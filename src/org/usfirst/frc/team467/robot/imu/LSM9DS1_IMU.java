@@ -44,6 +44,10 @@ public class LSM9DS1_IMU extends GyroBase implements Gyro, PIDSource, IMU {
 	private NetworkTableEntry angleX;
 	private NetworkTableEntry angleY;
 	private NetworkTableEntry angleZ;
+	private NetworkTableEntry magX;
+	private NetworkTableEntry magY;
+	private NetworkTableEntry magZ;
+	private NetworkTableEntry TEMP;
 
 	public enum AHRSAlgorithm {
 		kComplementary, kMadgwick
@@ -341,10 +345,10 @@ public class LSM9DS1_IMU extends GyroBase implements Gyro, PIDSource, IMU {
 			double accel_x = accelX.getValue().getDouble();
 			double accel_y = accelY.getValue().getDouble();
 			double accel_z = accelZ.getValue().getDouble();
-			double mag_x = table.getNumber("X-Axis Magnetometer", 0.0);
-			double mag_y = table.getNumber("Y-Axis Magnetometer", 0.0);
-			double mag_z = table.getNumber("Z-Axis Magnetometer", 0.0);
-			double temp = table.getNumber("Temperature", 0.0);
+			double mag_x = magX.getValue().getDouble();
+			double mag_y = magY.getValue().getDouble();
+			double mag_z = magZ.getValue().getDouble();
+			double temp = TEMP.getValue().getDouble();
 
 			m_samples_mutex.lock();
 			try {
