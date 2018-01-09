@@ -14,9 +14,9 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
-import edu.wpi.first.wpilibj.livewindow.LiveWindowSendable;
-import edu.wpi.first.wpilibj.networktables.NetworkTable;
-import edu.wpi.first.wpilibj.tables.ITable;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.GyroBase;
 import edu.wpi.first.wpilibj.InterruptableSensorBase;
@@ -26,7 +26,7 @@ import edu.wpi.first.wpilibj.Timer;
 /**
  * This class is for the ADIS16448 IMU that connects to the RoboRIO MXP port.
  */
-public class LSM9DS1_IMU extends GyroBase implements Gyro, PIDSource, LiveWindowSendable, IMU {
+public class LSM9DS1_IMU extends GyroBase implements Gyro, PIDSource, IMU {
 
 	private static final double MEASURES_PER_DEGREE = 1.0;
 
@@ -34,6 +34,16 @@ public class LSM9DS1_IMU extends GyroBase implements Gyro, PIDSource, LiveWindow
 	private static final double kCalibrationSampleTime = 5.0;
 
 	private NetworkTable table;
+	private NetworkTableEntry value;
+	private NetworkTableEntry pitch;
+	private NetworkTableEntry roll;
+	private NetworkTableEntry yaw;
+	private NetworkTableEntry accelX;
+	private NetworkTableEntry accelY;
+	private NetworkTableEntry accelZ;
+	private NetworkTableEntry angleX;
+	private NetworkTableEntry angleY;
+	private NetworkTableEntry angleZ;
 
 	public enum AHRSAlgorithm {
 		kComplementary, kMadgwick
@@ -202,7 +212,7 @@ public class LSM9DS1_IMU extends GyroBase implements Gyro, PIDSource, LiveWindow
 		m_yaw_axis = yaw_axis;
 		m_algorithm = algorithm;
 
-		table = NetworkTable.getTable("Sensors on Pi");
+		table = NetworkTableInstance.getDefault().getTable("Sensors on Pi");
 
 		// Create data acq FIFO. We make the FIFO 2 longer than it needs
 		// to be so the input and output never overlap (we hold a reference
@@ -325,12 +335,12 @@ public class LSM9DS1_IMU extends GyroBase implements Gyro, PIDSource, LiveWindow
 				m_last_sample_time = sample_time;
 			}
 
-			double gyro_x = table.getNumber("X-Axis Accelleration", 0.0);
-			double gyro_y = table.getNumber("Y-Axis Accelleration", 0.0);
-			double gyro_z = table.getNumber("Z-Axis Accelleration", 0.0);
-			double accel_x = table.getNumber("X-Axis Angle", 0.0);
-			double accel_y = table.getNumber("Y-Axis Angle", 0.0);
-			double accel_z = table.getNumber("Z-Axis Angle", 0.0);
+			double gyro_x = angleX.getValue().getDouble();
+			double gyro_y = angleY.getValue().getDouble();
+			double gyro_z = angleZ.getValue().getDouble();
+			double accel_x = accelX.getValue().getDouble();
+			double accel_y = accelY.getValue().getDouble();
+			double accel_z = accelZ.getValue().getDouble();
 			double mag_x = table.getNumber("X-Axis Magnetometer", 0.0);
 			double mag_y = table.getNumber("Y-Axis Magnetometer", 0.0);
 			double mag_z = table.getNumber("Z-Axis Magnetometer", 0.0);
@@ -996,24 +1006,37 @@ public class LSM9DS1_IMU extends GyroBase implements Gyro, PIDSource, LiveWindow
 	public synchronized void setTiltCompYaw(boolean enabled) {
 		m_tilt_comp_yaw = enabled;
 	}
-
+	
+	public void initTable() {
+		table = NetworkTableInstance.getDefault().getTable("Sensors on Pi");
+		value = new NetworkTableEntry(NetworkTableInstance.getDefault(), 0);
+		pitch = new NetworkTableEntry(NetworkTableInstance.getDefault(), 0);
+		roll = new NetworkTableEntry(NetworkTableInstance.getDefault(), 0);
+		yaw = new NetworkTableEntry(NetworkTableInstance.getDefault(), 0);
+		accelX = new NetworkTableEntry(NetworkTableInstance.getDefault(), 0);
+		accelY = new NetworkTableEntry(NetworkTableInstance.getDefault(), 0);
+		accelZ = new NetworkTableEntry(NetworkTableInstance.getDefault(), 0);
+		angleX = new NetworkTableEntry(NetworkTableInstance.getDefault(), 0);
+		angleY = new NetworkTableEntry(NetworkTableInstance.getDefault(), 0);
+		angleZ = new NetworkTableEntry(NetworkTableInstance.getDefault(), 0);
+	}
+	
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	public void updateTable() {
-		ITable table = getTable();
 		if (table != null) {
-			table.putNumber("Value", getAngle());
-			table.putNumber("Pitch", getPitch());
-			table.putNumber("Roll", getRoll());
-			table.putNumber("Yaw", getYaw());
-			table.putNumber("AccelX", getAccelX());
-			table.putNumber("AccelY", getAccelY());
-			table.putNumber("AccelZ", getAccelZ());
-			table.putNumber("AngleX", getAngleX());
-			table.putNumber("AngleY", getAngleY());
-			table.putNumber("AngleZ", getAngleZ());
+			value.setDouble(getAngle());
+			pitch.setDouble(getPitch());
+			roll.setDouble(getRoll());
+			yaw.setDouble(getYaw());
+			accelX.setDouble(getAccelX());
+			accelY.setDouble(getAccelY());
+			accelZ.setDouble(getAccelZ());
+			angleX.setDouble(getAngleX());
+			angleY.setDouble(getAngleY());
+			angleZ.setDouble(getAngleZ());
 		}
 	}
 
@@ -1025,5 +1048,4 @@ public class LSM9DS1_IMU extends GyroBase implements Gyro, PIDSource, LiveWindow
 	public double getBarometricPressure() {
 		return 0;
 	}
-
 }
