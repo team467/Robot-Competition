@@ -5,7 +5,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.apache.log4j.Logger;
 import org.usfirst.frc.team467.robot.*;
 
-import com.ctre.CANTalon.TalonControlMode;
+import com.ctre.phoenix.motorcontrol.ControlMode;
 
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.Timer;
@@ -61,7 +61,7 @@ public class Actions {
 	 */
 	public static boolean isInPositionMode() {
 		Drive drive = Drive.getInstance();
-		if (drive.getControlMode() == TalonControlMode.Position) {
+		if (drive.getControlMode() == ControlMode.Position) {
 			return true;
 		} else {
 			return false;
@@ -75,7 +75,7 @@ public class Actions {
 	 */
 	public static boolean isNotInPositionMode() {
 		Drive drive = Drive.getInstance();
-		if (drive.getControlMode() != TalonControlMode.Position) {
+		if (drive.getControlMode() != ControlMode.Position) {
 			return true;
 		} else {
 			return false;

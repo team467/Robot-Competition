@@ -6,18 +6,17 @@ package org.usfirst.frc.team467.robot;
 
 import org.apache.log4j.Logger;
 
-import com.ctre.CANTalon;
-import com.ctre.CANTalon.FeedbackDevice;
-import com.ctre.CANTalon.TalonControlMode;
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.wpilibj.PIDController;
-import edu.wpi.first.wpilibj.RobotDrive;
+import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  *
  */
-public class Drive extends RobotDrive {
+public class Drive extends DifferentialDrive {
 	// TODO: DEfine logger
 
 
@@ -26,10 +25,13 @@ public class Drive extends RobotDrive {
 
 	// Data storage object
 	private DataStorage data;
+	
+	public static WPI_TalonSRX left = new WPI_TalonSRX(1);
+	public static WPI_TalonSRX right = new WPI_TalonSRX(2);
 
 	// Private constructor
 	private Drive() {
-		super(1,2); // Need to specify the motor channels.
+		super(left, right); // Need to specify the motor channels.
 
 		// TODO: Define and initialize motors.
 
@@ -38,7 +40,7 @@ public class Drive extends RobotDrive {
 
 	}
 	
-	private void initMotor(CANTalon talon) {
+	private void initMotor(WPI_TalonSRX talon) {
 		// TODO: Set the default Talon parameters
 	}
 
@@ -88,7 +90,7 @@ public class Drive extends RobotDrive {
 		return false;
 	}
 
-	private void initMotorForFollowerMode(CANTalon master, CANTalon slave) {
+	private void initMotorForFollowerMode(WPI_TalonSRX master, WPI_TalonSRX slave) {
 		// TODO: Slave motors to a single master
 	}
 
@@ -96,9 +98,9 @@ public class Drive extends RobotDrive {
 		// TODO Log closed loop errors in the Speed/Position control loop
 	}
 
-	public TalonControlMode getControlMode() {
+	public ControlMode getControlMode() {
 		// TODO: Update to return the currently used control mode
-		return TalonControlMode.PercentVbus;
+		return ControlMode.PercentOutput;
 	}
 
 	/**
