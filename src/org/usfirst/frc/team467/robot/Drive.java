@@ -9,6 +9,8 @@ import org.apache.log4j.Logger;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
+
+
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -17,8 +19,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  *
  */
 public class Drive extends DifferentialDrive {
-	// TODO: DEfine logger
-
+	private ControlMode controlMode;
+	// TODO: DEfine logger (Done)
+	private static final Logger LOGGER = Logger.getLogger(Drive.class);
 
 	// Single instance of this class
 	private static Drive instance = null;
@@ -26,22 +29,63 @@ public class Drive extends DifferentialDrive {
 	// Data storage object
 	private DataStorage data;
 	
-	public static WPI_TalonSRX left = new WPI_TalonSRX(1);
-	public static WPI_TalonSRX right = new WPI_TalonSRX(2);
+	private WPI_TalonSRX leftFollower1;
+	private WPI_TalonSRX leftFollower2;
+	private WPI_TalonSRX rightFollower1;
+	private WPI_TalonSRX rightFollower2;
+	
+	private WPI_TalonSRX leftLead;
+	private WPI_TalonSRX rightLead;
 
 	// Private constructor
-	private Drive() {
-		super(left, right); // Need to specify the motor channels.
+	private Drive(WPI_TalonSRX left, WPI_TalonSRX leftFollower1, WPI_TalonSRX leftFollower2,
+			WPI_TalonSRX right, WPI_TalonSRX rightFollower1, WPI_TalonSRX rightFollower2) {
+		super(left, right);
+		
+		
+		// Need to specify the motor channels.
+		// TODO: Define and initialize motors. (Done)
+		
+		this.leftLead = left;
+		initMotor(this.leftLead);
 
-		// TODO: Define and initialize motors.
+		this.leftFollower1 = leftFollower1;
+		initMotor(this.leftFollower1);
+		initMotorForFollowerMode(left, leftFollower1);
 
-		// Make objects
-		data = DataStorage.getInstance();
+		this.leftFollower2 = leftFollower2;
+		initMotor(this.leftFollower2);
+		initMotorForFollowerMode(left, leftFollower2);
+		
+		this.rightLead = right;
+		initMotor(this.rightLead);
 
-	}
+		this.rightFollower1 = rightFollower1;
+		initMotor(this.rightFollower1);
+		initMotorForFollowerMode(right, rightFollower1);
+		
+		this.rightFollower2 = rightFollower2;
+		initMotor(this.rightFollower2);
+		initMotorForFollowerMode(right, rightFollower2);
+		
+	// Make objects
+	data = DataStorage.getInstance();
+	
+
+}
+	
+	
+	
+
+		
+
 	
 	private void initMotor(WPI_TalonSRX talon) {
-		// TODO: Set the default Talon parameters
+		talon.set(ControlMode.PercentOutput, 0);
+		talon.selectProfileSlot(RobotMap.VELOCITY_PID_PROFILE, 0);
+		talon.configAllowableClosedloopError(0, RobotMap.VELOCITY_ALLOWABLE_CLOSED_LOOP_ERROR, 0);
+		talon.configNominalOutputReverse(-1.0, 1);
+		// TODO: Set the default Talon parameters (done- check over again)
 	}
 
 	/**
@@ -53,13 +97,17 @@ public class Drive extends DifferentialDrive {
 		// TODO: Update if constructure changes
 		if (instance == null) {
 			// First usage - create Drive object
-			instance = new Drive();
+			instance = new Drive(
+					new WPI_TalonSRX(1), new WPI_TalonSRX(2), new WPI_TalonSRX(3),
+					new WPI_TalonSRX(4), new WPI_TalonSRX(5), new WPI_TalonSRX(6));
 		}
 		return instance;
 	}
 
 	public void setPIDF(double p, double i, double d, double f){
 		// TODO: Set the PIDF of the talons. Assumes the same values for all motors
+		
+		
 	}
 
 	/**
@@ -75,8 +123,12 @@ public class Drive extends DifferentialDrive {
 	/**
 	 * Sets the motors to drive in percent of voltage mode. Default for when the speed sensors are not working.
 	 */
-	public boolean setPercentVoltageBusMode() {
+	public boolean setPercentOutputMode() {
 		// TODO: Set motors for percent voltage bus mode
+		//TODO: When will this be used?
+		leftLead.set(ControlMode.PercentOutput, 0);
+		rightLead.set(ControlMode.PercentOutput, 0);
+		//TODO Set the followers.
 		return true;
 	}
 
@@ -92,10 +144,16 @@ public class Drive extends DifferentialDrive {
 
 	private void initMotorForFollowerMode(WPI_TalonSRX master, WPI_TalonSRX slave) {
 		// TODO: Slave motors to a single master
+		//TODO: Check the value on the follower set.
+		slave.set(ControlMode.Follower, master.getDeviceID());
+		LOGGER.debug("Set " + slave.getDeviceID() + " Following " + master.getDeviceID());
 	}
 
 	public void logClosedLoopErrors() {
-		// TODO Log closed loop errors in the Speed/Position control loop
+		LOGGER.debug(
+				//TODO Check the arguments for the closed loop errors.
+				"closedLoopErr FL=" + leftLead.getClosedLoopError(0) +
+				" FR=" + rightLead.getClosedLoopError(0));
 	}
 
 	public ControlMode getControlMode() {
@@ -108,6 +166,13 @@ public class Drive extends DifferentialDrive {
 	 */
 	public void setDefaultDriveMode() {
 		// TODO: Check the Robot Map and set the system to use the speed controllers if enabled there
+		if (RobotMap.useSpeedControllers) {
+			setSpeedMode();
+		} else {
+			setPercentOutputMode();
+		}
+
+		stop();
 	}
 
 	/**
@@ -118,11 +183,21 @@ public class Drive extends DifferentialDrive {
 	 * @param right
 	 * 			Speed or Distance value for right wheels
 	 */
-	private void go(double left, double right) {
+	private void go(double left, double right, ControlMode mode) {
 		// TODO: Check to make sure all motors exist. If not throw a null pointer exception
-
+		if (leftLead == null || rightLead == null || this.leftFollower1 == null || this.leftFollower2 == null || this.rightFollower1 == null || this.rightFollower2 == null) {
+			throw new NullPointerException("Null motor provided");
+		}
+		
 		//TODO: Set the speeds
-
+		//TODO Check to see if we need the params.
+		leftLead.set(mode, left);
+		rightLead.set(mode, right);
+		leftFollower1.set(ControlMode.Follower, leftLead.getDeviceID());
+		leftFollower2.set(ControlMode.Follower, leftLead.getDeviceID());
+		rightFollower1.set(ControlMode.Follower, rightLead.getDeviceID());
+		rightFollower2.set(ControlMode.Follower, rightLead.getDeviceID());
+		
 		if (m_safetyHelper != null) {
 			m_safetyHelper.feed();
 		}
@@ -165,6 +240,7 @@ public class Drive extends DifferentialDrive {
 
 	public void zeroPosition() {
 		// TODO: Zero the encoder and current position so that next position move is relative to current position
+		
 	}
 
 	/**
@@ -174,11 +250,13 @@ public class Drive extends DifferentialDrive {
 	 */
 	public double error() {
 		// TODO: Get the error from the motor sensor. If in position mode, change into a distance measurement based onte the number of codes per revolution
+		
 		return 0;
 	}
 
 	public boolean checkSensor() {
 		// TODO: Check the sensors to make sure they are reading the values specified. For example if I set the speed at 100, the value return from get speed should be 100
+		// TODO: Check with bryan about what this is for
 		// Need separate checks for speed and position.
 
 		// All some time for the motors to get up to speed
@@ -206,21 +284,6 @@ public class Drive extends DifferentialDrive {
 		return true;
 	}
 
-
-
-	/**
-	 * Crab Drive
-	 *
-	 * @param angle
-	 *            value corresponding to the field direction to move in
-	 * @param speed
-	 *            Speed to drive at
-	 */
-	public void crabDrive(double angle, double speed) {
-		// TODO: Adjust the drive based on the angle
-
-	}
-
 	public boolean isStopped(){
 		// TODO: Check to see if the robot is stopped
 		return false;
@@ -245,19 +308,11 @@ public class Drive extends DifferentialDrive {
 	 * Does not drive drive motors and keeps steering angle at previous position.
 	 */
 	public void stop() {
-		//TODO: Stop all motors 
-	}
-
-	/**
-	 * Individually controls a specific driving motor
-	 *
-	 * @param speed
-	 *            Speed to drive at
-	 * @param steeringId
-	 *            Id of driving motor to drive
-	 */
-	public void individualWheelDrive(double speed, int steeringId) {
-		// TODO: Call drive with a speed only for the specified motor, with all other motors stopped.
+		//TODO: Stop all motors
+		go(0,0, ControlMode.Disabled);
+		
+		
+		
 	}
 
 }
