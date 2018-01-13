@@ -9,8 +9,6 @@ import org.apache.log4j.Logger;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
-
-
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -29,62 +27,60 @@ public class Drive extends DifferentialDrive {
 	// Data storage object
 	private DataStorage data;
 	
+	private WPI_TalonSRX leftLead;
 	private WPI_TalonSRX leftFollower1;
 	private WPI_TalonSRX leftFollower2;
+	
+	private WPI_TalonSRX rightLead;
 	private WPI_TalonSRX rightFollower1;
 	private WPI_TalonSRX rightFollower2;
-	
-	private WPI_TalonSRX leftLead;
-	private WPI_TalonSRX rightLead;
 
 	// Private constructor
-	private Drive(WPI_TalonSRX left, WPI_TalonSRX leftFollower1, WPI_TalonSRX leftFollower2,
-			WPI_TalonSRX right, WPI_TalonSRX rightFollower1, WPI_TalonSRX rightFollower2) {
-		super(left, right);
+	private Drive(WPI_TalonSRX leftLead, WPI_TalonSRX leftFollower1, WPI_TalonSRX leftFollower2,
+		WPI_TalonSRX rightLead, WPI_TalonSRX rightFollower1, WPI_TalonSRX rightFollower2) {
+		super(leftLead, rightLead);
 		
 		
 		// Need to specify the motor channels.
 		// TODO: Define and initialize motors. (Done)
 		
-		this.leftLead = left;
+		this.leftLead = leftLead;
 		initMotor(this.leftLead);
 
 		this.leftFollower1 = leftFollower1;
 		initMotor(this.leftFollower1);
-		initMotorForFollowerMode(left, leftFollower1);
+		initMotorForFollowerMode(leftLead, leftFollower1);
 
 		this.leftFollower2 = leftFollower2;
 		initMotor(this.leftFollower2);
-		initMotorForFollowerMode(left, leftFollower2);
+		initMotorForFollowerMode(leftLead, leftFollower2);
 		
-		this.rightLead = right;
+		this.rightLead = rightLead;
 		initMotor(this.rightLead);
 
 		this.rightFollower1 = rightFollower1;
 		initMotor(this.rightFollower1);
-		initMotorForFollowerMode(right, rightFollower1);
+		initMotorForFollowerMode(rightLead, rightFollower1);
 		
 		this.rightFollower2 = rightFollower2;
 		initMotor(this.rightFollower2);
-		initMotorForFollowerMode(right, rightFollower2);
+		initMotorForFollowerMode(rightLead, rightFollower2);
 		
 	// Make objects
 	data = DataStorage.getInstance();
 	
-
-}
-	
-	
-	
-
-		
-
+	}
 	
 	private void initMotor(WPI_TalonSRX talon) {
 		talon.set(ControlMode.PercentOutput, 0);
 		talon.selectProfileSlot(RobotMap.VELOCITY_PID_PROFILE, 0);
 		talon.configAllowableClosedloopError(0, RobotMap.VELOCITY_ALLOWABLE_CLOSED_LOOP_ERROR, 0);
 		talon.configNominalOutputReverse(-1.0, 1);
+		talon.configNominalOutputForward(-1.0, 1);
+		talon.configPeakOutputForward(-1.0, 1);
+		talon.configPeakOutputReverse(-1.0, 1);
+		//Note: This was changed from voltage to percentage used with 1 representing 100 percent or max voltage and -1 representing 100 percent backwards.
+		
 		// TODO: Set the default Talon parameters (done- check over again)
 	}
 
@@ -192,9 +188,10 @@ public class Drive extends DifferentialDrive {
 		//TODO: Set the speeds
 		//TODO Check to see if we need the params.
 		leftLead.set(mode, left);
-		rightLead.set(mode, right);
 		leftFollower1.set(ControlMode.Follower, leftLead.getDeviceID());
 		leftFollower2.set(ControlMode.Follower, leftLead.getDeviceID());
+		
+		rightLead.set(mode, right);
 		rightFollower1.set(ControlMode.Follower, rightLead.getDeviceID());
 		rightFollower2.set(ControlMode.Follower, rightLead.getDeviceID());
 		
