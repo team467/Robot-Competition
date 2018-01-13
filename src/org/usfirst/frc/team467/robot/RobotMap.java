@@ -1,19 +1,38 @@
 package org.usfirst.frc.team467.robot;
 
+import org.usfirst.frc.team467.robot.RobotMap.RobotID;
+
 /**
  *
  */
 public class RobotMap {
 	public enum RobotID {
 		// TODO: Enumerate robot names
-		SOME_NAME;
+		YES_467, NO_467
 	};
-
+	public static final int FRONT_LEFT = 0;
+	public static final int FRONT_RIGHT = 1;
+	public static final int BACK_LEFT = 2;
+	public static final int BACK_RIGHT = 3;
+	
+		
+		
 	// Steering motor ids
 	// TODO: Enumerate steering motor IDS
 
 	// Initialize robot map. 
 	public static void init(RobotID id) {
+		switch (id) {
+		case YES_467:
+			isDriveMotorInverted = new boolean[] { false, true, false, true };
+		case NO_467:
+			isDriveMotorInverted = new boolean[] { false, true, false, true };
+			
+		}
+		
+	
+		
+	
 
 		// TODO: Initialize robot map based on robot ID; throw an error on a bad robot id
 
@@ -21,10 +40,16 @@ public class RobotMap {
 	}
 
 	// Global robot constants
-
 	public static RobotID robotID;
 
+	public static boolean[] isDriveMotorInverted;
 	public static boolean useSpeedControllers;
+	public static final int VELOCITY_PID_PROFILE = 0;
+	public static final int POSITION_PID_PROFILE = 1;
+	public static final double POSITION_ALLOWED_ERROR = (0.5 / RobotMap.WHEELPOD_CIRCUMFERENCE); // 1/2 inch
+	public static final int VELOCITY_ALLOWABLE_CLOSED_LOOP_ERROR = 50; 	// This is in encoder ticks
+	public static final int POSITION_ALLOWABLE_CLOSED_LOOP_ERROR = (int) (POSITION_ALLOWED_ERROR * 1024 * 0.95); 	// This is in encoder ticks
+
 
 	// The maximum revolutions per minute (RPM) of a wheel when in speed control mode.
 	public static double MAX_SPEED;
