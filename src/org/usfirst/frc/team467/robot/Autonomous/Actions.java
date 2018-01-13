@@ -1,4 +1,4 @@
-package org.usfirst.frc.team467.robot.Autonomous;
+/* package org.usfirst.frc.team467.robot.Autonomous;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -16,26 +16,26 @@ public class Actions {
 	public static final Action nothing(){
 		Drive drive = Drive.getInstance();
 		String actionText = "Do Nothing";
-		return new Action(actionText,
-				() -> drive.isStopped(),
-				() -> drive.crabDrive(0, 0));
+//		return new Action(actionText,
+//				() -> drive.isStopped());
+//				() -> drive.crabDrive(0, 0));
 	}
 
 	public static Action wait(double duration) {
 		Drive drive = Drive.getInstance();
 		String actionText = "Do Nothing";
-		return new Action(actionText,
-				new ActionGroup.ExampleActionCondition(),
+//		return new Action(actionText,
+//			new ActionGroup.ExampleActionCondition(),
 //				new ActionGroup.Duration(duration),
-				() -> drive.crabDrive(0, 0));
+//				() -> drive.crabDrive(0, 0));
 	}
 
-	public static final Action nothingForever(){
+//	public static final Action nothingForever(){
 		Drive drive = Drive.getInstance();
 		String actionText = "Do Nothing";
-		return new Action(actionText,
-				() -> false,
-				() -> drive.crabDrive(0, 0));
+//		return new Action(actionText,
+//				() -> false,
+//				() -> drive.crabDrive(0, 0));
 	}
 
 	public static final Action example1 = new Action(
@@ -58,7 +58,7 @@ public class Actions {
 	 * Autonomous requires a check to see if something is complete, in this case if the wheel pods are in position mode.
 	 *
 	 * @return true when the position mode is set
-	 */
+	 *
 	public static boolean isInPositionMode() {
 		Drive drive = Drive.getInstance();
 		if (drive.getControlMode() == ControlMode.Position) {
@@ -72,7 +72,7 @@ public class Actions {
 	 * Autonomous requires a check to see if something is complete, in this case if the wheel pods are in position mode.
 	 *
 	 * @return true when the position mode is not set
-	 */
+	 *
 	public static boolean isNotInPositionMode() {
 		Drive drive = Drive.getInstance();
 		if (drive.getControlMode() != ControlMode.Position) {
@@ -99,3 +99,4 @@ public class Actions {
 	}
 	public static final ActionGroup exampleProcess = getExampleProcess();
 }
+*/
