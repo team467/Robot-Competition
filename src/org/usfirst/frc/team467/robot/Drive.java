@@ -75,10 +75,10 @@ public class Drive extends DifferentialDrive {
 		talon.set(ControlMode.PercentOutput, 0);
 		talon.selectProfileSlot(RobotMap.VELOCITY_PID_PROFILE, 0);
 		talon.configAllowableClosedloopError(0, RobotMap.VELOCITY_ALLOWABLE_CLOSED_LOOP_ERROR, 0);
-		talon.configNominalOutputReverse(-1.0, 1);
-		talon.configNominalOutputForward(-1.0, 1);
-		talon.configPeakOutputForward(-1.0, 1);
-		talon.configPeakOutputReverse(-1.0, 1);
+//		talon.configNominalOutputReverse(-1.0, 0);
+//		talon.configNominalOutputForward(1.0, 0);
+		talon.configPeakOutputForward(1.0, 0);
+		talon.configPeakOutputReverse(-1.0, 0);
 		//Note: This was changed from voltage to percentage used with 1 representing 100 percent or max voltage and -1 representing 100 percent backwards.
 		
 		// TODO: Set the default Talon parameters (done- check over again)
@@ -179,7 +179,8 @@ public class Drive extends DifferentialDrive {
 	 * @param right
 	 * 			Speed or Distance value for right wheels
 	 */
-	private void go(double left, double right, ControlMode mode) {
+	//TODO: Change go to private later.
+	public void go(double left, double right, ControlMode mode) {
 		// TODO: Check to make sure all motors exist. If not throw a null pointer exception
 		if (leftLead == null || rightLead == null || this.leftFollower1 == null || this.leftFollower2 == null || this.rightFollower1 == null || this.rightFollower2 == null) {
 			throw new NullPointerException("Null motor provided");
@@ -187,11 +188,12 @@ public class Drive extends DifferentialDrive {
 		
 		//TODO: Set the speeds
 		//TODO Check to see if we need the params.
-		leftLead.set(mode, left);
+		LOGGER.info("The value for left is: " + left + " and the value of right is: " + right + ".");
+		leftLead.set(mode, left/64);
 		leftFollower1.set(ControlMode.Follower, leftLead.getDeviceID());
 		leftFollower2.set(ControlMode.Follower, leftLead.getDeviceID());
 		
-		rightLead.set(mode, right);
+		rightLead.set(mode, right/64);
 		rightFollower1.set(ControlMode.Follower, rightLead.getDeviceID());
 		rightFollower2.set(ControlMode.Follower, rightLead.getDeviceID());
 		

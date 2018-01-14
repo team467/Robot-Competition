@@ -4,12 +4,16 @@ import org.usfirst.frc.team467.robot.Autonomous.ActionGroup;
 
 public class DriverStation {
 	
-	
+	XBoxJoystick467 driverJoy;
+
 	// Create class variable for Singleton instance
 	// TODO: implement Singleton
+	private static DriverStation station = null;
 	
 	// Mapping of functions to Joystick Buttons for normal operation
 	// TODO: Create enum for buttons
+	
+	
 
 	/**
 	 * Singleton instance of the object.
@@ -17,8 +21,11 @@ public class DriverStation {
 	 * @return
 	 */
 	public static DriverStation getInstance() {
+		if (station == null) {
+			station = new DriverStation();
+		}
 		// TODO: Create singleton
-		return null;
+		return station;
 	}
 
 	/**
@@ -26,12 +33,14 @@ public class DriverStation {
 	 */
 	private DriverStation() {
 		// TODO: Initialize class variables
+		driverJoy = new XBoxJoystick467(0);
 	}
 
 	/**
 	 * Must be called prior to first button read.
 	 */
 	public void readInputs() {
+		driverJoy.read();
 		// TODO: Read inputs from the buttons
 	}
 
@@ -42,7 +51,7 @@ public class DriverStation {
 	 */
 	public XBoxJoystick467 getDriveJoystick() {
 		// TODO Return the joystick
-		return null;
+		return driverJoy;
 	}
 
 	public ButtonPanel getButtonPanel() {
