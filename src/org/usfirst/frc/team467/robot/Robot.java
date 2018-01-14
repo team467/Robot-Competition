@@ -152,17 +152,15 @@ public class Robot extends IterativeRobot {
 		double right = (-1*xbox.getY(Hand.kRight));
 		// -1* driverstation.getDriveJoystick().getJoystick()
 		LOGGER.info("left " + left + " right " + right) ;
-		if ((Math.abs(left) < MIN_DRIVE_SPEED) && (Math.abs(right) < MIN_DRIVE_SPEED)) {
-//			// Don't start driving until commanded speed greater than minimum
-			drive.stop();
-		} else {
-			// @formatter:off
-			drive.go(left,right, // Robot aligned direction
-					ControlMode.PercentOutput);     // Robot speed
-			// @formatter:on
+
+		if (Math.abs(left) < MIN_DRIVE_SPEED) {
+			left = 0.0;
 		}
-		// TODO: Read inputs from driver station
-		// TODO: Drive
+		if (Math.abs(right) < MIN_DRIVE_SPEED) {
+			right = 0.0;
+		}
+		
+		drive.go(left,right, ControlMode.PercentOutput);
 	}
 
 }
