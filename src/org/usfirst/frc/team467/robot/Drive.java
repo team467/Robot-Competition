@@ -107,28 +107,6 @@ public class Drive extends DifferentialDrive {
 	}
 
 	/**
-	 * Sets the motors to drive in speed mode.
-	 *
-	 * @return Successful or not
-	 */
-	public boolean setSpeedMode() {
-		// TODO: Set the motors in speed control mode. Check RobotMap to see if it is enabled for this robot.
-		return false; // Update
-	}
-
-	/**
-	 * Sets the motors to drive in percent of voltage mode. Default for when the speed sensors are not working.
-	 */
-	public boolean setPercentOutputMode() {
-		// TODO: Set motors for percent voltage bus mode
-		//TODO: When will this be used?
-		leftLead.set(ControlMode.PercentOutput, 0);
-		rightLead.set(ControlMode.PercentOutput, 0);
-		//TODO Set the followers.
-		return true;
-	}
-
-	/**
 	 * Sets the motors to drive in position mode.
 	 *
 	 * @return Successful or not
@@ -153,22 +131,7 @@ public class Drive extends DifferentialDrive {
 	}
 
 	public ControlMode getControlMode() {
-		// TODO: Update to return the currently used control mode
-		return ControlMode.PercentOutput;
-	}
-
-	/**
-	 * Takes the drive out of position mode back into its default drive mode.
-	 */
-	public void setDefaultDriveMode() {
-		// TODO: Check the Robot Map and set the system to use the speed controllers if enabled there
-		if (RobotMap.useSpeedControllers) {
-			setSpeedMode();
-		} else {
-			setPercentOutputMode();
-		}
-
-		stop();
+		return controlMode;
 	}
 
 	/**
@@ -181,6 +144,7 @@ public class Drive extends DifferentialDrive {
 	 */
 	private void go(double left, double right, ControlMode mode) {
 		// TODO: Check to make sure all motors exist. If not throw a null pointer exception
+		controlMode = mode;
 		if (leftLead == null || rightLead == null || this.leftFollower1 == null || this.leftFollower2 == null || this.rightFollower1 == null || this.rightFollower2 == null) {
 			throw new NullPointerException("Null motor provided");
 		}
@@ -273,7 +237,7 @@ public class Drive extends DifferentialDrive {
 	 * @return boolean true if move is complete
 	 */
 	public void moveDistance(double distance) {
-		// TODO: CHecks to see if the robot is in postion mode, and if so, converts the distance to revolutions and moves
+		go(distance, distance, ControlMode.MotionMagic);
 	}
 
 	public boolean isAtDistance() {

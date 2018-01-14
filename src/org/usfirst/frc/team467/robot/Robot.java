@@ -17,6 +17,7 @@ import org.usfirst.frc.team467.robot.Autonomous.ActionGroup;
 // import org.usfirst.frc.team467.robot.Autonomous.Actions;
 
 import com.ctre.CANTalon;
+import com.ctre.phoenix.motorcontrol.ControlMode;
 
 import org.apache.log4j.Logger;
 
@@ -57,8 +58,6 @@ public class Robot extends IterativeRobot {
 		// Make robot objects
 		driverstation = DriverStation.getInstance();
 		drive = Drive.getInstance();
-
-		drive.setDefaultDriveMode();
 
 		gyro = Gyrometer.getInstance();
 		gyro.calibrate();
@@ -119,7 +118,6 @@ public class Robot extends IterativeRobot {
 	}
 
 	public void teleopInit() {
-		drive.setDefaultDriveMode();
 		driverstation.readInputs();
 		autonomous.terminate();
 //		autonomous = Actions.doNothing();
@@ -139,9 +137,11 @@ public class Robot extends IterativeRobot {
 	 * This function is called periodically during operator control
 	 */
 	public void teleopPeriodic() {
-		
-		// TODO: Read inputs from driver station
-		// TODO: Drive
+		switch (driverstation.getDriveMode()) {
+		case MotionMagic:
+			double targetPos = driverstation.getDriveJoystick().getJoystick().getYChannel();
+    		drive.moveDistance(targetPos);
+		}
 	}
 
 }

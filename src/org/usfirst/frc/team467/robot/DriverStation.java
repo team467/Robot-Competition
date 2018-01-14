@@ -10,22 +10,27 @@ public class DriverStation {
 	
 	// Mapping of functions to Joystick Buttons for normal operation
 	// TODO: Create enum for buttons
-
+	
+	private static DriverStation instance;
+	private XBoxJoystick467 joystick;
+	
 	/**
 	 * Singleton instance of the object.
 	 *
 	 * @return
 	 */
 	public static DriverStation getInstance() {
-		// TODO: Create singleton
-		return null;
+		if (instance == null) {
+			instance = new DriverStation();
+		}
+		return instance;
 	}
 
 	/**
 	 * Private constructor
 	 */
 	private DriverStation() {
-		// TODO: Initialize class variables
+		joystick = new XBoxJoystick467(0);
 	}
 
 	/**
