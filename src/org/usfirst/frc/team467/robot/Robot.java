@@ -9,12 +9,15 @@ package org.usfirst.frc.team467.robot;
 
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.CameraServer;
+import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import org.usfirst.frc.team467.robot.Autonomous.ActionGroup;
 // import org.usfirst.frc.team467.robot.Autonomous.Actions;
+import org.usfirst.frc.team467.robot.Autonomous.Actions;
 
 import com.ctre.CANTalon;
 import com.ctre.phoenix.motorcontrol.ControlMode;
@@ -33,9 +36,9 @@ public class Robot extends IterativeRobot {
 	// Robot objects
 	private DriverStation driverstation;
 	private Drive drive;
-	private ActionGroup autonomous;
+//	private ActionGroup autonomous;
 
-	private VisionProcessing vision;
+//	private VisionProcessing vision;
 	private Gyrometer gyro;
 
 	int session;
@@ -57,6 +60,7 @@ public class Robot extends IterativeRobot {
 
 		// Make robot objects
 		driverstation = DriverStation.getInstance();
+		LOGGER.info("inited driverstation");
 		drive = Drive.getInstance();
 
 		gyro = Gyrometer.getInstance();
@@ -66,7 +70,7 @@ public class Robot extends IterativeRobot {
 		// Initialize math lookup table
 		LookUpTable.init();
 
-		vision = VisionProcessing.getInstance();
+//		vision = VisionProcessing.getInstance();
 		
 		// TODO: Implement actions.doNothing
 //		autonomous = Actions.doNothing();
@@ -92,7 +96,7 @@ public class Robot extends IterativeRobot {
 	public void disabledInit() {
 		LOGGER.debug("Disabled Starting");
 		drive.logClosedLoopErrors();
-		autonomous.terminate();
+//		autonomous.terminate();
 //		autonomous = Actions.doNothing();
 	}
 
@@ -105,21 +109,21 @@ public class Robot extends IterativeRobot {
 
 		// TODO: call appropriate auto modes based on list
 		LOGGER.debug("Autonomous init: " + autoMode);
-		switch (autoMode) {
-		case "none":
+//		switch (autoMode) {
+//		case "none":
 //			autonomous = Actions.doNothing();
-			break;
-		default:
+//			break;
+//		default:
 //			autonomous = Actions.doNothing();
-			break;
-		}
-		LOGGER.info("Init Autonomous:" + autonomous.getName());
-		autonomous.enable();
+//			break;
+//		}
+//		LOGGER.info("Init Autonomous:" + autonomous.getName());
+//		autonomous.enable();
 	}
 
 	public void teleopInit() {
 		driverstation.readInputs();
-		autonomous.terminate();
+//		autonomous.terminate();
 //		autonomous = Actions.doNothing();
 	}
 
@@ -130,7 +134,7 @@ public class Robot extends IterativeRobot {
 	}
 
 	public void autonomousPeriodic() {
-		autonomous.run();
+//		autonomous.run();
 	}
 
 	/**
@@ -139,7 +143,7 @@ public class Robot extends IterativeRobot {
 	public void teleopPeriodic() {
 		switch (driverstation.getDriveMode()) {
 		case MotionMagic:
-			double targetPos = driverstation.getDriveJoystick().getJoystick().getYChannel();
+			double targetPos = driverstation.getArcadeSpeed();
     		drive.moveDistance(targetPos);
 		}
 	}
