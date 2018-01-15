@@ -147,8 +147,8 @@ public class Robot extends IterativeRobot {
 		//TODO: Set Min_DRIVE_SPEED in Robot Map.
 		double MIN_DRIVE_SPEED = 0.1;
 		driverstation.readInputs();
-		double left = driverstation.getDriveJoystick().getLeftStickY()*-1;
-		double right = driverstation.getDriveJoystick().getRightStickX();
+		double left = driverstation.getArcadeSpeed();
+		double right = driverstation.getArcadeTurn();
 		// -1* driverstation.getDriveJoystick().getJoystick()
 		LOGGER.info("left " + left + " right " + right) ;
 
@@ -158,7 +158,6 @@ public class Robot extends IterativeRobot {
 		if (Math.abs(right) < MIN_DRIVE_SPEED) {
 			right = 0.0;
 		}
-		
 		
 		//changed to arcade drive
 		drive.arcadeDrive(left, right, true);

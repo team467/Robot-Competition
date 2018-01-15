@@ -2,6 +2,8 @@ package org.usfirst.frc.team467.robot;
 
 import org.usfirst.frc.team467.robot.Autonomous.ActionGroup;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
+
 import edu.wpi.first.wpilibj.XboxController;
 
 public class DriverStation {
@@ -86,6 +88,15 @@ public class DriverStation {
 	public boolean getGyroReset() {
 		// TODO Check the gyro reset button
 		return false;
+	}
+	
+	public double getArcadeSpeed() {
+		return getDriveJoystick().getLeftStickY()*-1;
+		
+	}
+	
+	public double getArcadeTurn() {
+		return getDriveJoystick().getRightStickX();
 	}
 
 }
