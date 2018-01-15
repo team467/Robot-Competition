@@ -36,8 +36,8 @@ public class Drive extends DifferentialDrive {
 	private WPI_TalonSRX rightFollower2;
 
 	// Private constructor
-	private Drive(WPI_TalonSRX leftLead, WPI_TalonSRX leftFollower1, WPI_TalonSRX leftFollower2,
-		WPI_TalonSRX rightLead, WPI_TalonSRX rightFollower1, WPI_TalonSRX rightFollower2) {
+	private Drive(WPI_TalonSRX leftLead,  WPI_TalonSRX leftFollower1,  WPI_TalonSRX leftFollower2,
+		          WPI_TalonSRX rightLead, WPI_TalonSRX rightFollower1, WPI_TalonSRX rightFollower2) {
 		super(leftLead, rightLead);
 		
 		
