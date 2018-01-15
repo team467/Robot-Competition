@@ -149,7 +149,7 @@ public class Robot extends IterativeRobot {
 		driverstation.readInputs();
 		XboxController xbox = new XboxController(0);
 		double left = driverstation.getDriveJoystick().getLeftStickY()*-1;
-		double right = driverstation.getDriveJoystick().getRightStickY();
+		double right = driverstation.getDriveJoystick().getRightStickX();
 		// -1* driverstation.getDriveJoystick().getJoystick()
 		LOGGER.info("left " + left + " right " + right) ;
 
@@ -160,7 +160,9 @@ public class Robot extends IterativeRobot {
 			right = 0.0;
 		}
 		
-		drive.go(left,right, ControlMode.PercentOutput);
+		//drive.go(left,right, ControlMode.PercentOutput);
+		//changed to arcade drive
+		drive.arcadeDrive(left, right, true);
 	}
 
 }

@@ -216,7 +216,7 @@ public class XBoxJoystick467 {
 		return Axis.RightY.value();
 	}
 	
-	public double getRightX() {
+	public double getRightStickX() {
 		return Axis.RightX.value();
 	}
 
