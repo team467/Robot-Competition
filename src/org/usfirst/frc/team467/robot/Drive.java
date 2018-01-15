@@ -310,8 +310,17 @@ public class Drive extends DifferentialDrive {
 		//TODO: Stop all motors
 		go(0,0, ControlMode.Disabled);
 		
+	}
+	
+	@Override
+	public void arcadeDrive(double xSpeed, double zRotation, boolean squaredInputs) {
+		super.arcadeDrive(xSpeed, zRotation, squaredInputs);
 		
+		leftFollower1.set(ControlMode.Follower, leftLead.getDeviceID());
+		leftFollower2.set(ControlMode.Follower, leftLead.getDeviceID());
 		
+		rightFollower1.set(ControlMode.Follower, rightLead.getDeviceID());
+		rightFollower2.set(ControlMode.Follower, rightLead.getDeviceID());
 	}
 
 }
