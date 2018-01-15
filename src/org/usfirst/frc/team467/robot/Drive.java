@@ -179,8 +179,8 @@ public class Drive extends DifferentialDrive {
 	 * @param right
 	 * 			Speed or Distance value for right wheels
 	 */
-	//TODO: Change go to private later.
-	public void go(double left, double right, ControlMode mode) {
+	//TODO: Check to see if we still need this function.
+	private void go(double left, double right, ControlMode mode) {
 		// TODO: Check to make sure all motors exist. If not throw a null pointer exception
 		if (leftLead == null || rightLead == null || this.leftFollower1 == null || this.leftFollower2 == null || this.rightFollower1 == null || this.rightFollower2 == null) {
 			throw new NullPointerException("Null motor provided");

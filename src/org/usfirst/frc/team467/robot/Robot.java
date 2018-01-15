@@ -147,7 +147,6 @@ public class Robot extends IterativeRobot {
 		//TODO: Set Min_DRIVE_SPEED in Robot Map.
 		double MIN_DRIVE_SPEED = 0.1;
 		driverstation.readInputs();
-		XboxController xbox = new XboxController(0);
 		double left = driverstation.getDriveJoystick().getLeftStickY()*-1;
 		double right = driverstation.getDriveJoystick().getRightStickX();
 		// -1* driverstation.getDriveJoystick().getJoystick()
@@ -160,7 +159,7 @@ public class Robot extends IterativeRobot {
 			right = 0.0;
 		}
 		
-		//drive.go(left,right, ControlMode.PercentOutput);
+		
 		//changed to arcade drive
 		drive.arcadeDrive(left, right, true);
 	}

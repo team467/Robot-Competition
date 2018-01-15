@@ -17,7 +17,7 @@ public class XBoxJoystick467 {
 	private XboxController xbox;
 	private int pov = 0;
 
-	private static final double DEADZONE = 0.5;
+	private static final double DEADZONE = 0.1;
 
 	public enum Button {
 		a(1),
