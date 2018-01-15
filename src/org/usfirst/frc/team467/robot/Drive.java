@@ -75,10 +75,10 @@ public class Drive extends DifferentialDrive {
 		talon.set(ControlMode.PercentOutput, 0);
 		talon.selectProfileSlot(RobotMap.VELOCITY_PID_PROFILE, 0);
 		talon.configAllowableClosedloopError(0, RobotMap.VELOCITY_ALLOWABLE_CLOSED_LOOP_ERROR, 0);
-		talon.configNominalOutputReverse(-1.0, 1);
-		talon.configNominalOutputForward(-1.0, 1);
-		talon.configPeakOutputForward(-1.0, 1);
-		talon.configPeakOutputReverse(-1.0, 1);
+		talon.configNominalOutputReverse(0.0, 0);
+		talon.configNominalOutputForward(0.0, 0);
+		talon.configPeakOutputForward(1.0, 0);
+		talon.configPeakOutputReverse(-1.0, 0);
 		//Note: This was changed from voltage to percentage used with 1 representing 100 percent or max voltage and -1 representing 100 percent backwards.
 		
 		// TODO: Set the default Talon parameters (done- check over again)
@@ -172,13 +172,14 @@ public class Drive extends DifferentialDrive {
 	}
 
 	/**
-	 * Drives each of the four wheels at different speeds using invert constants to account for wiring.
+	 * Drives each of the six wheels at different speeds using invert constants to account for wiring.
 	 *
 	 * @param left
 	 * 			Speed or Distance value for left wheels
 	 * @param right
 	 * 			Speed or Distance value for right wheels
 	 */
+	//TODO: Check to see if we still need this function.
 	private void go(double left, double right, ControlMode mode) {
 		// TODO: Check to make sure all motors exist. If not throw a null pointer exception
 		if (leftLead == null || rightLead == null || this.leftFollower1 == null || this.leftFollower2 == null || this.rightFollower1 == null || this.rightFollower2 == null) {
@@ -187,6 +188,7 @@ public class Drive extends DifferentialDrive {
 		
 		//TODO: Set the speeds
 		//TODO Check to see if we need the params.
+		LOGGER.info("Drive left=" + left + "right=" + right + ".");
 		leftLead.set(mode, left);
 		leftFollower1.set(ControlMode.Follower, leftLead.getDeviceID());
 		leftFollower2.set(ControlMode.Follower, leftLead.getDeviceID());
@@ -308,8 +310,17 @@ public class Drive extends DifferentialDrive {
 		//TODO: Stop all motors
 		go(0,0, ControlMode.Disabled);
 		
+	}
+	
+	@Override
+	public void arcadeDrive(double xSpeed, double zRotation, boolean squaredInputs) {
+		super.arcadeDrive(xSpeed, zRotation, squaredInputs);
 		
+		leftFollower1.set(ControlMode.Follower, leftLead.getDeviceID());
+		leftFollower2.set(ControlMode.Follower, leftLead.getDeviceID());
 		
+		rightFollower1.set(ControlMode.Follower, rightLead.getDeviceID());
+		rightFollower2.set(ControlMode.Follower, rightLead.getDeviceID());
 	}
 
 }

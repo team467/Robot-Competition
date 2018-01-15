@@ -2,14 +2,20 @@ package org.usfirst.frc.team467.robot;
 
 import org.usfirst.frc.team467.robot.Autonomous.ActionGroup;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
+
+import edu.wpi.first.wpilibj.XboxController;
+
 public class DriverStation {
 	
+	XBoxJoystick467 driverJoy;
 	
-	// Create class variable for Singleton instance
-	// TODO: implement Singleton
+	private static DriverStation station;
 	
-	// Mapping of functions to Joystick Buttons for normal operation
+	// Mapping of functions to Controller Buttons for normal operation
 	// TODO: Create enum for buttons
+	
+	
 
 	/**
 	 * Singleton instance of the object.
@@ -17,8 +23,10 @@ public class DriverStation {
 	 * @return
 	 */
 	public static DriverStation getInstance() {
-		// TODO: Create singleton
-		return null;
+		if (station == null) {
+			station = new DriverStation();
+		}
+		return station;
 	}
 
 	/**
@@ -26,12 +34,14 @@ public class DriverStation {
 	 */
 	private DriverStation() {
 		// TODO: Initialize class variables
+		driverJoy = new XBoxJoystick467(0);
 	}
 
 	/**
 	 * Must be called prior to first button read.
 	 */
 	public void readInputs() {
+		driverJoy.read();
 		// TODO: Read inputs from the buttons
 	}
 
@@ -41,8 +51,7 @@ public class DriverStation {
 	 * @return
 	 */
 	public XBoxJoystick467 getDriveJoystick() {
-		// TODO Return the joystick
-		return null;
+		return driverJoy;
 	}
 
 	public ButtonPanel getButtonPanel() {
@@ -79,6 +88,15 @@ public class DriverStation {
 	public boolean getGyroReset() {
 		// TODO Check the gyro reset button
 		return false;
+	}
+	
+	public double getArcadeSpeed() {
+		return getDriveJoystick().getLeftStickY()*-1;
+		
+	}
+	
+	public double getArcadeTurn() {
+		return getDriveJoystick().getRightStickX();
 	}
 
 }

@@ -9,14 +9,18 @@ package org.usfirst.frc.team467.robot;
 
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.CameraServer;
+import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import org.usfirst.frc.team467.robot.Autonomous.ActionGroup;
 // import org.usfirst.frc.team467.robot.Autonomous.Actions;
+import org.usfirst.frc.team467.robot.Autonomous.Actions;
 
 import com.ctre.CANTalon;
+import com.ctre.phoenix.motorcontrol.ControlMode;
 
 import org.apache.log4j.Logger;
 
@@ -32,9 +36,9 @@ public class Robot extends IterativeRobot {
 	// Robot objects
 	private DriverStation driverstation;
 	private Drive drive;
-	private ActionGroup autonomous;
+//	private ActionGroup autonomous;
 
-	private VisionProcessing vision;
+//	private VisionProcessing vision;
 	private Gyrometer gyro;
 
 	int session;
@@ -56,6 +60,7 @@ public class Robot extends IterativeRobot {
 
 		// Make robot objects
 		driverstation = DriverStation.getInstance();
+		LOGGER.info("inited driverstation");
 		drive = Drive.getInstance();
 
 		drive.setDefaultDriveMode();
@@ -67,7 +72,7 @@ public class Robot extends IterativeRobot {
 		// Initialize math lookup table
 		LookUpTable.init();
 
-		vision = VisionProcessing.getInstance();
+//		vision = VisionProcessing.getInstance();
 		
 		// TODO: Implement actions.doNothing
 //		autonomous = Actions.doNothing();
@@ -93,7 +98,7 @@ public class Robot extends IterativeRobot {
 	public void disabledInit() {
 		LOGGER.debug("Disabled Starting");
 		drive.logClosedLoopErrors();
-		autonomous.terminate();
+//		autonomous.terminate();
 //		autonomous = Actions.doNothing();
 	}
 
@@ -106,22 +111,22 @@ public class Robot extends IterativeRobot {
 
 		// TODO: call appropriate auto modes based on list
 		LOGGER.debug("Autonomous init: " + autoMode);
-		switch (autoMode) {
-		case "none":
+//		switch (autoMode) {
+//		case "none":
 //			autonomous = Actions.doNothing();
-			break;
-		default:
+//			break;
+//		default:
 //			autonomous = Actions.doNothing();
-			break;
-		}
-		LOGGER.info("Init Autonomous:" + autonomous.getName());
-		autonomous.enable();
+//			break;
+//		}
+//		LOGGER.info("Init Autonomous:" + autonomous.getName());
+//		autonomous.enable();
 	}
 
 	public void teleopInit() {
 		drive.setDefaultDriveMode();
 		driverstation.readInputs();
-		autonomous.terminate();
+//		autonomous.terminate();
 //		autonomous = Actions.doNothing();
 	}
 
@@ -132,16 +137,30 @@ public class Robot extends IterativeRobot {
 	}
 
 	public void autonomousPeriodic() {
-		autonomous.run();
+//		autonomous.run();
 	}
 
 	/**
 	 * This function is called periodically during operator control
 	 */
 	public void teleopPeriodic() {
+		//TODO: Set Min_DRIVE_SPEED in Robot Map.
+		double MIN_DRIVE_SPEED = 0.1;
+		driverstation.readInputs();
+		double left = driverstation.getArcadeSpeed();
+		double right = driverstation.getArcadeTurn();
+		// -1* driverstation.getDriveJoystick().getJoystick()
+		LOGGER.info("left " + left + " right " + right) ;
+
+		if (Math.abs(left) < MIN_DRIVE_SPEED) {
+			left = 0.0;
+		}
+		if (Math.abs(right) < MIN_DRIVE_SPEED) {
+			right = 0.0;
+		}
 		
-		// TODO: Read inputs from driver station
-		// TODO: Drive
+		//changed to arcade drive
+		drive.arcadeDrive(left, right, true);
 	}
 
 }

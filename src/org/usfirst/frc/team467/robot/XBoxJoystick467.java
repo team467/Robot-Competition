@@ -6,13 +6,15 @@
 package org.usfirst.frc.team467.robot;
 
 import java.lang.Math;
-import edu.wpi.first.wpilibj.Joystick;
+
+import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.XboxController;
 
 /**
  *
  */
 public class XBoxJoystick467 {
-	private Joystick joystick;
+	private XboxController xbox;
 	private int pov = 0;
 
 	private static final double DEADZONE = 0.1;
@@ -41,6 +43,8 @@ public class XBoxJoystick467 {
 		}
 		
 		public static void read() {
+			
+			// Button Enum read
 			// TODO Iterate over the enum, updating all the values. 
 			// Store the current value into the previous state, then read the raw button value
 		}
@@ -85,8 +89,8 @@ public class XBoxJoystick467 {
 		leftY(1),
 		leftTrigger(2),
 		rightTrigger(3),
-		rightX(4),
-		rightY(5);
+		RightX(4),
+		RightY(5);
 		
 		public final int channel;
 		
@@ -101,9 +105,20 @@ public class XBoxJoystick467 {
 			return value;
 		}
 		
-		public static void read(Joystick joystick) {
+		public static void read(XboxController xbox) {
 			// TODO Traverse the enum and read all the values
 			// Example --> value = accelerateJoystickInput(joystick.getRawAxis(channel));
+			
+			// Read Joystick Axes
+			leftX.value = accelerateJoystickInput(xbox.getX(GenericHID.Hand.kLeft));
+			leftY.value = accelerateJoystickInput(xbox.getY(GenericHID.Hand.kLeft));
+
+			RightX.value = accelerateJoystickInput(xbox.getX(GenericHID.Hand.kRight));
+			RightY.value = accelerateJoystickInput(xbox.getY(GenericHID.Hand.kRight));
+
+			leftTrigger.value = accelerateJoystickInput(xbox.getTriggerAxis(GenericHID.Hand.kLeft));
+			rightTrigger.value = accelerateJoystickInput(xbox.getTriggerAxis(GenericHID.Hand.kRight));
+
 		}
 		
 		/**
@@ -112,7 +127,7 @@ public class XBoxJoystick467 {
 		 * @param input
 		 * @return processed input
 		 */
-		private double accelerateJoystickInput(double input) {
+		private static double accelerateJoystickInput(double input) {
 			// Ensure that there is a dead zone around zero
 			if (Math.abs(input) < DEADZONE) {
 				return 0.0;
@@ -132,6 +147,7 @@ public class XBoxJoystick467 {
 	 */
 	public XBoxJoystick467(int stick) {
 		// TODO: Set a new joystick on the given channel
+		xbox = new XboxController(stick);
 	}
 
 	/**
@@ -139,9 +155,9 @@ public class XBoxJoystick467 {
 	 *
 	 * @return
 	 */
-	public Joystick getJoystick() {
+	public XboxController getJoystick() {
 		// TODO: Get the joystick
-		return joystick;
+		return xbox;
 	}
 
 	/**
@@ -150,7 +166,8 @@ public class XBoxJoystick467 {
 	public void read() {
 		// TODO: Store the current button state into the previous state, then read the raw button
 		// TODO Read all the joystick axis into the values
-		pov = joystick.getPOV(0);
+		Axis.read(xbox);
+		pov = xbox.getPOV(0);
 	}
 
 	public double getPOV() {
@@ -168,7 +185,7 @@ public class XBoxJoystick467 {
 
 	public double getRightStickDistance() {
 		// TODO Repeat for right
-		return 0;
+		return Math.sqrt((Axis.RightX.value * Axis.RightX.value) + (Axis.RightY.value * Axis.RightY.value));
 	}
 
 	private double calculateStickAngle(double stickX, double stickY) {
@@ -186,6 +203,22 @@ public class XBoxJoystick467 {
 
 		return (stickAngle);
 	}
+	
+	public double getLeftStickY() {
+		return Axis.leftY.value();
+	}
+	
+	public double getLeftStickX() {
+		return Axis.leftX.value();
+	}
+	
+	public double getRightStickY() {
+		return Axis.RightY.value();
+	}
+	
+	public double getRightStickX() {
+		return Axis.RightX.value();
+	}
 
 	/**
 	 * Calculate the angle of this joystick.
@@ -198,7 +231,7 @@ public class XBoxJoystick467 {
 
 	public double getRightStickAngle() {
 		// TODO Repeat for right stick
-		return 0;
+		return (calculateStickAngle(Axis.RightX.value, Axis.RightY.value));
 	}
 
 }
