@@ -43,6 +43,7 @@ public class XBoxJoystick467 {
 		}
 		
 		public static void read() {
+			
 			// Button Enum read
 			// TODO Iterate over the enum, updating all the values. 
 			// Store the current value into the previous state, then read the raw button value
@@ -88,8 +89,8 @@ public class XBoxJoystick467 {
 		leftY(1),
 		leftTrigger(2),
 		rightTrigger(3),
-		rightX(4),
-		rightY(5);
+		RightX(4),
+		RightY(5);
 		
 		public final int channel;
 		
@@ -112,8 +113,8 @@ public class XBoxJoystick467 {
 			leftX.value = accelerateJoystickInput(xbox.getX(GenericHID.Hand.kLeft));
 			leftY.value = accelerateJoystickInput(xbox.getY(GenericHID.Hand.kLeft));
 
-			rightX.value = accelerateJoystickInput(xbox.getX(GenericHID.Hand.kRight));
-			rightY.value = accelerateJoystickInput(xbox.getY(GenericHID.Hand.kRight));
+			RightX.value = accelerateJoystickInput(xbox.getX(GenericHID.Hand.kRight));
+			RightY.value = accelerateJoystickInput(xbox.getY(GenericHID.Hand.kRight));
 
 			leftTrigger.value = accelerateJoystickInput(xbox.getTriggerAxis(GenericHID.Hand.kLeft));
 			rightTrigger.value = accelerateJoystickInput(xbox.getTriggerAxis(GenericHID.Hand.kRight));
@@ -184,7 +185,7 @@ public class XBoxJoystick467 {
 
 	public double getRightStickDistance() {
 		// TODO Repeat for right
-		return Math.sqrt((Axis.rightX.value * Axis.rightX.value) + (Axis.rightY.value * Axis.rightY.value));
+		return Math.sqrt((Axis.RightX.value * Axis.RightX.value) + (Axis.RightY.value * Axis.RightY.value));
 	}
 
 	private double calculateStickAngle(double stickX, double stickY) {
@@ -202,6 +203,22 @@ public class XBoxJoystick467 {
 
 		return (stickAngle);
 	}
+	
+	public double getLeftStickY() {
+		return Axis.leftY.value();
+	}
+	
+	public double getLeftStickX() {
+		return Axis.leftX.value();
+	}
+	
+	public double getRightStickY() {
+		return Axis.RightY.value();
+	}
+	
+	public double getRightX() {
+		return Axis.RightX.value();
+	}
 
 	/**
 	 * Calculate the angle of this joystick.
@@ -214,7 +231,7 @@ public class XBoxJoystick467 {
 
 	public double getRightStickAngle() {
 		// TODO Repeat for right stick
-		return (calculateStickAngle(Axis.rightX.value, Axis.rightY.value));
+		return (calculateStickAngle(Axis.RightX.value, Axis.RightY.value));
 	}
 
 }

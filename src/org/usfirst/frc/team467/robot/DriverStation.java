@@ -2,15 +2,15 @@ package org.usfirst.frc.team467.robot;
 
 import org.usfirst.frc.team467.robot.Autonomous.ActionGroup;
 
+import edu.wpi.first.wpilibj.XboxController;
+
 public class DriverStation {
 	
 	XBoxJoystick467 driverJoy;
-
-	// Create class variable for Singleton instance
-	// TODO: implement Singleton
-	private static DriverStation station = null;
 	
-	// Mapping of functions to Joystick Buttons for normal operation
+	private static DriverStation station;
+	
+	// Mapping of functions to Controller Buttons for normal operation
 	// TODO: Create enum for buttons
 	
 	
@@ -24,7 +24,6 @@ public class DriverStation {
 		if (station == null) {
 			station = new DriverStation();
 		}
-		// TODO: Create singleton
 		return station;
 	}
 
@@ -50,7 +49,6 @@ public class DriverStation {
 	 * @return
 	 */
 	public XBoxJoystick467 getDriveJoystick() {
-		// TODO Return the joystick
 		return driverJoy;
 	}
 

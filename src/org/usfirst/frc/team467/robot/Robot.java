@@ -145,11 +145,11 @@ public class Robot extends IterativeRobot {
 	 */
 	public void teleopPeriodic() {
 		//TODO: Set Min_DRIVE_SPEED in Robot Map.
-		double MIN_DRIVE_SPEED = 0.5;
+		double MIN_DRIVE_SPEED = 0.1;
 		driverstation.readInputs();
 		XboxController xbox = new XboxController(0);
-		double left = (-1*xbox.getY(Hand.kLeft));
-		double right = (-1*xbox.getY(Hand.kRight));
+		double left = driverstation.getDriveJoystick().getLeftStickY()*-1;
+		double right = driverstation.getDriveJoystick().getRightStickY();
 		// -1* driverstation.getDriveJoystick().getJoystick()
 		LOGGER.info("left " + left + " right " + right) ;
 
