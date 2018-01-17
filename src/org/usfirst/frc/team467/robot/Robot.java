@@ -147,6 +147,19 @@ public class Robot extends IterativeRobot {
 		//TODO: Set Min_DRIVE_SPEED in Robot Map.
 		double MIN_DRIVE_SPEED = 0.1;
 		driverstation.readInputs();
+		
+		if (driverstation.leftRumbleButtonDown()) {
+			driverstation.setLeftRumble(1.0);
+		} else {
+			driverstation.setLeftRumble(0.0);
+		}
+		
+		if (driverstation.rightRumbleButtonDown()) {
+			driverstation.setRightRumble(1.0);
+		} else {
+			driverstation.setRightRumble(0.0);
+		}
+		
 		double left = driverstation.getArcadeSpeed();
 		double right = driverstation.getArcadeTurn();
 		// -1* driverstation.getDriveJoystick().getJoystick()
