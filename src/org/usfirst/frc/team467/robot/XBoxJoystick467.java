@@ -8,6 +8,7 @@ package org.usfirst.frc.team467.robot;
 import java.lang.Math;
 
 import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.XboxController;
 
 /**
@@ -155,6 +156,7 @@ public class XBoxJoystick467 {
 		// TODO: Store the current button state into the previous state, then read the raw button
 		// TODO Read all the joystick axis into the values
 		Axis.read(xbox);
+		Button.read(xbox);
 		pov = xbox.getPOV(0);
 	}
 
@@ -221,5 +223,9 @@ public class XBoxJoystick467 {
 		// TODO Repeat for right stick
 		return (calculateStickAngle(Axis.rightX.value, Axis.rightY.value));
 	}
-
+	
+	public void setRumble(RumbleType type, double value) {
+		xbox.setRumble(type, value);
+	}
+	
 }
