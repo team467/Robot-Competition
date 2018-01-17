@@ -1,9 +1,11 @@
 package org.usfirst.frc.team467.robot;
 
+import org.usfirst.frc.team467.robot.XBoxJoystick467.Button;
 import org.usfirst.frc.team467.robot.Autonomous.ActionGroup;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.XboxController;
 
 public class DriverStation {
@@ -92,11 +94,25 @@ public class DriverStation {
 	
 	public double getArcadeSpeed() {
 		return getDriveJoystick().getLeftStickY()*-1;
-		
 	}
 	
 	public double getArcadeTurn() {
 		return getDriveJoystick().getRightStickX();
 	}
-
+	
+	public void setLeftRumble(double value) {
+		getDriveJoystick().setRumble(RumbleType.kLeftRumble, value);
+	}
+	
+	public void setRightRumble(double value) {
+		getDriveJoystick().setRumble(RumbleType.kRightRumble, value);
+	}
+	
+	public boolean getLeftRumbleButton() {
+		return getDriveJoystick().buttonDown(Button.x);
+	}
+	
+	public boolean getRightRumbleButton() {
+		return getDriveJoystick().buttonDown(Button.b);
+	}
 }

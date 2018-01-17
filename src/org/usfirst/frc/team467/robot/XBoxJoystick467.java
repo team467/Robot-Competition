@@ -70,7 +70,7 @@ public class XBoxJoystick467 {
 		/**
 		 * @return True if the button was just released
 		 */
-		public boolean buttonReleased() {
+		public boolean released() {
 			return (wasPressed && !isPressed);
 		}
 	}
@@ -222,6 +222,18 @@ public class XBoxJoystick467 {
 	public double getRightStickAngle() {
 		// TODO Repeat for right stick
 		return (calculateStickAngle(Axis.rightX.value, Axis.rightY.value));
+	}
+	
+	public boolean buttonPressed(Button button) {
+		return button.pressed();
+	}
+	
+	public boolean buttonDown(Button button) {
+		return button.down();
+	}
+	
+	public boolean buttonReleased(Button button) {
+		return button.released();
 	}
 	
 	public void setRumble(RumbleType type, double value) {
