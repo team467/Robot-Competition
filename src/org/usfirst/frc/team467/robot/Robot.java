@@ -41,6 +41,13 @@ public class Robot extends IterativeRobot {
 //	private VisionProcessing vision;
 	private Gyrometer gyro;
 
+	private ElevatorSensor elevator;
+	//The lowest value is 196.0, the maximum value is 3741.0. The middle is 1968.5
+	//New max: 2980, new min:956.5
+	//16.9 ticks = 1 inch
+	//1 rotation=253 ticks
+	
+	
 	int session;
 
 	/**
@@ -68,6 +75,8 @@ public class Robot extends IterativeRobot {
 		gyro = Gyrometer.getInstance();
 		gyro.calibrate();
 		gyro.reset();
+		
+		elevator = ElevatorSensor.getInstance();
 
 		// Initialize math lookup table
 		LookUpTable.init();
@@ -139,6 +148,7 @@ public class Robot extends IterativeRobot {
 	public void autonomousPeriodic() {
 //		autonomous.run();
 	}
+	
 
 	/**
 	 * This function is called periodically during operator control
@@ -147,8 +157,16 @@ public class Robot extends IterativeRobot {
 		//TODO: Set Min_DRIVE_SPEED in Robot Map.
 		double MIN_DRIVE_SPEED = 0.1;
 		driverstation.readInputs();
+		elevator.getHeight();
+		if (elevator.isOutOfRange()) {
+			driverstation.setLeftRumble(1.0);
+			driverstation.setRightRumble(1.0);
+		} else {
+			driverstation.setLeftRumble(0.0);
+			driverstation.setRightRumble(0.0);
+		}
 		
-		if (driverstation.leftRumbleButtonDown()) {
+		/*if (driverstation.leftRumbleButtonDown()) {
 			driverstation.setLeftRumble(1.0);
 		} else {
 			driverstation.setLeftRumble(0.0);
@@ -159,11 +177,11 @@ public class Robot extends IterativeRobot {
 		} else {
 			driverstation.setRightRumble(0.0);
 		}
-		
+		*/
 		double left = driverstation.getArcadeSpeed();
 		double right = driverstation.getArcadeTurn();
 		// -1* driverstation.getDriveJoystick().getJoystick()
-		LOGGER.info("left " + left + " right " + right) ;
+		//LOGGER.info("left " + left + " right " + right) ;
 
 		if (Math.abs(left) < MIN_DRIVE_SPEED) {
 			left = 0.0;
