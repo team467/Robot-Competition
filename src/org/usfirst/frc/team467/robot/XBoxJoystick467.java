@@ -177,10 +177,26 @@ public class XBoxJoystick467 {
 	}
 	
 	public double turboSpeedAdjust() {
+		if (Axis.leftTrigger.value() > 0.0) {
+			return turboFastSpeed(); 
+		} else {
+			return turboSlowSpeed(); 
+		}	
+	}
+	
+	public double turboFastSpeed() {
 
-		return (getLeftStickY()*(RobotMap.MAX_SPEED_WITHOUT_TRIGGER 
-				+ (RobotMap.MAX_SPEED_WITH_TRIGGER-RobotMap.MAX_SPEED_WITHOUT_TRIGGER)
+		return (getLeftStickY()*(RobotMap.NORMAL_MAX_SPEED 
+				+ (RobotMap.FAST_MAX_SPEED-RobotMap.NORMAL_MAX_SPEED)
 				*Axis.leftTrigger.value()))
+				*-1; // For some reason, up stick is negative, so we flip it;
+	}
+	
+	public double turboSlowSpeed() {
+
+		return (getLeftStickY()*(RobotMap.NORMAL_MAX_SPEED 
+				+ (RobotMap.SLOW_MAX_SPEED-RobotMap.NORMAL_MAX_SPEED)
+				*Axis.rightTrigger.value()))
 				*-1; // For some reason, up stick is negative, so we flip it;
 	}
 
