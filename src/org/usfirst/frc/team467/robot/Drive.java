@@ -7,6 +7,7 @@ package org.usfirst.frc.team467.robot;
 import org.apache.log4j.Logger;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.wpilibj.PIDController;
@@ -20,6 +21,8 @@ public class Drive extends DifferentialDrive {
 	private ControlMode controlMode;
 	// TODO: DEfine logger (Done)
 	private static final Logger LOGGER = Logger.getLogger(Drive.class);
+	
+	private static final int TALON_TIMEOUT = 10; // 10 ms is the recommended timeout
 
 	// Single instance of this class
 	private static Drive instance = null;
@@ -30,6 +33,7 @@ public class Drive extends DifferentialDrive {
 	private WPI_TalonSRX leftLead;
 	private WPI_TalonSRX leftFollower1;
 	private WPI_TalonSRX leftFollower2;
+	
 	
 	private WPI_TalonSRX rightLead;
 	private WPI_TalonSRX rightFollower1;
@@ -46,6 +50,10 @@ public class Drive extends DifferentialDrive {
 		
 		this.leftLead = leftLead;
 		initMotor(this.leftLead);
+		leftLead.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, TALON_TIMEOUT);
+		leftLead.setSensorPhase(true);
+		leftLead.config_kF(0, 0.7297, TALON_TIMEOUT);
+		leftLead.configMotionCruiseVelocity(1052, TALON_TIMEOUT);
 
 		this.leftFollower1 = leftFollower1;
 		initMotor(this.leftFollower1);
@@ -57,7 +65,11 @@ public class Drive extends DifferentialDrive {
 		
 		this.rightLead = rightLead;
 		initMotor(this.rightLead);
-
+		rightLead.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, TALON_TIMEOUT);
+		rightLead.setSensorPhase(false);
+		rightLead.config_kF(0, 0.7297, TALON_TIMEOUT);
+		rightLead.configMotionCruiseVelocity(1052, TALON_TIMEOUT);
+		
 		this.rightFollower1 = rightFollower1;
 		initMotor(this.rightFollower1);
 		initMotorForFollowerMode(rightLead, rightFollower1);
@@ -65,6 +77,7 @@ public class Drive extends DifferentialDrive {
 		this.rightFollower2 = rightFollower2;
 		initMotor(this.rightFollower2);
 		initMotorForFollowerMode(rightLead, rightFollower2);
+		
 		
 	// Make objects
 	data = DataStorage.getInstance();
@@ -126,8 +139,10 @@ public class Drive extends DifferentialDrive {
 	public void logClosedLoopErrors() {
 		LOGGER.debug(
 				//TODO Check the arguments for the closed loop errors.
-				"closedLoopErr FL=" + leftLead.getClosedLoopError(0) +
-				" FR=" + rightLead.getClosedLoopError(0));
+				"Vel L= " + leftLead.getSelectedSensorVelocity(0) + " R=" + rightLead.getSelectedSensorVelocity(0)
+				+ "Pos L=" + leftLead.getSelectedSensorPosition(0) + " R=" + rightLead.getSelectedSensorPosition(0)+
+				"Err L=" + leftLead.getClosedLoopError(0) +
+				" R=" + rightLead.getClosedLoopError(0));
 	}
 
 	public ControlMode getControlMode() {
@@ -202,7 +217,9 @@ public class Drive extends DifferentialDrive {
 	}
 
 	public void zeroPosition() {
-		// TODO: Zero the encoder and current position so that next position move is relative to current position
+		rightLead.setSelectedSensorPosition(0, 0, 10);
+		leftLead.setSelectedSensorPosition(0, 0, 10);
+		
 		
 	}
 

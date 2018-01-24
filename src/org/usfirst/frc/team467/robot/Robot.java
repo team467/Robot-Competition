@@ -134,6 +134,8 @@ public class Robot extends IterativeRobot {
 	}
 
 	public void autonomousPeriodic() {
+		drive.arcadeDrive(1, 0);
+		drive.logClosedLoopErrors();
 //		autonomous.run();
 	}
 
