@@ -53,6 +53,10 @@ public class DriverStation {
 	public XBoxJoystick467 getDriveJoystick() {
 		return driverJoy;
 	}
+	
+	public double getTurnSensivity() {
+		return 0.0;
+	}
 
 	public ButtonPanel getButtonPanel() {
 		// TODO: Return the button panel
@@ -91,7 +95,7 @@ public class DriverStation {
 	}
 	
 	public double getArcadeSpeed() {
-		return getDriveJoystick().getLeftStickY()*-1;
+		return getDriveJoystick().turboSpeedAdjust();
 		
 	}
 	
