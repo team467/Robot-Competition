@@ -106,7 +106,8 @@ public class Robot extends IterativeRobot {
 
 	public void autonomousInit() {
 		final String autoMode = SmartDashboard.getString("Auto Selector", "none");
-
+		drive.initMotionMagicMode();
+		LOGGER.info(drive);
 		// TODO: call appropriate auto modes based on list
 		LOGGER.debug("Autonomous init: " + autoMode);
 //		switch (autoMode) {
@@ -134,8 +135,13 @@ public class Robot extends IterativeRobot {
 	}
 
 	public void autonomousPeriodic() {
-		drive.arcadeDrive(1, 0);
+		
+		double amountToGoLeft = Double.parseDouble(SmartDashboard.getString("DB/String 0", "1024"));
+		double amountToGoRight = Double.parseDouble(SmartDashboard.getString("DB/String 5", "1024"));
+		
 		drive.logClosedLoopErrors();
+		drive.publishClosedLoopErrors();
+		drive.motionMagicMove(amountToGoLeft, amountToGoRight);
 //		autonomous.run();
 	}
 

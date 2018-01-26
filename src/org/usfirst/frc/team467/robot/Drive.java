@@ -52,8 +52,9 @@ public class Drive extends DifferentialDrive {
 		initMotor(this.leftLead);
 		leftLead.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, TALON_TIMEOUT);
 		leftLead.setSensorPhase(true);
-		leftLead.config_kF(0, 0.7297, TALON_TIMEOUT);
-		leftLead.configMotionCruiseVelocity(1052, TALON_TIMEOUT);
+		leftLead.config_kF(0, 0.7297, TALON_TIMEOUT); //0.7297 is 1023 (100 percent of the output you can send to the motor) divided by 1402 (max speed measured in ticks)
+		
+		
 
 		this.leftFollower1 = leftFollower1;
 		initMotor(this.leftFollower1);
@@ -65,10 +66,11 @@ public class Drive extends DifferentialDrive {
 		
 		this.rightLead = rightLead;
 		initMotor(this.rightLead);
+		//rightLead.setInverted(false);
+		rightLead.setSensorPhase(true);
+		rightLead.setInverted(false);
 		rightLead.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, TALON_TIMEOUT);
-		rightLead.setSensorPhase(false);
 		rightLead.config_kF(0, 0.7297, TALON_TIMEOUT);
-		rightLead.configMotionCruiseVelocity(1052, TALON_TIMEOUT);
 		
 		this.rightFollower1 = rightFollower1;
 		initMotor(this.rightFollower1);
@@ -103,7 +105,7 @@ public class Drive extends DifferentialDrive {
 	 * @return The single instance.
 	 */
 	public static Drive getInstance() {
-		// TODO: Update if constructure changes
+		// TODO: Update if constructor changes
 		if (instance == null) {
 			// First usage - create Drive object
 			instance = new Drive(
@@ -118,14 +120,37 @@ public class Drive extends DifferentialDrive {
 		
 		
 	}
-
+	
 	/**
-	 * Sets the motors to drive in position mode.
+	 * Initializes settings for position mode
 	 *
 	 * @return Successful or not
 	 */
-	public boolean setPositionMode() {
+	public boolean initPositionMode() {
 		// TODO: Set motors for percent voltage bus mode Check RobotMap to see if it is enabled for this robot.
+		rightLead.setSelectedSensorPosition(0, 0, TALON_TIMEOUT);
+		leftLead.setSelectedSensorPosition(0, 0, TALON_TIMEOUT);
+		
+		double kPRight = Double.parseDouble(SmartDashboard.getString("DB/String 7", "0"));
+		double kPLeft = Double.parseDouble(SmartDashboard.getString("DB/String 2", "0"));
+		
+		double kIRight = Double.parseDouble(SmartDashboard.getString("DB/String 8", "0"));
+		double kILeft = Double.parseDouble(SmartDashboard.getString("DB/String 3", "0"));
+		
+		double kDRight = Double.parseDouble(SmartDashboard.getString("DB/String 9", "7"));
+		double kDLeft = Double.parseDouble(SmartDashboard.getString("DB/String 4", "7"));
+				
+		rightLead.config_kP(0, kPRight, TALON_TIMEOUT);
+		leftLead.config_kP(0, kPLeft, TALON_TIMEOUT);
+		
+		rightLead.config_kI(0, kIRight, TALON_TIMEOUT);
+		leftLead.config_kI(0, kILeft, TALON_TIMEOUT);
+		
+		rightLead.config_kD(0, kDRight, TALON_TIMEOUT);
+		leftLead.config_kD(0, kDLeft, TALON_TIMEOUT);
+		
+		
+		LOGGER.info("Right p value: " + kPRight + " and left p value: " + kPLeft);
 		return false;
 	}
 
@@ -143,6 +168,11 @@ public class Drive extends DifferentialDrive {
 				+ "Pos L=" + leftLead.getSelectedSensorPosition(0) + " R=" + rightLead.getSelectedSensorPosition(0)+
 				"Err L=" + leftLead.getClosedLoopError(0) +
 				" R=" + rightLead.getClosedLoopError(0));
+	}
+	
+	public void publishClosedLoopErrors() {
+		SmartDashboard.putNumber("leftRawSensorPosition", leftLead.getSelectedSensorPosition(0));
+		SmartDashboard.putNumber("rightRawSensorPosition", rightLead.getSelectedSensorPosition(0));
 	}
 
 	public ControlMode getControlMode() {
@@ -293,6 +323,39 @@ public class Drive extends DifferentialDrive {
 		
 	}
 	
+	public void motionMagicMove(double left, double right) {
+		go(left, right, ControlMode.MotionMagic);
+	}
+	
+	public void initMotionMagicMode() {
+		rightLead.setSelectedSensorPosition(0, 0, TALON_TIMEOUT);
+		leftLead.setSelectedSensorPosition(0, 0, TALON_TIMEOUT);
+		
+		double kPRight = Double.parseDouble(SmartDashboard.getString("DB/String 7", "0"));
+		double kPLeft = Double.parseDouble(SmartDashboard.getString("DB/String 2", "0"));
+		
+		double kIRight = Double.parseDouble(SmartDashboard.getString("DB/String 8", "0"));
+		double kILeft = Double.parseDouble(SmartDashboard.getString("DB/String 3", "0"));
+		
+		double kDRight = Double.parseDouble(SmartDashboard.getString("DB/String 9", "7"));
+		double kDLeft = Double.parseDouble(SmartDashboard.getString("DB/String 4", "7"));
+				
+		rightLead.config_kP(0, kPRight, TALON_TIMEOUT);
+		leftLead.config_kP(0, kPLeft, TALON_TIMEOUT);
+		
+		rightLead.config_kI(0, kIRight, TALON_TIMEOUT);
+		leftLead.config_kI(0, kILeft, TALON_TIMEOUT);
+		
+		rightLead.config_kD(0, kDRight, TALON_TIMEOUT);
+		leftLead.config_kD(0, kDLeft, TALON_TIMEOUT);
+		
+		leftLead.configMotionCruiseVelocity(1052, TALON_TIMEOUT); //1052 is 75 percent of the max speed, which is 1402	
+		leftLead.configMotionAcceleration(1052, TALON_TIMEOUT);
+		
+		rightLead.configMotionCruiseVelocity(1052, TALON_TIMEOUT);
+		rightLead.configMotionAcceleration(1052, TALON_TIMEOUT);	
+	}
+	
 	@Override
 	public void arcadeDrive(double xSpeed, double zRotation, boolean squaredInputs) {
 		super.arcadeDrive(xSpeed, zRotation, squaredInputs);
@@ -303,5 +366,4 @@ public class Drive extends DifferentialDrive {
 		rightFollower1.set(ControlMode.Follower, rightLead.getDeviceID());
 		rightFollower2.set(ControlMode.Follower, rightLead.getDeviceID());
 	}
-
 }
