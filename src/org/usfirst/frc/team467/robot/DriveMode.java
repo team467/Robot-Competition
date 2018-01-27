@@ -2,7 +2,7 @@ package org.usfirst.frc.team467.robot;
 
 public enum DriveMode {
 	// TODO: Define the drive control modes
-	SpeedControl,   //Speed control
+	TankDrive,
 	MotionMagic,		// Position control
-	PercentOutput   //Percent output mode *default control mode
+	ArcadeDrive,
 }

@@ -7,6 +7,7 @@
 /*----------------------------------------------------------------------------*/
 package org.usfirst.frc.team467.robot;
 
+//import edu.wpi.first.wpilibj.networktables.NetworkTable;
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.IterativeRobot;
@@ -84,7 +85,16 @@ public class Robot extends IterativeRobot {
 	public void disabledPeriodic() {
 		LOGGER.trace("Disabled Periodic");
 	}
-
+//TODO: Figure out the NetworkTables later.
+//	String[] autoList = {
+//			 			"none",
+//			 				"go"
+//			 		};
+//			 
+//			 		NetworkTable table = NetworkTable.getTable("SmartDashboard");
+//			 		table.putStringArray("Auto List", autoList);
+//			 		LOGGER.debug("Robot Initialized");
+//	
 	public void autonomousInit() {
 		final String autoMode = SmartDashboard.getString("Auto Selector", "none");
 		drive.initMotionMagicMode();
@@ -105,6 +115,7 @@ public class Robot extends IterativeRobot {
 	}
 
 	public void teleopInit() {
+		
 		driverstation.readInputs();
 //		autonomous.terminate();
 //		autonomous = Actions.doNothing();
@@ -123,7 +134,7 @@ public class Robot extends IterativeRobot {
 		amountToGoLeft = drive.degreesToTicks(amountToGoLeft);
 		amountToGoRight = drive.degreesToTicks(amountToGoRight);
 		drive.logClosedLoopErrors();
-		drive.publishClosedLoopErrors();
+		drive.publishRawSensorValues();
 //		drive.PositionModeMove(drive.feetToTicks(amountToGoLeft), drive.feetToTicks(amountToGoRight));
 		drive.motionMagicMove(amountToGoLeft, amountToGoRight);
 		
@@ -135,20 +146,37 @@ public class Robot extends IterativeRobot {
 	 */
 	public void teleopPeriodic() {
 		driverstation.readInputs();
-		double speed = driverstation.getArcadeSpeed();
-		double turn = driverstation.getArcadeTurn();
-		
+		//TODO: Set Min_DRIVE_SPEED in Robot Map.
+		double MIN_DRIVE_SPEED = 0.1;
+		driverstation.readInputs();
+		double left = driverstation.getArcadeSpeed();
+		double right = driverstation.getArcadeTurn();
+		 		// -1* driverstation.getDriveJoystick().getJoystick()
+		LOGGER.info("left " + left + " right " + right) ;
+		 
+		 	if (Math.abs(left) < MIN_DRIVE_SPEED) {
+		 		left = 0.0;
+		 	}
+		 	if (Math.abs(right) < MIN_DRIVE_SPEED) {
+		 		right = 0.0;
+		 	}
+
 		switch (driverstation.getDriveMode()) {
-		case SpeedControl:
-			drive.initSpeedControl();
+		case ArcadeDrive:
+			double speed = driverstation.getArcadeSpeed();
+			double turn = driverstation.getArcadeTurn();
+			drive.arcadeDrive(speed, turn, true);
 			break;
-		case PercentOutput:	
-			drive.initPercentOutput();
+		case TankDrive:	
+			double leftTank = driverstation.getDriveJoystick().getLeftStickY();
+			double rightTank = driverstation.getDriveJoystick().getRightStickY();
+			drive.tankDrive(leftTank, rightTank, true);
 			break;
 		case MotionMagic:
+			//TODO: Add things here later.
 			break;
 		}
-		drive.arcadeDrive(speed, turn, true);
+		
 	}
 
 }

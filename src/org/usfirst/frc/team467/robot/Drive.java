@@ -19,8 +19,6 @@ public class Drive extends DifferentialDrive {
 	private ControlMode controlMode;
 	// TODO: DEfine logger (Done)
 	private static final Logger LOGGER = Logger.getLogger(Drive.class);
-	
-	private static final int TALON_TIMEOUT = 10; // 10 ms is the recommended timeout
 
 	// Single instance of this class
 	private static Drive instance = null;
@@ -47,9 +45,9 @@ public class Drive extends DifferentialDrive {
 		
 		this.leftLead = leftLead;
 		initMotor(this.leftLead);
-		leftLead.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, TALON_TIMEOUT);
+		leftLead.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, RobotMap.TALON_TIMEOUT);
 		leftLead.setSensorPhase(true);
-		leftLead.config_kF(0, 0.7297, TALON_TIMEOUT); //0.7297 is 1023 (100 percent of the output you can send to the motor) divided by 1402 (max speed measured in ticks)
+		leftLead.config_kF(0, 1023.0 / 1402.0, RobotMap.TALON_TIMEOUT); // (100 percent of the output you can send to the motor) divided by (max speed measured in ticks)
 		
 		
 
@@ -66,8 +64,8 @@ public class Drive extends DifferentialDrive {
 		//rightLead.setInverted(false);
 		rightLead.setSensorPhase(true);
 	//	rightLead.setInverted(false);
-		rightLead.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, TALON_TIMEOUT);
-		rightLead.config_kF(0, 0.7297, TALON_TIMEOUT);
+		rightLead.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, RobotMap.TALON_TIMEOUT);
+		rightLead.config_kF(0, 0.7297, RobotMap.TALON_TIMEOUT);
 		
 		this.rightFollower1 = rightFollower1;
 		initMotor(this.rightFollower1);
@@ -123,58 +121,59 @@ public class Drive extends DifferentialDrive {
 	 */
 	public boolean initPositionMode() {
 		// TODO: Set motors for percent voltage bus mode Check RobotMap to see if it is enabled for this robot.
-		rightLead.setSelectedSensorPosition(0, 0, TALON_TIMEOUT);
-		leftLead.setSelectedSensorPosition(0, 0, TALON_TIMEOUT);
+		rightLead.setSelectedSensorPosition(0, 0, RobotMap.TALON_TIMEOUT);
+		leftLead.setSelectedSensorPosition(0, 0, RobotMap.TALON_TIMEOUT);
 		
-		double kPRight = Double.parseDouble(SmartDashboard.getString("DB/String 7", "0"));
-		double kPLeft = Double.parseDouble(SmartDashboard.getString("DB/String 2", "0"));
+//		double kPRight = Double.parseDouble(SmartDashboard.getString("DB/String 7", "0"));
+//		double kPLeft = Double.parseDouble(SmartDashboard.getString("DB/String 2", "0"));
+//		
+//		double kIRight = Double.parseDouble(SmartDashboard.getString("DB/String 8", "0"));
+//		double kILeft = Double.parseDouble(SmartDashboard.getString("DB/String 3", "0"));
+//		
+//		double kDRight = Double.parseDouble(SmartDashboard.getString("DB/String 9", "7"));
+//		double kDLeft = Double.parseDouble(SmartDashboard.getString("DB/String 4", "7"));
+//				
+//		rightLead.config_kP(0, kPRight, RobotMap.TALON_TIMEOUT);
+//		leftLead.config_kP(0, kPLeft, RobotMap.TALON_TIMEOUT);
+//		
+//		rightLead.config_kI(0, kIRight, RobotMap.TALON_TIMEOUT);
+//		leftLead.config_kI(0, kILeft, RobotMap.TALON_TIMEOUT);
+//		
+//		rightLead.config_kD(0, kDRight, RobotMap.TALON_TIMEOUT);
+//		leftLead.config_kD(0, kDLeft, RobotMap.TALON_TIMEOUT);
 		
-		double kIRight = Double.parseDouble(SmartDashboard.getString("DB/String 8", "0"));
-		double kILeft = Double.parseDouble(SmartDashboard.getString("DB/String 3", "0"));
-		
-		double kDRight = Double.parseDouble(SmartDashboard.getString("DB/String 9", "7"));
-		double kDLeft = Double.parseDouble(SmartDashboard.getString("DB/String 4", "7"));
-				
-		rightLead.config_kP(0, kPRight, TALON_TIMEOUT);
-		leftLead.config_kP(0, kPLeft, TALON_TIMEOUT);
-		
-		rightLead.config_kI(0, kIRight, TALON_TIMEOUT);
-		leftLead.config_kI(0, kILeft, TALON_TIMEOUT);
-		
-		rightLead.config_kD(0, kDRight, TALON_TIMEOUT);
-		leftLead.config_kD(0, kDLeft, TALON_TIMEOUT);
-		
-		LOGGER.info("Right p value: " + kPRight + " and left p value: " + kPLeft);
+//			LOGGER.info("Right p value: " + kPRight + " and left p value: " + kPLeft);
 		return false;
 	}
 	
 	public void initMotionMagicMode() {
-		rightLead.setSelectedSensorPosition(0, 0, TALON_TIMEOUT);
-		leftLead.setSelectedSensorPosition(0, 0, TALON_TIMEOUT);
+		rightLead.setSelectedSensorPosition(0, 0, RobotMap.TALON_TIMEOUT);
+		leftLead.setSelectedSensorPosition(0, 0, RobotMap.TALON_TIMEOUT);
 		
-		double kPRight = Double.parseDouble(SmartDashboard.getString("DB/String 7", "0"));
-		double kPLeft = Double.parseDouble(SmartDashboard.getString("DB/String 2", "0"));
+		double kPRight = 1.4; // Double.parseDouble(SmartDashboard.getString("DB/String 7", "1.4"));
+		double kPLeft = 1.6; //Double.parseDouble(SmartDashboard.getString("DB/String 2", "1.6"));
 		
-		double kIRight = Double.parseDouble(SmartDashboard.getString("DB/String 8", "0"));
-		double kILeft = Double.parseDouble(SmartDashboard.getString("DB/String 3", "0"));
+		double kIRight = 0.0; // Double.parseDouble(SmartDashboard.getString("DB/String 8", "0.0"));
+		double kILeft = 0.0; //Double.parseDouble(SmartDashboard.getString("DB/String 3", "0.0"));
 		
-		double kDRight = Double.parseDouble(SmartDashboard.getString("DB/String 9", "7"));
-		double kDLeft = Double.parseDouble(SmartDashboard.getString("DB/String 4", "7"));
+		double kDRight = 165; //Double.parseDouble(SmartDashboard.getString("DB/String 9", "165"));
+		double kDLeft = 198; //Double.parseDouble(SmartDashboard.getString("DB/String 4", "198"));
 				
-		rightLead.config_kP(0, kPRight, TALON_TIMEOUT);
-		leftLead.config_kP(0, kPLeft, TALON_TIMEOUT);
+		rightLead.config_kP(0, kPRight, RobotMap.TALON_TIMEOUT);
+		leftLead.config_kP(0, kPLeft, RobotMap.TALON_TIMEOUT);
 		
-		rightLead.config_kI(0, kIRight, TALON_TIMEOUT);
-		leftLead.config_kI(0, kILeft, TALON_TIMEOUT);
+		rightLead.config_kI(0, kIRight, RobotMap.TALON_TIMEOUT);
+		leftLead.config_kI(0, kILeft, RobotMap.TALON_TIMEOUT);
 		
-		rightLead.config_kD(0, kDRight, TALON_TIMEOUT);
-		leftLead.config_kD(0, kDLeft, TALON_TIMEOUT);
+		rightLead.config_kD(0, kDRight, RobotMap.TALON_TIMEOUT);
+		leftLead.config_kD(0, kDLeft, RobotMap.TALON_TIMEOUT);
+//		This is commented out because we will need the SmartDashboard to tune other things later.
 		
-		leftLead.configMotionCruiseVelocity(1052 / 2, TALON_TIMEOUT); //1052 is 75 percent of the max speed, which is 1402	
-		leftLead.configMotionAcceleration(1052 / 2, TALON_TIMEOUT);
+		leftLead.configMotionCruiseVelocity(1052 / 2, RobotMap.TALON_TIMEOUT); //1052 is 75 percent of the max speed, which is 1402	
+		leftLead.configMotionAcceleration(1052 / 2, RobotMap.TALON_TIMEOUT);
 		
-		rightLead.configMotionCruiseVelocity(1052 / 2, TALON_TIMEOUT);
-		rightLead.configMotionAcceleration(1052 / 2, TALON_TIMEOUT);	
+		rightLead.configMotionCruiseVelocity(1052 / 2, RobotMap.TALON_TIMEOUT);
+		rightLead.configMotionAcceleration(1052 / 2, RobotMap.TALON_TIMEOUT);	
 	}
 	public void initSpeedControl() {
 		rightLead.set(ControlMode.Velocity, rightLead.getSelectedSensorVelocity(1));
@@ -211,7 +210,7 @@ public class Drive extends DifferentialDrive {
 				" R=" + rightLead.getClosedLoopError(0));
 	}
 	
-	public void publishClosedLoopErrors() {
+	public void publishRawSensorValues() {
 		SmartDashboard.putNumber("leftRawSensorPosition", leftLead.getSelectedSensorPosition(0));
 		SmartDashboard.putNumber("rightRawSensorPosition", rightLead.getSelectedSensorPosition(0));
 	}
@@ -337,6 +336,7 @@ public class Drive extends DifferentialDrive {
 		
 	}
 	
+	@Override
 	public void arcadeDrive(double xSpeed, double zRotation, boolean squaredInputs) {
 		super.arcadeDrive(xSpeed, zRotation, squaredInputs);
 		
@@ -359,7 +359,7 @@ public class Drive extends DifferentialDrive {
 	public double degreesToTicks(double turnAmountInDegrees) {
 		double diameterInInches = 22.75;
 		double radius = diameterInInches / 24; //Diameter divided by (2 * 12) to translate to feet and to get radius.
-		double turnAmountInRadians = Math.toRadians(turnAmountInDegrees * (367.5/360));
+		double turnAmountInRadians = Math.toRadians(turnAmountInDegrees * (367.5/360)); //The 367.5/360 is to fix measurement errors.
 		return feetToTicks(turnAmountInRadians * radius);
 	}
 }
