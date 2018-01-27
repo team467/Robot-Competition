@@ -28,7 +28,9 @@ public class Robot extends IterativeRobot {
 	private DriverStation driverstation;
 	private Drive drive;
 //	private ActionGroup autonomous;
-
+	private double amountToGoLeft;
+	private double amountToGoRight;
+	
 //	private VisionProcessing vision;
 	private Gyrometer gyro;
 
@@ -98,6 +100,12 @@ public class Robot extends IterativeRobot {
 	public void autonomousInit() {
 		final String autoMode = SmartDashboard.getString("Auto Selector", "none");
 		drive.initMotionMagicMode();
+		
+		amountToGoLeft = 1;// Double.parseDouble(SmartDashboard.getString("DB/String 0", "1")); //Second value in feet
+		amountToGoRight = 1;//Double.parseDouble(SmartDashboard.getString("DB/String 5", "1")); //Second value in feet
+		
+		amountToGoLeft = drive.degreesToTicks(amountToGoLeft);
+		amountToGoRight = drive.degreesToTicks(amountToGoRight);
 //	drive.initPositionMode();
 		LOGGER.info(drive);
 		// TODO: call appropriate auto modes based on list
@@ -129,10 +137,6 @@ public class Robot extends IterativeRobot {
 
 	public void autonomousPeriodic() {
 		
-		double amountToGoLeft = Double.parseDouble(SmartDashboard.getString("DB/String 0", "1")); //Second value in feet
-		double amountToGoRight = Double.parseDouble(SmartDashboard.getString("DB/String 5", "1")); //Second value in feet
-		amountToGoLeft = drive.degreesToTicks(amountToGoLeft);
-		amountToGoRight = drive.degreesToTicks(amountToGoRight);
 		drive.logClosedLoopErrors();
 		drive.publishRawSensorValues();
 //		drive.PositionModeMove(drive.feetToTicks(amountToGoLeft), drive.feetToTicks(amountToGoRight));
@@ -153,7 +157,6 @@ public class Robot extends IterativeRobot {
 		double right = driverstation.getArcadeTurn();
 		 		// -1* driverstation.getDriveJoystick().getJoystick()
 		LOGGER.info("left " + left + " right " + right) ;
-		 
 		 	if (Math.abs(left) < MIN_DRIVE_SPEED) {
 		 		left = 0.0;
 		 	}
