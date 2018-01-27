@@ -68,7 +68,7 @@ public class Drive extends DifferentialDrive {
 		initMotor(this.rightLead);
 		//rightLead.setInverted(false);
 		rightLead.setSensorPhase(true);
-		rightLead.setInverted(false);
+	//	rightLead.setInverted(false);
 		rightLead.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, TALON_TIMEOUT);
 		rightLead.config_kF(0, 0.7297, TALON_TIMEOUT);
 		
@@ -149,11 +149,12 @@ public class Drive extends DifferentialDrive {
 		rightLead.config_kD(0, kDRight, TALON_TIMEOUT);
 		leftLead.config_kD(0, kDLeft, TALON_TIMEOUT);
 		
-		
 		LOGGER.info("Right p value: " + kPRight + " and left p value: " + kPLeft);
 		return false;
 	}
-
+	public void PositionModeMove(double left, double right) {
+		go(left, right, ControlMode.Position);
+	}
 	private void initMotorForFollowerMode(WPI_TalonSRX master, WPI_TalonSRX slave) {
 		// TODO: Slave motors to a single master
 		//TODO: Check the value on the follower set.
@@ -194,6 +195,8 @@ public class Drive extends DifferentialDrive {
 		if (leftLead == null || rightLead == null || this.leftFollower1 == null || this.leftFollower2 == null || this.rightFollower1 == null || this.rightFollower2 == null) {
 			throw new NullPointerException("Null motor provided");
 		}
+		
+		right *= -1;
 		
 		//TODO: Set the speeds
 		//TODO Check to see if we need the params.
@@ -246,27 +249,19 @@ public class Drive extends DifferentialDrive {
 		return 0;
 	}
 
-	public void zeroPosition() {
-		rightLead.setSelectedSensorPosition(0, 0, 10);
-		leftLead.setSelectedSensorPosition(0, 0, 10);
-		
-		
-	}
-
 	/**
 	 * Gets the error value from the motor controller.
 	 *
 	 * @return the current error
 	 */
 	public double error() {
-		// TODO: Get the error from the motor sensor. If in position mode, change into a distance measurement based onte the number of codes per revolution
+		// TODO: Get the error from the motor sensor. If in position mode, change into a distance measurement based on the the number of codes per revolution
 		
 		return 0;
 	}
 
 	public boolean checkSensor() {
 		// TODO: Check the sensors to make sure they are reading the values specified. For example if I set the speed at 100, the value return from get speed should be 100
-		// TODO: Check with bryan about what this is for
 		// Need separate checks for speed and position.
 
 		// All some time for the motors to get up to speed
@@ -285,12 +280,9 @@ public class Drive extends DifferentialDrive {
 	 *            the target distance in feet.
 	 * @return boolean true if move is complete
 	 */
-	public void moveDistance(double distance) {
-		go(distance, distance, ControlMode.MotionMagic);
-	}
 
 	public boolean isAtDistance() {
-		// TODO: Checks to see if the robot is at the desired postion, plus or minus the allowed error
+		// TODO: Checks to see if the robot is at the desired position, plus or minus the allowed error
 		return true;
 	}
 

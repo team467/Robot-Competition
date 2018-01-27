@@ -107,6 +107,7 @@ public class Robot extends IterativeRobot {
 	public void autonomousInit() {
 		final String autoMode = SmartDashboard.getString("Auto Selector", "none");
 		drive.initMotionMagicMode();
+//		drive.initPositionMode();
 		LOGGER.info(drive);
 		// TODO: call appropriate auto modes based on list
 		LOGGER.debug("Autonomous init: " + autoMode);
@@ -141,6 +142,7 @@ public class Robot extends IterativeRobot {
 		
 		drive.logClosedLoopErrors();
 		drive.publishClosedLoopErrors();
+//		drive.PositionModeMove(amountToGoLeft, amountToGoRight);;
 		drive.motionMagicMove(amountToGoLeft, amountToGoRight);
 //		autonomous.run();
 	}
@@ -152,7 +154,15 @@ public class Robot extends IterativeRobot {
 		switch (driverstation.getDriveMode()) {
 		case MotionMagic:
 			double targetPos = driverstation.getArcadeSpeed();
-    		drive.moveDistance(targetPos);
+			drive.motionMagicMove(targetPos, targetPos);
+    			break;
+		case SpeedControl:
+			break;
+		case PercentOutput:
+			double left = driverstation.getArcadeSpeed();
+			double right = driverstation.getArcadeSpeed();
+			
+			break;
 		}
 	}
 
