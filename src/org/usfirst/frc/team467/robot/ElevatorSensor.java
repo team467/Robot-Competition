@@ -32,6 +32,10 @@ public class ElevatorSensor {
 			instance = new ElevatorSensor();
 		}
 		return instance;
+		//The lowest value is 196.0, the maximum value is 3741.0. The middle is 1968.5
+		//New max: 2980, new min:956.5
+		//16.9 ticks = 1 inch
+		//1 rotation=253 ticks
 	}
 
 	public boolean isOutOfRange() {
@@ -46,7 +50,7 @@ public class ElevatorSensor {
 	//Height/16.9 represents the height in inches. 
 	
 	public double getHeight() {
-		double height = heightSensor.getAverageValue();
+		double height = heightSensor.getValue();
 		LOGGER.info("Height in inches: " + height/16.9);
 		return height;
 	}
