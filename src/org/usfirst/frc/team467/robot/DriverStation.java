@@ -13,7 +13,7 @@ public class DriverStation {
 	private static DriverStation station;
 	
 	// Mapping of functions to Controller Buttons for normal operation
-	// TODO: Create enum for buttons
+	// TODO: Create enumerate for buttons
 	/**
 	 * Singleton instance of the object.
 	 *
@@ -66,7 +66,7 @@ public class DriverStation {
 	 */
 	public DriveMode getDriveMode() {
 		// TODO: Set the drive mode based on the buttons pushed
-		return DriveMode.CRAB; // Update with the correct drive mode
+		return DriveMode.PercentOutput; // Update with the correct drive mode
 	}
 
 	public boolean getTerminateAuto() {
