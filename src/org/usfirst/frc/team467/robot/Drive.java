@@ -270,43 +270,6 @@ public class Drive extends DifferentialDrive {
 		return false; // Put in test to determine if on target
 	}
 
-	/**
-	 * Gets the error value from the motor controller.
-	 *
-	 * @return the current error
-	 */
-	public double error() {
-		// TODO: Get the error from the motor sensor. If in position mode, change into a distance measurement based on the the number of codes per revolution
-		
-		return 0;
-	}
-
-	public boolean checkSensor() {
-		// TODO: Check the sensors to make sure they are reading the values specified. For example if I set the speed at 100, the value return from get speed should be 100
-		// Need separate checks for speed and position.
-
-		// All some time for the motors to get up to speed
-		try {
-			Thread.sleep(5);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		return false;
-	}
-
-	/**
-	 * Moves a distance if in position mode.
-	 *
-	 * @param distance
-	 *            the target distance in feet.
-	 * @return boolean true if move is complete
-	 */
-
-	public boolean isAtDistance() {
-		// TODO: Checks to see if the robot is at the desired position, plus or minus the allowed error
-		return true;
-	}
-
 	public boolean isStopped(){
 		// TODO: Check to see if the robot is stopped
 		return false;

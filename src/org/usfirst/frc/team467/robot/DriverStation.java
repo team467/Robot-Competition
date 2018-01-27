@@ -9,7 +9,7 @@ public class DriverStation {
 	private static DriverStation station;
 	
 	// Mapping of functions to Controller Buttons for normal operation
-	// TODO: Create enumerate for buttons
+	// TODO: Create enum for buttons
 	/**
 	 * Singleton instance of the object.
 	 *
