@@ -21,8 +21,8 @@ import org.usfirst.frc.team467.robot.Autonomous.Actions;
 
 import com.ctre.CANTalon;
 import com.ctre.phoenix.motorcontrol.ControlMode;
-
 import org.apache.log4j.Logger;
+import edu.wpi.first.wpilibj.DigitalInput;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to each mode, as described in the
@@ -40,6 +40,11 @@ public class Robot extends IterativeRobot {
 
 //	private VisionProcessing vision;
 	private Gyrometer gyro;
+	private ElevatorHeightSensor ehs;
+	private UltrasonicSensor us;
+	private DigitalInput ping;
+	private Grabber grabber;
+	private OpticalSensor opticalsensor;
 
 	int session;
 
@@ -65,9 +70,17 @@ public class Robot extends IterativeRobot {
 
 		drive.setDefaultDriveMode();
 
+		ehs = ElevatorHeightSensor.getInstance();
+		us = UltrasonicSensor.getInstance();
+
 		gyro = Gyrometer.getInstance();
+		grabber = Grabber.getInstance();
+		opticalsensor = OpticalSensor.getInstance();
+		
 		gyro.calibrate();
 		gyro.reset();
+		
+		us.init();
 
 		// Initialize math lookup table
 		LookUpTable.init();
@@ -158,9 +171,35 @@ public class Robot extends IterativeRobot {
 		if (Math.abs(right) < MIN_DRIVE_SPEED) {
 			right = 0.0;
 		}
+		switch (driverstation.getDriveMode()) {
+		case MotionMagic:
+			double targetPos = driverstation.getArcadeSpeed();
+    		drive.moveDistance(targetPos);
+		}
+		
+		LOGGER.info("Elevator height: " + ehs.getHeight());
+		
+		
+		LOGGER.info("Ultrasound distance: " + us.getDistance());
+		
+		if(opticalsensor.hasCube()) {
+			//driverstation.setLeftRumble(1.0);
+			//driverstation.setRightRumble(1.0);
+			LOGGER.info("Has cube");
+		}
+		
+		else {
+			//driverstation.setLeftRumble(0.0);
+			//driverstation.setRightRumble(0.0);
+			LOGGER.info("No cube");
+		}
+		
+		
 		
 		//changed to arcade drive
 		drive.arcadeDrive(left, right, true);
 	}
-
 }
+
+	
+
