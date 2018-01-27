@@ -50,6 +50,9 @@ public class RobotMap {
 	public static final int VELOCITY_ALLOWABLE_CLOSED_LOOP_ERROR = 50; 	// This is in encoder ticks
 	public static final int POSITION_ALLOWABLE_CLOSED_LOOP_ERROR = (int) (POSITION_ALLOWED_ERROR * 1024 * 0.95); 	// This is in encoder ticks
 
+	public static final double FAST_MAX_SPEED = 1.0;
+	public static final double NORMAL_MAX_SPEED = 0.6;
+	public static final double SLOW_MAX_SPEED = 0.35;
 
 	// The maximum revolutions per minute (RPM) of a wheel when in speed control mode.
 	public static double MAX_SPEED;

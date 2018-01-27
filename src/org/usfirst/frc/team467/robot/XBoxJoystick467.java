@@ -19,6 +19,8 @@ public class XBoxJoystick467 {
 
 	private static final double DEADZONE = 0.1;
 
+	private static final double SENSITIVITY_MODIFIER = 0.6;
+	
 	public enum Button {
 		a(1),
 		b(2),
@@ -137,6 +139,10 @@ public class XBoxJoystick467 {
 			return (input * Math.abs(input));
 		}
 
+		private static double limitSensitivity(double input) {
+			return input * SENSITIVITY_MODIFIER;
+	
+}
 
 	}
 
@@ -168,6 +174,30 @@ public class XBoxJoystick467 {
 		// TODO Read all the joystick axis into the values
 		Axis.read(xbox);
 		pov = xbox.getPOV(0);
+	}
+	
+	public double turboSpeedAdjust() {
+		if (Axis.leftTrigger.value() > 0.0) {
+			return turboFastSpeed(); 
+		} else {
+			return turboSlowSpeed(); 
+		}	
+	}
+	
+	public double turboFastSpeed() {
+
+		return (getLeftStickY()*(RobotMap.NORMAL_MAX_SPEED 
+				+ (RobotMap.FAST_MAX_SPEED-RobotMap.NORMAL_MAX_SPEED)
+				*Axis.leftTrigger.value()))
+				*-1; // For some reason, up stick is negative, so we flip it;
+	}
+	
+	public double turboSlowSpeed() {
+
+		return (getLeftStickY()*(RobotMap.NORMAL_MAX_SPEED 
+				+ (RobotMap.SLOW_MAX_SPEED-RobotMap.NORMAL_MAX_SPEED)
+				*Axis.rightTrigger.value()))
+				*-1; // For some reason, up stick is negative, so we flip it;
 	}
 
 	public double getPOV() {
