@@ -2,10 +2,6 @@ package org.usfirst.frc.team467.robot;
 
 import org.usfirst.frc.team467.robot.Autonomous.ActionGroup;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
-
-import edu.wpi.first.wpilibj.XboxController;
-
 public class DriverStation {
 	
 	XBoxJoystick467 driverJoy;

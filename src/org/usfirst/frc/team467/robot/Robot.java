@@ -9,18 +9,8 @@ package org.usfirst.frc.team467.robot;
 
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.CameraServer;
-import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.IterativeRobot;
-import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
-import org.usfirst.frc.team467.robot.Autonomous.ActionGroup;
-// import org.usfirst.frc.team467.robot.Autonomous.Actions;
-import org.usfirst.frc.team467.robot.Autonomous.Actions;
-
-import com.ctre.CANTalon;
-import com.ctre.phoenix.motorcontrol.ControlMode;
 
 import org.apache.log4j.Logger;
 
@@ -83,16 +73,7 @@ public class Robot extends IterativeRobot {
 
 		//TODO: Create list of autonomous modes for selector
 		// Setup autonomous mode selectors
-		String[] autoList = {
-				"none",
-				"go"
-		};
-
-		NetworkTable table = NetworkTable.getTable("SmartDashboard");
-		table.putStringArray("Auto List", autoList);
-		LOGGER.debug("Robot Initialized");
 	}
-
 	public void disabledInit() {
 		LOGGER.debug("Disabled Starting");
 		drive.logClosedLoopErrors();
@@ -107,7 +88,7 @@ public class Robot extends IterativeRobot {
 	public void autonomousInit() {
 		final String autoMode = SmartDashboard.getString("Auto Selector", "none");
 		drive.initMotionMagicMode();
-//		drive.initPositionMode();
+//	drive.initPositionMode();
 		LOGGER.info(drive);
 		// TODO: call appropriate auto modes based on list
 		LOGGER.debug("Autonomous init: " + autoMode);
@@ -137,13 +118,15 @@ public class Robot extends IterativeRobot {
 
 	public void autonomousPeriodic() {
 		
-		double amountToGoLeft = Double.parseDouble(SmartDashboard.getString("DB/String 0", "1024"));
-		double amountToGoRight = Double.parseDouble(SmartDashboard.getString("DB/String 5", "1024"));
-		
+		double amountToGoLeft = Double.parseDouble(SmartDashboard.getString("DB/String 0", "1")); //Second value in feet
+		double amountToGoRight = Double.parseDouble(SmartDashboard.getString("DB/String 5", "1")); //Second value in feet
+		amountToGoLeft = drive.degreesToTicks(amountToGoLeft);
+		amountToGoRight = drive.degreesToTicks(amountToGoRight);
 		drive.logClosedLoopErrors();
 		drive.publishClosedLoopErrors();
-//		drive.PositionModeMove(amountToGoLeft, amountToGoRight);;
+//		drive.PositionModeMove(drive.feetToTicks(amountToGoLeft), drive.feetToTicks(amountToGoRight));
 		drive.motionMagicMove(amountToGoLeft, amountToGoRight);
+		
 //		autonomous.run();
 	}
 
@@ -151,19 +134,21 @@ public class Robot extends IterativeRobot {
 	 * This function is called periodically during operator control
 	 */
 	public void teleopPeriodic() {
+		driverstation.readInputs();
+		double speed = driverstation.getArcadeSpeed();
+		double turn = driverstation.getArcadeTurn();
+		
 		switch (driverstation.getDriveMode()) {
-		case MotionMagic:
-			double targetPos = driverstation.getArcadeSpeed();
-			drive.motionMagicMove(targetPos, targetPos);
-    			break;
 		case SpeedControl:
+			drive.initSpeedControl();
 			break;
-		case PercentOutput:
-			double left = driverstation.getArcadeSpeed();
-			double right = driverstation.getArcadeSpeed();
-			
+		case PercentOutput:	
+			drive.initPercentOutput();
+			break;
+		case MotionMagic:
 			break;
 		}
+		drive.arcadeDrive(speed, turn, true);
 	}
 
 }
