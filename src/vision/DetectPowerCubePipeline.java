@@ -1,4 +1,4 @@
-package yellowcubedetectorcode;
+package vision;
 
 import java.io.File;
 import java.io.FileWriter;
