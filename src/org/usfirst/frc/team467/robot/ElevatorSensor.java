@@ -1,4 +1,4 @@
-package org.eigusfirst.frc.team467.robot;
+package org.usfirst.frc.team467.robot;
 
 import org.apache.log4j.Logger;
 
@@ -43,12 +43,13 @@ public class ElevatorSensor {
 
 	private double feetPerTick;
 	
-	private double previousNumber;
+	private double previousHeight;
 	
 	private ElevatorSensor() {
 		heightSensor = new AnalogInput(ELEVATOR_HEIGHT_SENSOR_ID);
 		heightController = new WPI_TalonSRX(TALON_HEIGHT_CONTROLLER_ID);
 		feetPerTick = GEAR_CIRCUMFERENCE_IN_INCHES / TICKS_PER_TURN / 12;
+		previousHeight = getHeight();
 	}
 	
 	/**
@@ -75,11 +76,17 @@ public class ElevatorSensor {
 			speed = 0;
 			// TODO: Rumble here
 		}
-		double example = Stops.fieldSwitch.height;
+		double currentHeight = getHeight();
 		for (Stops stop : Stops.values()) {
-			System.out.println(stop.height);
+			if ((previousHeight < stop.height && currentHeight >= stop.height)
+				|| (previousHeight > stop.height && currentHeight <= stop.height)) {
+				LOGGER.info("Rumbling");
+			}
 		}
+		LOGGER.info("Current Height: " + currentHeight);
 		heightController.set(speed);
+		previousHeight = currentHeight;
+		LOGGER.info("Previous Height: " + previousHeight);
 	}
 
 	public boolean isOutOfRange() {
@@ -91,16 +98,13 @@ public class ElevatorSensor {
 			return false;
 		}
 	}
-	
-	public boolean garbageCan() {
-		if()		
-	}
-	
+
 	public double getHeight() {
 		double height = (heightSensor.getValue() - ELEVATOR_INITIAL_TICKS) * feetPerTick;
 		LOGGER.info("Height in feet: " + height);
 		return height;
 	}
+	
 }
 	
 

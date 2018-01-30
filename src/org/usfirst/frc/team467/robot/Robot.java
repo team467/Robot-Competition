@@ -147,6 +147,7 @@ public class Robot extends IterativeRobot {
 
 	public void autonomousPeriodic() {
 //		autonomous.run();
+		elevator.manualMove(1.0);
 	}
 	
 
