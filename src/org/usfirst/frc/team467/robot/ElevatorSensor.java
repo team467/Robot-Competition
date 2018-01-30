@@ -24,6 +24,8 @@ public class ElevatorSensor {
 	public static final int TALON_HEIGHT_CONTROLLER_ID = 1;
 	
 	
+	
+	
 	public enum Stops {
 		min(ELEVATOR_MIN_HEIGHT_IN_FEET),
 		fieldSwitch(2),
@@ -82,6 +84,7 @@ public class ElevatorSensor {
 				|| (previousHeight > stop.height && currentHeight <= stop.height)) {
 				LOGGER.info("Rumbling");
 			}
+			
 		}
 		LOGGER.info("Current Height: " + currentHeight);
 		heightController.set(speed);

@@ -57,7 +57,7 @@ public class Drive extends DifferentialDrive {
 		
 		this.rightLead = rightLead;
 		initMotor(this.rightLead);
-
+		
 		this.rightFollower1 = rightFollower1;
 		initMotor(this.rightFollower1);
 		initMotorForFollowerMode(rightLead, rightFollower1);
