@@ -2,27 +2,20 @@ package org.usfirst.frc.team467.robot;
 import edu.wpi.first.wpilibj.Spark;
 
 public class Grabber {
-	//private cube sensor
-	//8 pounds 
     private static Grabber instance;
     private Spark left;
 	private Spark right;
 	OpticalSensor os;
 	
-	
 	public final static double GRAB_SPEED = 1.0;
 	public final static double RELEASE_SPEED = -1.0;
 	public final static int GRABBER_L_PORT = 1; 
     public final static int GRABBER_R_PORT = 2;
-    
-    public boolean gotCube = false;
-	// 1 and 2 are place-holders
-	
 	
 	private Grabber() {
 		left = new Spark(GRABBER_L_PORT);
 		right = new Spark(GRABBER_R_PORT);
-		os = new OpticalSensor();
+		os = OpticalSensor.getInstance();
 	}
 	
 	public static Grabber getInstance() {
@@ -46,14 +39,7 @@ public class Grabber {
 	}
 	
 	public boolean hasCube() {
-		if(os.hasCube()) {
-			gotCube = true;
-		}
-		else {
-			gotCube = false;
-		}
-		
-		return gotCube;
+		return os.hasCube();
 	}
 
 }

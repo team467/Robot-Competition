@@ -40,9 +40,6 @@ public class Robot extends IterativeRobot {
 
 //	private VisionProcessing vision;
 	private Gyrometer gyro;
-	private ElevatorHeightSensor ehs;
-	private UltrasonicSensor us;
-	private DigitalInput ping;
 	private Grabber grabber;
 	private OpticalSensor opticalsensor;
 
@@ -70,17 +67,12 @@ public class Robot extends IterativeRobot {
 
 		drive.setDefaultDriveMode();
 
-		ehs = ElevatorHeightSensor.getInstance();
-		us = UltrasonicSensor.getInstance();
-
 		gyro = Gyrometer.getInstance();
 		grabber = Grabber.getInstance();
 		opticalsensor = OpticalSensor.getInstance();
 		
 		gyro.calibrate();
 		gyro.reset();
-		
-		us.init();
 
 		// Initialize math lookup table
 		LookUpTable.init();
@@ -91,10 +83,10 @@ public class Robot extends IterativeRobot {
 //		autonomous = Actions.doNothing();
 
 		//made usb camera and captures video
-		UsbCamera cam = CameraServer.getInstance().startAutomaticCapture();
+		//UsbCamera cam = CameraServer.getInstance().startAutomaticCapture();
 		//set resolution and frames per second to match driverstation
-		cam.setResolution(320, 240);
-		cam.setFPS(15);
+		//cam.setResolution(320, 240);
+		//cam.setFPS(15);
 
 		//TODO: Create list of autonomous modes for selector
 		// Setup autonomous mode selectors
@@ -139,6 +131,7 @@ public class Robot extends IterativeRobot {
 	public void teleopInit() {
 		drive.setDefaultDriveMode();
 		driverstation.readInputs();
+		
 //		autonomous.terminate();
 //		autonomous = Actions.doNothing();
 	}
@@ -163,7 +156,9 @@ public class Robot extends IterativeRobot {
 		double left = driverstation.getArcadeSpeed();
 		double right = driverstation.getArcadeTurn();
 		// -1* driverstation.getDriveJoystick().getJoystick()
-		LOGGER.info("left " + left + " right " + right) ;
+		LOGGER.info("left " + left + " right " + right);
+		LOGGER.info(opticalsensor.hasCube()); //implementing to grabber later
+		
 
 		if (Math.abs(left) < MIN_DRIVE_SPEED) {
 			left = 0.0;
@@ -171,31 +166,7 @@ public class Robot extends IterativeRobot {
 		if (Math.abs(right) < MIN_DRIVE_SPEED) {
 			right = 0.0;
 		}
-		switch (driverstation.getDriveMode()) {
-		case MotionMagic:
-			double targetPos = driverstation.getArcadeSpeed();
-    		drive.moveDistance(targetPos);
-		}
-		
-		LOGGER.info("Elevator height: " + ehs.getHeight());
-		
-		
-		LOGGER.info("Ultrasound distance: " + us.getDistance());
-		
-		if(opticalsensor.hasCube()) {
-			//driverstation.setLeftRumble(1.0);
-			//driverstation.setRightRumble(1.0);
-			LOGGER.info("Has cube");
-		}
-		
-		else {
-			//driverstation.setLeftRumble(0.0);
-			//driverstation.setRightRumble(0.0);
-			LOGGER.info("No cube");
-		}
-		
-		
-		
+	
 		//changed to arcade drive
 		drive.arcadeDrive(left, right, true);
 	}
