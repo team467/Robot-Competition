@@ -2,10 +2,6 @@ package org.usfirst.frc.team467.robot;
 
 import org.usfirst.frc.team467.robot.Autonomous.ActionGroup;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
-
-import edu.wpi.first.wpilibj.XboxController;
-
 public class DriverStation {
 	
 	XBoxJoystick467 driverJoy;
@@ -14,9 +10,6 @@ public class DriverStation {
 	
 	// Mapping of functions to Controller Buttons for normal operation
 	// TODO: Create enum for buttons
-	
-	
-
 	/**
 	 * Singleton instance of the object.
 	 *
@@ -73,7 +66,7 @@ public class DriverStation {
 	 */
 	public DriveMode getDriveMode() {
 		// TODO: Set the drive mode based on the buttons pushed
-		return DriveMode.CRAB; // Update with the correct drive mode
+		return DriveMode.ArcadeDrive; // Update with the correct drive mode
 	}
 
 	public boolean getTerminateAuto() {

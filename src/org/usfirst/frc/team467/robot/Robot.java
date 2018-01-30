@@ -7,20 +7,11 @@
 /*----------------------------------------------------------------------------*/
 package org.usfirst.frc.team467.robot;
 
+//import edu.wpi.first.wpilibj.networktables.NetworkTable;
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.CameraServer;
-import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
-import org.usfirst.frc.team467.robot.Autonomous.ActionGroup;
-// import org.usfirst.frc.team467.robot.Autonomous.Actions;
-import org.usfirst.frc.team467.robot.Autonomous.Actions;
-
-import com.ctre.CANTalon;
-import com.ctre.phoenix.motorcontrol.ControlMode;
 
 import org.apache.log4j.Logger;
 
@@ -37,7 +28,7 @@ public class Robot extends TimedRobot {
 	private DriverStation driverstation;
 	private Drive drive;
 //	private ActionGroup autonomous;
-
+	
 //	private VisionProcessing vision;
 	private Gyrometer gyro;
 
@@ -52,9 +43,7 @@ public class Robot extends TimedRobot {
 	 * This function is run when the robot is first started up and should be used for any initialization code.
 	 */
 	public void robotInit() {
-
-		// TODO: Initialize the Robot Map
-
+		
 		// Initialize logging framework
 		Logging.init();
 
@@ -62,8 +51,6 @@ public class Robot extends TimedRobot {
 		driverstation = DriverStation.getInstance();
 		LOGGER.info("inited driverstation");
 		drive = Drive.getInstance();
-
-		drive.setDefaultDriveMode();
 
 		gyro = Gyrometer.getInstance();
 		gyro.calibrate();
@@ -85,16 +72,7 @@ public class Robot extends TimedRobot {
 
 		//TODO: Create list of autonomous modes for selector
 		// Setup autonomous mode selectors
-		String[] autoList = {
-				"none",
-				"go"
-		};
-
-		NetworkTable table = NetworkTable.getTable("SmartDashboard");
-		table.putStringArray("Auto List", autoList);
-		LOGGER.debug("Robot Initialized");
 	}
-
 	public void disabledInit() {
 		LOGGER.debug("Disabled Starting");
 		drive.logClosedLoopErrors();
@@ -105,10 +83,19 @@ public class Robot extends TimedRobot {
 	public void disabledPeriodic() {
 		LOGGER.trace("Disabled Periodic");
 	}
-
+//TODO: Figure out the NetworkTables later.
+//	String[] autoList = {"none", "go"};
+//			 
+//	NetworkTable table = NetworkTable.getTable("SmartDashboard");
+//	table.putStringArray("Auto List", autoList);
+//	LOGGER.debug("Robot Initialized");
+//	
 	public void autonomousInit() {
 		final String autoMode = SmartDashboard.getString("Auto Selector", "none");
-
+		drive.initMotionMagicMode();
+		
+//	drive.initPositionMode();
+		LOGGER.info(drive);
 		// TODO: call appropriate auto modes based on list
 		LOGGER.debug("Autonomous init: " + autoMode);
 //		switch (autoMode) {
@@ -124,7 +111,7 @@ public class Robot extends TimedRobot {
 	}
 
 	public void teleopInit() {
-		drive.setDefaultDriveMode();
+		
 		driverstation.readInputs();
 //		autonomous.terminate();
 //		autonomous = Actions.doNothing();
@@ -137,6 +124,12 @@ public class Robot extends TimedRobot {
 	}
 
 	public void autonomousPeriodic() {
+		
+		drive.logClosedLoopErrors();
+		drive.publishRawSensorValues();
+//		drive.PositionModeMove(drive.feetToTicks(amountToGoLeft), drive.feetToTicks(amountToGoRight));
+//		drive.motionMagicMove(amountToGoLeft, amountToGoRight);
+		
 //		autonomous.run();
 	}
 
@@ -144,23 +137,37 @@ public class Robot extends TimedRobot {
 	 * This function is called periodically during operator control
 	 */
 	public void teleopPeriodic() {
+		driverstation.readInputs();
 		//TODO: Set Min_DRIVE_SPEED in Robot Map.
 		double MIN_DRIVE_SPEED = 0.1;
 		driverstation.readInputs();
 		double left = driverstation.getArcadeSpeed();
 		double right = driverstation.getArcadeTurn();
-		// -1* driverstation.getDriveJoystick().getJoystick()
+		 		// -1* driverstation.getDriveJoystick().getJoystick()
 		LOGGER.info("left " + left + " right " + right) ;
+	 	if (Math.abs(left) < MIN_DRIVE_SPEED) {
+	 		left = 0.0;
+	 	}
+	 	if (Math.abs(right) < MIN_DRIVE_SPEED) {
+	 		right = 0.0;
+	 	}
 
-		if (Math.abs(left) < MIN_DRIVE_SPEED) {
-			left = 0.0;
-		}
-		if (Math.abs(right) < MIN_DRIVE_SPEED) {
-			right = 0.0;
+		switch (driverstation.getDriveMode()) {
+		case ArcadeDrive:
+			double speed = driverstation.getArcadeSpeed();
+			double turn = driverstation.getArcadeTurn();
+			drive.arcadeDrive(speed, turn, true);
+			break;
+		case TankDrive:	
+			double leftTank = driverstation.getDriveJoystick().getLeftStickY();
+			double rightTank = driverstation.getDriveJoystick().getRightStickY();
+			drive.tankDrive(leftTank, rightTank, true);
+			break;
+		case MotionMagic:
+			//TODO: Add things here later.
+			break;
 		}
 		
-		//changed to arcade drive
-		drive.arcadeDrive(left, right, true);
 	}
 
 }

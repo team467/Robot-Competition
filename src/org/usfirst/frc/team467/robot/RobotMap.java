@@ -6,6 +6,7 @@ import org.usfirst.frc.team467.robot.RobotMap.RobotID;
  *
  */
 public class RobotMap {
+	public static final int TALON_TIMEOUT = 10; // 10 ms is the recommended timeout
 	public enum RobotID {
 		// TODO: Enumerate robot names
 		YES_467, NO_467
