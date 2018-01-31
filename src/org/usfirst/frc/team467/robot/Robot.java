@@ -141,6 +141,7 @@ public class Robot extends TimedRobot {
 		//TODO: Set Min_DRIVE_SPEED in Robot Map.
 		double MIN_DRIVE_SPEED = 0.1;
 		driverstation.readInputs();
+		
 		double left = driverstation.getArcadeSpeed();
 		double right = driverstation.getArcadeTurn();
 		 		// -1* driverstation.getDriveJoystick().getJoystick()
