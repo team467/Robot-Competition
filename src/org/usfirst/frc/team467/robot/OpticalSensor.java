@@ -19,7 +19,7 @@ public boolean gotCube = false;
 		return instance;
 	}
 	
-	public boolean hasCube() {
+	public boolean detectedTarget() {
 		return di.get();
 	}
 	

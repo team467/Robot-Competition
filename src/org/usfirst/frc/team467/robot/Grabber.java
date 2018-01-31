@@ -9,12 +9,12 @@ public class Grabber {
 	
 	public final static double GRAB_SPEED = 1.0;
 	public final static double RELEASE_SPEED = -1.0;
-	public final static int GRABBER_L_PORT = 1; 
-    public final static int GRABBER_R_PORT = 2;
+	public final static int GRABBER_L_CHANNEL = 1; 
+    public final static int GRABBER_R_CHANNEL = 2;
 	
 	private Grabber() {
-		left = new Spark(GRABBER_L_PORT);
-		right = new Spark(GRABBER_R_PORT);
+		left = new Spark(GRABBER_L_CHANNEL);
+		right = new Spark(GRABBER_R_CHANNEL);
 		os = OpticalSensor.getInstance();
 	}
 	
@@ -39,7 +39,7 @@ public class Grabber {
 	}
 	
 	public boolean hasCube() {
-		return os.hasCube();
+		return os.detectedTarget();
 	}
 
 }
