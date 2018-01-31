@@ -274,4 +274,9 @@ public class XBoxJoystick467 {
 		xbox.setRumble(type, value);
 	}
 	
+	public void setRumble(double value) {
+		xbox.setRumble(RumbleType.kLeftRumble, value);
+		xbox.setRumble(RumbleType.kRightRumble, value);
+	}
+	
 }
