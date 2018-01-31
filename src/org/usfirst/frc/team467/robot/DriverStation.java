@@ -100,7 +100,6 @@ public class DriverStation {
 	}
 	
 	public void setDriverRumble(double value) {
-		getDriveJoystick().setRumble(RumbleType.kLeftRumble, value);
-		getDriveJoystick().setRumble(RumbleType.kRightRumble, value);
+		getDriveJoystick().setRumble(value);
 	}
 }
