@@ -4,9 +4,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 
 public class UltrasonicSensor {
 	Ultrasonic us;
-	//DigitalInput input;
 	static UltrasonicSensor instance;
-	public double distance;
 	
 	
 	private static int pingChannel = 2;
@@ -29,8 +27,7 @@ public class UltrasonicSensor {
 	}
 	
 	public double getDistance() {
-		distance = us.getRangeInches();
-		return distance;
+		return us.getRangeInches();
 	}
 
 }
