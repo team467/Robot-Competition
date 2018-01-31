@@ -63,6 +63,8 @@ public class XBoxJoystick467 {
 		}
 
 		/**
+		 * Check if a specific button has just been pressed.
+		 *
 		 * @return True if the button was just pressed
 		 */
 		public boolean pressed() {
@@ -70,6 +72,8 @@ public class XBoxJoystick467 {
 		}
 
 		/**
+		 * Check if a specific button has just been released.
+		 * 
 		 * @return True if the button was just released
 		 */
 		public boolean released() {
