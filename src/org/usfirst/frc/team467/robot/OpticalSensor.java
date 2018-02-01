@@ -5,7 +5,6 @@ public class OpticalSensor {
 private final static int OPTICAL_CHANNEL = 5;
 public DigitalInput di;
 private static OpticalSensor instance;
-public boolean gotCube = false;
 	
 	private OpticalSensor() {
 		di = new DigitalInput(OPTICAL_CHANNEL);

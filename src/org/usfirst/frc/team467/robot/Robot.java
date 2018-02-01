@@ -40,8 +40,8 @@ public class Robot extends IterativeRobot {
 
 //	private VisionProcessing vision;
 	private Gyrometer gyro;
-//	private Grabber grabber;
-//	private OpticalSensor opticalsensor;
+//	private Grabber grabber; //not used yet
+   private OpticalSensor opticalsensor;
 
 	int session;
 	
@@ -71,7 +71,7 @@ public class Robot extends IterativeRobot {
 
 		gyro = Gyrometer.getInstance();
 		//grabber = Grabber.getInstance();
-		//opticalsensor = OpticalSensor.getInstance();
+		opticalsensor = OpticalSensor.getInstance();
 		
 		gyro.calibrate();
 		gyro.reset();
@@ -159,32 +159,11 @@ public class Robot extends IterativeRobot {
 		double right = driverstation.getArcadeTurn();
 		// -1* driverstation.getDriveJoystick().getJoystick()
 		//LOGGER.info("left " + left + " right " + right);
-		//LOGGER.info(opticalsensor.hasCube()); //implementing to grabber later
+		
 		//comments for testing
-		//LOGGER.info(gyro.getAngle());
+		LOGGER.info(opticalsensor.detectedTarget()); //implementing to grabber later
 		
-//		if(gyro.getAngleXDegrees() > gyro.getAngleYDegrees() && gyro.getAngleXDegrees() > gyro.getAngleZDegrees()) {
-//			axis = "X";
-//		}
-//		
-//		else if(gyro.getAngleYDegrees() > gyro.getAngleXDegrees() && gyro.getAngleYDegrees() > gyro.getAngleZDegrees()) {
-//		    axis = "Y";
-//		}
-//		
-//		else if(gyro.getAngleZDegrees() > gyro.getAngleXDegrees() && gyro.getAngleZDegrees() > gyro.getAngleYDegrees()) {
-//		    axis = "Z";
-//		}
-//		
-//		else {
-//			axis = "No turning";
-//		}
-//		
-//		LOGGER.info(axis);
-		
-		LOGGER.info(gyro.getAngle());
-		
-		
-		
+
 		
 		if (Math.abs(left) < MIN_DRIVE_SPEED) {
 			left = 0.0;
