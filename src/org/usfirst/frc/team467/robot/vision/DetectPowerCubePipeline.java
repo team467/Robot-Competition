@@ -1,4 +1,4 @@
-package vision;
+package org.usfirst.frc.team467.robot.vision;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -28,7 +28,9 @@ import org.opencv.objdetect.*;
 public class DetectPowerCubePipeline implements VisionPipeline {
 
 	//Outputs
-	private Mat hslThresholdOutput = new Mat();
+	private Mat cvResizeOutput = new Mat();
+	private Mat hsvThresholdOutput = new Mat();
+	private Mat cvErodeOutput = new Mat();
 	private ArrayList<MatOfPoint> findContoursOutput = new ArrayList<MatOfPoint>();
 	private ArrayList<MatOfPoint> filterContoursOutput = new ArrayList<MatOfPoint>();
 	private ArrayList<MatOfPoint> convexHullsOutput = new ArrayList<MatOfPoint>();
@@ -41,28 +43,45 @@ public class DetectPowerCubePipeline implements VisionPipeline {
 	 * This is the primary method that runs the entire pipeline and updates the outputs.
 	 */
 	@Override	public void process(Mat source0) {
-		// Step HSL_Threshold0:
-		Mat hslThresholdInput = source0;
-		double[] hslThresholdHue = {25.899280575539567, 77.098976109215};
-		double[] hslThresholdSaturation = {94.01978417266189, 191.90273037542661};
-		double[] hslThresholdLuminance = {100.83076104997077, 199.64733236629638};
-		hslThreshold(hslThresholdInput, hslThresholdHue, hslThresholdSaturation, hslThresholdLuminance, hslThresholdOutput);
+		// Step CV_resize0:
+		Mat cvResizeSrc = source0;
+		Size cvResizeDsize = new Size(0, 0);
+		double cvResizeFx = 0.25;
+		double cvResizeFy = 0.25;
+		int cvResizeInterpolation = Imgproc.INTER_LINEAR;
+		cvResize(cvResizeSrc, cvResizeDsize, cvResizeFx, cvResizeFy, cvResizeInterpolation, cvResizeOutput);
+
+		// Step HSV_Threshold0:
+		Mat hsvThresholdInput = cvResizeOutput;
+		double[] hsvThresholdHue = {25.251797634920628, 69.51724019543879};
+		double[] hsvThresholdSaturation = {96.31294439164859, 180.25863746116903};
+		double[] hsvThresholdValue = {99.0647483107855, 213.6724070844979};
+		hsvThreshold(hsvThresholdInput, hsvThresholdHue, hsvThresholdSaturation, hsvThresholdValue, hsvThresholdOutput);
+
+		// Step CV_erode0:
+		Mat cvErodeSrc = hsvThresholdOutput;
+		Mat cvErodeKernel = new Mat();
+		Point cvErodeAnchor = new Point(-1, -1);
+		double cvErodeIterations = 1.0;
+		int cvErodeBordertype = Core.BORDER_CONSTANT;
+		Scalar cvErodeBordervalue = new Scalar(-1);
+		cvErode(cvErodeSrc, cvErodeKernel, cvErodeAnchor, cvErodeIterations, cvErodeBordertype, cvErodeBordervalue, cvErodeOutput);
 
 		// Step Find_Contours0:
-		Mat findContoursInput = hslThresholdOutput;
+		Mat findContoursInput = cvErodeOutput;
 		boolean findContoursExternalOnly = false;
 		findContours(findContoursInput, findContoursExternalOnly, findContoursOutput);
 
 		// Step Filter_Contours0:
 		ArrayList<MatOfPoint> filterContoursContours = findContoursOutput;
-		double filterContoursMinArea = 1000.0;
-		double filterContoursMinPerimeter = 1000.0;
-		double filterContoursMinWidth = 10.0;
-		double filterContoursMaxWidth = 1000.0;
-		double filterContoursMinHeight = 10.0;
-		double filterContoursMaxHeight = 1000.0;
-		double[] filterContoursSolidity = {61.15107913669065, 100.0};
-		double filterContoursMaxVertices = 1000000.0;
+		double filterContoursMinArea = 9.0;
+		double filterContoursMinPerimeter = 7.0;
+		double filterContoursMinWidth = 7.0;
+		double filterContoursMaxWidth = 1009.0;
+		double filterContoursMinHeight = 12.0;
+		double filterContoursMaxHeight = 1014.0;
+		double[] filterContoursSolidity = {0, 100};
+		double filterContoursMaxVertices = 1000007.0;
 		double filterContoursMinVertices = 0.0;
 		double filterContoursMinRatio = 0.0;
 		double filterContoursMaxRatio = 1000.0;
@@ -75,11 +94,27 @@ public class DetectPowerCubePipeline implements VisionPipeline {
 	}
 
 	/**
-	 * This method is a generated getter for the output of a HSL_Threshold.
-	 * @return Mat output from HSL_Threshold.
+	 * This method is a generated getter for the output of a CV_resize.
+	 * @return Mat output from CV_resize.
 	 */
-	public Mat hslThresholdOutput() {
-		return hslThresholdOutput;
+	public Mat cvResizeOutput() {
+		return cvResizeOutput;
+	}
+
+	/**
+	 * This method is a generated getter for the output of a HSV_Threshold.
+	 * @return Mat output from HSV_Threshold.
+	 */
+	public Mat hsvThresholdOutput() {
+		return hsvThresholdOutput;
+	}
+
+	/**
+	 * This method is a generated getter for the output of a CV_erode.
+	 * @return Mat output from CV_erode.
+	 */
+	public Mat cvErodeOutput() {
+		return cvErodeOutput;
 	}
 
 	/**
@@ -108,19 +143,60 @@ public class DetectPowerCubePipeline implements VisionPipeline {
 
 
 	/**
-	 * Segment an image based on hue, saturation, and luminance ranges.
+	 * Resizes an image.
+	 * @param src The image to resize.
+	 * @param dSize size to set the image.
+	 * @param fx scale factor along X axis.
+	 * @param fy scale factor along Y axis.
+	 * @param interpolation type of interpolation to use.
+	 * @param dst output image.
+	 */
+	private void cvResize(Mat src, Size dSize, double fx, double fy, int interpolation,
+		Mat dst) {
+		if (dSize==null) {
+			dSize = new Size(0,0);
+		}
+		Imgproc.resize(src, dst, dSize, fx, fy, interpolation);
+	}
+
+	/**
+	 * Segment an image based on hue, saturation, and value ranges.
 	 *
 	 * @param input The image on which to perform the HSL threshold.
 	 * @param hue The min and max hue
 	 * @param sat The min and max saturation
-	 * @param lum The min and max luminance
+	 * @param val The min and max value
 	 * @param output The image in which to store the output.
 	 */
-	private void hslThreshold(Mat input, double[] hue, double[] sat, double[] lum,
-		Mat out) {
-		Imgproc.cvtColor(input, out, Imgproc.COLOR_BGR2HLS);
-		Core.inRange(out, new Scalar(hue[0], lum[0], sat[0]),
-			new Scalar(hue[1], lum[1], sat[1]), out);
+	private void hsvThreshold(Mat input, double[] hue, double[] sat, double[] val,
+	    Mat out) {
+		Imgproc.cvtColor(input, out, Imgproc.COLOR_BGR2HSV);
+		Core.inRange(out, new Scalar(hue[0], sat[0], val[0]),
+			new Scalar(hue[1], sat[1], val[1]), out);
+	}
+
+	/**
+	 * Expands area of lower value in an image.
+	 * @param src the Image to erode.
+	 * @param kernel the kernel for erosion.
+	 * @param anchor the center of the kernel.
+	 * @param iterations the number of times to perform the erosion.
+	 * @param borderType pixel extrapolation method.
+	 * @param borderValue value to be used for a constant border.
+	 * @param dst Output Image.
+	 */
+	private void cvErode(Mat src, Mat kernel, Point anchor, double iterations,
+		int borderType, Scalar borderValue, Mat dst) {
+		if (kernel == null) {
+			kernel = new Mat();
+		}
+		if (anchor == null) {
+			anchor = new Point(-1,-1);
+		}
+		if (borderValue == null) {
+			borderValue = new Scalar(-1);
+		}
+		Imgproc.erode(src, dst, kernel, anchor, (int)iterations, borderType, borderValue);
 	}
 
 	/**
