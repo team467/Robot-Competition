@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<BorderPane fx:id="mapUI" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0" prefWidth="950.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="simulator.MapController">
+<BorderPane fx:id="mapUI" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0" prefWidth="950.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.usfirst.frc.team467.robot.simulator.MapController">
    <center>
    	  <!-- Scale: 1 pixel equals 1 inch -->
       <BorderPane fx:id="fieldMap" maxHeight="360.0" maxWidth="888.0" minHeight="360.0" minWidth="888.0" prefHeight="360.0" prefWidth="888.0" BorderPane.alignment="CENTER">

@@ -32,15 +32,34 @@ public class Robot {
 	
 	int moveCount = 0;
 	
+	AutonomousModes mode;
+	
 	public void autonomousInit() {
 		drive.zeroPosition();
 		data.startPosition(20, 1.5);
 		data.send();
 		moveCount = 0;
+		mode = AutonomousModes.move1;
 	}
 	
 	public void autonomousPeriodic() {
+		switch (mode) {
 		
+		case move1:
+			move1();
+			break;
+			
+		default:
+		
+		}
+	}
+	
+	private enum AutonomousModes {
+		move1,
+		move2;
+	}
+	
+	private void move1() {
 		switch(moveCount) {
 		
 		case 0:
@@ -52,6 +71,7 @@ public class Robot {
 		
 		case 1:
 			if (drive.moveDistance(-0.785, 0.785)) {
+				//45º turn in place 
 				moveCount++;
 				drive.zeroPosition();				
 			}
@@ -81,6 +101,7 @@ public class Robot {
 		default:
 		}
 
+		
 	}
 	
 	public static void main(String[] args) {		
