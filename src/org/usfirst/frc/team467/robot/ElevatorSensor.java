@@ -82,6 +82,14 @@ public class ElevatorSensor {
 		for (Stops stop : Stops.values()) {
 			if ((previousHeight < stop.height && currentHeight >= stop.height)
 				|| (previousHeight > stop.height && currentHeight <= stop.height)) {
+				
+				//multiple prints are easier to spot on logger
+				LOGGER.info("Rumbling");
+				LOGGER.info("Rumbling");
+				LOGGER.info("Rumbling");
+				LOGGER.info("Rumbling");
+				LOGGER.info("Rumbling");
+				LOGGER.info("Rumbling");
 				LOGGER.info("Rumbling");
 			}
 			
