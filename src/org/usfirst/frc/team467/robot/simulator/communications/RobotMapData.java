@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.usfirst.frc.team467.robot.simulator;
+package org.usfirst.frc.team467.robot.simulator.communications;
 
 /**
  *
