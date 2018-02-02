@@ -17,20 +17,13 @@ public class RobotMap {
 	public static final int BACK_LEFT = 2;
 	public static final int BACK_RIGHT = 3;
 	
-	public static final Logger LOGGER = Logger.getLogger(ElevatorSensor.class);
-
+	public static final Logger LOGGER = Logger.getLogger(Elevator.class);
 	public static final double TICKS_PER_TURN = 253.0;
-	
 	public static final double GEAR_CIRCUMFERENCE_IN_INCHES = 10;
-	
 	public static final double ELEVATOR_MAX_HEIGHT_IN_FEET = 10;
-	
 	public static final double ELEVATOR_MIN_HEIGHT_IN_FEET = 0;
-
 	public static final double ELEVATOR_INITIAL_TICKS = 196;
-	
 	public static final int ELEVATOR_HEIGHT_SENSOR_ID = 0;
-	
 	public static final int TALON_HEIGHT_CONTROLLER_ID = 1;
 	
 		
@@ -103,12 +96,4 @@ public class RobotMap {
 
 	// Game Pieces
 	// TODO: Game pieces motor channels
-	
-	public static final double TICKS_PER_TURN = 253.0;
-	public static final double GEAR_CIRCUMFERENCE_IN_INCHES = 10;	
-	public static final double ELEVATOR_MAX_HEIGHT_IN_FEET = 10;
-	public static final double ELEVATOR_MIN_HEIGHT_IN_FEET = 0;
-	public static final double ELEVATOR_INITIAL_TICKS = 196;
-	public static final int ELEVATOR_HEIGHT_SENSOR_ID = 0;
-	public static final int TALON_HEIGHT_CONTROLLER_ID = 1;
 }
