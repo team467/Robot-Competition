@@ -9,18 +9,13 @@ package org.usfirst.frc.team467.robot;
 
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.CameraServer;
-import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.IterativeRobot;
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import org.usfirst.frc.team467.robot.Autonomous.ActionGroup;
 // import org.usfirst.frc.team467.robot.Autonomous.Actions;
 import org.usfirst.frc.team467.robot.Autonomous.Actions;
-
-import com.ctre.CANTalon;
-import com.ctre.phoenix.motorcontrol.ControlMode;
 
 import org.apache.log4j.Logger;
 
@@ -42,11 +37,6 @@ public class Robot extends IterativeRobot {
 	private Gyrometer gyro;
 
 	private ElevatorSensor elevator;
-	//The lowest value is 196.0, the maximum value is 3741.0. The middle is 1968.5
-	//New max: 2980, new min:956.5
-	//16.9 ticks = 1 inch
-	//1 rotation=253 ticks
-	
 	
 	int session;
 

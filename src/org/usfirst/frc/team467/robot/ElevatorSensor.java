@@ -6,25 +6,16 @@ import edu.wpi.first.wpilibj.AnalogInput;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 public class ElevatorSensor {
-	private static ElevatorSensor instance = null;
+	private static ElevatorSensor instance;
 	private static final Logger LOGGER = Logger.getLogger(ElevatorSensor.class);
 
 	private static final double TICKS_PER_TURN = 253.0;
-	
-	private static final double GEAR_CIRCUMFERENCE_IN_INCHES = 10;
-			
+	private static final double GEAR_CIRCUMFERENCE_IN_INCHES = 10;	
 	public static final double ELEVATOR_MAX_HEIGHT_IN_FEET = 10;
-	
 	public static final double ELEVATOR_MIN_HEIGHT_IN_FEET = 0;
-
 	public static final double ELEVATOR_INITIAL_TICKS = 196;
-	
 	public static final int ELEVATOR_HEIGHT_SENSOR_ID = 0;
-	
 	public static final int TALON_HEIGHT_CONTROLLER_ID = 1;
-	
-	
-	
 	
 	public enum Stops {
 		min(ELEVATOR_MIN_HEIGHT_IN_FEET),
@@ -40,11 +31,8 @@ public class ElevatorSensor {
 	}
 	
 	private AnalogInput heightSensor;
-	
 	private WPI_TalonSRX heightController;
-
 	private double feetPerTick;
-	
 	private double previousHeight;
 	
 	private ElevatorSensor() {
@@ -55,17 +43,18 @@ public class ElevatorSensor {
 	}
 	
 	/**
-	 * Returns a single instance of the ElevatorSensor object.
+	 * The lowest value is 196.0, the maximum value is 3741.0. The middle is 1968.5
+	 * New max: 2980, new min:956.5
+	 * 16.9 ticks = 1 inch
+	 * 1 rotation=253 ticks
+	 * 
+	 * @return a single instance of the ElevatorSensor object.
 	 */
 	public static ElevatorSensor getInstance() {
 		if (instance == null) {
 			instance = new ElevatorSensor();
 		}
 		return instance;
-		//The lowest value is 196.0, the maximum value is 3741.0. The middle is 1968.5
-		//New max: 2980, new min:956.5
-		//16.9 ticks = 1 inch
-		//1 rotation=253 ticks
 	}
 
 	/**
@@ -84,39 +73,24 @@ public class ElevatorSensor {
 				|| (previousHeight > stop.height && currentHeight <= stop.height)) {
 				
 				//multiple prints are easier to spot on logger
-				LOGGER.info("Rumbling");
-				LOGGER.info("Rumbling");
-				LOGGER.info("Rumbling");
-				LOGGER.info("Rumbling");
-				LOGGER.info("Rumbling");
-				LOGGER.info("Rumbling");
-				LOGGER.info("Rumbling");
+				LOGGER.debug("----- Rumbling -----");
 			}
 			
 		}
-		LOGGER.info("Current Height: " + currentHeight);
+		LOGGER.debug("Current Height: " + currentHeight);
 		heightController.set(speed);
 		previousHeight = currentHeight;
-		LOGGER.info("Previous Height: " + previousHeight);
+		LOGGER.debug("Previous Height: " + previousHeight);
 	}
 
 	public boolean isOutOfRange() {
-		double height = (heightSensor.getAverageValue() - ELEVATOR_INITIAL_TICKS) * feetPerTick;
-		
-		if (getHeight()  > ELEVATOR_MAX_HEIGHT_IN_FEET || getHeight() < ELEVATOR_MIN_HEIGHT_IN_FEET) {
-			return true;
-		} else {
-			return false;
-		}
+		return (getHeight()  > ELEVATOR_MAX_HEIGHT_IN_FEET || getHeight() < ELEVATOR_MIN_HEIGHT_IN_FEET);
 	}
 
 	public double getHeight() {
 		double height = (heightSensor.getValue() - ELEVATOR_INITIAL_TICKS) * feetPerTick;
-		LOGGER.info("Height in feet: " + height);
+		LOGGER.debug("Height in feet: " + height);
 		return height;
 	}
 	
 }
-	
-
-//TalonSRX ID is 1
