@@ -6,6 +6,7 @@
 package org.usfirst.frc.team467.robot;
 
 import java.lang.Math;
+import java.util.EnumMap;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
@@ -22,31 +23,34 @@ public class XBoxJoystick467 {
 
 	private static final double SENSITIVITY_MODIFIER = 0.6;
 	
-	public static boolean[] buttonDown = new boolean[10]; 
-	public static boolean[] prev_buttonDown = new boolean[10];
+//	public static boolean[] buttonDown = new boolean[10]; 
+//	public static boolean[] prev_buttonDown = new boolean[10];
+	public static EnumMap<Button, Boolean> prevButtonsState;
+	public static EnumMap<Button, Boolean> currButtonsState;
 	
 	public enum Button {
-		a(0),
-		b(1),
-		x(2),
-		y(3),
-		BumperLeft(4),
-		BumperRight(5),
-		back(6),
-		start(7),
-		left(8),
-		right(9);
+		a,
+		b,
+		x,
+		y,
+		BumperLeft,
+		BumperRight,
+		back,
+		start,
+		left,
+		right;
+
 		
-		public boolean isPressed;		
-		public boolean wasPressed;
+//		public boolean isPressed;		
+//		public boolean wasPressed;
 		
-		public final int channel;
+//		public final int channel;
 		
-		Button(int channel) {
-			this.channel = channel;
-			isPressed = false;
-			wasPressed = false;
-		}
+//		Button(int channel) {
+//			this.channel = channel;
+//			isPressed = false;
+//			wasPressed = false;
+//		}
 	}
 		
 //			// Button Enum read
@@ -61,7 +65,8 @@ public class XBoxJoystick467 {
 		 */
 		public boolean down(Button b) {
 			// TODO: Return if the button is currently down
-			return buttonDown[b.ordinal()];
+//			return buttonDown[b.ordinal()];
+			return currButtonsState.get(b);
 		}
 
 		/**
@@ -71,7 +76,7 @@ public class XBoxJoystick467 {
 		 */
 		public boolean pressed(Button b) {
 			// TODO: return true if the button is pressed, but wasn't before
-			return buttonDown[b.ordinal()] && !prev_buttonDown[b.ordinal()];
+			return currButtonsState.get(b) && !prevButtonsState.get(b);
 		}
 
 		/**
@@ -81,7 +86,7 @@ public class XBoxJoystick467 {
 		 */
 		public boolean buttonReleased(Button b) {
 			// TODO: Reverse of above
-			return !buttonDown[b.ordinal()] && prev_buttonDown[b.ordinal()];
+			return !currButtonsState.get(b) && prevButtonsState.get(b);
 		}
 	
 	private enum Axis {
@@ -109,9 +114,9 @@ public class XBoxJoystick467 {
 			// TODO Traverse the enum and read all the values
 			// Example --> value = accelerateJoystickInput(joystick.getRawAxis(channel));
 			
-			for(int i = 0; i < buttonDown.length; i++) {
-				prev_buttonDown[i] = buttonDown[i];
-				buttonDown[i] = xbox.getRawButton(i);
+			for(Button b : Button.values()) {
+				prevButtonsState.put(b, currButtonsState.get(b));
+				currButtonsState.put(b, xbox.getRawButton(b.ordinal()));
 				
 			}
 			
