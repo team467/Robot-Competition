@@ -10,6 +10,8 @@ public class DriverStation {
 	
 	XBoxJoystick467 driverJoy;
 	
+	XBoxJoystick467 navJoy;
+	
 	private static DriverStation station;
 	
 	// Mapping of functions to Controller Buttons for normal operation
@@ -35,6 +37,7 @@ public class DriverStation {
 	private DriverStation() {
 		// TODO: Initialize class variables
 		driverJoy = new XBoxJoystick467(0);
+		navJoy = new XBoxJoystick467(1);
 	}
 
 	/**
@@ -42,6 +45,7 @@ public class DriverStation {
 	 */
 	public void readInputs() {
 		driverJoy.read();
+		navJoy.read();
 		// TODO: Read inputs from the buttons
 	}
 
@@ -101,6 +105,22 @@ public class DriverStation {
 	
 	public double getArcadeTurn() {
 		return getDriveJoystick().getRightStickX();
+	}
+	
+	public void navSetLeftRumble(double value) {
+		navJoy.leftRumble(value);
+	}
+	
+	public void navSetRightRumble(double value) {
+		navJoy.rightRumble(value);
+	}
+	
+	public void driverSetLeftRumble(double value) {
+		driverJoy.leftRumble(value);
+	}
+	
+	public void driverSetRightRumble(double value) {
+		driverJoy.rightRumble(value);
 	}
 
 }

@@ -9,6 +9,7 @@ import java.lang.Math;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 
 /**
  *
@@ -21,17 +22,20 @@ public class XBoxJoystick467 {
 
 	private static final double SENSITIVITY_MODIFIER = 0.6;
 	
+	public static boolean[] buttonDown = new boolean[10]; 
+	public static boolean[] prev_buttonDown = new boolean[10];
+	
 	public enum Button {
-		a(1),
-		b(2),
-		x(3),
-		y(4),
-		bumperLeft(5),
-		BumperRight(6),
-		back(7),
-		start(8),
-		left(9),
-		right(10);
+		a(0),
+		b(1),
+		x(2),
+		y(3),
+		BumperLeft(4),
+		BumperRight(5),
+		back(6),
+		start(7),
+		left(8),
+		right(9);
 		
 		public boolean isPressed;		
 		public boolean wasPressed;
@@ -43,13 +47,11 @@ public class XBoxJoystick467 {
 			isPressed = false;
 			wasPressed = false;
 		}
+	}
 		
-		public static void read() {
-			
-			// Button Enum read
-			// TODO Iterate over the enum, updating all the values. 
-			// Store the current value into the previous state, then read the raw button value
-		}
+//			// Button Enum read
+//			// TODO Iterate over the enum, updating all the values. 
+//			// Store the current value into the previous state, then read the raw button value
 		
 		/**
 		 * Check if a specific button is being held down. Ignores first button press, but the robot loops too quickly for this to
@@ -57,9 +59,9 @@ public class XBoxJoystick467 {
 		 *
 		 * @return
 		 */
-		public boolean down() {
+		public boolean down(Button b) {
 			// TODO: Return if the button is currently down
-			return false;
+			return buttonDown[b.ordinal()];
 		}
 
 		/**
@@ -67,9 +69,9 @@ public class XBoxJoystick467 {
 		 *
 		 * @return
 		 */
-		public boolean pressed() {
+		public boolean pressed(Button b) {
 			// TODO: return true if the button is pressed, but wasn't before
-			return false;
+			return buttonDown[b.ordinal()] && !prev_buttonDown[b.ordinal()];
 		}
 
 		/**
@@ -77,14 +79,10 @@ public class XBoxJoystick467 {
 		 *
 		 * @return
 		 */
-		public boolean buttonReleased() {
+		public boolean buttonReleased(Button b) {
 			// TODO: Reverse of above
-			return false;
+			return !buttonDown[b.ordinal()] && prev_buttonDown[b.ordinal()];
 		}
-
-
-		
-	}
 	
 	private enum Axis {
 		leftX(0),
@@ -111,6 +109,13 @@ public class XBoxJoystick467 {
 			// TODO Traverse the enum and read all the values
 			// Example --> value = accelerateJoystickInput(joystick.getRawAxis(channel));
 			
+			for(int i = 0; i < buttonDown.length; i++) {
+				prev_buttonDown[i] = buttonDown[i];
+				buttonDown[i] = xbox.getRawButton(i);
+				
+			}
+			
+			
 			// Read Joystick Axes
 			leftX.value = accelerateJoystickInput(xbox.getX(GenericHID.Hand.kLeft));
 			leftY.value = accelerateJoystickInput(xbox.getY(GenericHID.Hand.kLeft));
@@ -120,7 +125,7 @@ public class XBoxJoystick467 {
 
 			leftTrigger.value = accelerateJoystickInput(xbox.getTriggerAxis(GenericHID.Hand.kLeft));
 			rightTrigger.value = accelerateJoystickInput(xbox.getTriggerAxis(GenericHID.Hand.kRight));
-
+		
 		}
 		
 		/**
@@ -263,5 +268,14 @@ public class XBoxJoystick467 {
 		// TODO Repeat for right stick
 		return (calculateStickAngle(Axis.RightX.value, Axis.RightY.value));
 	}
+	
+	public void leftRumble(double value) {
+		xbox.setRumble(RumbleType.kLeftRumble, value);
+	}
+	
+	public void rightRumble(double value) {
+		xbox.setRumble(RumbleType.kRightRumble, value);
+	}
+
 
 }

@@ -38,6 +38,11 @@ public class Grabber {
 		right.set(RELEASE_SPEED);
 	}
 	
+	public void pause() {
+		left.set(0);
+		right.set(0);
+	}
+	
 	public boolean hasCube() {
 		return os.detectedTarget();
 	}

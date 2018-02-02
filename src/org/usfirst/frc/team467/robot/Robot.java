@@ -40,8 +40,8 @@ public class Robot extends IterativeRobot {
 
 //	private VisionProcessing vision;
 	private Gyrometer gyro;
-//	private Grabber grabber; //not used yet
-   private OpticalSensor opticalsensor;
+   private Grabber grabber; //not used yet
+  // private OpticalSensor opticalsensor;
 
 	int session;
 	
@@ -71,7 +71,7 @@ public class Robot extends IterativeRobot {
 
 		gyro = Gyrometer.getInstance();
 		//grabber = Grabber.getInstance();
-		opticalsensor = OpticalSensor.getInstance();
+		grabber = Grabber.getInstance();
 		
 		gyro.calibrate();
 		gyro.reset();
@@ -161,7 +161,7 @@ public class Robot extends IterativeRobot {
 		//LOGGER.info("left " + left + " right " + right);
 		
 		//comments for testing
-		LOGGER.info(opticalsensor.detectedTarget()); //implementing to grabber later
+		LOGGER.info(grabber.hasCube()); //implementing to grabber late
 		
 
 		
@@ -170,6 +170,15 @@ public class Robot extends IterativeRobot {
 		}
 		if (Math.abs(right) < MIN_DRIVE_SPEED) {
 			right = 0.0;
+		}
+		
+		driverstation.navJoy.read();
+		if (driverstation.navJoy.down(XBoxJoystick467.Button.x)) {
+			grabber.grab();
+		} else if (driverstation.navJoy.down(XBoxJoystick467.Button.y)) {
+			grabber.release();
+		} else {
+			grabber.pause(); 
 		}
 	
 		//changed to arcade drive
