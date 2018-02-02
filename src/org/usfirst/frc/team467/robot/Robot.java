@@ -38,7 +38,7 @@ public class Robot extends TimedRobot {
 //	private VisionProcessing vision;
 	private Gyrometer gyro;
 
-	private ElevatorSensor elevator;
+	private Elevator elevator;
 	
 	int session;
 
@@ -64,7 +64,7 @@ public class Robot extends TimedRobot {
 		gyro.calibrate();
 		gyro.reset();
 		
-		elevator = ElevatorSensor.getInstance();
+		elevator = Elevator.getInstance();
 
 		// Initialize math lookup table
 		LookUpTable.init();

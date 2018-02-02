@@ -5,9 +5,9 @@ import org.apache.log4j.Logger;
 import edu.wpi.first.wpilibj.AnalogInput;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
-public class ElevatorSensor {
-	private static ElevatorSensor instance;
-	private static final Logger LOGGER = Logger.getLogger(ElevatorSensor.class);
+public class Elevator {
+	private static Elevator instance;
+	private static final Logger LOGGER = Logger.getLogger(Elevator.class);
 	
 	private AnalogInput heightSensor;
 	private WPI_TalonSRX heightController;
@@ -27,7 +27,7 @@ public class ElevatorSensor {
 		}
 	}
 
-	private ElevatorSensor() {
+	private Elevator() {
 		heightSensor = new AnalogInput(RobotMap.ELEVATOR_HEIGHT_SENSOR_ID);
 		heightController = new WPI_TalonSRX(RobotMap.TALON_HEIGHT_CONTROLLER_ID);
 		feetPerTick = (RobotMap.GEAR_CIRCUMFERENCE_IN_INCHES / 12) / RobotMap.TICKS_PER_TURN;
@@ -42,9 +42,9 @@ public class ElevatorSensor {
 	 * 
 	 * @return a single instance of the ElevatorSensor object.
 	 */
-	public static ElevatorSensor getInstance() {
+	public static Elevator getInstance() {
 		if (instance == null) {
-			instance = new ElevatorSensor();
+			instance = new Elevator();
 		}
 		return instance;
 	}
