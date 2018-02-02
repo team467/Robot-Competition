@@ -7,6 +7,7 @@ import org.usfirst.frc.team467.robot.RobotMap.RobotID;
  *
  */
 public class RobotMap {
+	public static final int TALON_TIMEOUT = 10; // 10 ms is the recommended timeout
 	public enum RobotID {
 		// TODO: Enumerate robot names
 		YES_467, NO_467
@@ -67,6 +68,9 @@ public class RobotMap {
 	public static final int VELOCITY_ALLOWABLE_CLOSED_LOOP_ERROR = 50; 	// This is in encoder ticks
 	public static final int POSITION_ALLOWABLE_CLOSED_LOOP_ERROR = (int) (POSITION_ALLOWED_ERROR * 1024 * 0.95); 	// This is in encoder ticks
 
+	public static final double FAST_MAX_SPEED = 1.0;
+	public static final double NORMAL_MAX_SPEED = 0.6;
+	public static final double SLOW_MAX_SPEED = 0.35;
 
 	// The maximum revolutions per minute (RPM) of a wheel when in speed control mode.
 	public static double MAX_SPEED;
@@ -99,5 +103,12 @@ public class RobotMap {
 
 	// Game Pieces
 	// TODO: Game pieces motor channels
-
+	
+	public static final double TICKS_PER_TURN = 253.0;
+	public static final double GEAR_CIRCUMFERENCE_IN_INCHES = 10;	
+	public static final double ELEVATOR_MAX_HEIGHT_IN_FEET = 10;
+	public static final double ELEVATOR_MIN_HEIGHT_IN_FEET = 0;
+	public static final double ELEVATOR_INITIAL_TICKS = 196;
+	public static final int ELEVATOR_HEIGHT_SENSOR_ID = 0;
+	public static final int TALON_HEIGHT_CONTROLLER_ID = 1;
 }

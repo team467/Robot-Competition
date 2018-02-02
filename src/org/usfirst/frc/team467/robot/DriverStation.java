@@ -2,9 +2,7 @@ package org.usfirst.frc.team467.robot;
 
 import org.usfirst.frc.team467.robot.XBoxJoystick467.Button;
 import org.usfirst.frc.team467.robot.Autonomous.ActionGroup;
-
 import com.ctre.phoenix.motorcontrol.ControlMode;
-
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.XboxController;
 
@@ -16,9 +14,6 @@ public class DriverStation {
 	
 	// Mapping of functions to Controller Buttons for normal operation
 	// TODO: Create enum for buttons
-	
-	
-
 	/**
 	 * Singleton instance of the object.
 	 *
@@ -44,6 +39,7 @@ public class DriverStation {
 	 */
 	public void readInputs() {
 		driverJoy.read();
+		setDriverRumble(0.0); // Default unless specified otherwise
 		// TODO: Read inputs from the buttons
 	}
 
@@ -54,6 +50,10 @@ public class DriverStation {
 	 */
 	public XBoxJoystick467 getDriveJoystick() {
 		return driverJoy;
+	}
+	
+	public double getTurnSensivity() {
+		return 0.0;
 	}
 
 	public ButtonPanel getButtonPanel() {
@@ -71,7 +71,7 @@ public class DriverStation {
 	 */
 	public DriveMode getDriveMode() {
 		// TODO: Set the drive mode based on the buttons pushed
-		return DriveMode.CRAB; // Update with the correct drive mode
+		return DriveMode.ArcadeDrive; // Update with the correct drive mode
 	}
 
 	public boolean getTerminateAuto() {
@@ -93,26 +93,14 @@ public class DriverStation {
 	}
 	
 	public double getArcadeSpeed() {
-		return getDriveJoystick().getLeftStickY()*-1;
+		return getDriveJoystick().turboSpeedAdjust();
 	}
 	
 	public double getArcadeTurn() {
 		return getDriveJoystick().getRightStickX();
 	}
 	
-	public void setLeftRumble(double value) {
-		getDriveJoystick().setRumble(RumbleType.kLeftRumble, value);
-	}
-	
-	public void setRightRumble(double value) {
-		getDriveJoystick().setRumble(RumbleType.kRightRumble, value);
-	}
-	
-	public boolean leftRumbleButtonDown() {
-		return getDriveJoystick().buttonDown(Button.x);
-	}
-	
-	public boolean rightRumbleButtonDown() {
-		return getDriveJoystick().buttonDown(Button.b);
+	public void setDriverRumble(double value) {
+		getDriveJoystick().setRumble(value);
 	}
 }
