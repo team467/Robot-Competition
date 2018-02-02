@@ -53,6 +53,15 @@ public class DriveSimulator implements Drive {
 		return rightPositionReading;
 	}
 	
+	public void setMaxMotionMagicSpeed(double percentOfMaxSpeed) {
+		if (percentOfMaxSpeed < 0) {
+			percentOfMaxSpeed = 0;
+		} else if (percentOfMaxSpeed > 1) {
+			percentOfMaxSpeed = 1;
+		}
+		maxFeetPerPeriod = WHEEL_CIRCUMFERENCE / 12 * percentOfMaxSpeed * MAX_RPM / 60 / 1000;
+	}
+	
 	public double leftPosition() {
 		return leftPositionReading;
 	}
@@ -69,9 +78,9 @@ public class DriveSimulator implements Drive {
 		
 		if (Math.abs((left - leftPositionReading)) > maxFeetPerPeriod) {
 			if (left < 0) {
-				leftPositionReading -= maxFeetPerPeriod;				
+				leftPositionReading -= maxFeetPerPeriod;
 			} else {
-				leftPositionReading += maxFeetPerPeriod;								
+				leftPositionReading += maxFeetPerPeriod;
 			}
 		} else {
 			leftPositionReading = left;
