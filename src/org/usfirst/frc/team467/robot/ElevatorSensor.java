@@ -8,37 +8,29 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 public class ElevatorSensor {
 	private static ElevatorSensor instance;
 	private static final Logger LOGGER = Logger.getLogger(ElevatorSensor.class);
-
-	private static final double TICKS_PER_TURN = 253.0;
-	private static final double GEAR_CIRCUMFERENCE_IN_INCHES = 10;	
-	public static final double ELEVATOR_MAX_HEIGHT_IN_FEET = 10;
-	public static final double ELEVATOR_MIN_HEIGHT_IN_FEET = 0;
-	public static final double ELEVATOR_INITIAL_TICKS = 196;
-	public static final int ELEVATOR_HEIGHT_SENSOR_ID = 0;
-	public static final int TALON_HEIGHT_CONTROLLER_ID = 1;
-	
-	public enum Stops {
-		min(ELEVATOR_MIN_HEIGHT_IN_FEET),
-		fieldSwitch(2),
-		lowScale(6),
-		highScale(8);
-
-		public final double height;
-		
-		Stops(double height) {
-			this.height = height;
-		}
-	}
 	
 	private AnalogInput heightSensor;
 	private WPI_TalonSRX heightController;
 	private double feetPerTick;
 	private double previousHeight;
 	
+	public enum Stops {
+		min(RobotMap.ELEVATOR_MIN_HEIGHT_IN_FEET),
+		fieldSwitch(2),
+		lowScale(6),
+		highScale(8);
+	
+		public final double height;
+		
+		Stops(double height) {
+			this.height = height;
+		}
+	}
+
 	private ElevatorSensor() {
-		heightSensor = new AnalogInput(ELEVATOR_HEIGHT_SENSOR_ID);
-		heightController = new WPI_TalonSRX(TALON_HEIGHT_CONTROLLER_ID);
-		feetPerTick = GEAR_CIRCUMFERENCE_IN_INCHES / TICKS_PER_TURN / 12;
+		heightSensor = new AnalogInput(RobotMap.ELEVATOR_HEIGHT_SENSOR_ID);
+		heightController = new WPI_TalonSRX(RobotMap.TALON_HEIGHT_CONTROLLER_ID);
+		feetPerTick = RobotMap.GEAR_CIRCUMFERENCE_IN_INCHES / RobotMap.TICKS_PER_TURN / 12;
 		previousHeight = getHeight();
 	}
 	
@@ -65,17 +57,20 @@ public class ElevatorSensor {
 	public void manualMove(double speed) {
 		if (isOutOfRange()) {
 			speed = 0;
-			// TODO: Rumble here
+			DriverStation.getInstance().setDriverRumble(0.5);
+		} else {
+			DriverStation.getInstance().setDriverRumble(0.0);
 		}
 		double currentHeight = getHeight();
 		for (Stops stop : Stops.values()) {
 			if ((previousHeight < stop.height && currentHeight >= stop.height)
 				|| (previousHeight > stop.height && currentHeight <= stop.height)) {
 				
-				//multiple prints are easier to spot on logger
+				DriverStation.getInstance().setDriverRumble(0.5);
 				LOGGER.debug("----- Rumbling -----");
+			} else {
+				DriverStation.getInstance().setDriverRumble(0.0);
 			}
-			
 		}
 		LOGGER.debug("Current Height: " + currentHeight);
 		heightController.set(speed);
@@ -84,11 +79,11 @@ public class ElevatorSensor {
 	}
 
 	public boolean isOutOfRange() {
-		return (getHeight()  > ELEVATOR_MAX_HEIGHT_IN_FEET || getHeight() < ELEVATOR_MIN_HEIGHT_IN_FEET);
+		return (getHeight()  > RobotMap.ELEVATOR_MAX_HEIGHT_IN_FEET || getHeight() < RobotMap.ELEVATOR_MIN_HEIGHT_IN_FEET);
 	}
 
 	public double getHeight() {
-		double height = (heightSensor.getValue() - ELEVATOR_INITIAL_TICKS) * feetPerTick;
+		double height = (heightSensor.getValue() - RobotMap.ELEVATOR_INITIAL_TICKS) * feetPerTick;
 		LOGGER.debug("Height in feet: " + height);
 		return height;
 	}

@@ -152,15 +152,10 @@ public class Robot extends TimedRobot {
 	 */
 	public void teleopPeriodic() {
 		driverstation.readInputs();
+		driverstation.setDriverRumble(0.0);
 		//TODO: Set Min_DRIVE_SPEED in Robot Map.
 		double MIN_DRIVE_SPEED = 0.1;
 		driverstation.readInputs();
-		elevator.getHeight();
-		if (elevator.isOutOfRange()) {
-			driverstation.setDriverRumble(1.0);
-		} else {
-			driverstation.setDriverRumble(0.0);
-		}
 
 		double left = driverstation.getArcadeSpeed();
 		double right = driverstation.getArcadeTurn();
