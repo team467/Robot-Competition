@@ -30,7 +30,7 @@ public class ElevatorSensor {
 	private ElevatorSensor() {
 		heightSensor = new AnalogInput(RobotMap.ELEVATOR_HEIGHT_SENSOR_ID);
 		heightController = new WPI_TalonSRX(RobotMap.TALON_HEIGHT_CONTROLLER_ID);
-		feetPerTick = RobotMap.GEAR_CIRCUMFERENCE_IN_INCHES / RobotMap.TICKS_PER_TURN / 12;
+		feetPerTick = (RobotMap.GEAR_CIRCUMFERENCE_IN_INCHES / 12) / RobotMap.TICKS_PER_TURN;
 		previousHeight = getHeight();
 	}
 	
@@ -52,22 +52,21 @@ public class ElevatorSensor {
 	/**
 	 * Moves based on the Xbox controller analog input
 	 * 
-	 * @param speed the speed and direction. Shall be a value between -1 and 1.
+	 * @param speed The velocity. Shall be a value between -1 and 1.
 	 */
 	public void manualMove(double speed) {
 		if (isOutOfRange()) {
-			speed = 0;
+			heightController.set(0);
 			DriverStation.getInstance().setDriverRumble(0.5);
-		} else {
-			DriverStation.getInstance().setDriverRumble(0.0);
+			return; // Don't bother with any more logic here.
 		}
+		
 		double currentHeight = getHeight();
 		for (Stops stop : Stops.values()) {
 			if ((previousHeight < stop.height && currentHeight >= stop.height)
 				|| (previousHeight > stop.height && currentHeight <= stop.height)) {
 				
 				DriverStation.getInstance().setDriverRumble(0.5);
-				LOGGER.debug("----- Rumbling -----");
 			} else {
 				DriverStation.getInstance().setDriverRumble(0.0);
 			}

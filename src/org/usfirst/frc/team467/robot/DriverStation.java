@@ -39,6 +39,7 @@ public class DriverStation {
 	 */
 	public void readInputs() {
 		driverJoy.read();
+		setDriverRumble(0.0); // Default unless specified otherwise
 		// TODO: Read inputs from the buttons
 	}
 

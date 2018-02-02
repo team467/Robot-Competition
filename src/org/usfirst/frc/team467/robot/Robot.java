@@ -11,12 +11,10 @@ package org.usfirst.frc.team467.robot;
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.CameraServer;
 
-import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import org.usfirst.frc.team467.robot.Autonomous.ActionGroup;
-// import org.usfirst.frc.team467.robot.Autonomous.Actions;
 import org.usfirst.frc.team467.robot.Autonomous.Actions;
 
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -152,7 +150,6 @@ public class Robot extends TimedRobot {
 	 */
 	public void teleopPeriodic() {
 		driverstation.readInputs();
-		driverstation.setDriverRumble(0.0);
 		//TODO: Set Min_DRIVE_SPEED in Robot Map.
 		double MIN_DRIVE_SPEED = 0.1;
 		driverstation.readInputs();
