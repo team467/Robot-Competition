@@ -148,7 +148,7 @@ public class Robot extends TimedRobot {
 		
 		double left = driverstation.getArcadeSpeed();
 		double right = driverstation.getArcadeTurn();
-		 		// -1* driverstation.getDriveJoystick().getJoystick()
+		
 		LOGGER.info("left " + left + " right " + right) ;
 	 	if (Math.abs(left) < MIN_DRIVE_SPEED) {
 	 		left = 0.0;
@@ -156,23 +156,22 @@ public class Robot extends TimedRobot {
 	 	if (Math.abs(right) < MIN_DRIVE_SPEED) {
 	 		right = 0.0;
 	 	}
-
+	 	
 		switch (driverstation.getDriveMode()) {
-		case ArcadeDrive:
-			double speed = driverstation.getArcadeSpeed();
-			double turn = driverstation.getArcadeTurn();
-			drive.arcadeDrive(speed, turn, true);
-			break;
-		case TankDrive:	
-			double leftTank = driverstation.getDriveJoystick().getLeftStickY();
-			double rightTank = driverstation.getDriveJoystick().getRightStickY();
-			drive.tankDrive(leftTank, rightTank, true);
-			break;
-		case MotionMagic:
-			//TODO: Add things here later.
-			break;
+			case ArcadeDrive:
+				double speed = driverstation.getArcadeSpeed();
+				double turn = driverstation.getArcadeTurn();
+				drive.arcadeDrive(speed, turn, true);
+				break;
+			case TankDrive:	
+				double leftTank = driverstation.getDriveJoystick().getLeftStickY();
+				double rightTank = driverstation.getDriveJoystick().getRightStickY();
+				drive.tankDrive(leftTank, rightTank, true);
+				break;
+			case MotionMagic:
+				//TODO: Add things here later.
+				break;
 		}
-		
 	}
-
 }
+

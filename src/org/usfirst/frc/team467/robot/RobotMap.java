@@ -12,6 +12,7 @@ public class RobotMap {
 	public static final int BACK_LEFT = 2;
 	public static final int BACK_RIGHT = 3;
 	
+	public static boolean HAS_WHEELS;
 	public static int LEFT_LEAD_CHANNEL;
 	public static int LEFT_FOLLOWER_1_CHANNEL;
 	public static int LEFT_FOLLOWER_2_CHANNEL;
@@ -25,6 +26,7 @@ public class RobotMap {
 		robotID = id;
 		switch (id) {
 		case PreseasonBot:
+			HAS_WHEELS = true;
 			WHEEL_CIRCUMFERENCE = 19.74;
 			WHEEL_ENCODER_CODES_PER_REVOLUTION = 256;
 			useSpeedControllers = true;
@@ -45,16 +47,8 @@ public class RobotMap {
 			isDriveMotorInverted = new boolean[] { false, true, false, true };
 			break;
 		case Board:
-			WHEEL_CIRCUMFERENCE = 0.0;
+			HAS_WHEELS = false;
 			WHEEL_ENCODER_CODES_PER_REVOLUTION = 256;
-			
-			LEFT_LEAD_CHANNEL = 0;
-			LEFT_FOLLOWER_1_CHANNEL = 0;
-			LEFT_FOLLOWER_2_CHANNEL = 0;
-			
-			RIGHT_LEAD_CHANNEL = 0;
-			RIGHT_FOLLOWER_1_CHANNEL = 0;
-			RIGHT_FOLLOWER_2_CHANNEL = 0;
 			
 			// TODO Assign values to the game piece variables, and make more as appropriate
 			EVEVATOR_MOTOR_CHANNEL = 0;
@@ -64,6 +58,7 @@ public class RobotMap {
 			isDriveMotorInverted = new boolean[] { false, true, false, true };
 			break;
 		case Competition_1:
+			HAS_WHEELS = true;
 			WHEEL_CIRCUMFERENCE = 19.74;
 			WHEEL_ENCODER_CODES_PER_REVOLUTION = 256;
 			useSpeedControllers = true;
@@ -82,6 +77,7 @@ public class RobotMap {
 			RAMP_SOLENOID_CHANNEL = 0;
 			break;
 		case Competition_2:
+			HAS_WHEELS = true;
 			WHEEL_CIRCUMFERENCE = 19.74;
 			WHEEL_ENCODER_CODES_PER_REVOLUTION = 256;
 			useSpeedControllers = true;

@@ -133,6 +133,11 @@ public class Drive extends DifferentialDrive {
 	}
 	
 	public void initMotionMagicMode() {
+		if (!RobotMap.HAS_WHEELS) {
+			LOGGER.trace("No Drive System");
+			return;
+		}
+		
 		rightLead.setSelectedSensorPosition(0, 0, RobotMap.TALON_TIMEOUT);
 		leftLead.setSelectedSensorPosition(0, 0, RobotMap.TALON_TIMEOUT);
 		
@@ -162,11 +167,21 @@ public class Drive extends DifferentialDrive {
 		rightLead.configMotionAcceleration(1052 / 2, RobotMap.TALON_TIMEOUT);	
 	}
 	public void initSpeedControl() {
+		if (!RobotMap.HAS_WHEELS) {
+			LOGGER.trace("No drive system");
+			return;
+		}
+		
 		rightLead.set(ControlMode.Velocity, rightLead.getSelectedSensorVelocity(1));
 		leftLead.set(ControlMode.Velocity, leftLead.getSelectedSensorVelocity(1));
 		
 	}
 	public void initPercentOutput() {
+		if (!RobotMap.HAS_WHEELS) {
+			LOGGER.trace("No drive system");
+			return;
+		}
+		
 		rightLead.set(ControlMode.PercentOutput, rightLead.getMotorOutputPercent());
 		leftLead.set(ControlMode.PercentOutput, leftLead.getMotorOutputPercent());;
 		
@@ -216,6 +231,11 @@ public class Drive extends DifferentialDrive {
 	//TODO: Check to see if we still need this function.
 	private void go(double left, double right, ControlMode mode) {
 		// TODO: Check to make sure all motors exist. If not throw a null pointer exception
+		if (!RobotMap.HAS_WHEELS) {
+			LOGGER.trace("No drive system");
+			return;
+		}
+		
 		controlMode = mode;
 		if (leftLead == null || rightLead == null || this.leftFollower1 == null || this.leftFollower2 == null || this.rightFollower1 == null || this.rightFollower2 == null) {
 			throw new NullPointerException("Null motor provided");
@@ -280,6 +300,10 @@ public class Drive extends DifferentialDrive {
 	 * Does not drive drive motors and keeps steering angle at previous position.
 	 */
 	public void stop() {
+		if (!RobotMap.HAS_WHEELS) {
+			LOGGER.trace("No drive system");
+			return;
+		}
 		//TODO: Stop all motors
 		go(0,0, ControlMode.Disabled);
 		
@@ -287,6 +311,10 @@ public class Drive extends DifferentialDrive {
 	
 	@Override
 	public void arcadeDrive(double xSpeed, double zRotation, boolean squaredInputs) {
+		if (!RobotMap.HAS_WHEELS) {
+			LOGGER.trace("No drive system");
+			return;
+		}
 		super.arcadeDrive(xSpeed, zRotation, squaredInputs);
 		
 		leftFollower1.set(ControlMode.Follower, leftLead.getDeviceID());
