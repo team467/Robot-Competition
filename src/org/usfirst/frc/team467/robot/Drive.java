@@ -22,13 +22,10 @@ public class Drive extends DifferentialDrive {
 
 	// Single instance of this class
 	private static Drive instance = null;
-
-	// Data storage object
 	
 	private WPI_TalonSRX leftLead;
 	private WPI_TalonSRX leftFollower1;
 	private WPI_TalonSRX leftFollower2;
-	
 	
 	private WPI_TalonSRX rightLead;
 	private WPI_TalonSRX rightFollower1;
@@ -39,7 +36,6 @@ public class Drive extends DifferentialDrive {
 		          WPI_TalonSRX rightLead, WPI_TalonSRX rightFollower1, WPI_TalonSRX rightFollower2) {
 		super(leftLead, rightLead);
 		
-		
 		// Need to specify the motor channels.
 		// TODO: Define and initialize motors. (Done)
 		
@@ -49,8 +45,6 @@ public class Drive extends DifferentialDrive {
 		leftLead.setSensorPhase(true);
 		leftLead.config_kF(0, 1023.0 / 1402.0, RobotMap.TALON_TIMEOUT); // (100 percent of the output you can send to the motor) divided by (max speed measured in ticks)
 		
-		
-
 		this.leftFollower1 = leftFollower1;
 		initMotor(this.leftFollower1);
 		initMotorForFollowerMode(leftLead, leftFollower1);
@@ -61,9 +55,7 @@ public class Drive extends DifferentialDrive {
 		
 		this.rightLead = rightLead;
 		initMotor(this.rightLead);
-		//rightLead.setInverted(false);
 		rightLead.setSensorPhase(true);
-	//	rightLead.setInverted(false);
 		rightLead.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, RobotMap.TALON_TIMEOUT);
 		rightLead.config_kF(0, 0.7297, RobotMap.TALON_TIMEOUT);
 		
@@ -102,8 +94,12 @@ public class Drive extends DifferentialDrive {
 		if (instance == null) {
 			// First usage - create Drive object
 			instance = new Drive(
-					new WPI_TalonSRX(1), new WPI_TalonSRX(2), new WPI_TalonSRX(3),
-					new WPI_TalonSRX(4), new WPI_TalonSRX(5), new WPI_TalonSRX(6));
+					new WPI_TalonSRX(RobotMap.LEFT_LEAD_CHANNEL),
+					new WPI_TalonSRX(RobotMap.LEFT_FOLLOWER_1_CHANNEL),
+					new WPI_TalonSRX(RobotMap.LEFT_FOLLOWER_2_CHANNEL),
+					new WPI_TalonSRX(RobotMap.RIGHT_LEAD_CHANNEL),
+					new WPI_TalonSRX(RobotMap.RIGHT_FOLLOWER_1_CHANNEL),
+					new WPI_TalonSRX(RobotMap.RIGHT_FOLLOWER_2_CHANNEL));
 		}
 		return instance;
 	}

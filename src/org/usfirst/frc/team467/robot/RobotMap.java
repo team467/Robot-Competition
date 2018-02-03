@@ -12,6 +12,14 @@ public class RobotMap {
 	public static final int BACK_LEFT = 2;
 	public static final int BACK_RIGHT = 3;
 	
+	public static int LEFT_LEAD_CHANNEL;
+	public static int LEFT_FOLLOWER_1_CHANNEL;
+	public static int LEFT_FOLLOWER_2_CHANNEL;
+	
+	public static int RIGHT_LEAD_CHANNEL;
+	public static int RIGHT_FOLLOWER_1_CHANNEL;
+	public static int RIGHT_FOLLOWER_2_CHANNEL;
+	
 	// Initialize robot map. 
 	public static void init(RobotID id) {
 		robotID = id;
@@ -20,6 +28,14 @@ public class RobotMap {
 			WHEEL_CIRCUMFERENCE = 19.74;
 			WHEEL_ENCODER_CODES_PER_REVOLUTION = 256;
 			useSpeedControllers = true;
+			
+			LEFT_LEAD_CHANNEL = 1;
+			LEFT_FOLLOWER_1_CHANNEL = 2;
+			LEFT_FOLLOWER_2_CHANNEL = 3;
+			
+			RIGHT_LEAD_CHANNEL = 4;
+			RIGHT_FOLLOWER_1_CHANNEL = 5;
+			RIGHT_FOLLOWER_2_CHANNEL = 6;
 			
 			// TODO Assign values to the game piece variables, and make more as appropriate
 			EVEVATOR_MOTOR_CHANNEL = 0;
@@ -32,6 +48,14 @@ public class RobotMap {
 			WHEEL_CIRCUMFERENCE = 0.0;
 			WHEEL_ENCODER_CODES_PER_REVOLUTION = 256;
 			
+			LEFT_LEAD_CHANNEL = 1;
+			LEFT_FOLLOWER_1_CHANNEL = 2;
+			LEFT_FOLLOWER_2_CHANNEL = 3;
+			
+			RIGHT_LEAD_CHANNEL = 4;
+			RIGHT_FOLLOWER_1_CHANNEL = 5;
+			RIGHT_FOLLOWER_2_CHANNEL = 6;
+			
 			// TODO Assign values to the game piece variables, and make more as appropriate
 			EVEVATOR_MOTOR_CHANNEL = 0;
 			GRABBER_MOTOR_CHANNEL = 0;
@@ -39,15 +63,41 @@ public class RobotMap {
 			
 			isDriveMotorInverted = new boolean[] { false, true, false, true };
 			break;
-		default:
-			WHEEL_CIRCUMFERENCE = 0.0;
-			WHEEL_ENCODER_CODES_PER_REVOLUTION = 0;
+		case Competition_1:
+			WHEEL_CIRCUMFERENCE = 19.74;
+			WHEEL_ENCODER_CODES_PER_REVOLUTION = 256;
+			useSpeedControllers = true;
+			
+			LEFT_LEAD_CHANNEL = 1;
+			LEFT_FOLLOWER_1_CHANNEL = 2;
+			LEFT_FOLLOWER_2_CHANNEL = 3;
+			
+			RIGHT_LEAD_CHANNEL = 4;
+			RIGHT_FOLLOWER_1_CHANNEL = 5;
+			RIGHT_FOLLOWER_2_CHANNEL = 6;
 			
 			// TODO Assign values to the game piece variables, and make more as appropriate
 			EVEVATOR_MOTOR_CHANNEL = 0;
 			GRABBER_MOTOR_CHANNEL = 0;
 			RAMP_SOLENOID_CHANNEL = 0;
+			break;
+		case Competition_2:
+			WHEEL_CIRCUMFERENCE = 19.74;
+			WHEEL_ENCODER_CODES_PER_REVOLUTION = 256;
+			useSpeedControllers = true;
 			
+			LEFT_LEAD_CHANNEL = 1;
+			LEFT_FOLLOWER_1_CHANNEL = 2;
+			LEFT_FOLLOWER_2_CHANNEL = 3;
+			
+			RIGHT_LEAD_CHANNEL = 4;
+			RIGHT_FOLLOWER_1_CHANNEL = 5;
+			RIGHT_FOLLOWER_2_CHANNEL = 6;
+			
+			// TODO Assign values to the game piece variables, and make more as appropriate
+			EVEVATOR_MOTOR_CHANNEL = 0;
+			GRABBER_MOTOR_CHANNEL = 0;
+			RAMP_SOLENOID_CHANNEL = 0;
 			break;
 		}
 	}
