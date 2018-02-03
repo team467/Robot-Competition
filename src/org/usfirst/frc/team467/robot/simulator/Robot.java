@@ -9,9 +9,9 @@ package org.usfirst.frc.team467.robot.simulator;
  */
 public class Robot {
 	
-	public static final double WIDTH = 2;
+	public static final double WIDTH = 2.92;
 	
-	public static final double LENGTH = 3;
+	public static final double LENGTH = 3.33;
 	
 	Drive drive;
 	
@@ -32,6 +32,24 @@ public class Robot {
 	
 	int moveCount = 0;
 	
+	/*
+	 * Referring to field map, mode codes represented: 
+	 * Modes 1-6: Robot Starting Position - Switch Side
+	 * Modes 7-12: Robot Starting Position - Scale Side
+	 * Mode 1: 1-A
+	 * Mode 2: 1-B
+	 * Mode 3: 2-A
+	 * Mode 4: 2-B
+	 * Mode 5: 3-A
+	 * Mode 6: 3-B
+	 * Mode 7: 1-C
+	 * Mode 8: 1-D
+	 * Mode 9: 2-C
+	 * Mode 10: 2-D
+	 * Mode 11: 3-C
+	 * Mode 12: 3-D
+	 */
+	
 	AutonomousModes mode;
 	
 	public void autonomousInit() {
@@ -49,6 +67,17 @@ public class Robot {
 			move1();
 			break;
 			
+		/*case move2:
+			move2();
+			break;
+			
+		case move3:
+			move3();
+			break;
+			
+		
+		*/
+			
 		default:
 		
 		}
@@ -63,7 +92,7 @@ public class Robot {
 		switch(moveCount) {
 		
 		case 0:
-			if (drive.moveDistance(5, 5)) {
+			if (drive.moveDistance(20, 20)) {
 				moveCount++;
 				drive.zeroPosition();				
 			}
