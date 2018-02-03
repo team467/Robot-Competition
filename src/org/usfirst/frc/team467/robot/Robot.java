@@ -25,7 +25,6 @@ import org.usfirst.frc.team467.robot.XBoxJoystick467.Button;
 public class Robot extends TimedRobot {
 	private static final Logger LOGGER = Logger.getLogger(Robot.class);
 	
-	Rumbler rumbler;
 	// Robot objects
 	private DriverStation driverstation;
 	private Drive drive;
@@ -57,9 +56,6 @@ public class Robot extends TimedRobot {
 		gyro = Gyrometer.getInstance();
 		gyro.calibrate();
 		gyro.reset();
-		
-		//Creates new rumbler for the driver joystick
-		rumbler = new Rumbler(driverstation.getDriveJoystick());
 
 		// Initialize math lookup table
 		LookUpTable.init();
@@ -128,12 +124,16 @@ public class Robot extends TimedRobot {
 	public void testPeriodic() {
 		driverstation.readInputs();
 
+		if (driverstation.getNavJoystick().buttonPressed(Button.a)){ 
+			driverstation.getNavRumbler().rumble(150, 0.3);
+			LOGGER.info("You pressed a");
+		}
 		if (driverstation.getDriveJoystick().buttonPressed(Button.a)){ 
-			rumbler.rumble(1000, 1.0);
+			driverstation.getNavRumbler().rumble(150, 1.0);
 			LOGGER.info("You pressed a");
 		}
 
-		rumbler.periodic();
+		driverstation.periodic();
 	}
 
 

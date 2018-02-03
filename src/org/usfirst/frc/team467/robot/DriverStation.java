@@ -4,7 +4,11 @@ import org.usfirst.frc.team467.robot.Autonomous.ActionGroup;
 
 public class DriverStation {
 	
-	XBoxJoystick467 driverJoy;
+	private XBoxJoystick467 driverJoy;
+	private XBoxJoystick467 navJoy;
+	
+	private Rumbler driverRumbler;
+	private Rumbler navRumbler;
 	
 	private static DriverStation station;
 	
@@ -26,8 +30,11 @@ public class DriverStation {
 	 * Private constructor
 	 */
 	private DriverStation() {
-		// TODO: Initialize class variables
 		driverJoy = new XBoxJoystick467(0);
+		navJoy = new XBoxJoystick467(1);
+		
+		driverRumbler = new Rumbler(driverJoy);
+		navRumbler = new Rumbler(navJoy);
 	}
 
 	/**
@@ -35,7 +42,7 @@ public class DriverStation {
 	 */
 	public void readInputs() {
 		driverJoy.read();
-		// TODO: Read inputs from the buttons
+		navJoy.read();
 	}
 
 	/**
@@ -47,6 +54,18 @@ public class DriverStation {
 		return driverJoy;
 	}
 	
+	public XBoxJoystick467 getNavJoystick() {
+		return navJoy;
+	}
+	
+	public Rumbler getDriverRumbler() {
+		return driverRumbler;
+	}
+	
+	public Rumbler getNavRumbler() {
+		return navRumbler;
+	}
+	
 	public double getTurnSensivity() {
 		return 0.0;
 	}
@@ -54,6 +73,11 @@ public class DriverStation {
 	public ButtonPanel getButtonPanel() {
 		// TODO: Return the button panel
 		return null;
+	}
+	
+	public void periodic() {
+		driverRumbler.periodic();
+		navRumbler.periodic();
 	}
 
 	// All button mappings are accessed through the functions below
