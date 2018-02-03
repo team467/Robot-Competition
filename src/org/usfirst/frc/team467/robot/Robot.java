@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import org.apache.log4j.Logger;
+import org.usfirst.frc.team467.robot.XBoxJoystick467.Button;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to each mode, as described in the
@@ -23,7 +24,8 @@ import org.apache.log4j.Logger;
 
 public class Robot extends TimedRobot {
 	private static final Logger LOGGER = Logger.getLogger(Robot.class);
-
+	
+	Rumbler rumbler;
 	// Robot objects
 	private DriverStation driverstation;
 	private Drive drive;
@@ -55,6 +57,9 @@ public class Robot extends TimedRobot {
 		gyro = Gyrometer.getInstance();
 		gyro.calibrate();
 		gyro.reset();
+		
+		//Get joystick
+		rumbler = new Rumbler(driverstation.getDriveJoystick());
 
 		// Initialize math lookup table
 		LookUpTable.init();
@@ -121,7 +126,16 @@ public class Robot extends TimedRobot {
 	}
 
 	public void testPeriodic() {
-	}
+			driverstation.readInputs();
+
+			if (driverstation.getDriveJoystick().buttonPressed(Button.a)){ 
+				rumbler.rumble(1000, 1.0);
+				LOGGER.info("You pressed a");
+			}
+
+			rumbler.periodic();
+		}
+
 
 	public void autonomousPeriodic() {
 		
