@@ -3,6 +3,8 @@ package org.usfirst.frc.team467.robot;
 import org.apache.log4j.Logger;
 
 import edu.wpi.first.wpilibj.AnalogInput;
+
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 public class Elevator {
@@ -57,7 +59,7 @@ public class Elevator {
 	public void manualMove(double speed) {
 		if (isOutOfRange()) {
 			heightController.set(0);
-			DriverStation.getInstance().setDriverRumble(0.5);
+			//DriverStation.getInstance().setDriverRumble(0.5);
 			return; // Don't bother with any more logic here.
 		}
 		
@@ -66,15 +68,38 @@ public class Elevator {
 			if ((previousHeight < stop.height && currentHeight >= stop.height)
 				|| (previousHeight > stop.height && currentHeight <= stop.height)) {
 				
-				DriverStation.getInstance().setDriverRumble(0.5);
+				//DriverStation.getInstance().setDriverRumble(0.5);
 			} else {
-				DriverStation.getInstance().setDriverRumble(0.0);
+				//DriverStation.getInstance().setDriverRumble(0.0);
 			}
 		}
 		LOGGER.debug("Current Height: " + currentHeight);
 		heightController.set(speed);
 		previousHeight = currentHeight;
 		LOGGER.debug("Previous Height: " + previousHeight);
+	}
+	
+	public void initMotionMagicMode() {
+		heightController.setSelectedSensorPosition(0, 0, RobotMap.TALON_TIMEOUT);
+		
+		double kPElevator = 1.4; // Double.parseDouble(SmartDashboard.getString("DB/String 7", "1.4"));
+		
+		double kIElevator = 0.0; // Double.parseDouble(SmartDashboard.getString("DB/String 8", "0.0"));
+		
+		double kDElevator = 165; //Double.parseDouble(SmartDashboard.getString("DB/String 9", "165"));
+				
+		heightController.config_kP(0, kPElevator, RobotMap.TALON_TIMEOUT);
+
+		heightController.config_kI(0, kIElevator, RobotMap.TALON_TIMEOUT);
+		
+		heightController.config_kD(0, kDElevator, RobotMap.TALON_TIMEOUT);
+		
+		heightController.config_kF(0, kPElevator, RobotMap.TALON_TIMEOUT);
+
+		//		This is commented out because we will need the SmartDashboard to tune other things later.
+		
+		heightController.configMotionCruiseVelocity(1052 / 2, RobotMap.TALON_TIMEOUT);
+		heightController.configMotionAcceleration(1052 / 2, RobotMap.TALON_TIMEOUT);	
 	}
 
 	public boolean isOutOfRange() {
@@ -85,6 +110,18 @@ public class Elevator {
 		double height = (heightSensor.getValue() - RobotMap.ELEVATOR_INITIAL_TICKS) * feetPerTick;
 		LOGGER.debug("Height in feet: " + height);
 		return height;
+	}
+	
+	public void motionMagicMove(double height) {
+		heightController.set(ControlMode.MotionMagic, height);
+	}
+	
+	public void logClosedLoopErrors() {
+		LOGGER.debug(
+				//TODO Check the arguments for the closed loop errors.
+				"Vel R= " + heightController.getSelectedSensorVelocity(0)
+				+ "Pos R=" + heightController.getSelectedSensorPosition(0)+
+				" R=" + heightController.getClosedLoopError(0));
 	}
 	
 }
