@@ -39,18 +39,12 @@ public class Drive extends DifferentialDrive {
 		          WPI_TalonSRX rightLead, WPI_TalonSRX rightFollower1, WPI_TalonSRX rightFollower2) {
 		super(leftLead, rightLead);
 		
-		
-		// Need to specify the motor channels.
-		// TODO: Define and initialize motors. (Done)
-		
 		this.leftLead = leftLead;
 		initMotor(this.leftLead);
 		leftLead.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, RobotMap.TALON_TIMEOUT);
 		leftLead.setSensorPhase(true);
 		leftLead.config_kF(0, 1023.0 / 1402.0, RobotMap.TALON_TIMEOUT); // (100 percent of the output you can send to the motor) divided by (max speed measured in ticks)
 		
-		
-
 		this.leftFollower1 = leftFollower1;
 		initMotor(this.leftFollower1);
 		initMotorForFollowerMode(leftLead, leftFollower1);
@@ -75,9 +69,6 @@ public class Drive extends DifferentialDrive {
 		initMotor(this.rightFollower2);
 		initMotorForFollowerMode(rightLead, rightFollower2);
 	}
-		
-		
-
 	
 	private void initMotor(WPI_TalonSRX talon) {
 		talon.set(ControlMode.PercentOutput, 0);
@@ -87,6 +78,8 @@ public class Drive extends DifferentialDrive {
 		talon.configNominalOutputForward(0.0, 0);
 		talon.configPeakOutputForward(1.0, 0);
 		talon.configPeakOutputReverse(-1.0, 0);
+		talon.configOpenloopRamp(0.2, RobotMap.TALON_TIMEOUT);
+		talon.configClosedloopRamp(0.2, RobotMap.TALON_TIMEOUT);
 		//Note: This was changed from voltage to percentage used with 1 representing 100 percent or max voltage and -1 representing 100 percent backwards.
 		
 		// TODO: Set the default Talon parameters (done- check over again)
