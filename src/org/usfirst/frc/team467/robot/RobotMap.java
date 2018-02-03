@@ -1,16 +1,13 @@
 package org.usfirst.frc.team467.robot;
 
-import org.usfirst.frc.team467.robot.RobotMap.RobotID;
-
-/**
- *
- */
 public class RobotMap {
 	public static final int TALON_TIMEOUT = 10; // 10 ms is the recommended timeout
+	
 	public enum RobotID {
 		// TODO: Enumerate robot names
-		YES_467, NO_467
+		PreseasonBot, Board, Competition_1, Competition_2
 	};
+	
 	public static final int FRONT_LEFT = 0;
 	public static final int FRONT_RIGHT = 1;
 	public static final int BACK_LEFT = 2;
@@ -24,20 +21,16 @@ public class RobotMap {
 	// Initialize robot map. 
 	public static void init(RobotID id) {
 		switch (id) {
-		case YES_467:
+		case PreseasonBot:
 			isDriveMotorInverted = new boolean[] { false, true, false, true };
-		case NO_467:
+			break;
+		case Board:
 			isDriveMotorInverted = new boolean[] { false, true, false, true };
+			break;
 			
 		}
 		
-	
-		
-	
-
 		// TODO: Initialize robot map based on robot ID; throw an error on a bad robot id
-
-
 	}
 
 	// Global robot constants

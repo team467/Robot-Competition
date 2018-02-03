@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import org.apache.log4j.Logger;
+import org.usfirst.frc.team467.robot.RobotMap.RobotID;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to each mode, as described in the
@@ -46,6 +47,9 @@ public class Robot extends TimedRobot {
 		
 		// Initialize logging framework
 		Logging.init();
+		
+		// Initialize RobotMap
+		RobotMap.init(RobotID.PreseasonBot);
 
 		// Make robot objects
 		driverstation = DriverStation.getInstance();
