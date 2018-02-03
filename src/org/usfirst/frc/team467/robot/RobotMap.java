@@ -4,7 +4,6 @@ public class RobotMap {
 	public static final int TALON_TIMEOUT = 10; // 10 ms is the recommended timeout
 	
 	public enum RobotID {
-		// TODO: Enumerate robot names
 		PreseasonBot, Board, Competition_1, Competition_2
 	};
 	
@@ -13,24 +12,44 @@ public class RobotMap {
 	public static final int BACK_LEFT = 2;
 	public static final int BACK_RIGHT = 3;
 	
-		
-		
-	// Steering motor ids
-	// TODO: Enumerate steering motor IDS
-
 	// Initialize robot map. 
 	public static void init(RobotID id) {
+		robotID = id;
 		switch (id) {
 		case PreseasonBot:
+			WHEEL_CIRCUMFERENCE = 19.74;
+			WHEEL_ENCODER_CODES_PER_REVOLUTION = 256;
+			useSpeedControllers = true;
+			
+			// TODO Assign values to the game piece variables, and make more as appropriate
+			EVEVATOR_MOTOR_CHANNEL = 0;
+			GRABBER_MOTOR_CHANNEL = 0;
+			RAMP_SOLENOID_CHANNEL = 0;
+			
 			isDriveMotorInverted = new boolean[] { false, true, false, true };
 			break;
 		case Board:
+			WHEEL_CIRCUMFERENCE = 0.0;
+			WHEEL_ENCODER_CODES_PER_REVOLUTION = 256;
+			
+			// TODO Assign values to the game piece variables, and make more as appropriate
+			EVEVATOR_MOTOR_CHANNEL = 0;
+			GRABBER_MOTOR_CHANNEL = 0;
+			RAMP_SOLENOID_CHANNEL = 0;
+			
 			isDriveMotorInverted = new boolean[] { false, true, false, true };
 			break;
+		default:
+			WHEEL_CIRCUMFERENCE = 0.0;
+			WHEEL_ENCODER_CODES_PER_REVOLUTION = 0;
 			
+			// TODO Assign values to the game piece variables, and make more as appropriate
+			EVEVATOR_MOTOR_CHANNEL = 0;
+			GRABBER_MOTOR_CHANNEL = 0;
+			RAMP_SOLENOID_CHANNEL = 0;
+			
+			break;
 		}
-		
-		// TODO: Initialize robot map based on robot ID; throw an error on a bad robot id
 	}
 
 	// Global robot constants
@@ -40,7 +59,7 @@ public class RobotMap {
 	public static boolean useSpeedControllers;
 	public static final int VELOCITY_PID_PROFILE = 0;
 	public static final int POSITION_PID_PROFILE = 1;
-	public static final double POSITION_ALLOWED_ERROR = (0.5 / RobotMap.WHEELPOD_CIRCUMFERENCE); // 1/2 inch
+	public static final double POSITION_ALLOWED_ERROR = (0.5 / RobotMap.WHEEL_CIRCUMFERENCE); // 1/2 inch
 	public static final int VELOCITY_ALLOWABLE_CLOSED_LOOP_ERROR = 50; 	// This is in encoder ticks
 	public static final int POSITION_ALLOWABLE_CLOSED_LOOP_ERROR = (int) (POSITION_ALLOWED_ERROR * 1024 * 0.95); 	// This is in encoder ticks
 
@@ -48,12 +67,15 @@ public class RobotMap {
 	public static final double NORMAL_MAX_SPEED = 0.6;
 	public static final double SLOW_MAX_SPEED = 0.35;
 
-	// The maximum revolutions per minute (RPM) of a wheel when in speed control mode.
+	/**
+	 * The maximum revolutions per minute (RPM) of a wheel when in speed control mode.
+	 * Also for motion magic?
+	 */
 	public static double MAX_SPEED;
 
 	public static final double MIN_DRIVE_SPEED = 0.1;
+	
 	// Robot Dimensions
-	public static double WHEEL_BASE_LENGTH;
 	public static double WHEEL_BASE_WIDTH;
 	public static double CamToCenterWidthInches;
 	public static double CamToCenterLengthInches;	
@@ -67,17 +89,19 @@ public class RobotMap {
 
 	// The circumference of the wheels for use in determining distance in
 	// position mode
-	public static final double WHEELPOD_CIRCUMFERENCE = 19.74; //20.5139; //21.43
+	public static double WHEEL_CIRCUMFERENCE;
 
 	// The number of encoder ticks per one revolution of the wheel. This is used
 	// for correctly determining RPM and position.
-	public static final int WHEELPOD_ENCODER_CODES_PER_REVOLUTION = 256;
+	public static int WHEEL_ENCODER_CODES_PER_REVOLUTION = 256;
 
 	// Set to true to use LSM9DS1 IMU on Raspberry Pi
 	// Set to false to use the local ADIS16448 IMU on the Robo Rio
 	public static final boolean useRemoteImu = false;
 
 	// Game Pieces
-	// TODO: Game pieces motor channels
-
+	public static int EVEVATOR_MOTOR_CHANNEL;
+	public static int GRABBER_MOTOR_CHANNEL;
+	
+	public static int RAMP_SOLENOID_CHANNEL;
 }
