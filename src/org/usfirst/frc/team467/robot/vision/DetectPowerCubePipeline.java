@@ -45,11 +45,12 @@ public class DetectPowerCubePipeline implements VisionPipeline {
 	@Override	public void process(Mat source0) {
 		// Step CV_resize0:
 		Mat cvResizeSrc = source0;
-		Size cvResizeDsize = new Size(0, 0);
-		double cvResizeFx = 0.25;
-		double cvResizeFy = 0.25;
-		int cvResizeInterpolation = Imgproc.INTER_LINEAR;
-		cvResize(cvResizeSrc, cvResizeDsize, cvResizeFx, cvResizeFy, cvResizeInterpolation, cvResizeOutput);
+		cvResizeOutput = cvResizeSrc; // temp short circuit
+//		Size cvResizeDsize = new Size(0, 0);
+//		double cvResizeFx = 0.25;
+//		double cvResizeFy = 0.25;
+//		int cvResizeInterpolation = Imgproc.INTER_LINEAR;
+//		cvResize(cvResizeSrc, cvResizeDsize, cvResizeFx, cvResizeFy, cvResizeInterpolation, cvResizeOutput);
 
 		// Step HSV_Threshold0:
 		Mat hsvThresholdInput = cvResizeOutput;
