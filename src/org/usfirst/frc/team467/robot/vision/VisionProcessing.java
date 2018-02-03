@@ -25,9 +25,9 @@ public class VisionProcessing {
 	private VideoCapture camera;
 	private double windowHeight;
 	private double windowWidth;
-	public static final double CUBE_WIDTH = 13;
-	public static final double CUBE_HEIGHT = 11;
-	private static final double FOCAL_LENGTH = 800.0; //623.59;
+	public static final double CUBE_WIDTH = 13.0;
+	public static final double CUBE_HEIGHT = 11.0;
+	private static final double FOCAL_LENGTH = 634; //164.21
 	
 	// the id of the camera to be used
 	public static final int CAMERA_ID = 0;
@@ -102,10 +102,10 @@ void main (String args[]) {
 			cameraDistanceX = cubeCenterPointX - (windowWidth / 2);
 			cameraDistanceY = cubeCenterPointY - (windowHeight / 2);
 			
-			angle = Math.atan2(cubeCenterPointX, FOCAL_LENGTH);
+			angle = Math.atan2(cameraDistanceX, FOCAL_LENGTH);
 			
 			
-//			System.out.println("Window width: " + windowWidth + " Window Height: " + windowHeight); //The width is 640 pixels and the height is 480 pixels.
+  		System.out.println("Window width: " + windowWidth + " Window Height: " + windowHeight); //The width is 640 pixels and the height is 480 pixels.
 //			System.out.println("Camera distance X: " + cameraDistanceX + " Camera distance Y: " + cameraDistanceY);
 
 //			System.out.println("x: " + box.x + " y: " + box.y + " width: " + box.width + " height: " + box.height);
