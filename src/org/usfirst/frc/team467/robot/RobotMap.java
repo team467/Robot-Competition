@@ -39,9 +39,9 @@ public class RobotMap {
 			RIGHT_FOLLOWER_1_CHANNEL = 5;
 			RIGHT_FOLLOWER_2_CHANNEL = 6;
 			
-			HAS_ELEVATOR = true;
-			HAS_GRABBER = true;
-			HAS_RAMPS = true;
+			HAS_ELEVATOR = false;
+			HAS_GRABBER = false;
+			HAS_RAMPS = false;
 			
 			// TODO Assign values to the game piece variables, and make more as appropriate
 			EVEVATOR_MOTOR_CHANNEL = 0;
