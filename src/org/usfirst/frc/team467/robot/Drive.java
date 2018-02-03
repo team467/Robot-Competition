@@ -147,7 +147,7 @@ public class Drive extends DifferentialDrive {
 		return false;
 	}
 	
-	public void initMotionMagicMode() {
+	public void initMode() {
 		rightLead.setSelectedSensorPosition(0, 0, RobotMap.TALON_TIMEOUT);
 		leftLead.setSelectedSensorPosition(0, 0, RobotMap.TALON_TIMEOUT);
 		

@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
+import org.usfirst.frc.team467.robot.Elevator.Stops;
 import org.usfirst.frc.team467.robot.Autonomous.ActionGroup;
 import org.usfirst.frc.team467.robot.Autonomous.Actions;
 
@@ -103,9 +104,9 @@ public class Robot extends TimedRobot {
 //	
 	public void autonomousInit() {
 		final String autoMode = SmartDashboard.getString("Auto Selector", "none");
-		drive.initMotionMagicMode();
+		//drive.initMotionMagicMode();
 		
-//	drive.initPositionMode();
+//	drive.initPositionMode(); 
 		LOGGER.info(drive);
 		// TODO: call appropriate auto modes based on list
 		LOGGER.debug("Autonomous init: " + autoMode);
@@ -129,9 +130,11 @@ public class Robot extends TimedRobot {
 	}
 
 	public void testInit() {
+		elevator.targetHeight(Stops.fieldSwitch);
 	}
 
 	public void testPeriodic() {
+		elevator.periodic();
 	}
 
 	public void autonomousPeriodic() {
@@ -142,7 +145,6 @@ public class Robot extends TimedRobot {
 //		drive.motionMagicMove(amountToGoLeft, amountToGoRight);
 		
 //		autonomous.run();
-		elevator.manualMove(1.0);
 	}
 	
 
