@@ -12,12 +12,9 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-/**
- *
- */
 public class Drive extends DifferentialDrive {
 	private ControlMode controlMode;
-	// TODO: DEfine logger (Done)
+	
 	private static final Logger LOGGER = Logger.getLogger(Drive.class);
 
 	// Single instance of this class
@@ -35,9 +32,6 @@ public class Drive extends DifferentialDrive {
 	private Drive(WPI_TalonSRX leftLead,  WPI_TalonSRX leftFollower1,  WPI_TalonSRX leftFollower2,
 		          WPI_TalonSRX rightLead, WPI_TalonSRX rightFollower1, WPI_TalonSRX rightFollower2) {
 		super(leftLead, rightLead);
-		
-		// Need to specify the motor channels.
-		// TODO: Define and initialize motors. (Done)
 		
 		this.leftLead = leftLead;
 		initMotor(this.leftLead);
@@ -67,9 +61,6 @@ public class Drive extends DifferentialDrive {
 		initMotor(this.rightFollower2);
 		initMotorForFollowerMode(rightLead, rightFollower2);
 	}
-		
-		
-
 	
 	private void initMotor(WPI_TalonSRX talon) {
 		talon.set(ControlMode.PercentOutput, 0);
@@ -90,13 +81,13 @@ public class Drive extends DifferentialDrive {
 	 * @return The single instance.
 	 */
 	public static Drive getInstance() {
-		// TODO: Update if constructor changes
 		if (instance == null) {
 			// First usage - create Drive object
 			instance = new Drive(
 					new WPI_TalonSRX(RobotMap.LEFT_LEAD_CHANNEL),
 					new WPI_TalonSRX(RobotMap.LEFT_FOLLOWER_1_CHANNEL),
 					new WPI_TalonSRX(RobotMap.LEFT_FOLLOWER_2_CHANNEL),
+					
 					new WPI_TalonSRX(RobotMap.RIGHT_LEAD_CHANNEL),
 					new WPI_TalonSRX(RobotMap.RIGHT_FOLLOWER_1_CHANNEL),
 					new WPI_TalonSRX(RobotMap.RIGHT_FOLLOWER_2_CHANNEL));
@@ -106,7 +97,6 @@ public class Drive extends DifferentialDrive {
 
 	public void setPIDF(double p, double i, double d, double f){
 		// TODO: Set the PIDF of the talons. Assumes the same values for all motors
-		
 		
 	}
 	
