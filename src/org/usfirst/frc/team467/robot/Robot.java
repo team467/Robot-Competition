@@ -44,36 +44,36 @@ public class Robot extends TimedRobot {
 	 * This function is run when the robot is first started up and should be used for any initialization code.
 	 */
 	public void robotInit() {
-		
 		// Initialize logging framework
 		Logging.init();
 		
 		// Initialize RobotMap
 		RobotMap.init(RobotID.PreseasonBot);
-
+		
 		// Make robot objects
 		driverstation = DriverStation.getInstance();
-		LOGGER.info("inited driverstation");
+		LOGGER.info("Initiated Driverstation");
+		
 		drive = Drive.getInstance();
-
+		
 		gyro = Gyrometer.getInstance();
 		gyro.calibrate();
 		gyro.reset();
-
+		
 		// Initialize math lookup table
 		LookUpTable.init();
-
+		
 //		vision = VisionProcessing.getInstance();
 		
 		// TODO: Implement actions.doNothing
 //		autonomous = Actions.doNothing();
-
+		
 		//made usb camera and captures video
 		UsbCamera cam = CameraServer.getInstance().startAutomaticCapture();
 		//set resolution and frames per second to match driverstation
 		cam.setResolution(320, 240);
 		cam.setFPS(15);
-
+		
 		//TODO: Create list of autonomous modes for selector
 		// Setup autonomous mode selectors
 	}
