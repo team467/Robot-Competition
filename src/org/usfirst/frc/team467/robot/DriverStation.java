@@ -55,11 +55,6 @@ public class DriverStation {
 		return 0.0;
 	}
 
-	public ButtonPanel getButtonPanel() {
-		// TODO: Return the button panel
-		return null;
-	}
-
 	// All button mappings are accessed through the functions below
 
 	/**
