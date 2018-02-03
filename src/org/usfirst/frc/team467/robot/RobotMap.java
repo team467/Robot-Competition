@@ -39,7 +39,7 @@ public class RobotMap {
 			
 			// TODO Assign values to the game piece variables, and make more as appropriate
 			EVEVATOR_MOTOR_CHANNEL = 0;
-			GRABBER_MOTOR_CHANNEL = 0;
+			GRABBER_MOTOR_PWM_CHANNEL = 0;
 			RAMP_SOLENOID_CHANNEL = 0;
 			
 			isDriveMotorInverted = new boolean[] { false, true, false, true };
@@ -48,17 +48,17 @@ public class RobotMap {
 			WHEEL_CIRCUMFERENCE = 0.0;
 			WHEEL_ENCODER_CODES_PER_REVOLUTION = 256;
 			
-			LEFT_LEAD_CHANNEL = 1;
-			LEFT_FOLLOWER_1_CHANNEL = 2;
-			LEFT_FOLLOWER_2_CHANNEL = 3;
+			LEFT_LEAD_CHANNEL = 0;
+			LEFT_FOLLOWER_1_CHANNEL = 0;
+			LEFT_FOLLOWER_2_CHANNEL = 0;
 			
-			RIGHT_LEAD_CHANNEL = 4;
-			RIGHT_FOLLOWER_1_CHANNEL = 5;
-			RIGHT_FOLLOWER_2_CHANNEL = 6;
+			RIGHT_LEAD_CHANNEL = 0;
+			RIGHT_FOLLOWER_1_CHANNEL = 0;
+			RIGHT_FOLLOWER_2_CHANNEL = 0;
 			
 			// TODO Assign values to the game piece variables, and make more as appropriate
 			EVEVATOR_MOTOR_CHANNEL = 0;
-			GRABBER_MOTOR_CHANNEL = 0;
+			GRABBER_MOTOR_PWM_CHANNEL = 0;
 			RAMP_SOLENOID_CHANNEL = 0;
 			
 			isDriveMotorInverted = new boolean[] { false, true, false, true };
@@ -78,7 +78,7 @@ public class RobotMap {
 			
 			// TODO Assign values to the game piece variables, and make more as appropriate
 			EVEVATOR_MOTOR_CHANNEL = 0;
-			GRABBER_MOTOR_CHANNEL = 0;
+			GRABBER_MOTOR_PWM_CHANNEL = 0;
 			RAMP_SOLENOID_CHANNEL = 0;
 			break;
 		case Competition_2:
@@ -96,7 +96,7 @@ public class RobotMap {
 			
 			// TODO Assign values to the game piece variables, and make more as appropriate
 			EVEVATOR_MOTOR_CHANNEL = 0;
-			GRABBER_MOTOR_CHANNEL = 0;
+			GRABBER_MOTOR_PWM_CHANNEL = 0;
 			RAMP_SOLENOID_CHANNEL = 0;
 			break;
 		}
@@ -151,7 +151,7 @@ public class RobotMap {
 
 	// Game Pieces
 	public static int EVEVATOR_MOTOR_CHANNEL;
-	public static int GRABBER_MOTOR_CHANNEL;
+	public static int GRABBER_MOTOR_PWM_CHANNEL;
 	
 	public static int RAMP_SOLENOID_CHANNEL;
 }
