@@ -124,11 +124,11 @@ public class Robot extends TimedRobot {
 	public void testPeriodic() {
 		driverstation.readInputs();
 
-		if (driverstation.getNavJoystick().buttonPressed(Button.a)){ 
+		if (driverstation.getNavJoystick().pressed(Button.a)){ 
 			driverstation.getNavRumbler().rumble(150, 0.3);
 			LOGGER.info("You pressed a");
 		}
-		if (driverstation.getDriveJoystick().buttonPressed(Button.a)){ 
+		if (driverstation.getDriveJoystick().pressed(Button.a)){ 
 			driverstation.getNavRumbler().rumble(150, 1.0);
 			LOGGER.info("You pressed a");
 		}
