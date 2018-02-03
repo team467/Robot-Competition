@@ -39,6 +39,10 @@ public class RobotMap {
 			RIGHT_FOLLOWER_1_CHANNEL = 5;
 			RIGHT_FOLLOWER_2_CHANNEL = 6;
 			
+			HAS_ELEVATOR = true;
+			HAS_GRABBER = true;
+			HAS_RAMPS = true;
+			
 			// TODO Assign values to the game piece variables, and make more as appropriate
 			EVEVATOR_MOTOR_CHANNEL = 0;
 			GRABBER_MOTOR_PWM_CHANNEL = 0;
@@ -55,6 +59,10 @@ public class RobotMap {
 			GRABBER_MOTOR_PWM_CHANNEL = 0;
 			RAMP_SOLENOID_CHANNEL = 0;
 			
+			HAS_ELEVATOR = false;
+			HAS_GRABBER = false;
+			HAS_RAMPS = false;
+			
 			isDriveMotorInverted = new boolean[] { false, true, false, true };
 			break;
 		case Competition_1:
@@ -70,6 +78,10 @@ public class RobotMap {
 			RIGHT_LEAD_CHANNEL = 4;
 			RIGHT_FOLLOWER_1_CHANNEL = 5;
 			RIGHT_FOLLOWER_2_CHANNEL = 6;
+			
+			HAS_ELEVATOR = true;
+			HAS_GRABBER = true;
+			HAS_RAMPS = true;
 			
 			// TODO Assign values to the game piece variables, and make more as appropriate
 			EVEVATOR_MOTOR_CHANNEL = 0;
@@ -89,6 +101,10 @@ public class RobotMap {
 			RIGHT_LEAD_CHANNEL = 4;
 			RIGHT_FOLLOWER_1_CHANNEL = 5;
 			RIGHT_FOLLOWER_2_CHANNEL = 6;
+			
+			HAS_ELEVATOR = true;
+			HAS_GRABBER = true;
+			HAS_RAMPS = true;
 			
 			// TODO Assign values to the game piece variables, and make more as appropriate
 			EVEVATOR_MOTOR_CHANNEL = 0;
@@ -146,8 +162,12 @@ public class RobotMap {
 	public static final boolean useRemoteImu = false;
 
 	// Game Pieces
+	public static boolean HAS_ELEVATOR;
 	public static int EVEVATOR_MOTOR_CHANNEL;
+	
+	public static boolean HAS_GRABBER;
 	public static int GRABBER_MOTOR_PWM_CHANNEL;
 	
+	public static boolean HAS_RAMPS;
 	public static int RAMP_SOLENOID_CHANNEL;
 }
