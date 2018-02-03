@@ -7,8 +7,7 @@ import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 public class Rumbler {
 	private static final Logger LOGGER = Logger.getLogger(Rumbler.class);
 	static final int ITERATION_TIME_MS = 20;
-	
-    XBoxJoystick467 controller;
+    private final XBoxJoystick467 controller;
 	int durationMS;
 	double intensity;
 	
@@ -16,7 +15,6 @@ public class Rumbler {
 		this.controller = controller;
 	}
 		
-	
 	void rumble(int durationMS, double intensity) {
 		this.durationMS = durationMS;
 		this.intensity = intensity; 
@@ -35,10 +33,6 @@ public class Rumbler {
 		   controller.setRumble(RumbleType.kLeftRumble, 0);
 
 		}
-		
 	}
-
-}
-
-
 	
+}
