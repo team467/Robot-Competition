@@ -7,6 +7,8 @@
 /*----------------------------------------------------------------------------*/
 package org.usfirst.frc.team467.robot;
 
+import edu.wpi.cscore.CvSink;
+import edu.wpi.cscore.CvSource;
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
@@ -18,6 +20,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team467.robot.Autonomous.ActionGroup;
 // import org.usfirst.frc.team467.robot.Autonomous.Actions;
 import org.usfirst.frc.team467.robot.Autonomous.Actions;
+import org.usfirst.frc.team467.robot.vision.VisionProcessing;
 
 import com.ctre.CANTalon;
 import com.ctre.phoenix.motorcontrol.ControlMode;
@@ -38,7 +41,7 @@ public class Robot extends IterativeRobot {
 	private Drive drive;
 //	private ActionGroup autonomous;
 
-//	private VisionProcessing vision;
+	private VisionProcessing vision;
 	private Gyrometer gyro;
 
 	int session;
@@ -57,6 +60,12 @@ public class Robot extends IterativeRobot {
 
 		// Initialize logging framework
 		Logging.init();
+		new Thread(() -> {
+			UsbCamera camera = CameraServer.getInstance().startAutomaticCapture();
+			camera.setResolution(640, 480);
+			CvSource outputsource = CameraServer.getInstance().putVideo("Cam", 640, 480);
+			
+		}
 
 		// Make robot objects
 		driverstation = DriverStation.getInstance();
