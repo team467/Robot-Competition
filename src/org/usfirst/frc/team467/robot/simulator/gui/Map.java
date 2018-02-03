@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.usfirst.frc.team467.robot.simulator;
+package org.usfirst.frc.team467.robot.simulator.gui;
 
 import javafx.application.Application;
 import javafx.event.EventHandler;
@@ -14,10 +14,6 @@ import javafx.stage.WindowEvent;
 /**
  * The main class for a JavaFX application. It creates and handle the main
  * window with its resources (style, graphics, etc.).
- * 
- * This application handles a video stream and can convert its frames in gray
- * scale or color. Moreover, for each frame, it shows the corresponding
- * histogram and it is possible to add a logo in a corner of the video.
  * 
  */
 public class Map extends Application {
@@ -58,28 +54,5 @@ public class Map extends Application {
 			e.printStackTrace();
 		}
 	}
-	
-//	private void drawShapes(GraphicsContext context) {
-//		context.setFill(Color.GREEN);
-//		context.setStroke(Color.BLUE);
-//		context.setLineWidth(5);
-//		context.strokeLine(40,  10, 10, 40);
-//		context.fillOval(10, 60, 30, 30);
-//		context.strokeOval(60, 60, 30, 30);
-//		context.fillRoundRect(110, 60, 30, 30, 10, 10);
-//		context.strokeRoundRect(160, 60, 30, 30, 10, 10);
-//		context.fillArc(10, 110, 30, 30, 45, 240, ArcType.OPEN);
-//		context.fillArc(60, 110, 30, 30, 45, 240, ArcType.CHORD);
-//		context.fillArc(110, 110, 30, 30, 45, 240, ArcType.ROUND);
-//		context.strokeArc(10, 160, 30, 30, 45, 240, ArcType.OPEN);
-//		context.strokeArc(60, 160, 30, 30, 45, 240, ArcType.CHORD);
-//		context.strokeArc(110, 160, 30, 30, 45, 240, ArcType.ROUND);
-//		context.fillPolygon(new double[]{10, 40, 10, 40},
-//                new double[]{210, 210, 240, 240}, 4);
-//		context.strokePolygon(new double[]{60, 90, 60, 90},
-//                  new double[]{210, 210, 240, 240}, 4);
-//		context.strokePolyline(new double[]{110, 140, 110, 140},
-//                   new double[]{210, 210, 240, 240}, 4);
-//	}
 
 }

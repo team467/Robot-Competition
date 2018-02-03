@@ -3,8 +3,10 @@
  */
 package org.usfirst.frc.team467.robot.simulator;
 
+import org.usfirst.frc.team467.robot.simulator.communications.RobotData;
+import org.usfirst.frc.team467.robot.simulator.gui.MapController;
+
 /**
- * @author Bryan Duerk
  *
  */
 public class Robot {
@@ -20,7 +22,7 @@ public class Robot {
 	RobotData data;
 	
 	public void robotInit() {
-		drive = Drive.getInstance();
+		drive = DriveSimulator.getInstance();
 		
 		data = RobotData.getInstance();
 		data.startServer();

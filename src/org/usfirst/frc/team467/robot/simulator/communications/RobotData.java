@@ -1,13 +1,14 @@
 /**
  * 
  */
-package org.usfirst.frc.team467.robot.simulator;
+package org.usfirst.frc.team467.robot.simulator.communications;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
+import org.usfirst.frc.team467.robot.simulator.Robot;
+
 import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 
 /**
@@ -100,7 +101,6 @@ public class RobotData {
 		this.rightPositionReading = rightPositionReading;
 		updateMapPosition();
 		send();
-		receive();
 	}
 	
 	public void send() {
