@@ -58,7 +58,7 @@ public class Robot extends TimedRobot {
 		gyro.calibrate();
 		gyro.reset();
 		
-		//Get joystick
+		//Creates new rumbler for the driver joystick
 		rumbler = new Rumbler(driverstation.getDriveJoystick());
 
 		// Initialize math lookup table
@@ -126,15 +126,15 @@ public class Robot extends TimedRobot {
 	}
 
 	public void testPeriodic() {
-			driverstation.readInputs();
+		driverstation.readInputs();
 
-			if (driverstation.getDriveJoystick().buttonPressed(Button.a)){ 
-				rumbler.rumble(1000, 1.0);
-				LOGGER.info("You pressed a");
-			}
-
-			rumbler.periodic();
+		if (driverstation.getDriveJoystick().buttonPressed(Button.a)){ 
+			rumbler.rumble(1000, 1.0);
+			LOGGER.info("You pressed a");
 		}
+
+		rumbler.periodic();
+	}
 
 
 	public void autonomousPeriodic() {
