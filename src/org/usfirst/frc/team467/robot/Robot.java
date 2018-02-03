@@ -10,6 +10,7 @@ package org.usfirst.frc.team467.robot;
 import edu.wpi.cscore.CvSink;
 import edu.wpi.cscore.CvSource;
 import edu.wpi.cscore.UsbCamera;
+import edu.wpi.cscore.VideoCamera.WhiteBalance;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.IterativeRobot;
@@ -26,6 +27,8 @@ import com.ctre.CANTalon;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 
 import org.apache.log4j.Logger;
+import org.opencv.core.Mat;
+import org.opencv.imgproc.Imgproc;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to each mode, as described in the
@@ -57,15 +60,35 @@ public class Robot extends IterativeRobot {
 	public void robotInit() {
 
 		// TODO: Initialize the Robot Map
+		
+		vision = VisionProcessing.getInstance();
 
 		// Initialize logging framework
 		Logging.init();
 		new Thread(() -> {
 			UsbCamera camera = CameraServer.getInstance().startAutomaticCapture();
-			camera.setResolution(640, 480);
-			CvSource outputsource = CameraServer.getInstance().putVideo("Cam", 640, 480);
+			camera.setResolution(320, 240);
+			camera.setBrightness(100);
+			camera.setWhiteBalanceManual(WhiteBalance.kFixedIndoor);
+			camera.setFPS(30);
+			camera.setExposureManual(0);
 			
-		}
+			
+			CvSink cvsink = CameraServer.getInstance().getVideo();
+			CvSource outputsource = CameraServer.getInstance().putVideo("CubeCam", 320, 240); //CubeCam
+			
+			Mat source = new Mat();
+			Mat output = new Mat();
+			
+			while(!Thread.interrupted()) {
+				cvsink.grabFrame(source);
+				vision.findCube(source);
+//				if (!source.empty()) {
+//					Imgproc.cvtColor(source, output, Imgproc.COLOR_BGR2GRAY);
+//					outputsource.putFrame(output);
+//				}
+			}
+		}).start();
 
 		// Make robot objects
 		driverstation = DriverStation.getInstance();
@@ -86,12 +109,6 @@ public class Robot extends IterativeRobot {
 		// TODO: Implement actions.doNothing
 //		autonomous = Actions.doNothing();
 
-		//made usb camera and captures video
-		UsbCamera cam = CameraServer.getInstance().startAutomaticCapture();
-		//set resolution and frames per second to match driverstation
-		cam.setResolution(320, 240);
-		cam.setFPS(15);
-
 		//TODO: Create list of autonomous modes for selector
 		// Setup autonomous mode selectors
 		String[] autoList = {
@@ -99,8 +116,6 @@ public class Robot extends IterativeRobot {
 				"go"
 		};
 
-		NetworkTable table = NetworkTable.getTable("SmartDashboard");
-		table.putStringArray("Auto List", autoList);
 		LOGGER.debug("Robot Initialized");
 	}
 
@@ -113,6 +128,12 @@ public class Robot extends IterativeRobot {
 
 	public void disabledPeriodic() {
 		LOGGER.trace("Disabled Periodic");
+		double angle = vision.angleMeasure();
+		if (!Double.isNaN(angle)) {
+			LOGGER.info("Angle Measure in Degrees = " + Math.toDegrees(angle));
+			LOGGER.info("Angle Measure in Radians = " + angle);			
+		}
+
 	}
 
 	public void autonomousInit() {
@@ -147,6 +168,7 @@ public class Robot extends IterativeRobot {
 
 	public void autonomousPeriodic() {
 //		autonomous.run();
+		drive.arcadeDrive(0, 0);
 	}
 
 	/**

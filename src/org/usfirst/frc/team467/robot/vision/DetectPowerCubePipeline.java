@@ -152,8 +152,7 @@ public class DetectPowerCubePipeline implements VisionPipeline {
 	 * @param interpolation type of interpolation to use.
 	 * @param dst output image.
 	 */
-	private void cvResize(Mat src, Size dSize, double fx, double fy, int interpolation,
-		Mat dst) {
+	private void cvResize(Mat src, Size dSize, double fx, double fy, int interpolation, Mat dst) {
 		if (dSize==null) {
 			dSize = new Size(0,0);
 		}
