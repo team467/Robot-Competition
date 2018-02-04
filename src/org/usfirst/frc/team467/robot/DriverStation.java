@@ -70,6 +70,7 @@ public class DriverStation {
 		return 0.0;
 	}
 
+<<<<<<< HEAD
 	public ButtonPanel getButtonPanel() {
 		// TODO: Return the button panel
 		return null;
@@ -80,6 +81,8 @@ public class DriverStation {
 		navRumbler.periodic();
 	}
 
+=======
+>>>>>>> 4dbe3dea4221f4057c5dceee40e8e943f474c158
 	// All button mappings are accessed through the functions below
 
 	/**
