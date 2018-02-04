@@ -14,6 +14,9 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import org.apache.log4j.Logger;
+import org.usfirst.frc.team467.robot.Autonomous.ActionGroup;
+import org.usfirst.frc.team467.robot.Autonomous.Actions;
+import org.usfirst.frc.team467.robot.simulator.DriveSimulator;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to each mode, as described in the
@@ -27,10 +30,11 @@ public class Robot extends TimedRobot {
 	// Robot objects
 	private DriverStation driverstation;
 	private Drive drive;
-//	private ActionGroup autonomous;
+	private ActionGroup autonomous;
 	
-//	private VisionProcessing vision;
 	private Gyrometer gyro;
+	
+	boolean useSimulator = false;
 
 	int session;
 
@@ -50,7 +54,12 @@ public class Robot extends TimedRobot {
 		// Make robot objects
 		driverstation = DriverStation.getInstance();
 		LOGGER.info("inited driverstation");
-		drive = Drive.getInstance();
+
+		if (useSimulator) {
+			drive = DriveSimulator.getInstance();
+		} else {
+			drive = DriveActual.getInstance();
+		}
 
 		gyro = Gyrometer.getInstance();
 		gyro.calibrate();
@@ -75,7 +84,6 @@ public class Robot extends TimedRobot {
 	}
 	public void disabledInit() {
 		LOGGER.debug("Disabled Starting");
-		drive.logClosedLoopErrors();
 //		autonomous.terminate();
 //		autonomous = Actions.doNothing();
 	}
@@ -92,22 +100,20 @@ public class Robot extends TimedRobot {
 //	
 	public void autonomousInit() {
 		final String autoMode = SmartDashboard.getString("Auto Selector", "none");
-		drive.initMotionMagicMode();
 		
-//	drive.initPositionMode();
 		LOGGER.info(drive);
 		// TODO: call appropriate auto modes based on list
 		LOGGER.debug("Autonomous init: " + autoMode);
-//		switch (autoMode) {
-//		case "none":
-//			autonomous = Actions.doNothing();
-//			break;
-//		default:
-//			autonomous = Actions.doNothing();
-//			break;
-//		}
-//		LOGGER.info("Init Autonomous:" + autonomous.getName());
-//		autonomous.enable();
+		switch (autoMode) {
+		case "none":
+			autonomous = Actions.doNothing();
+			break;
+		default:
+			autonomous = Actions.doNothing();
+			break;
+		}
+		LOGGER.info("Init Autonomous:" + autonomous.getName());
+		autonomous.enable();
 	}
 
 	public void teleopInit() {
@@ -125,9 +131,6 @@ public class Robot extends TimedRobot {
 
 	public void autonomousPeriodic() {
 		
-		drive.logClosedLoopErrors();
-		drive.publishRawSensorValues();
-//		drive.PositionModeMove(drive.feetToTicks(amountToGoLeft), drive.feetToTicks(amountToGoRight));
 //		drive.motionMagicMove(amountToGoLeft, amountToGoRight);
 		
 //		autonomous.run();

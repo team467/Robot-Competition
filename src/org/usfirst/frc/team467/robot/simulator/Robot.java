@@ -3,6 +3,7 @@
  */
 package org.usfirst.frc.team467.robot.simulator;
 
+import org.usfirst.frc.team467.robot.Drive;
 import org.usfirst.frc.team467.robot.simulator.communications.RobotData;
 import org.usfirst.frc.team467.robot.simulator.gui.MapController;
 
