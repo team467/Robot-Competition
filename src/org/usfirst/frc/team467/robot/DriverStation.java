@@ -69,11 +69,6 @@ public class DriverStation {
 	public double getTurnSensivity() {
 		return 0.0;
 	}
-
-	public ButtonPanel getButtonPanel() {
-		// TODO: Return the button panel
-		return null;
-	}
 	
 	public void periodic() {
 		driverRumbler.periodic();
