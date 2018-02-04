@@ -12,23 +12,17 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-/**
- *
- */
 public class Drive extends DifferentialDrive {
 	private ControlMode controlMode;
-	// TODO: DEfine logger (Done)
+	
 	private static final Logger LOGGER = Logger.getLogger(Drive.class);
 
 	// Single instance of this class
 	private static Drive instance = null;
-
-	// Data storage object
 	
 	private WPI_TalonSRX leftLead;
 	private WPI_TalonSRX leftFollower1;
 	private WPI_TalonSRX leftFollower2;
-	
 	
 	private WPI_TalonSRX rightLead;
 	private WPI_TalonSRX rightFollower1;
@@ -55,9 +49,7 @@ public class Drive extends DifferentialDrive {
 		
 		this.rightLead = rightLead;
 		initMotor(this.rightLead);
-		//rightLead.setInverted(false);
 		rightLead.setSensorPhase(true);
-	//	rightLead.setInverted(false);
 		rightLead.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, RobotMap.TALON_TIMEOUT);
 		rightLead.config_kF(0, 0.7297, RobotMap.TALON_TIMEOUT);
 		
@@ -91,19 +83,22 @@ public class Drive extends DifferentialDrive {
 	 * @return The single instance.
 	 */
 	public static Drive getInstance() {
-		// TODO: Update if constructor changes
 		if (instance == null) {
 			// First usage - create Drive object
 			instance = new Drive(
-					new WPI_TalonSRX(1), new WPI_TalonSRX(2), new WPI_TalonSRX(3),
-					new WPI_TalonSRX(4), new WPI_TalonSRX(5), new WPI_TalonSRX(6));
+					new WPI_TalonSRX(RobotMap.LEFT_LEAD_CHANNEL),
+					new WPI_TalonSRX(RobotMap.LEFT_FOLLOWER_1_CHANNEL),
+					new WPI_TalonSRX(RobotMap.LEFT_FOLLOWER_2_CHANNEL),
+					
+					new WPI_TalonSRX(RobotMap.RIGHT_LEAD_CHANNEL),
+					new WPI_TalonSRX(RobotMap.RIGHT_FOLLOWER_1_CHANNEL),
+					new WPI_TalonSRX(RobotMap.RIGHT_FOLLOWER_2_CHANNEL));
 		}
 		return instance;
 	}
 
 	public void setPIDF(double p, double i, double d, double f){
 		// TODO: Set the PIDF of the talons. Assumes the same values for all motors
-		
 		
 	}
 	
@@ -140,6 +135,11 @@ public class Drive extends DifferentialDrive {
 	}
 	
 	public void initMotionMagicMode() {
+		if (!RobotMap.HAS_WHEELS) {
+			LOGGER.trace("No Drive System");
+			return;
+		}
+		
 		rightLead.setSelectedSensorPosition(0, 0, RobotMap.TALON_TIMEOUT);
 		leftLead.setSelectedSensorPosition(0, 0, RobotMap.TALON_TIMEOUT);
 		
@@ -169,11 +169,21 @@ public class Drive extends DifferentialDrive {
 		rightLead.configMotionAcceleration(1052 / 2, RobotMap.TALON_TIMEOUT);	
 	}
 	public void initSpeedControl() {
+		if (!RobotMap.HAS_WHEELS) {
+			LOGGER.trace("No drive system");
+			return;
+		}
+		
 		rightLead.set(ControlMode.Velocity, rightLead.getSelectedSensorVelocity(1));
 		leftLead.set(ControlMode.Velocity, leftLead.getSelectedSensorVelocity(1));
 		
 	}
 	public void initPercentOutput() {
+		if (!RobotMap.HAS_WHEELS) {
+			LOGGER.trace("No drive system");
+			return;
+		}
+		
 		rightLead.set(ControlMode.PercentOutput, rightLead.getMotorOutputPercent());
 		leftLead.set(ControlMode.PercentOutput, leftLead.getMotorOutputPercent());;
 		
@@ -223,6 +233,11 @@ public class Drive extends DifferentialDrive {
 	//TODO: Check to see if we still need this function.
 	private void go(double left, double right, ControlMode mode) {
 		// TODO: Check to make sure all motors exist. If not throw a null pointer exception
+		if (!RobotMap.HAS_WHEELS) {
+			LOGGER.trace("No drive system");
+			return;
+		}
+		
 		controlMode = mode;
 		if (leftLead == null || rightLead == null || this.leftFollower1 == null || this.leftFollower2 == null || this.rightFollower1 == null || this.rightFollower2 == null) {
 			throw new NullPointerException("Null motor provided");
@@ -287,6 +302,10 @@ public class Drive extends DifferentialDrive {
 	 * Does not drive drive motors and keeps steering angle at previous position.
 	 */
 	public void stop() {
+		if (!RobotMap.HAS_WHEELS) {
+			LOGGER.trace("No drive system");
+			return;
+		}
 		//TODO: Stop all motors
 		go(0,0, ControlMode.Disabled);
 		
@@ -294,6 +313,10 @@ public class Drive extends DifferentialDrive {
 	
 	@Override
 	public void arcadeDrive(double xSpeed, double zRotation, boolean squaredInputs) {
+		if (!RobotMap.HAS_WHEELS) {
+			LOGGER.trace("No drive system");
+			return;
+		}
 		super.arcadeDrive(xSpeed, zRotation, squaredInputs);
 		
 		leftFollower1.set(ControlMode.Follower, leftLead.getDeviceID());
