@@ -52,7 +52,7 @@ public class Robot extends TimedRobot {
 		
 		// Make robot objects
 		driverstation = DriverStation.getInstance();
-		LOGGER.info("Initiated Driverstation");
+		LOGGER.info("Initialized Driverstation");
 		
 		drive = Drive.getInstance();
 		
