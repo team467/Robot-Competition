@@ -16,7 +16,7 @@ public class Actions {
 		String actionText = "Do Nothing";
 		return new Action(actionText,
 				() -> drive.isStopped(),
-				() -> drive.tankDrive(0, 0, false));
+				() -> drive.tankDrive(0, 0));
 	}
 
 	public static Action wait(double duration) {

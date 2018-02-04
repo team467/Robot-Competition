@@ -34,8 +34,6 @@ public class Robot extends TimedRobot {
 	
 	private Gyrometer gyro;
 	
-	boolean useSimulator = false;
-
 	int session;
 
 	/**
@@ -55,11 +53,7 @@ public class Robot extends TimedRobot {
 		driverstation = DriverStation.getInstance();
 		LOGGER.info("inited driverstation");
 
-		if (useSimulator) {
-			drive = DriveSimulator.getInstance();
-		} else {
-			drive = DriveActual.getInstance();
-		}
+		drive = DriveActual.getInstance();
 
 		gyro = Gyrometer.getInstance();
 		gyro.calibrate();
