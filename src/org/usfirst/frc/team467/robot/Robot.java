@@ -14,6 +14,8 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import org.apache.log4j.Logger;
+
+import org.usfirst.frc.team467.robot.XBoxJoystick467.Button;
 import org.usfirst.frc.team467.robot.RobotMap.RobotID;
 
 /**
@@ -24,7 +26,7 @@ import org.usfirst.frc.team467.robot.RobotMap.RobotID;
 
 public class Robot extends TimedRobot {
 	private static final Logger LOGGER = Logger.getLogger(Robot.class);
-
+	
 	// Robot objects
 	private DriverStation driverstation;
 	private Drive drive;
@@ -125,7 +127,20 @@ public class Robot extends TimedRobot {
 	}
 
 	public void testPeriodic() {
+		driverstation.readInputs();
+
+		if (driverstation.getNavJoystick().pressed(Button.b)){ 
+			driverstation.getNavRumbler().rumble(150, 0.3);
+			LOGGER.info("You pressed b");
+		}
+		if (driverstation.getDriveJoystick().pressed(Button.b)){ 
+			driverstation.getNavRumbler().rumble(150, 1.0);
+			LOGGER.info("You pressed b");
+		}
+
+		driverstation.periodic();
 	}
+
 
 	public void autonomousPeriodic() {
 		
