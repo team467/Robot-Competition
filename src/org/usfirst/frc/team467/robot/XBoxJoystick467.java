@@ -8,6 +8,8 @@ package org.usfirst.frc.team467.robot;
 import java.lang.Math;
 import java.util.EnumMap;
 
+import org.apache.log4j.Logger;
+
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
@@ -16,6 +18,7 @@ import edu.wpi.first.wpilibj.GenericHID.RumbleType;
  *
  */
 public class XBoxJoystick467 {
+	private static final Logger LOGGER = Logger.getLogger(XBoxJoystick467.class);
 	private XboxController xbox;
 	private int pov = 0;
 
@@ -25,8 +28,9 @@ public class XBoxJoystick467 {
 	
 //	public static boolean[] buttonDown = new boolean[10]; 
 //	public static boolean[] prev_buttonDown = new boolean[10];
-	public static EnumMap<Button, Boolean> prevButtonsState;
-	public static EnumMap<Button, Boolean> currButtonsState;
+	public static EnumMap<Button, Boolean> prevButtonsState = new EnumMap<>(Button.class);
+	public static EnumMap<Button, Boolean> currButtonsState = new EnumMap<>(Button.class);
+	
 	
 	public enum Button {
 		a,
@@ -39,8 +43,7 @@ public class XBoxJoystick467 {
 		start,
 		left,
 		right;
-
-		
+	
 //		public boolean isPressed;		
 //		public boolean wasPressed;
 		
@@ -114,13 +117,14 @@ public class XBoxJoystick467 {
 			// TODO Traverse the enum and read all the values
 			// Example --> value = accelerateJoystickInput(joystick.getRawAxis(channel));
 			
+			//LOGGER.info("test");
 			for(Button b : Button.values()) {
+				//LOGGER.info(b + " " + b.ordinal());
 				prevButtonsState.put(b, currButtonsState.get(b));
-				currButtonsState.put(b, xbox.getRawButton(b.ordinal()));
-				
+				currButtonsState.put(b, xbox.getRawButton(b.ordinal())); 
 			}
 			
-			
+
 			// Read Joystick Axes
 			leftX.value = accelerateJoystickInput(xbox.getX(GenericHID.Hand.kLeft));
 			leftY.value = accelerateJoystickInput(xbox.getY(GenericHID.Hand.kLeft));

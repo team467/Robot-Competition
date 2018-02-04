@@ -46,6 +46,10 @@ public class Robot extends IterativeRobot {
 	int session;
 	
 	String axis = "No turning";
+	
+	double rumbleTime = 0.0;
+	
+	//double count = 0.0;
 
 	/**
 	 * Time in milliseconds
@@ -70,7 +74,6 @@ public class Robot extends IterativeRobot {
 		drive.setDefaultDriveMode();
 
 		gyro = Gyrometer.getInstance();
-		//grabber = Grabber.getInstance();
 		grabber = Grabber.getInstance();
 		
 		gyro.calibrate();
@@ -111,6 +114,9 @@ public class Robot extends IterativeRobot {
 
 	public void disabledPeriodic() {
 		LOGGER.trace("Disabled Periodic");
+		
+//		driverstation.navJoy.leftRumble(0.0);
+//		driverstation.navJoy.rightRumble(0.0); 
 	}
 
 	public void autonomousInit() {
@@ -146,6 +152,8 @@ public class Robot extends IterativeRobot {
 
 	public void autonomousPeriodic() {
 //		autonomous.run();
+		
+		
 	}
 
 	/**
@@ -158,12 +166,7 @@ public class Robot extends IterativeRobot {
 		double left = driverstation.getArcadeSpeed();
 		double right = driverstation.getArcadeTurn();
 		// -1* driverstation.getDriveJoystick().getJoystick()
-		//LOGGER.info("left " + left + " right " + right);
-		
-		//comments for testing
-		LOGGER.info(grabber.hasCube()); //implementing to grabber late
-		
-
+		LOGGER.info("left " + left + " right " + right);
 		
 		if (Math.abs(left) < MIN_DRIVE_SPEED) {
 			left = 0.0;
@@ -173,12 +176,23 @@ public class Robot extends IterativeRobot {
 		}
 		
 		driverstation.navJoy.read();
+		
+		if(grabber.hasCube()) {
+			//rumble code here
+		}
+		
 		if (driverstation.navJoy.down(XBoxJoystick467.Button.x)) {
 			grabber.grab();
-		} else if (driverstation.navJoy.down(XBoxJoystick467.Button.y)) {
+		
+		}
+		
+		else if(driverstation.navJoy.down(XBoxJoystick467.Button.y)){
 			grabber.release();
-		} else {
+		}
+		
+		 else {
 			grabber.pause(); 
+			
 		}
 	
 		//changed to arcade drive
