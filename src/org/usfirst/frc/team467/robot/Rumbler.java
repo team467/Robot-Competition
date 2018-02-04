@@ -18,7 +18,7 @@ public class Rumbler {
 	void rumble(int durationMS, double intensity) {
 		this.durationMS = durationMS;
 		this.intensity = intensity; 
-		LOGGER.info("rumble duration=" + durationMS + "rumble intensity=" + intensity);
+		LOGGER.debug("rumble duration=" + durationMS + "rumble intensity=" + intensity);
 	}
 	
 	public void periodic() {
@@ -26,7 +26,7 @@ public class Rumbler {
 		    controller.setRumble(RumbleType.kRightRumble, intensity);
 		    controller.setRumble(RumbleType.kLeftRumble, intensity);
 		    durationMS -= ITERATION_TIME_MS;
-		    LOGGER.info("periodic duration=" + durationMS + " intensity=" + intensity);
+		    LOGGER.debug("periodic duration=" + durationMS + " intensity=" + intensity);
 		    
         } else { 
 		   controller.setRumble(RumbleType.kRightRumble, 0);
