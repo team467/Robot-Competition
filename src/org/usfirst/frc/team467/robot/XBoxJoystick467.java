@@ -181,7 +181,6 @@ public class XBoxJoystick467 {
     }
     
     public double turboFastSpeed() {
-
         return (getLeftStickY()*(RobotMap.NORMAL_MAX_SPEED 
                 + (RobotMap.FAST_MAX_SPEED-RobotMap.NORMAL_MAX_SPEED)
                 *Axis.leftTrigger.value()))
@@ -189,7 +188,6 @@ public class XBoxJoystick467 {
     }
     
     public double turboSlowSpeed() {
-
         return (getLeftStickY()*(RobotMap.NORMAL_MAX_SPEED 
                 + (RobotMap.SLOW_MAX_SPEED-RobotMap.NORMAL_MAX_SPEED)
                 *Axis.rightTrigger.value()))
