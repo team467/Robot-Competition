@@ -22,21 +22,33 @@ public class Grabber {
 	}
 		
 	public void grab() {
+		if (!RobotMap.HAS_GRABBER) {
+			return;
+		}
 		left.set(RobotMap.GRAB_SPEED);
 		right.set(RobotMap.GRAB_SPEED);
 	}
 	
 	public void release() {
+		if (!RobotMap.HAS_GRABBER) {
+			return;
+		}
 		left.set(RobotMap.RELEASE_SPEED);
 		right.set(RobotMap.RELEASE_SPEED);
 	}
 	
 	public void pause() {
+		if (!RobotMap.HAS_GRABBER) {
+			return;
+		}
 		left.set(0);
 		right.set(0);
 	}
 	
 	public boolean hasCube() {
+		if (!RobotMap.HAS_GRABBER) {
+			return false;
+		}
 		return os.detectedTarget();
 	}
 
