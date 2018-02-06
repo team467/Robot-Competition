@@ -7,14 +7,9 @@ public class Grabber {
 	private Spark right;
 	OpticalSensor os;
 	
-	public final static double GRAB_SPEED = 1.0;
-	public final static double RELEASE_SPEED = -1.0;
-	public final static int GRABBER_L_CHANNEL = 1; 
-    public final static int GRABBER_R_CHANNEL = 2;
-	
 	private Grabber() {
-		left = new Spark(GRABBER_L_CHANNEL);
-		right = new Spark(GRABBER_R_CHANNEL);
+		left = new Spark(RobotMap.GRABBER_L_CHANNEL);
+		right = new Spark(RobotMap.GRABBER_R_CHANNEL);
 		os = OpticalSensor.getInstance();
 	}
 	
@@ -25,17 +20,15 @@ public class Grabber {
 		
 		return instance;
 	}
-	
-	//speeds will be determined by map 
-	
+		
 	public void grab() {
-		left.set(GRAB_SPEED);
-		right.set(GRAB_SPEED);
+		left.set(RobotMap.GRAB_SPEED);
+		right.set(RobotMap.GRAB_SPEED);
 	}
 	
 	public void release() {
-		left.set(RELEASE_SPEED);
-		right.set(RELEASE_SPEED);
+		left.set(RobotMap.RELEASE_SPEED);
+		right.set(RobotMap.RELEASE_SPEED);
 	}
 	
 	public void pause() {

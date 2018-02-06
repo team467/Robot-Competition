@@ -43,25 +43,24 @@ public class RobotMap {
 			HAS_GRABBER = false;
 			HAS_RAMPS = false;
 			
-			// TODO Assign values to the game piece variables, and make more as appropriate
-			EVEVATOR_MOTOR_CHANNEL = 0;
-			GRABBER_MOTOR_PWM_CHANNEL = 0;
-			RAMP_SOLENOID_CHANNEL = 0;
-			
 			isDriveMotorInverted = new boolean[] { false, true, false, true };
 			break;
 		case Board:
 			HAS_WHEELS = false;
 			WHEEL_ENCODER_CODES_PER_REVOLUTION = 256;
 			
-			// TODO Assign values to the game piece variables, and make more as appropriate
-			EVEVATOR_MOTOR_CHANNEL = 0;
-			GRABBER_MOTOR_PWM_CHANNEL = 0;
-			RAMP_SOLENOID_CHANNEL = 0;
-			
 			HAS_ELEVATOR = false;
-			HAS_GRABBER = false;
 			HAS_RAMPS = false;
+			
+			HAS_GRABBER = true;
+			GRAB_SPEED = 1.0;
+			RELEASE_SPEED = -1.0;
+			GRABBER_L_CHANNEL = 1; 
+		    GRABBER_R_CHANNEL = 2;
+		    
+		    // TODO Assign values to the game piece variables, and make more as appropriate
+		 	EVEVATOR_MOTOR_CHANNEL = 0;
+		 	RAMP_SOLENOID_CHANNEL = 0;
 			
 			isDriveMotorInverted = new boolean[] { false, true, false, true };
 			break;
@@ -80,12 +79,16 @@ public class RobotMap {
 			RIGHT_FOLLOWER_2_CHANNEL = 6;
 			
 			HAS_ELEVATOR = true;
-			HAS_GRABBER = true;
 			HAS_RAMPS = true;
+			
+			HAS_GRABBER = true;
+			GRAB_SPEED = 1.0;
+			RELEASE_SPEED = -1.0;
+			GRABBER_L_CHANNEL = 1; 
+		    GRABBER_R_CHANNEL = 2;
 			
 			// TODO Assign values to the game piece variables, and make more as appropriate
 			EVEVATOR_MOTOR_CHANNEL = 0;
-			GRABBER_MOTOR_PWM_CHANNEL = 0;
 			RAMP_SOLENOID_CHANNEL = 0;
 			break;
 		case Competition_2:
@@ -103,12 +106,16 @@ public class RobotMap {
 			RIGHT_FOLLOWER_2_CHANNEL = 6;
 			
 			HAS_ELEVATOR = true;
-			HAS_GRABBER = true;
 			HAS_RAMPS = true;
+			
+			HAS_GRABBER = true;
+			GRAB_SPEED = 1.0;
+			RELEASE_SPEED = -1.0;
+			GRABBER_L_CHANNEL = 1; 
+		    GRABBER_R_CHANNEL = 2;
 			
 			// TODO Assign values to the game piece variables, and make more as appropriate
 			EVEVATOR_MOTOR_CHANNEL = 0;
-			GRABBER_MOTOR_PWM_CHANNEL = 0;
 			RAMP_SOLENOID_CHANNEL = 0;
 			break;
 		}
@@ -166,7 +173,10 @@ public class RobotMap {
 	public static int EVEVATOR_MOTOR_CHANNEL;
 	
 	public static boolean HAS_GRABBER;
-	public static int GRABBER_MOTOR_PWM_CHANNEL;
+	public static double GRAB_SPEED = 1.0;
+	public static double RELEASE_SPEED = -1.0;
+	public static int GRABBER_L_CHANNEL = 1; 
+    public static int GRABBER_R_CHANNEL = 2;
 	
 	public static boolean HAS_RAMPS;
 	public static int RAMP_SOLENOID_CHANNEL;
