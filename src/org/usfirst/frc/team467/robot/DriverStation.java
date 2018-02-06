@@ -2,23 +2,18 @@ package org.usfirst.frc.team467.robot;
 
 import org.usfirst.frc.team467.robot.Autonomous.ActionGroup;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
-
-import edu.wpi.first.wpilibj.XboxController;
-
 public class DriverStation {
 	
-	XBoxJoystick467 driverJoy;
+	private XBoxJoystick467 driverJoy;
+	private XBoxJoystick467 navJoy;
 	
-	XBoxJoystick467 navJoy;
+	private Rumbler driverRumbler;
+	private Rumbler navRumbler;
 	
 	private static DriverStation station;
 	
 	// Mapping of functions to Controller Buttons for normal operation
 	// TODO: Create enum for buttons
-	
-	
-
 	/**
 	 * Singleton instance of the object.
 	 *
@@ -35,9 +30,12 @@ public class DriverStation {
 	 * Private constructor
 	 */
 	private DriverStation() {
-		// TODO: Initialize class variables
-		driverJoy = new XBoxJoystick467(0);
-		navJoy = new XBoxJoystick467(1);
+
+		driverJoy = new XBoxJoystick467(0, "driver");
+		navJoy = new XBoxJoystick467(1, "nav");
+		
+		driverRumbler = new Rumbler(driverJoy);
+		navRumbler = new Rumbler(navJoy);
 	}
 
 	/**
@@ -46,7 +44,6 @@ public class DriverStation {
 	public void readInputs() {
 		driverJoy.read();
 		navJoy.read();
-		// TODO: Read inputs from the buttons
 	}
 
 	/**
@@ -58,13 +55,25 @@ public class DriverStation {
 		return driverJoy;
 	}
 	
+	public XBoxJoystick467 getNavJoystick() {
+		return navJoy;
+	}
+	
+	public Rumbler getDriverRumbler() {
+		return driverRumbler;
+	}
+	
+	public Rumbler getNavRumbler() {
+		return navRumbler;
+	}
+	
 	public double getTurnSensivity() {
 		return 0.0;
 	}
-
-	public ButtonPanel getButtonPanel() {
-		// TODO: Return the button panel
-		return null;
+	
+	public void periodic() {
+		driverRumbler.periodic();
+		navRumbler.periodic();
 	}
 
 	// All button mappings are accessed through the functions below
@@ -77,7 +86,7 @@ public class DriverStation {
 	 */
 	public DriveMode getDriveMode() {
 		// TODO: Set the drive mode based on the buttons pushed
-		return DriveMode.CRAB; // Update with the correct drive mode
+		return DriveMode.ArcadeDrive; // Update with the correct drive mode
 	}
 
 	public boolean getTerminateAuto() {
@@ -100,13 +109,13 @@ public class DriverStation {
 	
 	public double getArcadeSpeed() {
 		return getDriveJoystick().turboSpeedAdjust();
-		
 	}
 	
 	public double getArcadeTurn() {
 		return getDriveJoystick().getRightStickX();
 	}
 	
+
 	public void navSetLeftRumble(double value) {
 		navJoy.leftRumble(value);
 	}
@@ -121,6 +130,9 @@ public class DriverStation {
 	
 	public void driverSetRightRumble(double value) {
 		driverJoy.rightRumble(value);
+	}
+	public void setDriverRumble(double value) {
+		getDriveJoystick().setRumble(value);
 	}
 
 }
