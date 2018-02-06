@@ -33,7 +33,7 @@ public class DriveSimulator implements Drive {
 	private boolean isMoving = false;
 	
 	private DriveSimulator() {
-		maxFeetPerPeriod = RobotMap.WHEELPOD_CIRCUMFERENCE / 12 * MAX_RPM / 60 / 1000;
+		maxFeetPerPeriod = RobotMap.WHEELPOD_CIRCUMFERENCE / 12 * MAX_RPM / 60 / 500;
 		zeroPosition();
 		absoluteRightPositionReadingOffset = 0.0;
 		absoluteLeftPositionReadingOffset = 0.0;
@@ -110,7 +110,7 @@ public class DriveSimulator implements Drive {
 	      }
 	    }
 
-		if (leftPositionReading == leftDistance && rightPositionReading == leftDistance) {
+		if (leftPositionReading == leftDistance && rightPositionReading == rightDistance) {
 			isMoving = false;
 			return; // At destination
 		}
@@ -221,16 +221,13 @@ public class DriveSimulator implements Drive {
 	 * @return the absolute distance moved in feet
 	 */
 	public double absoluteDistanceMoved() {
-		double leftRotations =  Math.abs(leftPositionReading);
-		double rightRotations = Math.abs(rightPositionReading);
-		double distancePerRotation =  RobotMap.WHEELPOD_CIRCUMFERENCE / 12;
-		double distance = 0;
-		if (leftRotations < rightRotations) {
-			distance = leftRotations * distancePerRotation;
+		double absoluteLeftDistance =  Math.abs(leftPositionReading);
+		double absoluteRightDistance = Math.abs(rightPositionReading);
+		if (absoluteLeftDistance < absoluteRightDistance) {
+			return absoluteRightDistance;
 		} else {
-			distance = rightRotations * distancePerRotation;
+			return absoluteLeftDistance;
 		}
-		return distance;
 	}
 	
 	  /**
@@ -255,6 +252,11 @@ public class DriveSimulator implements Drive {
 		
 		double left = -1 * Math.toRadians(100);
 		double right =     Math.toRadians(100);
+		
+		do {
+			drive.moveDistance(0,90);
+		} while (!drive.isStopped());	
+		
 //		while (drive.moveDistance(left, right) != true);
 		
 //		drive.moveDistance(0, 0); // Stationary
