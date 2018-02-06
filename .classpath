@@ -11,8 +11,7 @@
 	<classpathentry kind="var" path="USERLIBS_DIR/CTRE_Phoenix-javadoc.jar"/>
 	<classpathentry kind="var" path="USERLIBS_DIR/CTRE_Phoenix-sources.jar"/>
 	<classpathentry kind="var" path="USERLIBS_DIR/CTRE_Phoenix.jar"/>
-	<classpathentry kind="var" path="USERLIBS_DIR/CTRLib.jar"/>
-	<classpathentry kind="lib" path="/Users/Nikhil/wpilib/user/java/lib/ntcore-java-4.0.0.jar"/>
-	<classpathentry kind="lib" path="/Users/Nikhil/wpilib/user/java/lib/ntcore-jni-4.0.0-all.jar"/>
+	<classpathentry kind="var" path="USERLIBS_DIR/ntcore-java-4.0.0.jar"/>
+	<classpathentry kind="var" path="USERLIBS_DIR/ntcore-jni-4.0.0-all.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
