@@ -35,24 +35,10 @@ public class Actions {
 				() -> drive.tankDrive(0, 0, false));
 	}
 
-	public static final Action example1 = new Action(
-			"Example 1",
-			new ActionGroup.Duration(2),
-			() -> { System.out.println("Running Example Autonomous Action #1: " + System.currentTimeMillis()); });
-
-	public static final Action example2 = new Action("Example 2", new ActionGroup.Duration(2), () -> {
-		System.out.println("Running Example Autonomous Action #2: " + System.currentTimeMillis());
-	});
-
 	public static final Action moveForward = new Action(
 			"Move Forward 2 seconds",
 			new ActionGroup.Duration(1),
 			() -> Drive.getInstance().tankDrive(0.5, 0.5));
-
-	public static final Action moveBackward = new Action(
-			"Move Backward 2 seconds",
-			new ActionGroup.Duration(2),
-			() -> Drive.getInstance().tankDrive(-0.5, -0.5));
 
 	public static Action print(String message) {
 		return new Action(
@@ -68,12 +54,11 @@ public class Actions {
 				() -> drive.tankDrive(0.7, 0.7));
 	}
 
-	public static Action goBackward(double seconds, double speed){
+	public static Action zeroDistance() {
 		Drive drive = Drive.getInstance();
-		String actionText = "Move backward " + seconds + "seconds";
-		return new Action(actionText,
-				new ActionGroup.Duration(seconds),
-				() -> drive.tankDrive(-speed, -speed));
+		return new Action(
+				"Zeroing the distance",
+				new ActionGroup.RunOnce(() -> drive.zeroPosition()));
 	}
 
 	public static Action moveDistanceForward(double distance) {
@@ -81,27 +66,29 @@ public class Actions {
 		String actionText = "Move forward " + distance + " feet";
 		return new Action(actionText,
 				new ActionGroup.ReachDistance(distance),
-				() -> drive.moveDistance(distance, distance));
+				() -> drive.moveDistance(distance));
+	}
+	
+	public static Action moveDistanceWithTurn(double distance, double rotationInDegrees) {
+	    double rotation = Math.toRadians(rotationInDegrees) * (RobotMap.WHEEL_BASE_WIDTH / 2);
+		double maxDistance = Math.copySign(Math.max(Math.abs(distance), Math.abs(rotation)), distance);
+	    
+		Drive drive = Drive.getInstance();
+		String actionText = "Move forward " + distance + " feet with a " + rotationInDegrees + " degree rotation.";
+		return new Action(actionText,
+				new ActionGroup.ReachDistance(maxDistance),
+				() -> drive.moveDistance(distance, rotation));
 	}
 
-//	public static Action moveDistanceForward(double distance, double angle) {
-//		Drive drive = Drive.getInstance();
-//		String actionText = "Move forward " + distance + " feet";
-//		return new Action(actionText,
-//				new ActionGroup.ReachDistance(distance),
-//				() -> drive.crabDrive(angle, distance));
-//	}
-
-	//takes in radians
-//	public static ActionGroup turnRadians(double angle) {
-//		final double inches = angle * RobotMap.WHEEL_BASE_WIDTH;
-//		final double feet = inches / 12.0;
-//		final String actionGroupText = "Turn to " + angle + " radians and " + feet + " feet";
-//		final ActionGroup mode = new ActionGroup(actionGroupText);
-//		mode.addAction(turnDrive(feet));
-//		return mode;
-//	}
-//
+	public static Action moveturn(double rotationInDegrees) {
+	    double rotation = Math.toRadians(rotationInDegrees) * (RobotMap.WHEEL_BASE_WIDTH / 2);
+	    
+		Drive drive = Drive.getInstance();
+		String actionText = "Rotate " + rotationInDegrees + " degrees.";
+		return new Action(actionText,
+				new ActionGroup.ReachDistance(rotation),
+				() -> drive.moveDistance(0, rotation));
+	}
 
 	public static boolean moveDistanceComplete(double distance) {
 		Drive drive = Drive.getInstance();
@@ -132,9 +119,26 @@ public class Actions {
 	public static ActionGroup moveDistanceForwardProcess3X(double distance) {
 		String actionGroupText = "Move forward 3X " + distance + " feet";
 		ActionGroup mode = new ActionGroup(actionGroupText);
+		mode.addAction(zeroDistance());
 		mode.addAction(moveDistanceForward(distance));
+		mode.addAction(zeroDistance());
 		mode.addAction(moveDistanceForward(distance));
+		mode.addAction(zeroDistance());
 		mode.addAction(moveDistanceForward(distance));
+		mode.enable();
+		return mode;
+	}
+
+	public static ActionGroup moveDistance(double distance) {
+		String actionGroupText = "Move forward 3X " + distance + " feet";
+		ActionGroup mode = new ActionGroup(actionGroupText);
+		mode.addAction(zeroDistance());
+		mode.addAction(moveDistanceForward(distance));
+		mode.addAction(zeroDistance());
+		mode.addAction(moveDistanceForward(distance));
+		mode.addAction(zeroDistance());
+		mode.addAction(moveDistanceForward(distance));
+		mode.enable();
 		return mode;
 	}
 
@@ -173,22 +177,50 @@ public class Actions {
 		return mode;
 	}
 
-	// Private method makes process, but for only one public variable
-	public static ActionGroup newBasicProcess() {
-		ActionGroup mode = new ActionGroup("Basic Auto");
-		mode.addAction(example1);
-		mode.addAction(moveForward);
-		mode.addAction(moveBackward);
-		mode.enable();
-		return mode;
-	}
-	public static final ActionGroup basicProcess = newBasicProcess();
+//	private void move1() {
+//	switch(moveCount) {
+//	
+//	case 0:
+//		if (drive.moveDistance(20, 20)) {
+//			moveCount++;
+//			drive.zeroPosition();				
+//		}
+//		break;
+//	
+//	case 1:
+//		if (drive.moveDistance(-0.785, 0.785)) {
+//			//45º turn in place 
+//			moveCount++;
+//			drive.zeroPosition();				
+//		}
+//		break;
+//	
+//	case 2:
+//		if (drive.moveDistance(5, 5)) {
+//			moveCount++;
+//			drive.zeroPosition();
+//		}
+//		break;
+//
+//	case 3:
+//		if (drive.moveDistance(1.57, -1.57)) {
+//			moveCount++;
+//			drive.zeroPosition();
+//		}
+//		break;
+//
+//	case 4:
+//		if (drive.moveDistance(5, 5)) {
+//			moveCount++;
+//			drive.zeroPosition();
+//		}
+//		break;
+//
+//	default:
+//	}
+//
+//	
+//}
 
-	private static ActionGroup getExampleProcess() {
-		ActionGroup mode = new ActionGroup("Example Auto");
-		mode.addAction(example1);
-		mode.addAction(example2);
-		return mode;
-	}
-	public static final ActionGroup exampleProcess = getExampleProcess();
+
 }

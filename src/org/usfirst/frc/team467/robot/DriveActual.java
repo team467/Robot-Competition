@@ -175,6 +175,10 @@ public class DriveActual extends DifferentialDrive implements Drive {
 		rightLead.setSelectedSensorPosition(0, 0, RobotMap.TALON_TIMEOUT);
 		leftLead.setSelectedSensorPosition(0, 0, RobotMap.TALON_TIMEOUT);
 	}
+
+	public void moveDistance(double distance) {
+		moveDistance(distance, distance);
+	}
 	
 	public void moveDistance(double left, double right) {
 		go(left, right, ControlMode.MotionMagic);

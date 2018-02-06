@@ -4,6 +4,9 @@
 package org.usfirst.frc.team467.robot.simulator;
 
 import org.usfirst.frc.team467.robot.Drive;
+import org.usfirst.frc.team467.robot.RobotMap;
+import org.usfirst.frc.team467.robot.Autonomous.ActionGroup;
+import org.usfirst.frc.team467.robot.Autonomous.Actions;
 import org.usfirst.frc.team467.robot.simulator.communications.RobotData;
 import org.usfirst.frc.team467.robot.simulator.gui.MapController;
 
@@ -22,8 +25,11 @@ public class Robot {
 	
 	RobotData data;
 	
+	ActionGroup autonomous;
+	
 	public void robotInit() {
-		drive = DriveSimulator.getInstance();
+		RobotMap.useSimulator = true;
+		drive = Drive.getInstance(); 
 		
 		data = RobotData.getInstance();
 		data.startServer();
@@ -32,9 +38,7 @@ public class Robot {
 	public void setView(MapController simulatorView) {
 		this.simulatorView = simulatorView;
 	}
-	
-	int moveCount = 0;
-	
+		
 	/*
 	 * Referring to field map, mode codes represented: 
 	 * Modes 1-6: Robot Starting Position - Switch Side
@@ -59,15 +63,11 @@ public class Robot {
 		drive.zeroPosition();
 		data.startPosition(20, 1.5);
 		data.send();
-		moveCount = 0;
 		mode = AutonomousModes.move1;
-	}
-	
-	public void autonomousPeriodic() {
 		switch (mode) {
 		
 		case move1:
-			move1();
+			autonomous = Actions.moveDistanceForwardProcess3X(2.0);
 			break;
 			
 		/*case move2:
@@ -84,58 +84,18 @@ public class Robot {
 		default:
 		
 		}
+		autonomous.enable();
+	}
+	
+	public void autonomousPeriodic() {
+		autonomous.run();
 	}
 	
 	private enum AutonomousModes {
 		move1,
 		move2;
 	}
-	
-	private void move1() {
-		switch(moveCount) {
 		
-		case 0:
-			if (drive.moveDistance(20, 20)) {
-				moveCount++;
-				drive.zeroPosition();				
-			}
-			break;
-		
-		case 1:
-			if (drive.moveDistance(-0.785, 0.785)) {
-				//45º turn in place 
-				moveCount++;
-				drive.zeroPosition();				
-			}
-			break;
-		
-		case 2:
-			if (drive.moveDistance(5, 5)) {
-				moveCount++;
-				drive.zeroPosition();
-			}
-			break;
-
-		case 3:
-			if (drive.moveDistance(1.57, -1.57)) {
-				moveCount++;
-				drive.zeroPosition();
-			}
-			break;
-
-		case 4:
-			if (drive.moveDistance(5, 5)) {
-				moveCount++;
-				drive.zeroPosition();
-			}
-			break;
-
-		default:
-		}
-
-		
-	}
-	
 	public static void main(String[] args) {		
 		Robot robot = new Robot();
 		robot.robotInit();

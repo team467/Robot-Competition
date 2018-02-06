@@ -4,10 +4,8 @@ import org.usfirst.frc.team467.robot.simulator.DriveSimulator;
 
 public interface Drive {
 	
-	public static boolean useSimulator = true;
-	
 	public static Drive getInstance() {
-		if (useSimulator) {
+		if (RobotMap.useSimulator) {
 			return DriveSimulator.getInstance();
 		} else {
 			return DriveActual.getInstance();
@@ -16,7 +14,9 @@ public interface Drive {
 
 	public void zeroPosition();
 
-	public void moveDistance(double left, double right);
+	public void moveDistance(double distance);
+	
+	public void moveDistance(double distance, double rotation);
 	
 	public void arcadeDrive(double speed, double rotation, boolean squaredInputs);
 	

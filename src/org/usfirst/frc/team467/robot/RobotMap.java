@@ -57,6 +57,8 @@ public class RobotMap {
 
 	// The maximum revolutions per minute (RPM) of a wheel when in speed control mode.
 	public static double MAX_SPEED;
+	
+	public static boolean useSimulator = false;
 
 	public static final double MIN_DRIVE_SPEED = 0.1;
 	// Robot Dimensions
