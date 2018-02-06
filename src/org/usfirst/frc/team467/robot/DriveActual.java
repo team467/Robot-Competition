@@ -170,19 +170,34 @@ public class DriveActual extends DifferentialDrive implements Drive {
 		rightLead.configMotionCruiseVelocity(1052 / 2, RobotMap.TALON_TIMEOUT);
 		rightLead.configMotionAcceleration(1052 / 2, RobotMap.TALON_TIMEOUT);	
 	}
-	
+	@Override
 	public void zeroPosition() {
 		rightLead.setSelectedSensorPosition(0, 0, RobotMap.TALON_TIMEOUT);
 		leftLead.setSelectedSensorPosition(0, 0, RobotMap.TALON_TIMEOUT);
 	}
-
-	public void moveDistance(double distance) {
-		moveDistance(distance, distance);
+	/**
+	 * @param distanceInFeet
+	 * 		Distance robot needs to go in feet
+	 */
+	@Override
+	public void moveFeet(double distanceInFeet) {
+		go(distanceInFeet, distanceInFeet, ControlMode.MotionMagic);
 	}
-	
-	public void moveDistance(double left, double right) {
-		go(left, right, ControlMode.MotionMagic);
-		logClosedLoopErrors();
+	/**
+	 * @param rotation 
+	 * 			Turn amount in degrees. Currently turns first then moves.
+	 * 
+	 * @param distance 
+	 * 		 Amount of distance robot needs to go. Currently turns first then moves.
+	 * 
+	 * 
+	 */
+	@Override
+	public void rotateDegrees(double rotation) {
+		double rotationTicks = degreesToTicks(rotation);
+		
+		go(rotationTicks, -rotationTicks, ControlMode.MotionMagic );
+		
 	}
 	
 	public void PositionModeMove(double left, double right) {
@@ -301,13 +316,14 @@ public class DriveActual extends DifferentialDrive implements Drive {
 	 * @param feetDist Distance in feet
 	 * @return Distance in sensor units
 	 */
+	@Override
 	public double feetToTicks(double feetDist) {
 		return 1024 * feetDist / (6 * Math.PI / 12);
 	}
-	
+	@Override
 	public double degreesToTicks(double turnAmountInDegrees) {
 		double diameterInInches = 22.75;
-		double radius = diameterInInches / 24; //Diameter divided by (2 * 12) to translate to feet and to get radius.
+		double radius = diameterInInches / 24.0; //Diameter divided by (2 * 12) to translate to feet and to get radius.
 		double turnAmountInRadians = Math.toRadians(turnAmountInDegrees * (367.5/360)); //The 367.5/360 is to fix measurement errors.
 		return feetToTicks(turnAmountInRadians * radius);
 	}
@@ -317,6 +333,7 @@ public class DriveActual extends DifferentialDrive implements Drive {
 	 *
 	 * @return the absolute distance moved in feet
 	 */
+	@Override
 	public double absoluteDistanceMoved() {
 		double leftRotations =  Math.abs(leftLead.getSelectedSensorPosition(0));
 		double rightRotations = Math.abs(this.rightLead.getSelectedSensorPosition(0));

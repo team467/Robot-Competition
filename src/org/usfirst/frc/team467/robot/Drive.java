@@ -14,9 +14,9 @@ public interface Drive {
 
 	public void zeroPosition();
 
-	public void moveDistance(double distance);
+	public void moveFeet(double distanceInFeet);
 	
-	public void moveDistance(double distance, double rotation);
+	public void rotateDegrees(double rotation);
 	
 	public void arcadeDrive(double speed, double rotation, boolean squaredInputs);
 	
@@ -27,6 +27,10 @@ public interface Drive {
 	public boolean isStopped();
 	
 	public double absoluteDistanceMoved();
+	
+	public double feetToTicks(double feetDist);
+	
+	public double degreesToTicks(double turnAmountInDegrees);
 
 
 }

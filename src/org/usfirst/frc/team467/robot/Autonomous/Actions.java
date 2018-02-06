@@ -60,34 +60,36 @@ public class Actions {
 				"Zeroing the distance",
 				new ActionGroup.RunOnce(() -> drive.zeroPosition()));
 	}
+	
+	
+	/**
+	 * 
+	 * @param Distance moves robot in feet.
+	 * @return
+	 */
 
 	public static Action moveDistanceForward(double distance) {
 		Drive drive = Drive.getInstance();
 		String actionText = "Move forward " + distance + " feet";
 		return new Action(actionText,
 				new ActionGroup.ReachDistance(distance),
-				() -> drive.moveDistance(distance));
+				() -> drive.moveFeet(distance));
 	}
 	
-	public static Action moveDistanceWithTurn(double distance, double rotationInDegrees) {
-	    double rotation = Math.toRadians(rotationInDegrees) * (RobotMap.WHEEL_BASE_WIDTH / 2);
-		double maxDistance = Math.copySign(Math.max(Math.abs(distance), Math.abs(rotation)), distance);
-	    
-		Drive drive = Drive.getInstance();
-		String actionText = "Move forward " + distance + " feet with a " + rotationInDegrees + " degree rotation.";
-		return new Action(actionText,
-				new ActionGroup.ReachDistance(maxDistance),
-				() -> drive.moveDistance(distance, rotation));
-	}
-
+	
+	/**
+	 * 
+	 * @param rotationInDegrees Rotates robot in radians. Enter rotation amount in Degrees.
+	 * @return
+	 */
 	public static Action moveturn(double rotationInDegrees) {
-	    double rotation = Math.toRadians(rotationInDegrees) * (RobotMap.WHEEL_BASE_WIDTH / 2);
+	    double rotation = rotationInDegrees;
 	    
 		Drive drive = Drive.getInstance();
 		String actionText = "Rotate " + rotationInDegrees + " degrees.";
 		return new Action(actionText,
 				new ActionGroup.ReachDistance(rotation),
-				() -> drive.moveDistance(0, rotation));
+				() -> drive.rotateDegrees(rotation));
 	}
 
 	public static boolean moveDistanceComplete(double distance) {
