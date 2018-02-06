@@ -200,7 +200,8 @@ public class Robot extends TimedRobot {
 		driverstation.getNavJoystick().read();
 		
 		if(grabber.hasCube()) {
-			//rumble code here\\\
+			//TODO: rumble code here
+			
 		}
 		
 		if (driverstation.getNavJoystick().down(XBoxJoystick467.Button.x)) {
