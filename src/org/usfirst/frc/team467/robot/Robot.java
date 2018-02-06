@@ -199,29 +199,19 @@ public class Robot extends TimedRobot {
 		
 		driverstation.getNavJoystick().read();
 		
-		if(grabber.hasCube()) {
-			//TODO: rumble code here
-			
+		if (grabber.hasCube()) {
+			driverstation.getNavRumbler().rumble(100, 0.5);
 		}
 		
 		if (driverstation.getNavJoystick().down(XBoxJoystick467.Button.x)) {
 			grabber.grab();
-		
-		}
-		
-		else if(driverstation.getNavJoystick().down(XBoxJoystick467.Button.y)){
+		} else if (driverstation.getNavJoystick().down(XBoxJoystick467.Button.y)) {
 			grabber.release();
-		}
-		
-		 else {
-			grabber.pause(); 
-			
+		} else {
+			grabber.pause();
 		}
 	
 		//changed to arcade drive
 		drive.arcadeDrive(left, right, true);
 	}
-
-
 }
-
