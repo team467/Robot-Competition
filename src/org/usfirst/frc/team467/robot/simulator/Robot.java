@@ -3,7 +3,9 @@
  */
 package org.usfirst.frc.team467.robot.simulator;
 
+import org.apache.log4j.Logger;
 import org.usfirst.frc.team467.robot.Drive;
+import org.usfirst.frc.team467.robot.Logging;
 import org.usfirst.frc.team467.robot.RobotMap;
 import org.usfirst.frc.team467.robot.Autonomous.ActionGroup;
 import org.usfirst.frc.team467.robot.Autonomous.Actions;
@@ -14,6 +16,8 @@ import org.usfirst.frc.team467.robot.simulator.gui.MapController;
  *
  */
 public class Robot {
+	
+	private static final Logger LOGGER = Logger.getLogger(Robot.class);
 	
 	public static final double WIDTH = 2.92;
 	
@@ -28,11 +32,15 @@ public class Robot {
 	ActionGroup autonomous;
 	
 	public void robotInit() {
+		
+		Logging.init();
+		
 		RobotMap.useSimulator = true;
 		drive = Drive.getInstance(); 
 		
 		data = RobotData.getInstance();
 		data.startServer();
+		
 	}
 	
 	public void setView(MapController simulatorView) {

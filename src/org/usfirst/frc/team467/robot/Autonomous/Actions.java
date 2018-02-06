@@ -80,7 +80,7 @@ public class Actions {
 				() -> drive.moveDistance(distance, rotation));
 	}
 
-	public static Action moveturn(double rotationInDegrees) {
+	public static Action turn(double rotationInDegrees) {
 	    double rotation = Math.toRadians(rotationInDegrees) * (RobotMap.WHEEL_BASE_WIDTH / 2);
 	    
 		Drive drive = Drive.getInstance();
@@ -119,13 +119,15 @@ public class Actions {
 	public static ActionGroup moveDistanceForwardProcess3X(double distance) {
 		String actionGroupText = "Move forward 3X " + distance + " feet";
 		ActionGroup mode = new ActionGroup(actionGroupText);
-		mode.addAction(zeroDistance());
-		mode.addAction(moveDistanceForward(distance));
-		mode.addAction(zeroDistance());
-		mode.addAction(moveDistanceForward(distance));
-		mode.addAction(zeroDistance());
-		mode.addAction(moveDistanceForward(distance));
-		mode.enable();
+//		mode.addAction(zeroDistance());
+		//mode.addAction(moveDistanceForward(distance));
+//		mode.addAction(zeroDistance());
+//		mode.addAction(moveDistanceForward(distance));
+//		mode.addAction(zeroDistance());
+//		mode.addAction(moveDistanceForward(distance));
+//		mode.addAction(zeroDistance());
+//		mode.addAction(turn(90));
+		mode.addAction(moveDistanceWithTurn(5,45));
 		return mode;
 	}
 
@@ -134,11 +136,6 @@ public class Actions {
 		ActionGroup mode = new ActionGroup(actionGroupText);
 		mode.addAction(zeroDistance());
 		mode.addAction(moveDistanceForward(distance));
-		mode.addAction(zeroDistance());
-		mode.addAction(moveDistanceForward(distance));
-		mode.addAction(zeroDistance());
-		mode.addAction(moveDistanceForward(distance));
-		mode.enable();
 		return mode;
 	}
 
@@ -176,51 +173,6 @@ public class Actions {
 //		mode.addAction(turnAndMoveDistance(270, 2));
 		return mode;
 	}
-
-//	private void move1() {
-//	switch(moveCount) {
-//	
-//	case 0:
-//		if (drive.moveDistance(20, 20)) {
-//			moveCount++;
-//			drive.zeroPosition();				
-//		}
-//		break;
-//	
-//	case 1:
-//		if (drive.moveDistance(-0.785, 0.785)) {
-//			//45º turn in place 
-//			moveCount++;
-//			drive.zeroPosition();				
-//		}
-//		break;
-//	
-//	case 2:
-//		if (drive.moveDistance(5, 5)) {
-//			moveCount++;
-//			drive.zeroPosition();
-//		}
-//		break;
-//
-//	case 3:
-//		if (drive.moveDistance(1.57, -1.57)) {
-//			moveCount++;
-//			drive.zeroPosition();
-//		}
-//		break;
-//
-//	case 4:
-//		if (drive.moveDistance(5, 5)) {
-//			moveCount++;
-//			drive.zeroPosition();
-//		}
-//		break;
-//
-//	default:
-//	}
-//
-//	
-//}
 
 
 }
