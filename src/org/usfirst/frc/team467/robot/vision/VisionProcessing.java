@@ -29,6 +29,9 @@ public class VisionProcessing {
 	public static final double CUBE_HEIGHT = 11.0;
 	private static final double FOCAL_LENGTH = 634;
 
+	private double average;
+	private MovingAverage averageAngle;
+
 	// the id of the camera to be used
 	public static final int CAMERA_ID = 0;
 
@@ -38,6 +41,7 @@ public class VisionProcessing {
 
 	private VisionProcessing() {
 		pipeline = new DetectPowerCubePipeline();
+		averageAngle = new MovingAverage(25); 
 		// camera = new VideoCapture();
 		// camera.open(VisionProcessing.CAMERA_ID);
 	}
@@ -102,8 +106,14 @@ public class VisionProcessing {
 				
 				cameraDistanceX = cubeCenterPointX - (windowWidth / 2);
 				cameraDistanceY = cubeCenterPointY - (windowHeight / 2);
+				
+				cameraAngleToCube = 0.00294524375 * cameraDistanceX;
+				
+				if(!Double.isNaN(cameraAngleToCube)) {
+					average = averageAngle.average(cameraAngleToCube);
+				}
 
-				cameraAngleToCube = Math.atan2(cameraDistanceX, FOCAL_LENGTH);
+//				cameraAngleToCube = Math.atan2(cameraDistanceX, FOCAL_LENGTH);
 
 				// System.out.println("Window width: " + windowWidth + " Window Height: " +
 				// windowHeight); //The width is 640 pixels and the height is 480 pixels.
@@ -135,6 +145,10 @@ public class VisionProcessing {
 
 	public double angleMeasure() {
 		return cameraAngleToCube;
+	}
+	
+	public double averageAngle() {
+		return average;
 	}
 
 	@Override

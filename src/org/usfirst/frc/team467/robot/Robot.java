@@ -58,7 +58,6 @@ public class Robot extends IterativeRobot {
 	 * This function is run when the robot is first started up and should be used for any initialization code.
 	 */
 	public void robotInit() {
-
 		// TODO: Initialize the Robot Map
 		
 		vision = VisionProcessing.getInstance();
@@ -68,10 +67,15 @@ public class Robot extends IterativeRobot {
 		new Thread(() -> {
 			UsbCamera camera = CameraServer.getInstance().startAutomaticCapture();
 			camera.setResolution(320, 240);
-			camera.setBrightness(100);
-			camera.setWhiteBalanceManual(WhiteBalance.kFixedIndoor);
 			camera.setFPS(30);
-			camera.setExposureManual(0);
+
+			camera.setBrightness(50);
+			camera.setWhiteBalanceManual(WhiteBalance.kFixedFluorescent1);
+//			camera.setExposureManual(0);
+			
+//			camera.setBrightness(100);
+			camera.setExposureAuto();
+			camera.setWhiteBalanceAuto();
 			
 			
 			CvSink cvsink = CameraServer.getInstance().getVideo();
@@ -128,11 +132,12 @@ public class Robot extends IterativeRobot {
 
 	public void disabledPeriodic() {
 		LOGGER.trace("Disabled Periodic");
-		double angle = vision.angleMeasure();
-		if (!Double.isNaN(angle)) {
-			LOGGER.info("Angle Measure in Degrees = " + Math.toDegrees(angle));
-			LOGGER.info("Angle Measure in Radians = " + angle);			
-		}
+		LOGGER.info("Angle Measure in Degrees = " + Math.toDegrees(vision.averageAngle()));
+//		double angle = vision.angleMeasure();
+//		if (!Double.isNaN(angle)) {
+//			LOGGER.info("Angle Measure in Degrees = " + Math.toDegrees(angle));
+//			LOGGER.info("Angle Measure in Radians = " + angle);			
+//		}
 
 	}
 
