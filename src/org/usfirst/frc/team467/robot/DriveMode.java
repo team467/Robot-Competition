@@ -5,4 +5,5 @@ public enum DriveMode {
 	TankDrive,
 	MotionMagic,		// Position control
 	ArcadeDrive,
+	ElevatorDrive
 }

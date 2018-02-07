@@ -57,6 +57,7 @@ public class Robot extends TimedRobot {
 		Logging.init();
 
 		// Make robot objects
+		Elevator elevator = Elevator.getInstance();
 		driverstation = DriverStation.getInstance();
 		LOGGER.info("inited driverstation");
 		drive = Drive.getInstance();
@@ -182,6 +183,16 @@ public class Robot extends TimedRobot {
 		case MotionMagic:
 			//TODO: Add things here later.
 			break;
+		case ElevatorDrive:
+			double ElevatorScale = driverstation.getDriveJoystick().getLeftStickY();
+			LOGGER.info(ElevatorScale);
+			
+//			if(ElevatorScale/4 > 1)ElevatorScale = 1;
+//			if(ElevatorScale/4 < -1)ElevatorScale = -1;
+//			//elevator.manualMove(ElevatorScale/4);
+			break;
+			
+			
 		}
 		
 	}
