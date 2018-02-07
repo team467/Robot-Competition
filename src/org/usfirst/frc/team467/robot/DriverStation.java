@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.XboxController;
 public class DriverStation {
 	
 	XBoxJoystick467 driverJoy;
+	XBoxJoystick467 navJoy;
 	
 	private static DriverStation station;
 	
@@ -31,7 +32,8 @@ public class DriverStation {
 	 */
 	private DriverStation() {
 		// TODO: Initialize class variables
-		driverJoy = new XBoxJoystick467(0);
+		driverJoy = new XBoxJoystick467(0,"Drive");
+		navJoy = new XBoxJoystick467 (1, "Nav");
 	}
 
 	/**
@@ -56,10 +58,6 @@ public class DriverStation {
 		return 0.0;
 	}
 
-	public ButtonPanel getButtonPanel() {
-		// TODO: Return the button panel
-		return null;
-	}
 
 	// All button mappings are accessed through the functions below
 
@@ -71,7 +69,7 @@ public class DriverStation {
 	 */
 	public DriveMode getDriveMode() {
 		// TODO: Set the drive mode based on the buttons pushed
-		return DriveMode.ElevatorDrive; // Update with the correct drive mode
+		return DriveMode.ArcadeDrive; // Update with the correct drive mode
 	}
 
 	public boolean getTerminateAuto() {
