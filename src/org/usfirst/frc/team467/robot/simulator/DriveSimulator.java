@@ -33,7 +33,7 @@ public class DriveSimulator implements Drive {
 	private boolean isMoving = false;
 	
 	private DriveSimulator() {
-		maxFeetPerPeriod = RobotMap.WHEELPOD_CIRCUMFERENCE / 12 * MAX_RPM / 60 / 500;
+		maxFeetPerPeriod = RobotMap.WHEELPOD_CIRCUMFERENCE / 12 * MAX_RPM / 60 / 5000; // actually 60/500
 		zeroPosition();
 		absoluteRightPositionReadingOffset = 0.0;
 		absoluteLeftPositionReadingOffset = 0.0;
@@ -78,38 +78,15 @@ public class DriveSimulator implements Drive {
 	
 	
 	@Override
-	public void moveDistance(double distance) {
+	public void moveFeet(double distance) {
 		moveDistance(distance, 0);
 	}
 		
-	@Override
 	public void moveDistance(double distance, double rotation) {
 
-	    double leftDistance;
-	    double rightDistance;
+	    double leftDistance = distance + rotation * (RobotMap.WHEEL_BASE_WIDTH / 2);
+	    double rightDistance = distance - rotation * (RobotMap.WHEEL_BASE_WIDTH / 2);
 	    
-	    double maxDistance = Math.copySign(Math.max(Math.abs(distance), Math.abs(rotation)), distance);;
-
-	    if (distance >= 0.0) {
-	      // First quadrant, else second quadrant
-	      if (rotation >= 0.0) {
-	    	  leftDistance = maxDistance;
-	    	  rightDistance = distance - rotation;
-	      } else {
-	    	  leftDistance = distance + rotation;
-	    	  rightDistance = maxDistance;
-	      }
-	    } else {
-	      // Third quadrant, else fourth quadrant
-	      if (rotation >= 0.0) {
-	    	  leftDistance = distance + rotation;
-	    	  rightDistance = maxDistance;
-	      } else {
-	    	  leftDistance = maxDistance;
-	    	  rightDistance = distance - rotation;
-	      }
-	    }
-
 		if (leftPositionReading == leftDistance && rightPositionReading == rightDistance) {
 			isMoving = false;
 			return; // At destination
@@ -254,7 +231,7 @@ public class DriveSimulator implements Drive {
 		double right =     Math.toRadians(100);
 		
 		do {
-			drive.moveDistance(0,90);
+//			drive.moveDistance(0,90);
 		} while (!drive.isStopped());	
 		
 //		while (drive.moveDistance(left, right) != true);
@@ -266,6 +243,24 @@ public class DriveSimulator implements Drive {
 //		drive.moveDistance(15.7, -15.7);
 //		drive.moveDistance(31.4, -31.4);
 //		drive.moveDistance(131.4, 68.6);
+	}
+
+	@Override
+	public void rotateDegrees(double rotation) {
+		moveDistance(0, Math.toRadians(rotation));
+		
+	}
+
+	@Override
+	public double feetToTicks(double feetDist) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public double degreesToTicks(double turnAmountInDegrees) {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 
 }

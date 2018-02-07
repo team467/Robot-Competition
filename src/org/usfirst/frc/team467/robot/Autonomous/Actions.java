@@ -136,13 +136,66 @@ public class Actions {
 		ActionGroup mode = new ActionGroup(actionGroupText);
 		mode.addAction(zeroDistance());
 		mode.addAction(moveDistanceForward(distance));
-		mode.addAction(zeroDistance());
-		mode.addAction(moveDistanceForward(distance));
-		mode.addAction(zeroDistance());
-		mode.addAction(moveDistanceForward(distance));
-		mode.enable();
 		return mode;
 	}
+	
+	public static ActionGroup powerUp1A(double distance, double rotationInDegrees) {
+		String actionGroupText = "Move " + distance + " feet" + " and turn " + rotationInDegrees + " degrees";
+		ActionGroup mode = new ActionGroup(actionGroupText);
+		mode.addAction(zeroDistance());
+		mode.addAction(moveDistanceForward(12.33));
+		mode.addAction(zeroDistance());
+		mode.addAction(moveturn(90)); // 90 degrees
+		
+//		mode.addAction(moveDistanceForward(6.5)); // 12' 4"
+//		mode.addAction(zeroDistance());
+//		mode.addAction(moveturn(73)); // 90 degrees
+//		mode.addAction(zeroDistance());
+//		mode.addAction(moveDistanceForward(0.4)); // 1' 5.75" 1.479
+//		mode.addAction(zeroDistance());
+		//mode.addAction(moveDistanceForward(-2.0)); // negative is backwards
+		return mode;
+	}
+	
+//	Plan 1-A:
+//	Set up: Robot flush against west side of the starting position (marked by green lines on South Side of field)
+//	1. Move forward 12 feet 4 inches
+//	2. Turn 90º clockwise (with respect to north)
+//	3. Raise elevator up 20 inches (if not already raised, and also this distance may vary - so that the bottom of the arm is above the top of the fence)
+//	4 Move forward 1 foot 5.75 inches (+ maybe 6 inches to ensure robot is flush with the switch barrier)
+//	5. Release power cube
+//	6. Move backwards 2 feet (ready for teleop)
+//
+	
+	public static ActionGroup powerUp1B(double distance, double rotationInDegrees) {
+		String actionGroupText = "Move " + distance + " feet" + " and turn " + rotationInDegrees + " degrees";
+		ActionGroup mode = new ActionGroup(actionGroupText);
+		mode.addAction(zeroDistance());
+		mode.addAction(moveDistanceForward(4.0)); // 4'
+		mode.addAction(zeroDistance());
+		mode.addAction(moveturn(90));
+		mode.addAction(zeroDistance());
+		mode.addAction(moveDistanceForward(8.33)); // 8' 4"
+		mode.addAction(zeroDistance());
+		mode.addAction(moveturn(90));
+		mode.addAction(zeroDistance());
+		mode.addAction(moveDistanceForward(1.479)); // 1' 5.75"
+		mode.addAction(moveDistanceForward(-2.0)); // 2'
+		return mode;
+	}
+//	Plan 1-B:
+//	Set up: Robot flush against west side of starting position
+//	Move forward 4 feet
+//	Turn 90º clockwise
+//	Move forward 19 feet 1 inch
+//	Turn 90º counterclockwise
+//	Move forward 8 feet 4 inches
+//	Turn 90º counterclockwise
+//	Raise elevator up 20 inches (if not already raised)
+//	Move forward 1 foot 5.75 inches (+ maybe* 6 inches to ensure robot is flush with the switch barrier)
+//	Release power cube
+//	Move backwards 2 feet (ready for teleop)
+
 
 //	public static Action aim(double angle) {
 //		Drive drive = Drive.getInstance();

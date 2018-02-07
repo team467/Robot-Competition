@@ -69,13 +69,13 @@ public class Robot {
 	
 	public void autonomousInit() {
 		drive.zeroPosition();
-		data.startPosition(20, 1.5);
+		data.startPosition(6, 1);
 		data.send();
 		mode = AutonomousModes.move1;
 		switch (mode) {
 		
 		case move1:
-			autonomous = Actions.moveDistanceForwardProcess3X(2.0);
+			autonomous = Actions.powerUp1A(0,0);
 			break;
 			
 		/*case move2:
