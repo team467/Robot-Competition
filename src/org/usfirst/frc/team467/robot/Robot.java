@@ -66,7 +66,7 @@ public class Robot extends TimedRobot {
 		Logging.init();
 		
 		// Initialize RobotMap
-		RobotMap.init(RobotID.PreseasonBot);
+		RobotMap.init(RobotID.Board);
 		
 		// Make robot objects
 		driverstation = DriverStation.getInstance();
@@ -74,11 +74,11 @@ public class Robot extends TimedRobot {
 		
 		drive = Drive.getInstance();
 		
-		gyro = Gyrometer.getInstance();
+		//gyro = Gyrometer.getInstance();
 		grabber = Grabber.getInstance();
 		
-		gyro.calibrate();
-		gyro.reset();
+		//gyro.calibrate();
+		//gyro.reset();
 		
 		// Initialize math lookup table
 		LookUpTable.init();
@@ -89,10 +89,10 @@ public class Robot extends TimedRobot {
 //		autonomous = Actions.doNothing();
 		
 		//made usb camera and captures video
-		UsbCamera cam = CameraServer.getInstance().startAutomaticCapture();
+		//UsbCamera cam = CameraServer.getInstance().startAutomaticCapture();
 		//set resolution and frames per second to match driverstation
-		cam.setResolution(320, 240);
-		cam.setFPS(15);
+		//cam.setResolution(320, 240);
+		//cam.setFPS(15);
 		
 		//TODO: Create list of autonomous modes for selector
 		// Setup autonomous mode selectors
@@ -189,6 +189,7 @@ public class Robot extends TimedRobot {
 		double right = driverstation.getArcadeTurn();
 		// -1* driverstation.getDriveJoystick().getJoystick()
 		LOGGER.info("left " + left + " right " + right);
+		LOGGER.info(grabber.hasCube());
 		
 		if (Math.abs(left) < MIN_DRIVE_SPEED) {
 			left = 0.0;
@@ -201,6 +202,7 @@ public class Robot extends TimedRobot {
 		
 		if(grabber.hasCube()) {
 			//TODO: rumble code here
+			driverstation.getNavRumbler().rumble(1000, 0.3);
 			
 		}
 		
