@@ -139,21 +139,17 @@ public class Actions {
 		return mode;
 	}
 	
-	public static ActionGroup powerUp1A(double distance, double rotationInDegrees) {
+	public static ActionGroup startSwitchSide1A(double distance, double rotationInDegrees) {
 		String actionGroupText = "Move " + distance + " feet" + " and turn " + rotationInDegrees + " degrees";
 		ActionGroup mode = new ActionGroup(actionGroupText);
 		mode.addAction(zeroDistance());
-		mode.addAction(moveDistanceForward(12.33));
+		mode.addAction(moveDistanceForward(12.33)); // 12' 4"
 		mode.addAction(zeroDistance());
 		mode.addAction(moveturn(90)); // 90 degrees
-		
-//		mode.addAction(moveDistanceForward(6.5)); // 12' 4"
-//		mode.addAction(zeroDistance());
-//		mode.addAction(moveturn(73)); // 90 degrees
-//		mode.addAction(zeroDistance());
-//		mode.addAction(moveDistanceForward(0.4)); // 1' 5.75" 1.479
-//		mode.addAction(zeroDistance());
-		//mode.addAction(moveDistanceForward(-2.0)); // negative is backwards
+		mode.addAction(zeroDistance());
+		mode.addAction(moveDistanceForward(1.479)); // 1' 5.75"
+		mode.addAction(zeroDistance());
+		mode.addAction(moveDistanceForward(-2.0)); // 2' backwards
 		return mode;
 	}
 	
@@ -165,9 +161,8 @@ public class Actions {
 //	4 Move forward 1 foot 5.75 inches (+ maybe 6 inches to ensure robot is flush with the switch barrier)
 //	5. Release power cube
 //	6. Move backwards 2 feet (ready for teleop)
-//
 	
-	public static ActionGroup powerUp1B(double distance, double rotationInDegrees) {
+	public static ActionGroup startSwitchSide1B(double distance, double rotationInDegrees) {
 		String actionGroupText = "Move " + distance + " feet" + " and turn " + rotationInDegrees + " degrees";
 		ActionGroup mode = new ActionGroup(actionGroupText);
 		mode.addAction(zeroDistance());
@@ -180,22 +175,87 @@ public class Actions {
 		mode.addAction(moveturn(90));
 		mode.addAction(zeroDistance());
 		mode.addAction(moveDistanceForward(1.479)); // 1' 5.75"
-		mode.addAction(moveDistanceForward(-2.0)); // 2'
+		mode.addAction(zeroDistance());
+		mode.addAction(moveDistanceForward(-2.0)); // 2' backwards
 		return mode;
 	}
-//	Plan 1-B:
-//	Set up: Robot flush against west side of starting position
-//	Move forward 4 feet
-//	Turn 90º clockwise
-//	Move forward 19 feet 1 inch
-//	Turn 90º counterclockwise
-//	Move forward 8 feet 4 inches
-//	Turn 90º counterclockwise
-//	Raise elevator up 20 inches (if not already raised)
-//	Move forward 1 foot 5.75 inches (+ maybe* 6 inches to ensure robot is flush with the switch barrier)
-//	Release power cube
-//	Move backwards 2 feet (ready for teleop)
 
+	public static ActionGroup startSwitchSide2A(double distance, double rotationInDegrees) {
+		String actionGroupText = "Move " + distance + " feet" + " and turn " + rotationInDegrees + " degrees";
+		ActionGroup mode = new ActionGroup(actionGroupText);
+		mode.addAction(zeroDistance());
+		mode.addAction(moveDistanceForward(4.0)); // 4'
+		mode.addAction(zeroDistance());
+		mode.addAction(moveturn(90));
+		mode.addAction(zeroDistance());
+		mode.addAction(moveDistanceForward(9.0)); // 9'
+		mode.addAction(zeroDistance());
+		mode.addAction(moveturn(90));
+		mode.addAction(moveDistanceForward(8.33)); // 8' 4"
+		mode.addAction(zeroDistance());
+		mode.addAction(moveturn(90));
+		mode.addAction(zeroDistance());
+		mode.addAction(moveDistanceForward(1.479)); // 1' 5.75"
+		mode.addAction(zeroDistance());
+		mode.addAction(moveDistanceForward(-2.0)); // 2' backwards
+		return mode;
+	}
+
+	public static ActionGroup startSwitchSide2B(double distance, double rotationInDegrees) {
+		String actionGroupText = "Move " + distance + " feet" + " and turn " + rotationInDegrees + " degrees";
+		ActionGroup mode = new ActionGroup(actionGroupText);
+		mode.addAction(zeroDistance());
+		mode.addAction(moveDistanceForward(4.0)); // 4'
+		mode.addAction(zeroDistance());
+		mode.addAction(moveturn(90));
+		mode.addAction(zeroDistance());
+		mode.addAction(moveDistanceForward(9.0833)); // 9' 1"
+		mode.addAction(zeroDistance());
+		mode.addAction(moveturn(90));
+		mode.addAction(moveDistanceForward(8.33)); // 8' 4"
+		mode.addAction(zeroDistance());
+		mode.addAction(moveturn(90));
+		mode.addAction(zeroDistance());
+		mode.addAction(moveDistanceForward(1.479)); // 1' 5.75"
+		mode.addAction(zeroDistance());
+		mode.addAction(moveDistanceForward(-2.0)); // 2' backwards
+		return mode;
+	}
+	
+	public static ActionGroup startSwitchSide3A(double distance, double rotationInDegrees) {
+		String actionGroupText = "Move " + distance + " feet" + " and turn " + rotationInDegrees + " degrees";
+		ActionGroup mode = new ActionGroup(actionGroupText);
+		mode.addAction(zeroDistance());
+		mode.addAction(moveDistanceForward(4.0)); // 4'
+		mode.addAction(zeroDistance());
+		mode.addAction(moveturn(90));
+		mode.addAction(zeroDistance());
+		mode.addAction(moveDistanceForward(19.0833)); // 19' 1"
+		mode.addAction(zeroDistance());
+		mode.addAction(moveturn(90));
+		mode.addAction(moveDistanceForward(8.33)); // 8' 4"
+		mode.addAction(zeroDistance());
+		mode.addAction(moveturn(90));
+		mode.addAction(zeroDistance());
+		mode.addAction(moveDistanceForward(1.479)); // 1' 5.75"
+		mode.addAction(zeroDistance());
+		mode.addAction(moveDistanceForward(-2.0)); // 2' backwards
+		return mode;
+	}
+	
+	public static ActionGroup startSwitchSide3B(double distance, double rotationInDegrees) {
+		String actionGroupText = "Move " + distance + " feet" + " and turn " + rotationInDegrees + " degrees";
+		ActionGroup mode = new ActionGroup(actionGroupText);
+		mode.addAction(zeroDistance());
+		mode.addAction(moveDistanceForward(12.33)); // 12' 4"
+		mode.addAction(zeroDistance());
+		mode.addAction(moveturn(90));
+		mode.addAction(zeroDistance());
+		mode.addAction(moveDistanceForward(1.479)); // 1' 5.75"
+		mode.addAction(zeroDistance());
+		mode.addAction(moveDistanceForward(-2.0)); // 2' backwards
+		return mode;
+	}
 
 //	public static Action aim(double angle) {
 //		Drive drive = Drive.getInstance();

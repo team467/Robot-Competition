@@ -75,7 +75,7 @@ public class Robot {
 		switch (mode) {
 		
 		case move1:
-			autonomous = Actions.powerUp1A(0,0);
+			autonomous = Actions.startSwitchSide1A(0,0);
 			break;
 			
 		/*case move2:
