@@ -18,6 +18,9 @@ import org.usfirst.frc.team467.robot.Autonomous.ActionGroup;
 import org.usfirst.frc.team467.robot.Autonomous.Actions;
 import org.usfirst.frc.team467.robot.simulator.DriveSimulator;
 
+import org.usfirst.frc.team467.robot.XBoxJoystick467.Button;
+import org.usfirst.frc.team467.robot.RobotMap.RobotID;
+
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to each mode, as described in the
  * IterativeRobot documentation. If you change the name of this class or the package after creating this project, you must also
@@ -26,7 +29,7 @@ import org.usfirst.frc.team467.robot.simulator.DriveSimulator;
 
 public class Robot extends TimedRobot {
 	private static final Logger LOGGER = Logger.getLogger(Robot.class);
-
+	
 	// Robot objects
 	private DriverStation driverstation;
 	private Drive drive;
@@ -45,34 +48,43 @@ public class Robot extends TimedRobot {
 	 * This function is run when the robot is first started up and should be used for any initialization code.
 	 */
 	public void robotInit() {
-		
 		// Initialize logging framework
 		Logging.init();
-
+		
+		// Initialize RobotMap
+		RobotMap.init(RobotID.PreseasonBot);
+		
 		// Make robot objects
 		driverstation = DriverStation.getInstance();
+<<<<<<< HEAD
 		LOGGER.info("inited driverstation");
 
 		drive = DriveActual.getInstance();
 
+=======
+		LOGGER.info("Initialized Driverstation");
+		
+		drive = Drive.getInstance();
+		
+>>>>>>> master
 		gyro = Gyrometer.getInstance();
 		gyro.calibrate();
 		gyro.reset();
-
+		
 		// Initialize math lookup table
 		LookUpTable.init();
-
+		
 //		vision = VisionProcessing.getInstance();
 		
 		// TODO: Implement actions.doNothing
 //		autonomous = Actions.doNothing();
-
+		
 		//made usb camera and captures video
 		UsbCamera cam = CameraServer.getInstance().startAutomaticCapture();
 		//set resolution and frames per second to match driverstation
 		cam.setResolution(320, 240);
 		cam.setFPS(15);
-
+		
 		//TODO: Create list of autonomous modes for selector
 		// Setup autonomous mode selectors
 	}
@@ -121,7 +133,20 @@ public class Robot extends TimedRobot {
 	}
 
 	public void testPeriodic() {
+		driverstation.readInputs();
+
+		if (driverstation.getNavJoystick().pressed(Button.b)){ 
+			driverstation.getNavRumbler().rumble(150, 0.3);
+			LOGGER.info("You pressed b");
+		}
+		if (driverstation.getDriveJoystick().pressed(Button.b)){ 
+			driverstation.getNavRumbler().rumble(150, 1.0);
+			LOGGER.info("You pressed b");
+		}
+
+		driverstation.periodic();
 	}
+
 
 	public void autonomousPeriodic() {
 		
@@ -141,7 +166,7 @@ public class Robot extends TimedRobot {
 		
 		double left = driverstation.getArcadeSpeed();
 		double right = driverstation.getArcadeTurn();
-		 		// -1* driverstation.getDriveJoystick().getJoystick()
+		
 		LOGGER.info("left " + left + " right " + right) ;
 	 	if (Math.abs(left) < MIN_DRIVE_SPEED) {
 	 		left = 0.0;
@@ -149,23 +174,22 @@ public class Robot extends TimedRobot {
 	 	if (Math.abs(right) < MIN_DRIVE_SPEED) {
 	 		right = 0.0;
 	 	}
-
+	 	
 		switch (driverstation.getDriveMode()) {
-		case ArcadeDrive:
-			double speed = driverstation.getArcadeSpeed();
-			double turn = driverstation.getArcadeTurn();
-			drive.arcadeDrive(speed, turn, true);
-			break;
-		case TankDrive:	
-			double leftTank = driverstation.getDriveJoystick().getLeftStickY();
-			double rightTank = driverstation.getDriveJoystick().getRightStickY();
-			drive.tankDrive(leftTank, rightTank, true);
-			break;
-		case MotionMagic:
-			//TODO: Add things here later.
-			break;
+			case ArcadeDrive:
+				double speed = driverstation.getArcadeSpeed();
+				double turn = driverstation.getArcadeTurn();
+				drive.arcadeDrive(speed, turn, true);
+				break;
+			case TankDrive:	
+				double leftTank = driverstation.getDriveJoystick().getLeftStickY();
+				double rightTank = driverstation.getDriveJoystick().getRightStickY();
+				drive.tankDrive(leftTank, rightTank, true);
+				break;
+			case MotionMagic:
+				//TODO: Add things here later.
+				break;
 		}
-		
 	}
-
 }
+
