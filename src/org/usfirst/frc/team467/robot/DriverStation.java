@@ -71,7 +71,7 @@ public class DriverStation {
 	 */
 	public DriveMode getDriveMode() {
 		// TODO: Set the drive mode based on the buttons pushed
-		return DriveMode.ArcadeDrive; // Update with the correct drive mode
+		return DriveMode.ElevatorDrive; // Update with the correct drive mode
 	}
 
 	public boolean getTerminateAuto() {

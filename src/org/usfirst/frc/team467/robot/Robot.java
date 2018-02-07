@@ -168,6 +168,11 @@ public class Robot extends TimedRobot {
 	 	if (Math.abs(right) < MIN_DRIVE_SPEED) {
 	 		right = 0.0;
 	 	}
+	 	
+		//ymax & ymin are 5 and -5
+		double ElevatorScale = driverstation.getDriveJoystick().getLeftStickY();
+		elevator.manualMove(ElevatorScale/5);
+		LOGGER.debug("Elevator Moving");
 
 		switch (driverstation.getDriveMode()) {
 		case ArcadeDrive:
@@ -176,20 +181,12 @@ public class Robot extends TimedRobot {
 			drive.arcadeDrive(speed, turn, true);
 			break;
 		case TankDrive:	
-			double leftTank = driverstation.getDriveJoystick().getLeftStickY();
+			double leftTank = driverstation.getDriveJoystick().getRightStickY();
 			double rightTank = driverstation.getDriveJoystick().getRightStickY();
 			drive.tankDrive(leftTank, rightTank, true);
 			break;
 		case MotionMagic:
 			//TODO: Add things here later.
-			break;
-		case ElevatorDrive:
-			double ElevatorScale = driverstation.getDriveJoystick().getLeftStickY();
-			LOGGER.info(ElevatorScale);
-			
-//			if(ElevatorScale/4 > 1)ElevatorScale = 1;
-//			if(ElevatorScale/4 < -1)ElevatorScale = -1;
-//			//elevator.manualMove(ElevatorScale/4);
 			break;
 			
 			
