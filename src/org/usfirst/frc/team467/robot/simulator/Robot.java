@@ -36,27 +36,27 @@ public class Robot {
 	
 	/*
 	 * Referring to field map, mode codes represented: 
-	 * Modes 1-6: Robot Starting Position - Switch Side
-	 * Modes 7-12: Robot Starting Position - Scale Side
-	 * Mode 1: 1-A
-	 * Mode 2: 1-B
-	 * Mode 3: 2-A
-	 * Mode 4: 2-B
-	 * Mode 5: 3-A
-	 * Mode 6: 3-B
-	 * Mode 7: 1-C
-	 * Mode 8: 1-D
-	 * Mode 9: 2-C
-	 * Mode 10: 2-D
-	 * Mode 11: 3-C
-	 * Mode 12: 3-D
+	 * Moves 1-6: Robot Starting Position - Switch Side
+	 * Moves 7-12: Robot Starting Position - Scale Side
+	 * Move 1: 1-A
+	 * Move 2: 1-B
+	 * Move 3: 2-A
+	 * Move 4: 2-B
+	 * Move 5: 3-A
+	 * Move 6: 3-B
+	 * Move 7: 1-C
+	 * Move 8: 1-D
+	 * Move 9: 2-C
+	 * Move 10: 2-D
+	 * Move 11: 3-C
+	 * Move 12: 3-D
 	 */
 	
 	AutonomousModes mode;
 	
 	public void autonomousInit() {
 		drive.zeroPosition();
-		data.startPosition(20, 1.5);
+		data.startPosition(5.5, 1.26);
 		data.send();
 		moveCount = 0;
 		mode = AutonomousModes.move1;
@@ -77,53 +77,83 @@ public class Robot {
 			move3();
 			break;
 			
-		
-		*/
+		case move4:
+			move4();
+			break;
+			
+		case move5:
+			move5();
+			break;
+			
+		case move6:
+			move6();
+			break;
+			
+		case move7:
+			move7();
+			break;
+			
+		case move8:
+			move8();
+			break;
+			
+		case move9:
+			move9();
+			break;
+			
+		case move10:
+			move10();
+			break;
+			
+		case move11:
+			move11();
+			break;
+			
+		case move12:
+			move12();
+			break;
 			
 		default:
-		
+		*/
 		}
 	}
 	
 	private enum AutonomousModes {
 		move1,
-		move2;
+		move2,
+		move3,
+		move4,
+		move5,
+		move6,
+		move7,
+		move8,
+		move9,
+		move10,
+		move11,
+		move12;
 	}
+	
+	//0.785
 	
 	private void move1() {
 		switch(moveCount) {
 		
 		case 0:
-			if (drive.moveDistance(20, 20)) {
+			if (drive.moveDistance(12.33, 12.33)) {
 				moveCount++;
 				drive.zeroPosition();				
 			}
 			break;
-		
+			
 		case 1:
-			if (drive.moveDistance(-0.785, 0.785)) {
-				//45º turn in place 
+			if (drive.moveDistance(1.57, -1.57)) {
 				moveCount++;
 				drive.zeroPosition();				
 			}
 			break;
 		
 		case 2:
-			if (drive.moveDistance(5, 5)) {
-				moveCount++;
-				drive.zeroPosition();
-			}
-			break;
-
-		case 3:
-			if (drive.moveDistance(1.57, -1.57)) {
-				moveCount++;
-				drive.zeroPosition();
-			}
-			break;
-
-		case 4:
-			if (drive.moveDistance(5, 5)) {
+			if (drive.moveDistance(1.48, 1.48)) {
 				moveCount++;
 				drive.zeroPosition();
 			}
