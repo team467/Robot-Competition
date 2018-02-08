@@ -7,7 +7,6 @@ import org.apache.log4j.Logger;
 import org.usfirst.frc.team467.robot.Drive;
 import org.usfirst.frc.team467.robot.Logging;
 import org.usfirst.frc.team467.robot.RobotMap;
-import org.usfirst.frc.team467.robot.RobotMap.RobotID;
 import org.usfirst.frc.team467.robot.Autonomous.ActionGroup;
 import org.usfirst.frc.team467.robot.Autonomous.Actions;
 import org.usfirst.frc.team467.robot.simulator.communications.RobotData;
@@ -20,7 +19,11 @@ public class Robot {
 	
 	private static final Logger LOGGER = Logger.getLogger(Robot.class);
 	
-	DriveSimulator drive;
+	public static final double WIDTH = 2.92;
+	
+	public static final double LENGTH = 3.33;
+	
+	Drive drive;
 	
 	MapController simulatorView;
 	
@@ -32,10 +35,8 @@ public class Robot {
 		
 		Logging.init();
 		
-		RobotMap.init(RobotID.PreseasonBot);
-		
 		RobotMap.useSimulator = true;
-		drive = DriveSimulator.getInstance(); 
+		drive = Drive.getInstance(); 
 		
 		data = RobotData.getInstance();
 		data.startServer();
@@ -67,14 +68,14 @@ public class Robot {
 	AutonomousModes mode;
 	
 	public void autonomousInit() {
-		drive.zero();
-		data.startPosition(4, 0);
+		drive.zeroPosition();
+		data.startPosition(6, 1);
 		data.send();
 		mode = AutonomousModes.move1;
 		switch (mode) {
 		
 		case move1:
-			autonomous = Actions.powerUp1A();
+			autonomous = Actions.startSwitchSide1A(0,0);
 			break;
 			
 		/*case move2:
