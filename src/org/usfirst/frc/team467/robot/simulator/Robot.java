@@ -68,13 +68,8 @@ public class Robot {
 	AutonomousModes mode;
 	
 	public void autonomousInit() {
-<<<<<<< HEAD
-		drive.zeroPosition();
-		data.startPosition(5.5, 1.26);
-=======
 		drive.zero();
-		data.startPosition(6, 1);
->>>>>>> 0dcd487da8d435ce77594cc1af9daef0be2b37b8
+		data.startPosition(5.5, 1.26);
 		data.send();
 		mode = AutonomousModes.move1;
 		switch (mode) {
@@ -151,43 +146,7 @@ public class Robot {
 		move11,
 		move12;
 	}
-<<<<<<< HEAD
-	
-	//0.785
-	
-	private void move1() {
-		switch(moveCount) {
 		
-		case 0:
-			if (drive.moveDistance(12.33, 12.33)) {
-				moveCount++;
-				drive.zeroPosition();				
-			}
-			break;
-			
-		case 1:
-			if (drive.moveDistance(1.57, -1.57)) {
-				moveCount++;
-				drive.zeroPosition();				
-			}
-			break;
-		
-		case 2:
-			if (drive.moveDistance(1.48, 1.48)) {
-				moveCount++;
-				drive.zeroPosition();
-			}
-			break;
-
-		default:
-		}
-
-		
-	}
-	
-=======
-		
->>>>>>> 0dcd487da8d435ce77594cc1af9daef0be2b37b8
 	public static void main(String[] args) {		
 		Robot robot = new Robot();
 		robot.robotInit();
