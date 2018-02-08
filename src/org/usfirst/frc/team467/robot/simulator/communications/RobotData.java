@@ -6,7 +6,9 @@ package org.usfirst.frc.team467.robot.simulator.communications;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
-import org.usfirst.frc.team467.robot.simulator.Robot;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+import org.usfirst.frc.team467.robot.RobotMap;
 
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -21,6 +23,13 @@ public class RobotData {
 	private double rightPositionReading;
 	private double leftPositionReading;
 	
+	private double heading;
+	private double absoluteHeading;
+	private double x;
+	private double y;
+	private double absoluteX;
+	private double absoluteY;
+	
 	ArrayList<RobotMapData> data = new ArrayList<RobotMapData>();
 	RobotMapData dataRow = null;
 		
@@ -28,23 +37,37 @@ public class RobotData {
 	private NetworkTableInstance tableInstance;
 	private NetworkTable table;
 	
+	private static final Logger LOGGER = Logger.getLogger(RobotData.class); 
 	private DecimalFormat df = new DecimalFormat("####0.00");
 	
 	private static RobotData instance = null;
 	
 	private RobotData() {
+		LOGGER.setLevel(Level.INFO);
+		
 		tableInstance = NetworkTableInstance.getDefault();
 		table = tableInstance.getTable("datatable").getSubTable("/robotmapdata");
 		
 		dataRow = new RobotMapData();
-		dataRow.rightX = (Robot.WIDTH/2);
+		dataRow.rightX = (RobotMap.WHEEL_BASE_WIDTH/2);
 		dataRow.rightY = 0;
-		dataRow.leftX = -1 * (Robot.WIDTH/2);
+		dataRow.leftX = -1 * (RobotMap.WHEEL_BASE_WIDTH/2);
 		dataRow.leftY = 0;
 		dataRow.headingAngle = 0;
+
 		addToHistory();
 		
-		zeroPosition();
+		rightPositionReading = 0;
+		leftPositionReading = 0;
+		prevRightPositionReading = 0;
+		prevLeftPositionReading = 0;
+		
+		heading = 0;
+		absoluteHeading = 0;
+		x = 0;
+		y = 0;
+		absoluteX = 0;
+		absoluteY = 0;
 	}
 	
 	public void startServer() {
@@ -78,18 +101,24 @@ public class RobotData {
 		data.add(historyEntry);
 	}
 
-	public void zeroPosition() {
+	public void startPosition(double x, double y) {
+		dataRow.startPositionLeftX = x;
+		dataRow.startPositionLeftY = y;
+		dataRow.startPositionRightX = x;
+		dataRow.startPositionRightY = y;	
+	}
+
+	public void zero() {
 		rightPositionReading = 0;
 		leftPositionReading = 0;
 		prevRightPositionReading = 0;
 		prevLeftPositionReading = 0;
-	}
-	
-	public void startPosition(double x, double y) {
-		dataRow.startPositionLeftX = x - Robot.WIDTH / 2;
-		dataRow.startPositionLeftY = y;
-		dataRow.startPositionRightX = x - Robot.WIDTH /2;
-		dataRow.startPositionRightY = y;	
+		absoluteHeading += heading;
+		heading = 0;
+		absoluteX += x;
+		absoluteY += y;
+		x = 0;
+		y = 0;
 	}
 	
 	public void update(
@@ -99,7 +128,7 @@ public class RobotData {
 		this.prevRightPositionReading = this.rightPositionReading;
 		this.leftPositionReading = leftPositionReading;
 		this.rightPositionReading = rightPositionReading;
-		updateMapPosition();
+		updateMapPosition((leftPositionReading-prevLeftPositionReading), (rightPositionReading-prevRightPositionReading));
 		send();
 	}
 	
@@ -127,28 +156,42 @@ public class RobotData {
 		dataRow.headingAngle = table.getEntry("/headingAngle").getDouble(dataRow.headingAngle);
 
 	}
-
-	public void updateMapPosition() {
+	
+	public void updateMapPosition(double leftDistance, double rightDistance) {
 		
-		System.out.println("Old Right = (" + df.format(dataRow.rightX) + "," + df.format(dataRow.rightY) + ")");
-		System.out.println("Old Left = (" + df.format(dataRow.leftX) + "," + df.format(dataRow.leftY) + ")");
+		double radius = (RobotMap.WHEEL_BASE_WIDTH / 2);
+		double averageMove = (leftDistance + rightDistance) / 2;
+		double leftArcLength = (leftDistance - averageMove);
+		double rightArcLength = (rightDistance - averageMove);
+		LOGGER.debug("Moves: Left = " + df.format(leftArcLength) + " Right = " + df.format(rightArcLength) + " Average = " + averageMove);
+		double leftTheta = leftArcLength / radius;
+		double rightTheta = rightArcLength / radius;
+		double theta = (rightTheta - leftTheta) /2;
+		LOGGER.debug("Thetas: Left = " + df.format(leftTheta) + " Right = " + df.format(rightTheta));
+		double leftX = radius * Math.cos(theta);
+		double leftY = radius * Math.sin(theta);
+		double changeInHeading = -1 * Math.atan2((leftY), (leftX));
+		String logMessage = ("Heading: " + df.format(Math.toDegrees(heading)));		
+		heading += changeInHeading;
+		logMessage += " + " + df.format(Math.toDegrees(changeInHeading)) + " = " + df.format(Math.toDegrees(heading));
+		LOGGER.debug(logMessage);
+		logMessage = "Position: (" + df.format(x) + "," + df.format(y) + ") + (";
+		dataRow.headingAngle = heading + absoluteHeading;
+		double addedX = averageMove * Math.sin(dataRow.headingAngle);
+		double addedY = averageMove * Math.cos(dataRow.headingAngle);
+		x += addedX;
+		y += addedY;
+		logMessage += df.format(addedX) + "," + df.format(addedY) +") = (" + df.format(x) + "," + df.format(y) + ")";
+		LOGGER.debug(logMessage);
 		
-		double leftDistanceMoved = leftPositionReading - prevLeftPositionReading;
-		double rightDistanceMoved = rightPositionReading - prevRightPositionReading;
-
-		dataRow.leftX 	+= leftDistanceMoved 	* Math.sin(dataRow.headingAngle);
-		dataRow.rightX 	+= rightDistanceMoved 	* Math.sin(dataRow.headingAngle);
-		dataRow.leftY 	+= leftDistanceMoved 	* Math.cos(dataRow.headingAngle);
-		dataRow.rightY 	+= rightDistanceMoved 	* Math.cos(dataRow.headingAngle);
-		
-		System.out.println("Orig Heading: " + Math.toDegrees(dataRow.headingAngle));
-		dataRow.headingAngle = -1 * Math.atan2((dataRow.rightY - dataRow.leftY), (dataRow.rightX - dataRow.leftX));
-		System.out.println("New Heading: " + df.format(Math.toDegrees(dataRow.headingAngle)));
-		
-		System.out.println("New Right (x,y) = (" + df.format(dataRow.rightX) + "," + df.format(dataRow.rightY) + ")");
-		System.out.println("New Left (x,y) = (" + df.format(dataRow.leftX) + "," + df.format(dataRow.leftY) + ")");
-		System.out.println();
-		
+		// X & Y swapped on the screen
+		dataRow.leftX = x + absoluteX + radius * Math.cos(dataRow.headingAngle);
+		dataRow.leftY = y + absoluteY + radius * Math.sin(dataRow.headingAngle);
+		dataRow.rightX = x + absoluteX + radius * Math.cos(dataRow.headingAngle);
+		dataRow.rightY = y + absoluteY + -1 * radius * Math.sin(dataRow.headingAngle);
+		LOGGER.debug("Screen Postion: [ " + df.format(Math.toDegrees(dataRow.headingAngle)) 
+			+ ", (" + df.format(dataRow.leftX) + "," + df.format(dataRow.leftY) + "), ("
+			+ df.format(dataRow.rightX) + "," + df.format(dataRow.rightY) + ")]");
 	}
 	
 	public double rightX() {

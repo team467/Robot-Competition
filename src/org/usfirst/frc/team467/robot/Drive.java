@@ -1,17 +1,7 @@
 package org.usfirst.frc.team467.robot;
 
-<<<<<<< HEAD
-import org.usfirst.frc.team467.robot.simulator.DriveSimulator;
-
-public interface Drive {
-	
-	public static Drive getInstance() {
-		if (RobotMap.useSimulator) {
-			return DriveSimulator.getInstance();
-		} else {
-			return DriveActual.getInstance();
-=======
 import org.apache.log4j.Logger;
+import org.usfirst.frc.team467.robot.simulator.communications.RobotData;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
@@ -48,11 +38,9 @@ public class Drive extends DifferentialDrive {
 		
 		this.leftFollower1 = leftFollower1;
 		initMotor(this.leftFollower1);
-		initMotorForFollowerMode(leftLead, leftFollower1);
 
 		this.leftFollower2 = leftFollower2;
 		initMotor(this.leftFollower2);
-		initMotorForFollowerMode(leftLead, leftFollower2);
 		
 		this.rightLead = rightLead;
 		initMotor(this.rightLead);
@@ -62,16 +50,14 @@ public class Drive extends DifferentialDrive {
 		
 		this.rightFollower1 = rightFollower1;
 		initMotor(this.rightFollower1);
-		initMotorForFollowerMode(rightLead, rightFollower1);
 		
 		this.rightFollower2 = rightFollower2;
 		initMotor(this.rightFollower2);
-		initMotorForFollowerMode(rightLead, rightFollower2);
 	}
 	
 	private void initMotor(WPI_TalonSRX talon) {
 		talon.set(ControlMode.PercentOutput, 0);
-		talon.selectProfileSlot(RobotMap.VELOCITY_PID_PROFILE, 0);
+		talon.selectProfileSlot(0, 0);
 		talon.configAllowableClosedloopError(0, RobotMap.VELOCITY_ALLOWABLE_CLOSED_LOOP_ERROR, 0);
 		talon.configNominalOutputReverse(0.0, 0);
 		talon.configNominalOutputForward(0.0, 0);
@@ -79,9 +65,9 @@ public class Drive extends DifferentialDrive {
 		talon.configPeakOutputReverse(-1.0, 0);
 		talon.configOpenloopRamp(0.2, RobotMap.TALON_TIMEOUT);
 		talon.configClosedloopRamp(0.2, RobotMap.TALON_TIMEOUT);
-		//Note: This was changed from voltage to percentage used with 1 representing 100 percent or max voltage and -1 representing 100 percent backwards.
+		//Note: This was changed from voltage to percentage used with 1 representing 100 percent or max voltage 
+		//      and -1 representing 100 percent backwards.
 		
-		// TODO: Set the default Talon parameters (done- check over again)
 	}
 
 	/**
@@ -100,26 +86,11 @@ public class Drive extends DifferentialDrive {
 					new WPI_TalonSRX(RobotMap.RIGHT_LEAD_CHANNEL),
 					new WPI_TalonSRX(RobotMap.RIGHT_FOLLOWER_1_CHANNEL),
 					new WPI_TalonSRX(RobotMap.RIGHT_FOLLOWER_2_CHANNEL));
->>>>>>> master
 		}
+		return instance;
 	}
 
-<<<<<<< HEAD
-	public void zeroPosition();
-
-	public void moveFeet(double distanceInFeet);
-=======
-	public void setPIDF(double p, double i, double d, double f){
-		// TODO: Set the PIDF of the talons. Assumes the same values for all motors
-		
-	}
->>>>>>> master
 	
-	public void rotateDegrees(double rotation);
-	
-<<<<<<< HEAD
-	public void arcadeDrive(double speed, double rotation, boolean squaredInputs);
-=======
 	public void initMotionMagicMode() {
 		if (!RobotMap.HAS_WHEELS) {
 			LOGGER.trace("No Drive System");
@@ -154,6 +125,7 @@ public class Drive extends DifferentialDrive {
 		rightLead.configMotionCruiseVelocity(1052 / 2, RobotMap.TALON_TIMEOUT);
 		rightLead.configMotionAcceleration(1052 / 2, RobotMap.TALON_TIMEOUT);	
 	}
+	
 	public void initSpeedControl() {
 		if (!RobotMap.HAS_WHEELS) {
 			LOGGER.trace("No drive system");
@@ -174,19 +146,7 @@ public class Drive extends DifferentialDrive {
 		leftLead.set(ControlMode.PercentOutput, leftLead.getMotorOutputPercent());;
 		
 	}
->>>>>>> master
-	
-	public void tankDrive(double left, double right);
-	
-	public void tankDrive(double left, double right, boolean squaredInputs);
-	
-	public boolean isStopped();
-	
-<<<<<<< HEAD
-	public double absoluteDistanceMoved();
-	
-	public double feetToTicks(double feetDist);
-=======
+
 	public void publishRawSensorValues() {
 		SmartDashboard.putNumber("leftRawSensorPosition", leftLead.getSelectedSensorPosition(0));
 		SmartDashboard.putNumber("rightRawSensorPosition", rightLead.getSelectedSensorPosition(0));
@@ -234,9 +194,18 @@ public class Drive extends DifferentialDrive {
 			m_safetyHelper.feed();
 		}
 	}
-
-	public void turnByPosition(double degrees) {
-		// TODO: Turns in place to the specified angle from center using position mode
+	
+	public void move(double distance) {
+		
+	}
+	
+	public void zero() {
+		rightLead.setSelectedSensorPosition(0, 0, RobotMap.TALON_TIMEOUT);
+		leftLead.setSelectedSensorPosition(0, 0, RobotMap.TALON_TIMEOUT);
+	}
+	
+	public void sendData() {
+		RobotData.getInstance().update(rightLead.getSelectedSensorPosition(0), leftLead.getSelectedSensorPosition(0));
 	}
 
 	/**
@@ -247,9 +216,8 @@ public class Drive extends DifferentialDrive {
 	 *
 	 * @return True when pointing at the angle
 	 */
-	public boolean turnToAngle(double angle) {
-		//TODO: Uses the gyro to determine the angle, correcting until it points the correct direction
-		return false; // Put in test to determine if on target
+	public void turn(double degrees) {
+		// TODO: Turns in place to the specified angle from center using position mode
 	}
 
 	public boolean isStopped(){
@@ -264,11 +232,6 @@ public class Drive extends DifferentialDrive {
 	 */
 	public double absoluteDistanceMoved() {
 		// TODO: returns the amount of distance moved based on the the position of the talon sensors nad the wheel circumerence
-		return 0;
-	}
-
-	public double getTurnError() {
-		// TODO Get the absolute error when turning
 		return 0;
 	}
 
@@ -299,9 +262,6 @@ public class Drive extends DifferentialDrive {
 		rightFollower1.set(ControlMode.Follower, rightLead.getDeviceID());
 		rightFollower2.set(ControlMode.Follower, rightLead.getDeviceID());
 	}
->>>>>>> master
-	
-	public double degreesToTicks(double turnAmountInDegrees);
 
 
 }

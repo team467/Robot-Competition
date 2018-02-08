@@ -56,17 +56,10 @@ public class Robot extends TimedRobot {
 		
 		// Make robot objects
 		driverstation = DriverStation.getInstance();
-<<<<<<< HEAD
-		LOGGER.info("inited driverstation");
-
-		drive = DriveActual.getInstance();
-
-=======
 		LOGGER.info("Initialized Driverstation");
 		
 		drive = Drive.getInstance();
 		
->>>>>>> master
 		gyro = Gyrometer.getInstance();
 		gyro.calibrate();
 		gyro.reset();

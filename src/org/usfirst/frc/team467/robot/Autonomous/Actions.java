@@ -5,6 +5,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.apache.log4j.Logger;
 import org.usfirst.frc.team467.robot.Drive;
 import org.usfirst.frc.team467.robot.RobotMap;
+import org.usfirst.frc.team467.robot.simulator.DriveSimulator;
 
 import edu.wpi.first.wpilibj.Timer;
 
@@ -55,10 +56,11 @@ public class Actions {
 	}
 
 	public static Action zeroDistance() {
-		Drive drive = Drive.getInstance();
+//		Drive drive = Drive.getInstance();
+		DriveSimulator drive = DriveSimulator.getInstance();
 		return new Action(
 				"Zeroing the distance",
-				new ActionGroup.RunOnce(() -> drive.zeroPosition()));
+				new ActionGroup.RunOnce(() -> drive.zero()));
 	}
 	
 	
@@ -69,11 +71,12 @@ public class Actions {
 	 */
 
 	public static Action moveDistanceForward(double distance) {
-		Drive drive = Drive.getInstance();
+//		Drive drive = Drive.getInstance();
+		DriveSimulator drive = DriveSimulator.getInstance();
 		String actionText = "Move forward " + distance + " feet";
 		return new Action(actionText,
 				new ActionGroup.ReachDistance(distance),
-				() -> drive.moveFeet(distance));
+				() -> drive.move(distance));
 	}
 	
 	
@@ -83,13 +86,13 @@ public class Actions {
 	 * @return
 	 */
 	public static Action moveturn(double rotationInDegrees) {
-	    double rotation = rotationInDegrees;
-	    
-		Drive drive = Drive.getInstance();
+	    double rotation = rotationInDegrees;	    
+//		Drive drive = Drive.getInstance();
+		DriveSimulator drive = DriveSimulator.getInstance();
 		String actionText = "Rotate " + rotationInDegrees + " degrees.";
 		return new Action(actionText,
 				new ActionGroup.ReachDistance(rotation),
-				() -> drive.rotateDegrees(rotation));
+				() -> drive.turn(rotation));
 	}
 
 	public static boolean moveDistanceComplete(double distance) {
@@ -139,21 +142,17 @@ public class Actions {
 		return mode;
 	}
 	
-	public static ActionGroup powerUp1A(double distance, double rotationInDegrees) {
-		String actionGroupText = "Move " + distance + " feet" + " and turn " + rotationInDegrees + " degrees";
+	public static ActionGroup powerUp1A() {
+		String actionGroupText = "FIRST Power Up - start position 1, first move type";
 		ActionGroup mode = new ActionGroup(actionGroupText);
 		mode.addAction(zeroDistance());
 		mode.addAction(moveDistanceForward(12.33));
 		mode.addAction(zeroDistance());
 		mode.addAction(moveturn(90)); // 90 degrees
-		
-//		mode.addAction(moveDistanceForward(6.5)); // 12' 4"
-//		mode.addAction(zeroDistance());
-//		mode.addAction(moveturn(73)); // 90 degrees
-//		mode.addAction(zeroDistance());
-//		mode.addAction(moveDistanceForward(0.4)); // 1' 5.75" 1.479
-//		mode.addAction(zeroDistance());
-		//mode.addAction(moveDistanceForward(-2.0)); // negative is backwards
+		mode.addAction(zeroDistance());
+		mode.addAction(moveDistanceForward(0.4)); // 1' 5.75" 1.479
+		mode.addAction(zeroDistance());
+		mode.addAction(moveDistanceForward(-2.0)); // negative is backwards
 		return mode;
 	}
 	
@@ -231,51 +230,6 @@ public class Actions {
 //		mode.addAction(turnAndMoveDistance(270, 2));
 		return mode;
 	}
-
-//	private void move1() {
-//	switch(moveCount) {
-//	
-//	case 0:
-//		if (drive.moveDistance(20, 20)) {
-//			moveCount++;
-//			drive.zeroPosition();				
-//		}
-//		break;
-//	
-//	case 1:
-//		if (drive.moveDistance(-0.785, 0.785)) {
-//			//45º turn in place 
-//			moveCount++;
-//			drive.zeroPosition();				
-//		}
-//		break;
-//	
-//	case 2:
-//		if (drive.moveDistance(5, 5)) {
-//			moveCount++;
-//			drive.zeroPosition();
-//		}
-//		break;
-//
-//	case 3:
-//		if (drive.moveDistance(1.57, -1.57)) {
-//			moveCount++;
-//			drive.zeroPosition();
-//		}
-//		break;
-//
-//	case 4:
-//		if (drive.moveDistance(5, 5)) {
-//			moveCount++;
-//			drive.zeroPosition();
-//		}
-//		break;
-//
-//	default:
-//	}
-//
-//	
-//}
 
 
 }

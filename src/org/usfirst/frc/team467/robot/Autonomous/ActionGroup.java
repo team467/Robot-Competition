@@ -8,6 +8,7 @@ import org.apache.log4j.Logger;
 import org.usfirst.frc.team467.robot.Drive;
 import org.usfirst.frc.team467.robot.RobotMap;
 import org.usfirst.frc.team467.robot.VisionProcessing;
+import org.usfirst.frc.team467.robot.simulator.DriveSimulator;
 
 import edu.wpi.first.wpilibj.PIDController;
 
@@ -141,7 +142,8 @@ public class ActionGroup {
 		private double currentPosition = 0.0;
 		private double lastPosition = 0.0;
 		private int increment = 0;
-		private Drive drive = Drive.getInstance();
+//		private Drive drive = Drive.getInstance();
+		private DriveSimulator drive = DriveSimulator.getInstance();
 		public ReachDistance(double distance) {
 			this.distance = distance;
 		}
