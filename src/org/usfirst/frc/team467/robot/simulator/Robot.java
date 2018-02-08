@@ -3,6 +3,12 @@
  */
 package org.usfirst.frc.team467.robot.simulator;
 
+import org.apache.log4j.Logger;
+import org.usfirst.frc.team467.robot.Drive;
+import org.usfirst.frc.team467.robot.Logging;
+import org.usfirst.frc.team467.robot.RobotMap;
+import org.usfirst.frc.team467.robot.Autonomous.ActionGroup;
+import org.usfirst.frc.team467.robot.Autonomous.Actions;
 import org.usfirst.frc.team467.robot.simulator.communications.RobotData;
 import org.usfirst.frc.team467.robot.simulator.gui.MapController;
 
@@ -11,29 +17,36 @@ import org.usfirst.frc.team467.robot.simulator.gui.MapController;
  */
 public class Robot {
 	
+	private static final Logger LOGGER = Logger.getLogger(Robot.class);
+	
 	public static final double WIDTH = 2.92;
 	
 	public static final double LENGTH = 3.33;
 	
-	Drive drive;
+	DriveSimulator drive;
 	
 	MapController simulatorView;
 	
 	RobotData data;
 	
+	ActionGroup autonomous;
+	
 	public void robotInit() {
-		drive = DriveSimulator.getInstance();
+		
+		Logging.init();
+		
+		RobotMap.useSimulator = true;
+		drive = DriveSimulator.getInstance(); 
 		
 		data = RobotData.getInstance();
 		data.startServer();
+		
 	}
 	
 	public void setView(MapController simulatorView) {
 		this.simulatorView = simulatorView;
 	}
-	
-	int moveCount = 0;
-	
+		
 	/*
 	 * Referring to field map, mode codes represented: 
 	 * Moves 1-6: Robot Starting Position - Switch Side
@@ -55,18 +68,19 @@ public class Robot {
 	AutonomousModes mode;
 	
 	public void autonomousInit() {
+<<<<<<< HEAD
 		drive.zeroPosition();
 		data.startPosition(5.5, 1.26);
+=======
+		drive.zero();
+		data.startPosition(6, 1);
+>>>>>>> 0dcd487da8d435ce77594cc1af9daef0be2b37b8
 		data.send();
-		moveCount = 0;
 		mode = AutonomousModes.move1;
-	}
-	
-	public void autonomousPeriodic() {
 		switch (mode) {
 		
 		case move1:
-			move1();
+			autonomous = Actions.startSwitchSide1A(0,0);
 			break;
 			
 		/*case move2:
@@ -116,6 +130,11 @@ public class Robot {
 		default:
 		*/
 		}
+		autonomous.enable();
+	}
+	
+	public void autonomousPeriodic() {
+		autonomous.run();
 	}
 	
 	private enum AutonomousModes {
@@ -132,6 +151,7 @@ public class Robot {
 		move11,
 		move12;
 	}
+<<<<<<< HEAD
 	
 	//0.785
 	
@@ -165,6 +185,9 @@ public class Robot {
 		
 	}
 	
+=======
+		
+>>>>>>> 0dcd487da8d435ce77594cc1af9daef0be2b37b8
 	public static void main(String[] args) {		
 		Robot robot = new Robot();
 		robot.robotInit();

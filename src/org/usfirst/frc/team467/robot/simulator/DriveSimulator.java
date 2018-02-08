@@ -5,34 +5,46 @@ package org.usfirst.frc.team467.robot.simulator;
 
 import java.text.DecimalFormat;
 
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+import org.usfirst.frc.team467.robot.RobotMap;
+import org.usfirst.frc.team467.robot.RobotMap.RobotID;
 import org.usfirst.frc.team467.robot.simulator.communications.RobotData;
 
 /**
  *
  */
-public class DriveSimulator implements Drive {
+public class DriveSimulator {
 	
 	public static final double MAX_RPM = 821;
-	
-	public static final double WHEEL_CIRCUMFERENCE = 18.7;
-	
-	private static Drive instance = null;
+		
+	private static DriveSimulator instance = null;
 	
 	private double maxFeetPerPeriod; // Period is 20 ms
 	
 	RobotData data = RobotData.getInstance();
 	
+	Logger LOGGER = Logger.getLogger(DriveSimulator.class);
+	
 	private DecimalFormat df = new DecimalFormat("####0.00");
 	
 	private double rightPositionReading;
 	private double leftPositionReading;
-
+	
+	private double absoluteRightPositionReadingOffset;
+	private double absoluteLeftPositionReadingOffset;
+	
+	private boolean isMoving = false;
+	
 	private DriveSimulator() {
-		maxFeetPerPeriod = WHEEL_CIRCUMFERENCE / 12 * MAX_RPM / 60 / 1000;
-		zeroPosition();
+		maxFeetPerPeriod = RobotMap.WHEEL_CIRCUMFERENCE / 12 * MAX_RPM / 60 / 10000; // actually 60/500
+		zero();
+		absoluteRightPositionReadingOffset = 0.0;
+		absoluteLeftPositionReadingOffset = 0.0;
+		LOGGER.setLevel(Level.INFO);
 	}
 	
-	public static Drive getInstance() {
+	public static DriveSimulator getInstance() {
 		if (instance == null) {
 			instance = new DriveSimulator();
 		}
@@ -42,15 +54,21 @@ public class DriveSimulator implements Drive {
 	/* (non-Javadoc)
 	 * @see org.usfirst.frc.team467.robot.simulator.Drive#zeroPosition()
 	 */
-	@Override
-	public void zeroPosition() {
+	public void zero() {
+		absoluteRightPositionReadingOffset = rightPositionReading;
+		absoluteLeftPositionReadingOffset = leftPositionReading;
 		rightPositionReading = 0;
 		leftPositionReading = 0;
-		data.zeroPosition();
+		isMoving = false;
+		data.zero();
 	}
 	
 	public double rightPosition() {
-		return rightPositionReading;
+		return rightPositionReading;//absoluteRightPositionReadingOffset + rightPositionReading;
+	}
+	
+	public double leftPosition() {
+		return leftPositionReading;//absoluteLeftPositionReadingOffset + leftPositionReading;
 	}
 	
 	public void setMaxMotionMagicSpeed(double percentOfMaxSpeed) {
@@ -59,69 +77,93 @@ public class DriveSimulator implements Drive {
 		} else if (percentOfMaxSpeed > 1) {
 			percentOfMaxSpeed = 1;
 		}
-		maxFeetPerPeriod = WHEEL_CIRCUMFERENCE / 12 * percentOfMaxSpeed * MAX_RPM / 60 / 1000;
+		maxFeetPerPeriod = RobotMap.WHEEL_CIRCUMFERENCE / 12 * percentOfMaxSpeed * MAX_RPM / 60 / 1000;
 	}
 	
-	public double leftPosition() {
-		return leftPositionReading;
-	}
 	
-	/* (non-Javadoc)
-	 * @see org.usfirst.frc.team467.robot.simulator.Drive#moveDistance(double, double)
-	 */
-	@Override
-	public boolean moveDistance(double left, double right) {
+	public void move(double distance) {
+		moveDistance(distance, 0);
+	}
+		
+	public void moveDistance(double distance, double rotation) {
 
-		if (leftPositionReading == left && rightPositionReading == right) {
-			return true; // At destination
+	    double leftDistance = distance + rotation * (RobotMap.WHEEL_BASE_WIDTH / 2);
+	    double rightDistance = distance - rotation * (RobotMap.WHEEL_BASE_WIDTH / 2);
+	    
+		if (leftPositionReading == leftDistance && rightPositionReading == rightDistance) {
+			isMoving = false;
+			return; // At destination
 		}
 		
-		if (Math.abs((left - leftPositionReading)) > maxFeetPerPeriod) {
-			if (left < 0) {
+		isMoving = true;
+
+		if (Math.abs((leftDistance - leftPositionReading)) > maxFeetPerPeriod) {
+			if (leftDistance < 0) {
 				leftPositionReading -= maxFeetPerPeriod;
 			} else {
 				leftPositionReading += maxFeetPerPeriod;
 			}
 		} else {
-			leftPositionReading = left;
+			leftPositionReading = leftDistance;
 		}
 		
-		if (Math.abs((right - rightPositionReading)) > maxFeetPerPeriod) {
-			if (right < 0) {
+		if (Math.abs((rightDistance - rightPositionReading)) > maxFeetPerPeriod) {
+			if (rightDistance < 0) {
 				rightPositionReading -= maxFeetPerPeriod;
 			} else {
 				rightPositionReading += maxFeetPerPeriod;
 			}
 		} else {
-			rightPositionReading = right;
+			rightPositionReading = rightDistance;
 		}
 		
-		System.out.println("Left Target: " + df.format(left) + " Right Target: " + df.format(right));
-		System.out.println("Left Move: " + df.format(leftPositionReading) 
+		LOGGER.debug("Left Target: " + df.format(leftDistance) + " Right Target: " + df.format(rightDistance));
+		LOGGER.debug("Left Move: " + df.format(leftPositionReading) 
 			+ " Right Move: " + df.format(rightPositionReading));
 		
-		data.update(rightPositionReading, leftPositionReading);
+		data.update(rightPosition(), leftPosition());
 		
-		return false;
-	}
-	
-	public static void main(String[] args) {		
-		Drive drive = DriveSimulator.getInstance();
-		drive.zeroPosition();
-		RobotData.getInstance().startPosition(20, 1.5);
-		
-		double left = -1 * Math.toRadians(100);
-		double right =     Math.toRadians(100);
-		while (drive.moveDistance(left, right) != true);
-		
-//		drive.moveDistance(0, 0); // Stationary
-//		drive.moveDistance(10, 10); // Straight forward
-//		drive.moveDistance(-3.14, 3.14); // 180 degrees
-//		drive.moveDistance(5.7, 35.7);
-//		drive.moveDistance(15.7, -15.7);
-//		drive.moveDistance(31.4, -31.4);
-//		drive.moveDistance(131.4, 68.6);
 	}
 
+	public boolean isStopped() {
+		return !isMoving;
+	}
+
+	/**
+	 * Gets the distance moved for checking drive modes.
+	 *
+	 * @return the absolute distance moved in feet
+	 */
+	public double absoluteDistanceMoved() {
+		double absoluteLeftDistance =  Math.abs(leftPositionReading);
+		double absoluteRightDistance = Math.abs(rightPositionReading);
+		if (absoluteLeftDistance < absoluteRightDistance) {
+			return absoluteRightDistance;
+		} else {
+			return absoluteLeftDistance;
+		}
+	}
+	
+		public void turn(double rotation) {
+			moveDistance(0, Math.toRadians(rotation));
+			
+		}
+
+
+	public static void main(String[] args) {
+		RobotMap.init(RobotID.PreseasonBot);
+		DriveSimulator drive = DriveSimulator.getInstance();
+		drive.zero();
+		RobotData.getInstance().startPosition(20, 0);
+		
+//		do {
+//			drive.moveDistance(4, 0);
+//		} while (!drive.isStopped());	
+		
+		do {
+			drive.turn(360+90);
+		} while (!drive.isStopped());	
+		
+	}
 
 }
