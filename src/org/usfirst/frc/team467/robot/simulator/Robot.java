@@ -23,7 +23,7 @@ public class Robot {
 	
 	public static final double LENGTH = 3.33;
 	
-	Drive drive;
+	DriveSimulator drive;
 	
 	MapController simulatorView;
 	
@@ -36,7 +36,7 @@ public class Robot {
 		Logging.init();
 		
 		RobotMap.useSimulator = true;
-		drive = Drive.getInstance(); 
+		drive = DriveSimulator.getInstance(); 
 		
 		data = RobotData.getInstance();
 		data.startServer();
@@ -68,7 +68,7 @@ public class Robot {
 	AutonomousModes mode;
 	
 	public void autonomousInit() {
-		drive.zeroPosition();
+		drive.zero();
 		data.startPosition(6, 1);
 		data.send();
 		mode = AutonomousModes.move1;

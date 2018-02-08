@@ -5,6 +5,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.apache.log4j.Logger;
 import org.usfirst.frc.team467.robot.Drive;
 import org.usfirst.frc.team467.robot.RobotMap;
+import org.usfirst.frc.team467.robot.simulator.DriveSimulator;
 
 import edu.wpi.first.wpilibj.Timer;
 
@@ -55,10 +56,12 @@ public class Actions {
 	}
 
 	public static Action zeroDistance() {
-		Drive drive = Drive.getInstance();
+//		Drive drive = Drive.getInstance();
+		DriveSimulator drive = DriveSimulator.getInstance();
 		return new Action(
 				"Zeroing the distance",
-				new ActionGroup.RunOnce(() -> drive.zeroPosition()));
+//				new ActionGroup.RunOnce(() -> drive.zeroPosition()));
+				new ActionGroup.RunOnce(() -> drive.zero()));
 	}
 	
 	
@@ -69,11 +72,13 @@ public class Actions {
 	 */
 
 	public static Action moveDistanceForward(double distance) {
-		Drive drive = Drive.getInstance();
+//		Drive drive = Drive.getInstance();
+		DriveSimulator drive = DriveSimulator.getInstance();
 		String actionText = "Move forward " + distance + " feet";
 		return new Action(actionText,
 				new ActionGroup.ReachDistance(distance),
-				() -> drive.moveFeet(distance));
+				() -> drive.move(distance));
+//				() -> drive.moveFeet(distance));
 	}
 	
 	
@@ -85,11 +90,13 @@ public class Actions {
 	public static Action moveturn(double rotationInDegrees) {
 	    double rotation = rotationInDegrees;
 	    
-		Drive drive = Drive.getInstance();
+//		Drive drive = Drive.getInstance();
+		DriveSimulator drive = DriveSimulator.getInstance();
 		String actionText = "Rotate " + rotationInDegrees + " degrees.";
 		return new Action(actionText,
 				new ActionGroup.ReachDistance(rotation),
-				() -> drive.rotateDegrees(rotation));
+				() -> drive.turn(rotation));
+//				() -> drive.rotateDegrees(rotation));
 	}
 
 	public static boolean moveDistanceComplete(double distance) {
