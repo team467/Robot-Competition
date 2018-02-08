@@ -49,11 +49,7 @@ public class Drive extends DifferentialDrive {
 		
 		this.rightLead = rightLead;
 		initMotor(this.rightLead);
-<<<<<<< HEAD
 
-		//rightLead.setInverted(false);
-=======
->>>>>>> master
 		rightLead.setSensorPhase(true);
 		rightLead.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, RobotMap.TALON_TIMEOUT);
 		rightLead.config_kF(0, 0.7297, RobotMap.TALON_TIMEOUT);
@@ -139,16 +135,18 @@ public class Drive extends DifferentialDrive {
 		return false;
 	}
 	
-<<<<<<< HEAD
+
 	public void initMode() {
-=======
+		
+	}
+
 	public void initMotionMagicMode() {
 		if (!RobotMap.HAS_WHEELS) {
 			LOGGER.trace("No Drive System");
 			return;
 		}
 		
->>>>>>> master
+
 		rightLead.setSelectedSensorPosition(0, 0, RobotMap.TALON_TIMEOUT);
 		leftLead.setSelectedSensorPosition(0, 0, RobotMap.TALON_TIMEOUT);
 		

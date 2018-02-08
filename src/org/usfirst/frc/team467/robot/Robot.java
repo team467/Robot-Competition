@@ -187,29 +187,12 @@ public class Robot extends TimedRobot {
 	 		right = 0.0;
 	 	}
 	 	
-<<<<<<< HEAD
+
 		//ymax & ymin are 5 and -5
 		double ElevatorScale = driverstation.getDriveJoystick().getLeftStickY();
 		elevator.manualMove(ElevatorScale/5);
-		LOGGER.debug("Elevator Moving");
+		LOGGER.debug("Elevator Moving");		
 
-		switch (driverstation.getDriveMode()) {
-		case ArcadeDrive:
-			double speed = driverstation.getArcadeSpeed();
-			double turn = driverstation.getArcadeTurn();
-			drive.arcadeDrive(speed, turn, true);
-			break;
-		case TankDrive:	
-			double leftTank = driverstation.getDriveJoystick().getRightStickY();
-			double rightTank = driverstation.getDriveJoystick().getRightStickY();
-			drive.tankDrive(leftTank, rightTank, true);
-			break;
-		case MotionMagic:
-			//TODO: Add things here later.
-			break;
-			
-			
-=======
 		switch (driverstation.getDriveMode()) {
 			case ArcadeDrive:
 				double speed = driverstation.getArcadeSpeed();
@@ -224,7 +207,7 @@ public class Robot extends TimedRobot {
 			case MotionMagic:
 				//TODO: Add things here later.
 				break;
->>>>>>> master
+
 		}
 	}
 }
