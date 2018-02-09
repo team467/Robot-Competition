@@ -145,8 +145,8 @@ public class RobotMap {
 	public static final double MIN_DRIVE_SPEED = 0.1;
 	
 	// Robot Dimensions
-	public static double WHEEL_BASE_LENGTH = 3;
-	public static double WHEEL_BASE_WIDTH = 2.0; // 2.92; // TODO: MEASURE TRUE WHEEL BASE WIDTH
+	public static double WHEEL_BASE_LENGTH = 3.33;
+	public static double WHEEL_BASE_WIDTH = 2.92; // TODO: MEASURE TRUE WHEEL BASE WIDTH
 
 	public static double CamToCenterWidthInches;
 	public static double CamToCenterLengthInches;	
