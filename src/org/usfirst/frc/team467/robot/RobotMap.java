@@ -73,11 +73,11 @@ public class RobotMap {
 			WHEEL_ENCODER_CODES_PER_REVOLUTION = 256;
 			
 			// TODO Assign values to the game piece variables, and make more as appropriate
-			EVEVATOR_MOTOR_CHANNEL = 0;
+			EVEVATOR_MOTOR_CHANNEL = 1;
 			GRABBER_MOTOR_PWM_CHANNEL = 0;
 			RAMP_SOLENOID_CHANNEL = 0;
 			
-			HAS_ELEVATOR = false;
+			HAS_ELEVATOR = true;
 			HAS_GRABBER = false;
 			HAS_RAMPS = false;
 			
