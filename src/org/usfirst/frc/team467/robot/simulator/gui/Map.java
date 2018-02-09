@@ -13,9 +13,8 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
 /**
- * The main class for a JavaFX application. It creates and handle the main
- * window with its resources (style, graphics, etc.).
- * 
+ * The main class for the JavaFX application that displays the robot and field. 
+ * It creates and handle the main window with its resources (style, graphics, etc.). 
  */
 public class Map extends Application {
 	
@@ -23,6 +22,9 @@ public class Map extends Application {
 		launch(args);
 	}
 	
+	/**
+	 * Starts the window and connects the event handler.
+	 */
 	@Override
 	public void start(Stage primaryStage) {
 		try {
@@ -34,7 +36,6 @@ public class Map extends Application {
 			
 			// Create and style a scene
 			Scene scene = new Scene(root, 950, 450);
-			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 
 			// Create the stage with the given title and the previously created scene
 			primaryStage.setTitle("Robot Map");

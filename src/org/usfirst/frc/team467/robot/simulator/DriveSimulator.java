@@ -12,7 +12,7 @@ import org.usfirst.frc.team467.robot.RobotMap.RobotID;
 import org.usfirst.frc.team467.robot.simulator.communications.RobotData;
 
 /**
- *
+ * Simulates the motors driving. Will be replaced by a simulated motor eventually.
  */
 public class DriveSimulator {
 	

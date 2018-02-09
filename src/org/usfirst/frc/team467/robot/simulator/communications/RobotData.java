@@ -121,6 +121,12 @@ public class RobotData {
 		y = 0;
 	}
 	
+	/**
+	 * Update the position readings for determining the map position and heading.
+	 * 
+	 * @param rightPositionReading the robot right position reading in feet
+	 * @param leftPositionReading the robot left position reading in feet
+	 */
 	public void update(
 			double rightPositionReading,
 			double leftPositionReading) {
@@ -132,6 +138,9 @@ public class RobotData {
 		send();
 	}
 	
+	/**
+	 * Puts the data onto the network table.
+	 */
 	public void send() {
 		table.getEntry("/startPositionRightX").setDouble(dataRow.startPositionRightX);
 		table.getEntry("/startPositionRightY").setDouble(dataRow.startPositionRightY);
@@ -144,6 +153,9 @@ public class RobotData {
 		table.getEntry("/headingAngle").setDouble(dataRow.headingAngle);
 	}
 	
+	/**
+	 * Gets the information from the network table.
+	 */
 	public void receive() {
 		dataRow.startPositionRightX = table.getEntry("/startPositionRightX").getDouble(dataRow.startPositionRightX);
 		dataRow.startPositionRightY = table.getEntry("/startPositionRightY").getDouble(dataRow.startPositionRightY);
@@ -157,6 +169,13 @@ public class RobotData {
 
 	}
 	
+	/**
+	 * Updates the heading and (x, y) position of the robot given the moves of 
+	 * the left and right sides of the robot.
+	 * 
+	 * @param leftDistance the distance the left middle wheel moved
+	 * @param rightDistance the distance the right middle wheel moved
+	 */
 	public void updateMapPosition(double leftDistance, double rightDistance) {
 		
 		double radius = (RobotMap.WHEEL_BASE_WIDTH / 2);

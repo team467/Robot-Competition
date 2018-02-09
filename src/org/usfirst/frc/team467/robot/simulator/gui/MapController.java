@@ -16,38 +16,57 @@ import javafx.scene.layout.Pane;
 
 /**
  * The controller associated with the only view of our application. The
- * application logic is implemented here. It handles the button for
- * starting/stopping the camera, the acquired video stream, the relative
- * controls and the histogram creation.
+ * application logic is implemented here. It handles the buttons and drawing 
+ * the field and robot.
  * 
  */
 public class MapController {
 	
+	/**
+	 * The overall window, including the buttons
+	 */
 	@FXML
-	private BorderPane MapUI;
+	private BorderPane mapUI;
 	
+	/**
+	 * The field pane, it needs to be separate from the canvas to allow overlays
+	 */
 	@FXML
 	private BorderPane fieldMap;
 	
+	/**
+	 * The field window pane
+	 */
 	@FXML
 	private Canvas field;
 	
+	/**
+	 * The overlay window pane for the robot
+	 */
 	@FXML
 	private Pane robotArea;
 	
-	// the FXML button
+	/**
+	 * The start button for beginning the match
+	 */
 	@FXML
 	private Button startButton;
 
-	// a timer for acquiring the video stream
+	/**
+	 * The timer for redrawing the robot after it moves
+	 */
 	private ScheduledExecutorService timer;
 
-	// a flag to start autonomous
+	/**
+	 * Flag to start getting the robot's moves
+	 */
 	private boolean robotActive;
 	
-	// Draw Shapes
-	RobotShape robotShape = new RobotShape();
-	FieldShape fieldShape = new FieldShape();
+	/**
+	 * The shapes for drawing for robot and field and other objects
+	 */
+	private RobotShape robotShape = new RobotShape();
+	private FieldShape fieldShape = new FieldShape();
 	
 	/**
 	 * Initialize method, automatically called by @{link FXMLLoader}
@@ -58,7 +77,8 @@ public class MapController {
 	}
 
 	/**
-	 * The action triggered by pushing the button on the GUI
+	 * The action triggered by pushing the button on the GUI. It creates a thread that monitors
+	 * robot movements 
 	 */
 	@FXML
 	protected void startRobot() {
@@ -99,7 +119,7 @@ public class MapController {
 	}
 
 	/**
-	 * Stop the acquisition from the camera and release all the resources
+	 * Stop the robot thread
 	 */
 	private void stopAcquisition() {
 		if (this.timer != null && !this.timer.isShutdown()) {
@@ -114,6 +134,9 @@ public class MapController {
 		}
 	}
 	
+	/**
+	 * Periodically updates the robot and field shape
+	 */
 	public void update() {
 		Platform.runLater(() -> {
 			fieldShape.draw();
@@ -123,7 +146,7 @@ public class MapController {
 	}
 	
 	/**
-	 * On application close, stop the acquisition from the camera
+	 * On application close, stop the threads and release any resources.
 	 */
 	protected void setClosed() {
 		this.stopAcquisition();

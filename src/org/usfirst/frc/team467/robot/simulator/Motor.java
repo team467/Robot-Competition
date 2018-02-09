@@ -20,7 +20,10 @@ import edu.wpi.first.wpilibj.Sendable;
 import edu.wpi.first.wpilibj.SpeedController;
 
 /**
- * Class for simulated or actual motor
+ * Class for simulated or actual motor. This will define a pass-through motor that will check
+ * for the presence of motors and call if they are available. It will also enable the use of the
+ * simulator.
+ *
  */
 public class Motor extends WPI_TalonSRX implements SpeedController, Sendable, MotorSafety, 
 IFollower, IMotorController, IMotorControllerEnhanced, IInvertable, IOutputSignal {
