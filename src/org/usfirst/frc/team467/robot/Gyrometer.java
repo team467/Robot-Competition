@@ -59,12 +59,12 @@ public class Gyrometer {
 	public double yawRadians() {
 		if (RobotMap.robotID == RobotMap.RobotID.PreseasonBot) {
 		return imu.getAngleZ() * Math.PI / (180 * measuresPerDegree);
+		} else if (RobotMap.robotID == RobotMap.RobotID.Competition_1){
+		return -imu.getAngleX() * Math.PI / (180 * measuresPerDegree);
 		} else {
-			if (RobotMap.robotID == RobotMap.RobotID.Competition_1) {
-			}return -imu.getAngleX() * Math.PI / (180 * measuresPerDegree);
-		}
+		return 0;
+		} 
 	}
-
 	/**
 	 * Returns the angle of the robot orientation in Degrees. Robot is assumed to be pointing forward at 0.0. Clockwise rotation is
 	 * positive, counter clockwise rotation is negative
@@ -82,11 +82,12 @@ public class Gyrometer {
 	 */
 	public double rollRadians() {
 		if (RobotMap.robotID == RobotMap.RobotID.PreseasonBot) {
-		return imu.getAngleX() * Math.PI / (180 * measuresPerDegree);
-		} else {
-			if (RobotMap.robotID == RobotMap.RobotID.Competition_1) {
-			} return -imu.getAngleY() * Math.PI / (180 * measuresPerDegree);
-		} 
+			return imu.getAngleZ() * Math.PI / (180 * measuresPerDegree);
+			} else if (RobotMap.robotID == RobotMap.RobotID.Competition_1){
+			return -imu.getAngleY() * Math.PI / (180 * measuresPerDegree);
+			} else {
+			return 0;
+			} 
 	}
 
 	/**
@@ -105,11 +106,12 @@ public class Gyrometer {
 	 */
 	public double pitchRadians() {
 		if (RobotMap.robotID == RobotMap.RobotID.PreseasonBot) {
-		return imu.getAngleY() * Math.PI / (180 * measuresPerDegree);
-		} else {
-		    if (RobotMap.robotID == RobotMap.RobotID.Competition_1) {
-		    } return -imu.getAngleZ() * Math.PI / (180 * measuresPerDegree);
-		}
+			return imu.getAngleZ() * Math.PI / (180 * measuresPerDegree);
+			} else if (RobotMap.robotID == RobotMap.RobotID.Competition_1){
+			return -imu.getAngleZ() * Math.PI / (180 * measuresPerDegree);
+			} else {
+			return 0;
+			} 
 	}
 
 	/**
