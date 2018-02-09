@@ -77,7 +77,7 @@ public class Actions {
 		String actionText = "Move forward " + distance + " feet";
 		return new Action(actionText,
 				new ActionGroup.ReachDistance(distance),
-				() -> drive.move(distance));
+				() -> drive.moveFeet(distance));
 //				() -> drive.moveFeet(distance));
 	}
 	
@@ -95,7 +95,7 @@ public class Actions {
 		String actionText = "Rotate " + rotationInDegrees + " degrees.";
 		return new Action(actionText,
 				new ActionGroup.ReachDistance(rotation),
-				() -> drive.turn(rotation));
+				() -> drive.rotateByAngle(rotation));
 //				() -> drive.rotateDegrees(rotation));
 	}
 

@@ -74,14 +74,15 @@ public class DriveSimulator {
 	}
 	
 	
-	public void move(double distance) {
-		moveDistance(distance, 0);
+	public void moveFeet(double distance) {
+		moveFeet(distance, 0);
 	}
 		
-	public void moveDistance(double distance, double rotation) {
+	public void moveFeet(double distance, double rotation) {
 
-	    double leftDistance = distance + rotation * (RobotMap.WHEEL_BASE_WIDTH / 2);
-	    double rightDistance = distance - rotation * (RobotMap.WHEEL_BASE_WIDTH / 2);
+		double rotationInRadians = Math.toRadians(rotation);
+	    double leftDistance = distance + rotationInRadians * (RobotMap.WHEEL_BASE_WIDTH / 2);
+	    double rightDistance = distance - rotationInRadians * (RobotMap.WHEEL_BASE_WIDTH / 2);
 	    
 		if (leftPositionReading == leftDistance && rightPositionReading == rightDistance) {
 			isMoving = false;
@@ -137,8 +138,8 @@ public class DriveSimulator {
 		}
 	}
 	
-		public void turn(double rotation) {
-			moveDistance(0, Math.toRadians(rotation));
+		public void rotateByAngle(double rotation) {
+			moveFeet(0, rotation);
 			
 		}
 
@@ -148,13 +149,9 @@ public class DriveSimulator {
 		DriveSimulator drive = DriveSimulator.getInstance();
 		drive.zero();
 		RobotData.getInstance().startPosition(20, 0);
-		
-//		do {
-//			drive.moveDistance(4, 0);
-//		} while (!drive.isStopped());	
-		
+				
 		do {
-			drive.turn(360+90);
+			drive.rotateByAngle(360+90);
 		} while (!drive.isStopped());	
 		
 	}
