@@ -41,7 +41,7 @@ public class DriveSimulator {
 		zero();
 		absoluteRightPositionReadingOffset = 0.0;
 		absoluteLeftPositionReadingOffset = 0.0;
-		LOGGER.setLevel(Level.INFO);
+		LOGGER.setLevel(Level.DEBUG);
 	}
 	
 	public static DriveSimulator getInstance() {

@@ -66,7 +66,7 @@ public class FieldShape {
 					30.0 * 12.0 * PIXELS_PER_MAP_INCH);
 			
 			// Red Alliance 
-			context.setFill(Color.CRIMSON);
+			context.setFill(Color.RED);
 			
 			// Red Alliance Station
 			context.fillRect(
@@ -104,7 +104,7 @@ public class FieldShape {
 			 3.0 * 12.0 * PIXELS_PER_MAP_INCH);
 			
 			// Blue Alliance
-			context.setFill(Color.CORNFLOWERBLUE);
+			context.setFill(Color.BLUE);
 
 			// Blue Alliance Station
 			context.fillRect(
@@ -134,6 +134,88 @@ public class FieldShape {
 			 4.0 * 12.0 * PIXELS_PER_MAP_INCH, 
 			 3.0 * 12.0 * PIXELS_PER_MAP_INCH);
 			
+			//Platform Zone
+			context.setFill(Color.LIGHTGRAY);
+			context.fillRect(
+			31.79 * 12.0 * PIXELS_PER_MAP_INCH,
+			9.46 * 12.0 * PIXELS_PER_MAP_INCH,
+			10.42 * 12.0 * PIXELS_PER_MAP_INCH,
+			11.08 * 12.0 * PIXELS_PER_MAP_INCH);
+			
+			//Top Scale Plate
+			context.setFill(Color.DIMGRAY);
+			context.fillRect(
+			35.0 * 12.0 * PIXELS_PER_MAP_INCH,
+			7.5 * 12.0 * PIXELS_PER_MAP_INCH,
+			4.0 * 12.0 * PIXELS_PER_MAP_INCH,
+			3.0 * 12.0 * PIXELS_PER_MAP_INCH);
+			
+			//Bottom Scale Plate
+			context.fillRect(
+			35.0 * 12.0 * PIXELS_PER_MAP_INCH,
+			19.5 * 12.0 * PIXELS_PER_MAP_INCH,
+			4.0 * 12.0 * PIXELS_PER_MAP_INCH,
+			3.0 * 12.0 * PIXELS_PER_MAP_INCH);
+			
+			//Red Alliance Starting Position
+			context.setFill(Color.DIMGRAY);
+			context.fillRect(
+			9.0 * 12.0 * PIXELS_PER_MAP_INCH,
+			4.0 * 12.0 * PIXELS_PER_MAP_INCH,
+			1.0 * 12.0 * PIXELS_PER_MAP_INCH,
+			6.0 * 12.0 * PIXELS_PER_MAP_INCH);
+			
+			context.fillRect(
+			9.0 * 12.0 * PIXELS_PER_MAP_INCH,
+			20.0 * 12.0 * PIXELS_PER_MAP_INCH,
+			1.0 * 12.0 * PIXELS_PER_MAP_INCH,
+			6.0 * 12.0 * PIXELS_PER_MAP_INCH);
+			
+			context.setFill(Color.LIGHTGRAY);
+			context.fillRect(
+			9.0 * 12.0 * PIXELS_PER_MAP_INCH,
+			14.0 * 12.0 * PIXELS_PER_MAP_INCH,
+			1.0 * 12.0 * PIXELS_PER_MAP_INCH,
+			6.0 * 12.0 * PIXELS_PER_MAP_INCH);
+			
+			//Blue Alliance Starting Position
+			context.setFill(Color.DIMGRAY);
+			context.fillRect(
+			64.0 * 12.0 * PIXELS_PER_MAP_INCH,
+			4.0 * 12.0 * PIXELS_PER_MAP_INCH,
+			1.0 * 12.0 * PIXELS_PER_MAP_INCH,
+			6.0 * 12.0 * PIXELS_PER_MAP_INCH);
+			
+			context.fillRect(
+			64.0 * 12.0 * PIXELS_PER_MAP_INCH,
+			20.0 * 12.0 * PIXELS_PER_MAP_INCH,
+			1.0 * 12.0 * PIXELS_PER_MAP_INCH,
+			6.0 * 12.0 * PIXELS_PER_MAP_INCH);
+			
+			context.setFill(Color.LIGHTGRAY);
+			context.fillRect(
+			64.0 * 12.0 * PIXELS_PER_MAP_INCH,
+			10.0 * 12.0 * PIXELS_PER_MAP_INCH,
+			1.0 * 12.0 * PIXELS_PER_MAP_INCH,
+			6.0 * 12.0 * PIXELS_PER_MAP_INCH);
+
+			//Red Alliance Exchange Zone
+			context.setFill(Color.CRIMSON);
+			context.fillRect(
+			10.0 * 12.0 * PIXELS_PER_MAP_INCH,
+			10.0 * 12.0 * PIXELS_PER_MAP_INCH,
+			3.0 * 12.0 * PIXELS_PER_MAP_INCH,
+			4.0 * 12.0 * PIXELS_PER_MAP_INCH);
+			
+			//Blue Alliance Exchange Zone
+			context.setFill(Color.CORNFLOWERBLUE);
+			context.fillRect(
+			61.0 * 12.0 * PIXELS_PER_MAP_INCH,
+			16.0 * 12.0 * PIXELS_PER_MAP_INCH,
+			3.0 * 12.0 * PIXELS_PER_MAP_INCH,
+			4.0 * 12.0 * PIXELS_PER_MAP_INCH);
+			
+					
 			// Center Line
 			context.setFill(Color.DIMGREY);
 			context.fillRect(
@@ -156,6 +238,30 @@ public class FieldShape {
 					((74.0 * 12.0) - (12.0 * 12.0 + 11) * 2) 	* PIXELS_PER_MAP_INCH, 
 					 2.0 			   							* PIXELS_PER_MAP_INCH);
 			
-	}
-
+			//Corner Lines
+			context.strokeLine(
+			10.0 * 12.0 * PIXELS_PER_MAP_INCH,
+			4.0 * 12.0 * PIXELS_PER_MAP_INCH,
+			12.92 * 12.0 * PIXELS_PER_MAP_INCH,
+			1.5 * 12.0 * PIXELS_PER_MAP_INCH);
+			
+			context.strokeLine(
+			10.0 * 12.0 * PIXELS_PER_MAP_INCH,
+			26.0 * 12.0 * PIXELS_PER_MAP_INCH,
+			12.92 * 12.0 * PIXELS_PER_MAP_INCH,
+			28.5 * 12.0 * PIXELS_PER_MAP_INCH);
+			
+			context.strokeLine(
+			64.0 * 12.0 * PIXELS_PER_MAP_INCH,
+			4.0 * 12.0 * PIXELS_PER_MAP_INCH,
+			61.08 * 12.0 * PIXELS_PER_MAP_INCH,
+			1.5 * 12.0 * PIXELS_PER_MAP_INCH);
+			
+			context.strokeLine(
+			64.0 * 12.0 * PIXELS_PER_MAP_INCH,
+			26.0 * 12.0 * PIXELS_PER_MAP_INCH,
+			61.08 * 12.0 * PIXELS_PER_MAP_INCH,
+			28.5 * 12.0 * PIXELS_PER_MAP_INCH);
+					
+		}
 }

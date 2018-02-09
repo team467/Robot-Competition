@@ -43,7 +43,7 @@ public class RobotData {
 	private static RobotData instance = null;
 	
 	private RobotData() {
-		LOGGER.setLevel(Level.INFO);
+		LOGGER.setLevel(Level.DEBUG);
 		
 		tableInstance = NetworkTableInstance.getDefault();
 		table = tableInstance.getTable("datatable").getSubTable("/robotmapdata");
@@ -185,7 +185,7 @@ public class RobotData {
 		LOGGER.debug(logMessage);
 		
 		// X & Y swapped on the screen
-		dataRow.leftX = x + absoluteX + radius * Math.cos(dataRow.headingAngle);
+		dataRow.leftX = x + absoluteX + -1 * radius * Math.cos(dataRow.headingAngle);
 		dataRow.leftY = y + absoluteY + radius * Math.sin(dataRow.headingAngle);
 		dataRow.rightX = x + absoluteX + radius * Math.cos(dataRow.headingAngle);
 		dataRow.rightY = y + absoluteY + -1 * radius * Math.sin(dataRow.headingAngle);

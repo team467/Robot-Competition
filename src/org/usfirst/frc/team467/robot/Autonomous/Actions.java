@@ -146,8 +146,8 @@ public class Actions {
 		return mode;
 	}
 	
-	public static ActionGroup startSwitchSide1A(double distance, double rotationInDegrees) {
-		String actionGroupText = "Move " + distance + " feet" + " and turn " + rotationInDegrees + " degrees";
+	public static ActionGroup startSwitchSide1A() {
+		String actionGroupText = "Start on side 1A, put cube on switch.";
 		ActionGroup mode = new ActionGroup(actionGroupText);
 		mode.addAction(zeroDistance());
 		mode.addAction(moveDistanceForward(12.33)); // 12' 4"
