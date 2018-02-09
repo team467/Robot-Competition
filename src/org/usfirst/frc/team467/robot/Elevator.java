@@ -3,6 +3,7 @@ package org.usfirst.frc.team467.robot;
 import org.apache.log4j.Logger;
 
 import edu.wpi.first.wpilibj.AnalogInput;
+import edu.wpi.first.wpilibj.MotorSafetyHelper;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
@@ -11,12 +12,13 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 public class Elevator {
 	private static Elevator instance;
 	private static final Logger LOGGER = Logger.getLogger(Elevator.class);
-	
+
 	private AnalogInput heightSensor;
 	private WPI_TalonSRX heightController;
 	private double feetPerTick;
 	private int maxTicksPerIteration;
 	private double previousHeight;
+	private MotorSafetyHelper m_safetyHelper = new MotorSafetyHelper(heightController);
 	
 	private Stops targetHeight;
 	
@@ -69,7 +71,9 @@ public class Elevator {
 	public void manualMove(double speed) {
 
 		targetHeight = Stops.noStop;
-		
+		if (m_safetyHelper != null) {
+			m_safetyHelper.feed();
+		}
 		if (isOutOfRange()) {
 			heightController.set(0);
 			//DriverStation.getInstance().setDriverRumble(0.5);
@@ -98,6 +102,7 @@ public class Elevator {
 	
 	public void initMotionMagicMode() {
 //		heightController.setSelectedSensorPosition(0, 0, RobotMap.TALON_TIMEOUT);
+
 		
 		double kPElevator = 1.4; // Double.parseDouble(SmartDashboard.getString("DB/String 7", "1.4"));
 		double kIElevator = 0.0; // Double.parseDouble(SmartDashboard.getString("DB/String 8", "0.0"));
@@ -140,6 +145,9 @@ public class Elevator {
 	}
 	
 	private void automaticMove(double height) {
+		if (m_safetyHelper != null) {
+			m_safetyHelper.feed();
+		}
 		double ticks =  height / feetPerTick + RobotMap.ELEVATOR_INITIAL_TICKS;
 		heightController.set(ControlMode.MotionMagic, ticks);
 		logSensorVelocityAndPosition();

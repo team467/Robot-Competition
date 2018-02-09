@@ -59,7 +59,7 @@ public class Robot extends TimedRobot {
 		Logging.init();
 		
 		// Initialize RobotMap
-		RobotMap.init(RobotID.PreseasonBot);
+		RobotMap.init(RobotID.Board);
 		
 		// Make robot objects
 		Elevator elevator = Elevator.getInstance();
@@ -187,10 +187,8 @@ public class Robot extends TimedRobot {
 	 		right = 0.0;
 	 	}
 	 	
-
-		//ymax & ymin are 5 and -5
-		double ElevatorScale = driverstation.getDriveJoystick().getLeftStickY();
-		elevator.manualMove(ElevatorScale/5);
+		double ElevatorScale = driverstation.getNavJoystick().getLeftStickY();
+		elevator.manualMove(ElevatorScale);
 		LOGGER.debug("Elevator Moving");		
 
 		switch (driverstation.getDriveMode()) {
