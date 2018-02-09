@@ -31,16 +31,11 @@ public class DriveSimulator {
 	private double rightPositionReading;
 	private double leftPositionReading;
 	
-	private double absoluteRightPositionReadingOffset;
-	private double absoluteLeftPositionReadingOffset;
-	
 	private boolean isMoving = false;
 	
 	private DriveSimulator() {
 		maxFeetPerPeriod = RobotMap.WHEEL_CIRCUMFERENCE / 12 * MAX_RPM / 60 / 10000; // actually 60/500
 		zero();
-		absoluteRightPositionReadingOffset = 0.0;
-		absoluteLeftPositionReadingOffset = 0.0;
 		LOGGER.setLevel(Level.DEBUG);
 	}
 	
@@ -55,8 +50,6 @@ public class DriveSimulator {
 	 * @see org.usfirst.frc.team467.robot.simulator.Drive#zeroPosition()
 	 */
 	public void zero() {
-		absoluteRightPositionReadingOffset = rightPositionReading;
-		absoluteLeftPositionReadingOffset = leftPositionReading;
 		rightPositionReading = 0;
 		leftPositionReading = 0;
 		isMoving = false;
