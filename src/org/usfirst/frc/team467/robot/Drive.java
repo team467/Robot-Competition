@@ -195,9 +195,7 @@ public class Drive extends DifferentialDrive {
 		}
 	}
 	
-	public void move(double distance) {
-		
-	}
+	
 	
 	public void zero() {
 		rightLead.setSelectedSensorPosition(0, 0, RobotMap.TALON_TIMEOUT);
@@ -221,7 +219,7 @@ public class Drive extends DifferentialDrive {
 	}
 
 	public boolean isStopped(){
-		// TODO: Check to see if the robot is stopped
+
 		return false;
 	}
 
@@ -262,6 +260,51 @@ public class Drive extends DifferentialDrive {
 		rightFollower1.set(ControlMode.Follower, rightLead.getDeviceID());
 		rightFollower2.set(ControlMode.Follower, rightLead.getDeviceID());
 	}
+	public double feetToTicks (double feetDist) {
+		return 1024 * feetDist / (6 * Math.PI / 12);
+	}
+	
+	public double degreesToTicks(double turnAmountInDegrees) {
+		double diameterInInches = 22.75;
+		double radius = diameterInInches / 24; //Diameter divided by (2 * 12) to translate to feet and to get radius
+		double turnAmountInRadians = Math.toRadians(turnAmountInDegrees * (367.5/360)); //The 367.5/360 is to fix measurement errors.
+		return feetToTicks(turnAmountInRadians * radius);
+	}
+	public void move(double distanceInFeet) {
+		moveFeet(distanceInFeet, 0);
+	}
+	
+	/**
+	 * 
+	 * @param distanceInFeet
+	 * @param rotationInDegrees enter positive degrees for left turn and enter negative degrees for right turn
+	 */
+	public void moveFeet (double distanceInFeet, double rotationInDegrees) {
+		
+		double turnAmtTicks, distAmtTicks, driveTicksS1, driveTicksS2;
+		
+		distAmtTicks = feetToTicks(distanceInFeet);
+		turnAmtTicks = degreesToTicks(rotationInDegrees);
+		
+		driveTicksS1 = distAmtTicks - turnAmtTicks;
+		driveTicksS2 = distAmtTicks + turnAmtTicks;
+		go(driveTicksS1, driveTicksS2, ControlMode.MotionMagic);
+		
+	}
+	
+	public void rotateToAngle(double angleInDegrees) {
+		double distForWheels;		
+		if(angleInDegrees <= 180) {
+			distForWheels = degreesToTicks(angleInDegrees);
+			go(distForWheels, -distForWheels, ControlMode.MotionMagic);
+		}
+		else {
+			distForWheels = degreesToTicks(360 - angleInDegrees);
+			go(-distForWheels, distForWheels, ControlMode.MotionMagic);
 
+		}
+	
+	
 
+}
 }
