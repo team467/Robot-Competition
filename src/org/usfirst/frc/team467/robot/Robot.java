@@ -62,7 +62,7 @@ public class Robot extends TimedRobot {
 		RobotMap.init(RobotID.Board);
 		
 		// Make robot objects
-		Elevator elevator = Elevator.getInstance();
+		elevator = Elevator.getInstance();
 		driverstation = DriverStation.getInstance();
 		LOGGER.info("Initialized Driverstation");
 		
