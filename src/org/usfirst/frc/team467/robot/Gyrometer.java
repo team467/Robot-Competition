@@ -69,8 +69,7 @@ public class Gyrometer {
 	 * Returns the angle of the robot orientation in Degrees. Robot is assumed to be pointing forward at 0.0. Clockwise rotation is
 	 * positive, counter clockwise rotation is negative
 	 *
-	 * @return the robot angle
-	 */
+	 * @return the robot angle	 */
 	public double yawDegrees() {
 		return Math.toDegrees(yawRadians());
 	}
@@ -82,7 +81,7 @@ public class Gyrometer {
 	 */
 	public double rollRadians() {
 		if (RobotMap.robotID == RobotMap.RobotID.PreseasonBot) {
-			return imu.getAngleZ() * Math.PI / (180 * measuresPerDegree);
+			return imu.getAngleX() * Math.PI / (180 * measuresPerDegree);
 			} else if (RobotMap.robotID == RobotMap.RobotID.Competition_1){
 			return -imu.getAngleY() * Math.PI / (180 * measuresPerDegree);
 			} else {
@@ -106,7 +105,7 @@ public class Gyrometer {
 	 */
 	public double pitchRadians() {
 		if (RobotMap.robotID == RobotMap.RobotID.PreseasonBot) {
-			return imu.getAngleZ() * Math.PI / (180 * measuresPerDegree);
+			return imu.getAngleY() * Math.PI / (180 * measuresPerDegree);
 			} else if (RobotMap.robotID == RobotMap.RobotID.Competition_1){
 			return -imu.getAngleZ() * Math.PI / (180 * measuresPerDegree);
 			} else {
