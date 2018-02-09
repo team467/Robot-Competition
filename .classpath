@@ -16,5 +16,6 @@
 	<classpathentry kind="var" path="USERLIBS_DIR/opencv-natives-3.1.0-linux-x86_64.jar"/>
 	<classpathentry kind="var" path="USERLIBS_DIR/opencv-natives-3.1.0-osx-x86_64.jar"/>
 	<classpathentry kind="var" path="USERLIBS_DIR/opencv-natives-3.1.0-windows-x86_64_2015.jar"/>
+	<classpathentry kind="var" path="USERLIBS_DIR/ntcore-java-4.0.0-javadoc.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
