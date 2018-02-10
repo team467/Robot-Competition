@@ -23,9 +23,10 @@ public class Drive extends DifferentialDrive {
 	private WPI_TalonSRX rightLead;
 	private WPI_TalonSRX rightFollower1;
 	private WPI_TalonSRX rightFollower2;
-	
-	private double currentLeftSensorPosition = 0.0;
-	private double currentRightSensorPosition = 0.0;
+		
+	private double previousLeftSensorPosition;
+	private double previousRightSensorPosition;
+
 
 	// Private constructor
 	private Drive(WPI_TalonSRX leftLead,  WPI_TalonSRX leftFollower1,  WPI_TalonSRX leftFollower2,
@@ -166,9 +167,7 @@ public class Drive extends DifferentialDrive {
 	 * @param right
 	 * 			Speed or Distance value for right wheels
 	 */
-	//TODO: Check to see if we still need this function.
 	private void go(double left, double right, ControlMode mode) {
-		// TODO: Check to make sure all motors exist. If not throw a null pointer exception
 		if (!RobotMap.HAS_WHEELS) {
 			LOGGER.trace("No drive system");
 			return;
@@ -200,6 +199,8 @@ public class Drive extends DifferentialDrive {
 	
 	
 	public void zero() {
+		previousLeftSensorPosition = 0;
+		previousRightSensorPosition = 0;
 		rightLead.setSelectedSensorPosition(0, 0, RobotMap.TALON_TIMEOUT);
 		leftLead.setSelectedSensorPosition(0, 0, RobotMap.TALON_TIMEOUT);
 	}
@@ -221,9 +222,19 @@ public class Drive extends DifferentialDrive {
 	}
 
 	public boolean isStopped(){
+		double leftSensorPosition = leftLead.getSelectedSensorPosition(0);
+		double rightSensorPosition = rightLead.getSelectedSensorPosition(0);
+		boolean isStopped = false;
 
-		return false;
-	}
+		if (rightLead.getControlMode() == ControlMode.Disabled && leftLead.getControlMode() == ControlMode.Disabled) {
+			isStopped =  true;
+		} else if (leftSensorPosition == previousLeftSensorPosition && rightSensorPosition == previousRightSensorPosition) {
+			isStopped = true;
+		}
+		previousLeftSensorPosition = leftSensorPosition;
+		previousRightSensorPosition = rightSensorPosition;
+		return isStopped;
+		}
 
 	/**
 	 * Gets the distance moved for checking drive modes.
@@ -243,7 +254,6 @@ public class Drive extends DifferentialDrive {
 	}
 	
 	public double absoluteDistanceMoved() {
-		// TODO: returns the amount of distance moved based on the the position of the talon sensors and the wheel circumference
 		double lowestAbsDist;
 		double leftLeadSensorPos = Math.abs(getLeftDistance());
 		double rightLeadSensorPos = Math.abs(getRightDistance());
@@ -282,6 +292,22 @@ public class Drive extends DifferentialDrive {
 		
 		rightFollower1.set(ControlMode.Follower, rightLead.getDeviceID());
 		rightFollower2.set(ControlMode.Follower, rightLead.getDeviceID());
+	}
+	@Override
+	public void curvatureDrive(double xSpeed, double zRotation, boolean isQuickTurn) {
+		if (!RobotMap.HAS_WHEELS) {
+			LOGGER.trace("No drive system");
+			return;
+		}
+		super.curvatureDrive(xSpeed, zRotation, isQuickTurn);
+		
+		leftFollower1.set(ControlMode.Follower, leftLead.getDeviceID());
+		leftFollower2.set(ControlMode.Follower, leftLead.getDeviceID());
+		
+		rightFollower1.set(ControlMode.Follower, rightLead.getDeviceID());
+		rightFollower2.set(ControlMode.Follower, rightLead.getDeviceID());
+		
+		
 	}
 	public double feetToTicks (double feetDistance) {
 		return (feetDistance / RobotMap.WHEEL_CIRCUMFERENCE * RobotMap.WHEEL_ENCODER_CODES_PER_REVOLUTION);
