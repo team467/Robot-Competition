@@ -20,7 +20,7 @@ public class Logging {
 
 		Logger.getLogger(Elevator.class).setLevel(Level.DEBUG);
 
-		Logger.getLogger(XBoxJoystick467.class).setLevel(Level.DEBUG);
+//		Logger.getLogger(XBoxJoystick467.class).setLevel(Level.DEBUG);
 
 	}
 

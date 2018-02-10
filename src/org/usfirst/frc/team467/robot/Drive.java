@@ -103,13 +103,6 @@ public class Drive extends DifferentialDrive {
 					"Err L=" + leftLead.getClosedLoopError(0) +
 					" R=" + rightLead.getClosedLoopError(0));
 	}
-	
-
-
-	public void initMode() {
-		
-	}
-
 
 	public void initMotionMagicMode() {
 		if (!RobotMap.HAS_WHEELS) {

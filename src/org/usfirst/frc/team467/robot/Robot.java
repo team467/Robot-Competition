@@ -63,7 +63,7 @@ public class Robot extends TimedRobot {
 		Logging.init();
 		
 		// Initialize RobotMap
-		RobotMap.init(RobotID.Board);
+		RobotMap.init(RobotID.PreseasonBot);
 		
 		// Make robot objects
 		elevator = Elevator.getInstance();
@@ -107,7 +107,6 @@ public class Robot extends TimedRobot {
 		LOGGER.debug("Elevator height=" + elevator.getHeight());
 
 		driverstation.logJoystickIDs();
-
 	}
 //TODO: Figure out the NetworkTables later.
 //	String[] autoList = {"none", "go"};
