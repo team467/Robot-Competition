@@ -10,7 +10,6 @@ import java.util.EnumMap;
 
 import org.apache.log4j.Logger;
 
-import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 
@@ -28,8 +27,11 @@ public class XBoxJoystick467 {
 
     private static final double SENSITIVITY_MODIFIER = 0.6;
     
-    public boolean[] buttonDown = new boolean[10]; 
-    public boolean[] prev_buttonDown = new boolean[10];
+//    public boolean[] buttonDown = new boolean[10];
+//    public boolean[] prev_buttonDown = new boolean[10];
+    
+    public EnumMap<Button, Boolean> buttonDown = new EnumMap<>(Button.class);
+    public EnumMap<Button, Boolean> prev_buttonDown = new EnumMap<>(Button.class);
     
 //    public double[] axes = new double[6];
     public EnumMap<Axis, Double> axes = new EnumMap<>(Axis.class);
@@ -61,7 +63,7 @@ public class XBoxJoystick467 {
      */
     public boolean down(Button b) {
         // TODO: Return if the button is currently down
-        return buttonDown[b.ordinal()];
+        return buttonDown.get(b);
     }
 
     /**
@@ -71,7 +73,7 @@ public class XBoxJoystick467 {
      */
     public boolean pressed(Button b) {
         // TODO: return true if the button is pressed, but wasn't before
-        return buttonDown[b.ordinal()] && !prev_buttonDown[b.ordinal()];
+        return buttonDown.get(b) && !prev_buttonDown.get(b);
     }
 
     /**
@@ -81,7 +83,7 @@ public class XBoxJoystick467 {
      */
     public boolean buttonReleased(Button b) {
         // TODO: Reverse of above
-        return !buttonDown[b.ordinal()] && prev_buttonDown[b.ordinal()];
+        return !buttonDown.get(b) && !prev_buttonDown.get(b);
     }
 
     private enum Axis {
@@ -142,10 +144,10 @@ public class XBoxJoystick467 {
     }
 
     private void readButtons() {
-        for(int i = 0; i < buttonDown.length; i++) {
-            prev_buttonDown[i] = buttonDown[i];
-            buttonDown[i] = xbox.getRawButton(i+1);
-        }
+    	for (Button b : Button.values()) {
+    		prev_buttonDown.put(b, buttonDown.get(b));
+    		buttonDown.put(b, xbox.getRawButton(b.channel));
+    	}
     }
     
     private void readAxes() {
