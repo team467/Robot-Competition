@@ -30,7 +30,7 @@ public class DriverStation {
 	 * Private constructor
 	 */
 	private DriverStation() {
-		driverJoy = new XBoxJoystick467(0, "driver");
+		driverJoy = new XBoxJoystick467(-1, "driver");
 		navJoy = new XBoxJoystick467(1, "nav");
 		
 		driverRumbler = new Rumbler(driverJoy);
