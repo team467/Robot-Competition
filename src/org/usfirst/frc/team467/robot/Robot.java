@@ -21,7 +21,11 @@ import com.ctre.CANTalon;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 
 import org.apache.log4j.Logger;
+
 import edu.wpi.first.wpilibj.DigitalInput;
+import org.usfirst.frc.team467.robot.Autonomous.ActionGroup;
+import org.usfirst.frc.team467.robot.Autonomous.Actions;
+import org.usfirst.frc.team467.robot.simulator.DriveSimulator;
 
 import org.usfirst.frc.team467.robot.XBoxJoystick467.Button;
 import org.usfirst.frc.team467.robot.RobotMap.RobotID;
@@ -38,11 +42,11 @@ public class Robot extends TimedRobot {
 	// Robot objects
 	private DriverStation driverstation;
 	private Drive drive;
-//	private ActionGroup autonomous;
+	private ActionGroup autonomous;
 	
-//	private VisionProcessing vision;
 	private Gyrometer gyro;
-   private Grabber grabber; //not used yet
+	
+	private Grabber grabber; //not used yet
   // private OpticalSensor opticalsensor;
 
 	int session;
@@ -99,7 +103,6 @@ public class Robot extends TimedRobot {
 	}
 	public void disabledInit() {
 		LOGGER.debug("Disabled Starting");
-		drive.logClosedLoopErrors();
 //		autonomous.terminate();
 //		autonomous = Actions.doNothing();
 	}
@@ -119,22 +122,20 @@ public class Robot extends TimedRobot {
 //	
 	public void autonomousInit() {
 		final String autoMode = SmartDashboard.getString("Auto Selector", "none");
-		drive.initMotionMagicMode();
 		
-//	drive.initPositionMode();
 		LOGGER.info(drive);
 		// TODO: call appropriate auto modes based on list
 		LOGGER.debug("Autonomous init: " + autoMode);
-//		switch (autoMode) {
-//		case "none":
-//			autonomous = Actions.doNothing();
-//			break;
-//		default:
-//			autonomous = Actions.doNothing();
-//			break;
-//		}
-//		LOGGER.info("Init Autonomous:" + autonomous.getName());
-//		autonomous.enable();
+		switch (autoMode) {
+		case "none":
+			autonomous = Actions.doNothing();
+			break;
+		default:
+			autonomous = Actions.doNothing();
+			break;
+		}
+		LOGGER.info("Init Autonomous:" + autonomous.getName());
+		autonomous.enable();
 	}
 
 	public void teleopInit() {
@@ -166,9 +167,6 @@ public class Robot extends TimedRobot {
 
 	public void autonomousPeriodic() {
 		
-		drive.logClosedLoopErrors();
-		drive.publishRawSensorValues();
-//		drive.PositionModeMove(drive.feetToTicks(amountToGoLeft), drive.feetToTicks(amountToGoRight));
 //		drive.motionMagicMove(amountToGoLeft, amountToGoRight);
 		
 //		autonomous.run();

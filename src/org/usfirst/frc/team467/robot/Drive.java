@@ -1,10 +1,7 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.usfirst.frc.team467.robot;
 
 import org.apache.log4j.Logger;
+import org.usfirst.frc.team467.robot.simulator.communications.RobotData;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
@@ -57,7 +54,7 @@ public class Drive extends DifferentialDrive {
 
 		initMotor(this.leftFollower2);
 		initMotorForFollowerMode(this.leftLead, this.leftFollower2);
-
+		
 		initMotor(this.rightLead);
 		this.rightLead.setSensorPhase(true);
 		this.rightLead.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, RobotMap.TALON_TIMEOUT);
@@ -72,7 +69,7 @@ public class Drive extends DifferentialDrive {
 
 	private void initMotor(WPI_TalonSRX talon) {
 		talon.set(ControlMode.PercentOutput, 0);
-		talon.selectProfileSlot(RobotMap.VELOCITY_PID_PROFILE, 0);
+		talon.selectProfileSlot(0, 0);
 		talon.configAllowableClosedloopError(0, RobotMap.VELOCITY_ALLOWABLE_CLOSED_LOOP_ERROR, 0);
 		talon.configNominalOutputReverse(0.0, 0);
 		talon.configNominalOutputForward(0.0, 0);
@@ -80,9 +77,9 @@ public class Drive extends DifferentialDrive {
 		talon.configPeakOutputReverse(-1.0, 0);
 		talon.configOpenloopRamp(0.2, RobotMap.TALON_TIMEOUT);
 		talon.configClosedloopRamp(0.2, RobotMap.TALON_TIMEOUT);
-		//Note: This was changed from voltage to percentage used with 1 representing 100 percent or max voltage and -1 representing 100 percent backwards.
 
-		// TODO: Set the default Talon parameters (done- check over again)
+		//Note: This was changed from voltage to percentage used with 1 representing 100 percent or max voltage 
+		//      and -1 representing 100 percent backwards.
 	}
 
 	/**
@@ -155,7 +152,7 @@ public class Drive extends DifferentialDrive {
 
 		//			LOGGER.info("Right p value: " + kPRight + " and left p value: " + kPLeft);
 	}
-
+	
 	public void initMotionMagicMode() {
 		if (!RobotMap.HAS_WHEELS) {
 			LOGGER.trace("No Drive System");
@@ -190,6 +187,7 @@ public class Drive extends DifferentialDrive {
 		rightLead.configMotionCruiseVelocity(1052 / 2, RobotMap.TALON_TIMEOUT);
 		rightLead.configMotionAcceleration(1052 / 2, RobotMap.TALON_TIMEOUT);	
 	}
+	
 	public void initSpeedControl() {
 		if (!RobotMap.HAS_WHEELS) {
 			LOGGER.trace("No drive system");
@@ -200,6 +198,7 @@ public class Drive extends DifferentialDrive {
 		leftLead.set(ControlMode.Velocity, leftLead.getSelectedSensorVelocity(1));
 
 	}
+	
 	public void initPercentOutput() {
 		if (!RobotMap.HAS_WHEELS) {
 			LOGGER.trace("No drive system");
@@ -294,9 +293,16 @@ public class Drive extends DifferentialDrive {
 			m_safetyHelper.feed();
 		}
 	}
-
-	public void turnByPosition(double degrees) {
-		// TODO: Turns in place to the specified angle from center using position mode
+	
+	
+	
+	public void zero() {
+		rightLead.setSelectedSensorPosition(0, 0, RobotMap.TALON_TIMEOUT);
+		leftLead.setSelectedSensorPosition(0, 0, RobotMap.TALON_TIMEOUT);
+	}
+	
+	public void sendData() {
+		RobotData.getInstance().update(rightLead.getSelectedSensorPosition(0), leftLead.getSelectedSensorPosition(0));
 	}
 
 	/**
@@ -307,13 +313,12 @@ public class Drive extends DifferentialDrive {
 	 *
 	 * @return True when pointing at the angle
 	 */
-	public boolean turnToAngle(double angle) {
-		//TODO: Uses the gyro to determine the angle, correcting until it points the correct direction
-		return false; // Put in test to determine if on target
+	public void turn(double degrees) {
+		// TODO: Turns in place to the specified angle from center using position mode
 	}
 
 	public boolean isStopped(){
-		// TODO: Check to see if the robot is stopped
+
 		return false;
 	}
 
@@ -324,11 +329,6 @@ public class Drive extends DifferentialDrive {
 	 */
 	public double absoluteDistanceMoved() {
 		// TODO: returns the amount of distance moved based on the the position of the talon sensors nad the wheel circumerence
-		return 0;
-	}
-
-	public double getTurnError() {
-		// TODO Get the absolute error when turning
 		return 0;
 	}
 
@@ -372,10 +372,48 @@ public class Drive extends DifferentialDrive {
 	public double feetToTicks(double feetDist) {
 		return 1024 * feetDist / (6 * Math.PI / 12);
 	}
+	
 	public double degreesToTicks(double turnAmountInDegrees) {
 		double diameterInInches = 22.75;
-		double radius = diameterInInches / 24; //Diameter divided by (2 * 12) to translate to feet and to get radius.
+		double radius = diameterInInches / 24; //Diameter divided by (2 * 12) to translate to feet and to get radius
 		double turnAmountInRadians = Math.toRadians(turnAmountInDegrees * (367.5/360)); //The 367.5/360 is to fix measurement errors.
 		return feetToTicks(turnAmountInRadians * radius);
 	}
+	public void move(double distanceInFeet) {
+		moveFeet(distanceInFeet, 0);
+	}
+	
+	/**
+	 * 
+	 * @param distanceInFeet
+	 * @param rotationInDegrees enter positive degrees for left turn and enter negative degrees for right turn
+	 */
+	public void moveFeet (double distanceInFeet, double rotationInDegrees) {
+		
+		double turnAmtTicks, distAmtTicks, driveTicksS1, driveTicksS2;
+		
+		distAmtTicks = feetToTicks(distanceInFeet);
+		turnAmtTicks = degreesToTicks(rotationInDegrees);
+		
+		driveTicksS1 = distAmtTicks - turnAmtTicks;
+		driveTicksS2 = distAmtTicks + turnAmtTicks;
+		go(driveTicksS1, driveTicksS2, ControlMode.MotionMagic);
+		
+	}
+	
+	public void rotateToAngle(double angleInDegrees) {
+		double distForWheels;		
+		if(angleInDegrees <= 180) {
+			distForWheels = degreesToTicks(angleInDegrees);
+			go(distForWheels, -distForWheels, ControlMode.MotionMagic);
+		}
+		else {
+			distForWheels = degreesToTicks(360 - angleInDegrees);
+			go(-distForWheels, distForWheels, ControlMode.MotionMagic);
+
+		}
+	
+	
+
+}
 }
