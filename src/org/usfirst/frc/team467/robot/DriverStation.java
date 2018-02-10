@@ -41,8 +41,21 @@ public class DriverStation {
 	 * Must be called prior to first button read.
 	 */
 	public void readInputs() {
-		driverJoy.read();
-		navJoy.read();
+		if (driverJoy != null) {
+			driverJoy.read();
+		}
+		if (navJoy != null) {
+			navJoy.read();
+		}
+	}
+	
+	public void logJoystickIDs() {
+		if (driverJoy != null) {
+			driverJoy.logIdentity();
+		}
+		if (navJoy != null) {
+			navJoy.logIdentity();
+		}
 	}
 
 	/**
