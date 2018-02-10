@@ -45,9 +45,9 @@ public class FieldShape {
 	 *    Platform top is 8' 8" x 3' 5.25"
 	 *    Ramp is 1' 1"
 	 *  Switch
-	 *    14' from Alliance STation
+	 *    14' from Alliance Station to middle of switch
 	 *    Plates are 3 ' x 4'
-	 *    Switch is 12' wide
+	 *    Switch is 4' 8" x 12'
 	 *  Portal 
 	 *    1' 2" square opening
 	 *  Power cube is 1' 1" x 1' 1" x 11"
@@ -85,20 +85,20 @@ public class FieldShape {
 			// Red Switch
 			context.setFill(Color.LIGHTGRAY);
 			context.fillRect(
-			24.0 * 12.0 * PIXELS_PER_MAP_INCH,
+			21.7 * 12.0 * PIXELS_PER_MAP_INCH,
 			 9.0 * 12.0 * PIXELS_PER_MAP_INCH, 
-			 4.0 * 12.0 * PIXELS_PER_MAP_INCH, 
+			 4.7 * 12.0 * PIXELS_PER_MAP_INCH, 
 			12.0 * 12.0 * PIXELS_PER_MAP_INCH);
 			
 			context.setFill(Color.DIMGRAY);
 			context.fillRect(
-			24.0 * 12.0 * PIXELS_PER_MAP_INCH,
+			22.0 * 12.0 * PIXELS_PER_MAP_INCH,
 			 9.0 * 12.0 * PIXELS_PER_MAP_INCH, 
 			 4.0 * 12.0 * PIXELS_PER_MAP_INCH, 
 			 3.0 * 12.0 * PIXELS_PER_MAP_INCH);
 			
 			context.fillRect(
-			24.0 * 12.0 * PIXELS_PER_MAP_INCH,
+			22.0 * 12.0 * PIXELS_PER_MAP_INCH,
 			18.0 * 12.0 * PIXELS_PER_MAP_INCH, 
 			 4.0 * 12.0 * PIXELS_PER_MAP_INCH, 
 			 3.0 * 12.0 * PIXELS_PER_MAP_INCH);
@@ -116,20 +116,20 @@ public class FieldShape {
 			// Blue Switch
 			context.setFill(Color.LIGHTGRAY);
 			context.fillRect(
-			46.0 * 12.0 * PIXELS_PER_MAP_INCH,
+			48.3 * 12.0 * PIXELS_PER_MAP_INCH,
 			 9.0 * 12.0 * PIXELS_PER_MAP_INCH, 
-			 4.0 * 12.0 * PIXELS_PER_MAP_INCH, 
+			 4.7 * 12.0 * PIXELS_PER_MAP_INCH, 
 			12.0 * 12.0 * PIXELS_PER_MAP_INCH);
 			
 			context.setFill(Color.DIMGRAY);
 			context.fillRect(
-			46.0 * 12.0 * PIXELS_PER_MAP_INCH,
+			48.7 * 12.0 * PIXELS_PER_MAP_INCH,
 			 9.0 * 12.0 * PIXELS_PER_MAP_INCH, 
 			 4.0 * 12.0 * PIXELS_PER_MAP_INCH, 
 			 3.0 * 12.0 * PIXELS_PER_MAP_INCH);
 			
 			context.fillRect(
-			46.0 * 12.0 * PIXELS_PER_MAP_INCH,
+			48.7 * 12.0 * PIXELS_PER_MAP_INCH,
 			18.0 * 12.0 * PIXELS_PER_MAP_INCH, 
 			 4.0 * 12.0 * PIXELS_PER_MAP_INCH, 
 			 3.0 * 12.0 * PIXELS_PER_MAP_INCH);
