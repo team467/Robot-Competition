@@ -34,7 +34,7 @@ public class DriveSimulator {
 	private boolean isMoving = false;
 	
 	private DriveSimulator() {
-		maxFeetPerPeriod = RobotMap.WHEEL_CIRCUMFERENCE / 12 * MAX_RPM / 60 / 10000; // actually 60/500
+		maxFeetPerPeriod = RobotMap.WHEEL_CIRCUMFERENCE / 12 * MAX_RPM / 60 / 1000; // actually 60/500
 		zero();
 		LOGGER.setLevel(Level.DEBUG);
 	}
