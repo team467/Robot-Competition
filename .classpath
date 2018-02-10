@@ -11,8 +11,6 @@
 	<classpathentry kind="var" path="USERLIBS_DIR/CTRE_Phoenix-sources.jar"/>
 	<classpathentry kind="var" path="USERLIBS_DIR/CTRE_Phoenix.jar"/>
 	<classpathentry kind="var" path="networktables" sourcepath="networktables.sources"/>
-	<classpathentry kind="var" path="USERLIBS_DIR/opencv-natives-3.1.0-osx-x86_64.jar"/>
-	<classpathentry kind="var" path="USERLIBS_DIR/opencv-natives-3.1.0-windows-x86_64_2015.jar"/>
 	<classpathentry kind="var" path="USERLIBS_DIR/ntcore-java-4.0.0.jar"/>
 	<classpathentry kind="var" path="USERLIBS_DIR/ntcore-jni-4.0.0-all.jar"/>
 	<classpathentry kind="output" path="bin"/>
