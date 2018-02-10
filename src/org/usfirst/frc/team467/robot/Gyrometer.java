@@ -20,7 +20,6 @@ public class Gyrometer {
 		if (RobotMap.useRemoteImu) {
 			imu = new LSM9DS1_IMU();
 			measuresPerDegree = 1;
-	
 		} else {
 			imu = new ADIS16448_IMU();
 			measuresPerDegree = 4;
@@ -50,19 +49,19 @@ public class Gyrometer {
 	public void calibrate() {
 		imu.calibrate();
 	}
-	
+
 	/**
 	 * Returns the Z angle of the gyro in Radians. Note, the IMU returns 1440 degrees per rotation.
 	 *
 	 * @return the gyro angle
 	 */
-	public double yawRadians() {
+	public double getYawRadians() {
 		if (RobotMap.robotID == RobotMap.RobotID.PreseasonBot) {
-		return imu.getAngleZ() * Math.PI / (180 * measuresPerDegree);
+			return Math.toRadians(imu.getAngleZ());
 		} else if (RobotMap.robotID == RobotMap.RobotID.Competition_1){
-		return -imu.getAngleX() * Math.PI / (180 * measuresPerDegree);
+			return Math.toRadians(-imu.getAngleX());
 		} else {
-		return 0;
+			return 0;
 		} 
 	}
 	/**
@@ -70,8 +69,8 @@ public class Gyrometer {
 	 * positive, counter clockwise rotation is negative
 	 *
 	 * @return the robot angle	 */
-	public double yawDegrees() {
-		return Math.toDegrees(yawRadians());
+	public double getYawDegrees() {
+		return Math.toDegrees(getYawRadians());
 	}
 
 	/**
@@ -79,14 +78,14 @@ public class Gyrometer {
 	 *
 	 * @return the gyro angle
 	 */
-	public double rollRadians() {
+	public double getRollRadians() {
 		if (RobotMap.robotID == RobotMap.RobotID.PreseasonBot) {
-			return imu.getAngleX() * Math.PI / (180 * measuresPerDegree);
-			} else if (RobotMap.robotID == RobotMap.RobotID.Competition_1){
-			return -imu.getAngleY() * Math.PI / (180 * measuresPerDegree);
-			} else {
+			return Math.toRadians(imu.getAngleX());
+		} else if (RobotMap.robotID == RobotMap.RobotID.Competition_1){
+			return Math.toRadians(-imu.getAngleY());
+		} else {
 			return 0;
-			} 
+		} 
 	}
 
 	/**
@@ -94,8 +93,8 @@ public class Gyrometer {
 	 *
 	 * @return the gyro angle
 	 */
-	public double rollDegrees() {
-		return Math.toDegrees(rollRadians());
+	public double getRollDegrees() {
+		return Math.toDegrees(getRollRadians());
 	}
 
 	/**
@@ -103,14 +102,14 @@ public class Gyrometer {
 	 *
 	 * @return the gyro angle
 	 */
-	public double pitchRadians() {
+	public double getPitchRadians() {
 		if (RobotMap.robotID == RobotMap.RobotID.PreseasonBot) {
-			return imu.getAngleY() * Math.PI / (180 * measuresPerDegree);
-			} else if (RobotMap.robotID == RobotMap.RobotID.Competition_1){
-			return -imu.getAngleZ() * Math.PI / (180 * measuresPerDegree);
-			} else {
+			return Math.toRadians(imu.getAngleY());
+		} else if (RobotMap.robotID == RobotMap.RobotID.Competition_1){
+			return Math.toRadians(-imu.getAngleZ());
+		} else {
 			return 0;
-			} 
+		} 
 	}
 
 	/**
@@ -118,8 +117,8 @@ public class Gyrometer {
 	 *
 	 * @return the gyro angle
 	 */
-	public double pitchDegrees() {
-		return Math.toDegrees(pitchRadians());
+	public double getPitchDegrees() {
+		return Math.toDegrees(getPitchRadians());
 	}
 
 }
