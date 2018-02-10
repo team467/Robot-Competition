@@ -49,8 +49,6 @@ public class RobotMap {
 			GRABBER_MOTOR_PWM_CHANNEL = 0;
 			RAMP_SOLENOID_CHANNEL = 0;
 			
-			
-			
 			isDriveMotorInverted = new boolean[] { false, true, false, true };
 			break;
 		case Board:
