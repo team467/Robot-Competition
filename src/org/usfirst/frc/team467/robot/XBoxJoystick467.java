@@ -6,6 +6,7 @@
 package org.usfirst.frc.team467.robot;
 
 import java.lang.Math;
+import java.util.EnumMap;
 
 import org.apache.log4j.Logger;
 
@@ -30,7 +31,8 @@ public class XBoxJoystick467 {
     public boolean[] buttonDown = new boolean[10]; 
     public boolean[] prev_buttonDown = new boolean[10];
     
-    public double[] axes = new double[6];
+//    public double[] axes = new double[6];
+    public EnumMap<Axis, Double> axes = new EnumMap<>(Axis.class);
     
     public enum Button {
         a(0),
@@ -147,9 +149,9 @@ public class XBoxJoystick467 {
     }
     
     private void readAxes() {
-    	for (int i = 0; i < axes.length; i++) {
-    		axes[i] = xbox.getRawAxis(i+1);
-    	}
+        for (Axis axis : Axis.values()) {
+            axes.put(axis, xbox.getRawAxis(axis.channel));
+        }
     }
     
     /**
@@ -166,7 +168,7 @@ public class XBoxJoystick467 {
     }
     
     public double turboSpeedAdjust() {
-        if (xbox.getRawAxis(Axis.leftTrigger.channel) > 0.0) {
+        if (getLeftTrigger() > 0.0) {
             return turboFastSpeed(); 
         } else {
             return turboSlowSpeed(); 
@@ -176,15 +178,15 @@ public class XBoxJoystick467 {
     public double turboFastSpeed() {
         return (getLeftStickY()*(RobotMap.NORMAL_MAX_SPEED 
                 + (RobotMap.FAST_MAX_SPEED-RobotMap.NORMAL_MAX_SPEED)
-                *xbox.getRawAxis(Axis.leftTrigger.channel)))
-                *-1; // For some reason, up stick is negative, so we flip it;
+                * getLeftTrigger()))
+                * -1; // For some reason, up stick is negative, so we flip it;
     }
     
     public double turboSlowSpeed() {
         return (getLeftStickY()*(RobotMap.NORMAL_MAX_SPEED 
                 + (RobotMap.SLOW_MAX_SPEED-RobotMap.NORMAL_MAX_SPEED)
-                *xbox.getRawAxis(Axis.rightTrigger.channel)))
-                *-1; // For some reason, up stick is negative, so we flip it;
+                * getRightTrigger()))
+                * -1; // For some reason, up stick is negative, so we flip it;
     }
 
     public double getPOV() {
@@ -221,19 +223,27 @@ public class XBoxJoystick467 {
     }
     
     public double getLeftStickY() {
-    	return xbox.getRawAxis(Axis.leftY.channel);
+    	return axes.get(Axis.leftY);
     }
     
     public double getLeftStickX() {
-        return xbox.getRawAxis(Axis.leftX.channel);
+        return axes.get(Axis.leftX);
     }
     
     public double getRightStickY() {
-        return xbox.getRawAxis(Axis.rightY.channel);
+        return axes.get(Axis.rightY);
     }
     
     public double getRightStickX() {
-        return xbox.getRawAxis(Axis.rightX.channel);
+        return axes.get(Axis.rightX);
+    }
+    
+    public double getLeftTrigger() {
+    	return axes.get(Axis.leftTrigger);
+    }
+    
+    public double getRightTrigger() {
+    	return axes.get(Axis.rightTrigger);
     }
 
     /**
@@ -242,12 +252,12 @@ public class XBoxJoystick467 {
      * @return Joystick Angle in range -PI to PI
      */
     public double getLeftStickAngle() {
-        return (calculateStickAngle(getLeftStickX(), getLeftStickY()));
+        return calculateStickAngle(getLeftStickX(), getLeftStickY());
     }
 
     public double getRightStickAngle() {
         // TODO Repeat for right stick
-        return (calculateStickAngle(getRightStickX(), getRightStickY()));
+        return calculateStickAngle(getRightStickX(), getRightStickY());
     }
     
     public void leftRumble(double value) {
