@@ -90,6 +90,19 @@ public class Drive extends DifferentialDrive {
 		return instance;
 	}
 
+	public void setPIDF(double p, double i, double d, double f){
+	 // TODO: Set the PIDF of the talons. Assumes the same values for all motors	
+	}
+	
+	public void logClosedLoopErrors() {
+			LOGGER.debug(
+					//TODO Check the arguments for the closed loop errors.
+					"Vel L= " + leftLead.getSelectedSensorVelocity(0) + " R=" + rightLead.getSelectedSensorVelocity(0)
+					+ "Pos L=" + leftLead.getSelectedSensorPosition(0) + " R=" + rightLead.getSelectedSensorPosition(0)+
+					"Err L=" + leftLead.getClosedLoopError(0) +
+					" R=" + rightLead.getClosedLoopError(0));
+	}
+	
 	
 	public void initMotionMagicMode() {
 		if (!RobotMap.HAS_WHEELS) {
