@@ -1,5 +1,6 @@
 package org.usfirst.frc.team467.robot;
 
+import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.usfirst.frc.team467.robot.simulator.communications.RobotData;
 
@@ -33,6 +34,8 @@ public class Drive extends DifferentialDrive {
 	private Drive(WPI_TalonSRX leftLead,  WPI_TalonSRX leftFollower1,  WPI_TalonSRX leftFollower2,
 		          WPI_TalonSRX rightLead, WPI_TalonSRX rightFollower1, WPI_TalonSRX rightFollower2) {
 		super(leftLead, rightLead);
+		
+		LOGGER.setLevel(Level.INFO);
 		
 		this.leftLead = leftLead;
 		initMotor(this.leftLead);
@@ -98,7 +101,7 @@ public class Drive extends DifferentialDrive {
 	}
 	
 	public void logClosedLoopErrors() {
-			LOGGER.debug(
+			LOGGER.trace(
 					//TODO Check the arguments for the closed loop errors.
 					"Vel L= " + leftLead.getSelectedSensorVelocity(0) + " R=" + rightLead.getSelectedSensorVelocity(0)
 					+ "Pos L=" + leftLead.getSelectedSensorPosition(0) + " R=" + rightLead.getSelectedSensorPosition(0)+
@@ -195,7 +198,7 @@ public class Drive extends DifferentialDrive {
 		
 		//TODO: Set the speeds
 		//TODO Check to see if we need the params.
-		LOGGER.info("Drive left=" + left + "right=" + right + ".");
+		LOGGER.debug("Drive left=" + left + "right=" + right + ".");
 		leftLead.set(mode, left);
 		leftFollower1.set(ControlMode.Follower, leftLead.getDeviceID());
 		leftFollower2.set(ControlMode.Follower, leftLead.getDeviceID());
@@ -228,17 +231,6 @@ public class Drive extends DifferentialDrive {
 //		RobotData.getInstance().update(rightLead.getSelectedSensorPosition(0), leftLead.getSelectedSensorPosition(0));
 //	}
 
-	/**
-	 * Turns to specified angle according to gyro
-	 *
-	 * @param angle
-	 *            in degrees
-	 *
-	 * @return True when pointing at the angle
-	 */
-	public void turn(double degrees) {
-		// TODO: Turns in place to the specified angle from center using position mode
-	}
 
 	public boolean isStopped(){
 		double leftSensorPosition = leftLead.getSelectedSensorPosition(0);
@@ -261,14 +253,12 @@ public class Drive extends DifferentialDrive {
 	 * @return the absolute distance moved in feet
 	 */
 	public double getLeftDistance() {
-		double leftLeadSensorPos = leftLead.getSelectedSensorPosition(0);
-		ticksToFeet(leftLeadSensorPos);
+		double leftLeadSensorPos = ticksToFeet(leftLead.getSelectedSensorPosition(0));
 		return leftLeadSensorPos;
 	}
 	
 	public double getRightDistance() {
-		double rightLeadSensorPos = rightLead.getSelectedSensorPosition(0);
-		ticksToFeet(rightLeadSensorPos);
+		double rightLeadSensorPos = ticksToFeet(rightLead.getSelectedSensorPosition(0));
 		return rightLeadSensorPos;
 	}
 	
@@ -282,6 +272,7 @@ public class Drive extends DifferentialDrive {
 		else {
 			lowestAbsDist = leftLeadSensorPos;
 		}	
+		LOGGER.debug("The absolute distance moved: " + lowestAbsDist);
 		return lowestAbsDist;
 	}
 
@@ -329,8 +320,10 @@ public class Drive extends DifferentialDrive {
 		
 	}
 	
-	public double feetToTicks (double feetDistance) {
-		return (feetDistance / RobotMap.WHEEL_CIRCUMFERENCE * RobotMap.WHEEL_ENCODER_CODES_PER_REVOLUTION);
+	public double feetToTicks (double feet) {
+		double ticks = (feet / (RobotMap.WHEEL_CIRCUMFERENCE / 12)) * RobotMap.WHEEL_ENCODER_CODES_PER_REVOLUTION;
+		LOGGER.trace(feet + " feet = " + ticks + " ticks.");
+		return ticks;
 	}
 	
 	public double degreesToTicks(double turnAmountInDegrees) {
@@ -339,6 +332,7 @@ public class Drive extends DifferentialDrive {
 		double turnAmountInRadians = Math.toRadians(turnAmountInDegrees * (367.5/360)); //The 367.5/360 is to fix measurement errors.
 		return feetToTicks(turnAmountInRadians * radius);
 	}
+	
 	public void moveFeet(double distanceInFeet) {
 		moveFeet(distanceInFeet, 0);
 	}
@@ -351,6 +345,7 @@ public class Drive extends DifferentialDrive {
 	public void moveFeet (double distanceInFeet, double rotationInDegrees) {
 		double turnAmtTicks, distAmtTicks, leftDistTicks, rightDistTicks, radius, distTurnInFeet, angleInRadians;
 		
+		LOGGER.trace("Automated move of " + distanceInFeet + " feet and " + rotationInDegrees + " degree turn.");
 		radius = RobotMap.WHEEL_BASE_WIDTH / 2;
 		distAmtTicks = feetToTicks(distanceInFeet); //Converts distance to ticks in feet.
 		angleInRadians = Math.toRadians(rotationInDegrees);
@@ -360,6 +355,8 @@ public class Drive extends DifferentialDrive {
 		rightDistTicks = distAmtTicks - turnAmtTicks;
 		leftDistTicks = distAmtTicks + turnAmtTicks;
 		
+		LOGGER.trace("Right distance in feet: " + ticksToFeet(rightDistTicks) + " Left distance in feet: " + ticksToFeet(leftDistTicks));
+		
 		go(leftDistTicks, rightDistTicks, ControlMode.MotionMagic);
 	}
 	
@@ -368,7 +365,9 @@ public class Drive extends DifferentialDrive {
 		}
 	
 	private double ticksToFeet(double ticks) {
-		return (ticks / RobotMap.WHEEL_ENCODER_CODES_PER_REVOLUTION * RobotMap.WHEEL_CIRCUMFERENCE);
+		double feet = (ticks / RobotMap.WHEEL_ENCODER_CODES_PER_REVOLUTION) * (RobotMap.WHEEL_CIRCUMFERENCE / 12);
+		LOGGER.trace(ticks + " ticks = " + feet + " feet.");
+		return feet; 
 	}
 	
 }

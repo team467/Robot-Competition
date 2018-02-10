@@ -98,12 +98,15 @@ public class Robot extends TimedRobot {
 //	LOGGER.debug("Robot Initialized");
 //	
 	public void autonomousInit() {
-		final String autoMode = SmartDashboard.getString("Auto Selector", "none");
+		//final String autoMode = SmartDashboard.getString("Auto Selector", "none");
 		
-		LOGGER.info(drive);
+		String autoMode = "StartSwitchSide1A";
 		// TODO: call appropriate auto modes based on list
 		LOGGER.debug("Autonomous init: " + autoMode);
 		switch (autoMode) {
+		case "StartSwitchSide1A": 
+			autonomous = Actions.startSwitchSide1A();
+			break;
 		case "none":
 			autonomous = Actions.doNothing();
 			break;
@@ -142,11 +145,11 @@ public class Robot extends TimedRobot {
 
 
 	public void autonomousPeriodic() {
-		drive.publishRawSensorValues();
+//		drive.publishRawSensorValues();
 //		drive.PositionModeMove(drive.feetToTicks(amountToGoLeft), drive.feetToTicks(amountToGoRight));
 //		drive.motionMagicMove(amountToGoLeft, amountToGoRight);
 		
-//		autonomous.run();
+		autonomous.run();
 	}
 
 	/**
