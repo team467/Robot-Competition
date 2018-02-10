@@ -30,8 +30,8 @@ public class DriverStation {
 	 * Private constructor
 	 */
 	private DriverStation() {
-		driverJoy = new XBoxJoystick467(-1, "driver");
-		navJoy = new XBoxJoystick467(1, "nav");
+		driverJoy = new XBoxJoystick467(0, "driver");
+//		navJoy = new XBoxJoystick467(2, "nav");
 		
 		driverRumbler = new Rumbler(driverJoy);
 		navRumbler = new Rumbler(navJoy);
@@ -46,8 +46,12 @@ public class DriverStation {
 	}
 	
 	public void logJoystickIDs() {
-		driverJoy.logIdentity();
-		navJoy.logIdentity();
+		if (driverJoy != null) {
+			driverJoy.logIdentity();
+		}
+		if (navJoy != null) {
+			navJoy.logIdentity();
+		}
 	}
 
 	/**
