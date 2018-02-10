@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.canvas.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<!-- This defines the window components and connects them to the map controller. -->
+<BorderPane fx:id="mapUI" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0" prefWidth="950.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.usfirst.frc.team467.robot.simulator.gui.MapController">
+   <center>
+   	  <!-- Scale: 1 pixel equals 1 inch -->
+      <BorderPane fx:id="fieldMap" maxHeight="360.0" maxWidth="888.0" minHeight="360.0" minWidth="888.0" prefHeight="360.0" prefWidth="888.0" BorderPane.alignment="CENTER">
+         <Canvas fx:id="field" height="360.0" width="888.0" BorderPane.alignment="CENTER"/>
+ 	     <Pane fx:id="robotArea" maxHeight="324.0" maxWidth="768.0" minHeight="324.0" minWidth="768.0" prefHeight="324.0" prefWidth="768.0" BorderPane.alignment="CENTER"/>
+      </BorderPane>
+   </center>
+   <bottom>
+      <Button fx:id="startButton" mnemonicParsing="false" onAction="#startRobot" text="Start" BorderPane.alignment="CENTER">
+         <padding>
+            <Insets bottom="15.0" left="25.0" right="25.0" top="15.0" />
+         </padding>
+         <BorderPane.margin>
+            <Insets />
+         </BorderPane.margin>
+      </Button>
+   </bottom>
+</BorderPane>
