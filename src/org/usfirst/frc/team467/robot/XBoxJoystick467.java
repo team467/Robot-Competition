@@ -27,13 +27,9 @@ public class XBoxJoystick467 {
 
     private static final double SENSITIVITY_MODIFIER = 0.6;
     
-//    public boolean[] buttonDown = new boolean[10];
-//    public boolean[] prev_buttonDown = new boolean[10];
-    
     public EnumMap<Button, Boolean> buttonDown = new EnumMap<>(Button.class);
     public EnumMap<Button, Boolean> prev_buttonDown = new EnumMap<>(Button.class);
     
-//    public double[] axes = new double[6];
     public EnumMap<Axis, Double> axes = new EnumMap<>(Axis.class);
     
     public enum Button {
