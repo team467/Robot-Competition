@@ -26,9 +26,10 @@ public class Drive extends DifferentialDrive {
 	private WPI_TalonSRX rightFollower2;
 
 	// Private constructor
-	private Drive(WPI_TalonSRX leftLead,  WPI_TalonSRX leftFollower1,  WPI_TalonSRX leftFollower2,
+	private Drive(TalonSpeedControllerGroup left, TalonSpeedControllerGroup right, 
+			WPI_TalonSRX leftLead,  WPI_TalonSRX leftFollower1,  WPI_TalonSRX leftFollower2,
 		          WPI_TalonSRX rightLead, WPI_TalonSRX rightFollower1, WPI_TalonSRX rightFollower2) {
-		super(leftLead, rightLead);
+		super(left, right);
 		
 		this.leftLead = leftLead;
 		initMotor(this.leftLead);
@@ -78,14 +79,20 @@ public class Drive extends DifferentialDrive {
 	public static Drive getInstance() {
 		if (instance == null) {
 			// First usage - create Drive object
+			WPI_TalonSRX leftLead = new WPI_TalonSRX(RobotMap.LEFT_LEAD_CHANNEL);
+			WPI_TalonSRX leftFollower1 = new WPI_TalonSRX(RobotMap.LEFT_FOLLOWER_1_CHANNEL);
+			WPI_TalonSRX leftFollower2 = new WPI_TalonSRX(RobotMap.LEFT_FOLLOWER_2_CHANNEL);
+			
+			WPI_TalonSRX rightLead = new WPI_TalonSRX(RobotMap.RIGHT_LEAD_CHANNEL);
+			WPI_TalonSRX rightFollower1 = new WPI_TalonSRX(RobotMap.RIGHT_FOLLOWER_1_CHANNEL);
+			WPI_TalonSRX rightFollower2 = new WPI_TalonSRX(RobotMap.RIGHT_FOLLOWER_2_CHANNEL);
+			
+			TalonSpeedControllerGroup left = new TalonSpeedControllerGroup(ControlMode.PercentOutput, leftLead, leftFollower1, leftFollower2);
+			TalonSpeedControllerGroup right = new TalonSpeedControllerGroup(ControlMode.PercentOutput, rightLead, rightFollower1, rightFollower2);
 			instance = new Drive(
-					new WPI_TalonSRX(RobotMap.LEFT_LEAD_CHANNEL),
-					new WPI_TalonSRX(RobotMap.LEFT_FOLLOWER_1_CHANNEL),
-					new WPI_TalonSRX(RobotMap.LEFT_FOLLOWER_2_CHANNEL),
-					
-					new WPI_TalonSRX(RobotMap.RIGHT_LEAD_CHANNEL),
-					new WPI_TalonSRX(RobotMap.RIGHT_FOLLOWER_1_CHANNEL),
-					new WPI_TalonSRX(RobotMap.RIGHT_FOLLOWER_2_CHANNEL));
+					left, right,
+					leftLead, leftFollower1, leftFollower2,
+					rightLead, rightFollower1, rightFollower2);
 		}
 		return instance;
 	}
@@ -259,20 +266,6 @@ public class Drive extends DifferentialDrive {
 		
 	}
 	
-	@Override
-	public void arcadeDrive(double xSpeed, double zRotation, boolean squaredInputs) {
-		if (!RobotMap.HAS_WHEELS) {
-			LOGGER.trace("No drive system");
-			return;
-		}
-		super.arcadeDrive(xSpeed, zRotation, squaredInputs);
-		
-		leftFollower1.set(ControlMode.Follower, leftLead.getDeviceID());
-		leftFollower2.set(ControlMode.Follower, leftLead.getDeviceID());
-		
-		rightFollower1.set(ControlMode.Follower, rightLead.getDeviceID());
-		rightFollower2.set(ControlMode.Follower, rightLead.getDeviceID());
-	}
 	public double feetToTicks (double feetDist) {
 		return 1024 * feetDist / (6 * Math.PI / 12);
 	}
