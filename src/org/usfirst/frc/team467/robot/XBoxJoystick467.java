@@ -30,6 +30,8 @@ public class XBoxJoystick467 {
     public boolean[] buttonDown = new boolean[10]; 
     public boolean[] prev_buttonDown = new boolean[10];
     
+    public double[] axes = new double[6];
+    
     public enum Button {
         a(0),
         b(1),
@@ -48,91 +50,72 @@ public class XBoxJoystick467 {
             this.channel = channel;
         }
     }
-        
-        /**
-         * Check if a specific button is being held down. Ignores first button press, but the robot loops too quickly for this to
-         * matter.
-         *
-         * @return
-         */
-        public boolean down(Button b) {
-            // TODO: Return if the button is currently down
-            return buttonDown[b.ordinal()];
-        }
-
-        /**
-         * Check if a specific button has just been pressed. (Ignores holding.)
-         *
-         * @return
-         */
-        public boolean pressed(Button b) {
-            // TODO: return true if the button is pressed, but wasn't before
-            return buttonDown[b.ordinal()] && !prev_buttonDown[b.ordinal()];
-        }
-
-        /**
-         * Check if a specific button has just been released.
-         *
-         * @return
-         */
-        public boolean buttonReleased(Button b) {
-            // TODO: Reverse of above
-            return !buttonDown[b.ordinal()] && prev_buttonDown[b.ordinal()];
-        }
     
+    /**
+     * Check if a specific button is being held down. Ignores first button press, but the robot loops too quickly for this to
+     * matter.
+     *
+     * @return
+     */
+    public boolean down(Button b) {
+        // TODO: Return if the button is currently down
+        return buttonDown[b.ordinal()];
+    }
+
+    /**
+     * Check if a specific button has just been pressed. (Ignores holding.)
+     *
+     * @return
+     */
+    public boolean pressed(Button b) {
+        // TODO: return true if the button is pressed, but wasn't before
+        return buttonDown[b.ordinal()] && !prev_buttonDown[b.ordinal()];
+    }
+
+    /**
+     * Check if a specific button has just been released.
+     *
+     * @return
+     */
+    public boolean buttonReleased(Button b) {
+        // TODO: Reverse of above
+        return !buttonDown[b.ordinal()] && prev_buttonDown[b.ordinal()];
+    }
+
     private enum Axis {
         leftX(0),
         leftY(1),
         leftTrigger(2),
         rightTrigger(3),
-        RightX(4),
-        RightY(5);
+        rightX(4),
+        rightY(5);
         
         public final int channel;
-        
-        private double value;
-        
+                
         Axis(int channel) {
             this.channel = channel;
-            value = 0.0;
         }
         
-        public double value() {
-            return value;
-        }
+    }
         
-        public static void read(XboxController xbox) {
-            // Read Joystick Axes
-            leftX.value = accelerateJoystickInput(xbox.getX(GenericHID.Hand.kLeft));
-            leftY.value = accelerateJoystickInput(xbox.getY(GenericHID.Hand.kLeft));
+    /**
+     * Implement a dead zone for Joystick centering - and a non-linear acceleration as the user moves away from the zero position.
+     *
+     * @param input
+     * @return processed input
+     */
+    private static double accelerateJoystickInput(double input) {
+        // Ensure that there is a dead zone around zero
+        if (Math.abs(input) < DEADZONE) {
+            return 0.0;
+        }
+        // Simply square the input to provide acceleration
+        // ensuring that the sign of the input is preserved
+        return (input * Math.abs(input));
+    }
 
-            RightX.value = accelerateJoystickInput(xbox.getX(GenericHID.Hand.kRight));
-            RightY.value = accelerateJoystickInput(xbox.getY(GenericHID.Hand.kRight));
-
-            leftTrigger.value = accelerateJoystickInput(xbox.getTriggerAxis(GenericHID.Hand.kLeft));
-            rightTrigger.value = accelerateJoystickInput(xbox.getTriggerAxis(GenericHID.Hand.kRight));
-        
-        }
-        
-        /**
-         * Implement a dead zone for Joystick centering - and a non-linear acceleration as the user moves away from the zero position.
-         *
-         * @param input
-         * @return processed input
-         */
-        private static double accelerateJoystickInput(double input) {
-            // Ensure that there is a dead zone around zero
-            if (Math.abs(input) < DEADZONE) {
-                return 0.0;
-            }
-            // Simply square the input to provide acceleration
-            // ensuring that the sign of the input is preserved
-            return (input * Math.abs(input));
-        }
-
-        private static double limitSensitivity(double input) {
-            return input * SENSITIVITY_MODIFIER;
-        }
+    private static double limitSensitivity(double input) {
+        return input * SENSITIVITY_MODIFIER;
     }
 
     /**
@@ -163,12 +146,18 @@ public class XBoxJoystick467 {
         }
     }
     
+    private void readAxes() {
+    	for (int i = 0; i < axes.length; i++) {
+    		axes[i] = xbox.getRawAxis(i+1);
+    	}
+    }
+    
     /**
      * Read all inputs from the underlying joystick object.
      */
     public void read() {
         readButtons();
-        Axis.read(xbox);
+        readAxes();
         pov = xbox.getPOV(0);
     }
     
@@ -177,7 +166,7 @@ public class XBoxJoystick467 {
     }
     
     public double turboSpeedAdjust() {
-        if (Axis.leftTrigger.value() > 0.0) {
+        if (xbox.getRawAxis(Axis.leftTrigger.channel) > 0.0) {
             return turboFastSpeed(); 
         } else {
             return turboSlowSpeed(); 
@@ -187,14 +176,14 @@ public class XBoxJoystick467 {
     public double turboFastSpeed() {
         return (getLeftStickY()*(RobotMap.NORMAL_MAX_SPEED 
                 + (RobotMap.FAST_MAX_SPEED-RobotMap.NORMAL_MAX_SPEED)
-                *Axis.leftTrigger.value()))
+                *xbox.getRawAxis(Axis.leftTrigger.channel)))
                 *-1; // For some reason, up stick is negative, so we flip it;
     }
     
     public double turboSlowSpeed() {
         return (getLeftStickY()*(RobotMap.NORMAL_MAX_SPEED 
                 + (RobotMap.SLOW_MAX_SPEED-RobotMap.NORMAL_MAX_SPEED)
-                *Axis.rightTrigger.value()))
+                *xbox.getRawAxis(Axis.rightTrigger.channel)))
                 *-1; // For some reason, up stick is negative, so we flip it;
     }
 
@@ -208,12 +197,11 @@ public class XBoxJoystick467 {
      * @return
      */
     public double getLeftStickDistance() {
-        return Math.sqrt((Axis.leftX.value * Axis.leftX.value) + (Axis.leftY.value * Axis.leftY.value));
+        return Math.sqrt((getLeftStickX() * getLeftStickX()) + (getLeftStickY() * getLeftStickY()));
     }
 
     public double getRightStickDistance() {
-        // TODO Repeat for right
-        return Math.sqrt((Axis.RightX.value * Axis.RightX.value) + (Axis.RightY.value * Axis.RightY.value));
+    	return Math.sqrt((getRightStickX() * getRightStickX()) + (getRightStickY() * getRightStickY()));
     }
 
     private double calculateStickAngle(double stickX, double stickY) {
@@ -233,19 +221,19 @@ public class XBoxJoystick467 {
     }
     
     public double getLeftStickY() {
-        return Axis.leftY.value();
+    	return xbox.getRawAxis(Axis.leftY.channel);
     }
     
     public double getLeftStickX() {
-        return Axis.leftX.value();
+        return xbox.getRawAxis(Axis.leftX.channel);
     }
     
     public double getRightStickY() {
-        return Axis.RightY.value();
+        return xbox.getRawAxis(Axis.rightY.channel);
     }
     
     public double getRightStickX() {
-        return Axis.RightX.value();
+        return xbox.getRawAxis(Axis.rightX.channel);
     }
 
     /**
@@ -254,12 +242,12 @@ public class XBoxJoystick467 {
      * @return Joystick Angle in range -PI to PI
      */
     public double getLeftStickAngle() {
-        return (calculateStickAngle(Axis.leftX.value, Axis.leftY.value));
+        return (calculateStickAngle(getLeftStickX(), getLeftStickY()));
     }
 
     public double getRightStickAngle() {
         // TODO Repeat for right stick
-        return (calculateStickAngle(Axis.RightX.value, Axis.RightY.value));
+        return (calculateStickAngle(getRightStickX(), getRightStickY()));
     }
     
     public void leftRumble(double value) {
