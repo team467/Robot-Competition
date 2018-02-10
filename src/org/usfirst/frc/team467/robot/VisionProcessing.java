@@ -37,7 +37,7 @@ public class VisionProcessing {
 		distance = table.getNumber("distance", 0.0);
 		width = table.getNumber("w", 0.0);
 		height = table.getNumber("h", 0.0);
-		table.putNumber("gyro", gyro.getRobotAngleDegrees());
+		table.putNumber("gyro", gyro.getYawDegrees());
 
 		// LOGGER.debug("Can see two contours = " + String.valueOf(seeTwo));
 	}

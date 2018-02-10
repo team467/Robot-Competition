@@ -1,6 +1,7 @@
 package org.usfirst.frc.team467.robot;
 
 import org.apache.log4j.Logger;
+import org.usfirst.frc.team467.robot.simulator.communications.RobotData;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
@@ -92,7 +93,19 @@ public class Drive extends DifferentialDrive {
 		}
 		return instance;
 	}
-
+	public void setPIDF(double p, double i, double d, double f){
+	 // TODO: Set the PIDF of the talons. Assumes the same values for all motors	
+	}
+	
+	public void logClosedLoopErrors() {
+			LOGGER.debug(
+					//TODO Check the arguments for the closed loop errors.
+					"Vel L= " + leftLead.getSelectedSensorVelocity(0) + " R=" + rightLead.getSelectedSensorVelocity(0)
+					+ "Pos L=" + leftLead.getSelectedSensorPosition(0) + " R=" + rightLead.getSelectedSensorPosition(0)+
+					"Err L=" + leftLead.getClosedLoopError(0) +
+					" R=" + rightLead.getClosedLoopError(0));
+	}
+	
 	
 	public void initMotionMagicMode() {
 		if (!RobotMap.HAS_WHEELS) {
@@ -203,6 +216,12 @@ public class Drive extends DifferentialDrive {
 		previousRightSensorPosition = 0;
 		rightLead.setSelectedSensorPosition(0, 0, RobotMap.TALON_TIMEOUT);
 		leftLead.setSelectedSensorPosition(0, 0, RobotMap.TALON_TIMEOUT);
+		rightLead.setSelectedSensorPosition(0, 0, RobotMap.TALON_TIMEOUT);
+		leftLead.setSelectedSensorPosition(0, 0, RobotMap.TALON_TIMEOUT);
+	}
+	
+	public void sendData() {
+		RobotData.getInstance().update(rightLead.getSelectedSensorPosition(0), leftLead.getSelectedSensorPosition(0));
 	}
 	
 //	public void sendData() {
@@ -309,6 +328,7 @@ public class Drive extends DifferentialDrive {
 		
 		
 	}
+	
 	public double feetToTicks (double feetDistance) {
 		return (feetDistance / RobotMap.WHEEL_CIRCUMFERENCE * RobotMap.WHEEL_ENCODER_CODES_PER_REVOLUTION);
 	}

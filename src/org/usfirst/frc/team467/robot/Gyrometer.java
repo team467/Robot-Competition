@@ -4,14 +4,10 @@ import org.usfirst.frc.team467.robot.imu.ADIS16448_IMU;
 import org.usfirst.frc.team467.robot.imu.IMU;
 import org.usfirst.frc.team467.robot.imu.LSM9DS1_IMU;
 
-import edu.wpi.first.wpilibj.PIDSource;
-import edu.wpi.first.wpilibj.PIDSourceType;
-
 /*
  *  Simple wrapper class around a gyro. This is implemented as a singleton
  */
-public class Gyrometer implements PIDSource {
-
+public class Gyrometer {
 	private IMU imu = null;
 	private static Gyrometer instance;
 	private double measuresPerDegree;
@@ -55,43 +51,26 @@ public class Gyrometer implements PIDSource {
 	}
 
 	/**
-	 * Returns the angle of the robot orientation in Radians. Robot is assumed to be pointing forward at 0.0. Clockwise rotation is
-	 * positive, counter clockwise rotation is negative
-	 *
-	 * @return the robot angle
-	 */
-	public double getRobotAngleRadians() {
-		// TODO: Check the direction
-		return getAngleZRadians();
-	}
-
-	/**
-	 * Returns the angle of the robot orientation in Degrees. Robot is assumed to be pointing forward at 0.0. Clockwise rotation is
-	 * positive, counter clockwise rotation is negative
-	 *
-	 * @return the robot angle
-	 */
-	public double getRobotAngleDegrees() {
-		// TODO: Check the direction
-		return getAngleZDegrees();
-	}
-
-	/**
 	 * Returns the Z angle of the gyro in Radians. Note, the IMU returns 1440 degrees per rotation.
 	 *
 	 * @return the gyro angle
 	 */
-	public double getAngleZRadians() {
-		return imu.getAngleZ() * Math.PI / (180 * measuresPerDegree);
+	public double getYawRadians() {
+		if (RobotMap.robotID == RobotMap.RobotID.PreseasonBot) {
+			return Math.toRadians(imu.getAngleZ());
+		} else if (RobotMap.robotID == RobotMap.RobotID.Competition_1){
+			return Math.toRadians(-imu.getAngleX());
+		} else {
+			return 0;
+		} 
 	}
-
 	/**
-	 * Returns the Z angle of the gyro in Degrees. Note, the IMU returns 1440 degrees per rotation.
+	 * Returns the angle of the robot orientation in Degrees. Robot is assumed to be pointing forward at 0.0. Clockwise rotation is
+	 * positive, counter clockwise rotation is negative
 	 *
-	 * @return the gyro angle
-	 */
-	public double getAngleZDegrees() {
-		return imu.getAngleZ() / measuresPerDegree;
+	 * @return the robot angle	 */
+	public double getYawDegrees() {
+		return Math.toDegrees(getYawRadians());
 	}
 
 	/**
@@ -99,8 +78,14 @@ public class Gyrometer implements PIDSource {
 	 *
 	 * @return the gyro angle
 	 */
-	public double getAngleXRadians() {
-		return imu.getAngleX() * Math.PI / (180 * measuresPerDegree);
+	public double getRollRadians() {
+		if (RobotMap.robotID == RobotMap.RobotID.PreseasonBot) {
+			return Math.toRadians(imu.getAngleX());
+		} else if (RobotMap.robotID == RobotMap.RobotID.Competition_1){
+			return Math.toRadians(-imu.getAngleY());
+		} else {
+			return 0;
+		} 
 	}
 
 	/**
@@ -108,8 +93,8 @@ public class Gyrometer implements PIDSource {
 	 *
 	 * @return the gyro angle
 	 */
-	public double getAngleXDegrees() {
-		return imu.getAngleX() / measuresPerDegree;
+	public double getRollDegrees() {
+		return Math.toDegrees(getRollRadians());
 	}
 
 	/**
@@ -117,8 +102,14 @@ public class Gyrometer implements PIDSource {
 	 *
 	 * @return the gyro angle
 	 */
-	public double getAngleYRadians() {
-		return imu.getAngleY() * Math.PI / (180 * measuresPerDegree);
+	public double getPitchRadians() {
+		if (RobotMap.robotID == RobotMap.RobotID.PreseasonBot) {
+			return Math.toRadians(imu.getAngleY());
+		} else if (RobotMap.robotID == RobotMap.RobotID.Competition_1){
+			return Math.toRadians(-imu.getAngleZ());
+		} else {
+			return 0;
+		} 
 	}
 
 	/**
@@ -126,34 +117,8 @@ public class Gyrometer implements PIDSource {
 	 *
 	 * @return the gyro angle
 	 */
-	public double getAngleYDegrees() {
-		return imu.getAngleY() / measuresPerDegree;
-	}
-
-	@Override
-	public void setPIDSourceType(PIDSourceType pidSource) {
-		// Sorry I'm just displacement for now :P
-
-	}
-
-	@Override
-	public PIDSourceType getPIDSourceType() {
-		return PIDSourceType.kDisplacement;
-	}
-
-	@Override
-	public double pidGet() {
-		double angle = getRobotAngleDegrees();
-		while (angle > 180) {
-			angle -= 360;
-		}
-		while (angle < -180) {
-			angle += 360;
-		}
-		if (angle == 0) {
-			imu.reset();
-		}
-		return angle;
+	public double getPitchDegrees() {
+		return Math.toDegrees(getPitchRadians());
 	}
 
 }
