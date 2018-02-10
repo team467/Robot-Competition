@@ -81,7 +81,6 @@ public class Robot extends TimedRobot {
 	}
 	public void disabledInit() {
 		LOGGER.debug("Disabled Starting");
-		drive.logClosedLoopErrors();
 //		autonomous.terminate();
 //		autonomous = Actions.doNothing();
 	}
@@ -143,8 +142,6 @@ public class Robot extends TimedRobot {
 
 
 	public void autonomousPeriodic() {
-		
-		drive.logClosedLoopErrors();
 		drive.publishRawSensorValues();
 //		drive.PositionModeMove(drive.feetToTicks(amountToGoLeft), drive.feetToTicks(amountToGoRight));
 //		drive.motionMagicMove(amountToGoLeft, amountToGoRight);

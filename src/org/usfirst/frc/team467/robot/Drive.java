@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.usfirst.frc.team467.robot;
 
 import org.apache.log4j.Logger;
@@ -27,6 +23,9 @@ public class Drive extends DifferentialDrive {
 	private WPI_TalonSRX rightLead;
 	private WPI_TalonSRX rightFollower1;
 	private WPI_TalonSRX rightFollower2;
+	
+	private double currentLeftSensorPosition = 0.0;
+	private double currentRightSensorPosition = 0.0;
 
 	// Private constructor
 	private Drive(WPI_TalonSRX leftLead,  WPI_TalonSRX leftFollower1,  WPI_TalonSRX leftFollower2,
@@ -41,11 +40,9 @@ public class Drive extends DifferentialDrive {
 		
 		this.leftFollower1 = leftFollower1;
 		initMotor(this.leftFollower1);
-		initMotorForFollowerMode(leftLead, leftFollower1);
 
 		this.leftFollower2 = leftFollower2;
 		initMotor(this.leftFollower2);
-		initMotorForFollowerMode(leftLead, leftFollower2);
 		
 		this.rightLead = rightLead;
 		initMotor(this.rightLead);
@@ -55,16 +52,14 @@ public class Drive extends DifferentialDrive {
 		
 		this.rightFollower1 = rightFollower1;
 		initMotor(this.rightFollower1);
-		initMotorForFollowerMode(rightLead, rightFollower1);
 		
 		this.rightFollower2 = rightFollower2;
 		initMotor(this.rightFollower2);
-		initMotorForFollowerMode(rightLead, rightFollower2);
 	}
 	
 	private void initMotor(WPI_TalonSRX talon) {
 		talon.set(ControlMode.PercentOutput, 0);
-		talon.selectProfileSlot(RobotMap.VELOCITY_PID_PROFILE, 0);
+		talon.selectProfileSlot(0, 0);
 		talon.configAllowableClosedloopError(0, RobotMap.VELOCITY_ALLOWABLE_CLOSED_LOOP_ERROR, 0);
 		talon.configNominalOutputReverse(0.0, 0);
 		talon.configNominalOutputForward(0.0, 0);
@@ -72,9 +67,9 @@ public class Drive extends DifferentialDrive {
 		talon.configPeakOutputReverse(-1.0, 0);
 		talon.configOpenloopRamp(0.2, RobotMap.TALON_TIMEOUT);
 		talon.configClosedloopRamp(0.2, RobotMap.TALON_TIMEOUT);
-		//Note: This was changed from voltage to percentage used with 1 representing 100 percent or max voltage and -1 representing 100 percent backwards.
+		//Note: This was changed from voltage to percentage used with 1 representing 100 percent or max voltage 
+		//      and -1 representing 100 percent backwards.
 		
-		// TODO: Set the default Talon parameters (done- check over again)
 	}
 
 	/**
@@ -97,42 +92,6 @@ public class Drive extends DifferentialDrive {
 		return instance;
 	}
 
-	public void setPIDF(double p, double i, double d, double f){
-		// TODO: Set the PIDF of the talons. Assumes the same values for all motors
-		
-	}
-	
-	/**
-	 * Initializes settings for position mode
-	 *
-	 * @return Successful or not
-	 */
-	public boolean initPositionMode() {
-		// TODO: Set motors for percent voltage bus mode Check RobotMap to see if it is enabled for this robot.
-		rightLead.setSelectedSensorPosition(0, 0, RobotMap.TALON_TIMEOUT);
-		leftLead.setSelectedSensorPosition(0, 0, RobotMap.TALON_TIMEOUT);
-		
-//		double kPRight = Double.parseDouble(SmartDashboard.getString("DB/String 7", "0"));
-//		double kPLeft = Double.parseDouble(SmartDashboard.getString("DB/String 2", "0"));
-//		
-//		double kIRight = Double.parseDouble(SmartDashboard.getString("DB/String 8", "0"));
-//		double kILeft = Double.parseDouble(SmartDashboard.getString("DB/String 3", "0"));
-//		
-//		double kDRight = Double.parseDouble(SmartDashboard.getString("DB/String 9", "7"));
-//		double kDLeft = Double.parseDouble(SmartDashboard.getString("DB/String 4", "7"));
-//				
-//		rightLead.config_kP(0, kPRight, RobotMap.TALON_TIMEOUT);
-//		leftLead.config_kP(0, kPLeft, RobotMap.TALON_TIMEOUT);
-//		
-//		rightLead.config_kI(0, kIRight, RobotMap.TALON_TIMEOUT);
-//		leftLead.config_kI(0, kILeft, RobotMap.TALON_TIMEOUT);
-//		
-//		rightLead.config_kD(0, kDRight, RobotMap.TALON_TIMEOUT);
-//		leftLead.config_kD(0, kDLeft, RobotMap.TALON_TIMEOUT);
-		
-//			LOGGER.info("Right p value: " + kPRight + " and left p value: " + kPLeft);
-		return false;
-	}
 	
 	public void initMotionMagicMode() {
 		if (!RobotMap.HAS_WHEELS) {
@@ -168,6 +127,7 @@ public class Drive extends DifferentialDrive {
 		rightLead.configMotionCruiseVelocity(1052 / 2, RobotMap.TALON_TIMEOUT);
 		rightLead.configMotionAcceleration(1052 / 2, RobotMap.TALON_TIMEOUT);	
 	}
+	
 	public void initSpeedControl() {
 		if (!RobotMap.HAS_WHEELS) {
 			LOGGER.trace("No drive system");
@@ -188,31 +148,7 @@ public class Drive extends DifferentialDrive {
 		leftLead.set(ControlMode.PercentOutput, leftLead.getMotorOutputPercent());;
 		
 	}
-	
-	public void motionMagicMove(double left, double right) {
-		go(left, right, ControlMode.MotionMagic);
-	}
-	
-	public void PositionModeMove(double left, double right) {
-		go(left, right, ControlMode.Position);
-	}
-	
-	private void initMotorForFollowerMode(WPI_TalonSRX master, WPI_TalonSRX slave) {
-		// TODO: Slave motors to a single master
-		//TODO: Check the value on the follower set.
-		slave.set(ControlMode.Follower, master.getDeviceID());
-		LOGGER.debug("Set " + slave.getDeviceID() + " Following " + master.getDeviceID());
-	}
 
-	public void logClosedLoopErrors() {
-		LOGGER.debug(
-				//TODO Check the arguments for the closed loop errors.
-				"Vel L= " + leftLead.getSelectedSensorVelocity(0) + " R=" + rightLead.getSelectedSensorVelocity(0)
-				+ "Pos L=" + leftLead.getSelectedSensorPosition(0) + " R=" + rightLead.getSelectedSensorPosition(0)+
-				"Err L=" + leftLead.getClosedLoopError(0) +
-				" R=" + rightLead.getClosedLoopError(0));
-	}
-	
 	public void publishRawSensorValues() {
 		SmartDashboard.putNumber("leftRawSensorPosition", leftLead.getSelectedSensorPosition(0));
 		SmartDashboard.putNumber("rightRawSensorPosition", rightLead.getSelectedSensorPosition(0));
@@ -260,10 +196,17 @@ public class Drive extends DifferentialDrive {
 			m_safetyHelper.feed();
 		}
 	}
-
-	public void turnByPosition(double degrees) {
-		// TODO: Turns in place to the specified angle from center using position mode
+	
+	
+	
+	public void zero() {
+		rightLead.setSelectedSensorPosition(0, 0, RobotMap.TALON_TIMEOUT);
+		leftLead.setSelectedSensorPosition(0, 0, RobotMap.TALON_TIMEOUT);
 	}
+	
+//	public void sendData() {
+//		RobotData.getInstance().update(rightLead.getSelectedSensorPosition(0), leftLead.getSelectedSensorPosition(0));
+//	}
 
 	/**
 	 * Turns to specified angle according to gyro
@@ -273,13 +216,12 @@ public class Drive extends DifferentialDrive {
 	 *
 	 * @return True when pointing at the angle
 	 */
-	public boolean turnToAngle(double angle) {
-		//TODO: Uses the gyro to determine the angle, correcting until it points the correct direction
-		return false; // Put in test to determine if on target
+	public void turn(double degrees) {
+		// TODO: Turns in place to the specified angle from center using position mode
 	}
 
 	public boolean isStopped(){
-		// TODO: Check to see if the robot is stopped
+
 		return false;
 	}
 
@@ -288,14 +230,30 @@ public class Drive extends DifferentialDrive {
 	 *
 	 * @return the absolute distance moved in feet
 	 */
-	public double absoluteDistanceMoved() {
-		// TODO: returns the amount of distance moved based on the the position of the talon sensors nad the wheel circumerence
-		return 0;
+	public double getLeftDistance() {
+		double leftLeadSensorPos = leftLead.getSelectedSensorPosition(0);
+		ticksToFeet(leftLeadSensorPos);
+		return leftLeadSensorPos;
 	}
-
-	public double getTurnError() {
-		// TODO Get the absolute error when turning
-		return 0;
+	
+	public double getRightDistance() {
+		double rightLeadSensorPos = rightLead.getSelectedSensorPosition(0);
+		ticksToFeet(rightLeadSensorPos);
+		return rightLeadSensorPos;
+	}
+	
+	public double absoluteDistanceMoved() {
+		// TODO: returns the amount of distance moved based on the the position of the talon sensors and the wheel circumference
+		double lowestAbsDist;
+		double leftLeadSensorPos = Math.abs(getLeftDistance());
+		double rightLeadSensorPos = Math.abs(getRightDistance());
+		if (leftLeadSensorPos >= rightLeadSensorPos) {
+			lowestAbsDist = rightLeadSensorPos;
+		}
+		else {
+			lowestAbsDist = leftLeadSensorPos;
+		}	
+		return lowestAbsDist;
 	}
 
 	/**
@@ -325,20 +283,46 @@ public class Drive extends DifferentialDrive {
 		rightFollower1.set(ControlMode.Follower, rightLead.getDeviceID());
 		rightFollower2.set(ControlMode.Follower, rightLead.getDeviceID());
 	}
-	
-	/**
-	 * Ticks are set to the distance in feet divided by the circumference of the wheel in feet
-	 * and then multiplied by 1024 which is the number of ticks in one revolution of the wheel.
-	 * @param feetDist Distance in feet
-	 * @return Distance in sensor units
-	 */
-	public double feetToTicks(double feetDist) {
-		return 1024 * feetDist / (6 * Math.PI / 12);
+	public double feetToTicks (double feetDistance) {
+		return (feetDistance / RobotMap.WHEEL_CIRCUMFERENCE * RobotMap.WHEEL_ENCODER_CODES_PER_REVOLUTION);
 	}
+	
 	public double degreesToTicks(double turnAmountInDegrees) {
 		double diameterInInches = 22.75;
-		double radius = diameterInInches / 24; //Diameter divided by (2 * 12) to translate to feet and to get radius.
+		double radius = diameterInInches / 24; //Diameter divided by (2 * 12) to translate to feet and to get radius
 		double turnAmountInRadians = Math.toRadians(turnAmountInDegrees * (367.5/360)); //The 367.5/360 is to fix measurement errors.
 		return feetToTicks(turnAmountInRadians * radius);
 	}
+	public void moveFeet(double distanceInFeet) {
+		moveFeet(distanceInFeet, 0);
+	}
+	
+	/**
+	 * 
+	 * @param distanceInFeet
+	 * @param rotationInDegrees enter positive degrees for left turn and enter negative degrees for right turn
+	 */
+	public void moveFeet (double distanceInFeet, double rotationInDegrees) {
+		double turnAmtTicks, distAmtTicks, leftDistTicks, rightDistTicks, radius, distTurnInFeet, angleInRadians;
+		
+		radius = RobotMap.WHEEL_BASE_WIDTH / 2;
+		distAmtTicks = feetToTicks(distanceInFeet); //Converts distance to ticks in feet.
+		angleInRadians = Math.toRadians(rotationInDegrees);
+		distTurnInFeet = radius * angleInRadians; //This is the distance we want to turn.
+		turnAmtTicks = (feetToTicks(distTurnInFeet)); //Converts turn angle in ticks to degrees, then to radians.
+		
+		rightDistTicks = distAmtTicks - turnAmtTicks;
+		leftDistTicks = distAmtTicks + turnAmtTicks;
+		
+		go(leftDistTicks, rightDistTicks, ControlMode.MotionMagic);
+	}
+	
+	public void rotateByAngle(double angleInDegrees) {
+		moveFeet(0, angleInDegrees);
+		}
+	
+	private double ticksToFeet(double ticks) {
+		return (ticks / RobotMap.WHEEL_ENCODER_CODES_PER_REVOLUTION * RobotMap.WHEEL_CIRCUMFERENCE);
+	}
+	
 }
