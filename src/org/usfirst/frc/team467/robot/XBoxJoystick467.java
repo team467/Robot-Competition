@@ -172,6 +172,10 @@ public class XBoxJoystick467 {
         pov = xbox.getPOV(0);
     }
     
+    public void logIdentity() {
+    	LOGGER.debug(name + " Port: " + xbox.getPort());
+    }
+    
     public double turboSpeedAdjust() {
         if (Axis.leftTrigger.value() > 0.0) {
             return turboFastSpeed(); 

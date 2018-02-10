@@ -89,6 +89,7 @@ public class Robot extends TimedRobot {
 
 	public void disabledPeriodic() {
 		LOGGER.trace("Disabled Periodic");
+		driverstation.logJoystickIDs();
 	}
 //TODO: Figure out the NetworkTables later.
 //	String[] autoList = {"none", "go"};

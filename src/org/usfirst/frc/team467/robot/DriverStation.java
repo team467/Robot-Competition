@@ -44,6 +44,11 @@ public class DriverStation {
 		driverJoy.read();
 		navJoy.read();
 	}
+	
+	public void logJoystickIDs() {
+		driverJoy.logIdentity();
+		navJoy.logIdentity();
+	}
 
 	/**
 	 * Gets joystick instance used by driver.
