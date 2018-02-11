@@ -165,17 +165,16 @@ public class Robot extends TimedRobot {
 		driverstation.readInputs();
 		//TODO: Set Min_DRIVE_SPEED in Robot Map.
 		// TODO Drive class should handle MIN_DRIVE_SPEED
-		double MIN_DRIVE_SPEED = 0.1;
 		double left = driverstation.getArcadeSpeed();
 		double right = driverstation.getArcadeTurn();
 		
 		LOGGER.debug("left " + left + " right " + right);
 		LOGGER.debug(grabber.hasCube());
 		
-		if (Math.abs(left) < MIN_DRIVE_SPEED) {
+		if (Math.abs(left) < RobotMap.MIN_DRIVE_SPEED) {
 			left = 0.0;
 		}
-		if (Math.abs(right) < MIN_DRIVE_SPEED) {
+		if (Math.abs(right) < RobotMap.MIN_DRIVE_SPEED) {
 			right = 0.0;
 		}
 		
