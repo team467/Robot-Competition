@@ -4,6 +4,7 @@ import org.apache.log4j.Logger;
 
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.MotorSafetyHelper;
+import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
@@ -18,7 +19,7 @@ public class Elevator {
 	private double feetPerTick;
 	private int maxTicksPerIteration;
 	private double previousHeight;
-	private MotorSafetyHelper m_safetyHelper = new MotorSafetyHelper(heightController);
+	private MotorSafetyHelper m_safetyHelper;
 
 	private Stops targetHeight;
 
@@ -39,25 +40,33 @@ public class Elevator {
 		}
 	}
 
-	private Elevator() {
-		heightSensor = new AnalogInput(RobotMap.ELEVATOR_HEIGHT_SENSOR_ID);
-		heightController = new WPI_TalonSRX(RobotMap.ELEVATOR_MOTOR_CHANNEL);
-		targetHeight = null;
-		feetPerTick = (RobotMap.ELEVATOR_GEAR_CIRCUMFERENCE_IN_INCHES / 12) / RobotMap.ELEVATOR_TICKS_PER_TURN;
-		maxTicksPerIteration = RobotMap.ELEVATOR_TICKS_PER_TURN * RobotMap.MAX_ELEVATOR_RPM / 60 / 100; // 10 ms per iteration
-		previousHeight = getHeightFeet();
-	}
-
 	/**
-
 	 * 
 	 * @return a single instance of the Elevator object.
 	 */
 	public static Elevator getInstance() {
 		if (instance == null) {
-			instance = new Elevator();
+			if (!RobotMap.HAS_ELEVATOR) {
+				instance = new Elevator(new NullSpeedController());
+			} else {
+				instance = new Elevator(new WPI_TalonSRX(RobotMap.ELEVATOR_MOTOR_CHANNEL));
+			}
 		}
 		return instance;
+	}
+
+	private Elevator(SpeedController heightController) {
+		if (!RobotMap.HAS_ELEVATOR) {
+			return;
+		}
+		heightSensor = new AnalogInput(RobotMap.ELEVATOR_HEIGHT_SENSOR_ID);
+		this.heightController = (WPI_TalonSRX) heightController;
+		targetHeight = null;
+		feetPerTick = (RobotMap.ELEVATOR_GEAR_CIRCUMFERENCE_IN_INCHES / 12) / RobotMap.ELEVATOR_TICKS_PER_TURN;
+		maxTicksPerIteration = RobotMap.ELEVATOR_TICKS_PER_TURN * RobotMap.MAX_ELEVATOR_RPM / 60 / 100; // 10 ms per iteration
+		previousHeight = getHeightFeet();
+
+		m_safetyHelper = new MotorSafetyHelper(this.heightController);
 	}
 
 	/**
@@ -66,10 +75,11 @@ public class Elevator {
 	 * @param speed The velocity. Shall be a value between -1 and 1.
 	 */
 	public void manualMove(double speed) {
-		targetHeight = null;
-		if (m_safetyHelper != null) {
-			m_safetyHelper.feed();
+		if (!RobotMap.HAS_ELEVATOR) {
+			return;
 		}
+		targetHeight = null;
+
 		if (isOutOfRange()) {
 			heightController.set(0);
 			//DriverStation.getInstance().setDriverRumble(0.5);
@@ -85,7 +95,7 @@ public class Elevator {
 				//DriverStation.getInstance().setDriverRumble(0.0);
 			}
 		}
-		
+
 		if (Math.abs(speed) < RobotMap.MIN_LIFT_SPEED) {
 			speed = 0.0;
 		}
@@ -117,6 +127,9 @@ public class Elevator {
 	}
 
 	public double getHeightFeet() {
+		if (!RobotMap.HAS_ELEVATOR) {
+			return 0.0;
+		}
 		double height = (heightSensor.getValue() - RobotMap.ELEVATOR_INITIAL_TICKS) * feetPerTick;
 		LOGGER.debug("Height in feet: " + height);
 		return height;
@@ -132,14 +145,28 @@ public class Elevator {
 			LOGGER.debug("No stop set");
 			return;
 		}
+
+		if (!RobotMap.HAS_ELEVATOR) {
+			return;
+		}
+
 		automaticMove(targetHeight.height);
 	}
+
 	public void cancelAutomaticMove() {
 		targetHeight = null;
+
+		if (!RobotMap.HAS_ELEVATOR) {
+			return;
+		}
+
 		heightController.stopMotor();
 	}
 
 	private void automaticMove(double height) {
+		if (!RobotMap.HAS_ELEVATOR) {
+			return;
+		}
 		if (m_safetyHelper != null) {
 			m_safetyHelper.feed();
 		}
@@ -154,5 +181,4 @@ public class Elevator {
 				"Vel= " + heightController.getSelectedSensorVelocity(0)
 				+ "Pos=" + heightController.getSelectedSensorPosition(0));
 	}
-
 }

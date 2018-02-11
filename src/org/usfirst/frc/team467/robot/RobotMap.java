@@ -18,14 +18,6 @@ public class RobotMap {
 	public static final int BACK_LEFT = 2;
 	public static final int BACK_RIGHT = 3;
 
-	public static final int ELEVATOR_TICKS_PER_TURN = 253;
-	public static final double ELEVATOR_GEAR_CIRCUMFERENCE_IN_INCHES = 10;
-	public static final double ELEVATOR_MAX_HEIGHT_IN_FEET = 10;
-	public static final double ELEVATOR_MIN_HEIGHT_IN_FEET = 0;
-	public static final int ELEVATOR_INITIAL_TICKS = 196;
-	public static final int ELEVATOR_HEIGHT_SENSOR_ID = 0;
-	public static final int ELEVATOR_MOTOR_CHANNEL = 1;
-	public static final int MAX_ELEVATOR_RPM = 1000; //Not the real value, placeholder constant. 
 	/*	* The lowest value is 196.0, the maximum value is 3741.0. The middle is 1968.5
 	 * New max: 2980, new min:956.5
 	 * 16.9 ticks = 1 inch
@@ -66,7 +58,7 @@ public class RobotMap {
 			HAS_RAMPS = false;
 
 			// TODO Assign values to the game piece variables, and make more as appropriate
-			EVEVATOR_MOTOR_CHANNEL = 0;
+			ELEVATOR_MOTOR_CHANNEL = 0;
 			RAMP_SOLENOID_CHANNEL = 0;
 
 			isDriveMotorInverted = new boolean[] { false, true, false, true };
@@ -81,7 +73,7 @@ public class RobotMap {
 			OPTICAL_CHANNEL = 5;
 
 			HAS_ELEVATOR = true;
-			EVEVATOR_MOTOR_CHANNEL = 1;
+			ELEVATOR_MOTOR_CHANNEL = 1;
 			
 			HAS_RAMPS = false;
 			RAMP_SOLENOID_CHANNEL = 0;
@@ -112,7 +104,7 @@ public class RobotMap {
 			OPTICAL_CHANNEL = 5;
 
 			// TODO Assign values to the game piece variables, and make more as appropriate
-			EVEVATOR_MOTOR_CHANNEL = 7;
+			ELEVATOR_MOTOR_CHANNEL = 7;
 			RAMP_SOLENOID_CHANNEL = 0;
 			break;
 		case Competition_2:
@@ -139,7 +131,7 @@ public class RobotMap {
 			OPTICAL_CHANNEL = 5;
 
 			// TODO Assign values to the game piece variables, and make more as appropriate
-			EVEVATOR_MOTOR_CHANNEL = 0;
+			ELEVATOR_MOTOR_CHANNEL = 0;
 			RAMP_SOLENOID_CHANNEL = 0;
 			break;
 		}
@@ -199,7 +191,7 @@ public class RobotMap {
 	// Game Pieces
 
 	public static boolean HAS_ELEVATOR;
-	public static int EVEVATOR_MOTOR_CHANNEL;
+	public static int ELEVATOR_MOTOR_CHANNEL;
 	public static double MIN_LIFT_SPEED = 0.1;
 
 	public static boolean HAS_GRABBER;
@@ -209,6 +201,14 @@ public class RobotMap {
 	public static int GRABBER_L_CHANNEL; 
 	public static int GRABBER_R_CHANNEL;
 	public static int OPTICAL_CHANNEL;
+
+	public static final int ELEVATOR_TICKS_PER_TURN = 253;
+	public static final double ELEVATOR_GEAR_CIRCUMFERENCE_IN_INCHES = 10;
+	public static final double ELEVATOR_MAX_HEIGHT_IN_FEET = 10;
+	public static final double ELEVATOR_MIN_HEIGHT_IN_FEET = 0;
+	public static final int ELEVATOR_INITIAL_TICKS = 196;
+	public static final int ELEVATOR_HEIGHT_SENSOR_ID = 0;
+	public static final int MAX_ELEVATOR_RPM = 1000; //Not the real value, placeholder constant. 
 
 	public static boolean HAS_RAMPS;
 	public static int RAMP_SOLENOID_CHANNEL;
