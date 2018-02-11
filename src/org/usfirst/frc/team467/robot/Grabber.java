@@ -39,10 +39,6 @@ public class Grabber {
 	}
 	
 	public boolean hasCube() {
-		if (!RobotMap.HAS_GRABBER) {
-			return false;
-		}
-		return os.detectedTarget();
+		return RobotMap.HAS_GRABBER && os.detectedTarget();
 	}
-
 }
