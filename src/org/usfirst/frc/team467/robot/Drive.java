@@ -1,5 +1,6 @@
 package org.usfirst.frc.team467.robot;
 
+import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.usfirst.frc.team467.robot.simulator.communications.RobotData;
 
@@ -25,6 +26,7 @@ public class Drive extends DifferentialDrive {
 		super(left, right);
 		this.left = left;
 		this.right = right;
+		initMotionMagicMode();
 	}
 
 	/**
@@ -87,7 +89,7 @@ public class Drive extends DifferentialDrive {
 	private void go(double leftSpeed, double rightSpeed, ControlMode mode) {
 		// TODO: Check to make sure all motors exist. If not throw a null pointer exception
 		if (!RobotMap.HAS_WHEELS) {
-			LOGGER.trace("No drive system");
+			LOGGER.debug("No drive system");
 			return;
 		}
 		
@@ -97,38 +99,49 @@ public class Drive extends DifferentialDrive {
 		
 		//TODO: Set the speeds
 		//TODO Check to see if we need the params.
-		LOGGER.info("Drive left=" + left + "right=" + right + ".");
+
+		LOGGER.info("Drive left=" + leftSpeed + "right=" + rightSpeed + ".");
 		left.set(mode, leftSpeed);
-		right.set(mode, rightSpeed);
-		
+		right.set(mode, rightSpeed);		
 	}
 	
-
-	/**
-	 * Turns to specified angle according to gyro
-	 *
-	 * @param angle
-	 *            in degrees
-	 *
-	 * @return True when pointing at the angle
-	 */
-	public void turn(double degrees) {
-		// TODO: Turns in place to the specified angle from center using position mode
+	public void zero() {
+		right.zero();
+		left.zero();
+	}
+	
+	public void sendData() {
+		RobotData.getInstance().update(right.sensorPosition(), left.sensorPosition());
 	}
 
 	public boolean isStopped(){
-
-		return false;
-	}
+		return left.isStopped() && right.isStopped();
+		}
 
 	/**
 	 * Gets the distance moved for checking drive modes.
 	 *
 	 * @return the absolute distance moved in feet
 	 */
+	public double getLeftDistance() {
+		return ticksToFeet(left.sensorPosition());
+	}
+	
+	public double getRightDistance() {
+		return ticksToFeet(right.sensorPosition());
+	}
+	
 	public double absoluteDistanceMoved() {
-		// TODO: returns the amount of distance moved based on the the position of the talon sensors nad the wheel circumerence
-		return 0;
+		double lowestAbsDist;
+		double leftLeadSensorPos = Math.abs(getLeftDistance());
+		double rightLeadSensorPos = Math.abs(getRightDistance());
+		if (leftLeadSensorPos >= rightLeadSensorPos) {
+			lowestAbsDist = rightLeadSensorPos;
+		} else {
+			lowestAbsDist = leftLeadSensorPos;
+		}	
+		LOGGER.debug("The absolute distance moved: " + lowestAbsDist);
+		return lowestAbsDist;
 	}
 
 	/**
@@ -139,20 +152,21 @@ public class Drive extends DifferentialDrive {
 		left.stopMotor();	
 	}
 	
-	public double feetToTicks (double feetDist) {
-		return 1024 * feetDist / (6 * Math.PI / 12);
-	}
-	
 	public double degreesToTicks(double turnAmountInDegrees) {
 		double diameterInInches = 22.75;
 		double radius = diameterInInches / 24; //Diameter divided by (2 * 12) to translate to feet and to get radius
 		double turnAmountInRadians = Math.toRadians(turnAmountInDegrees * (367.5/360)); //The 367.5/360 is to fix measurement errors.
 		return feetToTicks(turnAmountInRadians * radius);
 	}
-
-	public void sendData() {
-		RobotData.getInstance().update(right.leader.getSelectedSensorPosition(0), left.leader.getSelectedSensorPosition(0));
+	
+	public void moveFeet(double distanceInFeet) {
+		moveFeet(distanceInFeet, 0);
 	}
+	
+	public void rotateByAngle(double angleInDegrees) {
+		moveFeet(0, angleInDegrees);
+	}
+	
 	/**
 	 * 
 	 * @param distanceInFeet
@@ -160,35 +174,33 @@ public class Drive extends DifferentialDrive {
 	 */
 	//TODO ask about putting this into the TalonSpeedControllerGroup
 	public void moveFeet (double distanceInFeet, double rotationInDegrees) {
+		double turnAmtTicks, distAmtTicks, leftDistTicks, rightDistTicks, radius, distTurnInFeet, angleInRadians;
 		
-		double turnAmtTicks, distAmtTicks, driveTicksS1, driveTicksS2;
+		LOGGER.debug("Automated move of " + distanceInFeet + " feet and " + rotationInDegrees + " degree turn.");
+		radius = RobotMap.WHEEL_BASE_WIDTH / 2;
+		distAmtTicks = feetToTicks(distanceInFeet); //Converts distance to ticks in feet.
+		angleInRadians = Math.toRadians(rotationInDegrees);
+		distTurnInFeet = radius * angleInRadians; //This is the distance we want to turn.
+		turnAmtTicks = (feetToTicks(distTurnInFeet)); //Converts turn angle in ticks to degrees, then to radians.
 		
-		distAmtTicks = feetToTicks(distanceInFeet);
-		turnAmtTicks = degreesToTicks(rotationInDegrees);
+		rightDistTicks = distAmtTicks - turnAmtTicks;
+		leftDistTicks = distAmtTicks + turnAmtTicks;
 		
-		driveTicksS1 = distAmtTicks - turnAmtTicks;
-		driveTicksS2 = distAmtTicks + turnAmtTicks;
-		go(driveTicksS1, driveTicksS2, ControlMode.MotionMagic);
+		LOGGER.debug("Right distance in feet: " + ticksToFeet(rightDistTicks) + " Left distance in feet: " + ticksToFeet(leftDistTicks));
 		
+		go(leftDistTicks, rightDistTicks, ControlMode.MotionMagic);
 	}
 	
-	public void move(double distanceInFeet) {
-		moveFeet(distanceInFeet, 0);
+	private double ticksToFeet(double ticks) {
+		double feet = (ticks / RobotMap.WHEEL_ENCODER_CODES_PER_REVOLUTION) * (RobotMap.WHEEL_CIRCUMFERENCE / 12);
+		LOGGER.trace(ticks + " ticks = " + feet + " feet.");
+		return feet; 
 	}
 	
-	public void rotateToAngle(double angleInDegrees) {
-		double distForWheels;		
-		if(angleInDegrees <= 180) {
-			distForWheels = degreesToTicks(angleInDegrees);
-			go(distForWheels, -distForWheels, ControlMode.MotionMagic);
-		}
-		else {
-			distForWheels = degreesToTicks(360 - angleInDegrees);
-			go(-distForWheels, distForWheels, ControlMode.MotionMagic);
-
-		}
+	public double feetToTicks (double feet) {
+		double ticks = (feet / (RobotMap.WHEEL_CIRCUMFERENCE / 12)) * RobotMap.WHEEL_ENCODER_CODES_PER_REVOLUTION;
+		LOGGER.trace(feet + " feet = " + ticks + " ticks.");
+		return ticks;
+	}
 	
-	
-
-}
 }

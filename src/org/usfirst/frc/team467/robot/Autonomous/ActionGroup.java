@@ -142,8 +142,8 @@ public class ActionGroup {
 		private double currentPosition = 0.0;
 		private double lastPosition = 0.0;
 		private int increment = 0;
-//		private Drive drive = Drive.getInstance();
-		private DriveSimulator drive = DriveSimulator.getInstance();
+		private Drive drive = Drive.getInstance();
+//		private DriveSimulator drive = DriveSimulator.getInstance();
 		public ReachDistance(double distance) {
 			this.distance = distance;
 		}

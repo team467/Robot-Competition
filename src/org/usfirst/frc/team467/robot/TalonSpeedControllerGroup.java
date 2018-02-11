@@ -14,6 +14,8 @@ public class TalonSpeedControllerGroup implements SpeedController {
 	WPI_TalonSRX follower1;
 	WPI_TalonSRX follower2;
 	
+	private int previousSensorPosition;
+	
 	ControlMode controlMode = ControlMode.PercentOutput;
 	
 	public TalonSpeedControllerGroup(ControlMode controlMode, WPI_TalonSRX leader, WPI_TalonSRX follower1, WPI_TalonSRX follower2) {
@@ -25,7 +27,7 @@ public class TalonSpeedControllerGroup implements SpeedController {
 		//only have sensor on leader
 		leader.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, RobotMap.TALON_TIMEOUT);
 		leader.setSensorPhase(true);
-		leader.setSelectedSensorPosition(0, 0, RobotMap.TALON_TIMEOUT);
+		zero();
 		
 		leader.set(ControlMode.PercentOutput, 0);
 		leader.selectProfileSlot(0, 0);
@@ -44,7 +46,7 @@ public class TalonSpeedControllerGroup implements SpeedController {
 		leader.configMotionAcceleration(1052 / 2, RobotMap.TALON_TIMEOUT);
 		
 		leader.configMotionCruiseVelocity(1052 / 2, RobotMap.TALON_TIMEOUT);
-		leader.configMotionAcceleration(1052 / 2, RobotMap.TALON_TIMEOUT);	
+		leader.configMotionAcceleration(1052 / 2, RobotMap.TALON_TIMEOUT);
 	}
 	
 	public void logClosedLoopErrors() {
@@ -64,6 +66,7 @@ public class TalonSpeedControllerGroup implements SpeedController {
 		
 	
 	public void zero() {
+		previousSensorPosition = 0;
 		leader.setSelectedSensorPosition(0, 0, RobotMap.TALON_TIMEOUT);
 	}
 	
@@ -92,6 +95,7 @@ public class TalonSpeedControllerGroup implements SpeedController {
 	}
 	
 	public void set(ControlMode controlMode, double speed) {
+		LOGGER.debug("control mode: " + controlMode + " speed: " + speed);
 		leader.set(controlMode, speed);
 		follower1.follow(leader);
 		follower2.follow(leader);
@@ -116,4 +120,20 @@ public class TalonSpeedControllerGroup implements SpeedController {
 		follower2.stopMotor();		
 	}
 	
+	public boolean isStopped(){
+		int leaderSensorPosition = leader.getSelectedSensorPosition(0);
+		boolean isStopped = false;
+
+		if (leader.getControlMode() == ControlMode.Disabled) {
+			isStopped =  true;
+		} else if (leaderSensorPosition == previousSensorPosition) {
+			isStopped = true;
+		}
+		previousSensorPosition = leaderSensorPosition;
+		return isStopped;
+		}
+
+	public int sensorPosition() {
+		return leader.getSelectedSensorPosition(0);
+	}
 }

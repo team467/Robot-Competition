@@ -28,7 +28,7 @@ public class RobotMap {
 		case PreseasonBot:
 			HAS_WHEELS = true;
 			WHEEL_CIRCUMFERENCE = 19.74;
-			WHEEL_ENCODER_CODES_PER_REVOLUTION = 256;
+			WHEEL_ENCODER_CODES_PER_REVOLUTION = 1024;
 			useSpeedControllers = true;
 			POSITION_ALLOWED_ERROR = (0.5 / RobotMap.WHEEL_CIRCUMFERENCE); // 1/2 inch
 			
@@ -53,7 +53,7 @@ public class RobotMap {
 			break;
 		case Board:
 			HAS_WHEELS = false;
-			WHEEL_ENCODER_CODES_PER_REVOLUTION = 256;
+			WHEEL_ENCODER_CODES_PER_REVOLUTION = 1024;
 			
 			// TODO Assign values to the game piece variables, and make more as appropriate
 			EVEVATOR_MOTOR_CHANNEL = 0;
@@ -69,7 +69,7 @@ public class RobotMap {
 		case Competition_1:
 			HAS_WHEELS = true;
 			WHEEL_CIRCUMFERENCE = 19.74;
-			WHEEL_ENCODER_CODES_PER_REVOLUTION = 256;
+			WHEEL_ENCODER_CODES_PER_REVOLUTION = 1024;
 			useSpeedControllers = true;
 			POSITION_ALLOWED_ERROR = (0.5 / RobotMap.WHEEL_CIRCUMFERENCE); // 1/2 inch
 			
@@ -93,7 +93,7 @@ public class RobotMap {
 		case Competition_2:
 			HAS_WHEELS = true;
 			WHEEL_CIRCUMFERENCE = 19.74;
-			WHEEL_ENCODER_CODES_PER_REVOLUTION = 256;
+			WHEEL_ENCODER_CODES_PER_REVOLUTION = 1024;
 			useSpeedControllers = true;
 			POSITION_ALLOWED_ERROR = (0.5 / RobotMap.WHEEL_CIRCUMFERENCE); // 1/2 inch
 			
@@ -162,7 +162,7 @@ public class RobotMap {
 
 	// The number of encoder ticks per one revolution of the wheel. This is used
 	// for correctly determining RPM and position.
-	public static int WHEEL_ENCODER_CODES_PER_REVOLUTION = 256;
+	public static int WHEEL_ENCODER_CODES_PER_REVOLUTION = 1024;
 
 	// Set to true to use LSM9DS1 IMU on Raspberry Pi
 	// Set to false to use the local ADIS16448 IMU on the Robo Rio
