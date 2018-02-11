@@ -49,7 +49,7 @@ public class Elevator {
 	}
 
 	/**
-	 
+
 	 * 
 	 * @return a single instance of the Elevator object.
 	 */
@@ -85,7 +85,7 @@ public class Elevator {
 				//DriverStation.getInstance().setDriverRumble(0.0);
 			}
 		}
-		
+
 		LOGGER.debug("Current Height: " + currentHeight);
 		heightController.set(speed);
 		previousHeight = currentHeight;
@@ -103,7 +103,7 @@ public class Elevator {
 		heightController.config_kD(0, kDElevator, RobotMap.TALON_TIMEOUT);
 		heightController.config_kF(0, kFElevator, RobotMap.TALON_TIMEOUT);
 
-	
+
 		heightController.configMotionCruiseVelocity(maxTicksPerIteration / 2, RobotMap.TALON_TIMEOUT);
 		heightController.configMotionAcceleration(maxTicksPerIteration / 2, RobotMap.TALON_TIMEOUT);	
 	}
@@ -132,7 +132,7 @@ public class Elevator {
 	}
 	public void cancelAutomaticMove() {
 		targetHeight = null;
-		heightController.stopMotor(); 
+		heightController.stopMotor();
 	}
 
 	private void automaticMove(double height) {
