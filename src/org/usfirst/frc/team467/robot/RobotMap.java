@@ -1,5 +1,11 @@
 package org.usfirst.frc.team467.robot;
 
+import org.apache.log4j.Logger;
+import org.usfirst.frc.team467.robot.RobotMap.RobotID;
+
+/**
+ *
+ */
 public class RobotMap {
 	public static final int TALON_TIMEOUT = 10; // 10 ms is the recommended timeout
 
@@ -12,6 +18,13 @@ public class RobotMap {
 	public static final int BACK_LEFT = 2;
 	public static final int BACK_RIGHT = 3;
 
+	/*	* The lowest value is 196.0, the maximum value is 3741.0. The middle is 1968.5
+	 * New max: 2980, new min:956.5
+	 * 16.9 ticks = 1 inch
+	 * 1 rotation=253 ticks */
+
+	// Steering motor ids
+	// TODO: Enumerate steering motor IDS
 	public static boolean HAS_WHEELS;
 	public static int LEFT_LEAD_CHANNEL;
 	public static int LEFT_FOLLOWER_1_CHANNEL;
@@ -45,7 +58,7 @@ public class RobotMap {
 			HAS_RAMPS = false;
 
 			// TODO Assign values to the game piece variables, and make more as appropriate
-			EVEVATOR_MOTOR_CHANNEL = 0;
+			ELEVATOR_MOTOR_CHANNEL = 0;
 			RAMP_SOLENOID_CHANNEL = 0;
 
 			isDriveMotorInverted = new boolean[] { false, true, false, true };
@@ -54,16 +67,15 @@ public class RobotMap {
 			HAS_WHEELS = false;
 			WHEEL_ENCODER_CODES_PER_REVOLUTION = 256;
 
-			HAS_ELEVATOR = false;
-			HAS_RAMPS = false;
-
 			HAS_GRABBER = true;
 			GRABBER_L_CHANNEL = 0;
 			GRABBER_R_CHANNEL = 1;
 			OPTICAL_CHANNEL = 5;
 
-			// TODO Assign values to the game piece variables, and make more as appropriate
-			EVEVATOR_MOTOR_CHANNEL = 0;
+			HAS_ELEVATOR = true;
+			ELEVATOR_MOTOR_CHANNEL = 1;
+			
+			HAS_RAMPS = false;
 			RAMP_SOLENOID_CHANNEL = 0;
 
 			isDriveMotorInverted = new boolean[] { false, true, false, true };
@@ -83,7 +95,7 @@ public class RobotMap {
 			RIGHT_FOLLOWER_1_CHANNEL = 5;
 			RIGHT_FOLLOWER_2_CHANNEL = 6;
 
-			HAS_ELEVATOR = false;
+			HAS_ELEVATOR = true;
 			HAS_RAMPS = false;
 
 			HAS_GRABBER = true;
@@ -92,7 +104,7 @@ public class RobotMap {
 			OPTICAL_CHANNEL = 5;
 
 			// TODO Assign values to the game piece variables, and make more as appropriate
-			EVEVATOR_MOTOR_CHANNEL = 0;
+			ELEVATOR_MOTOR_CHANNEL = 7;
 			RAMP_SOLENOID_CHANNEL = 0;
 			break;
 		case Competition_2:
@@ -119,7 +131,7 @@ public class RobotMap {
 			OPTICAL_CHANNEL = 5;
 
 			// TODO Assign values to the game piece variables, and make more as appropriate
-			EVEVATOR_MOTOR_CHANNEL = 0;
+			ELEVATOR_MOTOR_CHANNEL = 0;
 			RAMP_SOLENOID_CHANNEL = 0;
 			break;
 		}
@@ -177,8 +189,10 @@ public class RobotMap {
 	public static final boolean useRemoteImu = false;
 
 	// Game Pieces
+
 	public static boolean HAS_ELEVATOR;
-	public static int EVEVATOR_MOTOR_CHANNEL;
+	public static int ELEVATOR_MOTOR_CHANNEL;
+	public static double MIN_LIFT_SPEED = 0.1;
 
 	public static boolean HAS_GRABBER;
 	public static double MAX_GRAB_SPEED = 1.0;
@@ -187,6 +201,14 @@ public class RobotMap {
 	public static int GRABBER_L_CHANNEL; 
 	public static int GRABBER_R_CHANNEL;
 	public static int OPTICAL_CHANNEL;
+
+	public static final int ELEVATOR_TICKS_PER_TURN = 253;
+	public static final double ELEVATOR_GEAR_CIRCUMFERENCE_IN_INCHES = 10;
+	public static final double ELEVATOR_MAX_HEIGHT_IN_FEET = 10;
+	public static final double ELEVATOR_MIN_HEIGHT_IN_FEET = 0;
+	public static final int ELEVATOR_INITIAL_TICKS = 196;
+	public static final int ELEVATOR_HEIGHT_SENSOR_ID = 0;
+	public static final int MAX_ELEVATOR_RPM = 1000; //Not the real value, placeholder constant. 
 
 	public static boolean HAS_RAMPS;
 	public static int RAMP_SOLENOID_CHANNEL;
