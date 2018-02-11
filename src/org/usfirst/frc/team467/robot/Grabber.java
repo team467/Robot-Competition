@@ -1,7 +1,11 @@
 package org.usfirst.frc.team467.robot;
+import org.apache.log4j.Logger;
+
 import edu.wpi.first.wpilibj.Spark;
 
 public class Grabber {
+	private static final Logger LOGGER = Logger.getLogger(Grabber.class);
+
     private static Grabber instance;
     private Spark left;
 	private Spark right;
@@ -29,7 +33,7 @@ public class Grabber {
 		if (Math.abs(throttle) < RobotMap.MIN_GRAB_SPEED) {
 			throttle = 0.0;
 		}
-		
+		LOGGER.debug("Grabber Throttle=" + throttle);
 		left.set(throttle * RobotMap.MAX_GRAB_SPEED);
 		right.set(throttle * RobotMap.MAX_GRAB_SPEED);
 	}

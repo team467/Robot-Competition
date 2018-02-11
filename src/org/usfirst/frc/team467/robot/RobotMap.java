@@ -60,6 +60,7 @@ public class RobotMap {
 			HAS_GRABBER = true;
 			GRABBER_L_CHANNEL = 0;
 		    GRABBER_R_CHANNEL = 1;
+		    OPTICAL_CHANNEL = 5;
 		    
 		    // TODO Assign values to the game piece variables, and make more as appropriate
 		 	EVEVATOR_MOTOR_CHANNEL = 0;
@@ -88,6 +89,7 @@ public class RobotMap {
 			HAS_GRABBER = true;
 			GRABBER_L_CHANNEL = 1; 
 		    GRABBER_R_CHANNEL = 2;
+		    OPTICAL_CHANNEL = 5;
 			
 			// TODO Assign values to the game piece variables, and make more as appropriate
 			EVEVATOR_MOTOR_CHANNEL = 0;
@@ -114,6 +116,7 @@ public class RobotMap {
 			HAS_GRABBER = true;
 			GRABBER_L_CHANNEL = 1; 
 		    GRABBER_R_CHANNEL = 2;
+		    OPTICAL_CHANNEL = 5;
 			
 			// TODO Assign values to the game piece variables, and make more as appropriate
 			EVEVATOR_MOTOR_CHANNEL = 0;
@@ -183,6 +186,7 @@ public class RobotMap {
 	public static double RELEASE_SPEED = -1.0;
 	public static int GRABBER_L_CHANNEL; 
     public static int GRABBER_R_CHANNEL;
+    public static int OPTICAL_CHANNEL;
 	
 	public static boolean HAS_RAMPS;
 	public static int RAMP_SOLENOID_CHANNEL;

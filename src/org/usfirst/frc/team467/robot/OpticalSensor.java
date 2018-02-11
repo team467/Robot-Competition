@@ -2,12 +2,11 @@ package org.usfirst.frc.team467.robot;
 import edu.wpi.first.wpilibj.DigitalInput;
 
 public class OpticalSensor {
-private final static int OPTICAL_CHANNEL = 5;
-public DigitalInput di;
-private static OpticalSensor instance;
+	private static OpticalSensor instance;
+	private DigitalInput di;
 	
 	private OpticalSensor() {
-		di = new DigitalInput(OPTICAL_CHANNEL);
+		di = new DigitalInput(RobotMap.OPTICAL_CHANNEL);
 	}
 	
 	public static OpticalSensor getInstance() {
