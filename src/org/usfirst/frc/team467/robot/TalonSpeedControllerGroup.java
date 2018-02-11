@@ -18,11 +18,11 @@ public class TalonSpeedControllerGroup implements SpeedController {
 	
 	ControlMode controlMode = ControlMode.PercentOutput;
 	
-	public TalonSpeedControllerGroup(ControlMode controlMode, WPI_TalonSRX leader, WPI_TalonSRX follower1, WPI_TalonSRX follower2) {
-		this.leader = leader;
-		this.follower1 = follower1;
-		this.follower2 = follower2;	
-		this.controlMode = controlMode;
+	public TalonSpeedControllerGroup(ControlMode _controlMode, WPI_TalonSRX _leader, WPI_TalonSRX _follower1, WPI_TalonSRX _follower2) {
+		this.leader = _leader;
+		this.follower1 = _follower1;
+		this.follower2 = _follower2;	
+		this.controlMode = _controlMode;
 		
 		//only have sensor on leader
 		leader.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, RobotMap.TALON_TIMEOUT);
@@ -43,10 +43,7 @@ public class TalonSpeedControllerGroup implements SpeedController {
 		leader.configClosedloopRamp(0.2, RobotMap.TALON_TIMEOUT);		
 		
 		leader.configMotionCruiseVelocity(1052 / 2, RobotMap.TALON_TIMEOUT); //1052 is 75 percent of the max speed, which is 1402	
-		leader.configMotionAcceleration(1052 / 2, RobotMap.TALON_TIMEOUT);
-		
-		leader.configMotionCruiseVelocity(1052 / 2, RobotMap.TALON_TIMEOUT);
-		leader.configMotionAcceleration(1052 / 2, RobotMap.TALON_TIMEOUT);
+		leader.configMotionAcceleration(1052 / 2, RobotMap.TALON_TIMEOUT);		
 	}
 	
 	public void logClosedLoopErrors() {
@@ -64,7 +61,6 @@ public class TalonSpeedControllerGroup implements SpeedController {
 		leader.config_kF(0, f, RobotMap.TALON_TIMEOUT);
 	}
 		
-	
 	public void zero() {
 		previousSensorPosition = 0;
 		leader.setSelectedSensorPosition(0, 0, RobotMap.TALON_TIMEOUT);

@@ -18,6 +18,11 @@ public class Drive extends DifferentialDrive {
 	private final TalonSpeedControllerGroup left;
 	private final TalonSpeedControllerGroup right;
 
+	// Temp for debug
+	WPI_TalonSRX leftLead = new WPI_TalonSRX(RobotMap.LEFT_LEAD_CHANNEL);
+	WPI_TalonSRX leftFollower1 = new WPI_TalonSRX(RobotMap.LEFT_FOLLOWER_1_CHANNEL);
+	WPI_TalonSRX leftFollower2 = new WPI_TalonSRX(RobotMap.LEFT_FOLLOWER_2_CHANNEL);
+
 	// Private constructor
 	private Drive(TalonSpeedControllerGroup left, TalonSpeedControllerGroup right) {
 		super(left, right);
@@ -90,10 +95,6 @@ public class Drive extends DifferentialDrive {
 			return;
 		}
 		
-		WPI_TalonSRX leftLead = new WPI_TalonSRX(RobotMap.LEFT_LEAD_CHANNEL);
-		WPI_TalonSRX leftFollower1 = new WPI_TalonSRX(RobotMap.LEFT_FOLLOWER_1_CHANNEL);
-		WPI_TalonSRX leftFollower2 = new WPI_TalonSRX(RobotMap.LEFT_FOLLOWER_2_CHANNEL);
-
 		controlMode = mode;
 		
 		rightSpeed *= -1;
@@ -111,42 +112,13 @@ public class Drive extends DifferentialDrive {
 	}
 	
 	public void zero() {
-		right.zero();
+		LOGGER.trace("Zeroed the motor sensors.");
 		left.zero();
+		right.zero();
 	}
 	
 	public void sendData() {
 		RobotData.getInstance().update(right.sensorPosition(), left.sensorPosition());
-	}
-
-	public boolean isStopped(){
-		return left.isStopped() && right.isStopped();
-		}
-
-	/**
-	 * Gets the distance moved for checking drive modes.
-	 *
-	 * @return the absolute distance moved in feet
-	 */
-	public double getLeftDistance() {
-		return ticksToFeet(left.sensorPosition());
-	}
-	
-	public double getRightDistance() {
-		return ticksToFeet(right.sensorPosition());
-	}
-	
-	public double absoluteDistanceMoved() {
-		double lowestAbsDist;
-		double leftLeadSensorPos = Math.abs(getLeftDistance());
-		double rightLeadSensorPos = Math.abs(getRightDistance());
-		if (leftLeadSensorPos >= rightLeadSensorPos) {
-			lowestAbsDist = rightLeadSensorPos;
-		} else {
-			lowestAbsDist = leftLeadSensorPos;
-		}	
-		LOGGER.debug("The absolute distance moved: " + lowestAbsDist);
-		return lowestAbsDist;
 	}
 
 	/**
@@ -157,31 +129,27 @@ public class Drive extends DifferentialDrive {
 		left.stopMotor();	
 	}
 	
-	public double degreesToTicks(double turnAmountInDegrees) {
-		double diameterInInches = 22.75;
-		double radius = diameterInInches / 24; //Diameter divided by (2 * 12) to translate to feet and to get radius
-		double turnAmountInRadians = Math.toRadians(turnAmountInDegrees * (367.5/360)); //The 367.5/360 is to fix measurement errors.
-		return feetToTicks(turnAmountInRadians * radius);
-	}
-	
+	public boolean isStopped(){
+		return left.isStopped() && right.isStopped();
+		}
+
 	public void moveFeet(double distanceInFeet) {
 		moveFeet(distanceInFeet, 0);
 	}
 	
 	public void rotateByAngle(double angleInDegrees) {
 		moveFeet(0, angleInDegrees);
-	}
+		}
 	
 	/**
 	 * 
 	 * @param distanceInFeet
 	 * @param rotationInDegrees enter positive degrees for left turn and enter negative degrees for right turn
 	 */
-	//TODO ask about putting this into the TalonSpeedControllerGroup
 	public void moveFeet (double distanceInFeet, double rotationInDegrees) {
 		double turnAmtTicks, distAmtTicks, leftDistTicks, rightDistTicks, radius, distTurnInFeet, angleInRadians;
 		
-		LOGGER.debug("Automated move of " + distanceInFeet + " feet and " + rotationInDegrees + " degree turn.");
+		LOGGER.trace("Automated move of " + distanceInFeet + " feet and " + rotationInDegrees + " degree turn.");
 		radius = RobotMap.WHEEL_BASE_WIDTH / 2;
 		distAmtTicks = feetToTicks(distanceInFeet); //Converts distance to ticks in feet.
 		angleInRadians = Math.toRadians(rotationInDegrees);
@@ -191,21 +159,50 @@ public class Drive extends DifferentialDrive {
 		rightDistTicks = distAmtTicks - turnAmtTicks;
 		leftDistTicks = distAmtTicks + turnAmtTicks;
 		
-		LOGGER.debug("Right distance in feet: " + ticksToFeet(rightDistTicks) + " Left distance in feet: " + ticksToFeet(leftDistTicks));
+		LOGGER.trace("Right distance in feet: " + ticksToFeet(rightDistTicks) + " Left distance in feet: " + ticksToFeet(leftDistTicks));
 		
 		go(leftDistTicks, rightDistTicks, ControlMode.MotionMagic);
+	}
+	
+	public double getLeftDistance() {
+		double leftLeadSensorPos = ticksToFeet(left.sensorPosition());
+		return leftLeadSensorPos;
+	}
+	
+	public double getRightDistance() {
+		double rightLeadSensorPos = ticksToFeet(right.sensorPosition());
+		return rightLeadSensorPos;
+	}
+	
+	/**
+	 * Gets the distance moved for checking drive modes.
+	 *
+	 * @return the absolute distance moved in feet
+	 */
+	public double absoluteDistanceMoved() {
+		double lowestAbsDist;
+		double leftLeadSensorPos = Math.abs(getLeftDistance());
+		double rightLeadSensorPos = Math.abs(getRightDistance());
+		if (leftLeadSensorPos >= rightLeadSensorPos) {
+			lowestAbsDist = rightLeadSensorPos;
+		}
+		else {
+			lowestAbsDist = leftLeadSensorPos;
+		}	
+		LOGGER.debug("The absolute distance moved: " + lowestAbsDist);
+		return lowestAbsDist;
+	}
+
+	private double feetToTicks (double feet) {
+		double ticks = (feet / (RobotMap.WHEEL_CIRCUMFERENCE / 12)) * RobotMap.WHEEL_ENCODER_CODES_PER_REVOLUTION;
+		LOGGER.trace(feet + " feet = " + ticks + " ticks.");
+		return ticks;
 	}
 	
 	private double ticksToFeet(double ticks) {
 		double feet = (ticks / RobotMap.WHEEL_ENCODER_CODES_PER_REVOLUTION) * (RobotMap.WHEEL_CIRCUMFERENCE / 12);
 		LOGGER.trace(ticks + " ticks = " + feet + " feet.");
 		return feet; 
-	}
-	
-	public double feetToTicks (double feet) {
-		double ticks = (feet / (RobotMap.WHEEL_CIRCUMFERENCE / 12)) * RobotMap.WHEEL_ENCODER_CODES_PER_REVOLUTION;
-		LOGGER.trace(feet + " feet = " + ticks + " ticks.");
-		return ticks;
-	}
-	
+	}	
+
 }
