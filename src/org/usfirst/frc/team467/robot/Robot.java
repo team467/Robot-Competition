@@ -99,7 +99,7 @@ public class Robot extends TimedRobot {
 	public void disabledPeriodic() {
 		LOGGER.trace("Disabled Periodic");
 
-		LOGGER.debug("Elevator height=" + elevator.getHeightFeet());
+		LOGGER.debug("Elevator raw height=" + elevator.getRawHeight());
 
 		driverstation.logJoystickIDs();
 	}

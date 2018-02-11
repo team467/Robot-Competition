@@ -135,6 +135,13 @@ public class Elevator {
 		return height;
 	}
 
+	public double getRawHeight() {
+		if (!RobotMap.HAS_ELEVATOR) {
+			return 0.0;
+		}
+		return heightSensor.getValue();
+	}
+
 	public void moveToHeight(Stops target) {
 		// targetHeight member variable used in periodic function to reach the height
 		targetHeight = target;
