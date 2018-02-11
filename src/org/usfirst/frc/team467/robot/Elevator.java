@@ -23,6 +23,7 @@ public class Elevator {
 	private Stops targetHeight;
 
 	public enum Stops {
+		// null if no stop is desired
 		floor(RobotMap.ELEVATOR_MIN_HEIGHT_IN_FEET),
 		fieldSwitch(2),
 		lowScale(6),
@@ -123,9 +124,11 @@ public class Elevator {
 	}
 
 	public void periodic() {
-		if (targetHeight != null) {
-			automaticMove(targetHeight.height);
+		if (targetHeight == null) {
+			LOGGER.debug("No stop set");
+			return;
 		}
+		automaticMove(targetHeight.height);
 	}
 	public void cancelAutomaticMove() {
 		targetHeight = null;
