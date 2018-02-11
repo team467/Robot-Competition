@@ -23,7 +23,7 @@ public class Elevator {
 	private Stops targetHeight;
 
 	public enum Stops {
-		noStop(RobotMap.ELEVATOR_MIN_HEIGHT_IN_FEET),
+		floor(RobotMap.ELEVATOR_MIN_HEIGHT_IN_FEET),
 		fieldSwitch(2),
 		lowScale(6),
 		highScale(8);
@@ -41,7 +41,7 @@ public class Elevator {
 	private Elevator() {
 		heightSensor = new AnalogInput(RobotMap.ELEVATOR_HEIGHT_SENSOR_ID);
 		heightController = new WPI_TalonSRX(RobotMap.ELEVATOR_MOTOR_CHANNEL);
-		targetHeight = Stops.noStop;
+		targetHeight = null;
 		feetPerTick = (RobotMap.ELEVATOR_GEAR_CIRCUMFERENCE_IN_INCHES / 12) / RobotMap.ELEVATOR_TICKS_PER_TURN;
 		maxTicksPerIteration = RobotMap.ELEVATOR_TICKS_PER_TURN * RobotMap.MAX_ELEVATOR_RPM / 60 / 100; // 10 ms per iteration
 		previousHeight = getHeightFeet();
@@ -65,7 +65,7 @@ public class Elevator {
 	 * @param speed The velocity. Shall be a value between -1 and 1.
 	 */
 	public void manualMove(double speed) {
-		targetHeight = Stops.noStop;
+		targetHeight = null;
 		if (m_safetyHelper != null) {
 			m_safetyHelper.feed();
 		}
@@ -123,12 +123,12 @@ public class Elevator {
 	}
 
 	public void periodic() {
-		if (targetHeight != Stops.noStop) {
+		if (targetHeight != null) {
 			automaticMove(targetHeight.height);
 		}
 	}
 	public void cancelAutomaticMove() {
-		targetHeight = Stops.noStop;
+		targetHeight = null;
 		heightController.stopMotor(); 
 	}
 
