@@ -40,7 +40,15 @@ public class Grabber {
 			return;
 		}
 
+		// Save the previous state and check for current state.
+		hadCube = hasCube;
 		hasCube = os.detectedTarget();
+
+		if (justGotCube()) {
+			LOGGER.debug("Just got cube, rumbling");
+			DriverStation.getInstance().getNavRumbler().rumble(100, 1.0);
+		}
+
 		if (Math.abs(throttle) < RobotMap.MIN_GRAB_SPEED) {
 			throttle = 0.0;
 		}
@@ -49,7 +57,6 @@ public class Grabber {
 		hasCube = os.detectedTarget();
 		left.set(throttle * RobotMap.MAX_GRAB_SPEED);
 		right.set(-throttle * RobotMap.MAX_GRAB_SPEED);
-		hadCube = hasCube;
 	}
 
 	public boolean justGotCube() {
