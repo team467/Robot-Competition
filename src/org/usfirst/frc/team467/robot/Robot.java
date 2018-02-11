@@ -178,7 +178,7 @@ public class Robot extends TimedRobot {
 		double right = driverstation.getArcadeTurn();
 		
 		LOGGER.debug("left " + left + " right " + right);
-		LOGGER.debug(grabber.hasCube());
+		LOGGER.debug(grabber.justGotCube());
 		
 		if (Math.abs(left) < MIN_DRIVE_SPEED) {
 			left = 0.0;
@@ -206,7 +206,7 @@ public class Robot extends TimedRobot {
 		elevator.manualMove(driverstation.getElevatorSpeed());
 		LOGGER.debug("Elevator Moving");
 		
-		if (grabber.hasCube()) {
+		if (grabber.justGotCube()) {
 			driverstation.getNavRumbler().rumble(100, 1.0);
 		}
 		
