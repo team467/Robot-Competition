@@ -168,11 +168,14 @@ public class Robot extends TimedRobot {
 	 		right = 0.0;
 	 	}
 	 	
+		double speed = driverstation.getArcadeSpeed();
+		double turn = driverstation.getArcadeTurn();
 		switch (driverstation.getDriveMode()) {
 			case ArcadeDrive:
-				double speed = driverstation.getArcadeSpeed();
-				double turn = driverstation.getArcadeTurn();
 				drive.arcadeDrive(speed, turn, true);
+				break;
+			case CurvatureDrive:
+				drive.curvatureDrive(speed, turn, true);
 				break;
 			case TankDrive:	
 				double leftTank = driverstation.getDriveJoystick().getLeftStickY();
