@@ -46,21 +46,7 @@ public class Robot extends TimedRobot {
 	
 	private Gyrometer gyro;
 	
-	private Grabber grabber; //not used yet
-  // private OpticalSensor opticalsensor;
-
-	int session;
-	
-	String axis = "No turning";
-	
-	double rumbleTime = 0.0;
-	
-	//double count = 0.0;
-
-	/**
-	 * Time in milliseconds
-	 */
-	double time;
+	private Grabber grabber;
 
 	/**
 	 * This function is run when the robot is first started up and should be used for any initialization code.
