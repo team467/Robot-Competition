@@ -108,7 +108,7 @@ public class RobotMap {
 			RIGHT_FOLLOWER_1_CHANNEL = 5;
 			RIGHT_FOLLOWER_2_CHANNEL = 6;
 
-			HAS_ELEVATOR = false;
+			HAS_ELEVATOR = true;
 			HAS_RAMPS = false;
 
 			HAS_GRABBER = true;
@@ -118,7 +118,6 @@ public class RobotMap {
 
 			// TODO Assign values to the game piece variables, and make more as appropriate
 			EVEVATOR_MOTOR_CHANNEL = 7;
-			
 			RAMP_SOLENOID_CHANNEL = 0;
 			break;
 		case Competition_2:
