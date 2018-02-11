@@ -58,8 +58,8 @@ public class RobotMap {
 			HAS_RAMPS = false;
 			
 			HAS_GRABBER = true;
-			GRABBER_L_CHANNEL = 1; 
-		    GRABBER_R_CHANNEL = 2;
+			GRABBER_L_CHANNEL = 0; 
+		    GRABBER_R_CHANNEL = 1;
 		    
 		    // TODO Assign values to the game piece variables, and make more as appropriate
 		 	EVEVATOR_MOTOR_CHANNEL = 0;
@@ -82,8 +82,8 @@ public class RobotMap {
 			RIGHT_FOLLOWER_1_CHANNEL = 5;
 			RIGHT_FOLLOWER_2_CHANNEL = 6;
 			
-			HAS_ELEVATOR = true;
-			HAS_RAMPS = true;
+			HAS_ELEVATOR = false;
+			HAS_RAMPS = false;
 			
 			HAS_GRABBER = true;
 			GRABBER_L_CHANNEL = 1; 

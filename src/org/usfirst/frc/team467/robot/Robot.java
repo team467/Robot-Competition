@@ -178,6 +178,7 @@ public class Robot extends TimedRobot {
 	public void teleopPeriodic() {
 		driverstation.readInputs();
 		//TODO: Set Min_DRIVE_SPEED in Robot Map.
+		// TODO Drive class should handle MIN_DRIVE_SPEED
 		double MIN_DRIVE_SPEED = 0.1;
 		
 		double left = driverstation.getArcadeSpeed();
@@ -198,14 +199,6 @@ public class Robot extends TimedRobot {
 		}
 		
 		grabber.grab(driverstation.getGrabThrottle());
-		
-//		if (driverstation.getNavJoystick().down(XBoxJoystick467.Button.x)) {
-//			grabber.grab();
-//		} else if (driverstation.getNavJoystick().down(XBoxJoystick467.Button.y)) {
-//			grabber.release();
-//		} else {
-//			grabber.pause();
-//		}
 	
 		//changed to arcade drive
 		drive.arcadeDrive(left, right, true);
