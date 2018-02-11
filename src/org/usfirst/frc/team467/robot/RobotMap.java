@@ -13,20 +13,24 @@ public class RobotMap {
 		PreseasonBot, Board, Competition_1, Competition_2
 	};
 	
+	
 	public static final int FRONT_LEFT = 0;
 	public static final int FRONT_RIGHT = 1;
 	public static final int BACK_LEFT = 2;
 	public static final int BACK_RIGHT = 3;
 	
 	public static final int ELEVATOR_TICKS_PER_TURN = 253;
-	public static final double GEAR_CIRCUMFERENCE_IN_INCHES = 10;
+	public static final double ELEVATOR_GEAR_CIRCUMFERENCE_IN_INCHES = 10;
 	public static final double ELEVATOR_MAX_HEIGHT_IN_FEET = 10;
 	public static final double ELEVATOR_MIN_HEIGHT_IN_FEET = 0;
 	public static final int ELEVATOR_INITIAL_TICKS = 196;
 	public static final int ELEVATOR_HEIGHT_SENSOR_ID = 0;
 	public static final int ELEVATOR_MOTOR_CHANNEL = 1;
 	public static final int MAX_ELEVATOR_RPM = 1000; //Not the real value, placeholder constant. 
-	
+/*	* The lowest value is 196.0, the maximum value is 3741.0. The middle is 1968.5
+	 * New max: 2980, new min:956.5
+	 * 16.9 ticks = 1 inch
+	 * 1 rotation=253 ticks */
 		
 	// Steering motor ids
 	// TODO: Enumerate steering motor IDS

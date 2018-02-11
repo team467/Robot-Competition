@@ -44,7 +44,6 @@ public class Drive extends DifferentialDrive {
 		
 		this.rightLead = rightLead;
 		initMotor(this.rightLead);
-
 		rightLead.setSensorPhase(true);
 		rightLead.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, RobotMap.TALON_TIMEOUT);
 		rightLead.config_kF(0, 0.7297, RobotMap.TALON_TIMEOUT);
