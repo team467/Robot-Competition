@@ -1,14 +1,11 @@
 package org.usfirst.frc.team467.robot;
 
-import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.usfirst.frc.team467.robot.simulator.communications.RobotData;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Drive extends DifferentialDrive {
 	private ControlMode controlMode;
@@ -93,6 +90,10 @@ public class Drive extends DifferentialDrive {
 			return;
 		}
 		
+		WPI_TalonSRX leftLead = new WPI_TalonSRX(RobotMap.LEFT_LEAD_CHANNEL);
+		WPI_TalonSRX leftFollower1 = new WPI_TalonSRX(RobotMap.LEFT_FOLLOWER_1_CHANNEL);
+		WPI_TalonSRX leftFollower2 = new WPI_TalonSRX(RobotMap.LEFT_FOLLOWER_2_CHANNEL);
+
 		controlMode = mode;
 		
 		rightSpeed *= -1;
@@ -101,7 +102,11 @@ public class Drive extends DifferentialDrive {
 		//TODO Check to see if we need the params.
 
 		LOGGER.info("Drive left=" + leftSpeed + "right=" + rightSpeed + ".");
-		left.set(mode, leftSpeed);
+		leftLead.set(mode, leftSpeed);
+		leftFollower1.set(ControlMode.Follower, leftLead.getDeviceID());
+		leftFollower2.set(ControlMode.Follower, leftLead.getDeviceID());
+		
+//		left.set(mode, leftSpeed);
 		right.set(mode, rightSpeed);		
 	}
 	
