@@ -186,11 +186,7 @@ public class Robot extends TimedRobot {
 		if (Math.abs(right) < MIN_DRIVE_SPEED) {
 			right = 0.0;
 		}
-
-		double elevatorScale = driverstation.getNavJoystick().getLeftStickY();
-		elevator.manualMove(elevatorScale);
-		LOGGER.debug("Elevator Moving");		
-
+		
 		switch (driverstation.getDriveMode()) {
 		case ArcadeDrive:
 			double speed = driverstation.getArcadeSpeed();
@@ -206,13 +202,17 @@ public class Robot extends TimedRobot {
 			//TODO: Add things here later.
 			break;
 		}
-				
+		
+		double elevatorScale = driverstation.getNavJoystick().getRightStickY();
+		elevator.manualMove(elevatorScale);
+		LOGGER.debug("Elevator Moving");
+		
 		if (grabber.hasCube()) {
 			driverstation.getNavRumbler().rumble(100, 1.0);
 		}
 		
 		grabber.grab(driverstation.getGrabThrottle());
-	
+		
 		//changed to arcade drive
 		drive.arcadeDrive(left, right, true);
 	}
