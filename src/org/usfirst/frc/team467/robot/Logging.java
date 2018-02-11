@@ -17,7 +17,7 @@ public class Logging {
 		Logger.getLogger(Robot.class).setLevel(Level.DEBUG);
 		Logger.getLogger(ActionGroup.class).setLevel(Level.DEBUG);
 		Logger.getLogger(Drive.class).setLevel(Level.DEBUG);
-		Logger.getLogger(XBoxJoystick467.class).setLevel(Level.DEBUG);
+//		Logger.getLogger(XBoxJoystick467.class).setLevel(Level.DEBUG);
 	}
 
 	private static void setupDefaultLogging() {

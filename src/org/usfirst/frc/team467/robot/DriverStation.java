@@ -30,7 +30,6 @@ public class DriverStation {
 	 * Private constructor
 	 */
 	private DriverStation() {
-
 		driverJoy = new XBoxJoystick467(0, "driver");
 		navJoy = new XBoxJoystick467(1, "nav");
 		
@@ -128,6 +127,9 @@ public class DriverStation {
 		return getDriveJoystick().getRightStickX();
 	}
 	
+	public double getGrabThrottle() {
+		return getNavJoystick().getLeftStickY();
+	}
 
 	public void navSetLeftRumble(double value) {
 		navJoy.leftRumble(value);

@@ -21,28 +21,17 @@ public class Grabber {
 		return instance;
 	}
 		
-	public void grab() {
+	public void grab(double throttle) {
 		if (!RobotMap.HAS_GRABBER) {
 			return;
 		}
-		left.set(RobotMap.GRAB_SPEED);
-		right.set(RobotMap.GRAB_SPEED);
-	}
-	
-	public void release() {
-		if (!RobotMap.HAS_GRABBER) {
-			return;
+		
+		if (Math.abs(throttle) < RobotMap.MIN_GRAB_SPEED) {
+			throttle = 0.0;
 		}
-		left.set(RobotMap.RELEASE_SPEED);
-		right.set(RobotMap.RELEASE_SPEED);
-	}
-	
-	public void pause() {
-		if (!RobotMap.HAS_GRABBER) {
-			return;
-		}
-		left.set(0);
-		right.set(0);
+		
+		left.set(throttle * RobotMap.MAX_GRAB_SPEED);
+		right.set(throttle * RobotMap.MAX_GRAB_SPEED);
 	}
 	
 	public boolean hasCube() {

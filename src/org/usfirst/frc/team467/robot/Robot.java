@@ -182,9 +182,9 @@ public class Robot extends TimedRobot {
 		
 		double left = driverstation.getArcadeSpeed();
 		double right = driverstation.getArcadeTurn();
-		// -1* driverstation.getDriveJoystick().getJoystick()
-		LOGGER.info("left " + left + " right " + right);
-		LOGGER.info(grabber.hasCube());
+		
+		LOGGER.debug("left " + left + " right " + right);
+		LOGGER.debug(grabber.hasCube());
 		
 		if (Math.abs(left) < MIN_DRIVE_SPEED) {
 			left = 0.0;
@@ -192,20 +192,20 @@ public class Robot extends TimedRobot {
 		if (Math.abs(right) < MIN_DRIVE_SPEED) {
 			right = 0.0;
 		}
-		
-		driverstation.getNavJoystick().read();
-		
+				
 		if (grabber.hasCube()) {
 			driverstation.getNavRumbler().rumble(100, 1.0);
 		}
 		
-		if (driverstation.getNavJoystick().down(XBoxJoystick467.Button.x)) {
-			grabber.grab();
-		} else if (driverstation.getNavJoystick().down(XBoxJoystick467.Button.y)) {
-			grabber.release();
-		} else {
-			grabber.pause();
-		}
+		grabber.grab(driverstation.getGrabThrottle());
+		
+//		if (driverstation.getNavJoystick().down(XBoxJoystick467.Button.x)) {
+//			grabber.grab();
+//		} else if (driverstation.getNavJoystick().down(XBoxJoystick467.Button.y)) {
+//			grabber.release();
+//		} else {
+//			grabber.pause();
+//		}
 	
 		//changed to arcade drive
 		drive.arcadeDrive(left, right, true);
