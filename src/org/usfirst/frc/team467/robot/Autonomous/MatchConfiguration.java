@@ -2,7 +2,6 @@ package org.usfirst.frc.team467.robot.Autonomous;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
-import org.usfirst.frc.team467.robot.Rumbler;
 
 import edu.wpi.first.wpilibj.DriverStation;
 
@@ -31,7 +30,7 @@ public class MatchConfiguration {
 		RIGHT;
 	}
 	
-	private static TeamColor teamColor;
+	private TeamColor teamColor;
 	
 	private Side redSwitch;
 	
@@ -71,7 +70,7 @@ public class MatchConfiguration {
 		startPosition = StartPosition.UNKNOWN;
 	}
 	
-	public static TeamColor teamColor() {
+	public TeamColor teamColor() {
 		return teamColor;
 	}
 	
@@ -94,16 +93,19 @@ public class MatchConfiguration {
 	public boolean isSwitchOnSameSide() {
 		boolean isOnSameSide = false;
 		if (teamColor == TeamColor.BLUE) {
-			if ((blueSwitch == Side.LEFT && startPosition == StartPosition.LEFT) || blueSwitch == Side.RIGHT && startPosition == StartPosition.RIGHT) {
+			if ((blueSwitch == Side.LEFT && startPosition == StartPosition.LEFT) || (blueSwitch == Side.RIGHT && startPosition == StartPosition.RIGHT)) {
 				isOnSameSide = true;
 			}
-			return isOnSameSide;
 		} else {
 			if (teamColor == TeamColor.RED) {
-				if (redSwitch == Side.LEFT && startPosition == StartPosition.LEFT || redSwitch == Side.RIGHT && startPosition == StartPosition.RIGHT) {
+				if (redSwitch == Side.LEFT && startPosition == StartPosition.LEFT || (redSwitch == Side.RIGHT && startPosition == StartPosition.RIGHT)) {
 					isOnSameSide = true;
 				}
-				return isOnSameSide = true;
+			}
+			if (teamColor== TeamColor.BLUE) {
+				if ((scale == Side.LEFT && startPosition == StartPosition.LEFT) || (scale == Side.RIGHT && startPosition == StartPosition.RIGHT)) {
+					isOnSameSide = true;
+				}
 			}
 		}
 		return isOnSameSide;
