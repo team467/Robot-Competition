@@ -13,7 +13,16 @@ import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
+import org.usfirst.frc.team467.robot.Autonomous.ActionGroup;
+// import org.usfirst.frc.team467.robot.Autonomous.Actions;
+import org.usfirst.frc.team467.robot.Autonomous.Actions;
+
+import com.ctre.CANTalon;
+import com.ctre.phoenix.motorcontrol.ControlMode;
+
 import org.apache.log4j.Logger;
+
+import edu.wpi.first.wpilibj.DigitalInput;
 import org.usfirst.frc.team467.robot.Autonomous.ActionGroup;
 import org.usfirst.frc.team467.robot.Autonomous.Actions;
 import org.usfirst.frc.team467.robot.simulator.DriveSimulator;
@@ -37,12 +46,7 @@ public class Robot extends TimedRobot {
 	
 	private Gyrometer gyro;
 	
-	int session;
-
-	/**
-	 * Time in milliseconds
-	 */
-	double time;
+	private Grabber grabber;
 
 	/**
 	 * This function is run when the robot is first started up and should be used for any initialization code.
@@ -52,7 +56,7 @@ public class Robot extends TimedRobot {
 		Logging.init();
 		
 		// Initialize RobotMap
-		RobotMap.init(RobotID.PreseasonBot);
+		RobotMap.init(RobotID.Competition_1);
 		
 		// Make robot objects
 		driverstation = DriverStation.getInstance();
@@ -60,9 +64,11 @@ public class Robot extends TimedRobot {
 		
 		drive = Drive.getInstance();
 		
-		gyro = Gyrometer.getInstance();
-		gyro.calibrate();
-		gyro.reset();
+		//gyro = Gyrometer.getInstance();
+		grabber = Grabber.getInstance();
+		
+		//gyro.calibrate();
+		//gyro.reset();
 		
 		// Initialize math lookup table
 		LookUpTable.init();
@@ -73,10 +79,10 @@ public class Robot extends TimedRobot {
 //		autonomous = Actions.doNothing();
 		
 		//made usb camera and captures video
-		UsbCamera cam = CameraServer.getInstance().startAutomaticCapture();
+		//UsbCamera cam = CameraServer.getInstance().startAutomaticCapture();
 		//set resolution and frames per second to match driverstation
-		cam.setResolution(320, 240);
-		cam.setFPS(15);
+		//cam.setResolution(320, 240);
+		//cam.setFPS(15);
 		
 		//TODO: Create list of autonomous modes for selector
 		// Setup autonomous mode selectors
@@ -119,6 +125,7 @@ public class Robot extends TimedRobot {
 	public void teleopInit() {
 		
 		driverstation.readInputs();
+		
 //		autonomous.terminate();
 //		autonomous = Actions.doNothing();
 	}
@@ -147,6 +154,8 @@ public class Robot extends TimedRobot {
 //		drive.motionMagicMove(amountToGoLeft, amountToGoRight);
 		
 //		autonomous.run();
+		
+		
 	}
 
 	/**
@@ -155,34 +164,29 @@ public class Robot extends TimedRobot {
 	public void teleopPeriodic() {
 		driverstation.readInputs();
 		//TODO: Set Min_DRIVE_SPEED in Robot Map.
+		// TODO Drive class should handle MIN_DRIVE_SPEED
 		double MIN_DRIVE_SPEED = 0.1;
 		
 		double left = driverstation.getArcadeSpeed();
 		double right = driverstation.getArcadeTurn();
 		
-		LOGGER.info("left " + left + " right " + right) ;
-	 	if (Math.abs(left) < MIN_DRIVE_SPEED) {
-	 		left = 0.0;
-	 	}
-	 	if (Math.abs(right) < MIN_DRIVE_SPEED) {
-	 		right = 0.0;
-	 	}
-	 	
-		switch (driverstation.getDriveMode()) {
-			case ArcadeDrive:
-				double speed = driverstation.getArcadeSpeed();
-				double turn = driverstation.getArcadeTurn();
-				drive.arcadeDrive(speed, turn, true);
-				break;
-			case TankDrive:	
-				double leftTank = driverstation.getDriveJoystick().getLeftStickY();
-				double rightTank = driverstation.getDriveJoystick().getRightStickY();
-				drive.tankDrive(leftTank, rightTank, true);
-				break;
-			case MotionMagic:
-				//TODO: Add things here later.
-				break;
+		LOGGER.debug("left " + left + " right " + right);
+		LOGGER.debug(grabber.hasCube());
+		
+		if (Math.abs(left) < MIN_DRIVE_SPEED) {
+			left = 0.0;
 		}
+		if (Math.abs(right) < MIN_DRIVE_SPEED) {
+			right = 0.0;
+		}
+				
+		if (grabber.hasCube()) {
+			driverstation.getNavRumbler().rumble(100, 1.0);
+		}
+		
+		grabber.grab(driverstation.getGrabThrottle());
+	
+		//changed to arcade drive
+		drive.arcadeDrive(left, right, true);
 	}
 }
-

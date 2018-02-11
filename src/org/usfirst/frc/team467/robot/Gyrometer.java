@@ -4,26 +4,25 @@ import org.usfirst.frc.team467.robot.imu.ADIS16448_IMU;
 import org.usfirst.frc.team467.robot.imu.IMU;
 import org.usfirst.frc.team467.robot.imu.LSM9DS1_IMU;
 
+import edu.wpi.first.wpilibj.PIDSource;
+import edu.wpi.first.wpilibj.PIDSourceType;
+import edu.wpi.first.wpilibj.interfaces.Gyro;
+import edu.wpi.first.wpilibj.GyroBase;
+
 /*
  *  Simple wrapper class around a gyro. This is implemented as a singleton
  */
-public class Gyrometer {
+public class Gyrometer extends GyroBase implements Gyro {
 	private IMU imu = null;
 	private static Gyrometer instance;
 	private double measuresPerDegree;
-
 
 	/*
 	 * private constructor (singleton pattern)
 	 */
 	private Gyrometer() {
-		if (RobotMap.useRemoteImu) {
-			imu = new LSM9DS1_IMU();
-			measuresPerDegree = 1;
-		} else {
-			imu = new ADIS16448_IMU();
+		imu = new ADIS16448_IMU();
 			measuresPerDegree = 4;
-		}
 	}
 
 	/**
@@ -119,6 +118,17 @@ public class Gyrometer {
 	 */
 	public double getPitchDegrees() {
 		return Math.toDegrees(getPitchRadians());
+	}
+
+	@Override
+	public double getAngle() {
+		return getYawDegrees();
+	}
+
+	@Override
+	public double getRate() {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 
 }
