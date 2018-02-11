@@ -85,6 +85,10 @@ public class Elevator {
 				//DriverStation.getInstance().setDriverRumble(0.0);
 			}
 		}
+		
+		if (Math.abs(speed) < RobotMap.MIN_LIFT_SPEED) {
+			speed = 0.0;
+		}
 
 		LOGGER.debug("Current Height: " + currentHeight);
 		heightController.set(speed);

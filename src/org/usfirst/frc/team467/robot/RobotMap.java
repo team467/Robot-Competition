@@ -205,6 +205,7 @@ public class RobotMap {
 
 	public static boolean HAS_ELEVATOR;
 	public static int EVEVATOR_MOTOR_CHANNEL;
+	public static double MIN_LIFT_SPEED = 0.1;
 
 	public static boolean HAS_GRABBER;
 	public static double MAX_GRAB_SPEED = 1.0;
