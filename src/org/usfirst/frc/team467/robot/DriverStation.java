@@ -127,6 +127,10 @@ public class DriverStation {
 		return getDriveJoystick().getRightStickX();
 	}
 	
+	public double getElevatorSpeed() {
+		return getNavJoystick().getRightStickY();
+	}
+	
 	public double getGrabThrottle() {
 		return getNavJoystick().getLeftStickY();
 	}

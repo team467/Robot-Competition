@@ -203,8 +203,7 @@ public class Robot extends TimedRobot {
 			break;
 		}
 		
-		double elevatorScale = driverstation.getNavJoystick().getRightStickY();
-		elevator.manualMove(elevatorScale);
+		elevator.manualMove(driverstation.getElevatorSpeed());
 		LOGGER.debug("Elevator Moving");
 		
 		if (grabber.hasCube()) {
