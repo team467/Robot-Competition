@@ -86,15 +86,12 @@ public class Elevator {
 	}
 
 	public double getHeightFeet() {
-		if (!RobotMap.HAS_ELEVATOR) {
-			return 0.0;
-		}
-		double height = (heightSensor.getValue() - RobotMap.ELEVATOR_INITIAL_TICKS) * feetPerTick;
+		double height = (getRawHeight() - RobotMap.ELEVATOR_INITIAL_TICKS) * feetPerTick;
 		LOGGER.debug("Height in feet: " + height);
 		return height;
 	}
 
-	public double getRawHeight() {
+	private double getRawHeight() {
 		if (!RobotMap.HAS_ELEVATOR) {
 			return 0.0;
 		}
