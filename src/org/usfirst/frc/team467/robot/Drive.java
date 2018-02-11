@@ -42,16 +42,15 @@ public class Drive extends DifferentialDrive {
 		this.leftFollower2 = (WPI_TalonSRX)leftFollower2;
 		this.rightFollower1 = (WPI_TalonSRX)rightFollower1;
 		this.rightFollower2 = (WPI_TalonSRX)rightFollower2;
-
-	
+		
 		initMotor(this.leftLead);
 		this.leftLead.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, RobotMap.TALON_TIMEOUT);
 		this.leftLead.setSensorPhase(true);
 		this.leftLead.config_kF(0, 1023.0 / 1402.0, RobotMap.TALON_TIMEOUT); // (100 percent of the output you can send to the motor) divided by (max speed measured in ticks)
-
+		
 		initMotor(this.leftFollower1);
 		initMotorForFollowerMode(this.leftLead, this.leftFollower1);
-
+		
 		initMotor(this.leftFollower2);
 		initMotorForFollowerMode(this.leftLead, this.leftFollower2);
 		
@@ -59,10 +58,10 @@ public class Drive extends DifferentialDrive {
 		this.rightLead.setSensorPhase(true);
 		this.rightLead.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, RobotMap.TALON_TIMEOUT);
 		this.rightLead.config_kF(0, 0.7297, RobotMap.TALON_TIMEOUT);
-
+		
 		initMotor(this.rightFollower1);
 		initMotorForFollowerMode(this.rightLead, this.rightFollower1);
-
+		
 		initMotor(this.rightFollower2);
 		initMotorForFollowerMode(this.rightLead, this.rightFollower2);
 	}
