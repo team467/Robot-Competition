@@ -14,20 +14,15 @@ import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-import org.usfirst.frc.team467.robot.Elevator.Stops;
 import org.usfirst.frc.team467.robot.Autonomous.ActionGroup;
 import org.usfirst.frc.team467.robot.Autonomous.Actions;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
-
 import org.apache.log4j.Logger;
 
-import edu.wpi.first.wpilibj.DigitalInput;
 import org.usfirst.frc.team467.robot.Autonomous.ActionGroup;
 import org.usfirst.frc.team467.robot.Autonomous.Actions;
-import org.usfirst.frc.team467.robot.simulator.DriveSimulator;
 
 import org.usfirst.frc.team467.robot.XBoxJoystick467.Button;
 import org.usfirst.frc.team467.robot.RobotMap.RobotID;
@@ -198,6 +193,10 @@ public class Robot extends TimedRobot {
 		case MotionMagic:
 			//TODO: Add things here later.
 			break;
+		}
+		
+		if (driverstation.getSwitchHeightButton()) {
+			elevator.moveToHeight(Elevator.Stops.fieldSwitch);
 		}
 		
 		elevator.move(driverstation.getElevatorSpeed());
