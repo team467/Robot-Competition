@@ -74,36 +74,33 @@ public class Elevator {
 	 * 
 	 * @param speed The velocity. Shall be a value between -1 and 1.
 	 */
-	public void manualMove(double speed) {
+	public void move(double speed) {
 		if (!RobotMap.HAS_ELEVATOR) {
 			return;
-		}
-		targetHeight = null;
-
-		if (isOutOfRange()) {
-			heightController.set(0);
-			//DriverStation.getInstance().setDriverRumble(0.5);
-			return; // Don't bother with any more logic here.
 		}
 
 		double currentHeight = getHeightFeet();
 		for (Stops stop : Stops.values()) {
 			if ((previousHeight < stop.height && currentHeight >= stop.height)
 					|| (previousHeight > stop.height && currentHeight <= stop.height)) {
-				DriverStation.getInstance().getNavRumbler().rumble(200,0.5);
-			} else {
-				DriverStation.getInstance().getNavRumbler().rumble(200,0.5);
+				DriverStation.getInstance().getNavRumbler().rumble(200, 0.8);
 			}
 		}
-
-		if (Math.abs(speed) < RobotMap.MIN_LIFT_SPEED) {
-			speed = 0.0;
-		}
-
-		LOGGER.debug("Current Height: " + currentHeight);
-		heightController.set(speed);
+		
+		LOGGER.debug("Height prev=" + previousHeight + " current=" + currentHeight);
 		previousHeight = currentHeight;
-		LOGGER.debug("Previous Height: " + previousHeight);
+
+		if (Math.abs(speed) >= RobotMap.MIN_LIFT_SPEED) {
+			// The controller is asking for elevator movement, cancel preset target and move.
+			targetHeight = null;
+			heightController.set(speed);
+		} else if (targetHeight != null) {
+			// There is a target preset position, move there.
+			automaticMove(targetHeight.height);
+		} else {
+			// Nothing to do, make sure we're not moving.
+			heightController.set(0.0);
+		}
 	}
 
 	public void initMotionMagicMode() {
@@ -120,10 +117,6 @@ public class Elevator {
 
 		heightController.configMotionCruiseVelocity(maxTicksPerIteration / 2, RobotMap.TALON_TIMEOUT);
 		heightController.configMotionAcceleration(maxTicksPerIteration / 2, RobotMap.TALON_TIMEOUT);	
-	}
-
-	public boolean isOutOfRange() {
-		return (getHeightFeet() > RobotMap.ELEVATOR_MAX_HEIGHT_IN_FEET || getHeightFeet() < RobotMap.ELEVATOR_MIN_HEIGHT_IN_FEET);
 	}
 
 	public double getHeightFeet() {
@@ -145,29 +138,6 @@ public class Elevator {
 	public void moveToHeight(Stops target) {
 		// targetHeight member variable used in periodic function to reach the height
 		targetHeight = target;
-	}
-
-	public void periodic() {
-		if (targetHeight == null) {
-			LOGGER.debug("No stop set");
-			return;
-		}
-
-		if (!RobotMap.HAS_ELEVATOR) {
-			return;
-		}
-
-		automaticMove(targetHeight.height);
-	}
-
-	public void cancelAutomaticMove() {
-		targetHeight = null;
-
-		if (!RobotMap.HAS_ELEVATOR) {
-			return;
-		}
-
-		heightController.stopMotor();
 	}
 
 	private void automaticMove(double height) {

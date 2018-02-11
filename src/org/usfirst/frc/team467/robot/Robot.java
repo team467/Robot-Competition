@@ -133,7 +133,6 @@ public class Robot extends TimedRobot {
 	}
 
 	public void teleopInit() {
-
 		driverstation.readInputs();
 		//		autonomous.terminate();
 		//		autonomous = Actions.doNothing();
@@ -141,11 +140,9 @@ public class Robot extends TimedRobot {
 	}
 
 	public void testInit() {
-		elevator.moveToHeight(Stops.fieldSwitch);
 	}
 
 	public void testPeriodic() {
-		elevator.periodic();
 		driverstation.readInputs();
 
 		if (driverstation.getNavJoystick().pressed(Button.b)){ 
@@ -203,7 +200,7 @@ public class Robot extends TimedRobot {
 			break;
 		}
 		
-		elevator.manualMove(driverstation.getElevatorSpeed());
+		elevator.move(driverstation.getElevatorSpeed());
 		LOGGER.debug("Elevator Moving");
 		
 		if (grabber.hasCube()) {
