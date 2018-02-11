@@ -69,40 +69,6 @@ public class Elevator {
 		m_safetyHelper = new MotorSafetyHelper(this.heightController);
 	}
 
-	/**
-	 * Moves based on the Xbox controller analog input
-	 * 
-	 * @param speed The velocity. Shall be a value between -1 and 1.
-	 */
-	public void move(double speed) {
-		if (!RobotMap.HAS_ELEVATOR) {
-			return;
-		}
-
-		double currentHeight = getHeightFeet();
-		for (Stops stop : Stops.values()) {
-			if ((previousHeight < stop.height && currentHeight >= stop.height)
-					|| (previousHeight > stop.height && currentHeight <= stop.height)) {
-				DriverStation.getInstance().getNavRumbler().rumble(200, 0.8);
-			}
-		}
-		
-		LOGGER.debug("Height prev=" + previousHeight + " current=" + currentHeight);
-		previousHeight = currentHeight;
-
-		if (Math.abs(speed) >= RobotMap.MIN_LIFT_SPEED) {
-			// The controller is asking for elevator movement, cancel preset target and move.
-			targetHeight = null;
-			heightController.set(speed);
-		} else if (targetHeight != null) {
-			// There is a target preset position, move there.
-			automaticMove(targetHeight.height);
-		} else {
-			// Nothing to do, make sure we're not moving.
-			heightController.set(0.0);
-		}
-	}
-
 	public void initMotionMagicMode() {
 		double kPElevator = 1.4; // Double.parseDouble(SmartDashboard.getString("DB/String 7", "1.4"));
 		double kIElevator = 0.0; // Double.parseDouble(SmartDashboard.getString("DB/String 8", "0.0"));
@@ -150,6 +116,40 @@ public class Elevator {
 		double ticks =  height / feetPerTick + RobotMap.ELEVATOR_INITIAL_TICKS;
 		heightController.set(ControlMode.MotionMagic, ticks);
 		logSensorVelocityAndPosition();
+	}
+
+	/**
+	 * Moves based on the Xbox controller analog input
+	 * 
+	 * @param speed The velocity. Shall be a value between -1 and 1.
+	 */
+	public void move(double speed) {
+		if (!RobotMap.HAS_ELEVATOR) {
+			return;
+		}
+
+		double currentHeight = getHeightFeet();
+		for (Stops stop : Stops.values()) {
+			if ((previousHeight < stop.height && currentHeight >= stop.height)
+					|| (previousHeight > stop.height && currentHeight <= stop.height)) {
+				DriverStation.getInstance().getNavRumbler().rumble(200, 0.8);
+			}
+		}
+
+		LOGGER.debug("Height prev=" + previousHeight + " current=" + currentHeight);
+		previousHeight = currentHeight;
+
+		if (Math.abs(speed) >= RobotMap.MIN_LIFT_SPEED) {
+			// The controller is asking for elevator movement, cancel preset target and move.
+			targetHeight = null;
+			heightController.set(ControlMode.PercentOutput, speed);
+		} else if (targetHeight != null) {
+			// There is a target preset position, move there.
+			automaticMove(targetHeight.height);
+		} else {
+			// Nothing to do, make sure we're not moving.
+			heightController.stopMotor();
+		}
 	}
 
 	public void logSensorVelocityAndPosition() {
