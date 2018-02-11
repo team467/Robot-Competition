@@ -2,25 +2,25 @@ package org.usfirst.frc.team467.robot;
 
 public class RobotMap {
 	public static final int TALON_TIMEOUT = 10; // 10 ms is the recommended timeout
-	
+
 	public enum RobotID {
 		PreseasonBot, Board, Competition_1, Competition_2
 	};
-	
+
 	public static final int FRONT_LEFT = 0;
 	public static final int FRONT_RIGHT = 1;
 	public static final int BACK_LEFT = 2;
 	public static final int BACK_RIGHT = 3;
-	
+
 	public static boolean HAS_WHEELS;
 	public static int LEFT_LEAD_CHANNEL;
 	public static int LEFT_FOLLOWER_1_CHANNEL;
 	public static int LEFT_FOLLOWER_2_CHANNEL;
-	
+
 	public static int RIGHT_LEAD_CHANNEL;
 	public static int RIGHT_FOLLOWER_1_CHANNEL;
 	public static int RIGHT_FOLLOWER_2_CHANNEL;
-	
+
 	// Initialize robot map. 
 	public static void init(RobotID id) {
 		robotID = id;
@@ -31,15 +31,15 @@ public class RobotMap {
 			WHEEL_ENCODER_CODES_PER_REVOLUTION = 256;
 			useSpeedControllers = true;
 			POSITION_ALLOWED_ERROR = (0.5 / RobotMap.WHEEL_CIRCUMFERENCE); // 1/2 inch
-			
+
 			LEFT_LEAD_CHANNEL = 1;
 			LEFT_FOLLOWER_1_CHANNEL = 2;
 			LEFT_FOLLOWER_2_CHANNEL = 3;
-			
+
 			RIGHT_LEAD_CHANNEL = 4;
 			RIGHT_FOLLOWER_1_CHANNEL = 5;
 			RIGHT_FOLLOWER_2_CHANNEL = 6;
-			
+
 			HAS_ELEVATOR = false;
 			HAS_GRABBER = false;
 			HAS_RAMPS = false;
@@ -47,25 +47,25 @@ public class RobotMap {
 			// TODO Assign values to the game piece variables, and make more as appropriate
 			EVEVATOR_MOTOR_CHANNEL = 0;
 			RAMP_SOLENOID_CHANNEL = 0;
-			
+
 			isDriveMotorInverted = new boolean[] { false, true, false, true };
 			break;
 		case Board:
 			HAS_WHEELS = false;
 			WHEEL_ENCODER_CODES_PER_REVOLUTION = 256;
-			
+
 			HAS_ELEVATOR = false;
 			HAS_RAMPS = false;
-			
+
 			HAS_GRABBER = true;
 			GRABBER_L_CHANNEL = 0;
-		    GRABBER_R_CHANNEL = 1;
-		    OPTICAL_CHANNEL = 5;
-		    
-		    // TODO Assign values to the game piece variables, and make more as appropriate
-		 	EVEVATOR_MOTOR_CHANNEL = 0;
-		 	RAMP_SOLENOID_CHANNEL = 0;
-			
+			GRABBER_R_CHANNEL = 1;
+			OPTICAL_CHANNEL = 5;
+
+			// TODO Assign values to the game piece variables, and make more as appropriate
+			EVEVATOR_MOTOR_CHANNEL = 0;
+			RAMP_SOLENOID_CHANNEL = 0;
+
 			isDriveMotorInverted = new boolean[] { false, true, false, true };
 			break;
 		case Competition_1:
@@ -74,23 +74,23 @@ public class RobotMap {
 			WHEEL_ENCODER_CODES_PER_REVOLUTION = 256;
 			useSpeedControllers = true;
 			POSITION_ALLOWED_ERROR = (0.5 / RobotMap.WHEEL_CIRCUMFERENCE); // 1/2 inch
-			
+
 			LEFT_LEAD_CHANNEL = 1;
 			LEFT_FOLLOWER_1_CHANNEL = 2;
 			LEFT_FOLLOWER_2_CHANNEL = 3;
-			
+
 			RIGHT_LEAD_CHANNEL = 4;
 			RIGHT_FOLLOWER_1_CHANNEL = 5;
 			RIGHT_FOLLOWER_2_CHANNEL = 6;
-			
+
 			HAS_ELEVATOR = false;
 			HAS_RAMPS = false;
-			
+
 			HAS_GRABBER = true;
 			GRABBER_L_CHANNEL = 1; 
-		    GRABBER_R_CHANNEL = 2;
-		    OPTICAL_CHANNEL = 5;
-			
+			GRABBER_R_CHANNEL = 2;
+			OPTICAL_CHANNEL = 5;
+
 			// TODO Assign values to the game piece variables, and make more as appropriate
 			EVEVATOR_MOTOR_CHANNEL = 0;
 			RAMP_SOLENOID_CHANNEL = 0;
@@ -101,23 +101,23 @@ public class RobotMap {
 			WHEEL_ENCODER_CODES_PER_REVOLUTION = 256;
 			useSpeedControllers = true;
 			POSITION_ALLOWED_ERROR = (0.5 / RobotMap.WHEEL_CIRCUMFERENCE); // 1/2 inch
-			
+
 			LEFT_LEAD_CHANNEL = 1;
 			LEFT_FOLLOWER_1_CHANNEL = 2;
 			LEFT_FOLLOWER_2_CHANNEL = 3;
-			
+
 			RIGHT_LEAD_CHANNEL = 4;
 			RIGHT_FOLLOWER_1_CHANNEL = 5;
 			RIGHT_FOLLOWER_2_CHANNEL = 6;
-			
+
 			HAS_ELEVATOR = true;
 			HAS_RAMPS = true;
-			
+
 			HAS_GRABBER = true;
 			GRABBER_L_CHANNEL = 1; 
-		    GRABBER_R_CHANNEL = 2;
-		    OPTICAL_CHANNEL = 5;
-			
+			GRABBER_R_CHANNEL = 2;
+			OPTICAL_CHANNEL = 5;
+
 			// TODO Assign values to the game piece variables, and make more as appropriate
 			EVEVATOR_MOTOR_CHANNEL = 0;
 			RAMP_SOLENOID_CHANNEL = 0;
@@ -145,11 +145,11 @@ public class RobotMap {
 	 * Also for motion magic?
 	 */
 	public static double MAX_SPEED;
-	
+
 	public static boolean useSimulator = false;
 
 	public static final double MIN_DRIVE_SPEED = 0.1;
-	
+
 	// Robot Dimensions
 	public static double WHEEL_BASE_LENGTH = 3.33;
 	public static double WHEEL_BASE_WIDTH = 2.92; // TODO: MEASURE TRUE WHEEL BASE WIDTH
@@ -179,15 +179,15 @@ public class RobotMap {
 	// Game Pieces
 	public static boolean HAS_ELEVATOR;
 	public static int EVEVATOR_MOTOR_CHANNEL;
-	
+
 	public static boolean HAS_GRABBER;
 	public static double MAX_GRAB_SPEED = 1.0;
 	public static double MIN_GRAB_SPEED = 0.1;
 	public static double RELEASE_SPEED = -1.0;
 	public static int GRABBER_L_CHANNEL; 
-    public static int GRABBER_R_CHANNEL;
-    public static int OPTICAL_CHANNEL;
-	
+	public static int GRABBER_R_CHANNEL;
+	public static int OPTICAL_CHANNEL;
+
 	public static boolean HAS_RAMPS;
 	public static int RAMP_SOLENOID_CHANNEL;
 }
