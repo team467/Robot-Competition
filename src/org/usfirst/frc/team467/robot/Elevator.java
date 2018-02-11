@@ -90,9 +90,9 @@ public class Elevator {
 		for (Stops stop : Stops.values()) {
 			if ((previousHeight < stop.height && currentHeight >= stop.height)
 					|| (previousHeight > stop.height && currentHeight <= stop.height)) {
-				//DriverStation.getInstance().setDriverRumble(0.5);
+				DriverStation.getInstance().getNavRumbler().rumble(200,0.5);
 			} else {
-				//DriverStation.getInstance().setDriverRumble(0.0);
+				DriverStation.getInstance().getNavRumbler().rumble(200,0.5);
 			}
 		}
 
