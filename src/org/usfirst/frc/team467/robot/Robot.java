@@ -83,10 +83,10 @@ public class Robot extends TimedRobot {
 		//		autonomous = Actions.doNothing();
 
 		//made usb camera and captures video
-		UsbCamera cam = CameraServer.getInstance().startAutomaticCapture();
-		//set resolution and frames per second to match driverstation
-		cam.setResolution(320, 240);
-		cam.setFPS(15);
+//		UsbCamera cam = CameraServer.getInstance().startAutomaticCapture();
+//		//set resolution and frames per second to match driverstation
+//		cam.setResolution(320, 240);
+//		cam.setFPS(15);
 		//TODO: Create list of autonomous modes for selector
 		// Setup autonomous mode selectors
 	}
