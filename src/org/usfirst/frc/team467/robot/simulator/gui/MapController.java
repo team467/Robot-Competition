@@ -5,6 +5,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import org.usfirst.frc.team467.robot.simulator.draw.FieldShape;
+import org.usfirst.frc.team467.robot.simulator.draw.PowerCubeShape;
 import org.usfirst.frc.team467.robot.simulator.draw.RobotShape;
 
 import javafx.application.Platform;
@@ -67,6 +68,7 @@ public class MapController {
 	 */
 	private RobotShape robotShape = new RobotShape();
 	private FieldShape fieldShape = new FieldShape();
+	private PowerCubeShape cube = new PowerCubeShape();
 	
 	/**
 	 * Initialize method, automatically called by @{link FXMLLoader}
@@ -86,6 +88,7 @@ public class MapController {
 		if (!this.robotActive) {
 			
 			robotArea.getChildren().add(robotShape.createRobotShape());
+			robotArea.getChildren().add(cube.createPowerCube());
 			
 			robotActive = true;
 			robotShape.init();
@@ -140,6 +143,7 @@ public class MapController {
 	public void update() {
 		Platform.runLater(() -> {
 			fieldShape.draw();
+			cube.draw();
 			robotShape.draw();
 		});
 
