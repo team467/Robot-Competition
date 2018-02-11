@@ -141,7 +141,7 @@ public class Robot extends TimedRobot {
 	}
 
 	public void testInit() {
-		elevator.targetHeight(Stops.fieldSwitch);
+		elevator.moveToHeight(Stops.fieldSwitch);
 	}
 
 	public void testPeriodic() {

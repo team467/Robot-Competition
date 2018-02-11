@@ -65,7 +65,6 @@ public class Elevator {
 	 * @param speed The velocity. Shall be a value between -1 and 1.
 	 */
 	public void manualMove(double speed) {
-
 		targetHeight = Stops.noStop;
 		if (m_safetyHelper != null) {
 			m_safetyHelper.feed();
@@ -80,10 +79,8 @@ public class Elevator {
 		for (Stops stop : Stops.values()) {
 			if ((previousHeight < stop.height && currentHeight >= stop.height)
 					|| (previousHeight > stop.height && currentHeight <= stop.height)) {
-//TODO: Rumble here 
 				//DriverStation.getInstance().setDriverRumble(0.5);
-			} else 
-			{
+			} else {
 				//DriverStation.getInstance().setDriverRumble(0.0);
 			}
 		}
@@ -120,7 +117,8 @@ public class Elevator {
 		return height;
 	}
 
-	public void targetHeight(Stops target) {
+	public void moveToHeight(Stops target) {
+		// targetHeight member variable used in periodic function to reach the height
 		targetHeight = target;
 	}
 
