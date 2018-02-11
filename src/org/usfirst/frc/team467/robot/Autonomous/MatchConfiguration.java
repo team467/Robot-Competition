@@ -31,7 +31,7 @@ public class MatchConfiguration {
 		RIGHT;
 	}
 	
-	private TeamColor teamColor;
+	private static TeamColor teamColor;
 	
 	private Side redSwitch;
 	
@@ -71,7 +71,7 @@ public class MatchConfiguration {
 		startPosition = StartPosition.UNKNOWN;
 	}
 	
-	public TeamColor teamColor() {
+	public static TeamColor teamColor() {
 		return teamColor;
 	}
 	
@@ -93,14 +93,14 @@ public class MatchConfiguration {
 	
 	public boolean isSwitchOnSameSide() {
 		boolean isOnSameSide = false;
-		if (teamColor == teamColor.BLUE) {
-			if ((blueSwitch == blueSwitch.LEFT && startPosition == startPosition.LEFT) || blueSwitch == blueSwitch.RIGHT && startPosition == startPosition.RIGHT) {
+		if (teamColor == TeamColor.BLUE) {
+			if ((blueSwitch == Side.LEFT && startPosition == StartPosition.LEFT) || blueSwitch == Side.RIGHT && startPosition == StartPosition.RIGHT) {
 				isOnSameSide = true;
 			}
 			return isOnSameSide;
 		} else {
-			if (teamColor == teamColor.RED) {
-				if (redSwitch == redSwitch.LEFT && startPosition == startPosition.LEFT || redSwitch == redSwitch.RIGHT && startPosition == startPosition.RIGHT) {
+			if (teamColor == TeamColor.RED) {
+				if (redSwitch == Side.LEFT && startPosition == StartPosition.LEFT || redSwitch == Side.RIGHT && startPosition == StartPosition.RIGHT) {
 					isOnSameSide = true;
 				}
 				return isOnSameSide = true;
