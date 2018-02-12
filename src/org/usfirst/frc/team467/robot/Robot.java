@@ -90,6 +90,7 @@ public class Robot extends TimedRobot {
 	public void disabledPeriodic() {
 		LOGGER.trace("Disabled Periodic");
 		driverstation.logJoystickIDs();
+		//LOGGER.debug("Right: "	+drive.getRightDistance() + " Left: " + drive.getLeftDistance());
 	}
 //TODO: Figure out the NetworkTables later.
 //	String[] autoList = {"none", "go"};
@@ -100,13 +101,14 @@ public class Robot extends TimedRobot {
 //	
 	public void autonomousInit() {
 		//final String autoMode = SmartDashboard.getString("Auto Selector", "none");
-		
+				
 		String autoMode = "StartSwitchSide1A";
 		// TODO: call appropriate auto modes based on list
 		LOGGER.debug("Autonomous init: " + autoMode);
 		switch (autoMode) {
 		case "StartSwitchSide1A": 
-			autonomous = Actions.startSwitchSide1A();
+//			autonomous = Actions.startSwitchSide1A();
+			autonomous = Actions.moveDistance(2.0);
 			break;
 		case "none":
 			autonomous = Actions.doNothing();
@@ -149,8 +151,8 @@ public class Robot extends TimedRobot {
 //		drive.publishRawSensorValues();
 //		drive.PositionModeMove(drive.feetToTicks(amountToGoLeft), drive.feetToTicks(amountToGoRight));
 //		drive.motionMagicMove(amountToGoLeft, amountToGoRight);
-		
-		autonomous.run();
+		drive.moveFeet(20.0);
+//		autonomous.run();
 	}
 
 	/**

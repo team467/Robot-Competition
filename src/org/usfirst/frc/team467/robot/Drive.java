@@ -18,11 +18,6 @@ public class Drive extends DifferentialDrive {
 	private final TalonSpeedControllerGroup left;
 	private final TalonSpeedControllerGroup right;
 
-	// Temp for debug
-	WPI_TalonSRX leftLead = new WPI_TalonSRX(RobotMap.LEFT_LEAD_CHANNEL);
-	WPI_TalonSRX leftFollower1 = new WPI_TalonSRX(RobotMap.LEFT_FOLLOWER_1_CHANNEL);
-	WPI_TalonSRX leftFollower2 = new WPI_TalonSRX(RobotMap.LEFT_FOLLOWER_2_CHANNEL);
-
 	// Private constructor
 	private Drive(TalonSpeedControllerGroup left, TalonSpeedControllerGroup right) {
 		super(left, right);
@@ -47,19 +42,22 @@ public class Drive extends DifferentialDrive {
 			WPI_TalonSRX rightFollower1 = new WPI_TalonSRX(RobotMap.RIGHT_FOLLOWER_1_CHANNEL);
 			WPI_TalonSRX rightFollower2 = new WPI_TalonSRX(RobotMap.RIGHT_FOLLOWER_2_CHANNEL);
 			
-			TalonSpeedControllerGroup left = new TalonSpeedControllerGroup(ControlMode.PercentOutput, leftLead, leftFollower1, leftFollower2);
-			TalonSpeedControllerGroup right = new TalonSpeedControllerGroup(ControlMode.PercentOutput, rightLead, rightFollower1, rightFollower2);
+			TalonSpeedControllerGroup left = new TalonSpeedControllerGroup(ControlMode.PercentOutput, RobotMap.LEFT_SENSOR_IS_INVERTED,
+					leftLead, leftFollower1, leftFollower2);
+			TalonSpeedControllerGroup right = new TalonSpeedControllerGroup(ControlMode.PercentOutput, RobotMap.RIGHT_SENSOR_IS_INVERTED,
+					rightLead, rightFollower1, rightFollower2);
 			instance = new Drive(left, right);
 		}
 		return instance;
 	}
 
 	public void logClosedLoopErrors() {
-		left.logClosedLoopErrors();
-		right.logClosedLoopErrors();
+		left.logClosedLoopErrors("Left");
+		right.logClosedLoopErrors("Right");
 	}
 	
 	public void initMotionMagicMode() {
+		LOGGER.debug("Called initMotionMagicMode()");
 		
 		double kPRight = 1.4; // Double.parseDouble(SmartDashboard.getString("DB/String 7", "1.4"));
 		double kPLeft = 1.6; //Double.parseDouble(SmartDashboard.getString("DB/String 2", "1.6"));
@@ -71,7 +69,10 @@ public class Drive extends DifferentialDrive {
 		double kDLeft = 198; //Double.parseDouble(SmartDashboard.getString("DB/String 4", "198"));
 		
 		double kFall = 1023.0 / 1402.0;
+		LOGGER.debug("Set PIDF left");
 		left.setPIDF(kPLeft, kILeft, kDLeft, kFall);
+		
+		LOGGER.debug("Set PIDF right");
 		right.setPIDF(kPRight, kIRight, kDRight, kFall);
 	}
 
@@ -99,16 +100,15 @@ public class Drive extends DifferentialDrive {
 		
 		rightSpeed *= -1;
 		
-		//TODO: Set the speeds
-		//TODO Check to see if we need the params.
-
-		LOGGER.info("Drive left=" + leftSpeed + "right=" + rightSpeed + ".");
-		leftLead.set(mode, leftSpeed);
-		leftFollower1.set(ControlMode.Follower, leftLead.getDeviceID());
-		leftFollower2.set(ControlMode.Follower, leftLead.getDeviceID());
+		LOGGER.info("Drive left=" + leftSpeed + " right=" + rightSpeed + ".");
 		
-//		left.set(mode, leftSpeed);
+//		LOGGER.debug("Left is set to go");
+		left.set(mode, leftSpeed);
+		
+//		LOGGER.debug("Right is set to go");
 		right.set(mode, rightSpeed);		
+		
+		this.logClosedLoopErrors();
 	}
 	
 	public void zero() {
@@ -161,7 +161,7 @@ public class Drive extends DifferentialDrive {
 		
 		LOGGER.trace("Right distance in feet: " + ticksToFeet(rightDistTicks) + " Left distance in feet: " + ticksToFeet(leftDistTicks));
 		
-		go(leftDistTicks, rightDistTicks, ControlMode.MotionMagic);
+		go(leftDistTicks, rightDistTicks, ControlMode.Position);
 	}
 	
 	public double getLeftDistance() {
