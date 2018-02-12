@@ -156,7 +156,7 @@ public class Robot extends TimedRobot {
 			driverstation.getNavRumbler().rumble(150, 1.0);
 			LOGGER.info("You pressed b");
 		}
-
+		TiltMonitor.getInstance().periodic();
 	}
 
 
@@ -214,5 +214,9 @@ public class Robot extends TimedRobot {
 		
 		//changed to arcade drive
 		drive.arcadeDrive(left, right, true);
+		
+		TiltMonitor.getInstance().periodic();
 	}
+	
+	
 }
