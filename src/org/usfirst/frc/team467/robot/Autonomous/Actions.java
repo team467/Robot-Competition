@@ -136,7 +136,7 @@ public class Actions {
 	}
 
 	public static ActionGroup moveDistance(double distance) {
-		String actionGroupText = "Move forward 3X " + distance + " feet";
+		String actionGroupText = "Move forward " + distance + " feet";
 		ActionGroup mode = new ActionGroup(actionGroupText);
 		mode.addAction(zeroDistance());
 		mode.addAction(moveDistanceForward(distance));
