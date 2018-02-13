@@ -22,7 +22,7 @@ public class RobotMap {
 	public static int RIGHT_FOLLOWER_1_CHANNEL;
 	public static int RIGHT_FOLLOWER_2_CHANNEL;
 	public static boolean RIGHT_SENSOR_IS_INVERTED;
-	public static int AUTONOMOUS_DRIVE_TIMEOUT;
+	public static int AUTONOMOUS_DRIVE_TIMEOUT_MS;
 	// Initialize robot map. 
 	public static void init(RobotID id) {
 		robotID = id;
@@ -54,7 +54,7 @@ public class RobotMap {
 			GRABBER_MOTOR_PWM_CHANNEL = 0;
 			RAMP_SOLENOID_CHANNEL = 0;
 			
-			AUTONOMOUS_DRIVE_TIMEOUT = 500;
+			AUTONOMOUS_DRIVE_TIMEOUT_MS = 1000;
 			
 			isDriveMotorInverted = new boolean[] { false, true, false, true };
 			break;
@@ -96,7 +96,7 @@ public class RobotMap {
 			EVEVATOR_MOTOR_CHANNEL = 0;
 			GRABBER_MOTOR_PWM_CHANNEL = 0;
 			RAMP_SOLENOID_CHANNEL = 0;
-			AUTONOMOUS_DRIVE_TIMEOUT = 500;
+			AUTONOMOUS_DRIVE_TIMEOUT_MS = 500;
 			break;
 		case Competition_2:
 			HAS_WHEELS = true;
@@ -121,7 +121,7 @@ public class RobotMap {
 			EVEVATOR_MOTOR_CHANNEL = 0;
 			GRABBER_MOTOR_PWM_CHANNEL = 0;
 			RAMP_SOLENOID_CHANNEL = 0;
-			AUTONOMOUS_DRIVE_TIMEOUT = 500;
+			AUTONOMOUS_DRIVE_TIMEOUT_MS = 500;
 			break;
 		}
 	}
