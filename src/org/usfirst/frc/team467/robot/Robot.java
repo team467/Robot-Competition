@@ -202,21 +202,19 @@ public class Robot extends TimedRobot {
 			//TODO: Add things here later.
 			break;
 		}
-		
+
 		elevator.manualMove(driverstation.getElevatorSpeed());
 		LOGGER.debug("Elevator Moving");
-		
+
 		if (grabber.hasCube()) {
 			driverstation.getNavRumbler().rumble(100, 1.0);
 		}
-		
+
 		grabber.grab(driverstation.getGrabThrottle());
-		
+
 		//changed to arcade drive
 		drive.arcadeDrive(left, right, true);
-		
+
 		TiltMonitor.getInstance().periodic();
 	}
-	
-	
 }
