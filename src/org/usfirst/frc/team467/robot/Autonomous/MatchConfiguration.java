@@ -102,11 +102,6 @@ public class MatchConfiguration {
 					isOnSameSide = true;
 				}
 			}
-			if (teamColor== TeamColor.BLUE) {
-				if ((scale == Side.LEFT && startPosition == StartPosition.LEFT) || (scale == Side.RIGHT && startPosition == StartPosition.RIGHT)) {
-					isOnSameSide = true;
-				}
-			}
 		}
 		return isOnSameSide;
 	}
