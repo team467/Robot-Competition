@@ -40,16 +40,27 @@ public class MatchConfiguration {
 
 	private StartPosition startPosition;
 
-	public void temp() {
-		String gameData;
-		gameData = DriverStation.getInstance().getGameSpecificMessage();
-		if(gameData.length() > 0)
-		{
-			if(gameData.charAt(0) == 'L')
-			{
-				//Put left auto code here
-			} else {
-				//Put right auto code here
+	public void setSide() {
+		String gameData = DriverStation.getInstance().getGameSpecificMessage();
+		// String will be three letters, such as 'LRL' or 'RRR' or 'RRL'
+		if(gameData.length() > 0) {
+			if(gameData.charAt(0) == 'L') {
+				if (teamColor == TeamColor.BLUE ) {
+					blueSwitch = Side.LEFT;
+				} else {
+					if (teamColor == TeamColor.RED) {
+						redSwitch = Side.LEFT;
+					}
+				}
+				if(gameData.charAt(0) == 'R') {
+					if (teamColor == TeamColor.BLUE) {
+						blueSwitch = Side.RIGHT;
+					} else {
+						if (teamColor == TeamColor.RED) {
+							redSwitch = Side.RIGHT;
+						}
+					}
+				}
 			}
 		}
 	}
