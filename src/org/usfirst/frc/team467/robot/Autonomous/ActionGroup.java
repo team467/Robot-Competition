@@ -158,7 +158,7 @@ public class ActionGroup {
 			} else {
 				increment = 0;
 			}
-			if (increment >= 5) {
+			if (increment >= RobotMap.AUTONOMOUS_DRIVE_TIMEOUT) {
 				return true;
 			} else if (currentPosition >= (Math.abs(distance) - RobotMap.POSITION_ALLOWED_ERROR)) {
 				LOGGER.debug("Finished moving");

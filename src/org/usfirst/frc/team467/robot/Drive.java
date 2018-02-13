@@ -1,5 +1,7 @@
 package org.usfirst.frc.team467.robot;
 
+import java.text.DecimalFormat;
+
 import org.apache.log4j.Logger;
 import org.usfirst.frc.team467.robot.simulator.communications.RobotData;
 
@@ -11,6 +13,7 @@ public class Drive extends DifferentialDrive {
 	private ControlMode controlMode;
 	
 	private static final Logger LOGGER = Logger.getLogger(Drive.class);
+	private DecimalFormat df = new DecimalFormat("####0.00");	
 
 	// Single instance of this class
 	private static Drive instance = null;
@@ -57,7 +60,7 @@ public class Drive extends DifferentialDrive {
 	}
 	
 	public void initMotionMagicMode() {
-		LOGGER.debug("Called initMotionMagicMode()");
+	
 		
 		double kPRight = 1.4; // Double.parseDouble(SmartDashboard.getString("DB/String 7", "1.4"));
 		double kPLeft = 1.6; //Double.parseDouble(SmartDashboard.getString("DB/String 2", "1.6"));
@@ -69,10 +72,8 @@ public class Drive extends DifferentialDrive {
 		double kDLeft = 198; //Double.parseDouble(SmartDashboard.getString("DB/String 4", "198"));
 		
 		double kFall = 1023.0 / 1402.0;
-		LOGGER.debug("Set PIDF left");
-		left.setPIDF(kPLeft, kILeft, kDLeft, kFall);
 		
-		LOGGER.debug("Set PIDF right");
+		left.setPIDF(kPLeft, kILeft, kDLeft, kFall);
 		right.setPIDF(kPRight, kIRight, kDRight, kFall);
 	}
 
@@ -101,11 +102,9 @@ public class Drive extends DifferentialDrive {
 		rightSpeed *= -1;
 		
 		LOGGER.info("Drive left=" + leftSpeed + " right=" + rightSpeed + ".");
-		
-//		LOGGER.debug("Left is set to go");
+	
 		left.set(mode, leftSpeed);
 		
-//		LOGGER.debug("Right is set to go");
 		right.set(mode, rightSpeed);		
 		
 		this.logClosedLoopErrors();
@@ -134,11 +133,11 @@ public class Drive extends DifferentialDrive {
 		}
 
 	public void moveFeet(double distanceInFeet) {
-		moveFeet(distanceInFeet, 0);
+		moveFeet(distanceInFeet, 0, ControlMode.MotionMagic);
 	}
 	
 	public void rotateByAngle(double angleInDegrees) {
-		moveFeet(0, angleInDegrees);
+		moveFeet(0, angleInDegrees, ControlMode.MotionMagic);
 		}
 	
 	/**
@@ -146,7 +145,7 @@ public class Drive extends DifferentialDrive {
 	 * @param distanceInFeet
 	 * @param rotationInDegrees enter positive degrees for left turn and enter negative degrees for right turn
 	 */
-	public void moveFeet (double distanceInFeet, double rotationInDegrees) {
+	public void moveFeet (double distanceInFeet, double rotationInDegrees, ControlMode mode) {
 		double turnAmtTicks, distAmtTicks, leftDistTicks, rightDistTicks, radius, distTurnInFeet, angleInRadians;
 		
 		LOGGER.trace("Automated move of " + distanceInFeet + " feet and " + rotationInDegrees + " degree turn.");
@@ -156,13 +155,20 @@ public class Drive extends DifferentialDrive {
 		distTurnInFeet = radius * angleInRadians; //This is the distance we want to turn.
 		turnAmtTicks = (feetToTicks(distTurnInFeet)); //Converts turn angle in ticks to degrees, then to radians.
 		
-		rightDistTicks = distAmtTicks - turnAmtTicks;
+		rightDistTicks = -1 * (distAmtTicks - turnAmtTicks);
 		leftDistTicks = distAmtTicks + turnAmtTicks;
 		
-		LOGGER.trace("Right distance in feet: " + ticksToFeet(rightDistTicks) + " Left distance in feet: " + ticksToFeet(leftDistTicks));
+//		LOGGER.debug("Distance in Feet - Right: " + df.format(ticksToFeet(rightDistTicks)) + " Left: " + df.format(ticksToFeet(leftDistTicks)));
+//		LOGGER.debug("Current Position - Right: " + df.format(getRightDistance()) + " Left: " + df.format(getLeftDistance()));	
+//		LOGGER.info("Drive left=" + leftDistTicks + " right=" + rightDistTicks + ".");
+	
+		left.set(mode, rightDistTicks);
 		
-		go(leftDistTicks, rightDistTicks, ControlMode.Position);
+		right.set(mode, leftDistTicks);		
+		
+		this.logClosedLoopErrors();
 	}
+	
 	
 	public double getLeftDistance() {
 		double leftLeadSensorPos = ticksToFeet(left.sensorPosition());
@@ -170,7 +176,7 @@ public class Drive extends DifferentialDrive {
 	}
 	
 	public double getRightDistance() {
-		double rightLeadSensorPos = ticksToFeet(right.sensorPosition());
+		double rightLeadSensorPos = -1 * ticksToFeet(right.sensorPosition());
 		return rightLeadSensorPos;
 	}
 	

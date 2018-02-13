@@ -65,16 +65,14 @@ public class TalonSpeedControllerGroup implements SpeedController {
 	private void logTooMuch() {
 		LOGGER.debug("GET: " + leader.get());
 		LOGGER.debug("Closed Loop error: " + leader.getClosedLoopError(0));
-//		LOGGER.debug("Closed loop Target: " + leader.getClosedLoopTarget(0));
+		LOGGER.debug("Closed loop Target: " + leader.getClosedLoopTarget(0));
 		LOGGER.debug("Name: " + leader.getName());
 		LOGGER.debug("Motor output percent: " + leader.getMotorOutputPercent());
 		LOGGER.debug("Sensor Position: " + leader.getSelectedSensorPosition(0));
 		LOGGER.debug("Sensor Velocity: " + leader.getSelectedSensorVelocity(0));
-		
 	}
 	
 	public void setPIDF(double p, double i, double d, double f){
-		LOGGER.debug("Set PIDF to: " + p + " " + i + " " + d +" " + f);
 		leader.config_kP(0, p, RobotMap.TALON_TIMEOUT);
 		leader.config_kI(0, i, RobotMap.TALON_TIMEOUT);
 		leader.config_kD(0, d, RobotMap.TALON_TIMEOUT);
@@ -107,16 +105,21 @@ public class TalonSpeedControllerGroup implements SpeedController {
 	
 	@Override
 	public void set(double speed) {
+		if (!RobotMap.HAS_WHEELS) {
+			LOGGER.debug("No drive system");
+			return;
+		}
 		set(controlMode, speed);
 	}
 	
 	public void set(ControlMode controlMode, double outputValue) {
-//		LOGGER.debug("Devices: " + leader.getDeviceID() + ", " + follower1.getDeviceID() + ", " + follower2.getDeviceID());
-//		LOGGER.debug("Control Mode: " + controlMode + " Output Value: " + outputValue);
+		if (!RobotMap.HAS_WHEELS) {
+			LOGGER.debug("No drive system");
+			return;
+		}
 		leader.set(controlMode, outputValue);
 		follower1.follow(leader);
 		follower2.follow(leader);
-//		logTooMuch();
 	}
 	
 	@Override

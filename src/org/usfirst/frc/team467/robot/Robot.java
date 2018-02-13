@@ -151,8 +151,8 @@ public class Robot extends TimedRobot {
 //		drive.publishRawSensorValues();
 //		drive.PositionModeMove(drive.feetToTicks(amountToGoLeft), drive.feetToTicks(amountToGoRight));
 //		drive.motionMagicMove(amountToGoLeft, amountToGoRight);
-		drive.moveFeet(20.0);
-//		autonomous.run();
+//		drive.moveFeet(2.0);
+		autonomous.run();
 	}
 
 	/**
