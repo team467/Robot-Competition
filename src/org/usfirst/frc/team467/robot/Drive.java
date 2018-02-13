@@ -26,7 +26,20 @@ public class Drive extends DifferentialDrive {
 		super(left, right);
 		this.left = left;
 		this.right = right;
-		initMotionMagicMode();
+
+		double kPRight = 1.4; // Double.parseDouble(SmartDashboard.getString("DB/String 7", "1.4"));
+		double kPLeft = 1.6; //Double.parseDouble(SmartDashboard.getString("DB/String 2", "1.6"));
+		
+		double kIRight = 0.0; // Double.parseDouble(SmartDashboard.getString("DB/String 8", "0.0"));
+		double kILeft = 0.0; //Double.parseDouble(SmartDashboard.getString("DB/String 3", "0.0"));
+		
+		double kDRight = 165; //Double.parseDouble(SmartDashboard.getString("DB/String 9", "165"));
+		double kDLeft = 198; //Double.parseDouble(SmartDashboard.getString("DB/String 4", "198"));
+		
+		double kFall = 1023.0 / 1402.0;
+		
+		left.setPIDF(kPLeft, kILeft, kDLeft, kFall);
+		right.setPIDF(kPRight, kIRight, kDRight, kFall);
 	}
 
 	/**
@@ -59,57 +72,10 @@ public class Drive extends DifferentialDrive {
 		right.logClosedLoopErrors("Right");
 	}
 	
-	public void initMotionMagicMode() {
-	
-		
-		double kPRight = 1.4; // Double.parseDouble(SmartDashboard.getString("DB/String 7", "1.4"));
-		double kPLeft = 1.6; //Double.parseDouble(SmartDashboard.getString("DB/String 2", "1.6"));
-		
-		double kIRight = 0.0; // Double.parseDouble(SmartDashboard.getString("DB/String 8", "0.0"));
-		double kILeft = 0.0; //Double.parseDouble(SmartDashboard.getString("DB/String 3", "0.0"));
-		
-		double kDRight = 165; //Double.parseDouble(SmartDashboard.getString("DB/String 9", "165"));
-		double kDLeft = 198; //Double.parseDouble(SmartDashboard.getString("DB/String 4", "198"));
-		
-		double kFall = 1023.0 / 1402.0;
-		
-		left.setPIDF(kPLeft, kILeft, kDLeft, kFall);
-		right.setPIDF(kPRight, kIRight, kDRight, kFall);
-	}
-
 	public ControlMode getControlMode() {
 		return controlMode;
 	}
 
-	/**
-	 * Drives each of the six wheels at different speeds using invert constants to account for wiring.
-	 *
-	 * @param left
-	 * 			Speed or Distance value for left wheels
-	 * @param right
-	 * 			Speed or Distance value for right wheels
-	 */
-	//TODO: Check to see if we still need this function.
-	private void go(double leftSpeed, double rightSpeed, ControlMode mode) {
-		// TODO: Check to make sure all motors exist. If not throw a null pointer exception
-		if (!RobotMap.HAS_WHEELS) {
-			LOGGER.debug("No drive system");
-			return;
-		}
-		
-		controlMode = mode;
-		
-		rightSpeed *= -1;
-		
-		LOGGER.info("Drive left=" + leftSpeed + " right=" + rightSpeed + ".");
-	
-		left.set(mode, leftSpeed);
-		
-		right.set(mode, rightSpeed);		
-		
-		this.logClosedLoopErrors();
-	}
-	
 	public void zero() {
 		LOGGER.trace("Zeroed the motor sensors.");
 		left.zero();
@@ -117,7 +83,7 @@ public class Drive extends DifferentialDrive {
 	}
 	
 	public void sendData() {
-		RobotData.getInstance().update(right.sensorPosition(), left.sensorPosition());
+		RobotData.getInstance().update(getRightDistance(), getLeftDistance());
 	}
 
 	/**
@@ -138,7 +104,7 @@ public class Drive extends DifferentialDrive {
 	
 	public void rotateByAngle(double angleInDegrees) {
 		moveFeet(0, angleInDegrees, ControlMode.MotionMagic);
-		}
+	}
 	
 	/**
 	 * 
@@ -158,17 +124,12 @@ public class Drive extends DifferentialDrive {
 		rightDistTicks = -1 * (distAmtTicks - turnAmtTicks);
 		leftDistTicks = distAmtTicks + turnAmtTicks;
 		
-//		LOGGER.debug("Distance in Feet - Right: " + df.format(ticksToFeet(rightDistTicks)) + " Left: " + df.format(ticksToFeet(leftDistTicks)));
-//		LOGGER.debug("Current Position - Right: " + df.format(getRightDistance()) + " Left: " + df.format(getLeftDistance()));	
-//		LOGGER.info("Drive left=" + leftDistTicks + " right=" + rightDistTicks + ".");
+		LOGGER.debug("Distance in Feet - Right: " + df.format(ticksToFeet(rightDistTicks)) + " Left: " + df.format(ticksToFeet(leftDistTicks)));
+		LOGGER.debug("Current Position - Right: " + df.format(getRightDistance()) + " Left: " + df.format(getLeftDistance()));	
 	
-		left.set(mode, rightDistTicks);
-		
+		left.set(mode, rightDistTicks);		
 		right.set(mode, leftDistTicks);		
-		
-		this.logClosedLoopErrors();
 	}
-	
 	
 	public double getLeftDistance() {
 		double leftLeadSensorPos = ticksToFeet(left.sensorPosition());
