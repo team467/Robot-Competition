@@ -7,17 +7,19 @@ import org.usfirst.frc.team467.robot.simulator.communications.RobotData;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+
+import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 
 public class Drive extends DifferentialDrive {
 	private ControlMode controlMode;
-	
+
 	private static final Logger LOGGER = Logger.getLogger(Drive.class);
 	private DecimalFormat df = new DecimalFormat("####0.00");	
 
 	// Single instance of this class
 	private static Drive instance = null;
-	
+
 	private final TalonSpeedControllerGroup left;
 	private final TalonSpeedControllerGroup right;
 
@@ -29,15 +31,15 @@ public class Drive extends DifferentialDrive {
 
 		double kPRight = 1.4; // Double.parseDouble(SmartDashboard.getString("DB/String 7", "1.4"));
 		double kPLeft = 1.6; //Double.parseDouble(SmartDashboard.getString("DB/String 2", "1.6"));
-		
+
 		double kIRight = 0.0; // Double.parseDouble(SmartDashboard.getString("DB/String 8", "0.0"));
 		double kILeft = 0.0; //Double.parseDouble(SmartDashboard.getString("DB/String 3", "0.0"));
-		
+
 		double kDRight = 165; //Double.parseDouble(SmartDashboard.getString("DB/String 9", "165"));
 		double kDLeft = 198; //Double.parseDouble(SmartDashboard.getString("DB/String 4", "198"));
-		
+
 		double kFall = 1023.0 / 1402.0;
-		
+
 		left.setPIDF(kPLeft, kILeft, kDLeft, kFall);
 		right.setPIDF(kPRight, kIRight, kDRight, kFall);
 	}
@@ -53,11 +55,11 @@ public class Drive extends DifferentialDrive {
 			WPI_TalonSRX leftLead = new WPI_TalonSRX(RobotMap.LEFT_LEAD_CHANNEL);
 			WPI_TalonSRX leftFollower1 = new WPI_TalonSRX(RobotMap.LEFT_FOLLOWER_1_CHANNEL);
 			WPI_TalonSRX leftFollower2 = new WPI_TalonSRX(RobotMap.LEFT_FOLLOWER_2_CHANNEL);
-			
+
 			WPI_TalonSRX rightLead = new WPI_TalonSRX(RobotMap.RIGHT_LEAD_CHANNEL);
 			WPI_TalonSRX rightFollower1 = new WPI_TalonSRX(RobotMap.RIGHT_FOLLOWER_1_CHANNEL);
 			WPI_TalonSRX rightFollower2 = new WPI_TalonSRX(RobotMap.RIGHT_FOLLOWER_2_CHANNEL);
-			
+
 			TalonSpeedControllerGroup left = new TalonSpeedControllerGroup(ControlMode.PercentOutput, RobotMap.LEFT_SENSOR_IS_INVERTED,
 					leftLead, leftFollower1, leftFollower2);
 			TalonSpeedControllerGroup right = new TalonSpeedControllerGroup(ControlMode.PercentOutput, RobotMap.RIGHT_SENSOR_IS_INVERTED,
@@ -71,17 +73,17 @@ public class Drive extends DifferentialDrive {
 		left.logClosedLoopErrors("Left");
 		right.logClosedLoopErrors("Right");
 	}
-	
+
 	public ControlMode getControlMode() {
 		return controlMode;
 	}
-
+	
 	public void zero() {
 		LOGGER.trace("Zeroed the motor sensors.");
 		left.zero();
 		right.zero();
 	}
-	
+
 	public void sendData() {
 		RobotData.getInstance().update(getRightDistance(), getLeftDistance());
 	}
@@ -93,19 +95,19 @@ public class Drive extends DifferentialDrive {
 		right.stopMotor();
 		left.stopMotor();	
 	}
-	
+
 	public boolean isStopped(){
 		return left.isStopped() && right.isStopped();
-		}
+	}
 
 	public void moveFeet(double distanceInFeet) {
 		moveFeet(distanceInFeet, 0, ControlMode.MotionMagic);
 	}
-	
+
 	public void rotateByAngle(double angleInDegrees) {
 		moveFeet(0, angleInDegrees, ControlMode.MotionMagic);
 	}
-	
+
 	/**
 	 * 
 	 * @param distanceInFeet
@@ -113,34 +115,34 @@ public class Drive extends DifferentialDrive {
 	 */
 	public void moveFeet (double distanceInFeet, double rotationInDegrees, ControlMode mode) {
 		double turnAmtTicks, distAmtTicks, leftDistTicks, rightDistTicks, radius, distTurnInFeet, angleInRadians;
-		
+
 		LOGGER.trace("Automated move of " + distanceInFeet + " feet and " + rotationInDegrees + " degree turn.");
 		radius = RobotMap.WHEEL_BASE_WIDTH / 2;
 		distAmtTicks = feetToTicks(distanceInFeet); //Converts distance to ticks in feet.
 		angleInRadians = Math.toRadians(rotationInDegrees);
 		distTurnInFeet = radius * angleInRadians; //This is the distance we want to turn.
 		turnAmtTicks = (feetToTicks(distTurnInFeet)); //Converts turn angle in ticks to degrees, then to radians.
-		
+
 		rightDistTicks = -1 * (distAmtTicks - turnAmtTicks);
 		leftDistTicks = distAmtTicks + turnAmtTicks;
-		
+
 		LOGGER.debug("Distance in Feet - Right: " + df.format(ticksToFeet(rightDistTicks)) + " Left: " + df.format(ticksToFeet(leftDistTicks)));
 		LOGGER.debug("Current Position - Right: " + df.format(getRightDistance()) + " Left: " + df.format(getLeftDistance()));	
-	
+
 		left.set(mode, rightDistTicks);		
 		right.set(mode, leftDistTicks);		
 	}
-	
+
 	public double getLeftDistance() {
 		double leftLeadSensorPos = ticksToFeet(left.sensorPosition());
 		return leftLeadSensorPos;
 	}
-	
+
 	public double getRightDistance() {
 		double rightLeadSensorPos = -1 * ticksToFeet(right.sensorPosition());
 		return rightLeadSensorPos;
 	}
-	
+
 	/**
 	 * Gets the distance moved for checking drive modes.
 	 *
@@ -165,7 +167,7 @@ public class Drive extends DifferentialDrive {
 		LOGGER.trace(feet + " feet = " + ticks + " ticks.");
 		return ticks;
 	}
-	
+
 	private double ticksToFeet(double ticks) {
 		double feet = (ticks / RobotMap.WHEEL_ENCODER_CODES_PER_REVOLUTION) * (RobotMap.WHEEL_CIRCUMFERENCE / 12);
 		LOGGER.trace(ticks + " ticks = " + feet + " feet.");

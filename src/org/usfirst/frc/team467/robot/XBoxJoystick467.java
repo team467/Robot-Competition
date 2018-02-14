@@ -10,6 +10,8 @@ import java.util.EnumMap;
 
 import org.apache.log4j.Logger;
 
+import org.apache.log4j.Logger;
+
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 
@@ -17,14 +19,14 @@ import edu.wpi.first.wpilibj.GenericHID.RumbleType;
  *
  */
 public class XBoxJoystick467 {
-    private static final Logger LOGGER = Logger.getLogger(XBoxJoystick467.class);
 
-    private XboxController xbox;
-    private String name;
-    private int pov = 0;
+	private static final Logger LOGGER = Logger.getLogger(XBoxJoystick467.class);
+	private XboxController xbox;
+	private String name;
+	private int pov = 0;
 
-    private static final double DEADZONE = 0.1;
-
+	private static final double DEADZONE = 0.1;
+	
     private static final double SENSITIVITY_MODIFIER = 0.6;
     
     public EnumMap<Button, Boolean> buttonDown = new EnumMap<>(Button.class);
@@ -138,7 +140,7 @@ public class XBoxJoystick467 {
         // TODO: Get the joystick
         return xbox;
     }
-
+    
     private void readButtons() {
     	for (Button b : Button.values()) {
     		prev_buttonDown.put(b, buttonDown.get(b));
@@ -265,7 +267,7 @@ public class XBoxJoystick467 {
     public void rightRumble(double value) {
         xbox.setRumble(RumbleType.kRightRumble, value);
     }
-
+    
     public void setRumble(RumbleType type, double value) {
         xbox.setRumble(type, value);
     }
