@@ -1,45 +1,21 @@
-/*----------------------------------------------------------------------------*/
-/* Copyright (c) FIRST 2008. All Rights Reserved.                             */
-
-/* Open Source Software - may be modified and shared by FRC teams. The code   */
-/* must be accompanied by the FIRST BSD license file in the root directory of */
-/* the project.                                                               */
-/*----------------------------------------------------------------------------*/
 package org.usfirst.frc.team467.robot;
 
-<<<<<<< HEAD
 import edu.wpi.cscore.CvSink;
 import edu.wpi.cscore.CvSource;
-=======
-//import edu.wpi.first.wpilibj.networktables.NetworkTable;
->>>>>>> master
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.cscore.VideoCamera.WhiteBalance;
 import edu.wpi.first.wpilibj.CameraServer;
 
-import edu.wpi.first.wpilibj.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-import org.usfirst.frc.team467.robot.Elevator.Stops;
 import org.usfirst.frc.team467.robot.Autonomous.ActionGroup;
 import org.usfirst.frc.team467.robot.Autonomous.Actions;
 import org.usfirst.frc.team467.robot.vision.VisionProcessing;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
-
 import org.apache.log4j.Logger;
 import org.opencv.core.Mat;
-import org.opencv.imgproc.Imgproc;
-
-import edu.wpi.first.wpilibj.DigitalInput;
-import org.usfirst.frc.team467.robot.Autonomous.ActionGroup;
-import org.usfirst.frc.team467.robot.Autonomous.Actions;
-import org.usfirst.frc.team467.robot.simulator.DriveSimulator;
-
-import org.usfirst.frc.team467.robot.XBoxJoystick467.Button;
-import org.usfirst.frc.team467.robot.RobotMap.RobotID;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to each mode, as described in the
@@ -103,7 +79,7 @@ public class Robot extends TimedRobot {
 		}).start();
 
 		// Initialize RobotMap
-		RobotMap.init(RobotID.Competition_1);
+		RobotMap.init(RobotMap.RobotID.PreseasonBot);
 		
 		// Make robot objects
 		driverstation = DriverStation.getInstance();
@@ -144,10 +120,6 @@ public class Robot extends TimedRobot {
 
 	}
 
-		LOGGER.debug("Elevator height=" + elevator.getHeightFeet());
-
-		driverstation.logJoystickIDs();
-	}
 	//TODO: Figure out the NetworkTables later.
 	//	String[] autoList = {"none", "go"};
 	//			 
@@ -186,21 +158,11 @@ public class Robot extends TimedRobot {
 	}
 
 	public void testInit() {
-		elevator.moveToHeight(Stops.fieldSwitch);
 	}
 
 	public void testPeriodic() {
 		elevator.periodic();
 		driverstation.readInputs();
-
-		if (driverstation.getNavJoystick().pressed(Button.b)){ 
-			driverstation.getNavRumbler().rumble(150, 0.3);
-			LOGGER.info("You pressed b");
-		}
-		if (driverstation.getDriveJoystick().pressed(Button.b)){ 
-			driverstation.getNavRumbler().rumble(150, 1.0);
-			LOGGER.info("You pressed b");
-		}
 
 	}
 
