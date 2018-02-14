@@ -133,7 +133,6 @@ public class Robot extends TimedRobot {
 	}
 
 	public void teleopInit() {
-
 		driverstation.readInputs();
 		//		autonomous.terminate();
 		//		autonomous = Actions.doNothing();
@@ -161,8 +160,8 @@ public class Robot extends TimedRobot {
 
 
 	public void autonomousPeriodic() {
-//		drive.motionMagicMove(amountToGoLeft, amountToGoRight);
-//		autonomous.run();
+		//		drive.motionMagicMove(amountToGoLeft, amountToGoRight);
+		//		autonomous.run();
 	}
 
 
@@ -176,17 +175,17 @@ public class Robot extends TimedRobot {
 		double MIN_DRIVE_SPEED = 0.1;
 		double left = driverstation.getArcadeSpeed();
 		double right = driverstation.getArcadeTurn();
-		
+
 		LOGGER.debug("left " + left + " right " + right);
-		LOGGER.debug(grabber.hasCube());
-		
+		LOGGER.debug(grabber.justGotCube());
+
 		if (Math.abs(left) < MIN_DRIVE_SPEED) {
 			left = 0.0;
 		}
 		if (Math.abs(right) < MIN_DRIVE_SPEED) {
 			right = 0.0;
 		}
-		
+
 		switch (driverstation.getDriveMode()) {
 		case ArcadeDrive:
 			double speed = driverstation.getArcadeSpeed();
@@ -204,11 +203,6 @@ public class Robot extends TimedRobot {
 		}
 
 		elevator.manualMove(driverstation.getElevatorSpeed());
-		LOGGER.debug("Elevator Moving");
-
-		if (grabber.hasCube()) {
-			driverstation.getNavRumbler().rumble(100, 1.0);
-		}
 
 		grabber.grab(driverstation.getGrabThrottle());
 
