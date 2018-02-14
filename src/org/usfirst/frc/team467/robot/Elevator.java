@@ -65,6 +65,7 @@ public class Elevator {
 		feetPerTick = (RobotMap.ELEVATOR_GEAR_CIRCUMFERENCE_IN_INCHES / 12) / RobotMap.ELEVATOR_TICKS_PER_TURN;
 		maxTicksPerIteration = RobotMap.ELEVATOR_TICKS_PER_TURN * RobotMap.MAX_ELEVATOR_RPM / 60 / 100; // 10 ms per iteration
 		previousHeight = getHeightFeet();
+		this.heightController.setInverted(true);
 
 		m_safetyHelper = new MotorSafetyHelper(this.heightController);
 	}
