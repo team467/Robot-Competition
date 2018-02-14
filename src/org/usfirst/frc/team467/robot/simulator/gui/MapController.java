@@ -1,5 +1,6 @@
 package org.usfirst.frc.team467.robot.simulator.gui;
 
+import java.util.ArrayList;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -68,7 +69,7 @@ public class MapController {
 	 */
 	private RobotShape robotShape = new RobotShape();
 	private FieldShape fieldShape = new FieldShape();
-	private PowerCubeShape cube = new PowerCubeShape();
+	private ArrayList<PowerCubeShape> cubes = new ArrayList<PowerCubeShape>();
 	
 	/**
 	 * Initialize method, automatically called by @{link FXMLLoader}
@@ -76,7 +77,25 @@ public class MapController {
 	public void initialize() {
 		this.robotActive = false;
 		fieldShape.context(field.getGraphicsContext2D());
+		
+		double redSwitchCubeOffsetX = 90; //next to red alliance station
+		double redSwitchCubeOffsetY = 197.5;
+		
+			for (int i = 0; i < 6; i++) {
+				cubes.add(new PowerCubeShape(redSwitchCubeOffsetX + i * 2.175 * 12, redSwitchCubeOffsetY)); // 1.25' in between each cube ; y-coordinate is same for 6 cubes
+			}
+	
+		double blueSwitchCubeOffsetX = 90; //next to blue alliance station
+		double blueSwitchCubeOffsetY = 448;
+			
+			for (int i = 0; i < 6; i++) {
+				cubes.add(new PowerCubeShape(blueSwitchCubeOffsetX + i * 2.175 * 12, blueSwitchCubeOffsetY)); // 1.25' in between each cube ; y-coordinate is same for 6 cubes
+			}
+			
+	
 	}
+		
+		
 
 	/**
 	 * The action triggered by pushing the button on the GUI. It creates a thread that monitors
@@ -86,9 +105,11 @@ public class MapController {
 	protected void startRobot() {
 		
 		if (!this.robotActive) {
-			
+				
 			robotArea.getChildren().add(robotShape.createRobotShape());
-			robotArea.getChildren().add(cube.createPowerCube());
+			for (PowerCubeShape cube : cubes) {
+				robotArea.getChildren().add(cube.createPowerCube());
+			}
 			
 			robotActive = true;
 			robotShape.init();
@@ -143,7 +164,11 @@ public class MapController {
 	public void update() {
 		Platform.runLater(() -> {
 			fieldShape.draw();
-			cube.draw();
+		
+			for (PowerCubeShape cube : cubes) {
+				cube.draw();
+			}
+			
 			robotShape.draw();
 		});
 
