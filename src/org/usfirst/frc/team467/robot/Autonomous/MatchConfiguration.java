@@ -4,7 +4,10 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 import edu.wpi.first.wpilibj.DriverStation;
-
+/** 
+ * This class determines the robots position during the beginning of the game
+ *
+ */
 public class MatchConfiguration {
 
 	private static MatchConfiguration instance;
@@ -40,10 +43,12 @@ public class MatchConfiguration {
 
 	private StartPosition startPosition;
 
-	public void setSide() {
+	public void setSides() {
 		String gameData = DriverStation.getInstance().getGameSpecificMessage();
 		// String will be three letters, such as 'LRL' or 'RRR' or 'RRL'
 		if(gameData.length() > 0) {
+
+			// Our switch
 			if(gameData.charAt(0) == 'L') {
 				if (teamColor == TeamColor.BLUE ) {
 					blueSwitch = Side.LEFT;
@@ -52,17 +57,65 @@ public class MatchConfiguration {
 						redSwitch = Side.LEFT;
 					}
 				}
-				if(gameData.charAt(0) == 'R') {
-					if (teamColor == TeamColor.BLUE) {
-						blueSwitch = Side.RIGHT;
-					} else {
-						if (teamColor == TeamColor.RED) {
-							redSwitch = Side.RIGHT;
-						}
+			}
+			if(gameData.charAt(0) == 'R') {
+				if (teamColor == TeamColor.BLUE) {
+					blueSwitch = Side.RIGHT;
+				} else {
+					if (teamColor == TeamColor.RED) {
+						redSwitch = Side.RIGHT;
+					}
+				}
+			}	
+		}
+
+		// Scale
+		if(gameData.charAt(1) == 'L') {
+			scale = Side.LEFT;
+		} else {
+			scale = Side.RIGHT;
+		}
+
+		// Their switch
+		if(gameData.charAt(2) == 'L') {
+			if (teamColor == TeamColor.BLUE ) {
+				blueSwitch = Side.LEFT;
+			} else {
+				if (teamColor == TeamColor.RED) {
+					redSwitch = Side.LEFT;
+				}
+			}
+			if(gameData.charAt(2) == 'R') {
+				if (teamColor == TeamColor.BLUE) {
+					blueSwitch = Side.RIGHT;
+				} else {
+					if (teamColor == TeamColor.RED) {
+						redSwitch = Side.RIGHT;
 					}
 				}
 			}
 		}
+	}
+	
+	public void allianceColor(){
+		DriverStation.Alliance color;
+		color = DriverStation.getInstance().getAlliance();
+		if(color == DriverStation.Alliance.Blue) {
+			LOGGER.info("Alliance is blue");
+			teamColor = TeamColor.BLUE;
+		} else if (color == DriverStation.Alliance.Red){
+			LOGGER.info("Alliance is red");
+			teamColor = TeamColor.RED;
+		} else {
+			LOGGER.info("Alliance not found");
+			teamColor = TeamColor.UNKNOWN;
+		}
+	}
+	
+	public void matchTime(){
+		double time;
+		time = DriverStation.getInstance().getMatchTime();
+		LOGGER.info("Match Time=" + time);
 	}
 
 	public static MatchConfiguration getInstance() {
