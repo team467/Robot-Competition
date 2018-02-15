@@ -1,10 +1,5 @@
 package org.usfirst.frc.team467.robot;
 
-import edu.wpi.cscore.CvSink;
-import edu.wpi.cscore.CvSource;
-import edu.wpi.cscore.UsbCamera;
-import edu.wpi.cscore.VideoCamera.WhiteBalance;
-import edu.wpi.first.wpilibj.CameraServer;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -12,10 +7,15 @@ import org.usfirst.frc.team467.robot.Autonomous.ActionGroup;
 import org.usfirst.frc.team467.robot.Autonomous.Actions;
 import org.usfirst.frc.team467.robot.vision.VisionProcessing;
 
+import edu.wpi.cscore.CvSink;
+import edu.wpi.cscore.CvSource;
+import edu.wpi.cscore.UsbCamera;
+import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.TimedRobot;
 
 import org.apache.log4j.Logger;
 import org.opencv.core.Mat;
+import org.opencv.imgproc.Imgproc;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to each mode, as described in the
@@ -30,7 +30,7 @@ public class Robot extends TimedRobot {
 	private DriverStation driverstation;
 	private Drive drive;
 	private ActionGroup autonomous;
-
+	
 	private VisionProcessing vision;
 
 	private Gyrometer gyro;
@@ -43,43 +43,34 @@ public class Robot extends TimedRobot {
 	 */
 	public void robotInit() {
 
+	
 		
-		vision = VisionProcessing.getInstance();
-
 		// Initialize logging framework
 		Logging.init();
-		new Thread(() -> {
+		// Initialize RobotMap
+		RobotMap.init(RobotMap.RobotID.PreseasonBot);
+		
+		// Camera for cube detection
+		
+//		vision.init();
+		new Thread (() -> {
 			UsbCamera camera = CameraServer.getInstance().startAutomaticCapture();
-			camera.setResolution(320, 240);
-			camera.setFPS(30);
-
-			camera.setBrightness(50);
-			camera.setWhiteBalanceManual(WhiteBalance.kFixedFluorescent1);
-//			camera.setExposureManual(0);
+			camera.setResolution(640, 480);
 			
-//			camera.setBrightness(100);
-			camera.setExposureAuto();
-			camera.setWhiteBalanceAuto();
-			
-			
-			CvSink cvsink = CameraServer.getInstance().getVideo();
-			CvSource outputsource = CameraServer.getInstance().putVideo("CubeCam", 320, 240); //CubeCam
+			CvSink cvSink = CameraServer.getInstance().getVideo();
+			CvSource outputStream = CameraServer.getInstance().putVideo("Camera Video", 640, 480);
 			
 			Mat source = new Mat();
 			Mat output = new Mat();
 			
 			while(!Thread.interrupted()) {
-				cvsink.grabFrame(source);
-				vision.findCube(source);
-//				if (!source.empty()) {
-//					Imgproc.cvtColor(source, output, Imgproc.COLOR_BGR2GRAY);
-//					outputsource.putFrame(output);
-//				}
+				cvSink.grabFrame(source);
+				Imgproc.cvtColor(source, output, Imgproc.COLOR_BGR2GRAY);
+				outputStream.putFrame(output);
+				
 			}
+			
 		}).start();
-
-		// Initialize RobotMap
-		RobotMap.init(RobotMap.RobotID.PreseasonBot);
 		
 		// Make robot objects
 		driverstation = DriverStation.getInstance();
@@ -97,8 +88,6 @@ public class Robot extends TimedRobot {
 		// Initialize math lookup table
 		LookUpTable.init();
 
-		//		vision = VisionProcessing.getInstance();
-
 		// TODO: Implement actions.doNothing
 		//		autonomous = Actions.doNothing();
 
@@ -110,8 +99,8 @@ public class Robot extends TimedRobot {
 	}
 
 	public void disabledPeriodic() {
-		LOGGER.trace("Disabled Periodic");
-		LOGGER.info("Angle Measure in Degrees = " + Math.toDegrees(vision.averageAngle()));
+//		LOGGER.trace("Disabled Periodic");
+//		LOGGER.info("Angle Measure in Degrees = " + Math.toDegrees(vision.averageAngle()));
 //		double angle = vision.angleMeasure();
 //		if (!Double.isNaN(angle)) {
 //			LOGGER.info("Angle Measure in Degrees = " + Math.toDegrees(angle));
@@ -129,10 +118,6 @@ public class Robot extends TimedRobot {
 	//	
 	public void autonomousInit() {
 		final String autoMode = SmartDashboard.getString("Auto Selector", "none");
-
-
-
-	
 
 		LOGGER.info(drive);
 		// TODO: call appropriate auto modes based on list
@@ -158,11 +143,13 @@ public class Robot extends TimedRobot {
 	}
 
 	public void testInit() {
+		vision.camera();
 	}
 
 	public void testPeriodic() {
-		elevator.periodic();
-		driverstation.readInputs();
+		vision.showFrame();
+//		elevator.periodic();
+//		driverstation.readInputs();
 
 	}
 
@@ -185,8 +172,8 @@ public class Robot extends TimedRobot {
 		double left = driverstation.getArcadeSpeed();
 		double right = driverstation.getArcadeTurn();
 		
-		LOGGER.debug("left " + left + " right " + right);
-		LOGGER.debug(grabber.hasCube());
+//		LOGGER.debug("left " + left + " right " + right);
+//		LOGGER.debug(grabber.hasCube());
 		
 		if (Math.abs(left) < MIN_DRIVE_SPEED) {
 			left = 0.0;
@@ -213,7 +200,6 @@ public class Robot extends TimedRobot {
 		
 		elevator.manualMove(driverstation.getElevatorSpeed());
 		LOGGER.debug("Elevator Moving");
-		
 		if (grabber.hasCube()) {
 			driverstation.getNavRumbler().rumble(100, 1.0);
 		}

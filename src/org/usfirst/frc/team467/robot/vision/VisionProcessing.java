@@ -2,8 +2,6 @@ package org.usfirst.frc.team467.robot.vision;
 
 import java.util.ArrayList;
 
-import javax.swing.Box;
-
 import org.apache.log4j.Logger;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
@@ -13,51 +11,94 @@ import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 import org.opencv.videoio.VideoCapture;
 
+import edu.wpi.cscore.CvSink;
+import edu.wpi.cscore.CvSource;
+import edu.wpi.cscore.UsbCamera;
+import edu.wpi.cscore.VideoCamera.WhiteBalance;
+import edu.wpi.first.wpilibj.CameraServer;
+
 //import javafx.scene.shape.Box;
 
 public class VisionProcessing {
+
 	public double cubeCenterPointY;
 	public double cubeCenterPointX;
+	
 	private DetectPowerCubePipeline pipeline;
 	private static final Logger LOGGER = Logger.getLogger(VisionProcessing.class);
 	private static VisionProcessing instance;
-	private VideoCapture camera;
+
 	private double windowHeight;
 	private double windowWidth;
 	private double cameraAngleToCube;
+	
 	public static final double CUBE_WIDTH = 13.0;
 	public static final double CUBE_HEIGHT = 11.0;
 	private static final double FOCAL_LENGTH = 634;
 
+	private UsbCamera camera = null;
+
 	private double average;
 	private MovingAverage averageAngle;
 
-	// the id of the camera to be used
-	public static final int CAMERA_ID = 0;
+	
+	public UsbCamera camera() {
+		camera = CameraServer.getInstance().startAutomaticCapture();
+		camera.setResolution(320, 240);
 
-	public static void main(String args[]) {
-		VisionProcessing vision = VisionProcessing.getInstance();
+		camera.setFPS(30);
+		camera.setBrightness(50);
+		camera.setWhiteBalanceManual(WhiteBalance.kFixedFluorescent1);
+		camera.setExposureManual(0);
+		
+		return camera;
 	}
+	
+	public void showFrame() {
+		CvSink cvsink = CameraServer.getInstance().getVideo();
+		Mat source = new Mat();
+		CvSource outputsource = CameraServer.getInstance().putVideo("CubeCam", 320, 240); // CubeCam
+		cvsink.grabFrame(source);
+		outputsource.putFrame(source);
+	}
+	
+	public void init() {
+		
+		camera = CameraServer.getInstance().startAutomaticCapture();
+		camera.setResolution(320, 240);
 
+		camera.setFPS(30);
+		camera.setBrightness(50);
+		camera.setWhiteBalanceManual(WhiteBalance.kFixedFluorescent1);
+		camera.setExposureManual(0);
+
+		// For Camera for driver
+//		camera.setBrightness(100);
+//		camera.setExposureAuto();
+//		camera.setWhiteBalanceAuto();
+
+		new Thread(() -> {
+
+			Mat source = new Mat();
+			Mat output = new Mat();
+			CvSink cvsink = CameraServer.getInstance().getVideo();
+			CvSource outputsource = CameraServer.getInstance().putVideo("CubeCam", 320, 240); // CubeCam
+
+			while (!Thread.interrupted()) {
+				cvsink.grabFrame(source);
+				outputsource.putFrame(source);
+//				findCube(source);
+				// if (!source.empty()) {
+				// Imgproc.cvtColor(source, output, Imgproc.COLOR_BGR2GRAY);
+				// outputsource.putFrame(output);
+				// }
+			}
+		}).start();
+	}
+		
 	private VisionProcessing() {
 		pipeline = new DetectPowerCubePipeline();
 		averageAngle = new MovingAverage(25); 
-		// camera = new VideoCapture();
-		// camera.open(VisionProcessing.CAMERA_ID);
-	}
-
-	public Mat grabFrame() {
-		Mat frame = new Mat();
-		if (camera.isOpened()) {
-			try {
-				camera.read(frame);
-				findCube(frame);
-			} catch (Exception e) {
-				// log the error
-				System.err.println("Exception during the image elaboration: " + e);
-			}
-		}
-		return frame;
 	}
 
 	public static VisionProcessing getInstance() {
@@ -83,11 +124,12 @@ public class VisionProcessing {
 			for (MatOfPoint points : pipeline.convexHullsOutput()) {
 				Rect box = Imgproc.boundingRect(points);
 				boundingBoxes.add(box);
+				LOGGER.info("ADDED Bounding BOX X:" + box.x + " Y: " + box.y + " H: " + box.height + " W: " + box.width);
 				cubeCenterPointY = (box.height / 2) + box.y;
 				cubeCenterPointX = (box.width / 2) + box.x;
-				Imgproc.rectangle(source, new Point(box.x, box.y), new Point(box.x + box.width, box.y + box.height),
-						new Scalar(0, 255, 0, 0), 5);
-
+//				Imgproc.rectangle(source, new Point(box.x, box.y), new Point(box.x + box.width, box.y + box.height),
+//						new Scalar(0, 255, 0, 0), 5);
+//
 				// if (box.height < box.width) {
 				// //TODO : This configuration has it so that the grabber barely fits, be exact.
 				// System.out.println("orientation 1");
@@ -113,7 +155,10 @@ public class VisionProcessing {
 					average = averageAngle.average(cameraAngleToCube);
 				}
 
-//				cameraAngleToCube = Math.atan2(cameraDistanceX, FOCAL_LENGTH);
+				LOGGER.info("Angle Measure in Degrees = " +
+						 Math.toDegrees(average));
+
+				//				cameraAngleToCube = Math.atan2(cameraDistanceX, FOCAL_LENGTH);
 
 				// System.out.println("Window width: " + windowWidth + " Window Height: " +
 				// windowHeight); //The width is 640 pixels and the height is 480 pixels.
@@ -122,8 +167,6 @@ public class VisionProcessing {
 
 				// System.out.println("x: " + box.x + " y: " + box.y + " width: " + box.width +
 				// " height: " + box.height);
-				// System.out.println("Angle Measure in Degrees = " +
-				// Math.toDegrees(cameraAngleToCube));
 				// System.out.println("Angle Measure in Radians = " + cameraAngleToCube);
 				break;
 			}
@@ -151,8 +194,4 @@ public class VisionProcessing {
 		return average;
 	}
 
-	@Override
-	public String toString() {
-		return "HI";
-	}
 }
