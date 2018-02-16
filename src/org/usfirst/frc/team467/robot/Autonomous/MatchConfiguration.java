@@ -46,7 +46,29 @@ public class MatchConfiguration {
 	private Side scale;
 
 	private StartPosition startPosition;
+	
+	private MatchConfiguration() {
+		LOGGER.setLevel(Level.INFO);
+		teamColor = TeamColor.UNKNOWN;
+		redSwitch = Side.UNKNOWN;
+		blueSwitch = Side.UNKNOWN;
+		scale = Side.UNKNOWN;
+		startPosition = StartPosition.UNKNOWN;
 
+		String[] autoList = {"none", "go"};
+
+		NetworkTableInstance tableInstance = NetworkTableInstance.getDefault();
+		NetworkTable table  = tableInstance.getTable("SmartDashboard");
+		table.getEntry("Auto List").setStringArray(autoList);
+	}
+
+	public static MatchConfiguration getInstance() {
+		if (instance == null) {
+			instance = new MatchConfiguration();
+		}
+		return instance;
+	}
+	
 	public void allianceColor(){
 		DriverStation.Alliance color;
 		color = DriverStation.getInstance().getAlliance();
@@ -123,28 +145,6 @@ public class MatchConfiguration {
 	//		durationMS -= ITERATION_TIME_MS;
 	//		LOGGER.info("Match Time=" + time);
 	//	}
-
-	public static MatchConfiguration getInstance() {
-		if (instance == null) {
-			instance = new MatchConfiguration();
-		}
-		return instance;
-	}
-
-	private MatchConfiguration() {
-		LOGGER.setLevel(Level.INFO);
-		teamColor = TeamColor.UNKNOWN;
-		redSwitch = Side.UNKNOWN;
-		blueSwitch = Side.UNKNOWN;
-		scale = Side.UNKNOWN;
-		startPosition = StartPosition.UNKNOWN;
-
-		String[] autoList = {"none", "go"};
-
-		NetworkTableInstance tableInstance = NetworkTableInstance.getDefault();
-		NetworkTable table  = tableInstance.getTable("SmartDashboard");
-		table.getEntry("Auto List").setStringArray(autoList);
-	}
 
 	public TeamColor teamColor() {
 		return teamColor;

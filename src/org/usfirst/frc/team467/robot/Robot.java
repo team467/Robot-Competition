@@ -35,6 +35,7 @@ public class Robot extends TimedRobot {
 	private DriverStation driverstation;
 	private Drive drive;
 	private ActionGroup autonomous;
+	private MatchConfiguration matchConfig;
 	
 	private Gyrometer gyro;
 	
@@ -67,6 +68,8 @@ public class Robot extends TimedRobot {
 		
 		// Initialize math lookup table
 		LookUpTable.init();
+		
+		matchConfig = MatchConfiguration.getInstance();
 		
 //		vision = VisionProcessing.getInstance();
 		
@@ -140,8 +143,9 @@ public class Robot extends TimedRobot {
 
 
 		driverstation.periodic();
-		//MatchConfiguration.getInstance().allianceColor();
+		MatchConfiguration.getInstance().allianceColor();
 		//MatchConfiguration.getInstance().matchTime();
+		MatchConfiguration 
 	}
 
 
