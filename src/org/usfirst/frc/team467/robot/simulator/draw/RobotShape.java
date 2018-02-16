@@ -6,6 +6,7 @@ package org.usfirst.frc.team467.robot.simulator.draw;
 import java.text.DecimalFormat;
 
 import org.apache.log4j.Logger;
+import org.usfirst.frc.team467.robot.Elevator.Stops;
 import org.usfirst.frc.team467.robot.RobotMap;
 import org.usfirst.frc.team467.robot.simulator.Robot;
 import org.usfirst.frc.team467.robot.simulator.communications.RobotData;
@@ -32,6 +33,13 @@ public class RobotShape {
 	private Rectangle chassisShape = null;
 	private Rectangle elevatorShape = null;
 
+	
+	private Stops elevatorStop = Stops.floor;
+	private static final Color ELEVATOR_FLOOR_COLOR = Color.LAWNGREEN;
+	private static final Color ELEVATOR_SWITCH_COLOR = Color.LEMONCHIFFON;
+	private static final Color ELEVATOR_SCALE_LOW_COLOR = Color.LIGHTCYAN;
+	private static final Color ELEVATOR_SCALE_HIGH_COLOR = Color.LIGHTSEAGREEN;
+	
 	// Network Tables
 	RobotData data = RobotData.getInstance();
 	
@@ -159,6 +167,31 @@ public class RobotShape {
 		return startingLocation.y + left.y;
 	}
 	
+	private void colorElevator() {
+		switch (elevatorStop) {
+		
+		case floor:
+			elevatorShape.setFill(ELEVATOR_FLOOR_COLOR);
+			break;
+
+		case fieldSwitch:
+			elevatorShape.setFill(ELEVATOR_SWITCH_COLOR);
+			break;
+
+		case lowScale:
+			elevatorShape.setFill(ELEVATOR_SCALE_LOW_COLOR);
+			break;
+		
+		case highScale:
+			elevatorShape.setFill(ELEVATOR_SCALE_HIGH_COLOR);
+			break;
+
+		default:
+			elevatorShape.setFill(Color.WHITESMOKE);
+		}
+		
+	}
+	
 	private void loadData() {
 		if(RUN_LOCAL) {
 			robot.autonomousPeriodic();
@@ -174,13 +207,16 @@ public class RobotShape {
 		previousRightDistance = rightDistance;
 		leftDistance = data.leftDistance();
 		rightDistance = data.rightDistance();
-		
 		startingLocation = data.startingLocation();
+		
+		elevatorStop = data.elevatorStop();
+
 		updateMapPosition((leftDistance - previousLeftDistance), (rightDistance - previousRightDistance));
 	}
 	
 	public void draw() {
 		loadData();	
+		colorElevator();
 		robotShape.relocate((FieldShape.FIELD_OFFSET_Y + leftY() * 12),
 				(FieldShape.FIELD_OFFSET_X + (leftX() + RobotMap.WHEEL_BASE_WIDTH/2) * 12));
 		robotShape.setRotate(Math.toDegrees(mapHeadingAngle));

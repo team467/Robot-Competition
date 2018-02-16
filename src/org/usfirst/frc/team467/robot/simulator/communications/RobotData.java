@@ -32,8 +32,6 @@ public class RobotData {
 	
 	private static RobotData instance = null;
 	
-	private Elevator.Stops elevtorStop;
-	
 	private RobotData() {
 		LOGGER.setLevel(Level.DEBUG);
 		
