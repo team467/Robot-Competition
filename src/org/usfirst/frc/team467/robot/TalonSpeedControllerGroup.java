@@ -27,15 +27,15 @@ public class TalonSpeedControllerGroup implements SpeedController {
 	}
 	
 	public TalonSpeedControllerGroup(ControlMode controlMode, boolean sensorIsInverted,
-			WPI_TalonSRX tSCGleader, WPI_TalonSRX tSCGfollower1, WPI_TalonSRX tSCGfollower2) {
-		this.leader = tSCGleader;
-		this.follower1 = tSCGfollower1;
-		this.follower2 = tSCGfollower2;	
+			WPI_TalonSRX leader, WPI_TalonSRX follower1, WPI_TalonSRX follower2) {
+		this.leader = leader;
+		this.follower1 = follower1;
+		this.follower2 = follower2;	
 		this.controlMode = controlMode;
 		
-		initMotor(leader);
-		initMotor(follower1);
-		initMotor(follower2);
+		initMotor(this.leader);
+		initMotor(this.follower1);
+		initMotor(this.follower2);
 		
 		//only have sensor on leader
 		leader.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, RobotMap.TALON_TIMEOUT);
