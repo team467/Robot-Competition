@@ -115,7 +115,7 @@ public class DriveSimulator {
 		LOGGER.debug("Left Move: " + df.format(leftPositionReading) 
 			+ " Right Move: " + df.format(rightPositionReading));
 		
-		data.update(rightPosition(), leftPosition());
+		data.updateDrivePosition(rightPosition(), leftPosition());
 		
 	}
 
@@ -148,7 +148,7 @@ public class DriveSimulator {
 		RobotMap.init(RobotID.PreseasonBot);
 		DriveSimulator drive = DriveSimulator.getInstance();
 		drive.zero();
-		RobotData.getInstance().startPosition(20, 0);
+		RobotData.getInstance().startingLocation(20, 0);
 				
 		do {
 			drive.rotateByAngle(360+90);

@@ -69,7 +69,7 @@ public class Robot {
 	
 	public void autonomousInit() {
 		drive.zero();
-		data.startPosition(2.5, 0);
+		data.startingLocation(2.5, 0);
 		data.send();
 		mode = AutonomousModes.move1;
 		switch (mode) {
