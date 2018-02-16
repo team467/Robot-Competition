@@ -4,6 +4,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.log4j.Logger;
 import org.usfirst.frc.team467.robot.Drive;
+import org.usfirst.frc.team467.robot.Elevator;
 import org.usfirst.frc.team467.robot.Grabber;
 import org.usfirst.frc.team467.robot.RobotMap;
 import org.usfirst.frc.team467.robot.simulator.DriveSimulator;
@@ -11,6 +12,7 @@ import org.usfirst.frc.team467.robot.simulator.DriveSimulator;
 import edu.wpi.first.wpilibj.Timer;
 
 public class Actions {
+
 	private static final Logger LOGGER = Logger.getLogger(Actions.class);
 
 	public static final Action nothing(){
@@ -85,6 +87,37 @@ public class Actions {
 				"Pausing grabber",
 				new ActionGroup.RunOnce(() -> grabber.pause()));
 	}
+	
+	public static Action drop() {
+		Elevator elevator = Elevator.getInstance();
+		return new Action(
+				"Elevator going to lowest level", 
+				new ActionGroup.RunOnce(() -> elevator.floor()));
+	}
+	
+	public static Action Girrafe() {
+		Elevator elevator = Elevator.getInstance();
+		return new Action(
+				"Elevator going up to switch height", 
+				new ActionGroup.RunOnce(() -> elevator.switchHeight()));
+				
+	}
+	
+	public static Action lowScale() {
+		Elevator elevator = Elevator.getInstance();
+		return new Action(
+				"Elevator going to lower level on scale",
+				new ActionGroup.RunOnce(() -> elevator.lowScale()));
+	}
+	
+	public static Action highScale() {
+		Elevator elevator = Elevator.getInstance();
+		return new Action(
+				"Elevator going to higher level on scale", 
+				new ActionGroup.RunOnce(() -> elevator.highScale()));
+				
+	}
+	
 	
 	
 	
