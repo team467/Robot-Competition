@@ -1,11 +1,28 @@
 package org.usfirst.frc.team467.robot;
 
 import org.apache.log4j.Logger;
+import org.usfirst.frc.team467.robot.Grabber.GrabberState;
 
 import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.SpeedController;
 
 public class Grabber {
+
+	public enum GrabberState {
+		GRAB,
+		NEUTRAL,
+		RELEASE
+	}
+
+	public static final int GRAB_TIME_MS = 1000;
+	public static final int RELEASE_TIME_MS = 1000;
+
+	private int grabCount = 0;
+	private int releaseCount = 0;
+	private int count = 0;
+
+	private GrabberState state = GrabberState.NEUTRAL;
+
 	private static final Logger LOGGER = Logger.getLogger(Grabber.class);
 
 	private static Grabber instance;
@@ -25,6 +42,9 @@ public class Grabber {
 			right = new NullSpeedController();
 			os = OpticalSensor.getInstance();
 		}
+
+		grabCount = GRAB_TIME_MS/20;
+		releaseCount = RELEASE_TIME_MS/20;
 	}
 
 	public static Grabber getInstance() {
@@ -33,6 +53,60 @@ public class Grabber {
 		}
 
 		return instance;
+	}
+
+	public void periodic() {
+
+		if (!RobotMap.HAS_GRABBER) {
+			return;
+		}
+
+		double speed = 0.0;
+
+		switch (state) {
+
+		case GRAB:
+			if(hasCube() || count > grabCount) {
+				state = GrabberState.NEUTRAL;
+			} else {
+				speed = RobotMap.MAX_GRAB_SPEED;
+			}
+			break;
+
+		case NEUTRAL:
+			speed = 0.0;
+			break; 
+
+		case RELEASE:
+			if(count > releaseCount) {
+				state = GrabberState.NEUTRAL;
+			} else {
+				speed = -1 * RobotMap.MAX_GRAB_SPEED;
+			}
+
+			break;
+
+		default:
+
+		}
+
+		left.set(speed);
+		right.set(-1 * speed);
+		count++;
+	}
+
+	public void grab() {
+		state = GrabberState.GRAB;
+		count = 0;
+	}
+
+	public void release() {
+		state = GrabberState.RELEASE;
+		count = 0;
+	}
+
+	public void pause() {
+		state = GrabberState.NEUTRAL;
 	}
 
 	public void grab(double throttle) {
@@ -61,5 +135,10 @@ public class Grabber {
 
 	public boolean justGotCube() {
 		return !hadCube && hasCube;
+	}
+	
+	public boolean hasCube() {
+		return os.detectedTarget() && RobotMap.HAS_GRABBER;
+		
 	}
 }

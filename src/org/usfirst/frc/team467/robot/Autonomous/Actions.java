@@ -4,6 +4,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.log4j.Logger;
 import org.usfirst.frc.team467.robot.Drive;
+import org.usfirst.frc.team467.robot.Grabber;
 import org.usfirst.frc.team467.robot.RobotMap;
 import org.usfirst.frc.team467.robot.simulator.DriveSimulator;
 
@@ -63,6 +64,29 @@ public class Actions {
 //				new ActionGroup.RunOnce(() -> drive.zeroPosition()));
 				new ActionGroup.RunOnce(() -> drive.zero()));
 	}
+	
+	public static Action grabCube() {
+		Grabber grabber = Grabber.getInstance();
+		return new Action(
+				"Grabbing cube",
+				new ActionGroup.RunOnce(() -> grabber.grab()));
+	}
+	
+	public static Action releaseCube() {
+		Grabber grabber = Grabber.getInstance();
+		return new Action(
+				"Releasing cube",
+				new ActionGroup.RunOnce(() -> grabber.release()));
+	}
+	
+	public static Action pauseGrabber() {
+		Grabber grabber = Grabber.getInstance();
+		return new Action(
+				"Pausing grabber",
+				new ActionGroup.RunOnce(() -> grabber.pause()));
+	}
+	
+	
 	
 	
 	/**
