@@ -3,6 +3,8 @@ package org.usfirst.frc.team467.robot.Autonomous;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
 /** 
  * This class determines the robots position during the beginning of the game
@@ -11,7 +13,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 public class MatchConfiguration {
 	//static final int ITERATION_TIME_MS = 10;	
 	//int durationMS;
-	
+
 	private static MatchConfiguration instance;
 
 	private static final Logger LOGGER = Logger.getLogger(MatchConfiguration.class);
@@ -59,7 +61,7 @@ public class MatchConfiguration {
 			teamColor = TeamColor.UNKNOWN;
 		} 
 	}
-	
+
 	public void setSides() {
 		String gameData = DriverStation.getInstance().getGameSpecificMessage();
 		// String will be three letters, such as 'LRL' or 'RRR' or 'RRL'
@@ -136,6 +138,12 @@ public class MatchConfiguration {
 		blueSwitch = Side.UNKNOWN;
 		scale = Side.UNKNOWN;
 		startPosition = StartPosition.UNKNOWN;
+
+		String[] autoList = {"none", "go"};
+
+		NetworkTableInstance tableInstance = NetworkTableInstance.getDefault();
+		NetworkTable table  = tableInstance.getTable("SmartDashboard");
+		table.getEntry("Auto List").setStringArray(autoList);
 	}
 
 	public TeamColor teamColor() {
