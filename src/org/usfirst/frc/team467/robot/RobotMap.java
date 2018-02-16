@@ -29,14 +29,17 @@ public class RobotMap {
 	public static int LEFT_LEAD_CHANNEL;
 	public static int LEFT_FOLLOWER_1_CHANNEL;
 	public static int LEFT_FOLLOWER_2_CHANNEL;
-	public static boolean LEFT_SENSOR_IS_INVERTED;
+	
 	
 	public static int RIGHT_LEAD_CHANNEL;
 	public static int RIGHT_FOLLOWER_1_CHANNEL;
 	public static int RIGHT_FOLLOWER_2_CHANNEL;
-	public static boolean RIGHT_SENSOR_IS_INVERTED;
+	
 	public static int AUTONOMOUS_DRIVE_TIMEOUT_MS;
-
+	
+	public static boolean RIGHT_DRIVE_SENSOR_IS_INVERTED;
+	public static boolean LEFT_DRIVE_SENSOR_IS_INVERTED;
+	
 	// Initialize robot map. 
 	public static void init(RobotID id) {
 		robotID = id;
@@ -51,12 +54,12 @@ public class RobotMap {
 			LEFT_LEAD_CHANNEL = 1;
 			LEFT_FOLLOWER_1_CHANNEL = 2;
 			LEFT_FOLLOWER_2_CHANNEL = 3;
-			LEFT_SENSOR_IS_INVERTED = true;
+			LEFT_DRIVE_SENSOR_IS_INVERTED = true;
 			
 			RIGHT_LEAD_CHANNEL = 4;
 			RIGHT_FOLLOWER_1_CHANNEL = 5;
 			RIGHT_FOLLOWER_2_CHANNEL = 6;
-			RIGHT_SENSOR_IS_INVERTED = true;
+			RIGHT_DRIVE_SENSOR_IS_INVERTED = true;
 
 			HAS_ELEVATOR = false;
 			HAS_GRABBER = false;

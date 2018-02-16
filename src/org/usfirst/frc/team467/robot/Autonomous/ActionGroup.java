@@ -154,7 +154,8 @@ public class ActionGroup {
 			} else {
 				increment = 0;
 			}
-			// Each iteration is 20 ms
+			// Each iteration is 20 ms.
+			//the increment check checks to see how long the robot is stopping for, if it is stopped for longer than (RobotMap.AUTONOMOUS_DRIVE_TIMEOUT_MS / 20) then the robot is done.
 			if (increment >= (RobotMap.AUTONOMOUS_DRIVE_TIMEOUT_MS / 20)) {
 				return true;
 			} else if (currentPosition >= (Math.abs(distance) - RobotMap.POSITION_ALLOWED_ERROR)) {

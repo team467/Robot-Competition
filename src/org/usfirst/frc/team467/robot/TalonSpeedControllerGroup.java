@@ -8,15 +8,16 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.wpilibj.SpeedController;
 
+//TalonSpeedControllerGroup
 public class TalonSpeedControllerGroup implements SpeedController {
 	private static final Logger LOGGER = Logger.getLogger(TalonSpeedControllerGroup.class);
-	WPI_TalonSRX leader;
-	WPI_TalonSRX follower1;
-	WPI_TalonSRX follower2;
+	private WPI_TalonSRX leader;
+	private WPI_TalonSRX follower1;
+	private WPI_TalonSRX follower2;
 	
 	private int previousSensorPosition;
 	
-	ControlMode controlMode = ControlMode.PercentOutput;
+	private ControlMode controlMode = ControlMode.PercentOutput;
 	
 	public TalonSpeedControllerGroup() {
 		RobotMap.HAS_WHEELS = false;
@@ -25,12 +26,12 @@ public class TalonSpeedControllerGroup implements SpeedController {
 		follower2 = null;
 	}
 	
-	public TalonSpeedControllerGroup(ControlMode _controlMode, boolean sensorIsInverted,
-			WPI_TalonSRX _leader, WPI_TalonSRX _follower1, WPI_TalonSRX _follower2) {
-		this.leader = _leader;
-		this.follower1 = _follower1;
-		this.follower2 = _follower2;	
-		this.controlMode = _controlMode;
+	public TalonSpeedControllerGroup(ControlMode controlMode, boolean sensorIsInverted,
+			WPI_TalonSRX tSCGleader, WPI_TalonSRX tSCGfollower1, WPI_TalonSRX tSCGfollower2) {
+		this.leader = tSCGleader;
+		this.follower1 = tSCGfollower1;
+		this.follower2 = tSCGfollower2;	
+		this.controlMode = controlMode;
 		
 		initMotor(leader);
 		initMotor(follower1);
@@ -49,8 +50,7 @@ public class TalonSpeedControllerGroup implements SpeedController {
 		talon.selectProfileSlot(0, 0);
 		talon.configAllowableClosedloopError(0, RobotMap.VELOCITY_ALLOWABLE_CLOSED_LOOP_ERROR, 0);
 
-		//Note: This was changed from voltage to percentage used with 1 representing 100 percent or max voltage 
-		//      and -1 representing 100 percent backwards.
+		//Note: -1 and 1 are the max outputs
 		talon.configNominalOutputReverse(0.0, 0);		
 		talon.configNominalOutputForward(0.0, 0);
 		talon.configPeakOutputForward(1.0, 0);
@@ -62,7 +62,6 @@ public class TalonSpeedControllerGroup implements SpeedController {
 	
 	public void logClosedLoopErrors(String side) {
 		LOGGER.debug(
-				//TODO Check the arguments for the closed loop errors.
 				side + ": Vel = " + leader.getSelectedSensorVelocity(0) +
 				" Pos = " + leader.getSelectedSensorPosition(0) +
 				" Err = " + leader.getClosedLoopError(0));

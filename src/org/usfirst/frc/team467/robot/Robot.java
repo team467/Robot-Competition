@@ -161,10 +161,6 @@ public class Robot extends TimedRobot {
 
 
 	public void autonomousPeriodic() {
-		//		drive.publishRawSensorValues();
-		//		drive.PositionModeMove(drive.feetToTicks(amountToGoLeft), drive.feetToTicks(amountToGoRight));
-		//		drive.motionMagicMove(amountToGoLeft, amountToGoRight);
-		//		drive.moveFeet(2.0);
 		autonomous.run();
 	}
 

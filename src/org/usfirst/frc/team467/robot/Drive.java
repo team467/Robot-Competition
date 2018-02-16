@@ -60,9 +60,9 @@ public class Drive extends DifferentialDrive {
 			WPI_TalonSRX rightFollower1 = new WPI_TalonSRX(RobotMap.RIGHT_FOLLOWER_1_CHANNEL);
 			WPI_TalonSRX rightFollower2 = new WPI_TalonSRX(RobotMap.RIGHT_FOLLOWER_2_CHANNEL);
 
-			TalonSpeedControllerGroup left = new TalonSpeedControllerGroup(ControlMode.PercentOutput, RobotMap.LEFT_SENSOR_IS_INVERTED,
+			TalonSpeedControllerGroup left = new TalonSpeedControllerGroup(ControlMode.PercentOutput, RobotMap.LEFT_DRIVE_SENSOR_IS_INVERTED,
 					leftLead, leftFollower1, leftFollower2);
-			TalonSpeedControllerGroup right = new TalonSpeedControllerGroup(ControlMode.PercentOutput, RobotMap.RIGHT_SENSOR_IS_INVERTED,
+			TalonSpeedControllerGroup right = new TalonSpeedControllerGroup(ControlMode.PercentOutput, RobotMap.RIGHT_DRIVE_SENSOR_IS_INVERTED,
 					rightLead, rightFollower1, rightFollower2);
 			instance = new Drive(left, right);
 		}
