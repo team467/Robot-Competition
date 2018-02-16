@@ -127,7 +127,31 @@ public class DriverStation {
 		return getDriveJoystick().getRightStickX();
 	}
 	
+	public double getElevatorSpeed() {
+		return getNavJoystick().getRightStickY();
+	}
+	
+	public double getGrabThrottle() {
+		return getNavJoystick().getLeftStickY();
+	}
+
+	public void navSetLeftRumble(double value) {
+		navJoy.leftRumble(value);
+	}
+	
+	public void navSetRightRumble(double value) {
+		navJoy.rightRumble(value);
+	}
+	
+	public void driverSetLeftRumble(double value) {
+		driverJoy.leftRumble(value);
+	}
+	
+	public void driverSetRightRumble(double value) {
+		driverJoy.rightRumble(value);
+	}
 	public void setDriverRumble(double value) {
 		getDriveJoystick().setRumble(value);
 	}
+
 }
