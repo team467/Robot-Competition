@@ -160,15 +160,7 @@ public class Actions {
 		return mode;
 	}
 	
-//	Plan 1-A:
-//	Set up: Robot flush against west side of the starting position (marked by green lines on South Side of field)
-//	1. Move forward 12 feet 4 inches
-//	2. Turn 90º clockwise (with respect to north)
-//	3. Raise elevator up 20 inches (if not already raised, and also this distance may vary - so that the bottom of the arm is above the top of the fence)
-//	4 Move forward 1 foot 5.75 inches (+ maybe 6 inches to ensure robot is flush with the switch barrier)
-//	5. Release power cube
-//	6. Move backwards 2 feet (ready for teleop)
-	
+
 	public static ActionGroup startSwitchSide1B() {
 		String actionGroupText = "Start on side 1B, put cube on switch.";
 		ActionGroup mode = new ActionGroup(actionGroupText);

@@ -9,7 +9,9 @@ import edu.wpi.first.wpilibj.DriverStation;
  *
  */
 public class MatchConfiguration {
-
+	//static final int ITERATION_TIME_MS = 10;	
+	//int durationMS;
+	
 	private static MatchConfiguration instance;
 
 	private static final Logger LOGGER = Logger.getLogger(MatchConfiguration.class);
@@ -43,6 +45,21 @@ public class MatchConfiguration {
 
 	private StartPosition startPosition;
 
+	public void allianceColor(){
+		DriverStation.Alliance color;
+		color = DriverStation.getInstance().getAlliance();
+		if(color == DriverStation.Alliance.Blue) {
+			LOGGER.info("Alliance is blue");
+			teamColor = TeamColor.BLUE;
+		} else if (color == DriverStation.Alliance.Red){
+			LOGGER.info("Alliance is red");
+			teamColor = TeamColor.RED;
+		} else {
+			LOGGER.info("Alliance not found");
+			teamColor = TeamColor.UNKNOWN;
+		} 
+	}
+	
 	public void setSides() {
 		String gameData = DriverStation.getInstance().getGameSpecificMessage();
 		// String will be three letters, such as 'LRL' or 'RRR' or 'RRL'
@@ -96,27 +113,14 @@ public class MatchConfiguration {
 			}
 		}
 	}
-	
-	public void allianceColor(){
-		DriverStation.Alliance color;
-		color = DriverStation.getInstance().getAlliance();
-		if(color == DriverStation.Alliance.Blue) {
-			LOGGER.info("Alliance is blue");
-			teamColor = TeamColor.BLUE;
-		} else if (color == DriverStation.Alliance.Red){
-			LOGGER.info("Alliance is red");
-			teamColor = TeamColor.RED;
-		} else {
-			LOGGER.info("Alliance not found");
-			teamColor = TeamColor.UNKNOWN;
-		}
-	}
-	
-	public void matchTime(){
-		double time;
-		time = DriverStation.getInstance().getMatchTime();
-		LOGGER.info("Match Time=" + time);
-	}
+
+	//	public void matchTime(){
+	//		double time;
+	//	if(durationMS > 0)
+	//			time = DriverStation.getInstance().getMatchTime();
+	//		durationMS -= ITERATION_TIME_MS;
+	//		LOGGER.info("Match Time=" + time);
+	//	}
 
 	public static MatchConfiguration getInstance() {
 		if (instance == null) {

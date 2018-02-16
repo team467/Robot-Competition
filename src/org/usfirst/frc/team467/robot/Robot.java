@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.apache.log4j.Logger;
 import org.usfirst.frc.team467.robot.Autonomous.ActionGroup;
 import org.usfirst.frc.team467.robot.Autonomous.Actions;
+import org.usfirst.frc.team467.robot.Autonomous.MatchConfiguration;
 import org.usfirst.frc.team467.robot.simulator.DriveSimulator;
 
 import org.usfirst.frc.team467.robot.XBoxJoystick467.Button;
@@ -128,16 +129,19 @@ public class Robot extends TimedRobot {
 	public void testPeriodic() {
 		driverstation.readInputs();
 
-		if (driverstation.getNavJoystick().pressed(Button.b)){ 
-			driverstation.getNavRumbler().rumble(150, 0.3);
-			LOGGER.info("You pressed b");
+		if (driverstation.getNavJoystick().pressed(Button.a)){
+			driverstation.getNavRumbler().rumble(1000, 1.0);
+			LOGGER.info("You pressed a");
 		}
 		if (driverstation.getDriveJoystick().pressed(Button.b)){ 
-			driverstation.getNavRumbler().rumble(150, 1.0);
+			driverstation.getNavRumbler().rumble(150, 0.5);
 			LOGGER.info("You pressed b");
 		}
 
+
 		driverstation.periodic();
+		//MatchConfiguration.getInstance().allianceColor();
+		//MatchConfiguration.getInstance().matchTime();
 	}
 
 
