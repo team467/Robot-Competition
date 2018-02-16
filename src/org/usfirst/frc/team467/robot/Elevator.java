@@ -159,8 +159,42 @@ public class Elevator {
 		if (!RobotMap.HAS_ELEVATOR) {
 			return;
 		}
+		
+		switch (targetHeight) {
+		case floor:
+			automaticMove(Stops.floor.ordinal());
+			break;
 
-		heightController.stopMotor();
+		case fieldSwitch:
+			automaticMove(Stops.fieldSwitch.ordinal());
+			break;
+
+		case lowScale:
+			automaticMove(Stops.lowScale.ordinal());
+			break;
+
+		case highScale:
+			automaticMove(Stops.highScale.ordinal());
+			break;
+
+		default:
+		}
+	}
+	
+	public void floor() {
+		targetHeight = Stops.floor;
+	}
+	
+	public void switchHeight() {
+		targetHeight = Stops.fieldSwitch;
+	}
+	
+	public void lowScale() {
+		targetHeight = Stops.lowScale;
+	}
+	
+	public void highScale() {
+		targetHeight = Stops.highScale;
 	}
 
 	private void automaticMove(double height) {
