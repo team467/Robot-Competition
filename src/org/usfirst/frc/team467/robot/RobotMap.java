@@ -26,7 +26,7 @@ public class RobotMap {
 	public static int LEFT_LEAD_CHANNEL;
 	public static int LEFT_FOLLOWER_1_CHANNEL;
 	public static int LEFT_FOLLOWER_2_CHANNEL;
-	
+
 	public static int FORWARD_PANIC_ANGLE;
 	public static int BACKWARD_PANIC_ANGLE;
 
@@ -44,10 +44,10 @@ public class RobotMap {
 			WHEEL_ENCODER_CODES_PER_REVOLUTION = 256;
 			useSpeedControllers = true;
 			POSITION_ALLOWED_ERROR = (0.5 / RobotMap.WHEEL_CIRCUMFERENCE); // 1/2 inch
-			
+
 			FORWARD_PANIC_ANGLE = 45;
 			BACKWARD_PANIC_ANGLE = -45;
-			
+
 			LEFT_LEAD_CHANNEL = 1;
 			LEFT_FOLLOWER_1_CHANNEL = 2;
 			LEFT_FOLLOWER_2_CHANNEL = 3;
@@ -69,7 +69,7 @@ public class RobotMap {
 		case Board:
 			HAS_WHEELS = false;
 			WHEEL_ENCODER_CODES_PER_REVOLUTION = 256;
-			
+
 			FORWARD_PANIC_ANGLE = 45;
 			BACKWARD_PANIC_ANGLE = -45;
 
@@ -80,7 +80,7 @@ public class RobotMap {
 
 			HAS_ELEVATOR = true;
 			ELEVATOR_MOTOR_CHANNEL = 1;
-			
+
 			HAS_RAMPS = false;
 			RAMP_SOLENOID_CHANNEL = 0;
 
@@ -92,7 +92,7 @@ public class RobotMap {
 			WHEEL_ENCODER_CODES_PER_REVOLUTION = 256;
 			useSpeedControllers = true;
 			POSITION_ALLOWED_ERROR = (0.5 / RobotMap.WHEEL_CIRCUMFERENCE); // 1/2 inch
-			
+
 			FORWARD_PANIC_ANGLE = 45;
 			BACKWARD_PANIC_ANGLE = -45;
 
@@ -122,7 +122,7 @@ public class RobotMap {
 			WHEEL_ENCODER_CODES_PER_REVOLUTION = 256;
 			useSpeedControllers = true;
 			POSITION_ALLOWED_ERROR = (0.5 / RobotMap.WHEEL_CIRCUMFERENCE); // 1/2 inch
-			
+
 			FORWARD_PANIC_ANGLE = 45;
 			BACKWARD_PANIC_ANGLE = -45;
 
@@ -214,13 +214,14 @@ public class RobotMap {
 	public static int GRABBER_R_CHANNEL;
 	public static int OPTICAL_CHANNEL;
 
-	public static final int ELEVATOR_TICKS_PER_TURN = 77;
-	public static final double ELEVATOR_GEAR_CIRCUMFERENCE_IN_INCHES = 10;
-	public static final double ELEVATOR_MAX_HEIGHT_IN_FEET = 10;
-	public static final double ELEVATOR_MIN_HEIGHT_IN_FEET = 0;
-	public static final int ELEVATOR_INITIAL_TICKS = 196;
+	public static final double ELEVATOR_HEIGHT_RANGE_INCHES = 104.5 - 10;
+	public static final double ELEVATOR_ERROR_TOLERANCE_INCHES = 1.0;
+
+	public static final int ELEVATOR_INITIAL_TICKS = -738;
 	public static final int ELEVATOR_HEIGHT_SENSOR_ID = 0;
-	public static final int MAX_ELEVATOR_RPM = 1000; //Not the real value, placeholder constant. 
+	public static final int MAX_ELEVATOR_RPM = 1000; //Not the real value, placeholder constant.
+	// Ticks per inch is based on empirical measurements on the robot.
+	public static final double ELEVATOR_TICKS_PER_INCH = (-364 - ELEVATOR_INITIAL_TICKS) / (104.5 - 10.0);
 
 	public static boolean HAS_RAMPS;
 	public static int RAMP_SOLENOID_CHANNEL;

@@ -18,7 +18,7 @@ public class Elevator {
 
 	private AnalogInput heightSensor;
 	private WPI_TalonSRX heightController;
-	private double feetPerTick;
+	private double inchesPerTick;
 	private int maxTicksPerIteration;
 	private double previousHeight;
 	private MotorSafetyHelper m_safetyHelper;
@@ -27,10 +27,10 @@ public class Elevator {
 
 	public enum Stops {
 		// null if no stop is desired
-		floor(RobotMap.ELEVATOR_MIN_HEIGHT_IN_FEET),
-		fieldSwitch(2),
-		lowScale(6),
-		highScale(8);
+		floor(10.0 + RobotMap.ELEVATOR_ERROR_TOLERANCE_INCHES),
+		fieldSwitch(24.0 + RobotMap.ELEVATOR_ERROR_TOLERANCE_INCHES),
+		lowScale(72.0 + RobotMap.ELEVATOR_ERROR_TOLERANCE_INCHES),
+		highScale(96 + RobotMap.ELEVATOR_ERROR_TOLERANCE_INCHES);
 
 		/**
 		 * Height in feet
@@ -70,9 +70,7 @@ public class Elevator {
 		this.heightController.configAllowableClosedloopError(0, 3, RobotMap.TALON_TIMEOUT);
 
 		targetHeight = null;
-		feetPerTick = 3 * (RobotMap.ELEVATOR_GEAR_CIRCUMFERENCE_IN_INCHES / 12) / RobotMap.ELEVATOR_TICKS_PER_TURN;
-		maxTicksPerIteration = RobotMap.ELEVATOR_TICKS_PER_TURN * RobotMap.MAX_ELEVATOR_RPM / 60 / 100; // 10 ms per iteration
-		previousHeight = getHeightFeet();
+		previousHeight = getHeightInches();
 		this.heightController.setInverted(true);
 
 		m_safetyHelper = new MotorSafetyHelper(this.heightController);
@@ -93,9 +91,9 @@ public class Elevator {
 		heightController.configMotionAcceleration(maxTicksPerIteration / 2, RobotMap.TALON_TIMEOUT);
 	}
 
-	public double getHeightFeet() {
-		double height = (getRawHeight() - RobotMap.ELEVATOR_INITIAL_TICKS) * feetPerTick;
-		LOGGER.debug("Height in feet: " + height);
+	public double getHeightInches() {
+		double height = (getRawHeight() - RobotMap.ELEVATOR_INITIAL_TICKS) / RobotMap.ELEVATOR_TICKS_PER_INCH;
+		LOGGER.debug("Height in inches: " + height);
 		return height;
 	}
 
@@ -111,7 +109,7 @@ public class Elevator {
 		targetHeight = target;
 	}
 
-	private void automaticMove(double heightInFeet) {
+	private void automaticMove(double heightInInches) {
 		if (!RobotMap.HAS_ELEVATOR) {
 			return;
 		}
@@ -120,7 +118,7 @@ public class Elevator {
 			m_safetyHelper.feed();
 		}
 
-		double ticks = RobotMap.ELEVATOR_INITIAL_TICKS + heightInFeet / feetPerTick;
+		double ticks = RobotMap.ELEVATOR_INITIAL_TICKS + heightInInches / RobotMap.ELEVATOR_TICKS_PER_INCH;
 		heightController.set(ControlMode.MotionMagic, ticks);
 		logSensorVelocityAndPosition();
 	}
@@ -135,7 +133,7 @@ public class Elevator {
 			return;
 		}
 
-		double currentHeight = getHeightFeet();
+		double currentHeight = getHeightInches();
 		for (Stops stop : Stops.values()) {
 			if ((previousHeight < stop.height && currentHeight >= stop.height)
 					|| (previousHeight > stop.height && currentHeight <= stop.height)) {
