@@ -39,23 +39,20 @@ public class Robot extends TimedRobot {
 		new Thread (() -> {
 			VisionProcessing vision = VisionProcessing.getInstance();
 			UsbCamera camera = CameraServer.getInstance().startAutomaticCapture();
-			camera.setResolution(640, 480);
+			camera.setResolution(160, 120);
+			camera.setFPS(30);
+			camera.setExposureManual(30);
 			
 			CvSink cvSink = CameraServer.getInstance().getVideo();
-			CvSource outputStream = CameraServer.getInstance().putVideo("Blur", 640, 480);
+			CvSource outputStream = CameraServer.getInstance().putVideo("CubeCam", 160, 120);
 			
 			Mat source = new Mat();
 			Mat output = new Mat();
 			while(!Thread.interrupted()) {
-				LOGGER.info("Is this even working?");
-				
-				LOGGER.info("" + vision.findCube(source));
 				cvSink.grabFrame(source);
+				LOGGER.info("" + vision.findCube(source));
 				outputStream.putFrame(source);
-				
 			}
-			
-			
 		}).start();
 		// Make robot objects
 		}
