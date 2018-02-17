@@ -7,7 +7,9 @@ import edu.wpi.first.wpilibj.MotorSafetyHelper;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
+import com.ctre.phoenix.ParamEnum;
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 public class Elevator {
@@ -61,6 +63,11 @@ public class Elevator {
 		}
 		heightSensor = new AnalogInput(RobotMap.ELEVATOR_HEIGHT_SENSOR_ID);
 		this.heightController = (WPI_TalonSRX) heightController;
+
+		// Configure talon to be able to use the analog sensor. 
+		this.heightController.configSelectedFeedbackSensor(FeedbackDevice.Analog, 0, RobotMap.TALON_TIMEOUT);
+		this.heightController.configSetParameter(ParamEnum.eFeedbackNotContinuous, 1, 0x00, 0x00, 0x00);
+
 		targetHeight = null;
 		feetPerTick = (RobotMap.ELEVATOR_GEAR_CIRCUMFERENCE_IN_INCHES / 12) / RobotMap.ELEVATOR_TICKS_PER_TURN;
 		maxTicksPerIteration = RobotMap.ELEVATOR_TICKS_PER_TURN * RobotMap.MAX_ELEVATOR_RPM / 60 / 100; // 10 ms per iteration
@@ -150,9 +157,13 @@ public class Elevator {
 	}
 
 	public void logSensorVelocityAndPosition() {
-		LOGGER.debug(
+		LOGGER.info(
 				//TODO Check the arguments for the closed loop errors.
 				"Vel= " + heightController.getSelectedSensorVelocity(0)
 				+ "Pos=" + heightController.getSelectedSensorPosition(0));
+		DriverStation.getInstance().set(0,"velocity");
+		DriverStation.getInstance().set(1, "position");
+		DriverStation.getInstance().set(5, heightController.getSelectedSensorVelocity(0));
+		DriverStation.getInstance().set(6, heightController.getSelectedSensorPosition(0));
 	}
 }
