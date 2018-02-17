@@ -67,6 +67,7 @@ public class Elevator {
 		// Configure talon to be able to use the analog sensor. 
 		this.heightController.configSelectedFeedbackSensor(FeedbackDevice.Analog, 0, RobotMap.TALON_TIMEOUT);
 		this.heightController.configSetParameter(ParamEnum.eFeedbackNotContinuous, 1, 0x00, 0x00, 0x00);
+		this.heightController.configNeutralDeadband(0.01, RobotMap.TALON_TIMEOUT);
 
 		targetHeight = null;
 		feetPerTick = (RobotMap.ELEVATOR_GEAR_CIRCUMFERENCE_IN_INCHES / 12) / RobotMap.ELEVATOR_TICKS_PER_TURN;
@@ -87,9 +88,8 @@ public class Elevator {
 		heightController.config_kD(0, kDElevator, RobotMap.TALON_TIMEOUT);
 		heightController.config_kF(0, kFElevator, RobotMap.TALON_TIMEOUT);
 
-
 		heightController.configMotionCruiseVelocity(maxTicksPerIteration / 2, RobotMap.TALON_TIMEOUT);
-		heightController.configMotionAcceleration(maxTicksPerIteration / 2, RobotMap.TALON_TIMEOUT);	
+		heightController.configMotionAcceleration(maxTicksPerIteration / 2, RobotMap.TALON_TIMEOUT);
 	}
 
 	public double getHeightFeet() {
@@ -110,14 +110,16 @@ public class Elevator {
 		targetHeight = target;
 	}
 
-	private void automaticMove(double height) {
+	private void automaticMove(double heightInFeet) {
 		if (!RobotMap.HAS_ELEVATOR) {
 			return;
 		}
+
 		if (m_safetyHelper != null) {
 			m_safetyHelper.feed();
 		}
-		double ticks =  height / feetPerTick + RobotMap.ELEVATOR_INITIAL_TICKS;
+
+		double ticks = RobotMap.ELEVATOR_INITIAL_TICKS + heightInFeet / feetPerTick;
 		heightController.set(ControlMode.MotionMagic, ticks);
 		logSensorVelocityAndPosition();
 	}
@@ -157,7 +159,7 @@ public class Elevator {
 	}
 
 	public void logSensorVelocityAndPosition() {
-		LOGGER.info(
+		LOGGER.debug(
 				//TODO Check the arguments for the closed loop errors.
 				"Vel= " + heightController.getSelectedSensorVelocity(0)
 				+ "Pos=" + heightController.getSelectedSensorPosition(0));
