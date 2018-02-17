@@ -50,6 +50,10 @@ public class Ramps {
 	}
 	
 	public void periodic() {
+		if (!RobotMap.HAS_RAMPS) {
+			return;
+		}
+
 		if (DriverStation.getInstance().shouldDeployRamps()) {
 			deploy();
 		} else if (DriverStation.getInstance().shouldLiftRamps()) {
