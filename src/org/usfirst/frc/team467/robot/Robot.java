@@ -203,8 +203,21 @@ public class Robot extends TimedRobot {
 		}
 
 		elevator.manualMove(driverstation.getElevatorSpeed());
-
 		grabber.grab(driverstation.getGrabThrottle());
+		
+		//testing
+		
+		if(driverstation.getNavJoystick().pressed(XBoxJoystick467.Button.a)) {
+			grabber.grab();
+		}
+		
+		else if(driverstation.getNavJoystick().pressed(XBoxJoystick467.Button.b)) {
+			grabber.release();
+		}
+		
+		else {
+			grabber.pause();
+		}
 
 		//changed to arcade drive
 		drive.arcadeDrive(left, right, true);

@@ -130,7 +130,7 @@ public class Grabber {
 		LOGGER.debug("Grabber Throttle=" + throttle);
 		hasCube = os.detectedTarget();
 		left.set(throttle * RobotMap.MAX_GRAB_SPEED);
-		right.set(-throttle * RobotMap.MAX_GRAB_SPEED);
+		right.set(-1 * throttle * RobotMap.MAX_GRAB_SPEED);
 	}
 
 	public boolean justGotCube() {
