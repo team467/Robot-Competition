@@ -47,7 +47,7 @@ public class Ramps {
 			return;
 		}
 
-		// TODO Ramp deploy code here, not sure if it's motors or pneumatics yet
+		// TODO Ramp retract code here, not sure if it's motors or pneumatics yet
 		LOGGER.debug("Deploying ramps");
 		isDeployed = false;
 	}
