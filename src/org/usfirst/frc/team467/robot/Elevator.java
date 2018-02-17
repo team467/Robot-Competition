@@ -2,7 +2,6 @@ package org.usfirst.frc.team467.robot;
 
 import org.apache.log4j.Logger;
 
-import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.MotorSafetyHelper;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -16,9 +15,7 @@ public class Elevator {
 	private static Elevator instance;
 	private static final Logger LOGGER = Logger.getLogger(Elevator.class);
 
-	private AnalogInput heightSensor;
 	private WPI_TalonSRX heightController;
-	private double inchesPerTick;
 	private int maxTicksPerIteration;
 	private double previousHeight;
 	private MotorSafetyHelper m_safetyHelper;
@@ -61,7 +58,7 @@ public class Elevator {
 		if (!RobotMap.HAS_ELEVATOR) {
 			return;
 		}
-		heightSensor = new AnalogInput(RobotMap.ELEVATOR_HEIGHT_SENSOR_ID);
+
 		this.heightController = (WPI_TalonSRX) heightController;
 
 		// Configure talon to be able to use the analog sensor. 
@@ -101,7 +98,7 @@ public class Elevator {
 		if (!RobotMap.HAS_ELEVATOR) {
 			return 0.0;
 		}
-		return heightSensor.getValue();
+		return heightController.getSelectedSensorPosition(0);
 	}
 
 	public void moveToHeight(Stops target) {
@@ -134,14 +131,14 @@ public class Elevator {
 		}
 
 		double currentHeight = getHeightInches();
-		for (Stops stop : Stops.values()) {
-			if ((previousHeight < stop.height && currentHeight >= stop.height)
-					|| (previousHeight > stop.height && currentHeight <= stop.height)) {
-				DriverStation.getInstance().getNavRumbler().rumble(200, 0.8);
-			}
-		}
+		//		for (Stops stop : Stops.values()) {
+		//			if ((previousHeight < stop.height && currentHeight >= stop.height)
+		//					|| (previousHeight > stop.height && currentHeight <= stop.height)) {
+		//				DriverStation.getInstance().getNavRumbler().rumble(200, 0.8);
+		//			}
+		//		}
 
-		LOGGER.debug("Height prev=" + previousHeight + " current=" + currentHeight);
+		//LOGGER.debug("Height prev=" + previousHeight + " current=" + currentHeight);
 		previousHeight = currentHeight;
 
 		if (Math.abs(speed) >= RobotMap.MIN_LIFT_SPEED) {
@@ -158,13 +155,14 @@ public class Elevator {
 	}
 
 	public void logSensorAndTargetPosition() {
+		int ticks = (int) (RobotMap.ELEVATOR_INITIAL_TICKS + targetHeight.height * RobotMap.ELEVATOR_TICKS_PER_INCH);
 		LOGGER.debug(
 				//TODO Check the arguments for the closed loop errors.
 				"Target= " + heightController.getActiveTrajectoryPosition()
 				+ "Pos=" + heightController.getSelectedSensorPosition(0));
-		DriverStation.getInstance().set(0,"target");
+		DriverStation.getInstance().set(0,"target ticks");
 		DriverStation.getInstance().set(1, "position");
-		DriverStation.getInstance().set(5, heightController.getActiveTrajectoryPosition());
+		DriverStation.getInstance().set(5, ticks);
 		DriverStation.getInstance().set(6, heightController.getSelectedSensorPosition(0));
 	}
 }

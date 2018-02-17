@@ -218,7 +218,6 @@ public class RobotMap {
 	public static final double ELEVATOR_ERROR_TOLERANCE_INCHES = 1.0;
 
 	public static final int ELEVATOR_INITIAL_TICKS = -738;
-	public static final int ELEVATOR_HEIGHT_SENSOR_ID = 0;
 	public static final int MAX_ELEVATOR_RPM = 1000; //Not the real value, placeholder constant.
 	// Ticks per inch is based on empirical measurements on the robot.
 	public static final double ELEVATOR_TICKS_PER_INCH = (-364 - ELEVATOR_INITIAL_TICKS) / (104.5 - 10.0);
