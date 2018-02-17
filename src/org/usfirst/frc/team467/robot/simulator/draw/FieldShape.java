@@ -86,9 +86,9 @@ public class FieldShape {
 			context.setFill(Color.LIGHTGRAY);
 			context.fillRect(
 			21.7 * 12.0 * PIXELS_PER_MAP_INCH,
-			 9.0 * 12.0 * PIXELS_PER_MAP_INCH, 
+			 8.604 * 12.0 * PIXELS_PER_MAP_INCH, 
 			 4.7 * 12.0 * PIXELS_PER_MAP_INCH, 
-			12.0 * 12.0 * PIXELS_PER_MAP_INCH);
+			12.79 * 12.0 * PIXELS_PER_MAP_INCH);
 			
 			context.setFill(Color.DIMGRAY);
 			context.fillRect(
@@ -117,9 +117,9 @@ public class FieldShape {
 			context.setFill(Color.LIGHTGRAY);
 			context.fillRect(
 			48.3 * 12.0 * PIXELS_PER_MAP_INCH,
-			 9.0 * 12.0 * PIXELS_PER_MAP_INCH, 
+			 8.604 * 12.0 * PIXELS_PER_MAP_INCH, 
 			 4.7 * 12.0 * PIXELS_PER_MAP_INCH, 
-			12.0 * 12.0 * PIXELS_PER_MAP_INCH);
+			12.79 * 12.0 * PIXELS_PER_MAP_INCH);
 			
 			context.setFill(Color.DIMGRAY);
 			context.fillRect(

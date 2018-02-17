@@ -34,7 +34,7 @@ public class DriveSimulator {
 	private boolean isMoving = false;
 	
 	private DriveSimulator() {
-		maxFeetPerPeriod = RobotMap.WHEEL_CIRCUMFERENCE / 12 * MAX_RPM / 60 / 1000; // actually 60/500
+		maxFeetPerPeriod = RobotMap.WHEEL_CIRCUMFERENCE / 12 * MAX_RPM / 60 / 5000; // actually 60/500
 		zero();
 		LOGGER.setLevel(Level.DEBUG);
 	}
@@ -115,7 +115,7 @@ public class DriveSimulator {
 		LOGGER.debug("Left Move: " + df.format(leftPositionReading) 
 			+ " Right Move: " + df.format(rightPositionReading));
 		
-		data.update(rightPosition(), leftPosition());
+		data.updateDrivePosition(rightPosition(), leftPosition());
 		
 	}
 
@@ -148,7 +148,7 @@ public class DriveSimulator {
 		RobotMap.init(RobotID.PreseasonBot);
 		DriveSimulator drive = DriveSimulator.getInstance();
 		drive.zero();
-		RobotData.getInstance().startPosition(20, 0);
+		RobotData.getInstance().startingLocation(20, 0);
 				
 		do {
 			drive.rotateByAngle(360+90);
