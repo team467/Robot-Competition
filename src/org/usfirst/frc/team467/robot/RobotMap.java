@@ -1,8 +1,5 @@
 package org.usfirst.frc.team467.robot;
 
-import org.apache.log4j.Logger;
-import org.usfirst.frc.team467.robot.RobotMap.RobotID;
-
 /**
  *
  */

@@ -14,20 +14,15 @@ import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-import org.usfirst.frc.team467.robot.Elevator.Stops;
 import org.usfirst.frc.team467.robot.Autonomous.ActionGroup;
 import org.usfirst.frc.team467.robot.Autonomous.Actions;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
-
 import org.apache.log4j.Logger;
 
-import edu.wpi.first.wpilibj.DigitalInput;
 import org.usfirst.frc.team467.robot.Autonomous.ActionGroup;
 import org.usfirst.frc.team467.robot.Autonomous.Actions;
-import org.usfirst.frc.team467.robot.simulator.DriveSimulator;
 
 import org.usfirst.frc.team467.robot.XBoxJoystick467.Button;
 import org.usfirst.frc.team467.robot.RobotMap.RobotID;
@@ -99,8 +94,6 @@ public class Robot extends TimedRobot {
 	public void disabledPeriodic() {
 		LOGGER.trace("Disabled Periodic");
 
-		LOGGER.debug("Elevator height=" + elevator.getHeightFeet());
-
 		driverstation.logJoystickIDs();
 	}
 	//TODO: Figure out the NetworkTables later.
@@ -140,11 +133,9 @@ public class Robot extends TimedRobot {
 	}
 
 	public void testInit() {
-		elevator.moveToHeight(Stops.fieldSwitch);
 	}
 
 	public void testPeriodic() {
-		elevator.periodic();
 		driverstation.readInputs();
 
 		if (driverstation.getNavJoystick().pressed(Button.b)){ 
@@ -172,17 +163,14 @@ public class Robot extends TimedRobot {
 		driverstation.readInputs();
 		//TODO: Set Min_DRIVE_SPEED in Robot Map.
 		// TODO Drive class should handle MIN_DRIVE_SPEED
-		double MIN_DRIVE_SPEED = 0.1;
 		double left = driverstation.getArcadeSpeed();
 		double right = driverstation.getArcadeTurn();
 
 		LOGGER.debug("left " + left + " right " + right);
-		LOGGER.debug(grabber.justGotCube());
-
-		if (Math.abs(left) < MIN_DRIVE_SPEED) {
+		if (Math.abs(left) < RobotMap.MIN_DRIVE_SPEED) {
 			left = 0.0;
 		}
-		if (Math.abs(right) < MIN_DRIVE_SPEED) {
+		if (Math.abs(right) < RobotMap.MIN_DRIVE_SPEED) {
 			right = 0.0;
 		}
 
@@ -201,9 +189,18 @@ public class Robot extends TimedRobot {
 			//TODO: Add things here later.
 			break;
 		}
-
-		elevator.manualMove(driverstation.getElevatorSpeed());
-
+		
+		if (driverstation.getSwitchHeightButton()) {
+			elevator.moveToHeight(Elevator.Stops.fieldSwitch);
+		}
+		
+		elevator.move(driverstation.getElevatorSpeed());
+		LOGGER.debug("Elevator Moving");
+		
+		if (grabber.hasCube()) {
+			driverstation.getNavRumbler().rumble(100, 1.0);
+		}
+		
 		grabber.grab(driverstation.getGrabThrottle());
 
 		//changed to arcade drive
