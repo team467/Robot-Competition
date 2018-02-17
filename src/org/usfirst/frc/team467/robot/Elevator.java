@@ -70,7 +70,7 @@ public class Elevator {
 		this.heightController.configAllowableClosedloopError(0, 3, RobotMap.TALON_TIMEOUT);
 
 		targetHeight = null;
-		feetPerTick = (RobotMap.ELEVATOR_GEAR_CIRCUMFERENCE_IN_INCHES / 12) / RobotMap.ELEVATOR_TICKS_PER_TURN;
+		feetPerTick = 3 * (RobotMap.ELEVATOR_GEAR_CIRCUMFERENCE_IN_INCHES / 12) / RobotMap.ELEVATOR_TICKS_PER_TURN;
 		maxTicksPerIteration = RobotMap.ELEVATOR_TICKS_PER_TURN * RobotMap.MAX_ELEVATOR_RPM / 60 / 100; // 10 ms per iteration
 		previousHeight = getHeightFeet();
 
