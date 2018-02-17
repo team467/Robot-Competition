@@ -1,8 +1,5 @@
 package org.usfirst.frc.team467.robot;
 
-import org.apache.log4j.Logger;
-import org.usfirst.frc.team467.robot.RobotMap.RobotID;
-
 /**
  *
  */
@@ -121,8 +118,8 @@ public class RobotMap {
 			HAS_RAMPS = false;
 
 			HAS_GRABBER = true;
-			GRABBER_L_CHANNEL = 1; 
-			GRABBER_R_CHANNEL = 2;
+			GRABBER_L_CHANNEL = 0; 
+			GRABBER_R_CHANNEL = 1;
 			OPTICAL_CHANNEL = 5;
 
 			// TODO Assign values to the game piece variables, and make more as appropriate
