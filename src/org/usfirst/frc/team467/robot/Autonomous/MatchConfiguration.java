@@ -6,13 +6,12 @@ import org.apache.log4j.Logger;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 /** 
  * This class determines the robots position during the beginning of the game
  *
  */
 public class MatchConfiguration {
-	//static final int ITERATION_TIME_MS = 10;	
-	//int durationMS;
 
 	private static MatchConfiguration instance;
 
@@ -46,7 +45,7 @@ public class MatchConfiguration {
 	private Side scale;
 
 	private StartPosition startPosition;
-	
+
 	private MatchConfiguration() {
 		LOGGER.setLevel(Level.INFO);
 		teamColor = TeamColor.UNKNOWN;
@@ -55,7 +54,7 @@ public class MatchConfiguration {
 		scale = Side.UNKNOWN;
 		startPosition = StartPosition.UNKNOWN;
 
-		String[] autoList = {"none", "go"};
+		String[] autoList = {"None", "Left", "Center", "Right"};
 
 		NetworkTableInstance tableInstance = NetworkTableInstance.getDefault();
 		NetworkTable table  = tableInstance.getTable("SmartDashboard");
@@ -68,8 +67,8 @@ public class MatchConfiguration {
 		}
 		return instance;
 	}
-	
-	public void allianceColor(){
+
+	public void setAllianceColor(){
 		DriverStation.Alliance color;
 		color = DriverStation.getInstance().getAlliance();
 		if(color == DriverStation.Alliance.Blue) {
@@ -82,6 +81,30 @@ public class MatchConfiguration {
 			LOGGER.info("Alliance not found");
 			teamColor = TeamColor.UNKNOWN;
 		} 
+	}
+
+	public void setAutoModeAndStartPosition() {
+		final String autoMode = SmartDashboard.getString("Auto Selector", "none");
+		switch (autoMode) {
+
+		case "Left":
+			startPosition = StartPosition.LEFT;
+			break;
+
+		case "Center":
+			startPosition = StartPosition.CENTER;
+			break;
+
+		case "Right":
+			startPosition = StartPosition.RIGHT;
+
+			break;
+
+		case "None":
+		default:
+
+		}
+
 	}
 
 	public void setSides() {
@@ -138,13 +161,23 @@ public class MatchConfiguration {
 		}
 	}
 
-	//	public void matchTime(){
-	//		double time;
-	//	if(durationMS > 0)
-	//			time = DriverStation.getInstance().getMatchTime();
-	//		durationMS -= ITERATION_TIME_MS;
-	//		LOGGER.info("Match Time=" + time);
-	//	}
+	public void autonomousDecisionTree() {
+
+
+
+	}
+
+	public void load() {
+		this.setSides();
+		this.setAutoModeAndStartPosition();
+		this.setAllianceColor();
+	}
+
+	public double matchTime(){
+		double time = DriverStation.getInstance().getMatchTime();
+		LOGGER.info("Match Time=" + time);
+		return time;
+	}
 
 	public TeamColor teamColor() {
 		return teamColor;
@@ -194,6 +227,8 @@ public class MatchConfiguration {
 					isOnSameSide = true;
 				}
 			}
-		}return isOnSameSide;
+		}
+		return isOnSameSide;
 	}
+
 }
