@@ -149,17 +149,7 @@ public class Elevator {
 		if (!RobotMap.HAS_ELEVATOR) {
 			return;
 		}
-
-		automaticMove(targetHeight.height);
-	}
-
-	public void cancelAutomaticMove() {
-		targetHeight = null;
-
-		if (!RobotMap.HAS_ELEVATOR) {
-			return;
-		}
-		
+	
 		switch (targetHeight) {
 		case floor:
 			automaticMove(Stops.floor.ordinal());
@@ -178,6 +168,17 @@ public class Elevator {
 			break;
 
 		default:
+		}
+
+		//automaticMove(targetHeight.height);
+		
+	}
+
+	public void cancelAutomaticMove() {
+		targetHeight = null;
+
+		if (!RobotMap.HAS_ELEVATOR) {
+			return;
 		}
 	}
 	
@@ -207,7 +208,7 @@ public class Elevator {
 		double ticks =  height / feetPerTick + RobotMap.ELEVATOR_INITIAL_TICKS;
 		heightController.set(ControlMode.MotionMagic, ticks);
 		logSensorVelocityAndPosition();
-	}
+	} 
 
 	public void logSensorVelocityAndPosition() {
 		LOGGER.debug(
