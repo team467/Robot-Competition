@@ -17,6 +17,7 @@ public class Ramps {
 
 	private Ramps() {
 		if (!RobotMap.HAS_RAMPS) {
+			LOGGER.debug("No ramps");
 			return;
 		}
 
