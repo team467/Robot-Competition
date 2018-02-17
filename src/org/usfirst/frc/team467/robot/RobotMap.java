@@ -214,7 +214,7 @@ public class RobotMap {
 	public static int GRABBER_R_CHANNEL;
 	public static int OPTICAL_CHANNEL;
 
-	public static final int ELEVATOR_TICKS_PER_TURN = 253;
+	public static final int ELEVATOR_TICKS_PER_TURN = 77;
 	public static final double ELEVATOR_GEAR_CIRCUMFERENCE_IN_INCHES = 10;
 	public static final double ELEVATOR_MAX_HEIGHT_IN_FEET = 10;
 	public static final double ELEVATOR_MIN_HEIGHT_IN_FEET = 0;
