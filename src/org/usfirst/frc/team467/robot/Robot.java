@@ -197,7 +197,7 @@ public class Robot extends TimedRobot {
 		elevator.move(driverstation.getElevatorSpeed());
 		LOGGER.debug("Elevator Moving");
 		
-		if (grabber.hasCube()) {
+		if (grabber.justGotCube()) {
 			driverstation.getNavRumbler().rumble(100, 1.0);
 		}
 		
