@@ -118,7 +118,7 @@ public class Elevator {
 			m_safetyHelper.feed();
 		}
 
-		double ticks = RobotMap.ELEVATOR_INITIAL_TICKS + heightInInches / RobotMap.ELEVATOR_TICKS_PER_INCH;
+		double ticks = RobotMap.ELEVATOR_INITIAL_TICKS + heightInInches * RobotMap.ELEVATOR_TICKS_PER_INCH;
 		heightController.set(ControlMode.MotionMagic, ticks);
 		logSensorAndTargetPosition();
 	}
