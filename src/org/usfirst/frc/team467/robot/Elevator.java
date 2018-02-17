@@ -67,7 +67,7 @@ public class Elevator {
 		// Configure talon to be able to use the analog sensor. 
 		this.heightController.configSelectedFeedbackSensor(FeedbackDevice.Analog, 0, RobotMap.TALON_TIMEOUT);
 		this.heightController.configSetParameter(ParamEnum.eFeedbackNotContinuous, 1, 0x00, 0x00, 0x00);
-		this.heightController.configNeutralDeadband(0.01, RobotMap.TALON_TIMEOUT);
+		this.heightController.configAllowableClosedloopError(0, 10, RobotMap.TALON_TIMEOUT);
 
 		targetHeight = null;
 		feetPerTick = (RobotMap.ELEVATOR_GEAR_CIRCUMFERENCE_IN_INCHES / 12) / RobotMap.ELEVATOR_TICKS_PER_TURN;
