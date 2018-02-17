@@ -143,8 +143,8 @@ public class Robot extends TimedRobot {
 
 
 		driverstation.periodic();
-		MatchConfiguration.getInstance().setAllianceColor();
-		//MatchConfiguration.getInstance().matchTime();
+		//MatchConfiguration.getInstance().setAllianceColor();
+		MatchConfiguration.getInstance().matchTime();
 	}
 
 

@@ -7,6 +7,7 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import javafx.geometry.Side;
 /** 
  * This class determines the robots position during the beginning of the game
  *
@@ -102,7 +103,7 @@ public class MatchConfiguration {
 
 		case "None":
 		default:
-
+			startPosition = StartPosition.UNKNOWN;
 		}
 
 	}
@@ -163,8 +164,38 @@ public class MatchConfiguration {
 
 	public void autonomousDecisionTree() {
 
+		switch(startPosition) {
+		case LEFT:
+			if(isSwitchOnSameSide()) {
+				//Load Left code if on same switch side true.
+			} else if(isScaleOnSameSide()) {
+				//Load Left code if is on same scale side true.
+			} else {
+				// Load Opposite scale code when the isScaleOnSameSide is false.
+			}
+			break;
 
+		case CENTER:
+			if(isMySwitchToTheRight()) {
+				//Load code if switch is to the right in center position (true).
+			}
+			break;
 
+		case RIGHT:
+			if(isSwitchOnSameSide()) {
+				//Load Right code if on same switch side true.
+			} else if(isScaleOnSameSide()) {
+				//Load Right code if is on same scale side true.
+			} else {
+				// Load Opposite scale code when the isScaleOnSameSide is false.
+			}
+			break;
+
+		case UNKNOWN:
+		default:
+			// Load doNothing.
+			break;
+		}
 	}
 
 	public void load() {
@@ -221,14 +252,25 @@ public class MatchConfiguration {
 			if ((scale == Side.LEFT && startPosition == StartPosition.LEFT) || (scale == Side.RIGHT && startPosition == StartPosition.RIGHT)) {
 				isOnSameSide = true;
 			}
-		} else {
-			if (teamColor == TeamColor.RED) {
-				if ((scale == Side.LEFT && startPosition == StartPosition.LEFT) || (scale == Side.RIGHT && startPosition == StartPosition.RIGHT)) {
-					isOnSameSide = true;
-				}
+		} else if (teamColor == TeamColor.RED) {
+			if ((scale == Side.LEFT && startPosition == StartPosition.LEFT) || (scale == Side.RIGHT && startPosition == StartPosition.RIGHT)) {
+				isOnSameSide = true;
 			}
 		}
 		return isOnSameSide;
 	}
 
+	public boolean isMySwitchToTheRight() {
+		boolean isOnRightSide = false;
+		if (teamColor == TeamColor.BLUE) {
+			if(blueSwitch == Side.RIGHT) {
+				isOnRightSide = true;
+			} else if(teamColor == TeamColor.RED) {
+				if(redSwitch == Side.RIGHT) {
+					isOnRightSide = true;
+				}
+			}
+		}
+		return isOnRightSide;
+	}
 }
