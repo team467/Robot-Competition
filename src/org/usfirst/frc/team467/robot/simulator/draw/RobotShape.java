@@ -220,7 +220,7 @@ public class RobotShape {
 		
 		double radius = RobotMap.WHEEL_BASE_WIDTH/2;
 		double x = radius * Math.cos(mapHeadingAngle);
-		double y = radius * Math.sin(mapHeadingAngle);
+		double y = -radius * Math.sin(mapHeadingAngle);
 		
 		robotShape.setRotate(Math.toDegrees(mapHeadingAngle));
 		robotShape.relocate((FieldShape.FIELD_OFFSET_Y + (leftY() + y) * 12),

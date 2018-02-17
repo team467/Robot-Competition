@@ -51,9 +51,9 @@ public class Robot {
 	 * Referring to field map, mode codes represented: 
 	 * Moves 1-6: Robot Starting Position - Switch Side
 	 * Moves 7-12: Robot Starting Position - Scale Side
-	 * Move 1: 1-A
-	 * Move 2: 1-B
-	 * Move 3: 2-A
+	 * Move 1: 1-A (2.5, 0)
+	 * Move 2: 1-B (2.5, 0)
+	 * Move 3: 2-A (12.5 , 0)
 	 * Move 4: 2-B
 	 * Move 5: 3-A
 	 * Move 6: 3-B
@@ -69,13 +69,13 @@ public class Robot {
 	
 	public void autonomousInit() {
 		drive.zero();
-		data.startingLocation(2.5, 0);
+		data.startingLocation(12.5, 0);
 		data.send();
 		mode = AutonomousModes.move1;
 		switch (mode) {
 		
 		case move1:
-			autonomous = Actions.startSwitchSide1A();
+			autonomous = Actions.switch2A();
 			break;
 		default:
 			break;

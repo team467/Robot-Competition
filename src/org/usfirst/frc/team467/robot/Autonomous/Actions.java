@@ -146,29 +146,21 @@ public class Actions {
 		return mode;
 	}
 	
-	public static ActionGroup startSwitchSide1A() {
+	public static ActionGroup switch1A() {
 		String actionGroupText = "Start on side 1A, put cube on switch.";
 		ActionGroup mode = new ActionGroup(actionGroupText);
 		mode.addAction(zeroDistance());
-		mode.addAction(moveDistanceForward(10.9)); // (11.67' -distance from center of switch to alliance wall)
+		mode.addAction(moveDistanceForward(12.33)); 
 		mode.addAction(zeroDistance());
 		mode.addAction(moveturn(90));
 		mode.addAction(zeroDistance());
-		mode.addAction(moveDistanceForward(0.45));
+		mode.addAction(moveDistanceForward(1.479));
 		mode.addAction(zeroDistance());
 		return mode;
-	}
+	} //works
+
 	
-//	Plan 1-A:
-//	Set up: Robot flush against west side of the starting position (marked by green lines on South Side of field)
-//	1. Move forward 12 feet 4 inches
-//	2. Turn 90º clockwise (with respect to north)
-//	3. Raise elevator up 20 inches (if not already raised, and also this distance may vary - so that the bottom of the arm is above the top of the fence)
-//	4 Move forward 1 foot 5.75 inches (+ maybe 6 inches to ensure robot is flush with the switch barrier)
-//	5. Release power cube
-//	6. Move backwards 2 feet (ready for teleop)
-	
-	public static ActionGroup startSwitchSide1B() {
+	public static ActionGroup switch1B() {
 		String actionGroupText = "Start on side 1B, put cube on switch.";
 		ActionGroup mode = new ActionGroup(actionGroupText);
 		mode.addAction(zeroDistance());
@@ -187,30 +179,29 @@ public class Actions {
 		mode.addAction(moveDistanceForward(1.2));
 		mode.addAction(zeroDistance());
 		return mode;
-	}
+	} 
 
-	public static ActionGroup startSwitchSide2A() {
+	public static ActionGroup switch2A() {
 		String actionGroupText = "Start on side 2A, put cube on switch.";
 		ActionGroup mode = new ActionGroup(actionGroupText);
 		mode.addAction(zeroDistance());
 		mode.addAction(moveDistanceForward(4.0)); // 4'
 		mode.addAction(zeroDistance());
+		mode.addAction(moveturn(-90));
+		mode.addAction(zeroDistance());
+		mode.addAction(moveDistanceForward(10.0)); // 10'
+		mode.addAction(zeroDistance());
 		mode.addAction(moveturn(90));
 		mode.addAction(zeroDistance());
-		mode.addAction(moveDistanceForward(9.0)); // 9'
-		mode.addAction(zeroDistance());
-		mode.addAction(moveturn(90));
 		mode.addAction(moveDistanceForward(8.33)); // 8' 4"
 		mode.addAction(zeroDistance());
 		mode.addAction(moveturn(90));
 		mode.addAction(zeroDistance());
 		mode.addAction(moveDistanceForward(1.479)); // 1' 5.75"
-		mode.addAction(zeroDistance());
-		mode.addAction(moveDistanceForward(-2.0)); // 2' backwards
 		return mode;
 	}
 
-	public static ActionGroup startSwitchSide2B() {
+	public static ActionGroup switch2B() {
 		String actionGroupText = "Start on side 2B, put cube on switch.";
 		ActionGroup mode = new ActionGroup(actionGroupText);
 		mode.addAction(zeroDistance());
@@ -231,7 +222,7 @@ public class Actions {
 		return mode;
 	}
 	
-	public static ActionGroup startSwitchSide3A() {
+	public static ActionGroup switch3A() {
 		String actionGroupText = "Start on side 3A, put cube on switch.";
 		ActionGroup mode = new ActionGroup(actionGroupText);
 		mode.addAction(zeroDistance());
@@ -252,7 +243,7 @@ public class Actions {
 		return mode;
 	}
 	
-	public static ActionGroup startSwitchSide3B(double distance, double rotationInDegrees) {
+	public static ActionGroup switch3B(double distance, double rotationInDegrees) {
 		String actionGroupText = "Start on side 3B, put cube on switch.";
 		ActionGroup mode = new ActionGroup(actionGroupText);
 		mode.addAction(zeroDistance());
