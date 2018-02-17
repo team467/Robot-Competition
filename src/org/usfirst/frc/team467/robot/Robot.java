@@ -146,13 +146,13 @@ public class Robot extends TimedRobot {
 			driverstation.getNavRumbler().rumble(150, 1.0);
 			LOGGER.info("You pressed b");
 		}
-
+		TiltMonitor.getInstance().periodic();
 	}
 
 
 	public void autonomousPeriodic() {
-//		drive.motionMagicMove(amountToGoLeft, amountToGoRight);
-//		autonomous.run();
+		//		drive.motionMagicMove(amountToGoLeft, amountToGoRight);
+		//		autonomous.run();
 	}
 
 
@@ -165,17 +165,15 @@ public class Robot extends TimedRobot {
 		// TODO Drive class should handle MIN_DRIVE_SPEED
 		double left = driverstation.getArcadeSpeed();
 		double right = driverstation.getArcadeTurn();
-		
+
 		LOGGER.debug("left " + left + " right " + right);
-		LOGGER.debug(grabber.hasCube());
-		
 		if (Math.abs(left) < RobotMap.MIN_DRIVE_SPEED) {
 			left = 0.0;
 		}
 		if (Math.abs(right) < RobotMap.MIN_DRIVE_SPEED) {
 			right = 0.0;
 		}
-		
+
 		switch (driverstation.getDriveMode()) {
 		case ArcadeDrive:
 			double speed = driverstation.getArcadeSpeed();
@@ -204,8 +202,10 @@ public class Robot extends TimedRobot {
 		}
 		
 		grabber.grab(driverstation.getGrabThrottle());
-		
+
 		//changed to arcade drive
 		drive.arcadeDrive(left, right, true);
+
+		TiltMonitor.getInstance().periodic();
 	}
 }

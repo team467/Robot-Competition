@@ -11,6 +11,8 @@ public class Grabber {
 	private static Grabber instance;
 	private SpeedController left;
 	private SpeedController right;
+	private boolean hadCube = false;
+	private boolean hasCube = false;
 	OpticalSensor os;
 
 	private Grabber() {
@@ -38,15 +40,26 @@ public class Grabber {
 			return;
 		}
 
+		// Save the previous state and check for current state.
+		hadCube = hasCube;
+		hasCube = os.detectedTarget();
+
+		if (justGotCube()) {
+			LOGGER.debug("Just got cube, rumbling");
+			DriverStation.getInstance().getNavRumbler().rumble(100, 1.0);
+		}
+
 		if (Math.abs(throttle) < RobotMap.MIN_GRAB_SPEED) {
 			throttle = 0.0;
 		}
+
 		LOGGER.debug("Grabber Throttle=" + throttle);
+		hasCube = os.detectedTarget();
 		left.set(throttle * RobotMap.MAX_GRAB_SPEED);
 		right.set(-throttle * RobotMap.MAX_GRAB_SPEED);
 	}
 
-	public boolean hasCube() {
-		return RobotMap.HAS_GRABBER && os.detectedTarget();
+	public boolean justGotCube() {
+		return !hadCube && hasCube;
 	}
 }

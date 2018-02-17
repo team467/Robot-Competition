@@ -26,6 +26,9 @@ public class RobotMap {
 	public static int LEFT_LEAD_CHANNEL;
 	public static int LEFT_FOLLOWER_1_CHANNEL;
 	public static int LEFT_FOLLOWER_2_CHANNEL;
+	
+	public static int FORWARD_PANIC_ANGLE;
+	public static int BACKWARD_PANIC_ANGLE;
 
 	public static int RIGHT_LEAD_CHANNEL;
 	public static int RIGHT_FOLLOWER_1_CHANNEL;
@@ -41,7 +44,10 @@ public class RobotMap {
 			WHEEL_ENCODER_CODES_PER_REVOLUTION = 256;
 			useSpeedControllers = true;
 			POSITION_ALLOWED_ERROR = (0.5 / RobotMap.WHEEL_CIRCUMFERENCE); // 1/2 inch
-
+			
+			FORWARD_PANIC_ANGLE = 45;
+			BACKWARD_PANIC_ANGLE = -45;
+			
 			LEFT_LEAD_CHANNEL = 1;
 			LEFT_FOLLOWER_1_CHANNEL = 2;
 			LEFT_FOLLOWER_2_CHANNEL = 3;
@@ -63,6 +69,9 @@ public class RobotMap {
 		case Board:
 			HAS_WHEELS = false;
 			WHEEL_ENCODER_CODES_PER_REVOLUTION = 256;
+			
+			FORWARD_PANIC_ANGLE = 45;
+			BACKWARD_PANIC_ANGLE = -45;
 
 			HAS_GRABBER = true;
 			GRABBER_L_CHANNEL = 0;
@@ -83,6 +92,9 @@ public class RobotMap {
 			WHEEL_ENCODER_CODES_PER_REVOLUTION = 256;
 			useSpeedControllers = true;
 			POSITION_ALLOWED_ERROR = (0.5 / RobotMap.WHEEL_CIRCUMFERENCE); // 1/2 inch
+			
+			FORWARD_PANIC_ANGLE = 45;
+			BACKWARD_PANIC_ANGLE = -45;
 
 			LEFT_LEAD_CHANNEL = 1;
 			LEFT_FOLLOWER_1_CHANNEL = 2;
@@ -110,6 +122,9 @@ public class RobotMap {
 			WHEEL_ENCODER_CODES_PER_REVOLUTION = 256;
 			useSpeedControllers = true;
 			POSITION_ALLOWED_ERROR = (0.5 / RobotMap.WHEEL_CIRCUMFERENCE); // 1/2 inch
+			
+			FORWARD_PANIC_ANGLE = 45;
+			BACKWARD_PANIC_ANGLE = -45;
 
 			LEFT_LEAD_CHANNEL = 1;
 			LEFT_FOLLOWER_1_CHANNEL = 2;
