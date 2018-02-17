@@ -68,11 +68,11 @@ public class Elevator {
 		this.heightController.configSelectedFeedbackSensor(FeedbackDevice.Analog, 0, RobotMap.TALON_TIMEOUT);
 		this.heightController.configSetParameter(ParamEnum.eFeedbackNotContinuous, 1, 0x00, 0x00, 0x00);
 		this.heightController.configAllowableClosedloopError(0, 3, RobotMap.TALON_TIMEOUT);
+		this.heightController.setInverted(false);
+		this.heightController.setSensorPhase(true);
 
 		targetHeight = null;
 		previousHeight = getHeightInches();
-		this.heightController.setInverted(true);
-
 		m_safetyHelper = new MotorSafetyHelper(this.heightController);
 	}
 
@@ -120,7 +120,7 @@ public class Elevator {
 
 		double ticks = RobotMap.ELEVATOR_INITIAL_TICKS + heightInInches / RobotMap.ELEVATOR_TICKS_PER_INCH;
 		heightController.set(ControlMode.MotionMagic, ticks);
-		logSensorVelocityAndPosition();
+		logSensorAndTargetPosition();
 	}
 
 	/**
@@ -157,14 +157,14 @@ public class Elevator {
 		}
 	}
 
-	public void logSensorVelocityAndPosition() {
+	public void logSensorAndTargetPosition() {
 		LOGGER.debug(
 				//TODO Check the arguments for the closed loop errors.
-				"Vel= " + heightController.getSelectedSensorVelocity(0)
+				"Target= " + heightController.getActiveTrajectoryPosition()
 				+ "Pos=" + heightController.getSelectedSensorPosition(0));
-		DriverStation.getInstance().set(0,"velocity");
+		DriverStation.getInstance().set(0,"target");
 		DriverStation.getInstance().set(1, "position");
-		DriverStation.getInstance().set(5, heightController.getSelectedSensorVelocity(0));
+		DriverStation.getInstance().set(5, heightController.getActiveTrajectoryPosition());
 		DriverStation.getInstance().set(6, heightController.getSelectedSensorPosition(0));
 	}
 }
