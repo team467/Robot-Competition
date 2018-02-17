@@ -29,7 +29,7 @@ public class RobotMap {
 	public static int LEFT_LEAD_CHANNEL;
 	public static int LEFT_FOLLOWER_1_CHANNEL;
 	public static int LEFT_FOLLOWER_2_CHANNEL;
-	
+
 	public static int FORWARD_PANIC_ANGLE;
 	public static int BACKWARD_PANIC_ANGLE;
 
@@ -47,10 +47,10 @@ public class RobotMap {
 			WHEEL_ENCODER_CODES_PER_REVOLUTION = 256;
 			useSpeedControllers = true;
 			POSITION_ALLOWED_ERROR = (0.5 / RobotMap.WHEEL_CIRCUMFERENCE); // 1/2 inch
-			
+
 			FORWARD_PANIC_ANGLE = 45;
 			BACKWARD_PANIC_ANGLE = -45;
-			
+
 			LEFT_LEAD_CHANNEL = 1;
 			LEFT_FOLLOWER_1_CHANNEL = 2;
 			LEFT_FOLLOWER_2_CHANNEL = 3;
@@ -63,16 +63,12 @@ public class RobotMap {
 			HAS_GRABBER = false;
 			HAS_RAMPS = false;
 
-			// TODO Assign values to the game piece variables, and make more as appropriate
-			ELEVATOR_MOTOR_CHANNEL = 0;
-			RAMP_SOLENOID_CHANNEL = 0;
-
 			isDriveMotorInverted = new boolean[] { false, true, false, true };
 			break;
 		case Board:
 			HAS_WHEELS = false;
 			WHEEL_ENCODER_CODES_PER_REVOLUTION = 256;
-			
+
 			FORWARD_PANIC_ANGLE = 45;
 			BACKWARD_PANIC_ANGLE = -45;
 
@@ -83,9 +79,10 @@ public class RobotMap {
 
 			HAS_ELEVATOR = true;
 			ELEVATOR_MOTOR_CHANNEL = 1;
-			
+
 			HAS_RAMPS = false;
-			RAMP_SOLENOID_CHANNEL = 0;
+			RAMP_LEFT_SOLENOID_CHANNEL = 0;
+			RAMP_RIGHT_SOLENOID_CHANNEL = 0; // TODO Assign real values
 
 			isDriveMotorInverted = new boolean[] { false, true, false, true };
 			break;
@@ -95,7 +92,7 @@ public class RobotMap {
 			WHEEL_ENCODER_CODES_PER_REVOLUTION = 256;
 			useSpeedControllers = true;
 			POSITION_ALLOWED_ERROR = (0.5 / RobotMap.WHEEL_CIRCUMFERENCE); // 1/2 inch
-			
+
 			FORWARD_PANIC_ANGLE = 45;
 			BACKWARD_PANIC_ANGLE = -45;
 
@@ -117,7 +114,8 @@ public class RobotMap {
 
 			// TODO Assign values to the game piece variables, and make more as appropriate
 			ELEVATOR_MOTOR_CHANNEL = 7;
-			RAMP_SOLENOID_CHANNEL = 0;
+			RAMP_LEFT_SOLENOID_CHANNEL = 0;
+			RAMP_RIGHT_SOLENOID_CHANNEL = 0; // TODO Assign real values
 			break;
 		case Competition_2:
 			HAS_WHEELS = true;
@@ -125,7 +123,7 @@ public class RobotMap {
 			WHEEL_ENCODER_CODES_PER_REVOLUTION = 256;
 			useSpeedControllers = true;
 			POSITION_ALLOWED_ERROR = (0.5 / RobotMap.WHEEL_CIRCUMFERENCE); // 1/2 inch
-			
+
 			FORWARD_PANIC_ANGLE = 45;
 			BACKWARD_PANIC_ANGLE = -45;
 
@@ -147,7 +145,8 @@ public class RobotMap {
 
 			// TODO Assign values to the game piece variables, and make more as appropriate
 			ELEVATOR_MOTOR_CHANNEL = 0;
-			RAMP_SOLENOID_CHANNEL = 0;
+			RAMP_LEFT_SOLENOID_CHANNEL = 0;
+			RAMP_RIGHT_SOLENOID_CHANNEL = 0; // TODO Assign real values
 			break;
 		}
 	}
@@ -226,5 +225,6 @@ public class RobotMap {
 	public static final int MAX_ELEVATOR_RPM = 1000; //Not the real value, placeholder constant. 
 
 	public static boolean HAS_RAMPS;
-	public static int RAMP_SOLENOID_CHANNEL;
+	public static int RAMP_LEFT_SOLENOID_CHANNEL;
+	public static int RAMP_RIGHT_SOLENOID_CHANNEL;
 }
