@@ -51,21 +51,28 @@ public class Drive extends DifferentialDrive {
 	 */
 	public static Drive getInstance() {
 		if (instance == null) {
-			// First usage - create Drive object
-			WPI_TalonSRX leftLead = new WPI_TalonSRX(RobotMap.LEFT_LEAD_CHANNEL);
-			WPI_TalonSRX leftFollower1 = new WPI_TalonSRX(RobotMap.LEFT_FOLLOWER_1_CHANNEL);
-			WPI_TalonSRX leftFollower2 = new WPI_TalonSRX(RobotMap.LEFT_FOLLOWER_2_CHANNEL);
+			if (RobotMap.HAS_WHEELS) {
+				// First usage - create Drive object
+				WPI_TalonSRX leftLead = new WPI_TalonSRX(RobotMap.LEFT_LEAD_CHANNEL);
+				WPI_TalonSRX leftFollower1 = new WPI_TalonSRX(RobotMap.LEFT_FOLLOWER_1_CHANNEL);
+				WPI_TalonSRX leftFollower2 = new WPI_TalonSRX(RobotMap.LEFT_FOLLOWER_2_CHANNEL);
+	
+				WPI_TalonSRX rightLead = new WPI_TalonSRX(RobotMap.RIGHT_LEAD_CHANNEL);
+				WPI_TalonSRX rightFollower1 = new WPI_TalonSRX(RobotMap.RIGHT_FOLLOWER_1_CHANNEL);
+				WPI_TalonSRX rightFollower2 = new WPI_TalonSRX(RobotMap.RIGHT_FOLLOWER_2_CHANNEL);
 
-			WPI_TalonSRX rightLead = new WPI_TalonSRX(RobotMap.RIGHT_LEAD_CHANNEL);
-			WPI_TalonSRX rightFollower1 = new WPI_TalonSRX(RobotMap.RIGHT_FOLLOWER_1_CHANNEL);
-			WPI_TalonSRX rightFollower2 = new WPI_TalonSRX(RobotMap.RIGHT_FOLLOWER_2_CHANNEL);
-
-			TalonSpeedControllerGroup left = new TalonSpeedControllerGroup(ControlMode.PercentOutput, RobotMap.LEFT_DRIVE_SENSOR_IS_INVERTED,
-					leftLead, leftFollower1, leftFollower2);
-			TalonSpeedControllerGroup right = new TalonSpeedControllerGroup(ControlMode.PercentOutput, RobotMap.RIGHT_DRIVE_SENSOR_IS_INVERTED,
-					rightLead, rightFollower1, rightFollower2);
-			instance = new Drive(left, right);
+				TalonSpeedControllerGroup left = new TalonSpeedControllerGroup(ControlMode.PercentOutput, RobotMap.LEFT_DRIVE_SENSOR_IS_INVERTED,
+						leftLead, leftFollower1, leftFollower2);
+				TalonSpeedControllerGroup right = new TalonSpeedControllerGroup(ControlMode.PercentOutput, RobotMap.RIGHT_DRIVE_SENSOR_IS_INVERTED,
+						rightLead, rightFollower1, rightFollower2);
+				instance = new Drive(left, right);							
+			} else {
+				TalonSpeedControllerGroup left = new TalonSpeedControllerGroup();
+				TalonSpeedControllerGroup right = new TalonSpeedControllerGroup();				
+				instance = new Drive(left, right);
+			}
 		}
+
 		return instance;
 	}
 
