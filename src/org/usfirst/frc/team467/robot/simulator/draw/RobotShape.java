@@ -216,10 +216,15 @@ public class RobotShape {
 	
 	public void draw() {
 		loadData();	
-		colorElevator();
-		robotShape.relocate((FieldShape.FIELD_OFFSET_Y + leftY() * 12),
-				(FieldShape.FIELD_OFFSET_X + (leftX() + RobotMap.WHEEL_BASE_WIDTH/2) * 12));
+		colorElevator();		
+		
+		double radius = RobotMap.WHEEL_BASE_WIDTH/2;
+		double x = radius * Math.cos(mapHeadingAngle);
+		double y = radius * Math.sin(mapHeadingAngle);
+		
 		robotShape.setRotate(Math.toDegrees(mapHeadingAngle));
+		robotShape.relocate((FieldShape.FIELD_OFFSET_Y + (leftY() + y) * 12),
+				(FieldShape.FIELD_OFFSET_X + (leftX() + x) * 12));
 	}
 
 }
