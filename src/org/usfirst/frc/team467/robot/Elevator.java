@@ -67,17 +67,18 @@ public class Elevator {
 		this.heightController.configAllowableClosedloopError(0, 3, RobotMap.TALON_TIMEOUT);
 		this.heightController.setInverted(false);
 		this.heightController.setSensorPhase(true);
+		configMotionMagicParameters();
 
 		targetHeight = null;
 		previousHeight = getHeightInches();
 		m_safetyHelper = new MotorSafetyHelper(this.heightController);
 	}
 
-	public void initMotionMagicMode() {
-		double kPElevator = 1.4; // Double.parseDouble(SmartDashboard.getString("DB/String 7", "1.4"));
+	public void configMotionMagicParameters() {
+		double kPElevator = 1.6; // Double.parseDouble(SmartDashboard.getString("DB/String 7", "1.4"));
 		double kIElevator = 0.0; // Double.parseDouble(SmartDashboard.getString("DB/String 8", "0.0"));
-		double kDElevator = 165; // Double.parseDouble(SmartDashboard.getString("DB/String 9", "165"));
-		double kFElevator = 0.5; //  Double.parseDouble(SmartDashboard.getString("DB/String 6", "0.5"));
+		double kDElevator = 198; // Double.parseDouble(SmartDashboard.getString("DB/String 9", "165"));
+		double kFElevator = 0.729672; //  Double.parseDouble(SmartDashboard.getString("DB/String 6", "0.5"));
 
 		heightController.config_kP(0, kPElevator, RobotMap.TALON_TIMEOUT);
 		heightController.config_kI(0, kIElevator, RobotMap.TALON_TIMEOUT);
@@ -116,6 +117,7 @@ public class Elevator {
 		}
 
 		double ticks = RobotMap.ELEVATOR_INITIAL_TICKS + heightInInches * RobotMap.ELEVATOR_TICKS_PER_INCH;
+		LOGGER.debug("Setting Motion Magic; target position=" + ticks);
 		heightController.set(ControlMode.MotionMagic, ticks);
 		logSensorAndTargetPosition();
 	}
@@ -162,7 +164,7 @@ public class Elevator {
 				+ "Pos=" + heightController.getSelectedSensorPosition(0));
 		DriverStation.getInstance().set(0,"target ticks");
 		DriverStation.getInstance().set(1, "position");
-		DriverStation.getInstance().set(5, ticks);
+		DriverStation.getInstance().set(5, heightController.getActiveTrajectoryPosition());
 		DriverStation.getInstance().set(6, heightController.getSelectedSensorPosition(0));
 	}
 }
