@@ -14,6 +14,7 @@ public class Ramps {
 	private Solenoid rightSolenoid;
 
 	private boolean isDeployed = false;
+	private boolean isLifted = false;
 
 	private Ramps() {
 		if (!RobotMap.HAS_RAMPS) {
@@ -43,17 +44,15 @@ public class Ramps {
 	}
 
 	public void retract() {
-		if (!RobotMap.HAS_RAMPS) {
-			return;
+		if (RobotMap.HAS_RAMPS && !isLifted) { // Don't retract if lifted
+			// TODO Ramp retract code here, not sure if it's motors or pneumatics yet
+			LOGGER.debug("Deploying ramps");
+			isDeployed = false;
 		}
-
-		// TODO Ramp retract code here, not sure if it's motors or pneumatics yet
-		LOGGER.debug("Deploying ramps");
-		isDeployed = false;
 	}
 
 	public void lift() {
-		if (RobotMap.HAS_RAMPS && isDeployed) {
+		if (RobotMap.HAS_RAMPS && isDeployed) { // Only lift if deployed
 			leftSolenoid.set(true);
 			rightSolenoid.set(true);
 			LOGGER.debug("Lifting ramps");
