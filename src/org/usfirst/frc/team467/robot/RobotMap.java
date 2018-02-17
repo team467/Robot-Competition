@@ -41,7 +41,7 @@ public class RobotMap {
 	
 	public static boolean RIGHT_DRIVE_SENSOR_IS_INVERTED;
 	public static boolean LEFT_DRIVE_SENSOR_IS_INVERTED;
-	
+	public static int DRIVEMOTOR_NUM;
 	// Initialize robot map. 
 	public static void init(RobotID id) {
 		robotID = id;
@@ -69,6 +69,8 @@ public class RobotMap {
 			HAS_ELEVATOR = false;
 			HAS_GRABBER = false;
 			HAS_RAMPS = false;
+			
+			DRIVEMOTOR_NUM = 0;
 
 			// TODO Assign values to the game piece variables, and make more as appropriate
 			ELEVATOR_MOTOR_CHANNEL = 0;
@@ -96,6 +98,8 @@ public class RobotMap {
 			
 			HAS_RAMPS = false;
 			RAMP_SOLENOID_CHANNEL = 0;
+			
+			DRIVEMOTOR_NUM = 0;
 
 			isDriveMotorInverted = new boolean[] { false, true, false, true };
 			break;
@@ -124,7 +128,8 @@ public class RobotMap {
 			GRABBER_L_CHANNEL = 1; 
 			GRABBER_R_CHANNEL = 2;
 			OPTICAL_CHANNEL = 5;
-
+			
+			DRIVEMOTOR_NUM = 6;
 			// TODO Assign values to the game piece variables, and make more as appropriate
 			ELEVATOR_MOTOR_CHANNEL = 7;
 			RAMP_SOLENOID_CHANNEL = 0;
@@ -155,6 +160,8 @@ public class RobotMap {
 			GRABBER_L_CHANNEL = 1; 
 			GRABBER_R_CHANNEL = 2;
 			OPTICAL_CHANNEL = 5;
+			
+			DRIVEMOTOR_NUM = 4;
 
 			// TODO Assign values to the game piece variables, and make more as appropriate
 			ELEVATOR_MOTOR_CHANNEL = 0;

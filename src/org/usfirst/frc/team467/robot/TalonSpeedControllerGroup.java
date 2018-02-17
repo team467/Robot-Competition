@@ -29,6 +29,9 @@ public class TalonSpeedControllerGroup implements SpeedController {
 	public TalonSpeedControllerGroup(ControlMode controlMode, boolean sensorIsInverted,
 			WPI_TalonSRX leader, WPI_TalonSRX follower1, WPI_TalonSRX follower2) {
 		if (!RobotMap.HAS_WHEELS) {
+			leader = null;
+			follower1 = null;
+			follower2 = null;
 			LOGGER.debug("No drive system");
 			return;
 		}
@@ -38,8 +41,8 @@ public class TalonSpeedControllerGroup implements SpeedController {
 		this.controlMode = controlMode;
 		
 		initMotor(this.leader);
-		initMotor(this.follower1);
-		initMotor(this.follower2);
+		if(follower1 != null) initMotor(this.follower1);
+		if(follower2 != null) initMotor(this.follower2);
 		
 		//only have sensor on leader
 		leader.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, RobotMap.TALON_TIMEOUT);
@@ -47,6 +50,16 @@ public class TalonSpeedControllerGroup implements SpeedController {
 		leader.configMotionCruiseVelocity(1052 / 2, RobotMap.TALON_TIMEOUT); //1052 is 75 percent of the max speed, which is 1402	
 		leader.configMotionAcceleration(1052 / 2, RobotMap.TALON_TIMEOUT);		
 		zero();		
+	}
+	
+	public TalonSpeedControllerGroup(ControlMode controlMode, boolean sensorIsInverted,
+			WPI_TalonSRX leader, WPI_TalonSRX follower1) {
+		this(controlMode, sensorIsInverted, leader, follower1, null);
+	}
+	
+	public TalonSpeedControllerGroup(ControlMode controlMode, boolean sensorIsInverted,
+			WPI_TalonSRX leader) {
+		this(controlMode, sensorIsInverted, leader, null, null);
 	}
 	
 	private void initMotor(WPI_TalonSRX talon) {
@@ -65,6 +78,10 @@ public class TalonSpeedControllerGroup implements SpeedController {
 	}
 	
 	public void logClosedLoopErrors(String side) {
+		if (!RobotMap.HAS_WHEELS) {
+			LOGGER.debug("No CLosed Loop errors");
+			return;
+		}
 		LOGGER.debug(
 				side + ": Vel = " + leader.getSelectedSensorVelocity(0) +
 				" Pos = " + leader.getSelectedSensorPosition(0) +
@@ -72,6 +89,10 @@ public class TalonSpeedControllerGroup implements SpeedController {
 	}
 	
 	public void setPIDF(double p, double i, double d, double f){
+		if (!RobotMap.HAS_WHEELS) {
+			LOGGER.debug("No PIDF");
+			return;
+		}
 		leader.config_kP(0, p, RobotMap.TALON_TIMEOUT);
 		leader.config_kI(0, i, RobotMap.TALON_TIMEOUT);
 		leader.config_kD(0, d, RobotMap.TALON_TIMEOUT);
@@ -94,8 +115,8 @@ public class TalonSpeedControllerGroup implements SpeedController {
 			return;
 		}
 		leader.disable();
-		follower1.disable();
-		follower2.disable();
+		if(follower1 != null) follower1.disable();
+		if(follower2 != null) follower2.disable();
 	}
 	
 	@Override
@@ -114,8 +135,8 @@ public class TalonSpeedControllerGroup implements SpeedController {
 			return;
 		}
 		leader.pidWrite(output);
-		follower1.follow(leader);
-		follower2.follow(leader);
+		if(follower1 != null)follower1.follow(leader);
+		if(follower2 != null)follower2.follow(leader);
 	}
 	
 	@Override
@@ -129,8 +150,8 @@ public class TalonSpeedControllerGroup implements SpeedController {
 			return;
 		}
 		leader.set(controlMode, outputValue);
-		follower1.follow(leader);
-		follower2.follow(leader);
+		if(follower1 != null)follower1.follow(leader);
+		if(follower2 != null)follower2.follow(leader);
 	}
 	
 	@Override
@@ -139,8 +160,8 @@ public class TalonSpeedControllerGroup implements SpeedController {
 			LOGGER.debug("No drive system");
 			return;
 		}		leader.setInverted(isInverted);
-		follower1.setInverted(isInverted);
-		follower2.setInverted(isInverted);
+		if(follower1 != null)follower1.setInverted(isInverted);
+		if(follower2 != null)follower2.setInverted(isInverted);
 	}
 	
 	@Override
@@ -159,13 +180,13 @@ public class TalonSpeedControllerGroup implements SpeedController {
 			return;
 		}
 		leader.stopMotor();
-		follower1.stopMotor();
-		follower2.stopMotor();		
+		if(follower1 != null)follower1.stopMotor();
+		if(follower2 != null)follower2.stopMotor();		
 	}
 	
 	public boolean isStopped(){
 		if (leader == null) {
-			LOGGER.debug("No drive system");
+			LOGGER.debug("no Drive System");
 			return true;
 		}
 		int leaderSensorPosition = leader.getSelectedSensorPosition(0);
@@ -186,5 +207,24 @@ public class TalonSpeedControllerGroup implements SpeedController {
 			return 0;
 		}
 		return leader.getSelectedSensorPosition(0);
+	}
+	
+	/**
+	 * Checks for the amount of Motors that you made
+	 * @return
+	 */
+	public int motorAmt(){
+		if(leader != null) {
+			return 1;
+			}
+		if(follower1 != null) { 
+			return 2;
+			}
+		if(follower2 != null) {
+			return 3;
+		}
+		else { 
+			return 0;
+			}
 	}
 }
