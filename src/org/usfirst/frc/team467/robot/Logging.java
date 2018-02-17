@@ -8,6 +8,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
 import org.apache.log4j.RollingFileAppender;
 import org.usfirst.frc.team467.robot.Autonomous.ActionGroup;
+import org.usfirst.frc.team467.robot.Autonomous.MatchConfiguration;
 import org.usfirst.frc.team467.robot.simulator.draw.RobotShape;
 
 public class Logging {
@@ -15,13 +16,14 @@ public class Logging {
 		setupDefaultLogging();
 
 		// Enable extra logging for classes you want to debug
+		Logger.getLogger(MatchConfiguration.class).setLevel(Level.DEBUG);
 		Logger.getLogger(Robot.class).setLevel(Level.DEBUG);
 		Logger.getLogger(ActionGroup.class).setLevel(Level.DEBUG);
 		Logger.getLogger(Drive.class).setLevel(Level.DEBUG);
 		Logger.getLogger(Elevator.class).setLevel(Level.WARN);
 		Logger.getLogger(XBoxJoystick467.class).setLevel(Level.WARN);
 		Logger.getLogger(Grabber.class).setLevel(Level.DEBUG);
-		Logger.getLogger(RobotShape.class).setLevel(Level.DEBUG);
+		Logger.getLogger(RobotShape.class).setLevel(Level.WARN);
 	}
 
 	private static void setupDefaultLogging() {

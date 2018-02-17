@@ -13,11 +13,12 @@ public class Actions {
 	private static final Logger LOGGER = Logger.getLogger(Actions.class);
 
 	public static final Action nothing(){
-		Drive drive = Drive.getInstance();
+//		Drive drive = Drive.getInstance();
+		DriveSimulator drive = DriveSimulator.getInstance();
 		String actionText = "Do Nothing";
 		return new Action(actionText,
 				() -> drive.isStopped(),
-				() -> drive.tankDrive(0, 0));
+				() -> drive.moveFeet(0));
 	}
 
 	public static Action wait(double duration) {
