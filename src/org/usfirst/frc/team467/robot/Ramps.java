@@ -49,4 +49,12 @@ public class Ramps {
 			LOGGER.debug("Lifting ramps");
 		}
 	}
+	
+	public void periodic() {
+		if (DriverStation.getInstance().shouldDeployRamps()) {
+			deploy();
+		} else if (DriverStation.getInstance().shouldLiftRamps()) {
+			lift();
+		}
+	}
 }

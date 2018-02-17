@@ -1,5 +1,6 @@
 package org.usfirst.frc.team467.robot;
 
+import org.usfirst.frc.team467.robot.XBoxJoystick467.Button;
 import org.usfirst.frc.team467.robot.Autonomous.ActionGroup;
 
 public class DriverStation {
@@ -129,6 +130,14 @@ public class DriverStation {
 	
 	public double getElevatorSpeed() {
 		return getNavJoystick().getRightStickY();
+	}
+	
+	public boolean shouldDeployRamps() {
+		return getNavJoystick().pressed(Button.left);
+	}
+	
+	public boolean shouldLiftRamps() {
+		return getNavJoystick().pressed(Button.right);
 	}
 	
 	public double getGrabThrottle() {

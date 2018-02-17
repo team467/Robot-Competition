@@ -50,6 +50,7 @@ public class Robot extends TimedRobot {
 
 	private Elevator elevator;
 	private Grabber grabber;
+	private Ramps ramps;
 
 	/**
 	 * This function is run when the robot is first started up and should be used for any initialization code.
@@ -73,6 +74,7 @@ public class Robot extends TimedRobot {
 		
 		grabber = Grabber.getInstance();
 		elevator = Elevator.getInstance();
+		ramps = Ramps.getInstance();
 		
 		// Initialize math lookup table
 		LookUpTable.init();
@@ -203,8 +205,8 @@ public class Robot extends TimedRobot {
 		}
 
 		elevator.manualMove(driverstation.getElevatorSpeed());
-
 		grabber.grab(driverstation.getGrabThrottle());
+		ramps.periodic();
 
 		//changed to arcade drive
 		drive.arcadeDrive(left, right, true);

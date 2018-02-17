@@ -15,7 +15,7 @@ public class NullSolenoid extends Solenoid {
 
 	@Override
 	public void set(boolean on) {
-		// Nothing
+		// Eat it
 	}
 
 	@Override
