@@ -20,6 +20,8 @@ import edu.wpi.first.wpilibj.CameraServer;
 //import javafx.scene.shape.Box;
 
 public class VisionProcessing {
+	
+	public Mat source;
 
 	public double cubeCenterPointY;
 	public double cubeCenterPointX;
@@ -41,60 +43,8 @@ public class VisionProcessing {
 	private double average;
 	private MovingAverage averageAngle;
 
+
 	
-	public UsbCamera camera() {
-		camera = CameraServer.getInstance().startAutomaticCapture();
-		camera.setResolution(320, 240);
-
-		camera.setFPS(30);
-		camera.setBrightness(50);
-		camera.setWhiteBalanceManual(WhiteBalance.kFixedFluorescent1);
-		camera.setExposureManual(0);
-		
-		return camera;
-	}
-	
-	public void showFrame() {
-		CvSink cvsink = CameraServer.getInstance().getVideo();
-		Mat source = new Mat();
-		CvSource outputsource = CameraServer.getInstance().putVideo("CubeCam", 320, 240); // CubeCam
-		cvsink.grabFrame(source);
-		outputsource.putFrame(source);
-	}
-	
-	public void init() {
-		
-		camera = CameraServer.getInstance().startAutomaticCapture();
-		camera.setResolution(320, 240);
-
-		camera.setFPS(30);
-		camera.setBrightness(50);
-		camera.setWhiteBalanceManual(WhiteBalance.kFixedFluorescent1);
-		camera.setExposureManual(0);
-
-		// For Camera for driver
-//		camera.setBrightness(100);
-//		camera.setExposureAuto();
-//		camera.setWhiteBalanceAuto();
-
-		new Thread(() -> {
-
-			Mat source = new Mat();
-			Mat output = new Mat();
-			CvSink cvsink = CameraServer.getInstance().getVideo();
-			CvSource outputsource = CameraServer.getInstance().putVideo("CubeCam", 320, 240); // CubeCam
-
-			while (!Thread.interrupted()) {
-				cvsink.grabFrame(source);
-				outputsource.putFrame(source);
-//				findCube(source);
-				// if (!source.empty()) {
-				// Imgproc.cvtColor(source, output, Imgproc.COLOR_BGR2GRAY);
-				// outputsource.putFrame(output);
-				// }
-			}
-		}).start();
-	}
 		
 	private VisionProcessing() {
 		pipeline = new DetectPowerCubePipeline();
@@ -117,9 +67,9 @@ public class VisionProcessing {
 
 		// grabFrame();
 		if (!source.empty()) {
+			pipeline.process(source);
 			windowHeight = source.size().height;
 			windowWidth = source.size().width;
-			pipeline.process(source);
 			ArrayList<Rect> boundingBoxes = new ArrayList<Rect>();
 			for (MatOfPoint points : pipeline.convexHullsOutput()) {
 				Rect box = Imgproc.boundingRect(points);
@@ -127,8 +77,8 @@ public class VisionProcessing {
 				LOGGER.info("ADDED Bounding BOX X:" + box.x + " Y: " + box.y + " H: " + box.height + " W: " + box.width);
 				cubeCenterPointY = (box.height / 2) + box.y;
 				cubeCenterPointX = (box.width / 2) + box.x;
-//				Imgproc.rectangle(source, new Point(box.x, box.y), new Point(box.x + box.width, box.y + box.height),
-//						new Scalar(0, 255, 0, 0), 5);
+				Imgproc.rectangle(source, new Point(box.x, box.y), new Point(box.x + box.width, box.y + box.height),
+						new Scalar(0, 255, 0, 0), 5);
 //
 				// if (box.height < box.width) {
 				// //TODO : This configuration has it so that the grabber barely fits, be exact.
@@ -171,7 +121,7 @@ public class VisionProcessing {
 				break;
 			}
 		}
-		return cameraAngleToCube;
+		return Math.toDegrees(average);
 	}
 
 	/**

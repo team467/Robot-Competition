@@ -93,7 +93,7 @@ public class DetectPowerCubePipeline implements VisionPipeline {
 		convexHulls(convexHullsContours, convexHullsOutput);
 
 	}
-
+	
 	/**
 	 * This method is a generated getter for the output of a CV_resize.
 	 * @return Mat output from CV_resize.
