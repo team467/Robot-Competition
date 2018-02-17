@@ -61,7 +61,7 @@ public class Robot extends TimedRobot {
 
 		// Initialize RobotMap
 		RobotMap.init(RobotID.Competition_1);
-		
+
 		// Make robot objects
 		driverstation = DriverStation.getInstance();
 		LOGGER.info("Initialized Driverstation");
@@ -71,11 +71,11 @@ public class Robot extends TimedRobot {
 		gyro = Gyrometer.getInstance();
 		gyro.calibrate();
 		gyro.reset();
-		
+
 		grabber = Grabber.getInstance();
 		elevator = Elevator.getInstance();
 		ramps = Ramps.getInstance();
-		
+
 		// Initialize math lookup table
 		LookUpTable.init();
 
@@ -85,10 +85,10 @@ public class Robot extends TimedRobot {
 		//		autonomous = Actions.doNothing();
 
 		//made usb camera and captures video
-//		UsbCamera cam = CameraServer.getInstance().startAutomaticCapture();
-//		//set resolution and frames per second to match driverstation
-//		cam.setResolution(320, 240);
-//		cam.setFPS(15);
+		//		UsbCamera cam = CameraServer.getInstance().startAutomaticCapture();
+		//		//set resolution and frames per second to match driverstation
+		//		cam.setResolution(320, 240);
+		//		cam.setFPS(15);
 		//TODO: Create list of autonomous modes for selector
 		// Setup autonomous mode selectors
 	}
@@ -117,7 +117,7 @@ public class Robot extends TimedRobot {
 
 
 
-	
+
 
 		LOGGER.info(drive);
 		// TODO: call appropriate auto modes based on list
