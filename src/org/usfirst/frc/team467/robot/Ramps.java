@@ -42,6 +42,16 @@ public class Ramps {
 		isDeployed = true;
 	}
 
+	public void retract() {
+		if (!RobotMap.HAS_RAMPS) {
+			return;
+		}
+
+		// TODO Ramp deploy code here, not sure if it's motors or pneumatics yet
+		LOGGER.debug("Deploying ramps");
+		isDeployed = false;
+	}
+
 	public void lift() {
 		if (RobotMap.HAS_RAMPS && isDeployed) {
 			leftSolenoid.set(true);
@@ -49,7 +59,15 @@ public class Ramps {
 			LOGGER.debug("Lifting ramps");
 		}
 	}
-	
+
+	public void drop() {
+		if (RobotMap.HAS_RAMPS) {
+			leftSolenoid.set(false);
+			rightSolenoid.set(false);
+			LOGGER.debug("Dropping ramps");
+		}
+	}
+
 	public void periodic() {
 		if (!RobotMap.HAS_RAMPS) {
 			return;
