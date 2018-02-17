@@ -138,6 +138,14 @@ public class DriverStation {
 		return getNavJoystick().down(Button.b);
 	}
 	
+	public boolean getLowScaleHeightButton() {
+		return getNavJoystick().down(Button.x);
+	}
+	
+	public boolean getHighScaleHeightButton() {
+		return getNavJoystick().down(Button.y);
+	}
+	
 	public double getGrabThrottle() {
 		return getNavJoystick().getLeftStickY();
 	}

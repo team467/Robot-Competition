@@ -55,7 +55,7 @@ public class Robot extends TimedRobot {
 
 		// Initialize RobotMap
 		RobotMap.init(RobotID.Competition_1);
-		
+
 		// Make robot objects
 		driverstation = DriverStation.getInstance();
 		LOGGER.info("Initialized Driverstation");
@@ -65,10 +65,10 @@ public class Robot extends TimedRobot {
 		gyro = Gyrometer.getInstance();
 		gyro.calibrate();
 		gyro.reset();
-		
+
 		grabber = Grabber.getInstance();
 		elevator = Elevator.getInstance();
-		
+
 		// Initialize math lookup table
 		LookUpTable.init();
 
@@ -78,10 +78,10 @@ public class Robot extends TimedRobot {
 		//		autonomous = Actions.doNothing();
 
 		//made usb camera and captures video
-//		UsbCamera cam = CameraServer.getInstance().startAutomaticCapture();
-//		//set resolution and frames per second to match driverstation
-//		cam.setResolution(320, 240);
-//		cam.setFPS(15);
+		//		UsbCamera cam = CameraServer.getInstance().startAutomaticCapture();
+		//		//set resolution and frames per second to match driverstation
+		//		cam.setResolution(320, 240);
+		//		cam.setFPS(15);
 		//TODO: Create list of autonomous modes for selector
 		// Setup autonomous mode selectors
 	}
@@ -109,7 +109,7 @@ public class Robot extends TimedRobot {
 
 
 
-	
+
 
 		LOGGER.info(drive);
 		// TODO: call appropriate auto modes based on list
@@ -190,18 +190,24 @@ public class Robot extends TimedRobot {
 			//TODO: Add things here later.
 			break;
 		}
-		
+
 		if (driverstation.getSwitchHeightButton()) {
+			LOGGER.debug("Lifting to switch height");
 			elevator.moveToHeight(Elevator.Stops.fieldSwitch);
+		} else if (driverstation.getLowScaleHeightButton()) {
+			LOGGER.debug("Lifting to low scale height");
+			elevator.moveToHeight(Elevator.Stops.lowScale);
+		} else if (driverstation.getHighScaleHeightButton()) {
+			LOGGER.debug("Lifting to high scale height");
+			elevator.moveToHeight(Elevator.Stops.highScale);
 		}
-		
+
 		elevator.move(driverstation.getElevatorSpeed());
-		LOGGER.debug("Elevator Moving");
-		
+
 		if (grabber.justGotCube()) {
 			driverstation.getNavRumbler().rumble(100, 1.0);
 		}
-		
+
 		grabber.grab(driverstation.getGrabThrottle());
 
 		//changed to arcade drive
