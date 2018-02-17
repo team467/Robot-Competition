@@ -3,7 +3,6 @@ package org.usfirst.frc.team467.robot;
 import org.apache.log4j.Logger;
 
 import edu.wpi.first.wpilibj.Solenoid;
-import edu.wpi.first.wpilibj.SolenoidBase;
 
 public class Ramps {
 	private static final Logger LOGGER = Logger.getLogger(Ramps.class);
@@ -37,7 +36,7 @@ public class Ramps {
 			return;
 		}
 
-		// Ramp deploy code here, not sure if it's motors or pneumatics yet
+		// TODO Ramp deploy code here, not sure if it's motors or pneumatics yet
 		LOGGER.debug("Deploying ramps");
 		isDeployed = true;
 	}
