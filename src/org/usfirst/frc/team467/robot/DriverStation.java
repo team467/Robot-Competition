@@ -1,6 +1,9 @@
 package org.usfirst.frc.team467.robot;
 
+import org.usfirst.frc.team467.robot.XBoxJoystick467.Button;
 import org.usfirst.frc.team467.robot.Autonomous.ActionGroup;
+
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class DriverStation {
 	
@@ -131,6 +134,10 @@ public class DriverStation {
 		return getNavJoystick().getRightStickY();
 	}
 	
+	public boolean getSwitchHeightButton() {
+		return getNavJoystick().down(Button.b);
+	}
+	
 	public double getGrabThrottle() {
 		return getNavJoystick().getLeftStickY();
 	}
@@ -150,8 +157,32 @@ public class DriverStation {
 	public void driverSetRightRumble(double value) {
 		driverJoy.rightRumble(value);
 	}
+	
 	public void setDriverRumble(double value) {
 		getDriveJoystick().setRumble(value);
 	}
+	
+	/**
+	 * Set a value in 'Basic' tab of the driver station
+	 * 
+	 * @param slot position of the value to set (0-9)
+	 * @param value any string value
+	 */
+	public void set(int slot, String value) {
+		if (slot < 0 || slot > 9) {
+			return;
+		}
+		SmartDashboard.putString("DB/String " + slot, value);
+	}
 
+	/**
+	 * Set a value in 'Basic' tab of the driver station
+	 * 
+	 * @param slot position of the value to set (0-9)
+	 * @param value any integer value
+	 */
+	public void set(int slot, int value) {
+		set(slot, String.valueOf(value));
+	}
+	
 }
