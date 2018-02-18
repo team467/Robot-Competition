@@ -213,8 +213,7 @@ public class MatchConfiguration {
 		
 		case LEFT:
 			if(isSwitchOnSameSide()) {
-				autonomous = Actions.switch1A();
-				Actions.switch1A();
+				autonomous = Actions.leftBasicSwitch();
 				LOGGER.debug("isSwitchOnSameSide Left True -----------------------");
 			} else if(isScaleOnSameSide()) {
 				//Load Left code if is on same scale side true.

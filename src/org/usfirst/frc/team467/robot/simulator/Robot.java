@@ -71,10 +71,9 @@ public class Robot {
 	
 	public void autonomousInit() {
 		drive.zero();
+		matchConfig.load();
 		data.startingLocation(12.5, 0);
 		data.send();
-		System.out.println("HI");
-		matchConfig.load();
 		autonomous = matchConfig.autonomousDecisionTree();
 	}
 	
