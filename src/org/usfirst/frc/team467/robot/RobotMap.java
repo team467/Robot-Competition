@@ -210,7 +210,7 @@ public class RobotMap {
 	public static double MAX_GRAB_SPEED = 1.0;
 	public static double MIN_GRAB_SPEED = 0.1;
 	public static double RELEASE_SPEED = -1.0;
-	public static int GRABBER_L_CHANNEL; 
+	public static int GRABBER_L_CHANNEL;
 	public static int GRABBER_R_CHANNEL;
 	public static int OPTICAL_CHANNEL;
 
