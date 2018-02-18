@@ -135,19 +135,19 @@ public class DriverStation {
 	}
 
 	public boolean getBottomHeightButton() {
-		return getNavJoystick().down(Button.a);
+		return getNavJoystick().pressed(Button.a);
 	}
 
 	public boolean getSwitchHeightButton() {
-		return getNavJoystick().down(Button.b);
+		return getNavJoystick().pressed(Button.b);
 	}
 
 	public boolean getLowScaleHeightButton() {
-		return getNavJoystick().down(Button.x);
+		return getNavJoystick().pressed(Button.x);
 	}
 
 	public boolean getHighScaleHeightButton() {
-		return getNavJoystick().down(Button.y);
+		return getNavJoystick().pressed(Button.y);
 	}
 
 	public double getGrabThrottle() {
