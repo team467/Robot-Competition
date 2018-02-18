@@ -131,6 +131,7 @@ public class Elevator {
 		}
 
 		double currentHeight = getHeightInches();
+		// TODO Re-enable and test to see if it works
 		//		for (Stops stop : Stops.values()) {
 		//			if ((previousHeight < stop.height && currentHeight >= stop.height)
 		//					|| (previousHeight > stop.height && currentHeight <= stop.height)) {
@@ -138,7 +139,6 @@ public class Elevator {
 		//			}
 		//		}
 
-		//LOGGER.debug("Height prev=" + previousHeight + " current=" + currentHeight);
 		previousHeight = currentHeight;
 
 		if (Math.abs(speed) >= RobotMap.MIN_LIFT_SPEED) {
