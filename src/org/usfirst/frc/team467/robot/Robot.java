@@ -155,19 +155,18 @@ public class Robot extends TimedRobot {
 	public void testPeriodic() {
 		driverstation.readInputs();
 
-		if (driverstation.getNavJoystick().pressed(Button.a)){
-			driverstation.getNavRumbler().rumble(1000, 1.0);
+		if (driverstation.getDriveJoystick().pressed(Button.a)){
+			driverstation.getDriverRumbler().rumble(1000, 1.0);
 			LOGGER.info("You pressed a");
 		}
 		if (driverstation.getDriveJoystick().pressed(Button.b)){ 
-			driverstation.getNavRumbler().rumble(150, 0.5);
+			driverstation.getDriverRumbler().rumble(150, 0.5);
 			LOGGER.info("You pressed b");
 		}
 
-
 		driverstation.periodic();
-		//MatchConfiguration.getInstance().setAllianceColor();
-		MatchConfiguration.getInstance().matchTime();
+//		MatchConfiguration.getInstance().setAllianceColor();
+//		MatchConfiguration.getInstance().matchTime();
 	}
 
 
@@ -179,13 +178,13 @@ public class Robot extends TimedRobot {
 		//		autonomous.run();
 
 		autonomous.run();
-
 	}
 
 	/**
 	 * This function is called periodically during operator control
 	 */
 	public void teleopPeriodic() {
+		driverstation.periodic();
 		driverstation.readInputs();
 		//TODO: Set Min_DRIVE_SPEED in Robot Map.
 
@@ -257,6 +256,19 @@ public class Robot extends TimedRobot {
 		drive.arcadeDrive(left1, right1, true);
 
 		TiltMonitor.getInstance().periodic();
+
 	}
+		driverstation.readInputs();
+
+		if (driverstation.getDriveJoystick().pressed(Button.a)){
+			driverstation.getDriverRumbler().rumble(1000, 1.0);
+			LOGGER.info("You pressed a");
+		}
+		if (driverstation.getDriveJoystick().pressed(Button.b)){ 
+			driverstation.getDriverRumbler().rumble(150, 0.5);
+			LOGGER.info("You pressed b");
+		}
+
+		driverstation.periodic();
 }
 }
