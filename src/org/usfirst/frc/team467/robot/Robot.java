@@ -99,7 +99,7 @@ public class Robot extends TimedRobot {
 	public void disabledPeriodic() {
 		LOGGER.trace("Disabled Periodic");
 
-		LOGGER.debug("Elevator height=" + elevator.getHeightFeet());
+		LOGGER.trace("Elevator height=" + elevator.getHeightFeet());
 
 		driverstation.logJoystickIDs();
 	}
@@ -112,11 +112,7 @@ public class Robot extends TimedRobot {
 	//	
 	public void autonomousInit() {
 		final String autoMode = SmartDashboard.getString("Auto Selector", "none");
-
-
-
-	
-
+		
 		LOGGER.info(drive);
 		// TODO: call appropriate auto modes based on list
 		LOGGER.debug("Autonomous init: " + autoMode);
@@ -134,9 +130,11 @@ public class Robot extends TimedRobot {
 
 	public void teleopInit() {
 		driverstation.readInputs();
+		driverstation.setDriverRumble(1000);
+		driverstation.setNavRumble(1000);
+		
 		//		autonomous.terminate();
 		//		autonomous = Actions.doNothing();
-		driverstation.periodic();
 	}
 
 	public void testInit() {
@@ -148,11 +146,11 @@ public class Robot extends TimedRobot {
 		driverstation.readInputs();
 
 		if (driverstation.getNavJoystick().pressed(Button.b)){ 
-			driverstation.getNavRumbler().rumble(150, 0.3);
+			driverstation.getDriverRumbler().rumble(150, 0.3);
 			LOGGER.info("You pressed b");
 		}
 		if (driverstation.getDriveJoystick().pressed(Button.b)){ 
-			driverstation.getNavRumbler().rumble(150, 1.0);
+			driverstation.getDriverRumbler().rumble(150, 1.0);
 			LOGGER.info("You pressed b");
 		}
 		TiltMonitor.getInstance().periodic();
@@ -170,6 +168,8 @@ public class Robot extends TimedRobot {
 	 */
 	public void teleopPeriodic() {
 		driverstation.readInputs();
+		driverstation.periodic();
+		
 		//TODO: Set Min_DRIVE_SPEED in Robot Map.
 		// TODO Drive class should handle MIN_DRIVE_SPEED
 		double MIN_DRIVE_SPEED = 0.1;

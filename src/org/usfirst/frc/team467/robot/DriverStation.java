@@ -150,8 +150,10 @@ public class DriverStation {
 	public void driverSetRightRumble(double value) {
 		driverJoy.rightRumble(value);
 	}
-	public void setDriverRumble(double value) {
-		getDriveJoystick().setRumble(value);
+	public void setDriverRumble(int rumbleDuration) {
+		driverRumbler.rumble(rumbleDuration, 1);
 	}
-
+	public void setNavRumble(int rumbleDuration) {
+		this.navRumbler.rumble(rumbleDuration, 1);
+	}
 }
