@@ -95,7 +95,6 @@ public class Robot extends TimedRobot {
 		LOGGER.trace("Disabled Periodic");
 
 		driverstation.logJoystickIDs();
-		LOGGER.debug("Elevator raw height=" + elevator.getRawHeight());
 	}
 	//TODO: Figure out the NetworkTables later.
 	//	String[] autoList = {"none", "go"};
