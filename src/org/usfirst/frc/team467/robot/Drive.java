@@ -8,7 +8,6 @@ import org.usfirst.frc.team467.robot.simulator.communications.RobotData;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
-import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 
 public class Drive extends DifferentialDrive {
@@ -33,9 +32,12 @@ public class Drive extends DifferentialDrive {
 	 */
 	public static Drive getInstance() {
 		if (instance == null) {
-			TalonSpeedControllerGroup left = new TalonSpeedControllerGroup();
-			TalonSpeedControllerGroup right = new TalonSpeedControllerGroup();
+			TalonSpeedControllerGroup left;
+			TalonSpeedControllerGroup right;
+			
+			LOGGER.info("Number of Motors:" + RobotMap.DRIVEMOTOR_NUM);
 			if (RobotMap.HAS_WHEELS && RobotMap.DRIVEMOTOR_NUM > 0) {
+				LOGGER.info("Creating  Lead Motors");
 				WPI_TalonSRX leftLead = new WPI_TalonSRX(RobotMap.LEFT_LEAD_CHANNEL);
 				WPI_TalonSRX rightLead = new WPI_TalonSRX(RobotMap.RIGHT_LEAD_CHANNEL);
 				WPI_TalonSRX leftFollower1 = null;
@@ -44,13 +46,13 @@ public class Drive extends DifferentialDrive {
 				WPI_TalonSRX rightFollower2= null;
 				
 				if (RobotMap.DRIVEMOTOR_NUM > 2) {
-					LOGGER.info("Creating  follower 1s");
+					LOGGER.info("Creating  first set of follower motors");
 					leftFollower1 = new WPI_TalonSRX(RobotMap.LEFT_FOLLOWER_1_CHANNEL);
 					rightFollower1 = new WPI_TalonSRX(RobotMap.RIGHT_FOLLOWER_1_CHANNEL);
 				}
 				
 				if (RobotMap.DRIVEMOTOR_NUM > 4) {
-					LOGGER.info("Creating follower 2s");
+					LOGGER.info("Creating second set of follower motors");
 					leftFollower2 = new WPI_TalonSRX(RobotMap.LEFT_FOLLOWER_2_CHANNEL);
 					rightFollower2 = new WPI_TalonSRX(RobotMap.RIGHT_FOLLOWER_2_CHANNEL);
 				}
@@ -59,10 +61,13 @@ public class Drive extends DifferentialDrive {
 						RobotMap.LEFT_DRIVE_SENSOR_IS_INVERTED, leftLead, leftFollower1, leftFollower2);
 				right = new TalonSpeedControllerGroup(ControlMode.PercentOutput,
 						RobotMap.RIGHT_DRIVE_SENSOR_IS_INVERTED, rightLead, rightFollower1, rightFollower2);
-				}
-			instance = new Drive(left, right);
-			
+			} else {
+				 left = new TalonSpeedControllerGroup();
+				 right = new TalonSpeedControllerGroup();
 			}
+			instance = new Drive(left, right);
+	
+		}
 		return instance;
 		
 	}

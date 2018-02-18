@@ -124,7 +124,7 @@ public class RobotMap {
 			GRABBER_R_CHANNEL = 1;
 			OPTICAL_CHANNEL = 5;
 			
-			DRIVEMOTOR_NUM = 6;
+			DRIVEMOTOR_NUM = 4;
 			// TODO Assign values to the game piece variables, and make more as appropriate
 			ELEVATOR_MOTOR_CHANNEL = 7;
 			RAMP_SOLENOID_CHANNEL = 0;
