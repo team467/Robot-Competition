@@ -74,10 +74,12 @@ public class Elevator {
 	}
 
 	public void configMotionMagicParameters() {
-		double kPElevator = 0.0; // Double.parseDouble(SmartDashboard.getString("DB/String 7", "1.4"));
-		double kIElevator = 0.0; // Double.parseDouble(SmartDashboard.getString("DB/String 8", "0.0"));
-		double kDElevator = 0.0; // Double.parseDouble(SmartDashboard.getString("DB/String 9", "165"));
-		double kFElevator = 51.15; //  Double.parseDouble(SmartDashboard.getString("DB/String 6", "0.5"));
+		SmartDashboard.putString("DB/String 3", "P");
+		SmartDashboard.putString("DB/String 4", "D");
+		double kPElevator = Double.parseDouble(SmartDashboard.getString("DB/String 8", "5.27"));
+		double kIElevator = 0.0;
+		double kDElevator = Double.parseDouble(SmartDashboard.getString("DB/String 9", "5.27"));
+		double kFElevator = 51.15;
 
 		heightController.config_kP(0, kPElevator, RobotMap.TALON_TIMEOUT);
 		heightController.config_kI(0, kIElevator, RobotMap.TALON_TIMEOUT);
@@ -115,10 +117,12 @@ public class Elevator {
 			m_safetyHelper.feed();
 		}
 
+		configMotionMagicParameters();
 		LOGGER.info("Moving to heightInInches=" + heightInInches);
 
 		double ticks = RobotMap.ELEVATOR_BOTTOM_TICKS - heightInInches * RobotMap.ELEVATOR_TICKS_PER_INCH;
 		SmartDashboard.putNumber("Elevator Closed Loop Error", heightController.getClosedLoopError(0));
+		SmartDashboard.putNumber("Elevator Position", heightController.getSelectedSensorPosition(0));
 		heightController.set(ControlMode.MotionMagic, ticks);
 		logSensorAndTargetPosition();
 	}
@@ -169,7 +173,5 @@ public class Elevator {
 		DriverStation.getInstance().set(1, "position");
 		DriverStation.getInstance().set(6, heightController.getSelectedSensorPosition(0));
 
-		DriverStation.getInstance().set(2, "get");
-		DriverStation.getInstance().set(7, String.valueOf(heightController.get()));
 	}
 }
