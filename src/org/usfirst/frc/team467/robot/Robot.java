@@ -177,7 +177,7 @@ public class Robot extends TimedRobot {
 		double right = driverstation.getArcadeTurn();
 
 		LOGGER.debug("left " + left + " right " + right);
-		LOGGER.debug(grabber.justGotCube());
+		LOGGER.debug("Just got cube: " + grabber.justGotCube());
 
 		if (Math.abs(left) < MIN_DRIVE_SPEED) {
 			left = 0.0;

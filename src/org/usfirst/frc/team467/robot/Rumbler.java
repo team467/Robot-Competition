@@ -23,16 +23,14 @@ public class Rumbler {
 	
 	public void periodic() {
 		if(durationMS > 0){
-		    controller.setRumble(RumbleType.kRightRumble, intensity);
-		    controller.setRumble(RumbleType.kLeftRumble, intensity);
+		    controller.leftRumble(intensity);
+		    controller.rightRumble(intensity);
 		    durationMS -= ITERATION_TIME_MS;
-		    LOGGER.debug("periodic duration=" + durationMS + " intensity=" + intensity);
-		    
+		    LOGGER.debug("periodic duration=" + durationMS + " intensity=" + intensity);  
         } else { 
-		   controller.setRumble(RumbleType.kRightRumble, 0);
-		   controller.setRumble(RumbleType.kLeftRumble, 0);
-
+		   controller.leftRumble(0);
+		   controller.leftRumble(0);
+		   intensity = 0;
 		}
 	}
-	
 }

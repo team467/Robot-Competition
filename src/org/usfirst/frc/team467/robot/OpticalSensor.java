@@ -18,7 +18,7 @@ public class OpticalSensor {
 	}
 
 	public boolean detectedTarget() {
-		return di.get();
+		return !di.get();
 	}
 
 }
