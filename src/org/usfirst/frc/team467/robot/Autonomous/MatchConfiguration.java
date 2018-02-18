@@ -21,7 +21,7 @@ public class MatchConfiguration {
 
 	private Alliance simulatedTeamColor = Alliance.Red;
 
-	private String simulatedAutoMode = "Left";
+	private String simulatedAutoMode = "Center";
 
 	private static MatchConfiguration instance;
 
@@ -213,6 +213,7 @@ public class MatchConfiguration {
 
 		case LEFT:
 			if(isSwitchOnSameSide()) { 		
+				autonomous = Actions.doNothing();
 				autonomous = Actions.leftBasicSwitch();
 				LOGGER.debug("isSwitchOnSameSide Left True -----------------------");
 				autonomous = Actions.doNothing();
@@ -230,6 +231,7 @@ public class MatchConfiguration {
 		case CENTER:
 			if(isMySwitchToTheRight()) {
 				autonomous = Actions.centerBasicSwitchRight();
+				autonomous = Actions.doNothing();
 				//Load code if switch is to the right in center position (true).
 				LOGGER.debug("IsMySwitchToTheRight----------------------------Center True");
 			} else if(isMySwitchToTheRight()) {
