@@ -1,4 +1,4 @@
-package org.usfirst.frc.team467.robot.Autonomous;
+	package org.usfirst.frc.team467.robot.Autonomous;
 // changes 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
@@ -21,7 +21,7 @@ public class MatchConfiguration {
 
 	private Alliance simulatedTeamColor = Alliance.Red;
 
-	private String simulatedAutoMode = "Center";
+	private String simulatedAutoMode = "Left";
 
 	private static MatchConfiguration instance;
 
