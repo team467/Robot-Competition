@@ -234,17 +234,16 @@ public class TalonSpeedControllerGroup implements SpeedController {
 	 * @return
 	 */
 	public int motorAmt() {
+		int amount = 0;
 		if(leader != null) {
-			return 1;
+			amount++;
 		}
 		if(follower1 != null) { 
-			return 2;
+			amount++;
 		}
 		if(follower2 != null) {
-			return 3;
+			amount++;
 		}
-		else { 
-			return 0;
-		}
+		return amount;
 	}
 }
