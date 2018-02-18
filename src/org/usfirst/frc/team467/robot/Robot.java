@@ -216,7 +216,12 @@ public class Robot extends TimedRobot {
 		}
 
 		grabber.grab(driverstation.getGrabThrottle());
-		ramps.periodic();
+
+		if (DriverStation.getInstance().shouldDeployRamps()) {
+			ramps.deploy();
+		} else if (DriverStation.getInstance().shouldLiftRamps()) {
+			ramps.lift();
+		}
 
 		//changed to arcade drive
 		drive.arcadeDrive(left, right, true);
