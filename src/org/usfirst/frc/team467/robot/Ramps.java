@@ -46,7 +46,7 @@ public class Ramps {
 		if (RobotMap.HAS_RAMPS && isDeployed) { // Only lift if deployed
 			leftSolenoid.set(true);
 			rightSolenoid.set(true);
-			LOGGER.debug("Lifting ramps");
+			LOGGER.info("Lifting ramps");
 		}
 	}
 
@@ -54,7 +54,7 @@ public class Ramps {
 		if (RobotMap.HAS_RAMPS) {
 			leftSolenoid.set(false);
 			rightSolenoid.set(false);
-			LOGGER.debug("Dropping ramps");
+			LOGGER.info("Dropping ramps");
 		}
 	}
 }
