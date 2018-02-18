@@ -28,7 +28,7 @@ public class Elevator {
 		highScale(96.0 + RobotMap.ELEVATOR_ERROR_TOLERANCE_INCHES);
 
 		/**
-		 * Height in feet
+		 * Height in inches
 		 */
 		public final double height;
 
