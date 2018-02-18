@@ -191,16 +191,16 @@ public class Robot extends TimedRobot {
 		}
 
 		if (driverstation.getFloorHeightButtonPressed()) {
-			LOGGER.debug("Dropping to bottom height");
+			LOGGER.info("Dropping to bottom height");
 			elevator.moveToHeight(Elevator.Stops.floor);
 		} else if (driverstation.getSwitchHeightButtonPressed()) {
-			LOGGER.debug("Lifting to switch height");
+			LOGGER.info("Lifting to switch height");
 			elevator.moveToHeight(Elevator.Stops.fieldSwitch);
 		} else if (driverstation.getLowScaleHeightButtonPressed()) {
-			LOGGER.debug("Lifting to low scale height");
+			LOGGER.info("Lifting to low scale height");
 			elevator.moveToHeight(Elevator.Stops.lowScale);
 		} else if (driverstation.getHighScaleHeightButtonPressed()) {
-			LOGGER.debug("Lifting to high scale height");
+			LOGGER.info("Lifting to high scale height");
 			elevator.moveToHeight(Elevator.Stops.highScale);
 		}
 
