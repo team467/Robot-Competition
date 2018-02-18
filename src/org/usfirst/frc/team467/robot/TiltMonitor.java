@@ -20,6 +20,7 @@ public class TiltMonitor {
 			Gyrometer.getInstance().getPitchDegrees() < RobotMap.BACKWARD_PANIC_ANGLE) {
 			LOGGER.debug("Pitch=" + Gyrometer.getInstance().getPitchDegrees());
 			Elevator.getInstance().moveToHeight(Elevator.Stops.floor);
+			LOGGER.info("------RETRACTING------");
 		}
 	}
 }
