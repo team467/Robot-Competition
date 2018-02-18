@@ -8,7 +8,6 @@ import org.usfirst.frc.team467.robot.simulator.communications.RobotData;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
-import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 
 public class Drive extends DifferentialDrive {
@@ -24,7 +23,6 @@ public class Drive extends DifferentialDrive {
 	private final TalonSpeedControllerGroup right;
 
 	// Private constructor
-	
 
 	/**
 	 * Gets the single instance of this class.
@@ -42,35 +40,34 @@ public class Drive extends DifferentialDrive {
 				WPI_TalonSRX rightFollower1 = null;
 				WPI_TalonSRX leftFollower2 = null;
 				WPI_TalonSRX rightFollower2= null;
-				
+
 				if (RobotMap.DRIVEMOTOR_NUM > 2) {
 					LOGGER.info("Creating  follower 1s");
 					leftFollower1 = new WPI_TalonSRX(RobotMap.LEFT_FOLLOWER_1_CHANNEL);
 					rightFollower1 = new WPI_TalonSRX(RobotMap.RIGHT_FOLLOWER_1_CHANNEL);
 				}
-				
+
 				if (RobotMap.DRIVEMOTOR_NUM > 4) {
 					LOGGER.info("Creating follower 2s");
 					leftFollower2 = new WPI_TalonSRX(RobotMap.LEFT_FOLLOWER_2_CHANNEL);
 					rightFollower2 = new WPI_TalonSRX(RobotMap.RIGHT_FOLLOWER_2_CHANNEL);
 				}
-				
+
 				left = new TalonSpeedControllerGroup(ControlMode.PercentOutput,
 						RobotMap.LEFT_DRIVE_SENSOR_IS_INVERTED, leftLead, leftFollower1, leftFollower2);
 				right = new TalonSpeedControllerGroup(ControlMode.PercentOutput,
 						RobotMap.RIGHT_DRIVE_SENSOR_IS_INVERTED, rightLead, rightFollower1, rightFollower2);
-				}
-			instance = new Drive(left, right);
-			
 			}
+			instance = new Drive(left, right);
+		}
 		return instance;
-		
 	}
+
 	private Drive(TalonSpeedControllerGroup left, TalonSpeedControllerGroup right) {
 		super(left, right);
 		this.left = left;
 		this.right = right;
-		
+
 		double kPRight = 1.4; // Double.parseDouble(SmartDashboard.getString("DB/String 7", "1.4"));
 		double kPLeft = 1.6; // Double.parseDouble(SmartDashboard.getString("DB/String 2", "1.6"));
 
@@ -84,7 +81,6 @@ public class Drive extends DifferentialDrive {
 
 		left.setPIDF(kPLeft, kILeft, kDLeft, kFall);
 		right.setPIDF(kPRight, kIRight, kDRight, kFall);
-		
 	}
 
 	public void logClosedLoopErrors() {

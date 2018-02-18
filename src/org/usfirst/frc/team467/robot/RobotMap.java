@@ -33,9 +33,9 @@ public class RobotMap {
 	public static int RIGHT_LEAD_CHANNEL;
 	public static int RIGHT_FOLLOWER_1_CHANNEL;
 	public static int RIGHT_FOLLOWER_2_CHANNEL;
-	
+
 	public static int AUTONOMOUS_DRIVE_TIMEOUT_MS;
-	
+
 	public static boolean RIGHT_DRIVE_SENSOR_IS_INVERTED;
 	public static boolean LEFT_DRIVE_SENSOR_IS_INVERTED;
 	public static int DRIVEMOTOR_NUM;
@@ -57,7 +57,7 @@ public class RobotMap {
 			LEFT_FOLLOWER_1_CHANNEL = 2;
 			LEFT_FOLLOWER_2_CHANNEL = 3;
 			LEFT_DRIVE_SENSOR_IS_INVERTED = true;
-			
+
 			RIGHT_LEAD_CHANNEL = 4;
 			RIGHT_FOLLOWER_1_CHANNEL = 5;
 			RIGHT_FOLLOWER_2_CHANNEL = 6;
@@ -66,13 +66,13 @@ public class RobotMap {
 			HAS_ELEVATOR = false;
 			HAS_GRABBER = false;
 			HAS_RAMPS = false;
-			
+
 			DRIVEMOTOR_NUM = 0;
 
 			// TODO Assign values to the game piece variables, and make more as appropriate
 			ELEVATOR_MOTOR_CHANNEL = 0;
 			RAMP_SOLENOID_CHANNEL = 0;
-			
+
 			AUTONOMOUS_DRIVE_TIMEOUT_MS = 1000;
 
 			isDriveMotorInverted = new boolean[] { false, true, false, true };
@@ -93,7 +93,7 @@ public class RobotMap {
 
 			HAS_RAMPS = false;
 			RAMP_SOLENOID_CHANNEL = 0;
-			
+
 			DRIVEMOTOR_NUM = 0;
 
 			isDriveMotorInverted = new boolean[] { false, true, false, true };
@@ -123,7 +123,7 @@ public class RobotMap {
 			GRABBER_L_CHANNEL = 0; 
 			GRABBER_R_CHANNEL = 1;
 			OPTICAL_CHANNEL = 5;
-			
+
 			DRIVEMOTOR_NUM = 6;
 			// TODO Assign values to the game piece variables, and make more as appropriate
 			ELEVATOR_MOTOR_CHANNEL = 7;
@@ -155,7 +155,7 @@ public class RobotMap {
 			GRABBER_L_CHANNEL = 1; 
 			GRABBER_R_CHANNEL = 2;
 			OPTICAL_CHANNEL = 5;
-			
+
 			DRIVEMOTOR_NUM = 4;
 
 			// TODO Assign values to the game piece variables, and make more as appropriate
@@ -180,7 +180,7 @@ public class RobotMap {
 	public static final double FAST_MAX_SPEED = 1.0;
 	public static final double NORMAL_MAX_SPEED = 0.6;
 	public static final double SLOW_MAX_SPEED = 0.35;
-	
+
 	/**
 	 * The maximum revolutions per minute (RPM) of a wheel when in speed control mode.
 	 * Also for motion magic?
