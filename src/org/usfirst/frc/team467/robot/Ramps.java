@@ -51,7 +51,7 @@ public class Ramps {
 	}
 
 	public void drop() {
-		if (RobotMap.HAS_RAMPS) {
+		if (RobotMap.HAS_RAMPS && isDeployed) { // Only drop if deployed
 			leftSolenoid.set(false);
 			rightSolenoid.set(false);
 			LOGGER.info("Dropping ramps");
