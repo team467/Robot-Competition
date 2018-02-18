@@ -41,7 +41,7 @@ public class Robot extends TimedRobot {
 			UsbCamera camera = CameraServer.getInstance().startAutomaticCapture();
 			camera.setResolution(160, 120);
 			camera.setFPS(30);
-			camera.setExposureManual(30);
+			camera.setExposureManual(40);
 			
 			CvSink cvSink = CameraServer.getInstance().getVideo();
 			CvSource outputStream = CameraServer.getInstance().putVideo("CubeCam", 160, 120);
@@ -50,7 +50,15 @@ public class Robot extends TimedRobot {
 			Mat output = new Mat();
 			while(!Thread.interrupted()) {
 				cvSink.grabFrame(source);
-				LOGGER.info("" + vision.findCube(source));
+
+							
+				if(Double.isNaN(vision.cameraAngle()) == true) {
+					LOGGER.info("Cube out of Bounds" + " Average angle: " + vision.findCube(source));
+					
+				}   
+				if(Double.isNaN(vision.cameraAngle()) == false) {
+					LOGGER.info("Average angle: " + vision.findCube(source));
+				}
 				outputStream.putFrame(source);
 			}
 		}).start();
@@ -70,7 +78,6 @@ public class Robot extends TimedRobot {
 	}
 
 	public void teleopInit() {
-		LOGGER.info("teleop Initializing");
 		 
 	}
 
