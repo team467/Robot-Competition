@@ -4,6 +4,8 @@ import org.apache.log4j.Logger;
 
 import edu.wpi.first.wpilibj.MotorSafetyHelper;
 import edu.wpi.first.wpilibj.SpeedController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 import com.ctre.phoenix.ParamEnum;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
@@ -14,7 +16,6 @@ public class Elevator {
 	private static final Logger LOGGER = Logger.getLogger(Elevator.class);
 
 	private WPI_TalonSRX heightController;
-	private int maxTicksPerIteration = 100;
 	private double previousHeight;
 	private MotorSafetyHelper m_safetyHelper;
 
@@ -73,18 +74,18 @@ public class Elevator {
 	}
 
 	public void configMotionMagicParameters() {
-		double kPElevator = 12.0; // Double.parseDouble(SmartDashboard.getString("DB/String 7", "1.4"));
+		double kPElevator = 0.0; // Double.parseDouble(SmartDashboard.getString("DB/String 7", "1.4"));
 		double kIElevator = 0.0; // Double.parseDouble(SmartDashboard.getString("DB/String 8", "0.0"));
-		double kDElevator = 198; // Double.parseDouble(SmartDashboard.getString("DB/String 9", "165"));
-		double kFElevator = 0.729672; //  Double.parseDouble(SmartDashboard.getString("DB/String 6", "0.5"));
+		double kDElevator = 0.0; // Double.parseDouble(SmartDashboard.getString("DB/String 9", "165"));
+		double kFElevator = 51.15; //  Double.parseDouble(SmartDashboard.getString("DB/String 6", "0.5"));
 
 		heightController.config_kP(0, kPElevator, RobotMap.TALON_TIMEOUT);
 		heightController.config_kI(0, kIElevator, RobotMap.TALON_TIMEOUT);
 		heightController.config_kD(0, kDElevator, RobotMap.TALON_TIMEOUT);
 		heightController.config_kF(0, kFElevator, RobotMap.TALON_TIMEOUT);
 
-		heightController.configMotionCruiseVelocity(maxTicksPerIteration / 2, RobotMap.TALON_TIMEOUT);
-		heightController.configMotionAcceleration(maxTicksPerIteration / 2, RobotMap.TALON_TIMEOUT);
+		heightController.configMotionCruiseVelocity(15, RobotMap.TALON_TIMEOUT);
+		heightController.configMotionAcceleration(15 / 2, RobotMap.TALON_TIMEOUT);
 	}
 
 	public double getHeightInches() {
@@ -117,6 +118,7 @@ public class Elevator {
 		LOGGER.info("Moving to heightInInches=" + heightInInches);
 
 		double ticks = RobotMap.ELEVATOR_BOTTOM_TICKS - heightInInches * RobotMap.ELEVATOR_TICKS_PER_INCH;
+		SmartDashboard.putNumber("Elevator Closed Loop Error", heightController.getClosedLoopError(0));
 		heightController.set(ControlMode.MotionMagic, ticks);
 		logSensorAndTargetPosition();
 	}
