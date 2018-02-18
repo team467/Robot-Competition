@@ -228,22 +228,4 @@ public class TalonSpeedControllerGroup implements SpeedController {
 		}
 		return leader.getSelectedSensorPosition(0);
 	}
-
-	/**
-	 * Checks for the amount of Motors that you made
-	 * @return
-	 */
-	public int motorAmt() {
-		int amount = 0;
-		if(leader != null) {
-			amount++;
-		}
-		if(follower1 != null) { 
-			amount++;
-		}
-		if(follower2 != null) {
-			amount++;
-		}
-		return amount;
-	}
 }
