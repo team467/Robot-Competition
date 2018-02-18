@@ -12,6 +12,7 @@ import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.networktables.NetworkTable;
 
 import org.apache.log4j.Logger;
 import org.usfirst.frc.team467.robot.Autonomous.ActionGroup;
@@ -46,6 +47,10 @@ public class Robot extends TimedRobot {
 	 */
 	double time;
 
+	private Elevator elevator;
+
+	private Grabber grabber;
+
 	/**
 	 * This function is run when the robot is first started up and should be used for any initialization code.
 	 */
@@ -55,6 +60,8 @@ public class Robot extends TimedRobot {
 
 		// Initialize RobotMap
 		RobotMap.init(RobotID.PreseasonBot);
+		RobotMap.init(RobotID.Competition_1);
+
 
 		// Make robot objects
 		driverstation = DriverStation.getInstance();
@@ -66,6 +73,9 @@ public class Robot extends TimedRobot {
 		gyro.calibrate();
 		gyro.reset();
 
+
+		Grabber grabber = Grabber.getInstance();
+		Elevator elevator = Elevator.getInstance();
 		// Initialize math lookup table
 		LookUpTable.init();
 
@@ -77,10 +87,16 @@ public class Robot extends TimedRobot {
 		//		autonomous = Actions.doNothing();
 
 		//made usb camera and captures video
+
 		UsbCamera cam = CameraServer.getInstance().startAutomaticCapture();
 		//set resolution and frames per second to match driverstation
 		cam.setResolution(320, 240);
 		cam.setFPS(15);
+		
+		//		 cam = CameraServer.getInstance().startAutomaticCapture();
+		//		//set resolution and frames per second to match driverstation
+		//		cam.setResolution(320, 240);
+		//		cam.setFPS(15);
 
 		//TODO: Create list of autonomous modes for selector
 		// Setup autonomous mode selectors
@@ -93,6 +109,9 @@ public class Robot extends TimedRobot {
 
 	public void disabledPeriodic() {
 		LOGGER.trace("Disabled Periodic");
+
+		driverstation.logJoystickIDs();
+		//LOGGER.debug("Right: "	+drive.getRightDistance() + " Left: " + drive.getLeftDistance());
 	}
 	//TODO: Figure out the NetworkTables later.
 	//	String[] autoList = {"none", "go"};
@@ -108,6 +127,10 @@ public class Robot extends TimedRobot {
 		// TODO: call appropriate auto modes based on list
 		LOGGER.debug("Autonomous init: " + autoMode);
 		switch (autoMode) {
+		case "StartSwitchSide1A": 
+			//			autonomous = Actions.startSwitchSide1A();
+			autonomous = Actions.moveDistance(2.0);
+			break;
 		case "none":
 			autonomous = Actions.doNothing();
 			break;
@@ -150,9 +173,13 @@ public class Robot extends TimedRobot {
 
 	public void autonomousPeriodic() {
 
+
 		//		drive.motionMagicMove(amountToGoLeft, amountToGoRight);
 
 		//		autonomous.run();
+
+		autonomous.run();
+
 	}
 
 	/**
@@ -161,6 +188,7 @@ public class Robot extends TimedRobot {
 	public void teleopPeriodic() {
 		driverstation.readInputs();
 		//TODO: Set Min_DRIVE_SPEED in Robot Map.
+
 		double MIN_DRIVE_SPEED = 0.1;
 		driverstation.readInputs();
 
@@ -169,17 +197,28 @@ public class Robot extends TimedRobot {
 
 		LOGGER.info("left " + left + " right " + right) ;
 		if (Math.abs(left) < MIN_DRIVE_SPEED) {
-			left = 0.0;
+
+		// TODO Drive class should handle MIN_DRIVE_SPEED
+		double left1 = driverstation.getArcadeSpeed(); // changed the name of left to left1
+		double right1 = driverstation.getArcadeTurn(); // changed the name of right to right2
+
+		LOGGER.debug("left " + left1 + " right " + right1);
+		if (Math.abs(left1) < RobotMap.MIN_DRIVE_SPEED) {
+
+			left1 = 0.0;
 		}
-		if (Math.abs(right) < MIN_DRIVE_SPEED) {
-			right = 0.0;
+		if (Math.abs(right1) < RobotMap.MIN_DRIVE_SPEED) {
+			right1 = 0.0;
 		}
 
+		double speed = driverstation.getArcadeSpeed();
+		double turn = driverstation.getArcadeTurn();
 		switch (driverstation.getDriveMode()) {
 		case ArcadeDrive:
-			double speed = driverstation.getArcadeSpeed();
-			double turn = driverstation.getArcadeTurn();
 			drive.arcadeDrive(speed, turn, true);
+			break;
+		case CurvatureDrive:
+			drive.curvatureDrive(speed, turn, true);
 			break;
 		case TankDrive:	
 			double leftTank = driverstation.getDriveJoystick().getLeftStickY();
@@ -190,5 +229,34 @@ public class Robot extends TimedRobot {
 			//TODO: Add things here later.
 			break;
 		}
+
+
+		if (driverstation.getFloorHeightButtonPressed()) {
+			LOGGER.info("Dropping to bottom height");
+			elevator.moveToHeight(Elevator.Stops.floor);
+		} else if (driverstation.getSwitchHeightButtonPressed()) {
+			LOGGER.info("Lifting to switch height");
+			elevator.moveToHeight(Elevator.Stops.fieldSwitch);
+		} else if (driverstation.getLowScaleHeightButtonPressed()) {
+			LOGGER.info("Lifting to low scale height");
+			elevator.moveToHeight(Elevator.Stops.lowScale);
+		} else if (driverstation.getHighScaleHeightButtonPressed()) {
+			LOGGER.info("Lifting to high scale height");
+			elevator.moveToHeight(Elevator.Stops.highScale);
+		}
+
+		elevator.move(driverstation.getElevatorSpeed());
+
+		if (grabber.justGotCube()) {
+			driverstation.getNavRumbler().rumble(100, 1.0);
+		}
+
+		grabber.grab(driverstation.getGrabThrottle());
+
+		//changed to arcade drive
+		drive.arcadeDrive(left1, right1, true);
+
+		TiltMonitor.getInstance().periodic();
 	}
+}
 }

@@ -26,6 +26,8 @@ public class Logging {
 		Logger.getLogger(Grabber.class).setLevel(Level.DEBUG);
 		Logger.getLogger(RobotShape.class).setLevel(Level.WARN);
 		Logger.getLogger(DriveSimulator.class).setLevel(Level.WARN);
+		Logger.getLogger(TalonSpeedControllerGroup.class).setLevel(Level.DEBUG);
+
 	}
 
 	private static void setupDefaultLogging() {

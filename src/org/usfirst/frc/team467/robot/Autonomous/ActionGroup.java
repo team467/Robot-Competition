@@ -7,10 +7,7 @@ import java.util.NoSuchElementException;
 import org.apache.log4j.Logger;
 import org.usfirst.frc.team467.robot.Drive;
 import org.usfirst.frc.team467.robot.RobotMap;
-import org.usfirst.frc.team467.robot.VisionProcessing;
-import org.usfirst.frc.team467.robot.simulator.DriveSimulator;
 
-import edu.wpi.first.wpilibj.PIDController;
 
 /**
  * Runs through a set of actions. <br>
@@ -142,8 +139,7 @@ public class ActionGroup {
 		private double currentPosition = 0.0;
 		private double lastPosition = 0.0;
 		private int increment = 0;
-//		private Drive drive = Drive.getInstance();
-		private DriveSimulator drive = DriveSimulator.getInstance();
+		private Drive drive = Drive.getInstance();
 		public ReachDistance(double distance) {
 			this.distance = distance;
 		}
@@ -158,7 +154,9 @@ public class ActionGroup {
 			} else {
 				increment = 0;
 			}
-			if (increment >= 5) {
+			// Each iteration is 20 ms.
+			//the increment check checks to see how long the robot is stopping for, if it is stopped for longer than (RobotMap.AUTONOMOUS_DRIVE_TIMEOUT_MS / 20) then the robot is done.
+			if (increment >= (RobotMap.AUTONOMOUS_DRIVE_TIMEOUT_MS / 20)) {
 				return true;
 			} else if (currentPosition >= (Math.abs(distance) - RobotMap.POSITION_ALLOWED_ERROR)) {
 				LOGGER.debug("Finished moving");
