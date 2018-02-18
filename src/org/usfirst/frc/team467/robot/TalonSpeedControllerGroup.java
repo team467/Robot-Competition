@@ -14,17 +14,17 @@ public class TalonSpeedControllerGroup implements SpeedController {
 	private WPI_TalonSRX leader;
 	private WPI_TalonSRX follower1;
 	private WPI_TalonSRX follower2;
-	
+
 	private int previousSensorPosition;
-	
+
 	private ControlMode controlMode = ControlMode.PercentOutput;
-	
+
 	public TalonSpeedControllerGroup() {
 		leader = null;
 		follower1 = null;
 		follower2 = null;
 	}
-	
+
 	public TalonSpeedControllerGroup(ControlMode controlMode, boolean sensorIsInverted,
 			WPI_TalonSRX leader, WPI_TalonSRX follower1, WPI_TalonSRX follower2) {
 		if (!RobotMap.HAS_WHEELS) {
@@ -38,11 +38,11 @@ public class TalonSpeedControllerGroup implements SpeedController {
 		this.follower1 = follower1;
 		this.follower2 = follower2;	
 		this.controlMode = controlMode;
-		
+
 		initMotor(this.leader);
 		if(follower1 != null) initMotor(this.follower1);
 		if(follower2 != null) initMotor(this.follower2);
-		
+
 		//only have sensor on leader
 		leader.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, RobotMap.TALON_TIMEOUT);
 		leader.setSensorPhase(sensorIsInverted);
@@ -50,17 +50,17 @@ public class TalonSpeedControllerGroup implements SpeedController {
 		leader.configMotionAcceleration(1052 / 2, RobotMap.TALON_TIMEOUT);		
 		zero();		
 	}
-	
+
 	public TalonSpeedControllerGroup(ControlMode controlMode, boolean sensorIsInverted,
 			WPI_TalonSRX leader, WPI_TalonSRX follower1) {
 		this(controlMode, sensorIsInverted, leader, follower1, null);
 	}
-	
+
 	public TalonSpeedControllerGroup(ControlMode controlMode, boolean sensorIsInverted,
 			WPI_TalonSRX leader) {
 		this(controlMode, sensorIsInverted, leader, null, null);
 	}
-	
+
 	private void initMotor(WPI_TalonSRX talon) {
 		talon.set(ControlMode.PercentOutput, 0);
 		talon.selectProfileSlot(0, 0);
@@ -71,11 +71,11 @@ public class TalonSpeedControllerGroup implements SpeedController {
 		talon.configNominalOutputForward(0.0, 0);
 		talon.configPeakOutputForward(1.0, 0);
 		talon.configPeakOutputReverse(-1.0, 0);
-		
+
 		talon.configOpenloopRamp(0.2, RobotMap.TALON_TIMEOUT);
 		talon.configClosedloopRamp(0.2, RobotMap.TALON_TIMEOUT);		
 	}
-	
+
 	public void logClosedLoopErrors(String side) {
 		if (!RobotMap.HAS_WHEELS) {
 			LOGGER.debug("No CLosed Loop errors");
@@ -86,7 +86,7 @@ public class TalonSpeedControllerGroup implements SpeedController {
 				" Pos = " + leader.getSelectedSensorPosition(0) +
 				" Err = " + leader.getClosedLoopError(0));
 	}
-	
+
 	public void setPIDF(double p, double i, double d, double f){
 		if (!RobotMap.HAS_WHEELS) {
 			LOGGER.debug("No PIDF");
@@ -97,7 +97,7 @@ public class TalonSpeedControllerGroup implements SpeedController {
 		leader.config_kD(0, d, RobotMap.TALON_TIMEOUT);
 		leader.config_kF(0, f, RobotMap.TALON_TIMEOUT);
 	}
-		
+
 	public void zero() {
 		if (!RobotMap.HAS_WHEELS) {
 			LOGGER.trace("No drive system");
@@ -106,7 +106,7 @@ public class TalonSpeedControllerGroup implements SpeedController {
 		previousSensorPosition = 0;
 		leader.setSelectedSensorPosition(0, 0, RobotMap.TALON_TIMEOUT);
 	}
-	
+
 	@Override
 	public void disable() {
 		if (leader == null) {
@@ -114,10 +114,14 @@ public class TalonSpeedControllerGroup implements SpeedController {
 			return;
 		}
 		leader.disable();
-		if(follower1 != null) follower1.disable();
-		if(follower2 != null) follower2.disable();
+		if (follower1 != null) {
+			follower1.disable();
+		}
+		if (follower2 != null) {
+			follower2.disable();
+		}
 	}
-	
+
 	@Override
 	public double get() {
 		if (leader == null) {
@@ -126,7 +130,7 @@ public class TalonSpeedControllerGroup implements SpeedController {
 		}
 		return leader.get();
 	}
-	
+
 	@Override
 	public void pidWrite(double output) {
 		if (leader == null) {
@@ -134,35 +138,47 @@ public class TalonSpeedControllerGroup implements SpeedController {
 			return;
 		}
 		leader.pidWrite(output);
-		if(follower1 != null)follower1.follow(leader);
-		if(follower2 != null)follower2.follow(leader);
+		if (follower1 != null) {
+			follower1.follow(leader);
+		}
+		if (follower2 != null) {
+			follower2.follow(leader);
+		}
 	}
-	
+
 	@Override
 	public void set(double speed) {
 		set(controlMode, speed);
 	}
-	
+
 	public void set(ControlMode controlMode, double outputValue) {
 		if (leader == null) {
 			LOGGER.trace("No drive system");
 			return;
 		}
 		leader.set(controlMode, outputValue);
-		if(follower1 != null)follower1.follow(leader);
-		if(follower2 != null)follower2.follow(leader);
+		if (follower1 != null) {
+			follower1.follow(leader);
+		}
+		if (follower2 != null) {
+			follower2.follow(leader);
+		}
 	}
-	
+
 	@Override
 	public void setInverted(boolean isInverted) {
 		if (leader == null) {
 			LOGGER.trace("No drive system");
 			return;
 		}		leader.setInverted(isInverted);
-		if(follower1 != null)follower1.setInverted(isInverted);
-		if(follower2 != null)follower2.setInverted(isInverted);
+		if (follower1 != null) {
+			follower1.setInverted(isInverted);
+		}
+		if (follower2 != null) {
+			follower2.setInverted(isInverted);
+		}
 	}
-	
+
 	@Override
 	public boolean getInverted() {
 		if (!RobotMap.HAS_WHEELS) {
@@ -171,7 +187,7 @@ public class TalonSpeedControllerGroup implements SpeedController {
 		}
 		return leader.getInverted();
 	}
-	
+
 	@Override
 	public void stopMotor() {
 		if (leader == null) {
@@ -179,10 +195,14 @@ public class TalonSpeedControllerGroup implements SpeedController {
 			return;
 		}
 		leader.stopMotor();
-		if(follower1 != null)follower1.stopMotor();
-		if(follower2 != null)follower2.stopMotor();		
+		if (follower1 != null) {
+			follower1.stopMotor();
+		}
+		if (follower2 != null) {
+			follower2.stopMotor();		
+		}
 	}
-	
+
 	public boolean isStopped(){
 		if (leader == null) {
 			LOGGER.trace("No drive system");
@@ -206,24 +226,5 @@ public class TalonSpeedControllerGroup implements SpeedController {
 			return 0;
 		}
 		return leader.getSelectedSensorPosition(0);
-	}
-	
-	/**
-	 * Checks for the amount of Motors that you made
-	 * @return
-	 */
-	public int motorAmt(){
-		if(leader != null) {
-			return 1;
-			}
-		if(follower1 != null) { 
-			return 2;
-			}
-		if(follower2 != null) {
-			return 3;
-		}
-		else { 
-			return 0;
-			}
 	}
 }
