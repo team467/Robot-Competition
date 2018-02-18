@@ -146,8 +146,6 @@ public class Elevator {
 		//			}
 		//		}
 
-		previousHeight = currentHeight;
-
 		if (Math.abs(speed) >= RobotMap.MIN_LIFT_SPEED) {
 			// The controller is asking for elevator movement, cancel preset target and move.
 			targetHeight = null;
@@ -157,8 +155,10 @@ public class Elevator {
 			automaticMove(targetHeight.height);
 		} else {
 			// Nothing to do, make sure we're not moving.
-			heightController.stopMotor();
+			heightController.set(ControlMode.MotionMagic, getRawHeight());
 		}
+
+		previousHeight = currentHeight;
 	}
 
 	public void logSensorAndTargetPosition() {
