@@ -170,5 +170,5 @@ public class Elevator {
 
 		DriverStation.getInstance().set(2, "get");
 		DriverStation.getInstance().set(7, String.valueOf(heightController.get()));
-}
+	}
 }
