@@ -54,7 +54,7 @@ public class Robot extends TimedRobot {
 		Logging.init();
 
 		// Initialize RobotMap
-		RobotMap.init(RobotID.Board);
+		RobotMap.init(RobotID.Competition_1);
 
 		// Make robot objects
 		driverstation = DriverStation.getInstance();
@@ -193,12 +193,21 @@ public class Robot extends TimedRobot {
 			break;
 		}
 
-		if (driverstation.getSwitchHeightButton()) {
+		if (driverstation.getFloorHeightButtonPressed()) {
+			LOGGER.info("Dropping to bottom height");
+			elevator.moveToHeight(Elevator.Stops.floor);
+		} else if (driverstation.getSwitchHeightButtonPressed()) {
+			LOGGER.info("Lifting to switch height");
 			elevator.moveToHeight(Elevator.Stops.fieldSwitch);
+		} else if (driverstation.getLowScaleHeightButtonPressed()) {
+			LOGGER.info("Lifting to low scale height");
+			elevator.moveToHeight(Elevator.Stops.lowScale);
+		} else if (driverstation.getHighScaleHeightButtonPressed()) {
+			LOGGER.info("Lifting to high scale height");
+			elevator.moveToHeight(Elevator.Stops.highScale);
 		}
 
 		elevator.move(driverstation.getElevatorSpeed());
-		LOGGER.debug("Elevator Moving");
 
 		if (grabber.justGotCube()) {
 			driverstation.getNavRumbler().rumble(100, 1.0);
