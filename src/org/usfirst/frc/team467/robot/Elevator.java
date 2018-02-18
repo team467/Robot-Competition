@@ -4,8 +4,6 @@ import org.apache.log4j.Logger;
 
 import edu.wpi.first.wpilibj.MotorSafetyHelper;
 import edu.wpi.first.wpilibj.SpeedController;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
 import com.ctre.phoenix.ParamEnum;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
@@ -16,7 +14,7 @@ public class Elevator {
 	private static final Logger LOGGER = Logger.getLogger(Elevator.class);
 
 	private WPI_TalonSRX heightController;
-	private int maxTicksPerIteration;
+	private int maxTicksPerIteration = 100;
 	private double previousHeight;
 	private MotorSafetyHelper m_safetyHelper;
 
@@ -75,7 +73,7 @@ public class Elevator {
 	}
 
 	public void configMotionMagicParameters() {
-		double kPElevator = 1.6; // Double.parseDouble(SmartDashboard.getString("DB/String 7", "1.4"));
+		double kPElevator = 12.0; // Double.parseDouble(SmartDashboard.getString("DB/String 7", "1.4"));
 		double kIElevator = 0.0; // Double.parseDouble(SmartDashboard.getString("DB/String 8", "0.0"));
 		double kDElevator = 198; // Double.parseDouble(SmartDashboard.getString("DB/String 9", "165"));
 		double kFElevator = 0.729672; //  Double.parseDouble(SmartDashboard.getString("DB/String 6", "0.5"));
@@ -146,7 +144,7 @@ public class Elevator {
 		if (Math.abs(speed) >= RobotMap.MIN_LIFT_SPEED) {
 			// The controller is asking for elevator movement, cancel preset target and move.
 			targetHeight = null;
-			heightController.set(ControlMode.PercentOutput, -speed);
+			heightController.set(ControlMode.PercentOutput, speed);
 		} else if (targetHeight != null) {
 			// There is a target preset position, move there.
 			automaticMove(targetHeight.height);
