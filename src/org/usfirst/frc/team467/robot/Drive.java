@@ -1,85 +1,28 @@
 package org.usfirst.frc.team467.robot;
 
+import java.text.DecimalFormat;
+
 import org.apache.log4j.Logger;
 import org.usfirst.frc.team467.robot.simulator.communications.RobotData;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
-import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Drive extends DifferentialDrive {
 	private ControlMode controlMode;
 
 	private static final Logger LOGGER = Logger.getLogger(Drive.class);
+	private DecimalFormat df = new DecimalFormat("####0.00");
 
 	// Single instance of this class
 	private static Drive instance = null;
 
-	private WPI_TalonSRX leftLead;
-	private WPI_TalonSRX leftFollower1;
-	private WPI_TalonSRX leftFollower2;
-
-	private WPI_TalonSRX rightLead;
-	private WPI_TalonSRX rightFollower1;
-	private WPI_TalonSRX rightFollower2;
+	private final TalonSpeedControllerGroup left;
+	private final TalonSpeedControllerGroup right;
 
 	// Private constructor
-	private Drive(SpeedController leftLead, SpeedController leftFollower1, SpeedController leftFollower2,
-			SpeedController rightLead, SpeedController rightFollower1, SpeedController rightFollower2) {
-		super(leftLead, rightLead);
-
-		if (!RobotMap.HAS_WHEELS) {
-			return;
-		}
-
-		this.leftLead = (WPI_TalonSRX)leftLead;
-		this.rightLead = (WPI_TalonSRX)rightLead;
-		this.leftFollower1 = (WPI_TalonSRX)leftFollower1;
-		this.leftFollower2 = (WPI_TalonSRX)leftFollower2;
-		this.rightFollower1 = (WPI_TalonSRX)rightFollower1;
-		this.rightFollower2 = (WPI_TalonSRX)rightFollower2;
-		
-		initMotor(this.leftLead);
-		this.leftLead.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, RobotMap.TALON_TIMEOUT);
-		this.leftLead.setSensorPhase(true);
-		this.leftLead.config_kF(0, 1023.0 / 1402.0, RobotMap.TALON_TIMEOUT); // (100 percent of the output you can send to the motor) divided by (max speed measured in ticks)
-		
-		initMotor(this.leftFollower1);
-		initMotorForFollowerMode(this.leftLead, this.leftFollower1);
-		
-		initMotor(this.leftFollower2);
-		initMotorForFollowerMode(this.leftLead, this.leftFollower2);
-		
-		initMotor(this.rightLead);
-		this.rightLead.setSensorPhase(true);
-		this.rightLead.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, RobotMap.TALON_TIMEOUT);
-		this.rightLead.config_kF(0, 0.7297, RobotMap.TALON_TIMEOUT);
-		
-		initMotor(this.rightFollower1);
-		initMotorForFollowerMode(this.rightLead, this.rightFollower1);
-		
-		initMotor(this.rightFollower2);
-		initMotorForFollowerMode(this.rightLead, this.rightFollower2);
-	}
-
-	private void initMotor(WPI_TalonSRX talon) {
-		talon.set(ControlMode.PercentOutput, 0);
-		talon.selectProfileSlot(0, 0);
-		talon.configAllowableClosedloopError(0, RobotMap.VELOCITY_ALLOWABLE_CLOSED_LOOP_ERROR, 0);
-		talon.configNominalOutputReverse(0.0, 0);
-		talon.configNominalOutputForward(0.0, 0);
-		talon.configPeakOutputForward(1.0, 0);
-		talon.configPeakOutputReverse(-1.0, 0);
-		talon.configOpenloopRamp(0.2, RobotMap.TALON_TIMEOUT);
-		talon.configClosedloopRamp(0.2, RobotMap.TALON_TIMEOUT);
-
-		//Note: This was changed from voltage to percentage used with 1 representing 100 percent or max voltage 
-		//      and -1 representing 100 percent backwards.
-	}
 
 	/**
 	 * Gets the single instance of this class.
@@ -88,237 +31,141 @@ public class Drive extends DifferentialDrive {
 	 */
 	public static Drive getInstance() {
 		if (instance == null) {
-			if (!RobotMap.HAS_WHEELS) {
-				instance = new Drive(
-						new NullSpeedController(),
-						new NullSpeedController(),
-						new NullSpeedController(),
-						new NullSpeedController(),
-						new NullSpeedController(),
-						new NullSpeedController()
-						);	
+			TalonSpeedControllerGroup left;
+			TalonSpeedControllerGroup right;
+			
+			LOGGER.info("Number of Motors:" + RobotMap.DRIVEMOTOR_NUM);
+			if (RobotMap.HAS_WHEELS && RobotMap.DRIVEMOTOR_NUM > 0) {
+				LOGGER.info("Creating  Lead Motors");
+				WPI_TalonSRX leftLead = new WPI_TalonSRX(RobotMap.LEFT_LEAD_CHANNEL);
+				WPI_TalonSRX rightLead = new WPI_TalonSRX(RobotMap.RIGHT_LEAD_CHANNEL);
+				WPI_TalonSRX leftFollower1 = null;
+				WPI_TalonSRX rightFollower1 = null;
+				WPI_TalonSRX leftFollower2 = null;
+				WPI_TalonSRX rightFollower2= null;
+
+				if (RobotMap.DRIVEMOTOR_NUM > 2) {
+					LOGGER.info("Creating  first set of follower motors");
+					leftFollower1 = new WPI_TalonSRX(RobotMap.LEFT_FOLLOWER_1_CHANNEL);
+					rightFollower1 = new WPI_TalonSRX(RobotMap.RIGHT_FOLLOWER_1_CHANNEL);
+				}
+
+				if (RobotMap.DRIVEMOTOR_NUM > 4) {
+					LOGGER.info("Creating second set of follower motors");
+					leftFollower2 = new WPI_TalonSRX(RobotMap.LEFT_FOLLOWER_2_CHANNEL);
+					rightFollower2 = new WPI_TalonSRX(RobotMap.RIGHT_FOLLOWER_2_CHANNEL);
+				}
+
+				left = new TalonSpeedControllerGroup(ControlMode.PercentOutput,
+						RobotMap.LEFT_DRIVE_SENSOR_IS_INVERTED, leftLead, leftFollower1, leftFollower2);
+				right = new TalonSpeedControllerGroup(ControlMode.PercentOutput,
+						RobotMap.RIGHT_DRIVE_SENSOR_IS_INVERTED, rightLead, rightFollower1, rightFollower2);
 			} else {
-
-				// First usage - create Drive object
-				instance = new Drive(
-						new WPI_TalonSRX(RobotMap.LEFT_LEAD_CHANNEL),
-						new WPI_TalonSRX(RobotMap.LEFT_FOLLOWER_1_CHANNEL),
-						new WPI_TalonSRX(RobotMap.LEFT_FOLLOWER_2_CHANNEL),
-
-						new WPI_TalonSRX(RobotMap.RIGHT_LEAD_CHANNEL),
-						new WPI_TalonSRX(RobotMap.RIGHT_FOLLOWER_1_CHANNEL),
-						new WPI_TalonSRX(RobotMap.RIGHT_FOLLOWER_2_CHANNEL));
+				 left = new TalonSpeedControllerGroup();
+				 right = new TalonSpeedControllerGroup();
 			}
+			instance = new Drive(left, right);
+	
 		}
 		return instance;
 	}
 
-	public void setPIDF(double p, double i, double d, double f){
-		// TODO: Set the PIDF of the talons. Assumes the same values for all motors
-
-	}
-
-	/**
-	 * Initializes settings for position mode
-	 *
-	 * @return Successful or not
-	 */
-	public void initPositionMode() {
-		// TODO: Set motors for percent voltage bus mode Check RobotMap to see if it is enabled for this robot.
-		if (!RobotMap.HAS_WHEELS) {
-			return;
-		}
-		rightLead.setSelectedSensorPosition(0, 0, RobotMap.TALON_TIMEOUT);
-		leftLead.setSelectedSensorPosition(0, 0, RobotMap.TALON_TIMEOUT);
-
-		//		double kPRight = Double.parseDouble(SmartDashboard.getString("DB/String 7", "0"));
-		//		double kPLeft = Double.parseDouble(SmartDashboard.getString("DB/String 2", "0"));
-		//		
-		//		double kIRight = Double.parseDouble(SmartDashboard.getString("DB/String 8", "0"));
-		//		double kILeft = Double.parseDouble(SmartDashboard.getString("DB/String 3", "0"));
-		//		
-		//		double kDRight = Double.parseDouble(SmartDashboard.getString("DB/String 9", "7"));
-		//		double kDLeft = Double.parseDouble(SmartDashboard.getString("DB/String 4", "7"));
-		//				
-		//		rightLead.config_kP(0, kPRight, RobotMap.TALON_TIMEOUT);
-		//		leftLead.config_kP(0, kPLeft, RobotMap.TALON_TIMEOUT);
-		//		
-		//		rightLead.config_kI(0, kIRight, RobotMap.TALON_TIMEOUT);
-		//		leftLead.config_kI(0, kILeft, RobotMap.TALON_TIMEOUT);
-		//		
-		//		rightLead.config_kD(0, kDRight, RobotMap.TALON_TIMEOUT);
-		//		leftLead.config_kD(0, kDLeft, RobotMap.TALON_TIMEOUT);
-
-		//			LOGGER.info("Right p value: " + kPRight + " and left p value: " + kPLeft);
-	}
-	
-	public void initMotionMagicMode() {
-		if (!RobotMap.HAS_WHEELS) {
-			LOGGER.trace("No Drive System");
-			return;
-		}
-
-		rightLead.setSelectedSensorPosition(0, 0, RobotMap.TALON_TIMEOUT);
-		leftLead.setSelectedSensorPosition(0, 0, RobotMap.TALON_TIMEOUT);
+	private Drive(TalonSpeedControllerGroup left, TalonSpeedControllerGroup right) {
+		super(left, right);
+		this.left = left;
+		this.right = right;
 
 		double kPRight = 1.4; // Double.parseDouble(SmartDashboard.getString("DB/String 7", "1.4"));
-		double kPLeft = 1.6; //Double.parseDouble(SmartDashboard.getString("DB/String 2", "1.6"));
+		double kPLeft = 1.6; // Double.parseDouble(SmartDashboard.getString("DB/String 2", "1.6"));
 
 		double kIRight = 0.0; // Double.parseDouble(SmartDashboard.getString("DB/String 8", "0.0"));
-		double kILeft = 0.0; //Double.parseDouble(SmartDashboard.getString("DB/String 3", "0.0"));
+		double kILeft = 0.0; // Double.parseDouble(SmartDashboard.getString("DB/String 3", "0.0"));
 
-		double kDRight = 165; //Double.parseDouble(SmartDashboard.getString("DB/String 9", "165"));
-		double kDLeft = 198; //Double.parseDouble(SmartDashboard.getString("DB/String 4", "198"));
+		double kDRight = 165; // Double.parseDouble(SmartDashboard.getString("DB/String 9", "165"));
+		double kDLeft = 198; // Double.parseDouble(SmartDashboard.getString("DB/String 4", "198"));
 
-		rightLead.config_kP(0, kPRight, RobotMap.TALON_TIMEOUT);
-		leftLead.config_kP(0, kPLeft, RobotMap.TALON_TIMEOUT);
+		double kFall = 1023.0 / 1402.0;
 
-		rightLead.config_kI(0, kIRight, RobotMap.TALON_TIMEOUT);
-		leftLead.config_kI(0, kILeft, RobotMap.TALON_TIMEOUT);
-
-		rightLead.config_kD(0, kDRight, RobotMap.TALON_TIMEOUT);
-		leftLead.config_kD(0, kDLeft, RobotMap.TALON_TIMEOUT);
-		//		This is commented out because we will need the SmartDashboard to tune other things later.
-
-		leftLead.configMotionCruiseVelocity(1052 / 2, RobotMap.TALON_TIMEOUT); //1052 is 75 percent of the max speed, which is 1402	
-		leftLead.configMotionAcceleration(1052 / 2, RobotMap.TALON_TIMEOUT);
-
-		rightLead.configMotionCruiseVelocity(1052 / 2, RobotMap.TALON_TIMEOUT);
-		rightLead.configMotionAcceleration(1052 / 2, RobotMap.TALON_TIMEOUT);	
-	}
-	
-	public void initSpeedControl() {
-		if (!RobotMap.HAS_WHEELS) {
-			LOGGER.trace("No drive system");
-			return;
-		}
-
-		rightLead.set(ControlMode.Velocity, rightLead.getSelectedSensorVelocity(1));
-		leftLead.set(ControlMode.Velocity, leftLead.getSelectedSensorVelocity(1));
-
-	}
-	
-	public void initPercentOutput() {
-		if (!RobotMap.HAS_WHEELS) {
-			LOGGER.trace("No drive system");
-			return;
-		}
-
-		rightLead.set(ControlMode.PercentOutput, rightLead.getMotorOutputPercent());
-		leftLead.set(ControlMode.PercentOutput, leftLead.getMotorOutputPercent());;
-
-	}
-
-	public void motionMagicMove(double left, double right) {
-		go(left, right, ControlMode.MotionMagic);
-	}
-
-	public void PositionModeMove(double left, double right) {
-		go(left, right, ControlMode.Position);
-	}
-
-	private void initMotorForFollowerMode(WPI_TalonSRX master, WPI_TalonSRX slave) {
-		// TODO: Slave motors to a single master
-		//TODO: Check the value on the follower set.
-		if (!RobotMap.HAS_WHEELS) {
-			return;
-		}
-		slave.set(ControlMode.Follower, master.getDeviceID());
-		LOGGER.debug("Set " + slave.getDeviceID() + " Following " + master.getDeviceID());
+		left.setPIDF(kPLeft, kILeft, kDLeft, kFall);
+		right.setPIDF(kPRight, kIRight, kDRight, kFall);
 	}
 
 	public void logClosedLoopErrors() {
-		if (!RobotMap.HAS_WHEELS) {
-			return;
-		}
-		LOGGER.debug(
-				//TODO Check the arguments for the closed loop errors.
-				"Vel L= " + leftLead.getSelectedSensorVelocity(0) + " R=" + rightLead.getSelectedSensorVelocity(0)
-				+ "Pos L=" + leftLead.getSelectedSensorPosition(0) + " R=" + rightLead.getSelectedSensorPosition(0)+
-				"Err L=" + leftLead.getClosedLoopError(0) +
-				" R=" + rightLead.getClosedLoopError(0));
-	}
-
-	public void publishRawSensorValues() {
-		if (!RobotMap.HAS_WHEELS) {
-			return;
-		}
-		SmartDashboard.putNumber("leftRawSensorPosition", leftLead.getSelectedSensorPosition(0));
-		SmartDashboard.putNumber("rightRawSensorPosition", rightLead.getSelectedSensorPosition(0));
+		left.logClosedLoopErrors("Left");
+		right.logClosedLoopErrors("Right");
 	}
 
 	public ControlMode getControlMode() {
 		return controlMode;
 	}
 
-	/**
-	 * Drives each of the six wheels at different speeds using invert constants to account for wiring.
-	 *
-	 * @param left
-	 * 			Speed or Distance value for left wheels
-	 * @param right
-	 * 			Speed or Distance value for right wheels
-	 */
-	//TODO: Check to see if we still need this function.
-	private void go(double left, double right, ControlMode mode) {
-		// TODO: Check to make sure all motors exist. If not throw a null pointer exception
-		if (!RobotMap.HAS_WHEELS) {
-			LOGGER.trace("No drive system");
-			if (m_safetyHelper != null) {
-				m_safetyHelper.feed();
-			}
-			return;
-		}
-
-		controlMode = mode;
-		if (leftLead == null || rightLead == null || this.leftFollower1 == null || this.leftFollower2 == null || this.rightFollower1 == null || this.rightFollower2 == null) {
-			throw new NullPointerException("Null motor provided");
-		}
-
-		right *= -1;
-
-		//TODO: Set the speeds
-		//TODO Check to see if we need the params.
-		LOGGER.info("Drive left=" + left + "right=" + right + ".");
-		leftLead.set(mode, left);
-		leftFollower1.set(ControlMode.Follower, leftLead.getDeviceID());
-		leftFollower2.set(ControlMode.Follower, leftLead.getDeviceID());
-
-		rightLead.set(mode, right);
-		rightFollower1.set(ControlMode.Follower, rightLead.getDeviceID());
-		rightFollower2.set(ControlMode.Follower, rightLead.getDeviceID());
-
-		if (m_safetyHelper != null) {
-			m_safetyHelper.feed();
-		}
-	}
-	
-	
-	
 	public void zero() {
-		rightLead.setSelectedSensorPosition(0, 0, RobotMap.TALON_TIMEOUT);
-		leftLead.setSelectedSensorPosition(0, 0, RobotMap.TALON_TIMEOUT);
+		LOGGER.trace("Zeroed the motor sensors.");
+		left.zero();
+		right.zero();
 	}
-	
+
 	public void sendData() {
-		RobotData.getInstance().update(rightLead.getSelectedSensorPosition(0), leftLead.getSelectedSensorPosition(0));
+		RobotData.getInstance().update(getRightDistance(), getLeftDistance());
 	}
 
 	/**
-	 * Turns to specified angle according to gyro
-	 *
-	 * @param angle
-	 *            in degrees
-	 *
-	 * @return True when pointing at the angle
+	 * Does not drive drive motors and keeps steering angle at previous position.
 	 */
-	public void turn(double degrees) {
-		// TODO: Turns in place to the specified angle from center using position mode
+	public void stop() {
+		right.stopMotor();
+		left.stopMotor();
 	}
 
-	public boolean isStopped(){
+	public boolean isStopped() {
+		return left.isStopped() && right.isStopped();
+	}
 
-		return false;
+	public void moveFeet(double distanceInFeet) {
+		moveFeet(distanceInFeet, 0, ControlMode.MotionMagic);
+	}
+
+	public void rotateByAngle(double angleInDegrees) {
+		moveFeet(0, angleInDegrees, ControlMode.MotionMagic);
+	}
+
+	/**
+	 * 
+	 * @param distanceInFeet
+	 * @param rotationInDegrees
+	 *            enter positive degrees for left turn and enter negative degrees
+	 *            for right turn
+	 */
+	public void moveFeet(double distanceInFeet, double rotationInDegrees, ControlMode mode) {
+		double turnAmtTicks, distAmtTicks, leftDistTicks, rightDistTicks, radius, distTurnInFeet, angleInRadians;
+
+		LOGGER.trace("Automated move of " + distanceInFeet + " feet and " + rotationInDegrees + " degree turn.");
+		radius = RobotMap.WHEEL_BASE_WIDTH / 2;
+		distAmtTicks = feetToTicks(distanceInFeet); // Converts distance to ticks in feet.
+		angleInRadians = Math.toRadians(rotationInDegrees);
+		distTurnInFeet = radius * angleInRadians; // This is the distance we want to turn.
+		turnAmtTicks = (feetToTicks(distTurnInFeet)); // Converts turn angle in ticks to degrees, then to radians.
+
+		rightDistTicks = -1 * (distAmtTicks - turnAmtTicks);
+		leftDistTicks = distAmtTicks + turnAmtTicks;
+
+		LOGGER.debug("Distance in Feet - Right: " + df.format(ticksToFeet(rightDistTicks)) + " Left: "
+				+ df.format(ticksToFeet(leftDistTicks)));
+		LOGGER.debug("Current Position - Right: " + df.format(getRightDistance()) + " Left: "
+				+ df.format(getLeftDistance()));
+
+		left.set(mode, rightDistTicks);
+		right.set(mode, leftDistTicks);
+	}
+
+	public double getLeftDistance() {
+		double leftLeadSensorPos = ticksToFeet(left.sensorPosition());
+		return leftLeadSensorPos;
+	}
+
+	public double getRightDistance() {
+		double rightLeadSensorPos = -1 * ticksToFeet(right.sensorPosition());
+		return rightLeadSensorPos;
 	}
 
 	/**
@@ -327,92 +174,28 @@ public class Drive extends DifferentialDrive {
 	 * @return the absolute distance moved in feet
 	 */
 	public double absoluteDistanceMoved() {
-		// TODO: returns the amount of distance moved based on the the position of the talon sensors nad the wheel circumerence
-		return 0;
-	}
-
-	/**
-	 * Does not drive drive motors and keeps steering angle at previous position.
-	 */
-	public void stop() {
-		if (!RobotMap.HAS_WHEELS) {
-			LOGGER.trace("No drive system");
-			return;
+		double lowestAbsDist;
+		double leftLeadSensorPos = Math.abs(getLeftDistance());
+		double rightLeadSensorPos = Math.abs(getRightDistance());
+		if (leftLeadSensorPos >= rightLeadSensorPos) {
+			lowestAbsDist = rightLeadSensorPos;
+		} else {
+			lowestAbsDist = leftLeadSensorPos;
 		}
-		//TODO: Stop all motors
-		go(0,0, ControlMode.Disabled);
-
+		LOGGER.debug("The absolute distance moved: " + lowestAbsDist);
+		return lowestAbsDist;
 	}
 
-	@Override
-	public void arcadeDrive(double xSpeed, double zRotation, boolean squaredInputs) {
-		if (!RobotMap.HAS_WHEELS) {
-			LOGGER.trace("No drive system");
-			if (m_safetyHelper != null) {
-				m_safetyHelper.feed();
-			}
-			return;
-		}
-		super.arcadeDrive(xSpeed, zRotation, squaredInputs);
-
-		leftFollower1.set(ControlMode.Follower, leftLead.getDeviceID());
-		leftFollower2.set(ControlMode.Follower, leftLead.getDeviceID());
-
-		rightFollower1.set(ControlMode.Follower, rightLead.getDeviceID());
-		rightFollower2.set(ControlMode.Follower, rightLead.getDeviceID());
+	private double feetToTicks(double feet) {
+		double ticks = (feet / (RobotMap.WHEEL_CIRCUMFERENCE / 12)) * RobotMap.WHEEL_ENCODER_CODES_PER_REVOLUTION;
+		LOGGER.trace(feet + " feet = " + ticks + " ticks.");
+		return ticks;
 	}
 
-	/**
-	 * Ticks are set to the distance in feet divided by the circumference of the wheel in feet
-	 * and then multiplied by 1024 which is the number of ticks in one revolution of the wheel.
-	 * @param feetDist Distance in feet
-	 * @return Distance in sensor units
-	 */
-	public double feetToTicks(double feetDist) {
-		return 1024 * feetDist / (6 * Math.PI / 12);
+	private double ticksToFeet(double ticks) {
+		double feet = (ticks / RobotMap.WHEEL_ENCODER_CODES_PER_REVOLUTION) * (RobotMap.WHEEL_CIRCUMFERENCE / 12);
+		LOGGER.trace(ticks + " ticks = " + feet + " feet.");
+		return feet;
 	}
-	
-	public double degreesToTicks(double turnAmountInDegrees) {
-		double diameterInInches = 22.75;
-		double radius = diameterInInches / 24; //Diameter divided by (2 * 12) to translate to feet and to get radius
-		double turnAmountInRadians = Math.toRadians(turnAmountInDegrees * (367.5/360)); //The 367.5/360 is to fix measurement errors.
-		return feetToTicks(turnAmountInRadians * radius);
-	}
-	public void move(double distanceInFeet) {
-		moveFeet(distanceInFeet, 0);
-	}
-	
-	/**
-	 * 
-	 * @param distanceInFeet
-	 * @param rotationInDegrees enter positive degrees for left turn and enter negative degrees for right turn
-	 */
-	public void moveFeet (double distanceInFeet, double rotationInDegrees) {
-		
-		double turnAmtTicks, distAmtTicks, driveTicksS1, driveTicksS2;
-		
-		distAmtTicks = feetToTicks(distanceInFeet);
-		turnAmtTicks = degreesToTicks(rotationInDegrees);
-		
-		driveTicksS1 = distAmtTicks - turnAmtTicks;
-		driveTicksS2 = distAmtTicks + turnAmtTicks;
-		go(driveTicksS1, driveTicksS2, ControlMode.MotionMagic);
-		
-	}
-	
-	public void rotateToAngle(double angleInDegrees) {
-		double distForWheels;		
-		if(angleInDegrees <= 180) {
-			distForWheels = degreesToTicks(angleInDegrees);
-			go(distForWheels, -distForWheels, ControlMode.MotionMagic);
-		}
-		else {
-			distForWheels = degreesToTicks(360 - angleInDegrees);
-			go(-distForWheels, distForWheels, ControlMode.MotionMagic);
 
-		}
-	
-	
-
-}
 }

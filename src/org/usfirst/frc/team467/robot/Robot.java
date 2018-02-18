@@ -95,6 +95,7 @@ public class Robot extends TimedRobot {
 		LOGGER.trace("Disabled Periodic");
 
 		driverstation.logJoystickIDs();
+		//LOGGER.debug("Right: "	+drive.getRightDistance() + " Left: " + drive.getLeftDistance());
 	}
 	//TODO: Figure out the NetworkTables later.
 	//	String[] autoList = {"none", "go"};
@@ -106,14 +107,14 @@ public class Robot extends TimedRobot {
 	public void autonomousInit() {
 		final String autoMode = SmartDashboard.getString("Auto Selector", "none");
 
-
-
-
-
 		LOGGER.info(drive);
 		// TODO: call appropriate auto modes based on list
 		LOGGER.debug("Autonomous init: " + autoMode);
 		switch (autoMode) {
+		case "StartSwitchSide1A": 
+			//			autonomous = Actions.startSwitchSide1A();
+			autonomous = Actions.moveDistance(2.0);
+			break;
 		case "none":
 			autonomous = Actions.doNothing();
 			break;
@@ -151,8 +152,7 @@ public class Robot extends TimedRobot {
 
 
 	public void autonomousPeriodic() {
-		//		drive.motionMagicMove(amountToGoLeft, amountToGoRight);
-		//		autonomous.run();
+		autonomous.run();
 	}
 
 
@@ -174,11 +174,14 @@ public class Robot extends TimedRobot {
 			right = 0.0;
 		}
 
+		double speed = driverstation.getArcadeSpeed();
+		double turn = driverstation.getArcadeTurn();
 		switch (driverstation.getDriveMode()) {
 		case ArcadeDrive:
-			double speed = driverstation.getArcadeSpeed();
-			double turn = driverstation.getArcadeTurn();
 			drive.arcadeDrive(speed, turn, true);
+			break;
+		case CurvatureDrive:
+			drive.curvatureDrive(speed, turn, true);
 			break;
 		case TankDrive:	
 			double leftTank = driverstation.getDriveJoystick().getLeftStickY();
