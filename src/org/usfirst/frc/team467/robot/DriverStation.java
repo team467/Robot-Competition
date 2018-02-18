@@ -133,7 +133,11 @@ public class DriverStation {
 	public double getElevatorSpeed() {
 		return getNavJoystick().getRightStickY();
 	}
-	
+
+	public boolean getBottomHeightButton() {
+		return getNavJoystick().down(Button.a);
+	}
+
 	public boolean getSwitchHeightButton() {
 		return getNavJoystick().down(Button.b);
 	}

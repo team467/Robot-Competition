@@ -14,7 +14,7 @@ public class Logging {
 		setupDefaultLogging();
 
 		// Enable extra logging for classes you want to debug
-//		Logger.getLogger(Robot.class).setLevel(Level.DEBUG);
+		Logger.getLogger(Robot.class).setLevel(Level.DEBUG);
 		Logger.getLogger(ActionGroup.class).setLevel(Level.DEBUG);
 		Logger.getLogger(Drive.class).setLevel(Level.DEBUG);
 		Logger.getLogger(Elevator.class).setLevel(Level.DEBUG);

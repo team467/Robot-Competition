@@ -214,13 +214,14 @@ public class RobotMap {
 	public static int GRABBER_R_CHANNEL;
 	public static int OPTICAL_CHANNEL;
 
-	public static final double ELEVATOR_HEIGHT_RANGE_INCHES = 104.5 - 10;
+	public static final double ELEVATOR_HEIGHT_RANGE_INCHES = 94.5;
 	public static final double ELEVATOR_ERROR_TOLERANCE_INCHES = 1.0;
 
-	public static final int ELEVATOR_INITIAL_TICKS = -738;
+	public static final int ELEVATOR_BOTTOM_TICKS = 812;
+	public static final int ELEVATOR_TOP_TICKS = 364;
 	public static final int MAX_ELEVATOR_RPM = 1000; //Not the real value, placeholder constant.
 	// Ticks per inch is based on empirical measurements on the robot.
-	public static final double ELEVATOR_TICKS_PER_INCH = (-364 - ELEVATOR_INITIAL_TICKS) / (104.5 - 10.0);
+	public static final double ELEVATOR_TICKS_PER_INCH = (ELEVATOR_TOP_TICKS - ELEVATOR_BOTTOM_TICKS) / ELEVATOR_HEIGHT_RANGE_INCHES;
 
 	public static boolean HAS_RAMPS;
 	public static int RAMP_SOLENOID_CHANNEL;

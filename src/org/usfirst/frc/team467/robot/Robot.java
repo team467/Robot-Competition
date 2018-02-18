@@ -95,6 +95,7 @@ public class Robot extends TimedRobot {
 		LOGGER.trace("Disabled Periodic");
 
 		driverstation.logJoystickIDs();
+		LOGGER.debug("Elevator raw height=" + elevator.getRawHeight());
 	}
 	//TODO: Figure out the NetworkTables later.
 	//	String[] autoList = {"none", "go"};
@@ -190,7 +191,10 @@ public class Robot extends TimedRobot {
 			break;
 		}
 
-		if (driverstation.getSwitchHeightButton()) {
+		if (driverstation.getBottomHeightButton()) {
+			LOGGER.debug("Dropping to bottom height");
+			elevator.moveToHeight(Elevator.Stops.floor);
+		} else if (driverstation.getSwitchHeightButton()) {
 			LOGGER.debug("Lifting to switch height");
 			elevator.moveToHeight(Elevator.Stops.fieldSwitch);
 		} else if (driverstation.getLowScaleHeightButton()) {

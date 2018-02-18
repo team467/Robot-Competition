@@ -27,7 +27,7 @@ public class Elevator {
 		floor(10.0 + RobotMap.ELEVATOR_ERROR_TOLERANCE_INCHES),
 		fieldSwitch(24.0 + RobotMap.ELEVATOR_ERROR_TOLERANCE_INCHES),
 		lowScale(72.0 + RobotMap.ELEVATOR_ERROR_TOLERANCE_INCHES),
-		highScale(96 + RobotMap.ELEVATOR_ERROR_TOLERANCE_INCHES);
+		highScale(96.0 + RobotMap.ELEVATOR_ERROR_TOLERANCE_INCHES);
 
 		/**
 		 * Height in feet
@@ -66,7 +66,7 @@ public class Elevator {
 		this.heightController.configSetParameter(ParamEnum.eFeedbackNotContinuous, 1, 0x00, 0x00, 0x00);
 		this.heightController.configAllowableClosedloopError(0, 3, RobotMap.TALON_TIMEOUT);
 		this.heightController.setInverted(false);
-		this.heightController.setSensorPhase(true);
+		this.heightController.setSensorPhase(false);
 		configMotionMagicParameters();
 
 		targetHeight = null;
@@ -90,12 +90,12 @@ public class Elevator {
 	}
 
 	public double getHeightInches() {
-		double height = (getRawHeight() - RobotMap.ELEVATOR_INITIAL_TICKS) / RobotMap.ELEVATOR_TICKS_PER_INCH;
+		double height = (getRawHeight() - RobotMap.ELEVATOR_BOTTOM_TICKS) / RobotMap.ELEVATOR_TICKS_PER_INCH;
 		LOGGER.debug("Height in inches: " + height);
 		return height;
 	}
 
-	private double getRawHeight() {
+	public double getRawHeight() {
 		if (!RobotMap.HAS_ELEVATOR) {
 			return 0.0;
 		}
@@ -116,7 +116,7 @@ public class Elevator {
 			m_safetyHelper.feed();
 		}
 
-		double ticks = RobotMap.ELEVATOR_INITIAL_TICKS + heightInInches * RobotMap.ELEVATOR_TICKS_PER_INCH;
+		double ticks = RobotMap.ELEVATOR_BOTTOM_TICKS - heightInInches * RobotMap.ELEVATOR_TICKS_PER_INCH;
 		LOGGER.debug("Setting Motion Magic; target position=" + ticks);
 		heightController.set(ControlMode.MotionMagic, ticks);
 		logSensorAndTargetPosition();
@@ -146,7 +146,7 @@ public class Elevator {
 		if (Math.abs(speed) >= RobotMap.MIN_LIFT_SPEED) {
 			// The controller is asking for elevator movement, cancel preset target and move.
 			targetHeight = null;
-			heightController.set(ControlMode.PercentOutput, speed);
+			heightController.set(ControlMode.PercentOutput, -speed);
 		} else if (targetHeight != null) {
 			// There is a target preset position, move there.
 			automaticMove(targetHeight.height);
@@ -157,14 +157,18 @@ public class Elevator {
 	}
 
 	public void logSensorAndTargetPosition() {
-		int ticks = (int) (RobotMap.ELEVATOR_INITIAL_TICKS + targetHeight.height * RobotMap.ELEVATOR_TICKS_PER_INCH);
 		LOGGER.debug(
 				//TODO Check the arguments for the closed loop errors.
 				"Target= " + heightController.getActiveTrajectoryPosition()
 				+ "Pos=" + heightController.getSelectedSensorPosition(0));
+
 		DriverStation.getInstance().set(0,"target ticks");
-		DriverStation.getInstance().set(1, "position");
 		DriverStation.getInstance().set(5, heightController.getActiveTrajectoryPosition());
+
+		DriverStation.getInstance().set(1, "position");
 		DriverStation.getInstance().set(6, heightController.getSelectedSensorPosition(0));
-	}
+
+		DriverStation.getInstance().set(2, "get");
+		DriverStation.getInstance().set(7, String.valueOf(heightController.get()));
+}
 }
