@@ -10,7 +10,7 @@ package org.usfirst.frc.team467.robot;
 //import edu.wpi.first.wpilibj.networktables.NetworkTable;
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.CameraServer;
-
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -37,7 +37,7 @@ public class Robot extends TimedRobot {
 	private static final Logger LOGGER = Logger.getLogger(Robot.class);
 
 	// Robot objects
-	private DriverStation driverstation;
+	private DriverStation467 driverstation;
 	private Drive drive;
 	private ActionGroup autonomous;
 
@@ -58,7 +58,7 @@ public class Robot extends TimedRobot {
 		RobotMap.init(RobotID.Competition_1);
 
 		// Make robot objects
-		driverstation = DriverStation.getInstance();
+		driverstation = DriverStation467.getInstance();
 		LOGGER.info("Initialized Driverstation");
 
 		drive = Drive.getInstance();
@@ -217,10 +217,12 @@ public class Robot extends TimedRobot {
 
 		grabber.grab(driverstation.getGrabThrottle());
 
-		if (DriverStation.getInstance().shouldDeployRamps()) {
-			ramps.deploy();
-		} else if (DriverStation.getInstance().shouldLiftRamps()) {
-			ramps.lift();
+		if (DriverStation.getInstance().getMatchTime() <= 30) {
+			if (DriverStation467.getInstance().shouldDeployRamps()) {
+				ramps.deploy();
+			} else if (DriverStation467.getInstance().shouldLiftRamps()) {
+				ramps.lift();
+			}
 		}
 
 		//changed to arcade drive

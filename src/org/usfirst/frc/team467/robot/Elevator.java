@@ -161,13 +161,13 @@ public class Elevator {
 				"Target= " + heightController.getActiveTrajectoryPosition()
 				+ "Pos=" + heightController.getSelectedSensorPosition(0));
 
-		DriverStation.getInstance().set(0,"target ticks");
-		DriverStation.getInstance().set(5, heightController.getActiveTrajectoryPosition());
+		DriverStation467.getInstance().set(0,"target ticks");
+		DriverStation467.getInstance().set(5, heightController.getActiveTrajectoryPosition());
 
-		DriverStation.getInstance().set(1, "position");
-		DriverStation.getInstance().set(6, heightController.getSelectedSensorPosition(0));
+		DriverStation467.getInstance().set(1, "position");
+		DriverStation467.getInstance().set(6, heightController.getSelectedSensorPosition(0));
 
-		DriverStation.getInstance().set(2, "get");
-		DriverStation.getInstance().set(7, String.valueOf(heightController.get()));
+		DriverStation467.getInstance().set(2, "get");
+		DriverStation467.getInstance().set(7, String.valueOf(heightController.get()));
 	}
 }

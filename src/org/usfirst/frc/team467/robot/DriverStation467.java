@@ -5,7 +5,7 @@ import org.usfirst.frc.team467.robot.Autonomous.ActionGroup;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public class DriverStation {
+public class DriverStation467 {
 
 	private XBoxJoystick467 driverJoy;
 	private XBoxJoystick467 navJoy;
@@ -13,7 +13,7 @@ public class DriverStation {
 	private Rumbler driverRumbler;
 	private Rumbler navRumbler;
 
-	private static DriverStation station;
+	private static DriverStation467 station;
 
 	// Mapping of functions to Controller Buttons for normal operation
 	// TODO: Create enum for buttons
@@ -22,9 +22,9 @@ public class DriverStation {
 	 *
 	 * @return
 	 */
-	public static DriverStation getInstance() {
+	public static DriverStation467 getInstance() {
 		if (station == null) {
-			station = new DriverStation();
+			station = new DriverStation467();
 		}
 		return station;
 	}
@@ -32,7 +32,7 @@ public class DriverStation {
 	/**
 	 * Private constructor
 	 */
-	private DriverStation() {
+	private DriverStation467() {
 		driverJoy = new XBoxJoystick467(0, "driver");
 		navJoy = new XBoxJoystick467(1, "nav");
 
