@@ -10,23 +10,13 @@ package org.usfirst.frc.team467.robot;
 //import edu.wpi.first.wpilibj.networktables.NetworkTable;
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.CameraServer;
-
-import edu.wpi.first.wpilibj.networktables.NetworkTable;
+import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-import org.usfirst.frc.team467.robot.Elevator.Stops;
-import org.usfirst.frc.team467.robot.Autonomous.ActionGroup;
-import org.usfirst.frc.team467.robot.Autonomous.Actions;
-
-import edu.wpi.first.wpilibj.TimedRobot;
-
-import com.ctre.phoenix.motorcontrol.ControlMode;
-
 import org.apache.log4j.Logger;
-
-import edu.wpi.first.wpilibj.DigitalInput;
 import org.usfirst.frc.team467.robot.Autonomous.ActionGroup;
 import org.usfirst.frc.team467.robot.Autonomous.Actions;
+import org.usfirst.frc.team467.robot.Autonomous.MatchConfiguration;
 import org.usfirst.frc.team467.robot.simulator.DriveSimulator;
 
 import org.usfirst.frc.team467.robot.XBoxJoystick467.Button;
@@ -45,11 +35,16 @@ public class Robot extends TimedRobot {
 	private DriverStation driverstation;
 	private Drive drive;
 	private ActionGroup autonomous;
+	private MatchConfiguration matchConfig;
 
 	private Gyrometer gyro;
 
-	private Elevator elevator;
-	private Grabber grabber;
+	int session;
+
+	/**
+	 * Time in milliseconds
+	 */
+	double time;
 
 	/**
 	 * This function is run when the robot is first started up and should be used for any initialization code.
@@ -59,8 +54,8 @@ public class Robot extends TimedRobot {
 		Logging.init();
 
 		// Initialize RobotMap
-		RobotMap.init(RobotID.Competition_1);
-		
+		RobotMap.init(RobotID.PreseasonBot);
+
 		// Make robot objects
 		driverstation = DriverStation.getInstance();
 		LOGGER.info("Initialized Driverstation");
@@ -70,12 +65,11 @@ public class Robot extends TimedRobot {
 		gyro = Gyrometer.getInstance();
 		gyro.calibrate();
 		gyro.reset();
-		
-		grabber = Grabber.getInstance();
-		elevator = Elevator.getInstance();
-		
+
 		// Initialize math lookup table
 		LookUpTable.init();
+
+		matchConfig = MatchConfiguration.getInstance();
 
 		//		vision = VisionProcessing.getInstance();
 
@@ -83,10 +77,11 @@ public class Robot extends TimedRobot {
 		//		autonomous = Actions.doNothing();
 
 		//made usb camera and captures video
-//		UsbCamera cam = CameraServer.getInstance().startAutomaticCapture();
-//		//set resolution and frames per second to match driverstation
-//		cam.setResolution(320, 240);
-//		cam.setFPS(15);
+		UsbCamera cam = CameraServer.getInstance().startAutomaticCapture();
+		//set resolution and frames per second to match driverstation
+		cam.setResolution(320, 240);
+		cam.setFPS(15);
+
 		//TODO: Create list of autonomous modes for selector
 		// Setup autonomous mode selectors
 	}
@@ -98,10 +93,6 @@ public class Robot extends TimedRobot {
 
 	public void disabledPeriodic() {
 		LOGGER.trace("Disabled Periodic");
-
-		LOGGER.debug("Elevator height=" + elevator.getHeightFeet());
-
-		driverstation.logJoystickIDs();
 	}
 	//TODO: Figure out the NetworkTables later.
 	//	String[] autoList = {"none", "go"};
@@ -112,10 +103,6 @@ public class Robot extends TimedRobot {
 	//	
 	public void autonomousInit() {
 		final String autoMode = SmartDashboard.getString("Auto Selector", "none");
-
-
-
-	
 
 		LOGGER.info(drive);
 		// TODO: call appropriate auto modes based on list
@@ -133,37 +120,40 @@ public class Robot extends TimedRobot {
 	}
 
 	public void teleopInit() {
+
 		driverstation.readInputs();
 		//		autonomous.terminate();
 		//		autonomous = Actions.doNothing();
-		driverstation.periodic();
 	}
 
 	public void testInit() {
-		elevator.moveToHeight(Stops.fieldSwitch);
 	}
 
 	public void testPeriodic() {
-		elevator.periodic();
 		driverstation.readInputs();
 
-		if (driverstation.getNavJoystick().pressed(Button.b)){ 
-			driverstation.getNavRumbler().rumble(150, 0.3);
-			LOGGER.info("You pressed b");
+		if (driverstation.getNavJoystick().pressed(Button.a)){
+			driverstation.getNavRumbler().rumble(1000, 1.0);
+			LOGGER.info("You pressed a");
 		}
 		if (driverstation.getDriveJoystick().pressed(Button.b)){ 
-			driverstation.getNavRumbler().rumble(150, 1.0);
+			driverstation.getNavRumbler().rumble(150, 0.5);
 			LOGGER.info("You pressed b");
 		}
-		TiltMonitor.getInstance().periodic();
+
+
+		driverstation.periodic();
+		//MatchConfiguration.getInstance().setAllianceColor();
+		MatchConfiguration.getInstance().matchTime();
 	}
 
 
 	public void autonomousPeriodic() {
+
 		//		drive.motionMagicMove(amountToGoLeft, amountToGoRight);
+
 		//		autonomous.run();
 	}
-
 
 	/**
 	 * This function is called periodically during operator control
@@ -171,14 +161,13 @@ public class Robot extends TimedRobot {
 	public void teleopPeriodic() {
 		driverstation.readInputs();
 		//TODO: Set Min_DRIVE_SPEED in Robot Map.
-		// TODO Drive class should handle MIN_DRIVE_SPEED
 		double MIN_DRIVE_SPEED = 0.1;
+		driverstation.readInputs();
+
 		double left = driverstation.getArcadeSpeed();
 		double right = driverstation.getArcadeTurn();
 
-		LOGGER.debug("left " + left + " right " + right);
-		LOGGER.debug(grabber.justGotCube());
-
+		LOGGER.info("left " + left + " right " + right) ;
 		if (Math.abs(left) < MIN_DRIVE_SPEED) {
 			left = 0.0;
 		}
@@ -201,14 +190,5 @@ public class Robot extends TimedRobot {
 			//TODO: Add things here later.
 			break;
 		}
-
-		elevator.manualMove(driverstation.getElevatorSpeed());
-
-		grabber.grab(driverstation.getGrabThrottle());
-
-		//changed to arcade drive
-		drive.arcadeDrive(left, right, true);
-
-		TiltMonitor.getInstance().periodic();
 	}
 }
