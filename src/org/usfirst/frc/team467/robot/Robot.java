@@ -217,7 +217,7 @@ public class Robot extends TimedRobot {
 
 		grabber.grab(driverstation.getGrabThrottle());
 
-		if (DriverStation.getInstance().getMatchTime() <= 30) {
+		if (DriverStation.getInstance().getMatchTime() <= 30) { // Only in last 30 seconds
 			if (DriverStation467.getInstance().shouldDeployRamps()) {
 				ramps.deploy();
 			} else if (DriverStation467.getInstance().shouldLiftRamps()) {
