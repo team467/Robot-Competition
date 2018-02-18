@@ -1,8 +1,5 @@
 package org.usfirst.frc.team467.robot;
 
-import org.apache.log4j.Logger;
-import org.usfirst.frc.team467.robot.RobotMap.RobotID;
-
 /**
  *
  */
@@ -37,6 +34,11 @@ public class RobotMap {
 	public static int RIGHT_FOLLOWER_1_CHANNEL;
 	public static int RIGHT_FOLLOWER_2_CHANNEL;
 
+	public static int AUTONOMOUS_DRIVE_TIMEOUT_MS;
+
+	public static boolean RIGHT_DRIVE_SENSOR_IS_INVERTED;
+	public static boolean LEFT_DRIVE_SENSOR_IS_INVERTED;
+	public static int DRIVEMOTOR_NUM;
 	// Initialize robot map. 
 	public static void init(RobotID id) {
 		robotID = id;
@@ -44,7 +46,7 @@ public class RobotMap {
 		case PreseasonBot:
 			HAS_WHEELS = true;
 			WHEEL_CIRCUMFERENCE = 19.74;
-			WHEEL_ENCODER_CODES_PER_REVOLUTION = 256;
+			WHEEL_ENCODER_CODES_PER_REVOLUTION = 1024;
 			useSpeedControllers = true;
 			POSITION_ALLOWED_ERROR = (0.5 / RobotMap.WHEEL_CIRCUMFERENCE); // 1/2 inch
 
@@ -54,20 +56,30 @@ public class RobotMap {
 			LEFT_LEAD_CHANNEL = 1;
 			LEFT_FOLLOWER_1_CHANNEL = 2;
 			LEFT_FOLLOWER_2_CHANNEL = 3;
+			LEFT_DRIVE_SENSOR_IS_INVERTED = true;
 
 			RIGHT_LEAD_CHANNEL = 4;
 			RIGHT_FOLLOWER_1_CHANNEL = 5;
 			RIGHT_FOLLOWER_2_CHANNEL = 6;
+			RIGHT_DRIVE_SENSOR_IS_INVERTED = true;
 
 			HAS_ELEVATOR = false;
 			HAS_GRABBER = false;
 			HAS_RAMPS = false;
 
+			DRIVEMOTOR_NUM = 0;
+
+			// TODO Assign values to the game piece variables, and make more as appropriate
+			ELEVATOR_MOTOR_CHANNEL = 0;
+
+			AUTONOMOUS_DRIVE_TIMEOUT_MS = 1000;
+
 			isDriveMotorInverted = new boolean[] { false, true, false, true };
 			break;
 		case Board:
 			HAS_WHEELS = false;
-			WHEEL_ENCODER_CODES_PER_REVOLUTION = 256;
+			DRIVEMOTOR_NUM = 0;
+			WHEEL_ENCODER_CODES_PER_REVOLUTION = 1024;
 
 			FORWARD_PANIC_ANGLE = 45;
 			BACKWARD_PANIC_ANGLE = -45;
@@ -88,8 +100,9 @@ public class RobotMap {
 			break;
 		case Competition_1:
 			HAS_WHEELS = true;
+			DRIVEMOTOR_NUM = 4;
 			WHEEL_CIRCUMFERENCE = 19.74;
-			WHEEL_ENCODER_CODES_PER_REVOLUTION = 256;
+			WHEEL_ENCODER_CODES_PER_REVOLUTION = 1024;
 			useSpeedControllers = true;
 			POSITION_ALLOWED_ERROR = (0.5 / RobotMap.WHEEL_CIRCUMFERENCE); // 1/2 inch
 
@@ -108,19 +121,22 @@ public class RobotMap {
 			HAS_RAMPS = false;
 
 			HAS_GRABBER = true;
-			GRABBER_L_CHANNEL = 1; 
-			GRABBER_R_CHANNEL = 2;
+			GRABBER_L_CHANNEL = 0; 
+			GRABBER_R_CHANNEL = 1;
 			OPTICAL_CHANNEL = 5;
 
 			// TODO Assign values to the game piece variables, and make more as appropriate
 			ELEVATOR_MOTOR_CHANNEL = 7;
+
 			RAMP_LEFT_SOLENOID_CHANNEL = 0;
 			RAMP_RIGHT_SOLENOID_CHANNEL = 0; // TODO Assign real values
+			AUTONOMOUS_DRIVE_TIMEOUT_MS = 500;
 			break;
 		case Competition_2:
 			HAS_WHEELS = true;
+			DRIVEMOTOR_NUM = 4;
 			WHEEL_CIRCUMFERENCE = 19.74;
-			WHEEL_ENCODER_CODES_PER_REVOLUTION = 256;
+			WHEEL_ENCODER_CODES_PER_REVOLUTION = 1024;
 			useSpeedControllers = true;
 			POSITION_ALLOWED_ERROR = (0.5 / RobotMap.WHEEL_CIRCUMFERENCE); // 1/2 inch
 
@@ -145,8 +161,10 @@ public class RobotMap {
 
 			// TODO Assign values to the game piece variables, and make more as appropriate
 			ELEVATOR_MOTOR_CHANNEL = 0;
+
 			RAMP_LEFT_SOLENOID_CHANNEL = 0;
 			RAMP_RIGHT_SOLENOID_CHANNEL = 0; // TODO Assign real values
+			AUTONOMOUS_DRIVE_TIMEOUT_MS = 500;
 			break;
 		}
 	}
@@ -196,7 +214,7 @@ public class RobotMap {
 
 	// The number of encoder ticks per one revolution of the wheel. This is used
 	// for correctly determining RPM and position.
-	public static int WHEEL_ENCODER_CODES_PER_REVOLUTION = 256;
+	public static int WHEEL_ENCODER_CODES_PER_REVOLUTION = 1024;
 
 	// Set to true to use LSM9DS1 IMU on Raspberry Pi
 	// Set to false to use the local ADIS16448 IMU on the Robo Rio
@@ -212,17 +230,18 @@ public class RobotMap {
 	public static double MAX_GRAB_SPEED = 1.0;
 	public static double MIN_GRAB_SPEED = 0.1;
 	public static double RELEASE_SPEED = -1.0;
-	public static int GRABBER_L_CHANNEL; 
+	public static int GRABBER_L_CHANNEL;
 	public static int GRABBER_R_CHANNEL;
 	public static int OPTICAL_CHANNEL;
 
-	public static final int ELEVATOR_TICKS_PER_TURN = 253;
-	public static final double ELEVATOR_GEAR_CIRCUMFERENCE_IN_INCHES = 10;
-	public static final double ELEVATOR_MAX_HEIGHT_IN_FEET = 10;
-	public static final double ELEVATOR_MIN_HEIGHT_IN_FEET = 0;
-	public static final int ELEVATOR_INITIAL_TICKS = 196;
-	public static final int ELEVATOR_HEIGHT_SENSOR_ID = 0;
-	public static final int MAX_ELEVATOR_RPM = 1000; //Not the real value, placeholder constant. 
+	public static final double ELEVATOR_HEIGHT_RANGE_INCHES = 94.5;
+	public static final double ELEVATOR_ERROR_TOLERANCE_INCHES = 1.0;
+
+	public static final int ELEVATOR_BOTTOM_TICKS = 812;
+	public static final int ELEVATOR_TOP_TICKS = 364;
+
+	// Ticks per inch is based on empirical measurements on the robot. Approximately 4.740...
+	public static final double ELEVATOR_TICKS_PER_INCH = (ELEVATOR_BOTTOM_TICKS - ELEVATOR_TOP_TICKS) / ELEVATOR_HEIGHT_RANGE_INCHES;
 
 	public static boolean HAS_RAMPS;
 	public static int RAMP_LEFT_SOLENOID_CHANNEL;

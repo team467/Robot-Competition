@@ -14,20 +14,15 @@ import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-import org.usfirst.frc.team467.robot.Elevator.Stops;
 import org.usfirst.frc.team467.robot.Autonomous.ActionGroup;
 import org.usfirst.frc.team467.robot.Autonomous.Actions;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
-
 import org.apache.log4j.Logger;
 
-import edu.wpi.first.wpilibj.DigitalInput;
 import org.usfirst.frc.team467.robot.Autonomous.ActionGroup;
 import org.usfirst.frc.team467.robot.Autonomous.Actions;
-import org.usfirst.frc.team467.robot.simulator.DriveSimulator;
 
 import org.usfirst.frc.team467.robot.XBoxJoystick467.Button;
 import org.usfirst.frc.team467.robot.RobotMap.RobotID;
@@ -101,9 +96,8 @@ public class Robot extends TimedRobot {
 	public void disabledPeriodic() {
 		LOGGER.trace("Disabled Periodic");
 
-		LOGGER.debug("Elevator height=" + elevator.getHeightFeet());
-
 		driverstation.logJoystickIDs();
+		//LOGGER.debug("Right: "	+drive.getRightDistance() + " Left: " + drive.getLeftDistance());
 	}
 	//TODO: Figure out the NetworkTables later.
 	//	String[] autoList = {"none", "go"};
@@ -115,14 +109,14 @@ public class Robot extends TimedRobot {
 	public void autonomousInit() {
 		final String autoMode = SmartDashboard.getString("Auto Selector", "none");
 
-
-
-
-
 		LOGGER.info(drive);
 		// TODO: call appropriate auto modes based on list
 		LOGGER.debug("Autonomous init: " + autoMode);
 		switch (autoMode) {
+		case "StartSwitchSide1A": 
+			//			autonomous = Actions.startSwitchSide1A();
+			autonomous = Actions.moveDistance(2.0);
+			break;
 		case "none":
 			autonomous = Actions.doNothing();
 			break;
@@ -142,11 +136,9 @@ public class Robot extends TimedRobot {
 	}
 
 	public void testInit() {
-		elevator.moveToHeight(Stops.fieldSwitch);
 	}
 
 	public void testPeriodic() {
-		elevator.periodic();
 		driverstation.readInputs();
 
 		if (driverstation.getNavJoystick().pressed(Button.b)){ 
@@ -162,8 +154,7 @@ public class Robot extends TimedRobot {
 
 
 	public void autonomousPeriodic() {
-		//		drive.motionMagicMove(amountToGoLeft, amountToGoRight);
-		//		autonomous.run();
+		autonomous.run();
 	}
 
 
@@ -174,25 +165,25 @@ public class Robot extends TimedRobot {
 		driverstation.readInputs();
 		//TODO: Set Min_DRIVE_SPEED in Robot Map.
 		// TODO Drive class should handle MIN_DRIVE_SPEED
-		double MIN_DRIVE_SPEED = 0.1;
 		double left = driverstation.getArcadeSpeed();
 		double right = driverstation.getArcadeTurn();
 
 		LOGGER.debug("left " + left + " right " + right);
-		LOGGER.debug(grabber.justGotCube());
-
-		if (Math.abs(left) < MIN_DRIVE_SPEED) {
+		if (Math.abs(left) < RobotMap.MIN_DRIVE_SPEED) {
 			left = 0.0;
 		}
-		if (Math.abs(right) < MIN_DRIVE_SPEED) {
+		if (Math.abs(right) < RobotMap.MIN_DRIVE_SPEED) {
 			right = 0.0;
 		}
 
+		double speed = driverstation.getArcadeSpeed();
+		double turn = driverstation.getArcadeTurn();
 		switch (driverstation.getDriveMode()) {
 		case ArcadeDrive:
-			double speed = driverstation.getArcadeSpeed();
-			double turn = driverstation.getArcadeTurn();
 			drive.arcadeDrive(speed, turn, true);
+			break;
+		case CurvatureDrive:
+			drive.curvatureDrive(speed, turn, true);
 			break;
 		case TankDrive:	
 			double leftTank = driverstation.getDriveJoystick().getLeftStickY();
@@ -204,7 +195,26 @@ public class Robot extends TimedRobot {
 			break;
 		}
 
-		elevator.manualMove(driverstation.getElevatorSpeed());
+		if (driverstation.getFloorHeightButtonPressed()) {
+			LOGGER.info("Dropping to bottom height");
+			elevator.moveToHeight(Elevator.Stops.floor);
+		} else if (driverstation.getSwitchHeightButtonPressed()) {
+			LOGGER.info("Lifting to switch height");
+			elevator.moveToHeight(Elevator.Stops.fieldSwitch);
+		} else if (driverstation.getLowScaleHeightButtonPressed()) {
+			LOGGER.info("Lifting to low scale height");
+			elevator.moveToHeight(Elevator.Stops.lowScale);
+		} else if (driverstation.getHighScaleHeightButtonPressed()) {
+			LOGGER.info("Lifting to high scale height");
+			elevator.moveToHeight(Elevator.Stops.highScale);
+		}
+
+		elevator.move(driverstation.getElevatorSpeed());
+
+		if (grabber.justGotCube()) {
+			driverstation.getNavRumbler().rumble(100, 1.0);
+		}
+
 		grabber.grab(driverstation.getGrabThrottle());
 		ramps.periodic();
 

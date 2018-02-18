@@ -3,16 +3,18 @@ package org.usfirst.frc.team467.robot;
 import org.usfirst.frc.team467.robot.XBoxJoystick467.Button;
 import org.usfirst.frc.team467.robot.Autonomous.ActionGroup;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 public class DriverStation {
-	
+
 	private XBoxJoystick467 driverJoy;
 	private XBoxJoystick467 navJoy;
-	
+
 	private Rumbler driverRumbler;
 	private Rumbler navRumbler;
-	
+
 	private static DriverStation station;
-	
+
 	// Mapping of functions to Controller Buttons for normal operation
 	// TODO: Create enum for buttons
 	/**
@@ -33,7 +35,7 @@ public class DriverStation {
 	private DriverStation() {
 		driverJoy = new XBoxJoystick467(0, "driver");
 		navJoy = new XBoxJoystick467(1, "nav");
-		
+
 		driverRumbler = new Rumbler(driverJoy);
 		navRumbler = new Rumbler(navJoy);
 	}
@@ -49,7 +51,7 @@ public class DriverStation {
 			navJoy.read();
 		}
 	}
-	
+
 	public void logJoystickIDs() {
 		if (driverJoy != null) {
 			driverJoy.logIdentity();
@@ -67,23 +69,23 @@ public class DriverStation {
 	public XBoxJoystick467 getDriveJoystick() {
 		return driverJoy;
 	}
-	
+
 	public XBoxJoystick467 getNavJoystick() {
 		return navJoy;
 	}
-	
+
 	public Rumbler getDriverRumbler() {
 		return driverRumbler;
 	}
-	
+
 	public Rumbler getNavRumbler() {
 		return navRumbler;
 	}
-	
+
 	public double getTurnSensivity() {
 		return 0.0;
 	}
-	
+
 	public void periodic() {
 		driverRumbler.periodic();
 		navRumbler.periodic();
@@ -99,7 +101,7 @@ public class DriverStation {
 	 */
 	public DriveMode getDriveMode() {
 		// TODO: Set the drive mode based on the buttons pushed
-		return DriveMode.ArcadeDrive; // Update with the correct drive mode
+		return DriveMode.CurvatureDrive; // Update with the correct drive mode
 	}
 
 	public boolean getTerminateAuto() {
@@ -119,27 +121,43 @@ public class DriverStation {
 		// TODO Check the gyro reset button
 		return false;
 	}
-	
+
 	public double getArcadeSpeed() {
 		return getDriveJoystick().turboSpeedAdjust();
 	}
-	
+
 	public double getArcadeTurn() {
 		return getDriveJoystick().getRightStickX();
 	}
-	
+
 	public double getElevatorSpeed() {
 		return getNavJoystick().getRightStickY();
 	}
-	
+
 	public boolean shouldDeployRamps() {
 		return getNavJoystick().pressed(Button.left);
 	}
-	
+
 	public boolean shouldLiftRamps() {
 		return getNavJoystick().pressed(Button.right);
 	}
-	
+
+	public boolean getFloorHeightButtonPressed() {
+		return getNavJoystick().pressed(Button.a);
+	}
+
+	public boolean getSwitchHeightButtonPressed() {
+		return getNavJoystick().pressed(Button.b);
+	}
+
+	public boolean getLowScaleHeightButtonPressed() {
+		return getNavJoystick().pressed(Button.y);
+	}
+
+	public boolean getHighScaleHeightButtonPressed() {
+		return getNavJoystick().pressed(Button.x);
+	}
+
 	public double getGrabThrottle() {
 		return getNavJoystick().getLeftStickY();
 	}
@@ -147,20 +165,44 @@ public class DriverStation {
 	public void navSetLeftRumble(double value) {
 		navJoy.leftRumble(value);
 	}
-	
+
 	public void navSetRightRumble(double value) {
 		navJoy.rightRumble(value);
 	}
-	
+
 	public void driverSetLeftRumble(double value) {
 		driverJoy.leftRumble(value);
 	}
-	
+
 	public void driverSetRightRumble(double value) {
 		driverJoy.rightRumble(value);
 	}
+
 	public void setDriverRumble(double value) {
 		getDriveJoystick().setRumble(value);
+	}
+
+	/**
+	 * Set a value in 'Basic' tab of the driver station
+	 * 
+	 * @param slot position of the value to set (0-9)
+	 * @param value any string value
+	 */
+	public void set(int slot, String value) {
+		if (slot < 0 || slot > 9) {
+			return;
+		}
+		SmartDashboard.putString("DB/String " + slot, value);
+	}
+
+	/**
+	 * Set a value in 'Basic' tab of the driver station
+	 * 
+	 * @param slot position of the value to set (0-9)
+	 * @param value any integer value
+	 */
+	public void set(int slot, int value) {
+		set(slot, String.valueOf(value));
 	}
 
 }
