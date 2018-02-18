@@ -89,11 +89,11 @@ public class Elevator {
 
 	public double getHeightInches() {
 		double height = (getRawHeight() - RobotMap.ELEVATOR_BOTTOM_TICKS) / RobotMap.ELEVATOR_TICKS_PER_INCH;
-		LOGGER.debug("Height in inches: " + height);
+		LOGGER.trace("Height in inches: " + height);
 		return height;
 	}
 
-	public double getRawHeight() {
+	private double getRawHeight() {
 		if (!RobotMap.HAS_ELEVATOR) {
 			return 0.0;
 		}
