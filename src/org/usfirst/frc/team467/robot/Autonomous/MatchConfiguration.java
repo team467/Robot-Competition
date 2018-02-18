@@ -149,7 +149,7 @@ public class MatchConfiguration {
 
 			// Our switch
 			if(gameData.charAt(0) == 'L') {
-				LOGGER.debug("HI: "+ teamColor);
+				LOGGER.debug("TeamColor: "+ teamColor);
 				if (teamColor == TeamColor.BLUE ) {
 					blueSwitch = Side.LEFT;
 					LOGGER.info("Our Switch Blue LEFT");
@@ -212,10 +212,11 @@ public class MatchConfiguration {
 		switch(startPosition) {
 		
 		case LEFT:
-			if(isSwitchOnSameSide()) {
+			if(isSwitchOnSameSide()) { 		
 				autonomous = Actions.leftBasicSwitch();
 				LOGGER.debug("isSwitchOnSameSide Left True -----------------------");
 			} else if(isScaleOnSameSide()) {
+				autonomous = Actions.centerBasicSwitchRight();
 				//Load Left code if is on same scale side true.
 				LOGGER.debug("LEFT SCALE ------------------------------ TRUE");
 			} else {
@@ -258,6 +259,7 @@ public class MatchConfiguration {
 		LOGGER.debug("Loading game info.");
 		this.setAllianceColor();
 		this.setSides();
+		this.isScaleOnSameSide();
 		this.setAutoModeAndStartPosition();
 	}
 
@@ -310,10 +312,12 @@ public class MatchConfiguration {
 		if (teamColor== TeamColor.BLUE) {
 			if ((scale == Side.LEFT && startPosition == StartPosition.LEFT) || (scale == Side.RIGHT && startPosition == StartPosition.RIGHT)) {
 				isOnSameSide = true;
+				LOGGER.info("Scale is on Same side testing");
 			}
 		} else if (teamColor == TeamColor.RED) {
 			if ((scale == Side.LEFT && startPosition == StartPosition.LEFT) || (scale == Side.RIGHT && startPosition == StartPosition.RIGHT)) {
 				isOnSameSide = true;
+				LOGGER.info("");
 			}
 		}
 		return isOnSameSide;
