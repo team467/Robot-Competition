@@ -78,18 +78,18 @@ public class MapController {
 		this.robotActive = false;
 		fieldShape.context(field.getGraphicsContext2D());
 		
-		double redSwitchCubeOffsetX = 90; //next to red alliance station
-		double redSwitchCubeOffsetY = 197.5;
+		double redSwitchCubeOffsetX = 85.25; //next to red alliance station
+		double redSwitchCubeOffsetY = 196;
 		
 			for (int i = 0; i < 6; i++) {
-				cubes.add(new PowerCubeShape(redSwitchCubeOffsetX + i * 2.175 * 12, redSwitchCubeOffsetY)); // 1.25' in between each cube ; y-coordinate is same for 6 cubes
+				cubes.add(new PowerCubeShape(redSwitchCubeOffsetX + i * 2.34 * 12.0, redSwitchCubeOffsetY)); // 1.25' in between each cube ; y-coordinate is same for 6 cubes
 			}
 	
-		double blueSwitchCubeOffsetX = 90; //next to blue alliance station
-		double blueSwitchCubeOffsetY = 448;
+		double blueSwitchCubeOffsetX = 85.25; //next to blue alliance station
+		double blueSwitchCubeOffsetY = 439.2;
 			
 			for (int i = 0; i < 6; i++) {
-				cubes.add(new PowerCubeShape(blueSwitchCubeOffsetX + i * 2.175 * 12, blueSwitchCubeOffsetY)); // 1.25' in between each cube ; y-coordinate is same for 6 cubes
+				cubes.add(new PowerCubeShape(blueSwitchCubeOffsetX + i * 2.34 * 12.0, blueSwitchCubeOffsetY)); // 1.25' in between each cube ; y-coordinate is same for 6 cubes
 			}
 			
 	

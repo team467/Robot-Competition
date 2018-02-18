@@ -116,20 +116,20 @@ public class FieldShape {
 			// Blue Switch
 			context.setFill(Color.LIGHTGRAY);
 			context.fillRect(
-			48.3 * 12.0 * PIXELS_PER_MAP_INCH,
+			47.7 * 12.0 * PIXELS_PER_MAP_INCH,
 			 8.604 * 12.0 * PIXELS_PER_MAP_INCH, 
-			 4.7 * 12.0 * PIXELS_PER_MAP_INCH, 
+			 4.66 * 12.0 * PIXELS_PER_MAP_INCH, 
 			12.79 * 12.0 * PIXELS_PER_MAP_INCH);
 			
 			context.setFill(Color.DIMGRAY);
 			context.fillRect(
-			48.7 * 12.0 * PIXELS_PER_MAP_INCH,
+			48.1 * 12.0 * PIXELS_PER_MAP_INCH,
 			 9.0 * 12.0 * PIXELS_PER_MAP_INCH, 
 			 4.0 * 12.0 * PIXELS_PER_MAP_INCH, 
 			 3.0 * 12.0 * PIXELS_PER_MAP_INCH);
 			
 			context.fillRect(
-			48.7 * 12.0 * PIXELS_PER_MAP_INCH,
+			48.1 * 12.0 * PIXELS_PER_MAP_INCH,
 			18.0 * 12.0 * PIXELS_PER_MAP_INCH, 
 			 4.0 * 12.0 * PIXELS_PER_MAP_INCH, 
 			 3.0 * 12.0 * PIXELS_PER_MAP_INCH);
