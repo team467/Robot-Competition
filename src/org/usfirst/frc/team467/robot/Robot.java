@@ -80,6 +80,7 @@ public class Robot extends TimedRobot {
 
 	public void disabledPeriodic() {
 		LOGGER.trace("Disabled Periodic");
+		drive.logClosedLoopErrors();
 	}
 	
 	public void testInit() {
@@ -91,18 +92,20 @@ public class Robot extends TimedRobot {
 
 	public void autonomousInit() {
 		driverstation.readInputs();
-//		matchConfig.load();
-//		autonomous = matchConfig.autonomousDecisionTree();
+		matchConfig.load();
+		autonomous = matchConfig.autonomousDecisionTree();
 		autonomous = Actions.moveDistance(5);
 		LOGGER.info("Init Autonomous:" + autonomous.getName());
 		autonomous.enable();
+		drive.zero();
 		}
 
 	public void autonomousPeriodic() {
 		tiltMonitor.periodic();
 		elevator.periodic();
 		grabber.periodic();
-		autonomous.run();
+//		autonomous.run();
+		drive.moveFeet(5);
 	}
 
 	public void teleopInit() {

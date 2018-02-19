@@ -147,7 +147,7 @@ public class Drive extends DifferentialDrive {
 		turnAmtTicks = (feetToTicks(distTurnInFeet)); // Converts turn angle in ticks to degrees, then to radians.
 
 		rightDistTicks = -1 * (distAmtTicks - turnAmtTicks);
-		leftDistTicks = distAmtTicks + turnAmtTicks;
+		leftDistTicks = (distAmtTicks + turnAmtTicks);
 
 		LOGGER.debug("Distance in Feet - Right: " + df.format(ticksToFeet(rightDistTicks)) + " Left: "
 				+ df.format(ticksToFeet(leftDistTicks)));

@@ -19,7 +19,7 @@ public class Logging {
 
 		// Enable extra logging for classes you want to debug
 		Logger.getLogger(ActionGroup.class).setLevel(Level.WARN);
-		Logger.getLogger(Drive.class).setLevel(Level.WARN);
+		Logger.getLogger(Drive.class).setLevel(Level.DEBUG);
 		Logger.getLogger(DriveSimulator.class).setLevel(Level.WARN);
 		Logger.getLogger(Elevator.class).setLevel(Level.WARN);
 		Logger.getLogger(Grabber.class).setLevel(Level.DEBUG);
@@ -28,7 +28,7 @@ public class Logging {
 		Logger.getLogger(Robot.class).setLevel(Level.INFO);
 		Logger.getLogger(RobotShape.class).setLevel(Level.WARN);
 		Logger.getLogger(Rumbler.class).setLevel(Level.WARN);
-		Logger.getLogger(TalonSpeedControllerGroup.class).setLevel(Level.WARN);
+		Logger.getLogger(TalonSpeedControllerGroup.class).setLevel(Level.TRACE);
 		Logger.getLogger(VisionIntegration.class).setLevel(Level.WARN);
 		Logger.getLogger(XBoxJoystick467.class).setLevel(Level.WARN);
 	}
