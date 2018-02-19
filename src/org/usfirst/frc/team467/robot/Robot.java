@@ -4,6 +4,7 @@ package org.usfirst.frc.team467.robot;
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import org.apache.log4j.Logger;
 import org.usfirst.frc.team467.robot.Autonomous.ActionGroup;
@@ -80,7 +81,7 @@ public class Robot extends TimedRobot {
 
 	public void disabledPeriodic() {
 		LOGGER.trace("Disabled Periodic");
-		drive.logClosedLoopErrors();
+//		drive.logClosedLoopErrors();
 	}
 	
 	public void testInit() {
@@ -89,14 +90,15 @@ public class Robot extends TimedRobot {
 	public void testPeriodic() {
 	}
 
-
+	double distance = 0.0;
 	public void autonomousInit() {
 		driverstation.readInputs();
-		matchConfig.load();
-		autonomous = matchConfig.autonomousDecisionTree();
+//		matchConfig.load();
+//		autonomous = matchConfig.autonomousDecisionTree();
 		autonomous = Actions.moveDistance(5);
 		LOGGER.info("Init Autonomous:" + autonomous.getName());
 		autonomous.enable();
+		distance = Double.parseDouble(SmartDashboard.getString("DB/String 0", "0.0")); //198		
 		drive.zero();
 		}
 
@@ -105,7 +107,7 @@ public class Robot extends TimedRobot {
 		elevator.periodic();
 		grabber.periodic();
 //		autonomous.run();
-		drive.moveFeet(5);
+		drive.moveFeet(distance);
 	}
 
 	public void teleopInit() {
@@ -123,6 +125,8 @@ public class Robot extends TimedRobot {
 
 		tiltMonitor.periodic();
 		elevator.periodic();
+		
+		drive.logClosedLoopErrors();
 
 		double speed = driverstation.getArcadeSpeed();
 		double turn = driverstation.getArcadeTurn();

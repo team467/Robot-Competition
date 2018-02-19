@@ -46,8 +46,8 @@ public class TalonSpeedControllerGroup implements SpeedController {
 		//only have sensor on leader
 		leader.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, RobotMap.TALON_TIMEOUT);
 		leader.setSensorPhase(sensorIsInverted);
-		leader.configMotionCruiseVelocity(1052 / 2, RobotMap.TALON_TIMEOUT); //1052 is 75 percent of the max speed, which is 1402	
-		leader.configMotionAcceleration(1052 / 2, RobotMap.TALON_TIMEOUT);		
+		leader.configMotionCruiseVelocity(687, RobotMap.TALON_TIMEOUT); //687 is 75 percent of the max speed, which is 916	
+		leader.configMotionAcceleration(687, RobotMap.TALON_TIMEOUT);		
 		zero();		
 	}
 

@@ -9,6 +9,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Drive extends DifferentialDrive {
 	private ControlMode controlMode;
@@ -75,19 +76,22 @@ public class Drive extends DifferentialDrive {
 		this.left = left;
 		this.right = right;
 
-		double kPRight = 1.4; // Double.parseDouble(SmartDashboard.getString("DB/String 7", "1.4"));
-		double kPLeft = 1.6; // Double.parseDouble(SmartDashboard.getString("DB/String 2", "1.6"));
+		double kFRight = Double.parseDouble(SmartDashboard.getString("DB/String 6", "1.2208")); // 0.0
+		double kFLeft = Double.parseDouble(SmartDashboard.getString("DB/String 1", "1.1168")); // 0.0
 
-		double kIRight = 0.0; // Double.parseDouble(SmartDashboard.getString("DB/String 8", "0.0"));
-		double kILeft = 0.0; // Double.parseDouble(SmartDashboard.getString("DB/String 3", "0.0"));
+		double kPRight = Double.parseDouble(SmartDashboard.getString("DB/String 7", "1.4")); // 1.4
+		double kPLeft = Double.parseDouble(SmartDashboard.getString("DB/String 2", "1.6")); // 1.6
 
-		double kDRight = 165; // Double.parseDouble(SmartDashboard.getString("DB/String 9", "165"));
-		double kDLeft = 198; // Double.parseDouble(SmartDashboard.getString("DB/String 4", "198"));
+		double kIRight = Double.parseDouble(SmartDashboard.getString("DB/String 8", "0.0")); // 0.0
+		double kILeft = Double.parseDouble(SmartDashboard.getString("DB/String 3", "0.0")); // 0.0
 
-		double kFall = 1023.0 / 1402.0;
+		double kDRight = Double.parseDouble(SmartDashboard.getString("DB/String 9", "165")); //165
+		double kDLeft = Double.parseDouble(SmartDashboard.getString("DB/String 4", "198")); //198
 
-		left.setPIDF(kPLeft, kILeft, kDLeft, kFall);
-		right.setPIDF(kPRight, kIRight, kDRight, kFall);
+//		double kFall = 1023.0 / 1402.0;
+
+		left.setPIDF(kPLeft, kILeft, kDLeft, kFLeft);
+		right.setPIDF(kPRight, kIRight, kDRight, kFRight);
 	}
 
 	public void logClosedLoopErrors() {
@@ -154,8 +158,8 @@ public class Drive extends DifferentialDrive {
 		LOGGER.debug("Current Position - Right: " + df.format(getRightDistance()) + " Left: "
 				+ df.format(getLeftDistance()));
 
-		left.set(mode, rightDistTicks);
-		right.set(mode, leftDistTicks);
+		left.set(mode, leftDistTicks);
+		right.set(mode, rightDistTicks);
 	}
 
 	public double getLeftDistance() {
