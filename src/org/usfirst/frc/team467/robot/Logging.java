@@ -19,8 +19,9 @@ public class Logging {
 		Logger.getLogger(Drive.class).setLevel(Level.WARN);
 //		Logger.getLogger(Elevator.class).setLevel(Level.DEBUG);
 //		Logger.getLogger(XBoxJoystick467.class).setLevel(Level.DEBUG);
-		Logger.getLogger(Grabber.class).setLevel(Level.WARN);
+		Logger.getLogger(Grabber.class).setLevel(Level.DEBUG);
 		Logger.getLogger(Rumbler.class).setLevel(Level.DEBUG);
+		Logger.getLogger(OpticalSensor.class).setLevel(Level.DEBUG);
 	}
 
 	private static void setupDefaultLogging() {

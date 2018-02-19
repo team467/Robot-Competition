@@ -56,13 +56,16 @@ public class Grabber {
 	}
 
 	public void periodic() {
-
 		if (!RobotMap.HAS_GRABBER) {
 			return;
 		}
+		
+		if (justGotCube()) {
+			DriverStation.getInstance().setNavRumble(250);
+			DriverStation.getInstance().setDriverRumble(250);
+		}
 
 		double speed = 0.0;
-
 		switch (state) {
 
 		case GRAB:
@@ -89,10 +92,14 @@ public class Grabber {
 		default:
 
 		}
-
+		
 		left.set(speed);
 		right.set(-1 * speed);
 		count++;
+
+		// Save the previous state and check for current state.
+		hadCube = hasCube;
+		hasCube = os.detectedTarget();
 	}
 
 	public void grab() {
@@ -114,31 +121,20 @@ public class Grabber {
 			return;
 		}
 
-		// Save the previous state and check for current state.
-		hadCube = hasCube;
-		hasCube = os.detectedTarget();
-
-		if (justGotCube()) {
-			LOGGER.debug("Just got cube, rumbling");
-			DriverStation.getInstance().getNavRumbler().rumble(100, 1.0);
-		}
-
 		if (Math.abs(throttle) < RobotMap.MIN_GRAB_SPEED) {
 			throttle = 0.0;
 		}
 
 		LOGGER.debug("Grabber Throttle=" + throttle);
-		hasCube = os.detectedTarget();
 		left.set(throttle * RobotMap.MAX_GRAB_SPEED);
 		right.set(-1 * throttle * RobotMap.MAX_GRAB_SPEED);
 	}
 
 	public boolean justGotCube() {
-		return !hadCube && hasCube;
+		return (!hadCube && hasCube());
 	}
 	
 	public boolean hasCube() {
-		return os.detectedTarget() && RobotMap.HAS_GRABBER;
-		
+		return (os.detectedTarget() && RobotMap.HAS_GRABBER);
 	}
 }

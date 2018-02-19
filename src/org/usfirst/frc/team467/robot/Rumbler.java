@@ -32,11 +32,4 @@ public class Rumbler {
 			intensity = 0;
 		}
 	}
-	
-	public void rumbleOnA() {
-		if (controller.pressed(Button.a)) {
-			LOGGER.info("Is button A even working?");
-			periodic();
-		}
-	}
 }

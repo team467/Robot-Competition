@@ -101,7 +101,7 @@ public class Robot extends TimedRobot {
 
 		LOGGER.trace("Elevator height=" + elevator.getHeightFeet());
 
-		driverstation.logJoystickIDs();
+//		driverstation.logJoystickIDs();
 	}
 	//TODO: Figure out the NetworkTables later.
 	//	String[] autoList = {"none", "go"};
@@ -126,15 +126,6 @@ public class Robot extends TimedRobot {
 		}
 		LOGGER.info("Init Autonomous:" + autonomous.getName());
 		autonomous.enable();
-	}
-
-	public void teleopInit() {
-		driverstation.readInputs();
-		driverstation.setDriverRumble(1000);
-		driverstation.setNavRumble(1000);
-		
-		//		autonomous.terminate();
-		//		autonomous = Actions.doNothing();
 	}
 
 	public void testInit() {
@@ -163,65 +154,75 @@ public class Robot extends TimedRobot {
 	}
 
 
+	public void teleopInit() {
+		driverstation.readInputs();
+//		driverstation.setDriverRumble(1000);
+//		driverstation.setNavRumble(1000);
+		//		autonomous = Actions.doNothing();
+	}
+	
 	/**
 	 * This function is called periodically during operator control
-	 */
+	 */		
 	public void teleopPeriodic() {
+		Grabber.getInstance().hasCube();
 		driverstation.readInputs();
 		driverstation.periodic();
-		
-		//TODO: Set Min_DRIVE_SPEED in Robot Map.
-		// TODO Drive class should handle MIN_DRIVE_SPEED
-		double MIN_DRIVE_SPEED = 0.1;
-		double left = driverstation.getArcadeSpeed();
-		double right = driverstation.getArcadeTurn();
-
-		LOGGER.debug("left " + left + " right " + right);
-		LOGGER.debug("Just got cube: " + grabber.justGotCube());
-
-		if (Math.abs(left) < MIN_DRIVE_SPEED) {
-			left = 0.0;
-		}
-		if (Math.abs(right) < MIN_DRIVE_SPEED) {
-			right = 0.0;
-		}
-
-		switch (driverstation.getDriveMode()) {
-		case ArcadeDrive:
-			double speed = driverstation.getArcadeSpeed();
-			double turn = driverstation.getArcadeTurn();
-			drive.arcadeDrive(speed, turn, true);
-			break;
-		case TankDrive:	
-			double leftTank = driverstation.getDriveJoystick().getLeftStickY();
-			double rightTank = driverstation.getDriveJoystick().getRightStickY();
-			drive.tankDrive(leftTank, rightTank, true);
-			break;
-		case MotionMagic:
-			//TODO: Add things here later.
-			break;
-		}
-
-		elevator.manualMove(driverstation.getElevatorSpeed());
-		grabber.grab(driverstation.getGrabThrottle());
-		
-		//testing
-		
-		if(driverstation.getNavJoystick().pressed(XBoxJoystick467.Button.a)) {
-			grabber.grab();
-		}
-		
-		else if(driverstation.getNavJoystick().pressed(XBoxJoystick467.Button.b)) {
-			grabber.release();
-		}
-		
-		else {
-			grabber.pause();
-		}
-
-		//changed to arcade drive
-		drive.arcadeDrive(left, right, true);
-
-		TiltMonitor.getInstance().periodic();
+		Grabber.getInstance().periodic();
+		Grabber.getInstance().grab();
+//		
+//		//TODO: Set Min_DRIVE_SPEED in Robot Map.
+//		// TODO Drive class should handle MIN_DRIVE_SPEED
+//		double MIN_DRIVE_SPEED = 0.1;
+//		double left = driverstation.getArcadeSpeed();
+//		double right = driverstation.getArcadeTurn();
+//
+//		LOGGER.debug("left " + left + " right " + right);
+//		LOGGER.debug("Just got cube: " + grabber.justGotCube());
+//
+//		if (Math.abs(left) < MIN_DRIVE_SPEED) {
+//			left = 0.0;
+//		}
+//		if (Math.abs(right) < MIN_DRIVE_SPEED) {
+//			right = 0.0;
+//		}
+//
+//		switch (driverstation.getDriveMode()) {
+//		case ArcadeDrive:
+//			double speed = driverstation.getArcadeSpeed();
+//			double turn = driverstation.getArcadeTurn();
+//			drive.arcadeDrive(speed, turn, true);
+//			break;
+//		case TankDrive:	
+//			double leftTank = driverstation.getDriveJoystick().getLeftStickY();
+//			double rightTank = driverstation.getDriveJoystick().getRightStickY();
+//			drive.tankDrive(leftTank, rightTank, true);
+//			break;
+//		case MotionMagic:
+//			//TODO: Add things here later.
+//			break;
+//		}
+//
+//		elevator.manualMove(driverstation.getElevatorSpeed());
+//		grabber.grab(driverstation.getGrabThrottle());
+//		
+//		//testing
+//		
+//		if(driverstation.getNavJoystick().pressed(XBoxJoystick467.Button.a)) {
+//			grabber.grab();
+//		}
+//		
+//		else if(driverstation.getNavJoystick().pressed(XBoxJoystick467.Button.b)) {
+//			grabber.release();
+//		}
+//		
+//		else {
+//			grabber.pause();
+//		}
+//
+//		//changed to arcade drive
+//		drive.arcadeDrive(left, right, true);
+//
+//		TiltMonitor.getInstance().periodic();
 	}
 }
