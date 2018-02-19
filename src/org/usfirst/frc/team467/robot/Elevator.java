@@ -117,12 +117,7 @@ public class Elevator {
 		}
 
 		// TODO Re-enable and test to see if it works
-		//		for (Stops stop : Stops.values()) {
-		//			if ((previousHeight < stop.height && currentHeight >= stop.height)
-		//					|| (previousHeight > stop.height && currentHeight <= stop.height)) {
-		//				DriverStation.getInstance().getNavRumbler().rumble(200, 0.8);
-		//			}
-		//		}
+		// rumbleOnPresetHeights();
 
 		if (Math.abs(speed) >= RobotMap.MIN_LIFT_SPEED) {
 			// The controller is asking for elevator movement, cancel preset target and move.
