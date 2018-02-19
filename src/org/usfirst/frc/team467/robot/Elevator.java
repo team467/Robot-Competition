@@ -16,7 +16,6 @@ public class Elevator {
 	private static final Logger LOGGER = Logger.getLogger(Elevator.class);
 
 	private WPI_TalonSRX heightController;
-	private double previousHeight;
 	private MotorSafetyHelper m_safetyHelper;
 
 	private Stops targetHeight;
@@ -28,7 +27,6 @@ public class Elevator {
 		fieldSwitch(636),
 		lowScale(468),
 		highScale(358);
-
 		/**
 		 * Height in sensor units
 		 */
@@ -63,7 +61,6 @@ public class Elevator {
 		configMotorParameters();
 
 		targetHeight = null;
-		previousHeight = getRawHeight();
 		m_safetyHelper = new MotorSafetyHelper(this.heightController);
 	}
 
@@ -119,7 +116,6 @@ public class Elevator {
 			return;
 		}
 
-		double currentHeight = getRawHeight();
 		// TODO Re-enable and test to see if it works
 		//		for (Stops stop : Stops.values()) {
 		//			if ((previousHeight < stop.height && currentHeight >= stop.height)
@@ -140,9 +136,16 @@ public class Elevator {
 			heightController.set(ControlMode.MotionMagic, getRawHeight());
 		}
 
-		previousHeight = currentHeight;
-
 		telemetry();
+	}
+
+	public void rumbleOnPresetHeights() {
+		double currentHeight = getRawHeight();
+		for(Stops stop: Stops.values()) {
+			if(stop.height == currentHeight) {
+				DriverStation.getInstance().getNavRumbler().rumble(150, 0.3);
+			}
+		}
 	}
 
 	public void telemetry() {
