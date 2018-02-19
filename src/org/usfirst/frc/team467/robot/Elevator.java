@@ -21,6 +21,7 @@ public class Elevator {
 	private Stops targetHeight;
 
 	private final int ALLOWABLE_ERROR_TICKS = 3;
+	private final int LIMIT_BUFFER = 10;
 
 	public enum Stops {
 		// null if no stop is desired
@@ -133,6 +134,8 @@ public class Elevator {
 		// TODO Re-enable and test to see if it works
 		// rumbleOnPresetHeights();
 
+		limitCheck();
+
 		if (Math.abs(speed) >= RobotMap.MIN_LIFT_SPEED) {
 			// The controller is asking for elevator movement, cancel preset target and move.
 			targetHeight = null;
@@ -154,6 +157,16 @@ public class Elevator {
 			if(stop.height == currentHeight) {
 				DriverStation.getInstance().getNavRumbler().rumble(150, 0.3);
 			}
+		}
+	}
+
+	public void limitCheck() {
+		final int position = heightController.getSelectedSensorPosition(0);
+		if (position > RobotMap.ELEVATOR_BOTTOM_TICKS + LIMIT_BUFFER
+				|| position < RobotMap.ELEVATOR_TOP_TICKS - LIMIT_BUFFER) {
+			LOGGER.error("HEIGHT SENSOR OUT OF EXPECTED RANGE ("
+					+ RobotMap.ELEVATOR_TOP_TICKS + " - "
+					+ RobotMap.ELEVATOR_BOTTOM_TICKS + "), found " + position);
 		}
 	}
 
