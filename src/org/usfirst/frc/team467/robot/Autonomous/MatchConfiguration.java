@@ -77,7 +77,7 @@ public class MatchConfiguration {
 		}
 		return instance;
 	}
-
+	
 	public void setAllianceColor(){
 		Alliance color; 
 
@@ -137,8 +137,12 @@ public class MatchConfiguration {
 	public void setSides() {
 		String gameData;
 
-		if (RobotMap.useSimulator) {
-			gameData = simulatedGameSpecificMessage;
+		if (RobotMap.USE_FAKE_GAME_DATA) {
+			if (RobotMap.useSimulator) {
+				gameData = simulatedGameSpecificMessage;
+			} else {
+				gameData = SmartDashboard.getString("DB/String 5", "LLL");
+			}
 		} else {
 			gameData = DriverStation.getInstance().getGameSpecificMessage();
 		}

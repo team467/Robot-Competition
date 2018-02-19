@@ -189,6 +189,7 @@ public class RobotMap {
 	public static double MAX_SPEED;
 
 	public static boolean useSimulator = false;
+	public static boolean USE_FAKE_GAME_DATA = true;
 
 	public static final double MIN_DRIVE_SPEED = 0.1;
 
