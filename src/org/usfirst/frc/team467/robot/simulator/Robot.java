@@ -68,7 +68,7 @@ public class Robot {
 	 * Move 11: 3-C
 	 * Move 12: 3-D
 	 */
-	
+	// (21.5, 0) Right StartingPosition.
 	public void autonomousInit() {
 		drive.zero();
 		matchConfig.load();

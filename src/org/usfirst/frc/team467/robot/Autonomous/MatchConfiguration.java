@@ -1,4 +1,4 @@
-	package org.usfirst.frc.team467.robot.Autonomous;
+package org.usfirst.frc.team467.robot.Autonomous;
 // changes 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
@@ -17,11 +17,11 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class MatchConfiguration {
 
 	// Simulator variables
-	private String simulatedGameSpecificMessage = "RRR";
+	private String simulatedGameSpecificMessage = "LLL";
 
 	private Alliance simulatedTeamColor = Alliance.Red;
 
-	private String simulatedAutoMode = "left";
+	private String simulatedAutoMode = "Left";
 
 	private static MatchConfiguration instance;
 
@@ -104,30 +104,32 @@ public class MatchConfiguration {
 		String autoMode; 
 
 		if (RobotMap.useSimulator) {
-			autoMode = simulatedAutoMode;
+			autoMode = simulatedAutoMode.toUpperCase();
 		} else {
-			autoMode = SmartDashboard.getString("Auto Selector", "none");
+			autoMode = SmartDashboard.getString("Auto Selector", "none").toUpperCase();
 		}
 
 		LOGGER.info( "AutoMode: '" + autoMode + "'");
 
 		switch (autoMode) {
 
-		case "Left":
+		case "LEFT":
+			LOGGER.debug("Set start position to left side");
 			startPosition = StartPosition.LEFT;
 			break;
 
-		case "Center":
+		case "CENTER":
 			startPosition = StartPosition.CENTER;
 			break;
 
-		case "Right":
+		case "RIGHT":
 			startPosition = StartPosition.RIGHT;
 
 			break;
 
-		case "None":
+		case "NONE":
 		default:
+			LOGGER.debug("Start position unknown");
 			startPosition = StartPosition.UNKNOWN;
 		}
 
@@ -183,22 +185,22 @@ public class MatchConfiguration {
 		// Their switch
 		if(gameData.charAt(2) == 'L') {
 			if (teamColor == TeamColor.BLUE ) {
-				blueSwitch = Side.LEFT;
-				LOGGER.info("Their Switch BlueSwitch LEFT");
+				redSwitch = Side.LEFT;
+				LOGGER.info("Their Switch Red LEFT");
 			} else {
 				if (teamColor == TeamColor.RED) {
-					redSwitch = Side.LEFT;
-					LOGGER.info("Their Switch RedSwitch LEFT");
+					blueSwitch = Side.LEFT;
+					LOGGER.info("Their Switch Blue LEFT");
 				}
 			}
 			if(gameData.charAt(2) == 'R') {
 				if (teamColor == TeamColor.BLUE) {
-					blueSwitch = Side.RIGHT;
-					LOGGER.info("Their Switch BlueSwitch Right");
+					redSwitch = Side.RIGHT;
+					LOGGER.info("Their Switch Red Right");
 				} else {
 					if (teamColor == TeamColor.RED) {
-						redSwitch = Side.RIGHT;
-						LOGGER.info("Their Switch RedSwitch Right");
+						blueSwitch = Side.RIGHT;
+						LOGGER.info("Their Switch Blue Right");
 					}
 				}
 			}
@@ -207,43 +209,44 @@ public class MatchConfiguration {
 	//||----------------------------------Right Here!----------------------------------||
 	public ActionGroup autonomousDecisionTree() {
 
+		LOGGER.debug("Entering decision tree");
 		autonomous = Actions.doNothing();
 
 		switch(startPosition) {
 
 		case LEFT:
-			if(isSwitchOnSameSide()) {
-				autonomous = Actions.leftBasicSwitch();
-				LOGGER.debug("isSwitchOnSameSide Left True -----------------------");
+			if(isSwitchOnSameSide() && !isScaleOnSameSide()) {
+				autonomous = Actions.leftAdvancedSwitchRightScale();
+				LOGGER.debug("isSwitchOnSameSide Left True -----------------------"); 
 			} else if(isScaleOnSameSide()) {
-				//Load Left code if is on same scale side true.
+				autonomous = Actions.leftBasicScaleLeft();
 				LOGGER.debug("LEFT SCALE ------------------------------ TRUE");
-			} else {
-				// Load Opposite scale code when the isScaleOnSameSide is false.
+			} else if(!isScaleOnSameSide()) {
+				autonomous = Actions.leftBasicScaleRight();
 				LOGGER.debug("LEFT Scale ----------------------------- False");
-			}
+			} 
+
 			break;
 
 		case CENTER:
 			if(isMySwitchToTheRight()) {
 				autonomous = Actions.centerBasicSwitchRight();
-				//Load code if switch is to the right in center position (true).
 				LOGGER.debug("IsMySwitchToTheRight----------------------------Center True");
-			} else if(isMySwitchToTheRight()) {
-				autonomous = Actions.centerBasicScaleRight();
+			} else if(!isMySwitchToTheRight()) {
+				autonomous = Actions.centerBasicSwitchLeft();
+				LOGGER.debug("opposite code of isMySwitchToTheright()");
 			}
 			break;
 
 		case RIGHT: 
-			if(isSwitchOnSameSide()) {
-				autonomous = Actions.rightBasicSwitch();
-				//Load Right code if on same switch side true.
+			if(isSwitchOnSameSide() && !isScaleOnSameSide()) {
+				autonomous = Actions.rightBasicSwitch(); // place the advance version in here and remove the one before. 
 				LOGGER.debug("Right isSwitchOnSameSide-----------------------------true ");
 			} else if(isScaleOnSameSide()) {
-				//Load Right code if is on same scale side true.
+				autonomous = Actions.rightBasicScaleRight();
 				LOGGER.debug("Scale is on same side");
-			} else {
-				// Load Opposite scale code when the isScaleOnSameSide is false.
+			} else if(!isScaleOnSameSide()) {
+				autonomous = Actions.rightBasicScaleLeft();
 				LOGGER.debug("Scale is on opposite side");
 			}
 			break;
