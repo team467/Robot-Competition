@@ -134,8 +134,6 @@ public class Elevator {
 		// TODO Re-enable and test to see if it works
 		// rumbleOnPresetHeights();
 
-		limitCheck();
-
 		if (Math.abs(speed) >= RobotMap.MIN_LIFT_SPEED) {
 			// The controller is asking for elevator movement, cancel preset target and move.
 			targetHeight = null;
@@ -148,6 +146,7 @@ public class Elevator {
 			heightController.disable();
 		}
 
+		limitCheck();
 		telemetry();
 	}
 
