@@ -33,6 +33,8 @@ public class RobotMap {
 	public static int RIGHT_LEAD_CHANNEL;
 	public static int RIGHT_FOLLOWER_1_CHANNEL;
 	public static int RIGHT_FOLLOWER_2_CHANNEL;
+	
+	public static int ALLOWABLESUCK = 2;
 
 	// Initialize robot map. 
 	public static void init(RobotID id) {
