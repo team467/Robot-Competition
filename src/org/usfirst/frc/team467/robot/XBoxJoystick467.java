@@ -60,8 +60,10 @@ public class XBoxJoystick467 {
 	 * @return
 	 */
 	public boolean down(Button b) {
-		// TODO: Return if the button is currently down
-		return buttonDown.get(b);
+		boolean result = buttonDown.get(b);
+		LOGGER.debug("Button " + b.name() + "=" + result);
+		// TODO: return true if the button is pressed, but wasn't before
+		return result;
 	}
 
 	/**

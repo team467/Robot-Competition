@@ -95,7 +95,6 @@ public class Robot extends TimedRobot {
 		LOGGER.trace("Disabled Periodic");
 		driverstation.readInputs();
 //		driverstation.logJoystickIDs();
-		driverstation.getFloorHeightButtonPressed();
 		elevator.telemetry();
 		//LOGGER.debug("Right: "	+drive.getRightDistance() + " Left: " + drive.getLeftDistance());
 	}
