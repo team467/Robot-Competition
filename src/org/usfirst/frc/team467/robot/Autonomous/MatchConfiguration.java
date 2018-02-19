@@ -17,11 +17,11 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class MatchConfiguration {
 
 	// Simulator variables
-	private String simulatedGameSpecificMessage = "LRL";
+	private String simulatedGameSpecificMessage = "RRR";
 
 	private Alliance simulatedTeamColor = Alliance.Red;
 
-	private String simulatedAutoMode = "Left";
+	private String simulatedAutoMode = "left";
 
 	private static MatchConfiguration instance;
 
@@ -212,13 +212,9 @@ public class MatchConfiguration {
 		switch(startPosition) {
 
 		case LEFT:
-			if(isSwitchOnSameSide()) { 		
-				autonomous = Actions.doNothing();
+			if(isSwitchOnSameSide()) {
 				autonomous = Actions.leftBasicSwitch();
 				LOGGER.debug("isSwitchOnSameSide Left True -----------------------");
-				autonomous = Actions.doNothing();
-				autonomous = Actions.leftBasicScaleRight();
-				LOGGER.debug("Did this thing run as well?");
 			} else if(isScaleOnSameSide()) {
 				//Load Left code if is on same scale side true.
 				LOGGER.debug("LEFT SCALE ------------------------------ TRUE");
@@ -231,7 +227,6 @@ public class MatchConfiguration {
 		case CENTER:
 			if(isMySwitchToTheRight()) {
 				autonomous = Actions.centerBasicSwitchRight();
-				autonomous = Actions.doNothing();
 				//Load code if switch is to the right in center position (true).
 				LOGGER.debug("IsMySwitchToTheRight----------------------------Center True");
 			} else if(isMySwitchToTheRight()) {
@@ -241,6 +236,7 @@ public class MatchConfiguration {
 
 		case RIGHT: 
 			if(isSwitchOnSameSide()) {
+				autonomous = Actions.rightBasicSwitch();
 				//Load Right code if on same switch side true.
 				LOGGER.debug("Right isSwitchOnSameSide-----------------------------true ");
 			} else if(isScaleOnSameSide()) {
