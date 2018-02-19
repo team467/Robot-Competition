@@ -23,15 +23,6 @@ public class Elevator {
 
 	public enum Stops {
 		// null if no stop is desired
-//		floor(10.0 + RobotMap.ELEVATOR_ERROR_TOLERANCE_INCHES),
-//		fieldSwitch(24.0 + RobotMap.ELEVATOR_ERROR_TOLERANCE_INCHES),
-//		lowScale(72.0 + RobotMap.ELEVATOR_ERROR_TOLERANCE_INCHES),
-//		highScale(96.0 + RobotMap.ELEVATOR_ERROR_TOLERANCE_INCHES);
-//		Basement - 761
-//		Floor - 747
-//		Switch - 636
-//		Scale Low - 468
-//		Scale High - 358
 		basement(761),
 		floor(747),
 		fieldSwitch(636),
@@ -69,44 +60,27 @@ public class Elevator {
 		}
 
 		this.heightController = (WPI_TalonSRX) heightController;
-
-		// Configure talon to be able to use the analog sensor. 
-		this.heightController.configSelectedFeedbackSensor(FeedbackDevice.Analog, 0, RobotMap.TALON_TIMEOUT);
-		this.heightController.configSetParameter(ParamEnum.eFeedbackNotContinuous, 1, 0x00, 0x00, 0x00);
-		this.heightController.configAllowableClosedloopError(0, 3, RobotMap.TALON_TIMEOUT);
-		this.heightController.setInverted(false);
-		this.heightController.setSensorPhase(false);
-		configMotionMagicParameters();
+		configMotorParameters();
 
 		targetHeight = null;
-//		previousHeight = getHeightInches();
 		previousHeight = getRawHeight();
 		m_safetyHelper = new MotorSafetyHelper(this.heightController);
 	}
 
-	public void configMotionMagicParameters() {
-		SmartDashboard.putString("DB/String 3", "P");
-		SmartDashboard.putString("DB/String 4", "D");
-		double kPElevator = Double.parseDouble(SmartDashboard.getString("DB/String 8", "5.27"));
-		double kIElevator = 0.0;
-		double kDElevator = Double.parseDouble(SmartDashboard.getString("DB/String 9", "5.27"));
-		double kFElevator = 51.15;
+	public void configMotorParameters() {
+		// Configure talon to be able to use the analog sensor.
+		this.heightController.configSelectedFeedbackSensor(FeedbackDevice.Analog, 0, RobotMap.TALON_TIMEOUT);
+		this.heightController.configSetParameter(ParamEnum.eFeedbackNotContinuous, 1, 0x00, 0x00, 0x00);
+		this.heightController.setInverted(false);
+		this.heightController.setSensorPhase(false);
 
-		heightController.config_kP(0, kPElevator, RobotMap.TALON_TIMEOUT);
-		heightController.config_kI(0, kIElevator, RobotMap.TALON_TIMEOUT);
-		heightController.config_kD(0, kDElevator, RobotMap.TALON_TIMEOUT);
-		heightController.config_kF(0, kFElevator, RobotMap.TALON_TIMEOUT);
+		heightController.config_kP(0, 40.0, RobotMap.TALON_TIMEOUT);
+		heightController.config_kI(0, 0.0, RobotMap.TALON_TIMEOUT);
+		heightController.config_kD(0, 5.0, RobotMap.TALON_TIMEOUT);
+		heightController.config_kF(0, 0.0, RobotMap.TALON_TIMEOUT);
 
-		heightController.configMotionCruiseVelocity(15, RobotMap.TALON_TIMEOUT);
-		heightController.configMotionAcceleration(15, RobotMap.TALON_TIMEOUT);
-		heightController.configAllowableClosedloopError(0, 0, RobotMap.TALON_TIMEOUT);
+		heightController.configAllowableClosedloopError(0, 3, RobotMap.TALON_TIMEOUT);
 	}
-
-//	public double getHeightInches() {
-//		double height = (getRawHeight() - RobotMap.ELEVATOR_BOTTOM_TICKS) / RobotMap.ELEVATOR_TICKS_PER_INCH;
-//		LOGGER.trace("Height in inches: " + height);
-//		return height;
-//	}
 
 	private double getRawHeight() {
 		if (!RobotMap.HAS_ELEVATOR) {
@@ -129,19 +103,11 @@ public class Elevator {
 			m_safetyHelper.feed();
 		}
 
-		configMotionMagicParameters();
-		LOGGER.info("Moving to heightInInches=" + targetHeight.height);
+		configMotorParameters();
+		LOGGER.info("Moving to height=" + targetHeight.height);
 
-		heightController.set(ControlMode.MotionMagic, targetHeight.height);
+		heightController.set(ControlMode.Position, targetHeight.height);
 	}
-	
-//	private int getTargetTicks() {
-//	    if (targetHeight == null) {
-//	        return -1;
-//	    }
-//
-//	    return (int) (RobotMap.ELEVATOR_BOTTOM_TICKS - targetHeight.height * RobotMap.ELEVATOR_TICKS_PER_INCH);
-//	}
 
 	/**
 	 * Moves based on the Xbox controller analog input
@@ -153,7 +119,6 @@ public class Elevator {
 			return;
 		}
 
-//		double currentHeight = getHeightInches();
 		double currentHeight = getRawHeight();
 		// TODO Re-enable and test to see if it works
 		//		for (Stops stop : Stops.values()) {
@@ -186,8 +151,8 @@ public class Elevator {
 		DriverStation.getInstance().set(1, "position");
 		DriverStation.getInstance().set(6, heightController.getSelectedSensorPosition(0));
 
-        SmartDashboard.putNumber("Elevator Closed Loop Error", heightController.getClosedLoopError(0));
-        SmartDashboard.putNumber("Elevator Current Position", heightController.getSelectedSensorPosition(0));
-        SmartDashboard.putNumber("Elevator Target Height (in)", targetHeight != null ? targetHeight.height : -1);
+		SmartDashboard.putNumber("Elevator Closed Loop Error", heightController.getClosedLoopError(0));
+		SmartDashboard.putNumber("Elevator Current Position", heightController.getSelectedSensorPosition(0));
+		SmartDashboard.putNumber("Elevator Target Height (in)", targetHeight != null ? targetHeight.height : -1);
 	}
 }
