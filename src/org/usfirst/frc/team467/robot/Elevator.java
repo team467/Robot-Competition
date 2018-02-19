@@ -37,7 +37,6 @@ public class Elevator {
 		fieldSwitch(636),
 		lowScale(468),
 		highScale(358);
-
 		/**
 		 * Height in sensor units
 		 */
@@ -178,7 +177,18 @@ public class Elevator {
 		previousHeight = currentHeight;
 
 		telemetry();
+		
 	}
+	public void rumbleOnPresetHeights() {
+		double currentHeight = getRawHeight();
+		for(Stops stop: Stops.values()) {
+			if(stop.height == currentHeight) {
+				DriverStation.getInstance().getNavRumbler().rumble(150, 0.3);
+			}
+		}
+	}
+	
+
 
 	public void telemetry() {
 		DriverStation.getInstance().set(0,"target ticks");
