@@ -34,7 +34,7 @@ public class RobotMap {
 	public static int RIGHT_FOLLOWER_1_CHANNEL;
 	public static int RIGHT_FOLLOWER_2_CHANNEL;
 	
-	public static int ALLOWABLESUCK = 2;
+	public static int ALLOWED_GRABBER_ERROR = 2; // in degrees
 
 	// Initialize robot map. 
 	public static void init(RobotID id) {

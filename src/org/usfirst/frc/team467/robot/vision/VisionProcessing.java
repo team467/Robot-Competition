@@ -119,7 +119,7 @@ public class VisionProcessing {
 		double currentDegFromCube;
 	
 		currentDegFromCube = avgAngle();
-		if (currentDegFromCube <= RobotMap.ALLOWABLESUCK && currentDegFromCube >= -1 * RobotMap.ALLOWABLESUCK)
+		if (currentDegFromCube <= RobotMap.ALLOWED_GRABBER_ERROR && currentDegFromCube >= -1 * RobotMap.ALLOWED_GRABBER_ERROR)
 		{
 			return true;
 		}

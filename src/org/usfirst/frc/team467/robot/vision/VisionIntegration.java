@@ -14,7 +14,7 @@ public class VisionIntegration {
 	private OpticalSensor opticalsensor = OpticalSensor.getInstance();
 	private Grabber grabber = Grabber.getInstance();
 	private static final Logger LOGGER = Logger.getLogger(Robot.class);
-	
+
 	public static VisionIntegration getInstance() {
 		if (instance == null) {
 			instance = new VisionIntegration();
@@ -42,22 +42,15 @@ public class VisionIntegration {
 }
 
 /*
- * TODO 
- * 1. Vision class gets the cube angle 
- * 2. Integration says whether or not the robot can get the cube 
- * 3. Autonomous action of driving to the correct angle of the cube so that the camera angle returns zero or the cube is within suck angle
- * 4. then drive forward and grab the cube.
- * 5. Optical sensor checks to see if cube is in the grabber the whole time 
+ * TODO 1. Vision class gets the cube angle 2. Integration says whether or not
+ * the robot can get the cube 3. Autonomous action of driving to the correct
+ * angle of the cube so that the camera angle returns zero or the cube is within
+ * suck angle 4. then drive forward and grab the cube. 5. Optical sensor checks
+ * to see if cube is in the grabber the whole time
  * 
- * 1. can vision see cube? done
- * 2. if yes, what is the angle to the cube? done
- * 3. turn to the angle? done
- * 4. on target?done
- * 5a. activate grabber
- * 5b. drive into cube
- * 6. have cube
- * 7. stop driving
- * 8. thats it?
+ * 1. can vision see cube? done 2. if yes, what is the angle to the cube? done
+ * 3. turn to the angle? done 4. on target?done 5a. activate grabber 5b. drive
+ * into cube 6. have cube 7. stop driving 8. thats it?
  * 
  * 
  *
@@ -66,5 +59,3 @@ public class VisionIntegration {
  * 1. lost cube? - stop, VisionIntegration retarget
  * 
  */
-
-
