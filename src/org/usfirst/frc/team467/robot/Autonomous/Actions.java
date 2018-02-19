@@ -63,7 +63,6 @@ public class Actions {
 		DriveSimulator drive = DriveSimulator.getInstance();
 		return new Action(
 				"Zeroing the distance",
-//				new ActionGroup.RunOnce(() -> drive.zeroPosition()));
 				new ActionGroup.RunOnce(() -> drive.zero()));
 	}
 	
@@ -88,39 +87,40 @@ public class Actions {
 				new ActionGroup.RunOnce(() -> grabber.pause()));
 	}
 	
-	public static Action drop() {
+	public static Action elevatorToFloor() {
 		Elevator elevator = Elevator.getInstance();
 		return new Action(
 				"Elevator going to lowest level", 
 				new ActionGroup.RunOnce(() -> elevator.floor()));
 	}
 	
-	public static Action Girrafe() {
+	public static Action elevatorToSwitch() {
 		Elevator elevator = Elevator.getInstance();
 		return new Action(
 				"Elevator going up to switch height", 
 				new ActionGroup.RunOnce(() -> elevator.switchHeight()));
-				
 	}
 	
-	public static Action lowScale() {
+	public static Action elevatorToLowScale() {
 		Elevator elevator = Elevator.getInstance();
 		return new Action(
 				"Elevator going to lower level on scale",
 				new ActionGroup.RunOnce(() -> elevator.lowScale()));
 	}
 	
-	public static Action highScale() {
+	public static Action elevatorToHighScale() {
 		Elevator elevator = Elevator.getInstance();
 		return new Action(
 				"Elevator going to higher level on scale", 
-				new ActionGroup.RunOnce(() -> elevator.highScale()));
-				
+				new ActionGroup.RunOnce(() -> elevator.highScale()));		
 	}
 	
-	
-	
-	
+	public static Action cancelAutomaticElevatorMove() {
+		Elevator elevator = Elevator.getInstance();
+		return new Action(
+				"Cancel elevator move", 
+				new ActionGroup.RunOnce(() -> elevator.cancelAutomaticMove()));				
+	}
 	
 	/**
 	 * 
@@ -135,9 +135,7 @@ public class Actions {
 		return new Action(actionText,
 				new ActionGroup.ReachDistance(distance),
 				() -> drive.moveFeet(distance));
-//				() -> drive.moveFeet(distance));
 	}
-	
 	
 	/**
 	 * 
@@ -145,15 +143,13 @@ public class Actions {
 	 * @return
 	 */
 	public static Action moveturn(double rotationInDegrees) {
-	    double rotation = rotationInDegrees;
-	    
+	    double rotation = rotationInDegrees;	    
 //		Drive drive = Drive.getInstance();
 		DriveSimulator drive = DriveSimulator.getInstance();
 		String actionText = "Rotate " + rotationInDegrees + " degrees.";
 		return new Action(actionText,
 				new ActionGroup.ReachDistance(rotation),
 				() -> drive.rotateByAngle(rotation));
-//				() -> drive.rotateDegrees(rotation));
 	}
 
 	public static boolean moveDistanceComplete(double distance) {
@@ -168,19 +164,6 @@ public class Actions {
 			return false;
 		}
 	}
-
-//	public static boolean turnDistanceComplete() {
-//		Drive drive = Drive.getInstance();
-//		double turnError = drive.getTurnError();
-//		LOGGER.debug("Error: " + turnError);
-//		if (turnError <= RobotMap.POSITION_ALLOWED_ERROR) {
-//			LOGGER.info("Error: " + turnError);
-//			return true;
-//		} else {
-//			LOGGER.debug("Error" + turnError);
-//			return false;
-//		}
-//	}
 
 	public static ActionGroup moveDistanceForwardProcess3X(double distance) {
 		String actionGroupText = "Move forward 3X " + distance + " feet";
@@ -325,25 +308,6 @@ public class Actions {
 		return mode;
 	}
 
-//	public static Action aim(double angle) {
-//		Drive drive = Drive.getInstance();
-//		Action aim =  new Action(
-//				"Aim",
-//				new ActionGroup.OnTarget(5),
-//				() -> drive.turnToAngle(angle));
-//		return aim;
-//	}
-
-//	public static Action disableAiming() {
-//		Drive drive = Drive.getInstance();
-//		Action disableAimingAction = new Action(
-//				"Disable",
-//				() -> true,
-//				() -> drive.aiming.disable());
-//		return disableAimingAction;
-//	}
-
-
 	public static ActionGroup doNothing(){
 		ActionGroup mode = new ActionGroup("none");
 		mode.addAction(nothing());
@@ -359,51 +323,5 @@ public class Actions {
 //		mode.addAction(turnAndMoveDistance(270, 2));
 		return mode;
 	}
-
-//	private void move1() {
-//	switch(moveCount) {
-//	
-//	case 0:
-//		if (drive.moveDistance(20, 20)) {
-//			moveCount++;
-//			drive.zeroPosition();				
-//		}
-//		break;
-//	
-//	case 1:
-//		if (drive.moveDistance(-0.785, 0.785)) {
-//			//45º turn in place 
-//			moveCount++;
-//			drive.zeroPosition();				
-//		}
-//		break;
-//	
-//	case 2:
-//		if (drive.moveDistance(5, 5)) {
-//			moveCount++;
-//			drive.zeroPosition();
-//		}
-//		break;
-//
-//	case 3:
-//		if (drive.moveDistance(1.57, -1.57)) {
-//			moveCount++;
-//			drive.zeroPosition();
-//		}
-//		break;
-//
-//	case 4:
-//		if (drive.moveDistance(5, 5)) {
-//			moveCount++;
-//			drive.zeroPosition();
-//		}
-//		break;
-//
-//	default:
-//	}
-//
-//	
-//}
-
 
 }

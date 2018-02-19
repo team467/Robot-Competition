@@ -5,23 +5,24 @@ import org.apache.log4j.Logger;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.MotorSafetyHelper;
 import edu.wpi.first.wpilibj.SpeedController;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 public class Elevator {
+
 	private static Elevator instance;
 	private static final Logger LOGGER = Logger.getLogger(Elevator.class);
 
 	private AnalogInput heightSensor;
 	private WPI_TalonSRX heightController;
-	private double feetPerTick;
-	private int maxTicksPerIteration;
-	private double previousHeight;
 	private MotorSafetyHelper m_safetyHelper;
 
+	private double feetPerTick;
+	private int maxTicksPerIteration;
+
 	private Stops targetHeight;
+	private double previousHeight;
 
 	public enum Stops {
 		// null if no stop is desired
@@ -100,10 +101,10 @@ public class Elevator {
 			speed = 0.0;
 		}
 
+		LOGGER.debug("Previous Height: " + previousHeight);
 		LOGGER.debug("Current Height: " + currentHeight);
 		heightController.set(speed);
 		previousHeight = currentHeight;
-		LOGGER.debug("Previous Height: " + previousHeight);
 	}
 
 	public void initMotionMagicMode() {
@@ -168,18 +169,13 @@ public class Elevator {
 			break;
 
 		default:
+			cancelAutomaticMove();
 		}
 
-		//automaticMove(targetHeight.height);
-		
 	}
 
 	public void cancelAutomaticMove() {
 		targetHeight = null;
-
-		if (!RobotMap.HAS_ELEVATOR) {
-			return;
-		}
 	}
 	
 	public void floor() {
@@ -206,8 +202,10 @@ public class Elevator {
 			m_safetyHelper.feed();
 		}
 		double ticks =  height / feetPerTick + RobotMap.ELEVATOR_INITIAL_TICKS;
+		LOGGER.debug("Target - Feet: " + height + " Ticks: " + ticks);
 		heightController.set(ControlMode.MotionMagic, ticks);
 		logSensorVelocityAndPosition();
+		previousHeight = getHeightFeet();
 	} 
 
 	public void logSensorVelocityAndPosition() {

@@ -1,7 +1,6 @@
 package org.usfirst.frc.team467.robot;
 
 import org.apache.log4j.Logger;
-import org.usfirst.frc.team467.robot.Grabber.GrabberState;
 
 import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.SpeedController;
