@@ -59,11 +59,6 @@ public class Grabber {
 			return;
 		}
 		
-		if (justGotCube()) {
-			DriverStation.getInstance().setNavRumble(250);
-			DriverStation.getInstance().setDriverRumble(250);
-		}
-
 		double speed = 0.0;
 		switch (state) {
 
@@ -124,9 +119,18 @@ public class Grabber {
 			throttle = 0.0;
 		}
 
+		if (justGotCube() && throttle < 0.0) {
+			DriverStation.getInstance().setNavRumble(100);
+			DriverStation.getInstance().setDriverRumble(100);
+		}
+
 		LOGGER.debug("Grabber Throttle=" + throttle);
 		left.set(throttle * RobotMap.MAX_GRAB_SPEED);
 		right.set(-1 * throttle * RobotMap.MAX_GRAB_SPEED);
+
+		// Save the previous state and check for current state.
+		hadCube = hasCube;
+		hasCube = os.detectedTarget();
 	}
 
 	public boolean justGotCube() {

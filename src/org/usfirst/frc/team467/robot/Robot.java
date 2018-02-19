@@ -28,6 +28,9 @@ public class Robot extends TimedRobot {
 	private MatchConfiguration matchConfig;
 	private VisionProcessing vision;
 	private Gyrometer gyro;
+	private Elevator elevator;
+	private Grabber grabber;
+	private TiltMonitor tiltMonitor;
 
 	int session;
 
@@ -36,8 +39,6 @@ public class Robot extends TimedRobot {
 	 */
 	double time;
 
-	private Elevator elevator;
-	private Grabber grabber;
 
 	/**
 	 * This function is run when the robot is first started up and should be used for any initialization code.
@@ -47,22 +48,25 @@ public class Robot extends TimedRobot {
 		Logging.init();
 
 		// Initialize RobotMap
-		RobotMap.init(RobotID.Competition_1);
+		RobotMap.init(RobotID.Board);
+//		RobotMap.init(RobotID.Competition_1);
 
 		// Make robot objects
 		driverstation = DriverStation.getInstance();
 		LOGGER.info("Initialized Driverstation");
 
 		drive = Drive.getInstance();
+		elevator = Elevator.getInstance();
+		grabber = Grabber.getInstance();
+		matchConfig = MatchConfiguration.getInstance();
+		tiltMonitor = TiltMonitor.getInstance();
 
 		gyro = Gyrometer.getInstance();
 		gyro.calibrate();
 		gyro.reset();
 
-		matchConfig = MatchConfiguration.getInstance();
 		vision = VisionProcessing.getInstance();
 		vision.startVision();
-
 		//made usb camera and captures video
 		UsbCamera cam = CameraServer.getInstance().startAutomaticCapture();
 		//set resolution and frames per second to match driverstation
@@ -70,7 +74,7 @@ public class Robot extends TimedRobot {
 		cam.setFPS(15);
 		
 	}
-
+	
 	public void disabledInit() {
 		
 	}
@@ -83,12 +87,11 @@ public class Robot extends TimedRobot {
 	}
 
 	public void testPeriodic() {
-		driverstation.readInputs();
-		driverstation.periodic();
 	}
 
 
 	public void autonomousInit() {
+		driverstation.readInputs();
 		matchConfig.load();
 		autonomous = matchConfig.autonomousDecisionTree();
 		LOGGER.info("Init Autonomous:" + autonomous.getName());
@@ -96,6 +99,9 @@ public class Robot extends TimedRobot {
 	}
 
 	public void autonomousPeriodic() {
+		tiltMonitor.periodic();
+		elevator.periodic();
+		grabber.periodic();
 		autonomous.run();
 	}
 
@@ -108,10 +114,13 @@ public class Robot extends TimedRobot {
 	 * This function is called periodically during operator control
 	 */
 	public void teleopPeriodic() {
-		driverstation.periodic();
 		driverstation.readInputs();
-		TiltMonitor.getInstance().periodic();
-	
+		grabber.grab(driverstation.getGrabThrottle());
+		elevator.manualMove(driverstation.getElevatorSpeed());
+
+		tiltMonitor.periodic();
+		elevator.periodic();
+
 		double speed = driverstation.getArcadeSpeed();
 		double turn = driverstation.getArcadeTurn();
 		switch (driverstation.getDriveMode()) {
@@ -128,8 +137,6 @@ public class Robot extends TimedRobot {
 			break;
 		default:
 		}
-
-
 	}
 
 }

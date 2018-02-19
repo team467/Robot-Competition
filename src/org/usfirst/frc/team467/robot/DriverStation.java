@@ -48,6 +48,8 @@ public class DriverStation {
 		if (navJoy != null) {
 			navJoy.read();
 		}
+		driverRumbler.periodic();
+		navRumbler.periodic();
 	}
 
 	public void logJoystickIDs() {
@@ -82,11 +84,6 @@ public class DriverStation {
 
 	public double getTurnSensivity() {
 		return 0.0;
-	}
-
-	public void periodic() {
-		driverRumbler.periodic();
-		navRumbler.periodic();
 	}
 
 	// All button mappings are accessed through the functions below
