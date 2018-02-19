@@ -23,17 +23,27 @@ public class Elevator {
 
 	public enum Stops {
 		// null if no stop is desired
-		floor(10.0 + RobotMap.ELEVATOR_ERROR_TOLERANCE_INCHES),
-		fieldSwitch(24.0 + RobotMap.ELEVATOR_ERROR_TOLERANCE_INCHES),
-		lowScale(72.0 + RobotMap.ELEVATOR_ERROR_TOLERANCE_INCHES),
-		highScale(96.0 + RobotMap.ELEVATOR_ERROR_TOLERANCE_INCHES);
+//		floor(10.0 + RobotMap.ELEVATOR_ERROR_TOLERANCE_INCHES),
+//		fieldSwitch(24.0 + RobotMap.ELEVATOR_ERROR_TOLERANCE_INCHES),
+//		lowScale(72.0 + RobotMap.ELEVATOR_ERROR_TOLERANCE_INCHES),
+//		highScale(96.0 + RobotMap.ELEVATOR_ERROR_TOLERANCE_INCHES);
+//		Basement - 761
+//		Floor - 747
+//		Switch - 636
+//		Scale Low - 468
+//		Scale High - 358
+		basement(761),
+		floor(747),
+		fieldSwitch(636),
+		lowScale(468),
+		highScale(358);
 
 		/**
-		 * Height in inches
+		 * Height in sensor units
 		 */
-		public final double height;
+		public final int height;
 
-		Stops(double height) {
+		Stops(int height) {
 			this.height = height;
 		}
 	}
@@ -69,7 +79,8 @@ public class Elevator {
 		configMotionMagicParameters();
 
 		targetHeight = null;
-		previousHeight = getHeightInches();
+//		previousHeight = getHeightInches();
+		previousHeight = getRawHeight();
 		m_safetyHelper = new MotorSafetyHelper(this.heightController);
 	}
 
@@ -87,14 +98,15 @@ public class Elevator {
 		heightController.config_kF(0, kFElevator, RobotMap.TALON_TIMEOUT);
 
 		heightController.configMotionCruiseVelocity(15, RobotMap.TALON_TIMEOUT);
-		heightController.configMotionAcceleration(15 / 2, RobotMap.TALON_TIMEOUT);
+		heightController.configMotionAcceleration(15, RobotMap.TALON_TIMEOUT);
+		heightController.configAllowableClosedloopError(0, 0, RobotMap.TALON_TIMEOUT);
 	}
 
-	public double getHeightInches() {
-		double height = (getRawHeight() - RobotMap.ELEVATOR_BOTTOM_TICKS) / RobotMap.ELEVATOR_TICKS_PER_INCH;
-		LOGGER.trace("Height in inches: " + height);
-		return height;
-	}
+//	public double getHeightInches() {
+//		double height = (getRawHeight() - RobotMap.ELEVATOR_BOTTOM_TICKS) / RobotMap.ELEVATOR_TICKS_PER_INCH;
+//		LOGGER.trace("Height in inches: " + height);
+//		return height;
+//	}
 
 	private double getRawHeight() {
 		if (!RobotMap.HAS_ELEVATOR) {
@@ -120,16 +132,16 @@ public class Elevator {
 		configMotionMagicParameters();
 		LOGGER.info("Moving to heightInInches=" + targetHeight.height);
 
-		heightController.set(ControlMode.MotionMagic, getTargetTicks());
+		heightController.set(ControlMode.MotionMagic, targetHeight.height);
 	}
 	
-	private int getTargetTicks() {
-	    if (targetHeight == null) {
-	        return -1;
-	    }
-
-	    return (int) (RobotMap.ELEVATOR_BOTTOM_TICKS - targetHeight.height * RobotMap.ELEVATOR_TICKS_PER_INCH);
-	}
+//	private int getTargetTicks() {
+//	    if (targetHeight == null) {
+//	        return -1;
+//	    }
+//
+//	    return (int) (RobotMap.ELEVATOR_BOTTOM_TICKS - targetHeight.height * RobotMap.ELEVATOR_TICKS_PER_INCH);
+//	}
 
 	/**
 	 * Moves based on the Xbox controller analog input
@@ -141,7 +153,8 @@ public class Elevator {
 			return;
 		}
 
-		double currentHeight = getHeightInches();
+//		double currentHeight = getHeightInches();
+		double currentHeight = getRawHeight();
 		// TODO Re-enable and test to see if it works
 		//		for (Stops stop : Stops.values()) {
 		//			if ((previousHeight < stop.height && currentHeight >= stop.height)
@@ -175,7 +188,6 @@ public class Elevator {
 
         SmartDashboard.putNumber("Elevator Closed Loop Error", heightController.getClosedLoopError(0));
         SmartDashboard.putNumber("Elevator Current Position", heightController.getSelectedSensorPosition(0));
-        SmartDashboard.putNumber("Elevator Target Ticks", getTargetTicks());
         SmartDashboard.putNumber("Elevator Target Height (in)", targetHeight != null ? targetHeight.height : -1);
 	}
 }
