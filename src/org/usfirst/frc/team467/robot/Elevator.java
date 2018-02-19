@@ -108,7 +108,7 @@ public class Elevator {
 		targetHeight = target;
 	}
 
-	private void automaticMove(double heightInInches) {
+	private void automaticMove() {
 		if (!RobotMap.HAS_ELEVATOR) {
 			return;
 		}
@@ -118,13 +118,17 @@ public class Elevator {
 		}
 
 		configMotionMagicParameters();
-		LOGGER.info("Moving to heightInInches=" + heightInInches);
+		LOGGER.info("Moving to heightInInches=" + targetHeight.height);
 
-		double ticks = RobotMap.ELEVATOR_BOTTOM_TICKS - heightInInches * RobotMap.ELEVATOR_TICKS_PER_INCH;
-		SmartDashboard.putNumber("Elevator Closed Loop Error", heightController.getClosedLoopError(0));
-		SmartDashboard.putNumber("Elevator Position", heightController.getSelectedSensorPosition(0));
-		heightController.set(ControlMode.MotionMagic, ticks);
-		logSensorAndTargetPosition();
+		heightController.set(ControlMode.MotionMagic, getTargetTicks());
+	}
+	
+	private int getTargetTicks() {
+	    if (targetHeight == null) {
+	        return -1;
+	    }
+
+	    return (int) (RobotMap.ELEVATOR_BOTTOM_TICKS - targetHeight.height * RobotMap.ELEVATOR_TICKS_PER_INCH);
 	}
 
 	/**
@@ -152,26 +156,26 @@ public class Elevator {
 			heightController.set(ControlMode.PercentOutput, speed);
 		} else if (targetHeight != null) {
 			// There is a target preset position, move there.
-			automaticMove(targetHeight.height);
+			automaticMove();
 		} else {
 			// Nothing to do, make sure we're not moving.
 			heightController.set(ControlMode.MotionMagic, getRawHeight());
 		}
 
 		previousHeight = currentHeight;
+
+		telemetry();
 	}
 
-	public void logSensorAndTargetPosition() {
-		LOGGER.debug(
-				//TODO Check the arguments for the closed loop errors.
-				"Target= " + heightController.getActiveTrajectoryPosition()
-				+ "Pos=" + heightController.getSelectedSensorPosition(0));
-
+	public void telemetry() {
 		DriverStation.getInstance().set(0,"target ticks");
 		DriverStation.getInstance().set(5, heightController.getActiveTrajectoryPosition());
-
 		DriverStation.getInstance().set(1, "position");
 		DriverStation.getInstance().set(6, heightController.getSelectedSensorPosition(0));
 
+        SmartDashboard.putNumber("Elevator Closed Loop Error", heightController.getClosedLoopError(0));
+        SmartDashboard.putNumber("Elevator Current Position", heightController.getSelectedSensorPosition(0));
+        SmartDashboard.putNumber("Elevator Target Ticks", getTargetTicks());
+        SmartDashboard.putNumber("Elevator Target Height (in)", targetHeight != null ? targetHeight.height : -1);
 	}
 }
