@@ -72,7 +72,7 @@ public class Robot {
 	public void autonomousInit() {
 		drive.zero();
 		matchConfig.load();
-		data.startingLocation(21.5, 0);
+		data.startingLocation(2.5, 0);
 		data.send();
 		autonomous = matchConfig.autonomousDecisionTree();
 	}
