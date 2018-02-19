@@ -17,11 +17,11 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class MatchConfiguration {
 
 	// Simulator variables
-	private String simulatedGameSpecificMessage = "LLL";
+	private String simulatedGameSpecificMessage = "RLL";
 
 	private Alliance simulatedTeamColor = Alliance.Red;
 
-	private String simulatedAutoMode = "Left";
+	private String simulatedAutoMode = "Right";
 
 	private static MatchConfiguration instance;
 
@@ -241,6 +241,7 @@ public class MatchConfiguration {
 		case RIGHT: 
 			if(isSwitchOnSameSide() && !isScaleOnSameSide()) {
 				autonomous = Actions.rightBasicSwitch(); // place the advance version in here and remove the one before. 
+				//autonomous = Actions.rightAdvancedSwitchLeftScale();
 				LOGGER.debug("Right isSwitchOnSameSide-----------------------------true ");
 			} else if(isScaleOnSameSide()) {
 				autonomous = Actions.rightBasicScaleRight();

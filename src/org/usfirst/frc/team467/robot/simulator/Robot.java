@@ -17,40 +17,40 @@ import org.usfirst.frc.team467.robot.simulator.gui.MapController;
  * The simulated robot
  */
 public class Robot {
-	
+
 	private static final Logger LOGGER = Logger.getLogger(Robot.class);
-	
+
 	DriveSimulator drive;
-	
+
 	MapController simulatorView;
-	
+
 	RobotData data;
-	
+
 	ActionGroup autonomous;
-	
+
 	private MatchConfiguration matchConfig;
-	
+
 	public void robotInit() {
-		
+
 		Logging.init();
-		
+
 		RobotMap.init(RobotID.PreseasonBot);
-		
+
 		RobotMap.useSimulator = true;
 		drive = DriveSimulator.getInstance();
 		matchConfig = MatchConfiguration.getInstance();
-		
+
 		data = RobotData.getInstance();
 		data.startServer();
-		
+
 		LOGGER.info("Started the robot simulator");
-		
+
 	}
-	
+
 	public void setView(MapController simulatorView) {
 		this.simulatorView = simulatorView;
 	}
-		
+
 	/*
 	 * Referring to field map, mode codes represented: 
 	 * Moves 1-6: Robot Starting Position - Switch Side
@@ -72,15 +72,15 @@ public class Robot {
 	public void autonomousInit() {
 		drive.zero();
 		matchConfig.load();
-		data.startingLocation(2.5, 0);
+		data.startingLocation(21.5, 0);
 		data.send();
 		autonomous = matchConfig.autonomousDecisionTree();
 	}
-	
+
 	public void autonomousPeriodic() {
 		autonomous.run();
 	}
-			
+
 	public static void main(String[] args) {		
 		Robot robot = new Robot();
 		robot.robotInit();
