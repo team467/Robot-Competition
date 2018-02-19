@@ -17,11 +17,11 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class MatchConfiguration {
 
 	// Simulator variables
-	private String simulatedGameSpecificMessage = "LLL";
+	private String simulatedGameSpecificMessage = "LRL";
 
 	private Alliance simulatedTeamColor = Alliance.Red;
 
-	private String simulatedAutoMode = "Left";
+	private String simulatedAutoMode = "Center";
 
 	private static MatchConfiguration instance;
 
@@ -230,13 +230,18 @@ public class MatchConfiguration {
 
 			break;
 
-		case CENTER:
+		case CENTER: // there is currently some problems with CENTER code. Check isMySwitchToTheRight().
+			LOGGER.info("Entering Center");
 			if(isMySwitchToTheRight()) {
+				LOGGER.info("reading isMySwitchToTheRight()");
 				autonomous = Actions.centerBasicSwitchRight();
 				LOGGER.debug("IsMySwitchToTheRight----------------------------Center True");
-			} else if(!isMySwitchToTheRight()) {
+			} else if (!isMySwitchToTheRight()){
+				LOGGER.info("reading !isMySwitchToTheRight()");
 				autonomous = Actions.centerBasicSwitchLeft();
-				LOGGER.debug("opposite code of isMySwitchToTheright()");
+				LOGGER.debug("opposite code of isMySwitchToTheRight()");
+			} else {
+				LOGGER.debug("Side not found! Cannot do anything.");
 			}
 			break;
 
@@ -320,7 +325,7 @@ public class MatchConfiguration {
 
 	public boolean isScaleOnSameSide() {
 		boolean isOnSameSide = false; 
-		if (teamColor== TeamColor.BLUE) {
+		if (teamColor == TeamColor.BLUE) {
 			if ((scale == Side.LEFT && startPosition == StartPosition.LEFT) || (scale == Side.RIGHT && startPosition == StartPosition.RIGHT)) {
 				isOnSameSide = true;
 				LOGGER.info("Scale is on Same side testing Blue");
@@ -336,15 +341,11 @@ public class MatchConfiguration {
 
 	public boolean isMySwitchToTheRight() {
 		boolean isOnRightSide = false;
-		if (teamColor == TeamColor.BLUE) {
-			if(blueSwitch == Side.RIGHT) {
-				isOnRightSide = true;
-			} else if(teamColor == TeamColor.RED) {
-				if(redSwitch == Side.RIGHT) {
-					isOnRightSide = true;
-				}
-			}
-		}
+		if (teamColor == TeamColor.BLUE && blueSwitch == Side.RIGHT) {
+			isOnRightSide = true;
+		} else if (teamColor == TeamColor.RED && redSwitch == Side.RIGHT) {
+			isOnRightSide = true;
+		} 
 		return isOnRightSide;
 	}
 }
