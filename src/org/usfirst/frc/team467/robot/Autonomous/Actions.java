@@ -60,8 +60,8 @@ public class Actions {
 	}
 
 	public static Action zeroDistance() {
+		DriveSimulator drive = DriveSimulator.getInstance();
 //		Drive drive = Drive.getInstance();
-		Drive drive = Drive.getInstance();
 		return new Action(
 				"Zeroing the distance",
 				new ActionGroup.RunOnce(() -> drive.zero()));
@@ -130,7 +130,8 @@ public class Actions {
 	 */
 
 	public static Action moveDistanceForward(double distance) {
-		Drive drive = Drive.getInstance();
+		DriveSimulator drive = DriveSimulator.getInstance();
+//		Drive drive = Drive.getInstance();
 		String actionText = "Move forward " + distance + " feet";
 		return new Action(actionText,
 				new ActionGroup.ReachDistance(distance),
@@ -144,8 +145,8 @@ public class Actions {
 	 */
 	public static Action moveturn(double rotationInDegrees) {
 	    double rotation = rotationInDegrees;	    
-//		DriveSimulator drive = DriveSimulator.getInstance();
-		Drive drive = Drive.getInstance();
+		DriveSimulator drive = DriveSimulator.getInstance();
+//		Drive drive = Drive.getInstance();
 		String actionText = "Rotate " + rotationInDegrees + " degrees.";
 		return new Action(actionText,
 				new ActionGroup.ReachDistance(rotation),

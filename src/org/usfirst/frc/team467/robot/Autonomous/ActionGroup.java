@@ -7,6 +7,7 @@ import java.util.NoSuchElementException;
 import org.apache.log4j.Logger;
 import org.usfirst.frc.team467.robot.Drive;
 import org.usfirst.frc.team467.robot.RobotMap;
+import org.usfirst.frc.team467.robot.simulator.DriveSimulator;
 
 /**
  * Runs through a set of actions. <br>
@@ -138,7 +139,8 @@ public class ActionGroup {
 		private double currentPosition = 0.0;
 		private double lastPosition = 0.0;
 		private int increment = 0;
-		private Drive drive = Drive.getInstance();
+		DriveSimulator drive = DriveSimulator.getInstance();
+//		Drive drive = Drive.getInstance();
 		public ReachDistance(double distance) {
 			this.distance = distance;
 		}

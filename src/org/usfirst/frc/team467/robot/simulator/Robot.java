@@ -34,7 +34,7 @@ public class Robot {
 		
 		Logging.init();
 		
-		RobotMap.init(RobotID.PreseasonBot);
+		RobotMap.init(RobotID.Competition_1);
 		
 		RobotMap.useSimulator = true;
 		drive = DriveSimulator.getInstance();
