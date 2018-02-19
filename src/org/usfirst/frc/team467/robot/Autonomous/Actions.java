@@ -16,11 +16,12 @@ public class Actions {
 	private static final Logger LOGGER = Logger.getLogger(Actions.class);
 
 	public static final Action nothing(){
-		Drive drive = Drive.getInstance();
+//		Drive drive = Drive.getInstance();
+		DriveSimulator drive = DriveSimulator.getInstance();
 		String actionText = "Do Nothing";
 		return new Action(actionText,
 				() -> drive.isStopped(),
-				() -> drive.tankDrive(0, 0));
+				() -> drive.moveFeet(0));
 	}
 
 	public static Action wait(double duration) {
@@ -186,125 +187,322 @@ public class Actions {
 		return mode;
 	}
 	
-	public static ActionGroup startSwitchSide1A() {
-		String actionGroupText = "Start on side 1A, put cube on switch.";
+	//SWITCH
+	
+	
+	public static ActionGroup leftBasicSwitch() {
+		String actionGroupText = "Start on left side, put cube on switch.";
+		ActionGroup mode = new ActionGroup(actionGroupText);
+		mode.addAction(zeroDistance());
+		mode.addAction(moveDistanceForward(12.33)); 
+		mode.addAction(zeroDistance());
+		mode.addAction(moveturn(90));
+		mode.addAction(zeroDistance());
+		mode.addAction(moveDistanceForward(1.479));
+		mode.addAction(zeroDistance());
+		mode.addAction(zeroDistance());
+		mode.addAction(moveDistanceForward(-2.0));
+		return mode;
+	} 
+
+
+
+	public static ActionGroup centerBasicSwitchLeft() {
+		String actionGroupText = "Start in center, put cube on left switch.";
+		ActionGroup mode = new ActionGroup(actionGroupText);
+		mode.addAction(zeroDistance());
+		mode.addAction(moveDistanceForward(4.0)); 
+		mode.addAction(zeroDistance());
+		mode.addAction(moveturn(-90));
+		mode.addAction(zeroDistance());
+		mode.addAction(moveDistanceForward(5.27)); 
+		mode.addAction(zeroDistance());
+		mode.addAction(moveturn(90));
+		mode.addAction(zeroDistance());
+		mode.addAction(moveDistanceForward(4.34)); 
+		return mode;
+	}
+
+	public static ActionGroup centerBasicSwitchRight() {
+		String actionGroupText = "Start in center, put cube on right switch.";
+		ActionGroup mode = new ActionGroup(actionGroupText);
+		mode.addAction(zeroDistance());
+		mode.addAction(moveDistanceForward(4.0));
+		mode.addAction(zeroDistance());
+		mode.addAction(moveturn(90));
+		mode.addAction(zeroDistance());
+		mode.addAction(moveDistanceForward(4.27)); 
+		mode.addAction(zeroDistance());
+		mode.addAction(moveturn(-90));
+		mode.addAction(zeroDistance());
+		mode.addAction(moveDistanceForward(4.34));
+		return mode;
+	}
+
+	
+	public static ActionGroup rightBasicSwitch() {
+		String actionGroupText = "Start on right, put cube on switch.";
 		ActionGroup mode = new ActionGroup(actionGroupText);
 		mode.addAction(zeroDistance());
 		mode.addAction(moveDistanceForward(12.33)); // 12' 4"
 		mode.addAction(zeroDistance());
-		mode.addAction(moveturn(90)); // 90 degrees
+		mode.addAction(moveturn(-90));
 		mode.addAction(zeroDistance());
 		mode.addAction(moveDistanceForward(1.479)); // 1' 5.75"
-		mode.addAction(zeroDistance());
-		mode.addAction(moveDistanceForward(-2.0)); // 2' backwards
-		return mode;
-	}
-	
-//	Plan 1-A:
-//	Set up: Robot flush against west side of the starting position (marked by green lines on South Side of field)
-//	1. Move forward 12 feet 4 inches
-//	2. Turn 90º clockwise (with respect to north)
-//	3. Raise elevator up 20 inches (if not already raised, and also this distance may vary - so that the bottom of the arm is above the top of the fence)
-//	4 Move forward 1 foot 5.75 inches (+ maybe 6 inches to ensure robot is flush with the switch barrier)
-//	5. Release power cube
-//	6. Move backwards 2 feet (ready for teleop)
-	
-	public static ActionGroup startSwitchSide1B() {
-		String actionGroupText = "Start on side 1B, put cube on switch.";
-		ActionGroup mode = new ActionGroup(actionGroupText);
-		mode.addAction(zeroDistance());
-		mode.addAction(moveDistanceForward(16.5));
-		mode.addAction(zeroDistance());
-		mode.addAction(moveturn(90));
-		mode.addAction(zeroDistance());
-		mode.addAction(moveDistanceForward(17.0)); // 17' 9"
-		mode.addAction(zeroDistance());
-		mode.addAction(moveturn(90));
-		mode.addAction(zeroDistance());
-		mode.addAction(moveDistanceForward(2.75)); // 2' 
-		mode.addAction(zeroDistance());
-		mode.addAction(moveturn(90));
-		mode.addAction(zeroDistance());
-		mode.addAction(moveDistanceForward(1.0)); // 1'
-		mode.addAction(zeroDistance());
-		mode.addAction(moveDistanceForward(-1.0)); // 1' backwards
-		return mode;
+		return mode; //works
 	}
 
-	public static ActionGroup startSwitchSide2A() {
-		String actionGroupText = "Start on side 2A, put cube on switch.";
+//	public static ActionGroup switch3A() {
+//		String actionGroupText = "Start on side 3A, put cube on switch.";
+//		ActionGroup mode = new ActionGroup(actionGroupText);
+//		mode.addAction(zeroDistance());
+//		mode.addAction(moveDistanceForward(4.0)); // 4'
+//		mode.addAction(zeroDistance());
+//		mode.addAction(moveturn(90));
+//		mode.addAction(zeroDistance());
+//		mode.addAction(moveDistanceForward(19.0833)); // 19' 1"
+//		mode.addAction(zeroDistance());
+//		mode.addAction(moveturn(90));
+//		mode.addAction(moveDistanceForward(8.33)); // 8' 4"
+//		mode.addAction(zeroDistance());
+//		mode.addAction(moveturn(90));
+//		mode.addAction(zeroDistance());
+//		mode.addAction(moveDistanceForward(1.479)); // 1' 5.75"
+//		mode.addAction(zeroDistance());
+//		mode.addAction(moveDistanceForward(-2.0)); // 2' backwards
+//		return mode;
+//	}
+//	
+//	public static ActionGroup switch1B() {
+//		String actionGroupText = "Start on side 1B, put cube on switch.";
+//		ActionGroup mode = new ActionGroup(actionGroupText);
+//		mode.addAction(zeroDistance());
+//		mode.addAction(moveDistanceForward(16.33));
+//		mode.addAction(zeroDistance());
+//		mode.addAction(moveturn(90));
+//		mode.addAction(zeroDistance());
+//		mode.addAction(moveDistanceForward(17.0));
+//		mode.addAction(zeroDistance());
+//		mode.addAction(moveturn(90));
+//		mode.addAction(zeroDistance());
+//		mode.addAction(moveDistanceForward(2.55));
+//		mode.addAction(zeroDistance());
+//		mode.addAction(moveturn(90));
+//		mode.addAction(zeroDistance());
+//		mode.addAction(moveDistanceForward(1.2));
+//		mode.addAction(zeroDistance());
+//		return mode;
+//	} 
+	
+	
+	
+	//SCALE
+	
+	public static ActionGroup leftBasicScaleLeft() {
+		String actionGroupText = "Start on left, put cube on left scale";
 		ActionGroup mode = new ActionGroup(actionGroupText);
 		mode.addAction(zeroDistance());
-		mode.addAction(moveDistanceForward(4.0)); // 4'
+		mode.addAction(moveDistanceForward(25.33));
 		mode.addAction(zeroDistance());
 		mode.addAction(moveturn(90));
 		mode.addAction(zeroDistance());
-		mode.addAction(moveDistanceForward(9.0)); // 9'
+		mode.addAction(moveDistanceForward(0.375));
 		mode.addAction(zeroDistance());
-		mode.addAction(moveturn(90));
-		mode.addAction(moveDistanceForward(8.33)); // 8' 4"
-		mode.addAction(zeroDistance());
-		mode.addAction(moveturn(90));
-		mode.addAction(zeroDistance());
-		mode.addAction(moveDistanceForward(1.479)); // 1' 5.75"
-		mode.addAction(zeroDistance());
-		mode.addAction(moveDistanceForward(-2.0)); // 2' backwards
-		return mode;
-	}
-
-	public static ActionGroup startSwitchSide2B() {
-		String actionGroupText = "Start on side 2B, put cube on switch.";
-		ActionGroup mode = new ActionGroup(actionGroupText);
-		mode.addAction(zeroDistance());
-		mode.addAction(moveDistanceForward(4.0)); // 4'
-		mode.addAction(zeroDistance());
-		mode.addAction(moveturn(90));
-		mode.addAction(zeroDistance());
-		mode.addAction(moveDistanceForward(9.0833)); // 9' 1"
-		mode.addAction(zeroDistance());
-		mode.addAction(moveturn(90));
-		mode.addAction(moveDistanceForward(8.33)); // 8' 4"
-		mode.addAction(zeroDistance());
-		mode.addAction(moveturn(90));
-		mode.addAction(zeroDistance());
-		mode.addAction(moveDistanceForward(1.479)); // 1' 5.75"
-		mode.addAction(zeroDistance());
-		mode.addAction(moveDistanceForward(-2.0)); // 2' backwards
+		mode.addAction(moveDistanceForward(-2.0));
 		return mode;
 	}
 	
-	public static ActionGroup startSwitchSide3A() {
-		String actionGroupText = "Start on side 3A, put cube on switch.";
+	public static ActionGroup leftBasicScaleRight(){
+		String actionGroupText = "Start on left, put cube on right scale";
 		ActionGroup mode = new ActionGroup(actionGroupText);
 		mode.addAction(zeroDistance());
-		mode.addAction(moveDistanceForward(4.0)); // 4'
+		mode.addAction(moveDistanceForward(18.14));
 		mode.addAction(zeroDistance());
 		mode.addAction(moveturn(90));
 		mode.addAction(zeroDistance());
-		mode.addAction(moveDistanceForward(19.0833)); // 19' 1"
+		mode.addAction(moveDistanceForward(19.08));
 		mode.addAction(zeroDistance());
-		mode.addAction(moveturn(90));
-		mode.addAction(moveDistanceForward(8.33)); // 8' 4"
+		mode.addAction(moveturn(-90));
 		mode.addAction(zeroDistance());
-		mode.addAction(moveturn(90));
+		mode.addAction(moveDistanceForward(7.19));
 		mode.addAction(zeroDistance());
-		mode.addAction(moveDistanceForward(1.479)); // 1' 5.75"
+		mode.addAction(moveturn(-90));
 		mode.addAction(zeroDistance());
-		mode.addAction(moveDistanceForward(-2.0)); // 2' backwards
+		mode.addAction(moveDistanceForward(0.375));
 		return mode;
 	}
 	
-	public static ActionGroup startSwitchSide3B(double distance, double rotationInDegrees) {
-		String actionGroupText = "Start on side 3B, put cube on switch.";
+	public static ActionGroup centerBasicScaleLeft(){
+		String actionGroupText = "Start in center, put cube on left scale";
 		ActionGroup mode = new ActionGroup(actionGroupText);
 		mode.addAction(zeroDistance());
-		mode.addAction(moveDistanceForward(12.33)); // 12' 4"
+		mode.addAction(moveDistanceForward(4.0));
+		mode.addAction(zeroDistance());
+		mode.addAction(moveturn(-90));
+		mode.addAction(zeroDistance());
+		mode.addAction(moveDistanceForward(10.0));
 		mode.addAction(zeroDistance());
 		mode.addAction(moveturn(90));
 		mode.addAction(zeroDistance());
-		mode.addAction(moveDistanceForward(1.479)); // 1' 5.75"
+		mode.addAction(moveDistanceForward(21.33));
 		mode.addAction(zeroDistance());
-		mode.addAction(moveDistanceForward(-2.0)); // 2' backwards
+		mode.addAction(moveturn(90));
+		mode.addAction(zeroDistance());
+		mode.addAction(moveDistanceForward(0.375));
+		return mode;
+	}
+	
+	public static ActionGroup centerBasicScaleRight(){
+		String actionGroupText = "Start in center, put cube on right scale";
+		ActionGroup mode = new ActionGroup(actionGroupText);
+		mode.addAction(zeroDistance());
+		mode.addAction(moveDistanceForward(4.0));
+		mode.addAction(zeroDistance());
+		mode.addAction(moveturn(90));
+		mode.addAction(zeroDistance());
+		mode.addAction(moveDistanceForward(9.08));
+		mode.addAction(zeroDistance());
+		mode.addAction(moveturn(-90));
+		mode.addAction(zeroDistance());
+		mode.addAction(moveDistanceForward(21.33));
+		mode.addAction(zeroDistance());
+		mode.addAction(moveturn(-90));
+		mode.addAction(zeroDistance());
+		mode.addAction(moveDistanceForward(0.375));
+		return mode;
+	}
+	
+	public static ActionGroup rightBasicScaleLeft(){
+		String actionGroupText = "Start on right, put cube on left scale";
+		ActionGroup mode = new ActionGroup(actionGroupText);
+		mode.addAction(zeroDistance());
+		mode.addAction(moveDistanceForward(18.14));
+		mode.addAction(zeroDistance());
+		mode.addAction(moveturn(-90));
+		mode.addAction(zeroDistance());
+		mode.addAction(moveDistanceForward(19.08));
+		mode.addAction(zeroDistance());
+		mode.addAction(moveturn(90));
+		mode.addAction(zeroDistance());
+		mode.addAction(moveDistanceForward(7.19));
+		mode.addAction(zeroDistance());
+		mode.addAction(moveturn(90));
+		mode.addAction(zeroDistance());
+		mode.addAction(moveDistanceForward(0.375));
+		return mode;
+	}
+	
+	public static ActionGroup rightBasicScaleRight(){
+		String actionGroupText = "Start on right, put cube on right scale";
+		ActionGroup mode = new ActionGroup(actionGroupText);
+		mode.addAction(zeroDistance());
+		mode.addAction(moveDistanceForward(25.33));
+		mode.addAction(zeroDistance());
+		mode.addAction(moveturn(-90));
+		mode.addAction(zeroDistance());
+		mode.addAction(moveDistanceForward(0.375));
+		return mode;
+	}
+	
+	// Advanced
+	
+	public static ActionGroup leftAdvancedSwitch() {
+		String actionGroupText = "Start on left side, put cube on switch and second on left side of scale.";
+		ActionGroup mode = new ActionGroup(actionGroupText);
+		mode.addActions(leftBasicSwitch());
+		mode.addAction(zeroDistance());
+		mode.addAction(moveturn(-90)); // turn 90 degrees counterclockwise
+		mode.addAction(zeroDistance());
+		mode.addAction(moveDistanceForward(5.81)); // move forward 5' 9.72"
+		mode.addAction(zeroDistance());
+		mode.addAction(moveturn(90)); // turn 90 degrees clockwise
+		mode.addAction(zeroDistance());
+		mode.addAction(moveDistanceForward(4.08)); // move forward 4' 1"
+		mode.addAction(zeroDistance());
+		mode.addAction(moveturn(90)); // turn 90 degrees clockwise
+		mode.addAction(zeroDistance());
+		mode.addAction(zeroDistance());
+		mode.addAction(moveDistanceForward(1.3)); // move forward 1' 3.6"
+		mode.addAction(zeroDistance());
+		mode.addAction(moveDistanceForward(-1.3)); // move backward 1' 3.6"
+		mode.addAction(zeroDistance());
+		mode.addAction(moveturn(-90)); // turn 90 degrees counterclockwise
+		mode.addAction(zeroDistance());
+		mode.addAction(moveDistanceForward(-4.08)); // move backward 4' 1"
+		mode.addAction(zeroDistance());
+		mode.addAction(moveturn(-90)); // turn 90 degrees counterclockwise
+		mode.addAction(zeroDistance());
+		mode.addAction(moveDistanceForward(7.19)); // move forward 7' 2.28"
+		mode.addAction(zeroDistance());
+		mode.addAction(moveturn(90)); // turn 90 degrees clockwise
+		mode.addAction(zeroDistance());
+		mode.addAction(moveDistanceForward(0.375 + 0.521)); // move forward 10.752"
+		return mode;
+	}
+	
+	public static ActionGroup leftAdvancedScaleLeftSwitch() {
+		String actionGroupText = "Start on left side, put cube on left scale and second on left switch.";
+		ActionGroup mode = new ActionGroup(actionGroupText);
+		mode.addActions(leftBasicScaleLeft());
+		mode.addAction(moveturn(90));
+		mode.addAction(zeroDistance());
+		mode.addAction(moveDistanceForward(7.19));
+		mode.addAction(zeroDistance());
+		mode.addAction(moveturn(-90));
+		mode.addAction(zeroDistance());
+		mode.addAction(moveDistanceForward(4.08 + 1.0));
+		mode.addAction(zeroDistance());
+		mode.addAction(moveturn(90));
+		mode.addAction(zeroDistance());
+		mode.addAction(moveDistanceForward(1.4)); // move forward 1' 3.6"
+		mode.addAction(zeroDistance());
+		mode.addAction(moveDistanceForward(-1.4)); // move backward 1' 3.6"
+		mode.addAction(zeroDistance());
+		mode.addAction(moveturn(-90));
+		mode.addAction(zeroDistance());
+		mode.addAction(moveDistanceForward(-5.08));
+		mode.addAction(zeroDistance());
+		mode.addAction(moveturn(90));
+		mode.addAction(zeroDistance());
+		mode.addAction(moveDistanceForward(5.81)); // move forward 5' 9.72"
+		mode.addAction(zeroDistance());
+		mode.addAction(moveturn(-90));
+		mode.addAction(zeroDistance());
+		mode.addAction(moveDistanceForward(3.1));
+		mode.addAction(zeroDistance());
+		return mode;
+	}
+	
+	public static ActionGroup leftAdvancedSwitchRightScale() {
+		String actionGroupText = "Start on left side, put cube on left switch and second on right scale.";
+		ActionGroup mode = new ActionGroup(actionGroupText);
+		mode.addActions(leftBasicSwitch());
+		mode.addAction(zeroDistance());
+		mode.addAction(moveturn(-90));
+		mode.addAction(zeroDistance());
+		mode.addAction(moveDistanceForward(5.81)); //5.08
+		mode.addAction(zeroDistance());
+		mode.addAction(moveturn(90));
+		mode.addAction(zeroDistance());
+		mode.addAction(moveDistanceForward(2.0 + 11.7083 + 1.083 + 1.083)); //19.08
+		mode.addAction(zeroDistance());
+		mode.addAction(moveturn(90));
+		mode.addAction(zeroDistance());
+		mode.addAction(moveDistanceForward(1.3)); // move forward 1' 3.6"
+		mode.addAction(zeroDistance());
+		mode.addAction(moveDistanceForward(-1.3)); // move backward 1' 3.6"
+		mode.addAction(zeroDistance());
+		mode.addAction(moveturn(-90));
+		mode.addAction(zeroDistance());
+		mode.addAction(moveDistanceForward(5.2057));
+		mode.addAction(zeroDistance());
+		mode.addAction(moveturn(-90));
+		mode.addAction(zeroDistance());
+		mode.addAction(moveDistanceForward(7.19));
+		mode.addAction(zeroDistance());
+		mode.addAction(moveturn(-90));
+		mode.addAction(zeroDistance());
+		mode.addAction(moveDistanceForward(0.375 + 1.0 + 0.45));
 		return mode;
 	}
 

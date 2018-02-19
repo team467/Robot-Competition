@@ -9,21 +9,27 @@ import org.apache.log4j.PatternLayout;
 import org.apache.log4j.RollingFileAppender;
 import org.usfirst.frc.team467.robot.Autonomous.ActionGroup;
 import org.usfirst.frc.team467.robot.vision.VisionIntegration;
+import org.usfirst.frc.team467.robot.Autonomous.MatchConfiguration;
+import org.usfirst.frc.team467.robot.simulator.DriveSimulator;
+import org.usfirst.frc.team467.robot.simulator.draw.RobotShape;
 
 public class Logging {
 	public static void init() {
 		setupDefaultLogging();
 
 		// Enable extra logging for classes you want to debug
-		Logger.getLogger(Robot.class).setLevel(Level.WARN);
 		Logger.getLogger(ActionGroup.class).setLevel(Level.WARN);
 		Logger.getLogger(Drive.class).setLevel(Level.WARN);
+		Logger.getLogger(DriveSimulator.class).setLevel(Level.WARN);
 		Logger.getLogger(Elevator.class).setLevel(Level.WARN);
+		Logger.getLogger(Grabber.class).setLevel(Level.WARN);
+		Logger.getLogger(MatchConfiguration.class).setLevel(Level.DEBUG);
+		Logger.getLogger(OpticalSensor.class).setLevel(Level.WARN);
+		Logger.getLogger(Robot.class).setLevel(Level.DEBUG);
+		Logger.getLogger(RobotShape.class).setLevel(Level.WARN);
+		Logger.getLogger(Rumbler.class).setLevel(Level.WARN);
+		Logger.getLogger(VisionIntegration.class).setLevel(Level.WARN);
 		Logger.getLogger(XBoxJoystick467.class).setLevel(Level.WARN);
-		Logger.getLogger(Grabber.class).setLevel(Level.DEBUG);
-		Logger.getLogger(Rumbler.class).setLevel(Level.DEBUG);
-		Logger.getLogger(OpticalSensor.class).setLevel(Level.DEBUG);
-		Logger.getLogger(VisionIntegration.class).setLevel(Level.DEBUG);
 	}
 
 	private static void setupDefaultLogging() {

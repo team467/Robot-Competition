@@ -301,7 +301,7 @@ public class Drive extends DifferentialDrive {
 	}
 	
 	public void sendData() {
-		RobotData.getInstance().update(rightLead.getSelectedSensorPosition(0), leftLead.getSelectedSensorPosition(0));
+		RobotData.getInstance().updateDrivePosition(rightLead.getSelectedSensorPosition(0), leftLead.getSelectedSensorPosition(0));
 	}
 
 	/**
