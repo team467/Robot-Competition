@@ -93,8 +93,6 @@ public class RobotMap {
 			ELEVATOR_MOTOR_CHANNEL = 1;
 
 			HAS_RAMPS = false;
-			RAMP_LEFT_SOLENOID_CHANNEL = 0;
-			RAMP_RIGHT_SOLENOID_CHANNEL = 0; // TODO Assign real values
 
 			isDriveMotorInverted = new boolean[] { false, true, false, true };
 			break;
@@ -128,8 +126,6 @@ public class RobotMap {
 			// TODO Assign values to the game piece variables, and make more as appropriate
 			ELEVATOR_MOTOR_CHANNEL = 7;
 
-			RAMP_LEFT_SOLENOID_CHANNEL = 0;
-			RAMP_RIGHT_SOLENOID_CHANNEL = 0; // TODO Assign real values
 			AUTONOMOUS_DRIVE_TIMEOUT_MS = 500;
 			break;
 		case Competition_2:
@@ -152,18 +148,22 @@ public class RobotMap {
 			RIGHT_FOLLOWER_2_CHANNEL = 6;
 
 			HAS_ELEVATOR = true;
-			HAS_RAMPS = true;
+			ELEVATOR_MOTOR_CHANNEL = 0;
 
 			HAS_GRABBER = true;
 			GRABBER_L_CHANNEL = 1; 
 			GRABBER_R_CHANNEL = 2;
 			OPTICAL_CHANNEL = 5;
 
-			// TODO Assign values to the game piece variables, and make more as appropriate
-			ELEVATOR_MOTOR_CHANNEL = 0;
+			HAS_RAMPS = true;
+			RAMP_LEFT_FORWARD_CHANNEL = 1;
+			RAMP_LEFT_REVERSE_CHANNEL = 4;
 
-			RAMP_LEFT_SOLENOID_CHANNEL = 0;
-			RAMP_RIGHT_SOLENOID_CHANNEL = 0; // TODO Assign real values
+			RAMP_LEFT_FORWARD_CHANNEL = 2;
+			RAMP_LEFT_REVERSE_CHANNEL = 5;
+
+			RAMP_RELEASE_FORWARD_CHANNEL = 0;
+			RAMP_RELEASE_REVERSE_CHANNEL = 3;
 			AUTONOMOUS_DRIVE_TIMEOUT_MS = 500;
 			break;
 		}
@@ -244,6 +244,12 @@ public class RobotMap {
 	public static final double ELEVATOR_TICKS_PER_INCH = (ELEVATOR_BOTTOM_TICKS - ELEVATOR_TOP_TICKS) / ELEVATOR_HEIGHT_RANGE_INCHES;
 
 	public static boolean HAS_RAMPS;
-	public static int RAMP_LEFT_SOLENOID_CHANNEL;
-	public static int RAMP_RIGHT_SOLENOID_CHANNEL;
+	public static int RAMP_LEFT_FORWARD_CHANNEL;
+	public static int RAMP_LEFT_REVERSE_CHANNEL;
+
+	public static int RAMP_RIGHT_FORWARD_CHANNEL;
+	public static int RAMP_RIGHT_REVERSE_CHANNEL;
+
+	public static int RAMP_RELEASE_FORWARD_CHANNEL;
+	public static int RAMP_RELEASE_REVERSE_CHANNEL;
 }
