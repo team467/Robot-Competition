@@ -182,16 +182,6 @@ public class RobotMap {
 	public static final double NORMAL_MAX_SPEED = 0.6;
 	public static final double SLOW_MAX_SPEED = 0.35;
 	
-	
-	// Elevator Constants
-	public static final double ELEVATOR_GEAR_CIRCUMFERENCE_IN_INCHES = 20; // TODO: SET
-	public static int ELEVATOR_HEIGHT_SENSOR_ID = 7; // TODO: SET
-	public static int ELEVATOR_INITIAL_TICKS = 123; // TODO: SET
-	public static double ELEVATOR_MIN_HEIGHT_IN_FEET = 0.0; // TODO: SET
-	public static double ELEVATOR_MAX_HEIGHT_IN_FEET = 8.0; // TODO: SET
-	public static int ELEVATOR_TICKS_PER_TURN = 20; // TODO: SET
-	public static int MAX_ELEVATOR_RPM = 20; // TODO: SET
-
 	/**
 	 * The maximum revolutions per minute (RPM) of a wheel when in speed control mode.
 	 * Also for motion magic?
@@ -230,6 +220,24 @@ public class RobotMap {
 
 	// Game Pieces
 
+	// Elevator Constants
+	public static final double ELEVATOR_GEAR_CIRCUMFERENCE_IN_INCHES = 20; // TODO: SET
+	public static int ELEVATOR_HEIGHT_SENSOR_ID = 7; // TODO: SET
+	public static int ELEVATOR_INITIAL_TICKS = 123; // TODO: SET
+	public static double ELEVATOR_MIN_HEIGHT_IN_FEET = 0.0; // TODO: SET
+	public static double ELEVATOR_MAX_HEIGHT_IN_FEET = 8.0; // TODO: SET
+	public static int ELEVATOR_TICKS_PER_TURN = 20; // TODO: SET
+	public static int MAX_ELEVATOR_RPM = 20; // TODO: SET
+
+	public static final double ELEVATOR_HEIGHT_RANGE_INCHES = 94.5;
+	public static final double ELEVATOR_ERROR_TOLERANCE_INCHES = 1.0;
+
+	public static final int ELEVATOR_BOTTOM_TICKS = 812;
+	public static final int ELEVATOR_TOP_TICKS = 364;
+
+	// Ticks per inch is based on empirical measurements on the robot. Approximately 4.740...
+	public static final double ELEVATOR_TICKS_PER_INCH = (ELEVATOR_BOTTOM_TICKS - ELEVATOR_TOP_TICKS) / ELEVATOR_HEIGHT_RANGE_INCHES;
+
 	public static boolean HAS_ELEVATOR;
 	public static int ELEVATOR_MOTOR_CHANNEL;
 	public static double MIN_LIFT_SPEED = 0.1;
@@ -241,15 +249,6 @@ public class RobotMap {
 	public static int GRABBER_L_CHANNEL;
 	public static int GRABBER_R_CHANNEL;
 	public static int OPTICAL_CHANNEL;
-
-	public static final double ELEVATOR_HEIGHT_RANGE_INCHES = 94.5;
-	public static final double ELEVATOR_ERROR_TOLERANCE_INCHES = 1.0;
-
-	public static final int ELEVATOR_BOTTOM_TICKS = 812;
-	public static final int ELEVATOR_TOP_TICKS = 364;
-
-	// Ticks per inch is based on empirical measurements on the robot. Approximately 4.740...
-	public static final double ELEVATOR_TICKS_PER_INCH = (ELEVATOR_BOTTOM_TICKS - ELEVATOR_TOP_TICKS) / ELEVATOR_HEIGHT_RANGE_INCHES;
 
 	public static boolean HAS_RAMPS;
 	public static int RAMP_SOLENOID_CHANNEL;
