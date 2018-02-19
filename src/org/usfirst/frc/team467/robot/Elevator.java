@@ -20,6 +20,8 @@ public class Elevator {
 
 	private Stops targetHeight;
 
+	private final int ALLOWABLE_ERROR_TICKS = 3;
+
 	public enum Stops {
 		// null if no stop is desired
 		basement(761),
@@ -38,8 +40,7 @@ public class Elevator {
 	}
 
 	/**
-	 * 
-	 * @return a single instance of the Elevator object.
+	 * Get the single instance of the Elevator object.
 	 */
 	public static Elevator getInstance() {
 		if (instance == null) {
@@ -76,7 +77,7 @@ public class Elevator {
 		heightController.config_kD(0, 5.0, RobotMap.TALON_TIMEOUT);
 		heightController.config_kF(0, 0.0, RobotMap.TALON_TIMEOUT);
 
-		heightController.configAllowableClosedloopError(0, 3, RobotMap.TALON_TIMEOUT);
+		heightController.configAllowableClosedloopError(0, ALLOWABLE_ERROR_TICKS, RobotMap.TALON_TIMEOUT);
 	}
 
 	private double getRawHeight() {
@@ -89,6 +90,7 @@ public class Elevator {
 	public void moveToHeight(Stops target) {
 		// targetHeight member variable used in periodic function to reach the height
 		targetHeight = target;
+		SmartDashboard.putString("Elevator/Most Recent Target", target.toString());
 	}
 
 	private void automaticMove() {
@@ -100,8 +102,18 @@ public class Elevator {
 			m_safetyHelper.feed();
 		}
 
+		// If we're in position, stop.
+		final int error = targetHeight.height - heightController.getSelectedSensorPosition(0);
+		if (heightController.getControlMode() == ControlMode.MotionMagic && Math.abs(error) <= ALLOWABLE_ERROR_TICKS) {
+			LOGGER.debug("automaticMove, clearing target,  trajectory=" + targetHeight.height
+					+ " pos=" + heightController.getSelectedSensorPosition(0) + " err=" + error);
+			targetHeight = null;
+			heightController.disable();
+			return;
+		}
+
 		configMotorParameters();
-		LOGGER.info("Moving to height=" + targetHeight.height);
+		LOGGER.debug("Moving to height=" + targetHeight.height);
 
 		heightController.set(ControlMode.Position, targetHeight.height);
 	}
@@ -112,6 +124,8 @@ public class Elevator {
 	 * @param speed The velocity. Shall be a value between -1 and 1.
 	 */
 	public void move(double speed) {
+		SmartDashboard.putNumber("Elevator/Move Speed", speed);
+
 		if (!RobotMap.HAS_ELEVATOR) {
 			return;
 		}
@@ -128,7 +142,7 @@ public class Elevator {
 			automaticMove();
 		} else {
 			// Nothing to do, make sure we're not moving.
-			heightController.set(ControlMode.MotionMagic, getRawHeight());
+			heightController.disable();
 		}
 
 		telemetry();
@@ -149,8 +163,9 @@ public class Elevator {
 		DriverStation.getInstance().set(1, "position");
 		DriverStation.getInstance().set(6, heightController.getSelectedSensorPosition(0));
 
-		SmartDashboard.putNumber("Elevator Closed Loop Error", heightController.getClosedLoopError(0));
-		SmartDashboard.putNumber("Elevator Current Position", heightController.getSelectedSensorPosition(0));
-		SmartDashboard.putNumber("Elevator Target Height (in)", targetHeight != null ? targetHeight.height : -1);
+		SmartDashboard.putNumber("Elevator/Closed Loop Error", heightController.getClosedLoopError(0));
+		SmartDashboard.putNumber("Elevator/Current Ticks", heightController.getSelectedSensorPosition(0));
+		SmartDashboard.putNumber("Elevator/Target Ticks", targetHeight != null ? targetHeight.height : -1);
+		SmartDashboard.putString("Elevator/Control Mode", heightController.getControlMode().toString());
 	}
 }
