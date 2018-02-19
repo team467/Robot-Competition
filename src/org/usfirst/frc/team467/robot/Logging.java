@@ -8,6 +8,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
 import org.apache.log4j.RollingFileAppender;
 import org.usfirst.frc.team467.robot.Autonomous.ActionGroup;
+import org.usfirst.frc.team467.robot.vision.VisionIntegration;
 
 public class Logging {
 	public static void init() {
@@ -20,6 +21,7 @@ public class Logging {
 		Logger.getLogger(Elevator.class).setLevel(Level.DEBUG);
 //		Logger.getLogger(XBoxJoystick467.class).setLevel(Level.DEBUG);
 		Logger.getLogger(Grabber.class).setLevel(Level.DEBUG);
+		Logger.getLogger(VisionIntegration.class).setLevel(Level.DEBUG);
 	}
 
 	private static void setupDefaultLogging() {
