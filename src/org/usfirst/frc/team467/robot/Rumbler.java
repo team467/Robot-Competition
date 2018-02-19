@@ -1,9 +1,6 @@
 package org.usfirst.frc.team467.robot;
 
 import org.apache.log4j.Logger;
-import org.usfirst.frc.team467.robot.XBoxJoystick467.Button;
-
-import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 
 public class Rumbler {
 	private static final Logger LOGGER = Logger.getLogger(Rumbler.class);

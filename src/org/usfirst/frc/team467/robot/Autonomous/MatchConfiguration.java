@@ -1,6 +1,5 @@
 package org.usfirst.frc.team467.robot.Autonomous;
-// changes 
-import org.apache.log4j.Level;
+
 import org.apache.log4j.Logger;
 import org.usfirst.frc.team467.robot.RobotMap;
 
@@ -206,7 +205,7 @@ public class MatchConfiguration {
 			}
 		}
 	}
-	//||----------------------------------Right Here!----------------------------------||
+
 	public ActionGroup autonomousDecisionTree() {
 
 		LOGGER.debug("Entering decision tree");
@@ -254,7 +253,7 @@ public class MatchConfiguration {
 		case UNKNOWN:
 		default:
 			autonomous = Actions.doNothing();
-			LOGGER.info("DO NOTHING! ---------------------------------------------------------" + Actions.doNothing());
+			LOGGER.info("DO NOTHING! ------------------------------------------------" + Actions.doNothing());
 		}
 
 		autonomous.enable();

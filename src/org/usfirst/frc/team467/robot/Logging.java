@@ -28,6 +28,7 @@ public class Logging {
 		Logger.getLogger(Robot.class).setLevel(Level.DEBUG);
 		Logger.getLogger(RobotShape.class).setLevel(Level.WARN);
 		Logger.getLogger(Rumbler.class).setLevel(Level.WARN);
+		Logger.getLogger(TalonSpeedControllerGroup.class).setLevel(Level.WARN);
 		Logger.getLogger(VisionIntegration.class).setLevel(Level.WARN);
 		Logger.getLogger(XBoxJoystick467.class).setLevel(Level.WARN);
 	}

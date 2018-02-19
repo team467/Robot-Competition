@@ -38,7 +38,7 @@ public class VisionIntegration {
 					return;
 				} else {
 					turnAngle = vision.avgAngle();
-					drive.turn(turnAngle);
+//					drive.turn(turnAngle);
 				}
 			}
 		} else {
