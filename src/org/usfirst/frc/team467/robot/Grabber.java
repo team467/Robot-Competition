@@ -118,7 +118,7 @@ public class Grabber {
 		if (Math.abs(throttle) < RobotMap.MIN_GRAB_SPEED) {
 			throttle = 0.0;
 		}
-
+		
 		if (justGotCube() && throttle < 0.0) {
 			DriverStation.getInstance().setNavRumble(100);
 			DriverStation.getInstance().setDriverRumble(100);

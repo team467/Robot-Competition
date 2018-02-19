@@ -48,8 +48,7 @@ public class Robot extends TimedRobot {
 		Logging.init();
 
 		// Initialize RobotMap
-		RobotMap.init(RobotID.Board);
-//		RobotMap.init(RobotID.Competition_1);
+		RobotMap.init(RobotID.Competition_1);
 
 		// Make robot objects
 		driverstation = DriverStation.getInstance();
@@ -65,13 +64,13 @@ public class Robot extends TimedRobot {
 		gyro.calibrate();
 		gyro.reset();
 
-		vision = VisionProcessing.getInstance();
-		vision.startVision();
-		//made usb camera and captures video
-		UsbCamera cam = CameraServer.getInstance().startAutomaticCapture();
-		//set resolution and frames per second to match driverstation
-		cam.setResolution(320, 240);
-		cam.setFPS(15);
+//		vision = VisionProcessing.getInstance();
+//		vision.startVision();
+//		//made usb camera and captures video
+//		UsbCamera cam = CameraServer.getInstance().startAutomaticCapture();
+//		//set resolution and frames per second to match driverstation
+//		cam.setResolution(320, 240);
+//		cam.setFPS(15);
 		
 	}
 	
@@ -92,11 +91,12 @@ public class Robot extends TimedRobot {
 
 	public void autonomousInit() {
 		driverstation.readInputs();
-		matchConfig.load();
-		autonomous = matchConfig.autonomousDecisionTree();
+//		matchConfig.load();
+//		autonomous = matchConfig.autonomousDecisionTree();
+		autonomous = Actions.moveDistance(5);
 		LOGGER.info("Init Autonomous:" + autonomous.getName());
 		autonomous.enable();
-	}
+		}
 
 	public void autonomousPeriodic() {
 		tiltMonitor.periodic();
@@ -106,7 +106,7 @@ public class Robot extends TimedRobot {
 	}
 
 	public void teleopInit() {
-		autonomous.terminate();
+//		autonomous.terminate();
 		autonomous = Actions.doNothing();
 		driverstation.readInputs();
 	}

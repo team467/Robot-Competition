@@ -44,11 +44,6 @@ public class Actions {
 				() -> drive.tankDrive(0, 0, false));
 	}
 
-	public static final Action moveForward = new Action(
-			"Move Forward 2 seconds",
-			new ActionGroup.Duration(1),
-			() -> Drive.getInstance().tankDrive(0.5, 0.5));
-
 	public static Action print(String message) {
 		return new Action(
 				"Print custom message",

@@ -22,10 +22,10 @@ public class Logging {
 		Logger.getLogger(Drive.class).setLevel(Level.WARN);
 		Logger.getLogger(DriveSimulator.class).setLevel(Level.WARN);
 		Logger.getLogger(Elevator.class).setLevel(Level.WARN);
-		Logger.getLogger(Grabber.class).setLevel(Level.WARN);
+		Logger.getLogger(Grabber.class).setLevel(Level.DEBUG);
 		Logger.getLogger(MatchConfiguration.class).setLevel(Level.DEBUG);
 		Logger.getLogger(OpticalSensor.class).setLevel(Level.WARN);
-		Logger.getLogger(Robot.class).setLevel(Level.DEBUG);
+		Logger.getLogger(Robot.class).setLevel(Level.INFO);
 		Logger.getLogger(RobotShape.class).setLevel(Level.WARN);
 		Logger.getLogger(Rumbler.class).setLevel(Level.WARN);
 		Logger.getLogger(TalonSpeedControllerGroup.class).setLevel(Level.WARN);

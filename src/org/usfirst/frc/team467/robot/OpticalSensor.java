@@ -1,4 +1,6 @@
 package org.usfirst.frc.team467.robot;
+import com.sun.media.jfxmedia.logging.Logger;
+
 import edu.wpi.first.wpilibj.DigitalInput;
 
 public class OpticalSensor {
@@ -19,6 +21,11 @@ public class OpticalSensor {
 	}
 
 	public boolean detectedTarget() {
+//		if (di.get()) {
+//			System.out.println("NO CUBE !!!");
+//		} else {
+//			System.out.println("SEE CUBE !!!!!!");
+//		}
 		return !di.get();
 	}
 
