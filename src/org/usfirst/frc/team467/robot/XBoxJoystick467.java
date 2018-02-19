@@ -70,8 +70,10 @@ public class XBoxJoystick467 {
 	 * @return
 	 */
 	public boolean pressed(Button b) {
+		boolean result = buttonDown.get(b) && !prev_buttonDown.get(b);
+		LOGGER.debug("Button " + b.name() + "=" + result);
 		// TODO: return true if the button is pressed, but wasn't before
-		return buttonDown.get(b) && !prev_buttonDown.get(b);
+		return result;
 	}
 
 	/**
