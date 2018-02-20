@@ -202,6 +202,7 @@ public class Drive extends DifferentialDrive {
 		double ramp = ((elevatorHeight * 4.8) / -407) + 9.21;
 		left.setOpenLoopRamp(ramp);
 		right.setOpenLoopRamp(ramp);
+		LOGGER.debug("TILT: "+ Gyrometer.getInstance().getPitchDegrees());
 	}
 
 }
