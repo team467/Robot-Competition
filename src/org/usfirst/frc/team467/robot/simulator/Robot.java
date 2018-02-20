@@ -149,11 +149,5 @@ public class Robot {
 		move12;
 	}
 		
-	public static void main(String[] args) {		
-		Robot robot = new Robot();
-		robot.robotInit();
-		robot.autonomousInit();
-		while(true) robot.autonomousPeriodic();
-	}
 
 }
