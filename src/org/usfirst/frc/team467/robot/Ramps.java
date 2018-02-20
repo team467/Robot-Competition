@@ -9,8 +9,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * This class uses a state machine with three states.
- * Each function first checks that it's in the right state,
- * and then sets the right state when it finishes.
+ * Each function checks that it's in the appropriate precondition before it starts,
+ * and then sets the appropriate state when it finishes.
  */
 public class Ramps {
 	private static final Logger LOGGER = Logger.getLogger(Ramps.class);
