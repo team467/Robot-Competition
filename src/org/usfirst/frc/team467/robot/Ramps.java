@@ -31,9 +31,9 @@ public class Ramps {
 	private int timeSinceRelease;
 
 	private Ramps() {
+		releaseSolenoid = new DoubleSolenoid(RobotMap.RAMP_RELEASE_FORWARD_CHANNEL, RobotMap.RAMP_RELEASE_REVERSE_CHANNEL);
 		left = new Ramp("Left Ramp", RobotMap.RAMP_LEFT_FORWARD_CHANNEL, RobotMap.RAMP_LEFT_REVERSE_CHANNEL);
 		right = new Ramp("Right Ramp", RobotMap.RAMP_RIGHT_FORWARD_CHANNEL, RobotMap.RAMP_RIGHT_REVERSE_CHANNEL);
-		releaseSolenoid = new DoubleSolenoid(RobotMap.RAMP_RELEASE_FORWARD_CHANNEL, RobotMap.RAMP_RELEASE_REVERSE_CHANNEL);
 	}
 
 	public static Ramps getInstance() {

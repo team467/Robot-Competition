@@ -219,14 +219,17 @@ public class Robot extends TimedRobot {
 
 		// Ramps state machines protect against conflicts
 		if (driverstation.getDeployButtonsDown()) {
+			LOGGER.debug("Deploy Buttons down");
 			ramps.deploy();
 		}
 
 		if (driverstation.getLeftRampButtonPressed()) {
+			LOGGER.debug("Left Ramp Button Pressed");
 			ramps.toggleLeftState();
 		}
 
 		if (driverstation.getRightRampButtonPressed()) {
+			LOGGER.debug("Right Ramp Button Pressed");
 			ramps.toggleRightState();
 		}
 
