@@ -131,6 +131,7 @@ public class Robot extends TimedRobot {
 		//		autonomous.terminate();
 		//		autonomous = Actions.doNothing();
 		driverstation.periodic();
+		drive.setRamp(1.0);
 	}
 
 	public void testInit() {
