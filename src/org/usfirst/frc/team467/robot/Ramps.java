@@ -11,8 +11,8 @@ public class Ramps {
 	private static final Logger LOGGER = Logger.getLogger(Ramps.class);
 	private static Ramps instance;
 
-	public Ramp left;
-	public Ramp right;
+	private Ramp left;
+	private Ramp right;
 	private DoubleSolenoid release;
 	private State state = State.START;
 

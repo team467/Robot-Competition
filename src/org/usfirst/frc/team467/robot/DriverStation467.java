@@ -134,11 +134,14 @@ public class DriverStation467 {
 		return getNavJoystick().getRightStickY();
 	}
 
-	public boolean getLeftRampButton() {
+	public boolean getDeployButtonsDown() {
+		return getNavJoystick().down(Button.left) && getNavJoystick().down(Button.right);
+	}
+	public boolean getLeftRampButtonPressed() {
 		return getNavJoystick().pressed(Button.left);
 	}
 
-	public boolean getRightRampButton() {
+	public boolean getRightRampButtonPressed() {
 		return getNavJoystick().pressed(Button.right);
 	}
 
