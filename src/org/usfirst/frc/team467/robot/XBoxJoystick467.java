@@ -202,11 +202,10 @@ public class XBoxJoystick467 {
 
 	public boolean getPOVleftPressed() {
 		boolean isLeft = getPOVleft();
-		if (isLeft && !wasPOVleft) {
-			wasPOVleft = isLeft;
-			return true;
-		}
-		return false;
+		boolean isPressed = isLeft && !wasPOVleft;
+		wasPOVleft = isLeft;
+
+		return isPressed;
 	}
 
 	public boolean getPOVright() {
@@ -215,11 +214,10 @@ public class XBoxJoystick467 {
 
 	public boolean getPOVrightPressed() {
 		boolean isRight = getPOVright();
-		if (isRight && !wasPOVright) {
-			wasPOVright = isRight;
-			return true;
-		}
-		return false;
+		boolean isPressed = isRight && !wasPOVright;
+		wasPOVright = isRight;
+
+		return isPressed;
 	}
 
 	/**
