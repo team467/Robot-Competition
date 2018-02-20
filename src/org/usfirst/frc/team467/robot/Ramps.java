@@ -105,7 +105,7 @@ public class Ramps {
 
 	public void telemetry() {
 		SmartDashboard.putString("Ramps/State", state.name());
-		SmartDashboard.putNumber("Time Since Release", timeSinceRelease);
+		SmartDashboard.putNumber("Ramps/Time Since Release", timeSinceRelease);
 		left.telemetry();
 		right.telemetry();
 	}
