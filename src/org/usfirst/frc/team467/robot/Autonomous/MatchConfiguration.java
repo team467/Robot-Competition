@@ -17,11 +17,11 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class MatchConfiguration {
 
 	// Simulator variables
-	private String simulatedGameSpecificMessage = "LRL";
+	private String simulatedGameSpecificMessage = "RRL";
 
 	private Alliance simulatedTeamColor = Alliance.Red;
 
-	private String simulatedAutoMode = "Center";
+	private String simulatedAutoMode = "Left";
 
 	private static MatchConfiguration instance;
 
@@ -220,17 +220,17 @@ public class MatchConfiguration {
 				LOGGER.debug("isSwitchOnSameSide Left True -----------------------"); 
 			} else if (isSwitchOnSameSide() && isScaleOnSameSide()){
 				autonomous = Actions.leftAdvancedSwitch();
-			} else if(isScaleOnSameSide()) {
-				autonomous = Actions.leftBasicScaleLeft();
+			} else if(isScaleOnSameSide() && !isSwitchOnSameSide()) {
+				autonomous = Actions.leftAdvancedSwitchRightScaleLeft();
 				LOGGER.debug("LEFT SCALE ------------------------------ TRUE");
-			} else if(!isScaleOnSameSide()) {
-				autonomous = Actions.leftBasicScaleRight();
+			} else if(!isSwitchOnSameSide() && !isScaleOnSameSide()) {
+				autonomous = Actions.leftAdvancedSwitchRightScaleRight();
 				LOGGER.debug("LEFT Scale ----------------------------- False");
 			} 
 
 			break;
 
-		case CENTER: // there is currently some problems with CENTER code. Check isMySwitchToTheRight().
+		case CENTER: 
 			LOGGER.info("Entering Center");
 			if(isMySwitchToTheRight()) {
 				LOGGER.info("reading isMySwitchToTheRight()");
@@ -245,16 +245,15 @@ public class MatchConfiguration {
 
 		case RIGHT: 
 			if(isSwitchOnSameSide() && !isScaleOnSameSide()) {
-				autonomous = Actions.rightBasicSwitch(); // place the advance version in here and remove the one before. 
-				//autonomous = Actions.rightAdvancedSwitchLeftScale();
+				autonomous = Actions.rightAdvancedSwitchLeftScale();
 				LOGGER.debug("Right isSwitchOnSameSide-----------------------------true ");
 			} else if (isSwitchOnSameSide() && isScaleOnSameSide()) {
-				//autonomous = Actions.rightAdvancedSwitchRightScale();
-			} else if(isScaleOnSameSide()) {
-				autonomous = Actions.rightBasicScaleRight();
+				autonomous = Actions.rightAdvancedSwitch();
+			} else if(isScaleOnSameSide() && !isSwitchOnSameSide()) {
+				autonomous = Actions.rightAdvancedSwitchLeftScaleRight();
 				LOGGER.debug("Scale is on same side");
-			} else if(!isScaleOnSameSide()) {
-				autonomous = Actions.rightBasicScaleLeft();
+			} else if(!isScaleOnSameSide() && !isSwitchOnSameSide()) {
+				autonomous = Actions.rightAdvancedSwitchLeftScaleLeft();
 				LOGGER.debug("Scale is on opposite side");
 			}
 			break;
