@@ -186,11 +186,7 @@ public class Elevator {
 	}
 
 	public void telemetry() {
-		DriverStation467.getInstance().set(0,"target ticks");
-		DriverStation467.getInstance().set(5, heightController.getActiveTrajectoryPosition());
-		DriverStation467.getInstance().set(1, "position");
-		DriverStation467.getInstance().set(6, heightController.getSelectedSensorPosition(0));
-
+		SmartDashboard.putString("Elevator/Control Mode", heightController.getControlMode().name());
 		SmartDashboard.putNumber("Elevator/Closed Loop Error", heightController.getClosedLoopError(0));
 		SmartDashboard.putNumber("Elevator/Current Ticks", heightController.getSelectedSensorPosition(0));
 		SmartDashboard.putNumber("Elevator/Target Ticks", targetHeight != null ? targetHeight.height : -1);
