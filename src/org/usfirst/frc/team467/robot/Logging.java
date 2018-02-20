@@ -21,6 +21,8 @@ public class Logging {
 		Logger.getLogger(Elevator.class).setLevel(Level.INFO);
 		Logger.getLogger(XBoxJoystick467.class).setLevel(Level.INFO);
 		Logger.getLogger(Grabber.class).setLevel(Level.INFO);
+		Logger.getLogger(Ramps.class).setLevel(Level.TRACE);
+		Logger.getLogger(Ramp.class).setLevel(Level.TRACE);
 	}
 
 	private static void setupDefaultLogging() {
