@@ -5,6 +5,11 @@ import org.apache.log4j.Logger;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 
+/**
+ * This class uses a state machine with two states.
+ * Each function first checks that it's in the right state,
+ * and then sets the right state when it finishes.
+ */
 public class Ramp {
 	private static final Logger LOGGER = Logger.getLogger(Ramp.class);
 

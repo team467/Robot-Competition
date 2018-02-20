@@ -7,6 +7,11 @@ import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
+/**
+ * This class uses a state machine with three states.
+ * Each function first checks that it's in the right state,
+ * and then sets the right state when it finishes.
+ */
 public class Ramps {
 	private static final Logger LOGGER = Logger.getLogger(Ramps.class);
 	private static Ramps instance;
@@ -69,6 +74,7 @@ public class Ramps {
 		}
 	}
 
+	// All functions below do not work if the ramps are not deployed
 	public void leftLift() {
 		if (state != State.DEPLOYED) {
 			return;
