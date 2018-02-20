@@ -217,19 +217,17 @@ public class Robot extends TimedRobot {
 
 		grabber.grab(driverstation.getGrabThrottle());
 
-		// Ramps state machines protects against conflicts
+		// Ramps state machines protect against conflicts
 		if (driverstation.getDeployButtonsDown()) {
 			ramps.deploy();
 		}
 
 		if (driverstation.getLeftRampButtonPressed()) {
-			ramps.leftLift();
-			ramps.leftDrop();
+			ramps.toggleLeftState();
 		}
 
 		if (driverstation.getRightRampButtonPressed()) {
-			ramps.rightLift();
-			ramps.rightDrop();
+			ramps.toggleRightState();
 		}
 
 		//changed to arcade drive

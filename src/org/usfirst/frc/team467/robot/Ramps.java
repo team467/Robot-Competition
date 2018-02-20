@@ -60,7 +60,7 @@ public class Ramps {
 		}
 
 		timeSinceRelease += 20; // 20 ms per iteration
-		LOGGER.debug("time=" + timeSinceRelease);
+		LOGGER.trace("time=" + timeSinceRelease);
 
 		if (timeSinceRelease >= 200) { // This code takes priority
 			left.drop();
@@ -73,35 +73,33 @@ public class Ramps {
 	}
 
 	// All functions below do not work if the ramps are not deployed
-	public void leftLift() {
+	public void toggleLeftState() {
 		if (state != State.DEPLOYED) {
 			return;
 		}
 
-		left.lift();
+		switch (left.getState()) {
+		case DOWN:
+			left.lift();
+			break;
+		case UP:
+			left.drop();
+			break;
+		}
 	}
 
-	public void leftDrop() {
+	public void toggleRightState() {
 		if (state != State.DEPLOYED) {
 			return;
 		}
 
-		left.drop();
-	}
-
-	public void rightLift() {
-		if (state != State.DEPLOYED) {
-			return;
+		switch (right.getState()) {
+		case DOWN:
+			right.lift();
+			break;
+		case UP:
+			right.drop();
+			break;
 		}
-
-		right.lift();
-	}
-
-	public void rightDrop() {
-		if (state != State.DEPLOYED) {
-			return;
-		}
-
-		right.drop();
 	}
 }

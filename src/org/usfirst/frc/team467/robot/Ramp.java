@@ -34,6 +34,10 @@ public class Ramp {
 		state = State.DOWN;
 	}
 
+	public State getState() {
+		return state;
+	}
+
 	public void lift() {
 		if (!RobotMap.HAS_RAMPS) {
 			return;
