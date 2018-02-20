@@ -62,7 +62,6 @@ public class XBoxJoystick467 {
 	public boolean down(Button b) {
 		boolean result = buttonDown.get(b);
 		LOGGER.debug("Button " + b.name() + "=" + result);
-		// TODO: return true if the button is pressed, but wasn't before
 		return result;
 	}
 
@@ -74,7 +73,6 @@ public class XBoxJoystick467 {
 	public boolean pressed(Button b) {
 		boolean result = buttonDown.get(b) && !prev_buttonDown.get(b);
 		LOGGER.debug("Button " + b.name() + "=" + result);
-		// TODO: return true if the button is pressed, but wasn't before
 		return result;
 	}
 
@@ -84,7 +82,6 @@ public class XBoxJoystick467 {
 	 * @return
 	 */
 	public boolean buttonReleased(Button b) {
-		// TODO: Reverse of above
 		return !buttonDown.get(b) && !prev_buttonDown.get(b);
 	}
 
