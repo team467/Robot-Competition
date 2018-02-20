@@ -44,7 +44,7 @@ public class Ramps {
 	}
 
 	public void deploy() {
-		if (state != State.START || DriverStation.getInstance().getMatchTime() > 30) {
+		if (state != State.START || DriverStation.getInstance().getMatchTime() > 30.0) {
 			// Only deploy from start configuration in the last 30 seconds
 			return;
 		}
@@ -61,8 +61,8 @@ public class Ramps {
 		}
 
 		if (timeSinceRelease >= 200) { // This code takes priority
-			left.toggle();
-			right.toggle();
+			left.drop();
+			right.drop();
 			LOGGER.info("Deployed");
 			state = State.DEPLOYED;
 			return;
