@@ -45,15 +45,35 @@ public class Ramp {
 
 		switch (state) {
 		case DOWN:
+			lift();
+			break;
+		case UP:
+			drop();
+			break;
+		}
+	}
+
+	public void lift() {
+		if (!RobotMap.HAS_RAMPS) {
+			return;
+		}
+
+		if (state == State.DOWN) {
 			solenoid.set(DoubleSolenoid.Value.kForward);
 			LOGGER.info(name + " lifting");
 			state = State.UP;
-			break;
-		case UP:
+		}
+	}
+
+	public void drop() {
+		if (!RobotMap.HAS_RAMPS) {
+			return;
+		}
+
+		if (state == State.UP) {
 			solenoid.set(DoubleSolenoid.Value.kReverse);
 			LOGGER.info(name + " dropping");
 			state = State.DOWN;
-			break;
 		}
 	}
 }

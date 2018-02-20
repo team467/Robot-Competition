@@ -52,6 +52,7 @@ public class Ramps {
 		releaseSolenoid.set(DoubleSolenoid.Value.kForward);
 		state = State.RELEASED;
 		timeSinceRelease = 0;
+		LOGGER.info("Deploying");
 	}
 
 	public void periodic() {
@@ -63,12 +64,13 @@ public class Ramps {
 		LOGGER.trace("time=" + timeSinceRelease);
 
 		if (timeSinceRelease >= 200) { // This code takes priority
-			left.toggle(); // Drops because they start lifted
+			left.toggle();
 			right.toggle();
+			LOGGER.info("Deployed");
 			state = State.DEPLOYED;
 		} else if (timeSinceRelease >= 100) { // This code called first
-			left.toggle(); // Lifts because they start dropped
-			right.toggle();
+			left.lift();
+			right.lift();
 		}
 	}
 
