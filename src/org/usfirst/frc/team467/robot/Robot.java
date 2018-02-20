@@ -105,6 +105,7 @@ public class Robot extends TimedRobot {
 	public void autonomousPeriodic() {
 		tiltMonitor.periodic();
 		grabber.periodic();
+		elevator.move(0); // Will move to height if set.
 //		autonomous.run();
 		drive.moveFeet(distance);
 //		drive.logClosedLoopErrors();
@@ -120,16 +121,38 @@ public class Robot extends TimedRobot {
 	 */
 	public void teleopPeriodic() {
 		driverstation.readInputs();
+		tiltMonitor.periodic();
+
 		grabber.grab(driverstation.getGrabThrottle());
 		elevator.move(driverstation.getElevatorSpeed());
 
-		tiltMonitor.periodic();
+		if (driverstation.getFloorHeightButtonPressed()) {
+			LOGGER.info("Dropping to bottom height");
+			elevator.moveToHeight(Elevator.Stops.floor);
+		} else if (driverstation.getSwitchHeightButtonPressed()) {
+			LOGGER.info("Lifting to switch height");
+			elevator.moveToHeight(Elevator.Stops.fieldSwitch);
+		} else if (driverstation.getLowScaleHeightButtonPressed()) {
+			LOGGER.info("Lifting to low scale height");
+			elevator.moveToHeight(Elevator.Stops.lowScale);
+		} else if (driverstation.getHighScaleHeightButtonPressed()) {
+			LOGGER.info("Lifting to high scale height");
+			elevator.moveToHeight(Elevator.Stops.highScale);
+		}
 		
-		drive.logClosedLoopErrors();
-
 		double speed = driverstation.getArcadeSpeed();
 		double turn = driverstation.getArcadeTurn();
+
+		if (Math.abs(speed) < RobotMap.MIN_DRIVE_SPEED) {
+			speed = 0.0;
+		}
+		if (Math.abs(turn) < RobotMap.MIN_DRIVE_SPEED) {
+			turn = 0.0;
+		}
+
+
 		switch (driverstation.getDriveMode()) {
+
 		case ArcadeDrive:
 			drive.arcadeDrive(speed, turn, true);
 			break;
@@ -143,6 +166,8 @@ public class Robot extends TimedRobot {
 			break;
 		default:
 		}
+		
+		drive.logClosedLoopErrors();
 	}
 
 }
