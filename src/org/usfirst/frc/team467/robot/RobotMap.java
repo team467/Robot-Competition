@@ -97,6 +97,8 @@ public class RobotMap {
 			RAMP_SOLENOID_CHANNEL = 0;
 
 			DRIVEMOTOR_NUM = 0;
+			
+			HAS_CAMERA = true;
 
 			isDriveMotorInverted = new boolean[] { false, true, false, true };
 			break;
@@ -124,6 +126,8 @@ public class RobotMap {
 			HAS_RAMPS = false;
 
 			HAS_GRABBER = true;
+			HAS_CAMERA = true;
+			
 			GRABBER_L_CHANNEL = 0; 
 			GRABBER_R_CHANNEL = 1;
 			OPTICAL_CHANNEL = 5;
@@ -160,6 +164,9 @@ public class RobotMap {
 			OPTICAL_CHANNEL = 5;
 
 			DRIVEMOTOR_NUM = 4;
+			
+			HAS_CAMERA = true;
+
 
 			// TODO Assign values to the game piece variables, and make more as appropriate
 			ELEVATOR_MOTOR_CHANNEL = 0;
@@ -255,4 +262,6 @@ public class RobotMap {
 
 	public static boolean HAS_RAMPS;
 	public static int RAMP_SOLENOID_CHANNEL;
+	
+	public static boolean HAS_CAMERA;
 }

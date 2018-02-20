@@ -65,13 +65,15 @@ public class Robot extends TimedRobot {
 		gyro.calibrate();
 		gyro.reset();
 
-//		vision = VisionProcessing.getInstance();
-//		vision.startVision();
-//		//made usb camera and captures video
-//		UsbCamera cam = CameraServer.getInstance().startAutomaticCapture();
-//		//set resolution and frames per second to match driverstation
-//		cam.setResolution(320, 240);
-//		cam.setFPS(15);
+		if (RobotMap.HAS_CAMERA) {
+			vision = VisionProcessing.getInstance();
+			vision.startVision();
+			//made usb camera and captures video
+			UsbCamera cam = CameraServer.getInstance().startAutomaticCapture();
+			//set resolution and frames per second to match driverstation
+			cam.setResolution(320, 240);
+			cam.setFPS(15);
+		}
 		
 	}
 	
