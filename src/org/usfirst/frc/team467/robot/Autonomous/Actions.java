@@ -57,8 +57,10 @@ public class Actions {
 	}
 
 	public static Action zeroDistance() {
-		//		Drive drive = Drive.getInstance();
+
+//		Drive drive = Drive.getInstance();
 		DriveSimulator drive = DriveSimulator.getInstance();
+
 		return new Action(
 				"Zeroing the distance",
 				//				new ActionGroup.RunOnce(() -> drive.zeroPosition()));
@@ -73,13 +75,13 @@ public class Actions {
 	 */
 
 	public static Action moveDistanceForward(double distance) {
-		//		Drive drive = Drive.getInstance();
+
 		DriveSimulator drive = DriveSimulator.getInstance();
+
 		String actionText = "Move forward " + distance + " feet";
 		return new Action(actionText,
 				new ActionGroup.ReachDistance(distance),
 				() -> drive.moveFeet(distance));
-		//				() -> drive.moveFeet(distance));
 	}
 
 
@@ -89,10 +91,12 @@ public class Actions {
 	 * @return
 	 */
 	public static Action moveturn(double rotationInDegrees) {
-		double rotation = rotationInDegrees;
 
-		//		Drive drive = Drive.getInstance();
+	    double rotation = rotationInDegrees;
+	    
+//		Drive drive = Drive.getInstance();
 		DriveSimulator drive = DriveSimulator.getInstance();
+
 		String actionText = "Rotate " + rotationInDegrees + " degrees.";
 		return new Action(actionText,
 				new ActionGroup.ReachDistance(rotation),
@@ -101,7 +105,7 @@ public class Actions {
 	}
 
 	public static boolean moveDistanceComplete(double distance) {
-		Drive drive = Drive.getInstance();
+		DriveSimulator drive = DriveSimulator.getInstance();
 		double distanceMoved = drive.absoluteDistanceMoved();
 		LOGGER.debug("Distances - Target: " + Math.abs(distance) + " Moved: " + distanceMoved);
 		if (distanceMoved >= (Math.abs(distance) - RobotMap.POSITION_ALLOWED_ERROR)) {
@@ -140,7 +144,7 @@ public class Actions {
 	}
 
 	public static ActionGroup moveDistance(double distance) {
-		String actionGroupText = "Move forward 3X " + distance + " feet";
+		String actionGroupText = "Move forward " + distance + " feet";
 		ActionGroup mode = new ActionGroup(actionGroupText);
 		mode.addAction(zeroDistance());
 		mode.addAction(moveDistanceForward(distance));

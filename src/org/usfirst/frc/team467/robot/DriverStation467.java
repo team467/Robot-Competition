@@ -1,8 +1,11 @@
 package org.usfirst.frc.team467.robot;
 
+import org.usfirst.frc.team467.robot.XBoxJoystick467.Button;
 import org.usfirst.frc.team467.robot.Autonomous.ActionGroup;
 
-class DriverStation {
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
+public class DriverStation467 {
 
 	private XBoxJoystick467 driverJoy;
 	private XBoxJoystick467 navJoy;
@@ -10,7 +13,8 @@ class DriverStation {
 	private Rumbler driverRumbler;
 	private Rumbler navRumbler;
 
-	private static DriverStation station;
+	private static DriverStation467 station;
+
 
 	// Mapping of functions to Controller Buttons for normal operation
 	// TODO: Create enum for buttons
@@ -19,9 +23,9 @@ class DriverStation {
 	 *
 	 * @return
 	 */
-	public static DriverStation getInstance() {
+	public static DriverStation467 getInstance() {
 		if (station == null) {
-			station = new DriverStation();
+			station = new DriverStation467();
 		}
 		return station;
 	}
@@ -29,7 +33,7 @@ class DriverStation {
 	/**
 	 * Private constructor
 	 */
-	private DriverStation() {
+	private DriverStation467() {
 		driverJoy = new XBoxJoystick467(0, "driver");
 		navJoy = new XBoxJoystick467(1, "nav");
 
@@ -131,6 +135,33 @@ class DriverStation {
 		return getNavJoystick().getRightStickY();
 	}
 
+	public boolean getDeployButtonsDown() {
+		return getNavJoystick().down(Button.BumperLeft) && getNavJoystick().down(Button.BumperRight);
+	}
+	public boolean getLeftRampButtonPressed() {
+		return getNavJoystick().getPOVleftPressed();
+	}
+
+	public boolean getRightRampButtonPressed() {
+		return getNavJoystick().getPOVrightPressed();
+	}
+
+	public boolean getFloorHeightButtonPressed() {
+		return getNavJoystick().pressed(Button.a);
+	}
+
+	public boolean getSwitchHeightButtonPressed() {
+		return getNavJoystick().pressed(Button.b);
+	}
+
+	public boolean getLowScaleHeightButtonPressed() {
+		return getNavJoystick().pressed(Button.y);
+	}
+
+	public boolean getHighScaleHeightButtonPressed() {
+		return getNavJoystick().pressed(Button.x);
+	}
+
 	public double getGrabThrottle() {
 		return getNavJoystick().getLeftStickY();
 	}
@@ -150,8 +181,32 @@ class DriverStation {
 	public void driverSetRightRumble(double value) {
 		driverJoy.rightRumble(value);
 	}
+
 	public void setDriverRumble(double value) {
 		getDriveJoystick().setRumble(value);
+	}
+
+	/**
+	 * Set a value in 'Basic' tab of the driver station
+	 * 
+	 * @param slot position of the value to set (0-9)
+	 * @param value any string value
+	 */
+	public void set(int slot, String value) {
+		if (slot < 0 || slot > 9) {
+			return;
+		}
+		SmartDashboard.putString("DB/String " + slot, value);
+	}
+
+	/**
+	 * Set a value in 'Basic' tab of the driver station
+	 * 
+	 * @param slot position of the value to set (0-9)
+	 * @param value any integer value
+	 */
+	public void set(int slot, int value) {
+		set(slot, String.valueOf(value));
 	}
 
 }
