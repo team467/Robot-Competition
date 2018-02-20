@@ -138,11 +138,11 @@ public class DriverStation467 {
 		return getNavJoystick().down(Button.left) && getNavJoystick().down(Button.right);
 	}
 	public boolean getLeftRampButtonPressed() {
-		return getNavJoystick().getPOVleft();
+		return getNavJoystick().getPOVleftPressed();
 	}
 
 	public boolean getRightRampButtonPressed() {
-		return getNavJoystick().getPOVright();
+		return getNavJoystick().getPOVrightPressed();
 	}
 
 	public boolean getFloorHeightButtonPressed() {
