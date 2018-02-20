@@ -41,7 +41,8 @@ public class Ramp {
 
 		if (state == State.DOWN) {
 			solenoid.set(DoubleSolenoid.Value.kForward);
-			LOGGER.info(name + " Lifting ramps");
+			LOGGER.info(name + " lifting");
+			state = State.UP;
 		}
 	}
 
@@ -52,7 +53,8 @@ public class Ramp {
 
 		if (state == State.UP) {
 			solenoid.set(DoubleSolenoid.Value.kReverse);
-			LOGGER.info(name + " Dropping ramps");
+			LOGGER.info(name + " dropping");
+			state = State.DOWN;
 		}
 	}
 }
