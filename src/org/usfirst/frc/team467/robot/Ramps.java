@@ -28,7 +28,7 @@ public class Ramps {
 	/**
 	 * Time in milliseconds
 	 */
-	private int timeSinceRelease = -1;
+	private int timeSinceRelease;
 
 	private Ramps() {
 		left = new Ramp("Left Ramp", RobotMap.RAMP_LEFT_FORWARD_CHANNEL, RobotMap.RAMP_LEFT_REVERSE_CHANNEL);
@@ -44,7 +44,7 @@ public class Ramps {
 	}
 
 	public void deploy() {
-		if (state != State.START && DriverStation.getInstance().getMatchTime() > 30) {
+		if (state != State.START || DriverStation.getInstance().getMatchTime() > 30) {
 			// Only deploy from start configuration in the last 30 seconds
 			return;
 		}
@@ -60,18 +60,20 @@ public class Ramps {
 			return;
 		}
 
-		timeSinceRelease += 20; // 20 ms per iteration
-		LOGGER.trace("time=" + timeSinceRelease);
-
 		if (timeSinceRelease >= 200) { // This code takes priority
 			left.toggle();
 			right.toggle();
 			LOGGER.info("Deployed");
 			state = State.DEPLOYED;
+			return;
 		} else if (timeSinceRelease >= 100) { // This code called first
 			left.lift();
 			right.lift();
+			LOGGER.info("Kicked");
 		}
+
+		timeSinceRelease += 20; // 20 ms per iteration
+		LOGGER.trace("time=" + timeSinceRelease);
 	}
 
 	// All functions below do not work if the ramps are not deployed
