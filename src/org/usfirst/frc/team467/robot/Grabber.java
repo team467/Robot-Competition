@@ -46,7 +46,7 @@ public class Grabber {
 
 		if (justGotCube()) {
 			LOGGER.debug("Just got cube, rumbling");
-			DriverStation.getInstance().getNavRumbler().rumble(100, 1.0);
+			DriverStation467.getInstance().getNavRumbler().rumble(100, 1.0);
 		}
 
 		if (Math.abs(throttle) < RobotMap.MIN_GRAB_SPEED) {

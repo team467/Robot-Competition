@@ -10,7 +10,7 @@ package org.usfirst.frc.team467.robot;
 //import edu.wpi.first.wpilibj.networktables.NetworkTable;
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.CameraServer;
-
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -37,7 +37,7 @@ public class Robot extends TimedRobot {
 	private static final Logger LOGGER = Logger.getLogger(Robot.class);
 
 	// Robot objects
-	private DriverStation driverstation;
+	private DriverStation467 driverstation;
 	private Drive drive;
 	private ActionGroup autonomous;
 
@@ -45,6 +45,8 @@ public class Robot extends TimedRobot {
 
 	private Elevator elevator;
 	private Grabber grabber;
+
+	private Ramps ramps;
 
 	/**
 	 * This function is run when the robot is first started up and should be used for any initialization code.
@@ -57,7 +59,7 @@ public class Robot extends TimedRobot {
 		RobotMap.init(RobotID.Competition_1);
 
 		// Make robot objects
-		driverstation = DriverStation.getInstance();
+		driverstation = DriverStation467.getInstance();
 		LOGGER.info("Initialized Driverstation");
 
 		drive = Drive.getInstance();
@@ -68,6 +70,7 @@ public class Robot extends TimedRobot {
 
 		grabber = Grabber.getInstance();
 		elevator = Elevator.getInstance();
+		ramps = Ramps.getInstance();
 
 		// Initialize math lookup table
 		LookUpTable.init();
@@ -131,6 +134,7 @@ public class Robot extends TimedRobot {
 		//		autonomous.terminate();
 		//		autonomous = Actions.doNothing();
 		driverstation.periodic();
+		ramps.reset();
 	}
 
 	public void testInit() {
@@ -213,6 +217,24 @@ public class Robot extends TimedRobot {
 		}
 
 		grabber.grab(driverstation.getGrabThrottle());
+
+		// Ramps state machines protect against conflicts
+		if (driverstation.getDeployButtonsDown()) {
+			LOGGER.debug("Deploy Buttons down");
+			ramps.deploy();
+		}
+
+		if (driverstation.getLeftRampButtonPressed()) {
+			LOGGER.debug("Left Ramp Button Pressed");
+			ramps.toggleLeftState();
+		}
+
+		if (driverstation.getRightRampButtonPressed()) {
+			LOGGER.debug("Right Ramp Button Pressed");
+			ramps.toggleRightState();
+		}
+
+		ramps.periodic();
 
 		//changed to arcade drive
 		drive.arcadeDrive(left, right, true);

@@ -24,6 +24,8 @@ public class XBoxJoystick467 {
 	private XboxController xbox;
 	private String name;
 	private int pov = 0;
+	private boolean wasPOVleft;
+	private boolean wasPOVright;
 
 	private static final double DEADZONE = 0.1;
 
@@ -192,6 +194,30 @@ public class XBoxJoystick467 {
 
 	public double getPOV() {
 		return pov;
+	}
+
+	public boolean getPOVleft() {
+		return pov > 180 && pov < 360;
+	}
+
+	public boolean getPOVleftPressed() {
+		boolean isLeft = getPOVleft();
+		boolean isPressed = isLeft && !wasPOVleft;
+		wasPOVleft = isLeft;
+
+		return isPressed;
+	}
+
+	public boolean getPOVright() {
+		return pov > 0 && pov < 180;
+	}
+
+	public boolean getPOVrightPressed() {
+		boolean isRight = getPOVright();
+		boolean isPressed = isRight && !wasPOVright;
+		wasPOVright = isRight;
+
+		return isPressed;
 	}
 
 	/**

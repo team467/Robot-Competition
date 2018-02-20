@@ -167,7 +167,7 @@ public class Elevator {
 		for (Stops stop : Stops.values()) {
 			if ((previousHeight < stop.height && currentHeight >= stop.height)
 					|| (previousHeight > stop.height && currentHeight <= stop.height)) {
-				DriverStation.getInstance().getNavRumbler().rumble(200, 0.8);
+				DriverStation467.getInstance().getNavRumbler().rumble(200, 0.8);
 			}
 		}
 	}
@@ -186,14 +186,9 @@ public class Elevator {
 	}
 
 	public void telemetry() {
-		DriverStation.getInstance().set(0,"target ticks");
-		DriverStation.getInstance().set(5, heightController.getActiveTrajectoryPosition());
-		DriverStation.getInstance().set(1, "position");
-		DriverStation.getInstance().set(6, heightController.getSelectedSensorPosition(0));
-
+		SmartDashboard.putString("Elevator/Control Mode", heightController.getControlMode().name());
 		SmartDashboard.putNumber("Elevator/Closed Loop Error", heightController.getClosedLoopError(0));
 		SmartDashboard.putNumber("Elevator/Current Ticks", heightController.getSelectedSensorPosition(0));
 		SmartDashboard.putNumber("Elevator/Target Ticks", targetHeight != null ? targetHeight.height : -1);
-		SmartDashboard.putString("Elevator/Control Mode", heightController.getControlMode().toString());
 	}
 }
