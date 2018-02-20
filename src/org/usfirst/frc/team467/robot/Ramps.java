@@ -28,7 +28,7 @@ public class Ramps {
 	/**
 	 * Time in milliseconds
 	 */
-	private int time = -1;
+	private int timeSinceRelease = -1;
 
 	private Ramps() {
 		left = new Ramp("Left Ramp", RobotMap.RAMP_LEFT_FORWARD_CHANNEL, RobotMap.RAMP_LEFT_REVERSE_CHANNEL);
@@ -51,7 +51,7 @@ public class Ramps {
 
 		releaseSolenoid.set(DoubleSolenoid.Value.kForward);
 		state = State.RELEASED;
-		time = 0;
+		timeSinceRelease = 0;
 	}
 
 	public void periodic() {
@@ -59,14 +59,14 @@ public class Ramps {
 			return;
 		}
 
-		time += 20; // 20 ms per iteration
-		LOGGER.debug("time=" + time);
+		timeSinceRelease += 20; // 20 ms per iteration
+		LOGGER.debug("time=" + timeSinceRelease);
 
-		if (time >= 200) { // This code takes priority
+		if (timeSinceRelease >= 200) { // This code takes priority
 			left.drop();
 			right.drop();
 			state = State.DEPLOYED;
-		} else if (time >= 100) { // This code called first
+		} else if (timeSinceRelease >= 100) { // This code called first
 			left.lift();
 			right.lift();
 		}
