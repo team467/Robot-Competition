@@ -3,10 +3,9 @@ package org.usfirst.frc.team467.robot;
 import org.apache.log4j.Logger;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
-import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 
 /**
- * This class uses a state machine with two states: UP and DOWN.
+ * This class uses a state machine with two states: UP <-> DOWN.
  * Each function checks that it's in the appropriate precondition before it starts,
  * and then sets the appropriate state when it finishes.
  */
@@ -41,7 +40,7 @@ public class Ramp {
 		}
 
 		if (state == State.DOWN) {
-			solenoid.set(Value.kForward);
+			solenoid.set(DoubleSolenoid.Value.kForward);
 			LOGGER.info(name + " Lifting ramps");
 		}
 	}
@@ -52,7 +51,7 @@ public class Ramp {
 		}
 
 		if (state == State.UP) {
-			solenoid.set(Value.kReverse);
+			solenoid.set(DoubleSolenoid.Value.kReverse);
 			LOGGER.info(name + " Dropping ramps");
 		}
 	}

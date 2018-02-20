@@ -3,11 +3,10 @@ package org.usfirst.frc.team467.robot;
 import org.apache.log4j.Logger;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
-import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.DriverStation;
 
 /**
- * This class uses a state machine with three states: START, RELEASED, and DEPLOYED.
+ * This class uses a state machine with three states: START -> RELEASED -> DEPLOYED.
  * Each function checks that it's in the appropriate precondition before it starts,
  * and then sets the appropriate state when it finishes.
  */
@@ -17,7 +16,7 @@ public class Ramps {
 
 	private Ramp left;
 	private Ramp right;
-	private DoubleSolenoid release;
+	private DoubleSolenoid releaseSolenoid;
 	private State state = State.START;
 
 	public enum State {
@@ -34,7 +33,7 @@ public class Ramps {
 	private Ramps() {
 		left = new Ramp("Left Ramp", RobotMap.RAMP_LEFT_FORWARD_CHANNEL, RobotMap.RAMP_LEFT_REVERSE_CHANNEL);
 		right = new Ramp("Right Ramp", RobotMap.RAMP_RIGHT_FORWARD_CHANNEL, RobotMap.RAMP_RIGHT_REVERSE_CHANNEL);
-		release = new DoubleSolenoid(RobotMap.RAMP_RELEASE_FORWARD_CHANNEL, RobotMap.RAMP_RELEASE_REVERSE_CHANNEL);
+		releaseSolenoid = new DoubleSolenoid(RobotMap.RAMP_RELEASE_FORWARD_CHANNEL, RobotMap.RAMP_RELEASE_REVERSE_CHANNEL);
 	}
 
 	public static Ramps getInstance() {
@@ -50,7 +49,7 @@ public class Ramps {
 			return;
 		}
 
-		release.set(Value.kForward);
+		releaseSolenoid.set(DoubleSolenoid.Value.kForward);
 		state = State.RELEASED;
 		time = 0;
 	}
