@@ -19,11 +19,6 @@ public class Ramp {
 	private String name;
 	private State state;
 
-	/**
-	 * Count-down in milliseconds
-	 */
-	private int time = 0;
-
 	public enum State {
 		UP,
 		DOWN;
