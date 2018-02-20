@@ -144,7 +144,6 @@ public class Robot extends TimedRobot {
 
 		driverstation.periodic();
 		//MatchConfiguration.getInstance().setAllianceColor();
-		MatchConfiguration.getInstance().matchTime();
 	}
 
 
@@ -153,6 +152,7 @@ public class Robot extends TimedRobot {
 		//		drive.motionMagicMove(amountToGoLeft, amountToGoRight);
 
 		//		autonomous.run();
+		MatchConfiguration.getInstance().matchTime();
 	}
 
 	/**
