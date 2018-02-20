@@ -5,7 +5,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.apache.log4j.Logger;
 import org.usfirst.frc.team467.robot.Drive;
 import org.usfirst.frc.team467.robot.RobotMap;
-import org.usfirst.frc.team467.robot.simulator.DriveSimulator;
 
 import edu.wpi.first.wpilibj.Timer;
 
@@ -57,7 +56,7 @@ public class Actions {
 
 	public static Action zeroDistance() {
 //		Drive drive = Drive.getInstance();
-		DriveSimulator drive = DriveSimulator.getInstance();
+		Drive drive = Drive.getInstance();
 		return new Action(
 				"Zeroing the distance",
 //				new ActionGroup.RunOnce(() -> drive.zeroPosition()));
@@ -72,13 +71,11 @@ public class Actions {
 	 */
 
 	public static Action moveDistanceForward(double distance) {
-//		Drive drive = Drive.getInstance();
-		DriveSimulator drive = DriveSimulator.getInstance();
+		Drive drive = Drive.getInstance();
 		String actionText = "Move forward " + distance + " feet";
 		return new Action(actionText,
 				new ActionGroup.ReachDistance(distance),
 				() -> drive.moveFeet(distance));
-//				() -> drive.moveFeet(distance));
 	}
 	
 	
@@ -91,7 +88,7 @@ public class Actions {
 	    double rotation = rotationInDegrees;
 	    
 //		Drive drive = Drive.getInstance();
-		DriveSimulator drive = DriveSimulator.getInstance();
+		Drive drive = Drive.getInstance();
 		String actionText = "Rotate " + rotationInDegrees + " degrees.";
 		return new Action(actionText,
 				new ActionGroup.ReachDistance(rotation),
@@ -139,7 +136,7 @@ public class Actions {
 	}
 
 	public static ActionGroup moveDistance(double distance) {
-		String actionGroupText = "Move forward 3X " + distance + " feet";
+		String actionGroupText = "Move forward " + distance + " feet";
 		ActionGroup mode = new ActionGroup(actionGroupText);
 		mode.addAction(zeroDistance());
 		mode.addAction(moveDistanceForward(distance));
@@ -157,6 +154,7 @@ public class Actions {
 		mode.addAction(moveDistanceForward(1.479)); // 1' 5.75"
 		mode.addAction(zeroDistance());
 		mode.addAction(moveDistanceForward(-2.0)); // 2' backwards
+		mode.addAction(nothingForever());
 		return mode;
 	}
 	
