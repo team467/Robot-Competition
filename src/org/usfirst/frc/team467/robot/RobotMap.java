@@ -155,8 +155,8 @@ public class RobotMap {
 			useSpeedControllers = true;
 			POSITION_ALLOWED_ERROR = (0.5 / RobotMap.WHEEL_CIRCUMFERENCE); // 1/2 inch
 
-			FORWARD_PANIC_ANGLE = 45;
-			BACKWARD_PANIC_ANGLE = -45;
+			FORWARD_PANIC_ANGLE = 60;
+			BACKWARD_PANIC_ANGLE = -60;
 
 			LEFT_LEAD_CHANNEL = 1;
 			LEFT_FOLLOWER_1_CHANNEL = 2;
