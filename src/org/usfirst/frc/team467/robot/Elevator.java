@@ -32,6 +32,7 @@ public class Elevator {
 		fieldSwitch(RobotMap.ELEVATOR_SWITCH_HEIGHT),
 		lowScale(RobotMap.ELEVATOR_LOW_SCALE_HEIGHT),
 		highScale(RobotMap.ELEVATOR_TOP_TICKS);
+
 		/**
 		 * Height in sensor units
 		 */
