@@ -66,6 +66,8 @@ public class RobotMap {
 			HAS_ELEVATOR = false;
 			HAS_GRABBER = false;
 			HAS_RAMPS = false;
+			HAS_LEFT_RAMP = false;
+			HAS_RIGHT_RAMP = false;
 
 			DRIVEMOTOR_NUM = 0;
 
@@ -91,8 +93,9 @@ public class RobotMap {
 
 			HAS_ELEVATOR = true;
 			ELEVATOR_MOTOR_CHANNEL = 1;
-
 			HAS_RAMPS = false;
+			HAS_LEFT_RAMP = false;
+			HAS_RIGHT_RAMP = false;
 
 			isDriveMotorInverted = new boolean[] { false, true, false, true };
 			break;
@@ -130,13 +133,15 @@ public class RobotMap {
 			ELEVATOR_LOW_SCALE_HEIGHT = 468;
 			ELEVATOR_TOP_TICKS = 357;
 
-			HAS_RAMPS = true;
+			HAS_LEFT_RAMP = true;
 			RAMP_LEFT_FORWARD_CHANNEL = 1;
 			RAMP_LEFT_REVERSE_CHANNEL = 4;
-
+			
+			HAS_RIGHT_RAMP = true;
 			RAMP_RIGHT_FORWARD_CHANNEL = 2;
 			RAMP_RIGHT_REVERSE_CHANNEL = 5;
 
+			HAS_RAMPS = true;
 			RAMP_RELEASE_FORWARD_CHANNEL = 0;
 			RAMP_RELEASE_REVERSE_CHANNEL = 3;
 
@@ -169,15 +174,18 @@ public class RobotMap {
 			GRABBER_R_CHANNEL = 2;
 			OPTICAL_CHANNEL = 5;
 
-			HAS_RAMPS = true;
+			HAS_LEFT_RAMP = true;
 			RAMP_LEFT_FORWARD_CHANNEL = 1;
 			RAMP_LEFT_REVERSE_CHANNEL = 4;
+			
+			HAS_RIGHT_RAMP = true;
+			RAMP_RIGHT_FORWARD_CHANNEL = 2;
+			RAMP_RIGHT_REVERSE_CHANNEL = 5;
 
-			RAMP_LEFT_FORWARD_CHANNEL = 2;
-			RAMP_LEFT_REVERSE_CHANNEL = 5;
-
+			HAS_RAMPS = true;
 			RAMP_RELEASE_FORWARD_CHANNEL = 0;
 			RAMP_RELEASE_REVERSE_CHANNEL = 3;
+
 			AUTONOMOUS_DRIVE_TIMEOUT_MS = 500;
 			break;
 		}
@@ -257,13 +265,15 @@ public class RobotMap {
 	public static int ELEVATOR_LOW_SCALE_HEIGHT;
 	public static int ELEVATOR_TOP_TICKS;
 
-	public static boolean HAS_RAMPS;
+	public static boolean HAS_LEFT_RAMP;
 	public static int RAMP_LEFT_FORWARD_CHANNEL;
 	public static int RAMP_LEFT_REVERSE_CHANNEL;
 
+	public static boolean HAS_RIGHT_RAMP;
 	public static int RAMP_RIGHT_FORWARD_CHANNEL;
 	public static int RAMP_RIGHT_REVERSE_CHANNEL;
 
+	public static boolean HAS_RAMPS;
 	public static int RAMP_RELEASE_FORWARD_CHANNEL;
 	public static int RAMP_RELEASE_REVERSE_CHANNEL;
 }

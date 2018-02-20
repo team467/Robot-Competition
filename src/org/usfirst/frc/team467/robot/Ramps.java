@@ -33,8 +33,8 @@ public class Ramps {
 
 	private Ramps() {
 		releaseSolenoid = new DoubleSolenoid(RobotMap.RAMP_RELEASE_FORWARD_CHANNEL, RobotMap.RAMP_RELEASE_REVERSE_CHANNEL);
-		left = new Ramp("Left", RobotMap.RAMP_LEFT_FORWARD_CHANNEL, RobotMap.RAMP_LEFT_REVERSE_CHANNEL);
-		right = new Ramp("Right", RobotMap.RAMP_RIGHT_FORWARD_CHANNEL, RobotMap.RAMP_RIGHT_REVERSE_CHANNEL);
+		left = new Ramp("Left", RobotMap.RAMP_LEFT_FORWARD_CHANNEL, RobotMap.RAMP_LEFT_REVERSE_CHANNEL, RobotMap.HAS_LEFT_RAMP);
+		right = new Ramp("Right", RobotMap.RAMP_RIGHT_FORWARD_CHANNEL, RobotMap.RAMP_RIGHT_REVERSE_CHANNEL, RobotMap.HAS_RIGHT_RAMP);
 	}
 
 	public static Ramps getInstance() {
@@ -45,8 +45,8 @@ public class Ramps {
 	}
 
 	public void deploy() {
-		if (state != State.START || DriverStation.getInstance().getMatchTime() > 30.0) {
-			// Only deploy from start configuration in the last 30 seconds
+		if (state != State.START || DriverStation.getInstance().getMatchTime() > 30.0 || !RobotMap.HAS_RAMPS) {
+			// Only deploy from start configuration in the last 30 seconds if you have ramps
 			return;
 		}
 

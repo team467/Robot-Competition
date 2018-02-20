@@ -18,14 +18,16 @@ public class Ramp {
 
 	private String name;
 	private State state;
+	private boolean exists;
 
 	public enum State {
 		UP,
 		DOWN;
 	}
 
-	public Ramp(String name, int forwardChannel, int reverseChannel) {
-		if (!RobotMap.HAS_RAMPS) {
+	public Ramp(String name, int forwardChannel, int reverseChannel, boolean exists) {
+		this.exists = exists;
+		if (!exists) {
 			LOGGER.info("No ramps");
 			return;
 		}
@@ -40,7 +42,7 @@ public class Ramp {
 	}
 
 	public void toggle() {
-		if (!RobotMap.HAS_RAMPS) {
+		if (!exists) {
 			return;
 		}
 
@@ -55,7 +57,7 @@ public class Ramp {
 	}
 
 	public void lift() {
-		if (!RobotMap.HAS_RAMPS) {
+		if (!exists) {
 			return;
 		}
 
@@ -67,7 +69,7 @@ public class Ramp {
 	}
 
 	public void drop() {
-		if (!RobotMap.HAS_RAMPS) {
+		if (!exists) {
 			return;
 		}
 
@@ -79,6 +81,10 @@ public class Ramp {
 	}
 
 	public void telemetry() {
+		if (!exists) {
+			return;
+		}
+
 		SmartDashboard.putString("Ramps/" + name + "/State", state.name());
 	}
 }
