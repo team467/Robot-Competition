@@ -194,6 +194,14 @@ public class XBoxJoystick467 {
 		return pov;
 	}
 
+	public boolean getPOVleft() {
+		return pov > 180 && pov < 360;
+	}
+
+	public boolean getPOVright() {
+		return pov > 0 && pov < 180;
+	}
+
 	/**
 	 * Calculate the distance of this stick from the center position.
 	 *
