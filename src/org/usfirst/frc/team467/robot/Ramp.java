@@ -38,27 +38,22 @@ public class Ramp {
 		return state;
 	}
 
-	public void lift() {
+	public void toggle() {
 		if (!RobotMap.HAS_RAMPS) {
 			return;
 		}
 
-		if (state == State.DOWN) {
+		switch (state) {
+		case DOWN:
 			solenoid.set(DoubleSolenoid.Value.kForward);
 			LOGGER.info(name + " lifting");
 			state = State.UP;
-		}
-	}
-
-	public void drop() {
-		if (!RobotMap.HAS_RAMPS) {
-			return;
-		}
-
-		if (state == State.UP) {
+			break;
+		case UP:
 			solenoid.set(DoubleSolenoid.Value.kReverse);
 			LOGGER.info(name + " dropping");
 			state = State.DOWN;
+			break;
 		}
 	}
 }

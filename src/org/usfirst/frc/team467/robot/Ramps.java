@@ -63,12 +63,12 @@ public class Ramps {
 		LOGGER.trace("time=" + timeSinceRelease);
 
 		if (timeSinceRelease >= 200) { // This code takes priority
-			left.drop();
-			right.drop();
+			left.toggle(); // Drops because they start lifted
+			right.toggle();
 			state = State.DEPLOYED;
 		} else if (timeSinceRelease >= 100) { // This code called first
-			left.lift();
-			right.lift();
+			left.toggle(); // Lifts because they start dropped
+			right.toggle();
 		}
 	}
 
@@ -78,14 +78,7 @@ public class Ramps {
 			return;
 		}
 
-		switch (left.getState()) {
-		case DOWN:
-			left.lift();
-			break;
-		case UP:
-			left.drop();
-			break;
-		}
+		left.toggle();
 	}
 
 	public void toggleRightState() {
@@ -93,13 +86,6 @@ public class Ramps {
 			return;
 		}
 
-		switch (right.getState()) {
-		case DOWN:
-			right.lift();
-			break;
-		case UP:
-			right.drop();
-			break;
-		}
+		right.toggle();
 	}
 }
