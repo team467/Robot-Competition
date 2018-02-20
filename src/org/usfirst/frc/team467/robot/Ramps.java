@@ -5,6 +5,7 @@ import org.apache.log4j.Logger;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Ramps {
 	private static final Logger LOGGER = Logger.getLogger(Ramps.class);
@@ -13,13 +14,18 @@ public class Ramps {
 	public Ramp left;
 	public Ramp right;
 	private DoubleSolenoid release;
+	private State state = State.START;
 
-	private boolean isDeployed = false;
+	public enum State {
+		START,
+		RELEASED,
+		DEPLOYED;
+	}
 
 	/**
-	 * Count-down in milliseconds
+	 * Time in milliseconds
 	 */
-	private int waitTime = 999999;
+	private int time = -1;
 
 	private Ramps() {
 		left = new Ramp("Left Ramp", RobotMap.RAMP_LEFT_FORWARD_CHANNEL, RobotMap.RAMP_LEFT_REVERSE_CHANNEL);
@@ -35,53 +41,63 @@ public class Ramps {
 	}
 
 	public void deploy() {
-		if (!RobotMap.HAS_RAMPS) {
+		if (state != State.START && DriverStation.getInstance().getMatchTime() > 30) {
+			// Only deploy from start configuration in the last 30 seconds
 			return;
 		}
 
-		if (DriverStation.getInstance().getMatchTime() > 30) {
-			// Only allow deployment in last 30 seconds.
-			return;
-		}
-
-		LOGGER.info("Deploying");
-		waitTime = 1000;
+		release.set(Value.kForward);
+		state = State.RELEASED;
+		time = 0;
 	}
 
 	public void periodic() {
-		if (!RobotMap.HAS_RAMPS) {
+		if (state != State.RELEASED) {
 			return;
 		}
 
-		if (DriverStation.getInstance().getMatchTime() > 30) {
-			// Only allow deployment in last 30 seconds.
-			return;
-		}
+		time += 20; // 20 ms per iteration
+		LOGGER.debug("time=" + time);
 
-		if (waitTime > 0) {
-			// It's not time to deploy yet.
-			release.set(Value.kForward);
-			left.lift();
-			right.lift();
-			waitTime -= 20; // 20 ms per iteration
-			return;
-		}
-
-		if (!isDeployed) {
+		if (time >= 200) { // This code takes priority
 			left.drop();
 			right.drop();
-			waitTime = 0;
-			isDeployed = true;
-		} else if (isDeployed) {
-			if (DriverStation467.getInstance().getLeftRampButton()) {
-				left.lift();
-				left.drop();
-			}
-
-			if (DriverStation467.getInstance().getRightRampButton()) {
-				right.lift();
-				right.drop();
-			}
+			state = State.DEPLOYED;
+		} else if (time >= 100) { // This code called first
+			left.lift();
+			right.lift();
 		}
+	}
+
+	public void leftLift() {
+		if (state != State.DEPLOYED) {
+			return;
+		}
+
+		left.lift();
+	}
+
+	public void leftDrop() {
+		if (state != State.DEPLOYED) {
+			return;
+		}
+
+		left.drop();
+	}
+
+	public void rightLift() {
+		if (state != State.DEPLOYED) {
+			return;
+		}
+
+		right.lift();
+	}
+
+	public void rightDrop() {
+		if (state != State.DEPLOYED) {
+			return;
+		}
+
+		right.drop();
 	}
 }

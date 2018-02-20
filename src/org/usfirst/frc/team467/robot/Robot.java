@@ -218,8 +218,6 @@ public class Robot extends TimedRobot {
 
 		grabber.grab(driverstation.getGrabThrottle());
 
-		ramps.periodic();
-
 		//changed to arcade drive
 		drive.arcadeDrive(left, right, true);
 

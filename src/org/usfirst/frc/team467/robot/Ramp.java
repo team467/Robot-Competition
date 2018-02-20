@@ -12,13 +12,17 @@ public class Ramp {
 	private DoubleSolenoid solenoid;
 
 	private String name;
-
-	private boolean isDeployed = false;
+	private State state;
 
 	/**
 	 * Count-down in milliseconds
 	 */
-	private int waitTime = 0;
+	private int time = 0;
+
+	public enum State {
+		DOWN,
+		UP;
+	}
 
 	public Ramp(String name, int forwardChannel, int reverseChannel) {
 		if (!RobotMap.HAS_RAMPS) {
@@ -26,8 +30,9 @@ public class Ramp {
 			return;
 		}
 
-		this.name = name;
 		solenoid = new DoubleSolenoid(forwardChannel, reverseChannel);
+		this.name = name;
+		state = State.DOWN;
 	}
 
 	public void lift() {
@@ -35,8 +40,10 @@ public class Ramp {
 			return;
 		}
 
-		solenoid.set(Value.kForward);
-		LOGGER.info(name + " Lifting ramps");
+		if (state == State.DOWN) {
+			solenoid.set(Value.kForward);
+			LOGGER.info(name + " Lifting ramps");
+		}
 	}
 
 	public void drop() {
@@ -44,7 +51,9 @@ public class Ramp {
 			return;
 		}
 
-		solenoid.set(Value.kReverse);
-		LOGGER.info(name + " Dropping ramps");
+		if (state == State.UP) {
+			solenoid.set(Value.kReverse);
+			LOGGER.info(name + " Dropping ramps");
+		}
 	}
 }
