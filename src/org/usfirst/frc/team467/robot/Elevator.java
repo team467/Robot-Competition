@@ -91,7 +91,7 @@ public class Elevator {
 		Stops.highScale.height = highScale;
 	}
 
-	private int getRawHeight() {
+	public int getRawHeight() {
 		if (!RobotMap.HAS_ELEVATOR) {
 			return 0;
 		}

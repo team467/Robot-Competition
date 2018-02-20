@@ -131,7 +131,6 @@ public class Robot extends TimedRobot {
 		//		autonomous.terminate();
 		//		autonomous = Actions.doNothing();
 		driverstation.periodic();
-		drive.setRamp(1.0);
 	}
 
 	public void testInit() {
@@ -161,7 +160,9 @@ public class Robot extends TimedRobot {
 	 * This function is called periodically during operator control
 	 */
 	public void teleopPeriodic() {
+		Elevator elevator = Elevator.getInstance();
 		driverstation.readInputs();
+		drive.setRamp(elevator.getRawHeight());
 		//TODO: Set Min_DRIVE_SPEED in Robot Map.
 		// TODO Drive class should handle MIN_DRIVE_SPEED
 		double left = driverstation.getArcadeSpeed();

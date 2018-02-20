@@ -198,7 +198,8 @@ public class Drive extends DifferentialDrive {
 		return feet;
 	}
 	
-	public void setRamp(double ramp) {
+	public void setRamp(double elevatorHeight) {
+		double ramp = ((elevatorHeight * 4.8) / -407) + 9.21;
 		left.setOpenLoopRamp(ramp);
 		right.setOpenLoopRamp(ramp);
 	}
