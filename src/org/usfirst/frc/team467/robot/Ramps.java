@@ -92,4 +92,11 @@ public class Ramps {
 
 		right.toggle();
 	}
+
+	public void reset() {
+		state = State.START;
+		timeSinceRelease = 0;
+		left.drop();
+		right.drop();
+	}
 }
