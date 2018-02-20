@@ -21,7 +21,7 @@ public class Logging {
 		Logger.getLogger(ActionGroup.class).setLevel(Level.WARN);
 		Logger.getLogger(Drive.class).setLevel(Level.DEBUG);
 		Logger.getLogger(DriveSimulator.class).setLevel(Level.WARN);
-		Logger.getLogger(Elevator.class).setLevel(Level.WARN);
+		Logger.getLogger(Elevator.class).setLevel(Level.INFO);
 		Logger.getLogger(Grabber.class).setLevel(Level.DEBUG);
 		Logger.getLogger(MatchConfiguration.class).setLevel(Level.DEBUG);
 		Logger.getLogger(OpticalSensor.class).setLevel(Level.WARN);

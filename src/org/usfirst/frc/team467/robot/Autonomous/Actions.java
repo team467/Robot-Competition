@@ -5,6 +5,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.apache.log4j.Logger;
 import org.usfirst.frc.team467.robot.Drive;
 import org.usfirst.frc.team467.robot.Elevator;
+import org.usfirst.frc.team467.robot.Elevator.Stops;
 import org.usfirst.frc.team467.robot.Grabber;
 import org.usfirst.frc.team467.robot.RobotMap;
 import org.usfirst.frc.team467.robot.simulator.DriveSimulator;
@@ -95,37 +96,30 @@ public class Actions {
 		Elevator elevator = Elevator.getInstance();
 		return new Action(
 				"Elevator going to lowest level", 
-				new ActionGroup.RunOnce(() -> elevator.floor()));
+				new ActionGroup.RunOnce(() -> elevator.moveToHeight(Stops.basement)));
 	}
 	
 	public static Action elevatorToSwitch() {
 		Elevator elevator = Elevator.getInstance();
 		return new Action(
 				"Elevator going up to switch height", 
-				new ActionGroup.RunOnce(() -> elevator.switchHeight()));
+				new ActionGroup.RunOnce(() -> elevator.moveToHeight(Stops.fieldSwitch)));
 	}
 	
 	public static Action elevatorToLowScale() {
 		Elevator elevator = Elevator.getInstance();
 		return new Action(
 				"Elevator going to lower level on scale",
-				new ActionGroup.RunOnce(() -> elevator.lowScale()));
+				new ActionGroup.RunOnce(() -> elevator.moveToHeight(Stops.lowScale)));
 	}
 	
 	public static Action elevatorToHighScale() {
 		Elevator elevator = Elevator.getInstance();
 		return new Action(
 				"Elevator going to higher level on scale", 
-				new ActionGroup.RunOnce(() -> elevator.highScale()));		
+				new ActionGroup.RunOnce(() -> elevator.moveToHeight(Stops.highScale)));		
 	}
-	
-	public static Action cancelAutomaticElevatorMove() {
-		Elevator elevator = Elevator.getInstance();
-		return new Action(
-				"Cancel elevator move", 
-				new ActionGroup.RunOnce(() -> elevator.cancelAutomaticMove()));				
-	}
-	
+		
 	/**
 	 * 
 	 * @param Distance moves robot in feet.

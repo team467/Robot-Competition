@@ -81,7 +81,6 @@ public class Robot extends TimedRobot {
 
 	public void disabledPeriodic() {
 		LOGGER.trace("Disabled Periodic");
-//		drive.logClosedLoopErrors();
 	}
 	
 	public void testInit() {
@@ -104,7 +103,6 @@ public class Robot extends TimedRobot {
 
 	public void autonomousPeriodic() {
 		tiltMonitor.periodic();
-		elevator.periodic();
 		grabber.periodic();
 //		autonomous.run();
 		drive.moveFeet(distance);
@@ -121,10 +119,9 @@ public class Robot extends TimedRobot {
 	public void teleopPeriodic() {
 		driverstation.readInputs();
 		grabber.grab(driverstation.getGrabThrottle());
-		elevator.manualMove(driverstation.getElevatorSpeed());
+		elevator.move(driverstation.getElevatorSpeed());
 
 		tiltMonitor.periodic();
-		elevator.periodic();
 		
 		drive.logClosedLoopErrors();
 
