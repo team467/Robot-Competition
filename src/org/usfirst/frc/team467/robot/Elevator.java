@@ -35,7 +35,7 @@ public class Elevator {
 		/**
 		 * Height in sensor units
 		 */
-		public final int height;
+		public int height;
 
 		Stops(int height) {
 			this.height = height;
@@ -83,6 +83,14 @@ public class Elevator {
 		heightController.configAllowableClosedloopError(0, ALLOWABLE_ERROR_TICKS, RobotMap.TALON_TIMEOUT);
 	}
 
+	public void setHeights(int basement, int floor, int switchValue, int lowScale, int highScale) {
+		Stops.basement.height = basement;
+		Stops.floor.height = floor;
+		Stops.fieldSwitch.height = switchValue;
+		Stops.lowScale.height = lowScale;
+		Stops.highScale.height = highScale;
+	}
+
 	private int getRawHeight() {
 		if (!RobotMap.HAS_ELEVATOR) {
 			return 0;
@@ -107,7 +115,7 @@ public class Elevator {
 
 		// If we're in position, stop.
 		final int error = targetHeight.height - heightController.getSelectedSensorPosition(0);
-		if (heightController.getControlMode() == ControlMode.MotionMagic && Math.abs(error) <= ALLOWABLE_ERROR_TICKS) {
+		if (heightController.getControlMode() == ControlMode.Position && Math.abs(error) <= ALLOWABLE_ERROR_TICKS) {
 			LOGGER.debug("automaticMove, clearing target,  trajectory=" + targetHeight.height
 					+ " pos=" + heightController.getSelectedSensorPosition(0) + " err=" + error);
 			targetHeight = null;
