@@ -4,6 +4,7 @@ import org.apache.log4j.Logger;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * This class uses a state machine with three states: START -> RELEASED -> DEPLOYED.
@@ -32,8 +33,8 @@ public class Ramps {
 
 	private Ramps() {
 		releaseSolenoid = new DoubleSolenoid(RobotMap.RAMP_RELEASE_FORWARD_CHANNEL, RobotMap.RAMP_RELEASE_REVERSE_CHANNEL);
-		left = new Ramp("Left Ramp", RobotMap.RAMP_LEFT_FORWARD_CHANNEL, RobotMap.RAMP_LEFT_REVERSE_CHANNEL);
-		right = new Ramp("Right Ramp", RobotMap.RAMP_RIGHT_FORWARD_CHANNEL, RobotMap.RAMP_RIGHT_REVERSE_CHANNEL);
+		left = new Ramp("Left", RobotMap.RAMP_LEFT_FORWARD_CHANNEL, RobotMap.RAMP_LEFT_REVERSE_CHANNEL);
+		right = new Ramp("Right", RobotMap.RAMP_RIGHT_FORWARD_CHANNEL, RobotMap.RAMP_RIGHT_REVERSE_CHANNEL);
 	}
 
 	public static Ramps getInstance() {
@@ -56,6 +57,8 @@ public class Ramps {
 	}
 
 	public void periodic() {
+		telemetry();
+
 		if (state != State.RELEASED) {
 			return;
 		}
@@ -98,5 +101,12 @@ public class Ramps {
 		timeSinceRelease = 0;
 		left.drop();
 		right.drop();
+	}
+
+	public void telemetry() {
+		SmartDashboard.putString("Ramps/State", state.name());
+		SmartDashboard.putNumber("Time Since Release", timeSinceRelease);
+		left.telemetry();
+		right.telemetry();
 	}
 }

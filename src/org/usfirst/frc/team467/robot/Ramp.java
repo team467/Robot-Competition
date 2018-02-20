@@ -3,6 +3,7 @@ package org.usfirst.frc.team467.robot;
 import org.apache.log4j.Logger;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * This class uses a state machine with two states: UP <-> DOWN.
@@ -75,5 +76,9 @@ public class Ramp {
 			LOGGER.info(name + " dropping");
 			state = State.DOWN;
 		}
+	}
+
+	public void telemetry() {
+		SmartDashboard.putString("Ramps/" + name + "/State", state.name());
 	}
 }
