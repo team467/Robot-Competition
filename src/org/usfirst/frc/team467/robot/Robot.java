@@ -96,9 +96,9 @@ public class Robot extends TimedRobot {
 
 	public void disabledPeriodic() {
 		LOGGER.trace("Disabled Periodic");
-
+		driverstation.readInputs();
 		driverstation.logJoystickIDs();
-		//LOGGER.debug("Right: "	+drive.getRightDistance() + " Left: " + drive.getLeftDistance());
+		elevator.telemetry();
 	}
 	//TODO: Figure out the NetworkTables later.
 	//	String[] autoList = {"none", "go"};
@@ -169,7 +169,6 @@ public class Robot extends TimedRobot {
 		double left = driverstation.getArcadeSpeed();
 		double right = driverstation.getArcadeTurn();
 
-		LOGGER.debug("left " + left + " right " + right);
 		if (Math.abs(left) < RobotMap.MIN_DRIVE_SPEED) {
 			left = 0.0;
 		}

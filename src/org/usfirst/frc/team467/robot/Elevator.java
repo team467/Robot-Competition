@@ -4,6 +4,8 @@ import org.apache.log4j.Logger;
 
 import edu.wpi.first.wpilibj.MotorSafetyHelper;
 import edu.wpi.first.wpilibj.SpeedController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 import com.ctre.phoenix.ParamEnum;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
@@ -14,32 +16,34 @@ public class Elevator {
 	private static final Logger LOGGER = Logger.getLogger(Elevator.class);
 
 	private WPI_TalonSRX heightController;
-	private int maxTicksPerIteration = 100;
-	private double previousHeight;
 	private MotorSafetyHelper m_safetyHelper;
 
 	private Stops targetHeight;
+	private int previousHeight;
+
+	private final int ALLOWABLE_ERROR_TICKS = 3;
+	private final int LIMIT_BUFFER = 10;
 
 	public enum Stops {
 		// null if no stop is desired
-		floor(10.0 + RobotMap.ELEVATOR_ERROR_TOLERANCE_INCHES),
-		fieldSwitch(24.0 + RobotMap.ELEVATOR_ERROR_TOLERANCE_INCHES),
-		lowScale(72.0 + RobotMap.ELEVATOR_ERROR_TOLERANCE_INCHES),
-		highScale(96.0 + RobotMap.ELEVATOR_ERROR_TOLERANCE_INCHES);
-
+		// height values measured empirically
+		basement(RobotMap.ELEVATOR_BOTTOM_TICKS),
+		floor(RobotMap.ELEVATOR_FLOOR_HEIGHT),
+		fieldSwitch(RobotMap.ELEVATOR_SWITCH_HEIGHT),
+		lowScale(RobotMap.ELEVATOR_LOW_SCALE_HEIGHT),
+		highScale(RobotMap.ELEVATOR_TOP_TICKS);
 		/**
-		 * Height in inches
+		 * Height in sensor units
 		 */
-		public final double height;
+		public int height;
 
-		Stops(double height) {
+		Stops(int height) {
 			this.height = height;
 		}
 	}
 
 	/**
-	 * 
-	 * @return a single instance of the Elevator object.
+	 * Get the single instance of the Elevator object.
 	 */
 	public static Elevator getInstance() {
 		if (instance == null) {
@@ -58,44 +62,38 @@ public class Elevator {
 		}
 
 		this.heightController = (WPI_TalonSRX) heightController;
-
-		// Configure talon to be able to use the analog sensor. 
-		this.heightController.configSelectedFeedbackSensor(FeedbackDevice.Analog, 0, RobotMap.TALON_TIMEOUT);
-		this.heightController.configSetParameter(ParamEnum.eFeedbackNotContinuous, 1, 0x00, 0x00, 0x00);
-		this.heightController.configAllowableClosedloopError(0, 3, RobotMap.TALON_TIMEOUT);
-		this.heightController.setInverted(false);
-		this.heightController.setSensorPhase(false);
-		configMotionMagicParameters();
+		configMotorParameters();
 
 		targetHeight = null;
-		previousHeight = getHeightInches();
 		m_safetyHelper = new MotorSafetyHelper(this.heightController);
 	}
 
-	public void configMotionMagicParameters() {
-		double kPElevator = 12.0; // Double.parseDouble(SmartDashboard.getString("DB/String 7", "1.4"));
-		double kIElevator = 0.0; // Double.parseDouble(SmartDashboard.getString("DB/String 8", "0.0"));
-		double kDElevator = 198; // Double.parseDouble(SmartDashboard.getString("DB/String 9", "165"));
-		double kFElevator = 0.729672; //  Double.parseDouble(SmartDashboard.getString("DB/String 6", "0.5"));
+	public void configMotorParameters() {
+		// Configure talon to be able to use the analog sensor.
+		this.heightController.configSelectedFeedbackSensor(FeedbackDevice.Analog, 0, RobotMap.TALON_TIMEOUT);
+		this.heightController.configSetParameter(ParamEnum.eFeedbackNotContinuous, 1, 0x00, 0x00, 0x00);
+		this.heightController.setInverted(false);
+		this.heightController.setSensorPhase(false);
 
-		heightController.config_kP(0, kPElevator, RobotMap.TALON_TIMEOUT);
-		heightController.config_kI(0, kIElevator, RobotMap.TALON_TIMEOUT);
-		heightController.config_kD(0, kDElevator, RobotMap.TALON_TIMEOUT);
-		heightController.config_kF(0, kFElevator, RobotMap.TALON_TIMEOUT);
+		heightController.config_kP(0, 40.0, RobotMap.TALON_TIMEOUT);
+		heightController.config_kI(0, 0.0, RobotMap.TALON_TIMEOUT);
+		heightController.config_kD(0, 5.0, RobotMap.TALON_TIMEOUT);
+		heightController.config_kF(0, 0.0, RobotMap.TALON_TIMEOUT);
 
-		heightController.configMotionCruiseVelocity(maxTicksPerIteration / 2, RobotMap.TALON_TIMEOUT);
-		heightController.configMotionAcceleration(maxTicksPerIteration / 2, RobotMap.TALON_TIMEOUT);
+		heightController.configAllowableClosedloopError(0, ALLOWABLE_ERROR_TICKS, RobotMap.TALON_TIMEOUT);
 	}
 
-	public double getHeightInches() {
-		double height = (getRawHeight() - RobotMap.ELEVATOR_BOTTOM_TICKS) / RobotMap.ELEVATOR_TICKS_PER_INCH;
-		LOGGER.trace("Height in inches: " + height);
-		return height;
+	public void setHeights(int basement, int floor, int switchValue, int lowScale, int highScale) {
+		Stops.basement.height = basement;
+		Stops.floor.height = floor;
+		Stops.fieldSwitch.height = switchValue;
+		Stops.lowScale.height = lowScale;
+		Stops.highScale.height = highScale;
 	}
 
-	private double getRawHeight() {
+	private int getRawHeight() {
 		if (!RobotMap.HAS_ELEVATOR) {
-			return 0.0;
+			return 0;
 		}
 		return heightController.getSelectedSensorPosition(0);
 	}
@@ -103,9 +101,10 @@ public class Elevator {
 	public void moveToHeight(Stops target) {
 		// targetHeight member variable used in periodic function to reach the height
 		targetHeight = target;
+		SmartDashboard.putString("Elevator/Most Recent Target", target.toString());
 	}
 
-	private void automaticMove(double heightInInches) {
+	private void automaticMove() {
 		if (!RobotMap.HAS_ELEVATOR) {
 			return;
 		}
@@ -114,11 +113,20 @@ public class Elevator {
 			m_safetyHelper.feed();
 		}
 
-		LOGGER.info("Moving to heightInInches=" + heightInInches);
+		// If we're in position, stop.
+		final int error = targetHeight.height - heightController.getSelectedSensorPosition(0);
+		if (heightController.getControlMode() == ControlMode.Position && Math.abs(error) <= ALLOWABLE_ERROR_TICKS) {
+			LOGGER.debug("automaticMove, clearing target,  trajectory=" + targetHeight.height
+					+ " pos=" + heightController.getSelectedSensorPosition(0) + " err=" + error);
+			targetHeight = null;
+			heightController.disable();
+			return;
+		}
 
-		double ticks = RobotMap.ELEVATOR_BOTTOM_TICKS - heightInInches * RobotMap.ELEVATOR_TICKS_PER_INCH;
-		heightController.set(ControlMode.MotionMagic, ticks);
-		logSensorAndTargetPosition();
+		configMotorParameters();
+		LOGGER.debug("Moving to height=" + targetHeight.height);
+
+		heightController.set(ControlMode.Position, targetHeight.height);
 	}
 
 	/**
@@ -127,20 +135,15 @@ public class Elevator {
 	 * @param speed The velocity. Shall be a value between -1 and 1.
 	 */
 	public void move(double speed) {
+		previousHeight = getRawHeight();
+		SmartDashboard.putNumber("Elevator/Move Speed", speed);
+
 		if (!RobotMap.HAS_ELEVATOR) {
 			return;
 		}
 
-		double currentHeight = getHeightInches();
 		// TODO Re-enable and test to see if it works
-		//		for (Stops stop : Stops.values()) {
-		//			if ((previousHeight < stop.height && currentHeight >= stop.height)
-		//					|| (previousHeight > stop.height && currentHeight <= stop.height)) {
-		//				DriverStation.getInstance().getNavRumbler().rumble(200, 0.8);
-		//			}
-		//		}
-
-		previousHeight = currentHeight;
+		// rumbleOnPresetHeights();
 
 		if (Math.abs(speed) >= RobotMap.MIN_LIFT_SPEED) {
 			// The controller is asking for elevator movement, cancel preset target and move.
@@ -148,26 +151,48 @@ public class Elevator {
 			heightController.set(ControlMode.PercentOutput, speed);
 		} else if (targetHeight != null) {
 			// There is a target preset position, move there.
-			automaticMove(targetHeight.height);
+			automaticMove();
 		} else {
 			// Nothing to do, make sure we're not moving.
-			heightController.stopMotor();
+			heightController.disable();
+		}
+
+		limitCheck();
+		telemetry();
+	}
+
+	public void rumbleOnPresetHeights() {
+		double currentHeight = getRawHeight();
+
+		for (Stops stop : Stops.values()) {
+			if ((previousHeight < stop.height && currentHeight >= stop.height)
+					|| (previousHeight > stop.height && currentHeight <= stop.height)) {
+				DriverStation467.getInstance().getNavRumbler().rumble(200, 0.8);
+			}
 		}
 	}
 
-	public void logSensorAndTargetPosition() {
-		LOGGER.debug(
-				//TODO Check the arguments for the closed loop errors.
-				"Target= " + heightController.getActiveTrajectoryPosition()
-				+ "Pos=" + heightController.getSelectedSensorPosition(0));
+	/**
+	 * Look for sensor slippage
+	 */
+	public void limitCheck() {
+		final int position = heightController.getSelectedSensorPosition(0);
+		if (position > RobotMap.ELEVATOR_BOTTOM_TICKS + LIMIT_BUFFER
+				|| position < RobotMap.ELEVATOR_TOP_TICKS - LIMIT_BUFFER) {
+			LOGGER.error("HEIGHT SENSOR OUT OF EXPECTED RANGE ("
+					+ RobotMap.ELEVATOR_TOP_TICKS + " - "
+					+ RobotMap.ELEVATOR_BOTTOM_TICKS + "), found " + position);
+		}
+	}
 
+	public void telemetry() {
 		DriverStation467.getInstance().set(0,"target ticks");
 		DriverStation467.getInstance().set(5, heightController.getActiveTrajectoryPosition());
-
 		DriverStation467.getInstance().set(1, "position");
 		DriverStation467.getInstance().set(6, heightController.getSelectedSensorPosition(0));
 
-		DriverStation467.getInstance().set(2, "get");
-		DriverStation467.getInstance().set(7, String.valueOf(heightController.get()));
+		SmartDashboard.putNumber("Elevator/Closed Loop Error", heightController.getClosedLoopError(0));
+		SmartDashboard.putNumber("Elevator/Current Ticks", heightController.getSelectedSensorPosition(0));
+		SmartDashboard.putNumber("Elevator/Target Ticks", targetHeight != null ? targetHeight.height : -1);
 	}
 }
