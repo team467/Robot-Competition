@@ -230,6 +230,8 @@ public class Robot extends TimedRobot {
 			ramps.toggleRightState();
 		}
 
+		ramps.periodic();
+
 		//changed to arcade drive
 		drive.arcadeDrive(left, right, true);
 
