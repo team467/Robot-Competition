@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
- * This class uses a state machine with three states.
+ * This class uses a state machine with three states: START, RELEASED, and DEPLOYED.
  * Each function checks that it's in the appropriate precondition before it starts,
  * and then sets the appropriate state when it finishes.
  */

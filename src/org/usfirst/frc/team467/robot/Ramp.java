@@ -6,7 +6,7 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 
 /**
- * This class uses a state machine with two states.
+ * This class uses a state machine with two states: UP and DOWN.
  * Each function checks that it's in the appropriate precondition before it starts,
  * and then sets the appropriate state when it finishes.
  */
@@ -25,8 +25,8 @@ public class Ramp {
 	private int time = 0;
 
 	public enum State {
-		DOWN,
-		UP;
+		UP,
+		DOWN;
 	}
 
 	public Ramp(String name, int forwardChannel, int reverseChannel) {
