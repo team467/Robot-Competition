@@ -91,6 +91,7 @@ public class Robot extends TimedRobot {
 
 	double distance = 0.0;
 	public void autonomousInit() {
+		drive.setPIDs();
 		driverstation.readInputs();
 //		matchConfig.load();
 //		autonomous = matchConfig.autonomousDecisionTree();
@@ -106,6 +107,7 @@ public class Robot extends TimedRobot {
 		grabber.periodic();
 //		autonomous.run();
 		drive.moveFeet(distance);
+//		drive.logClosedLoopErrors();
 	}
 
 	public void teleopInit() {

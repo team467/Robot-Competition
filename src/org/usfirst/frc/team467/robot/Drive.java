@@ -76,6 +76,10 @@ public class Drive extends DifferentialDrive {
 		this.left = left;
 		this.right = right;
 
+		setPIDs();
+	}
+
+	public void setPIDs() {
 		double kFRight = Double.parseDouble(SmartDashboard.getString("DB/String 6", "1.2208")); // 0.0
 		double kFLeft = Double.parseDouble(SmartDashboard.getString("DB/String 1", "1.1168")); // 0.0
 
@@ -126,7 +130,7 @@ public class Drive extends DifferentialDrive {
 	}
 
 	public void moveFeet(double distanceInFeet) {
-		moveFeet(distanceInFeet, 0, ControlMode.MotionMagic);
+		moveFeet(distanceInFeet, 0, ControlMode.Position);
 	}
 
 	public void rotateByAngle(double angleInDegrees) {

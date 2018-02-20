@@ -102,7 +102,7 @@ public class RobotMap {
 			break;
 		case Competition_1:
 			HAS_WHEELS = true;
-			WHEEL_CIRCUMFERENCE = 19.74;
+			WHEEL_CIRCUMFERENCE = 19.11;
 			WHEEL_ENCODER_CODES_PER_REVOLUTION = 1024;
 			useSpeedControllers = true;
 			POSITION_ALLOWED_ERROR = (0.5 / RobotMap.WHEEL_CIRCUMFERENCE); // 1/2 inch

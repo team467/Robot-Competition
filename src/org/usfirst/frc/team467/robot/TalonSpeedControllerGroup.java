@@ -14,7 +14,7 @@ public class TalonSpeedControllerGroup implements SpeedController {
 	private WPI_TalonSRX leader;
 	private WPI_TalonSRX follower1;
 	private WPI_TalonSRX follower2;
-
+	
 	private int previousSensorPosition;
 
 	private ControlMode controlMode = ControlMode.PercentOutput;
@@ -46,8 +46,10 @@ public class TalonSpeedControllerGroup implements SpeedController {
 		//only have sensor on leader
 		leader.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, RobotMap.TALON_TIMEOUT);
 		leader.setSensorPhase(sensorIsInverted);
-		leader.configMotionCruiseVelocity(687, RobotMap.TALON_TIMEOUT); //687 is 75 percent of the max speed, which is 916	
-		leader.configMotionAcceleration(687, RobotMap.TALON_TIMEOUT);		
+		
+		// 687 based on 916
+		leader.configMotionCruiseVelocity(740, RobotMap.TALON_TIMEOUT); //687 is 75 percent of the max speed, which is 916	
+		leader.configMotionAcceleration(300, RobotMap.TALON_TIMEOUT);		
 		zero();		
 	}
 
