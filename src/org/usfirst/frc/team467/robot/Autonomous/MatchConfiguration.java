@@ -236,12 +236,10 @@ public class MatchConfiguration {
 				LOGGER.info("reading isMySwitchToTheRight()");
 				autonomous = Actions.centerBasicSwitchRight();
 				LOGGER.debug("IsMySwitchToTheRight----------------------------Center True");
-			} else if (!isMySwitchToTheRight()){
+			} else {
 				LOGGER.info("reading !isMySwitchToTheRight()");
 				autonomous = Actions.centerBasicSwitchLeft();
 				LOGGER.debug("opposite code of isMySwitchToTheRight()");
-			} else {
-				LOGGER.debug("Side not found! Cannot do anything.");
 			}
 			break;
 
