@@ -2,50 +2,49 @@ package org.usfirst.frc.team467.robot;
 
 import org.apache.log4j.Logger;
 
-import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 
 public class Ramp {
 	private static final Logger LOGGER = Logger.getLogger(Ramp.class);
 
 	// Compressor automatically set to closedLoopControl when Solenoid is declared
-	private Solenoid solenoid;
+	private DoubleSolenoid solenoid;
 
 	private String name;
 
 	private boolean isDeployed = false;
-	private boolean isLifted = false;
 
-	public Ramp(String name, int solenoidChannel) {
+	/**
+	 * Count-down in milliseconds
+	 */
+	private int waitTime = 0;
+
+	public Ramp(String name, int forwardChannel, int reverseChannel) {
 		if (!RobotMap.HAS_RAMPS) {
-			LOGGER.debug("No ramps");
+			LOGGER.info("No ramps");
 			return;
 		}
 
 		this.name = name;
-		solenoid = new Solenoid(solenoidChannel);
-	}
-
-	public void deploy() {
-		if (RobotMap.HAS_RAMPS) {
-			// TODO Ramp deploy code here, not sure if it's motors or pneumatics yet
-			LOGGER.info(name + " Deploying ramps");
-			isDeployed = true;
-		}
+		solenoid = new DoubleSolenoid(forwardChannel, reverseChannel);
 	}
 
 	public void lift() {
-		if (RobotMap.HAS_RAMPS && isDeployed  && !isLifted) { // Only lift if deployed
-			solenoid.set(true);
-			LOGGER.info(name + " Lifting ramps");
-			isLifted = true;
+		if (!RobotMap.HAS_RAMPS) {
+			return;
 		}
+
+		solenoid.set(Value.kForward);
+		LOGGER.info(name + " Lifting ramps");
 	}
 
 	public void drop() {
-		if (RobotMap.HAS_RAMPS && isDeployed && isLifted) { // Only drop if deployed
-			solenoid.set(false);
-			LOGGER.info(name + " Dropping ramps");
-			isLifted = false;
+		if (!RobotMap.HAS_RAMPS) {
+			return;
 		}
+
+		solenoid.set(Value.kReverse);
+		LOGGER.info(name + " Dropping ramps");
 	}
 }

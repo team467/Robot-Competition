@@ -45,8 +45,8 @@ public class Robot extends TimedRobot {
 
 	private Elevator elevator;
 	private Grabber grabber;
-	private Ramp leftRamp;
-	private Ramp rightRamp;
+
+	private Ramps ramps;
 
 	/**
 	 * This function is run when the robot is first started up and should be used for any initialization code.
@@ -70,8 +70,7 @@ public class Robot extends TimedRobot {
 
 		grabber = Grabber.getInstance();
 		elevator = Elevator.getInstance();
-		leftRamp = new Ramp("Left Ramp", RobotMap.RAMP_LEFT_SOLENOID_CHANNEL);
-		rightRamp = new Ramp("Right Ramp", RobotMap.RAMP_LEFT_SOLENOID_CHANNEL);
+		ramps = Ramps.getInstance();
 
 		// Initialize math lookup table
 		LookUpTable.init();
@@ -219,18 +218,7 @@ public class Robot extends TimedRobot {
 
 		grabber.grab(driverstation.getGrabThrottle());
 
-		if (DriverStation.getInstance().getMatchTime() <= 30) { // Only in last 30 seconds
-			if (DriverStation467.getInstance().getLeftRampButton()) {
-				leftRamp.deploy();
-				leftRamp.lift();
-				leftRamp.drop();
-			}
-			if (DriverStation467.getInstance().getRightRampButton()) {
-				rightRamp.deploy();
-				rightRamp.lift();
-				rightRamp.drop();
-			}
-		}
+		ramps.periodic();
 
 		//changed to arcade drive
 		drive.arcadeDrive(left, right, true);
