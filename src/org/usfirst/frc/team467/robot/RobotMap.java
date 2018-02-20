@@ -7,7 +7,7 @@ public class RobotMap {
 	public static final int TALON_TIMEOUT = 10; // 10 ms is the recommended timeout
 
 	public enum RobotID {
-		PreseasonBot, Board, Competition_1, Competition_2
+		Board, Competition_1, Competition_2
 	};
 
 	public static final int FRONT_LEFT = 0;
@@ -43,40 +43,6 @@ public class RobotMap {
 	public static void init(RobotID id) {
 		robotID = id;
 		switch (id) {
-		case PreseasonBot:
-			HAS_WHEELS = true;
-			WHEEL_CIRCUMFERENCE = 19.74;
-			WHEEL_ENCODER_CODES_PER_REVOLUTION = 1024;
-			useSpeedControllers = true;
-			POSITION_ALLOWED_ERROR = (0.5 / RobotMap.WHEEL_CIRCUMFERENCE); // 1/2 inch
-
-			FORWARD_PANIC_ANGLE = 45;
-			BACKWARD_PANIC_ANGLE = -45;
-
-			LEFT_LEAD_CHANNEL = 1;
-			LEFT_FOLLOWER_1_CHANNEL = 2;
-			LEFT_FOLLOWER_2_CHANNEL = 3;
-			LEFT_DRIVE_SENSOR_IS_INVERTED = true;
-
-			RIGHT_LEAD_CHANNEL = 4;
-			RIGHT_FOLLOWER_1_CHANNEL = 5;
-			RIGHT_FOLLOWER_2_CHANNEL = 6;
-			RIGHT_DRIVE_SENSOR_IS_INVERTED = true;
-
-			HAS_ELEVATOR = false;
-			HAS_GRABBER = false;
-			HAS_RAMPS = false;
-
-			DRIVEMOTOR_NUM = 0;
-
-			// TODO Assign values to the game piece variables, and make more as appropriate
-			ELEVATOR_MOTOR_CHANNEL = 0;
-			RAMP_SOLENOID_CHANNEL = 0;
-
-			AUTONOMOUS_DRIVE_TIMEOUT_MS = 1000;
-
-			isDriveMotorInverted = new boolean[] { false, true, false, true };
-			break;
 		case Board:
 			HAS_WHEELS = false;
 			WHEEL_ENCODER_CODES_PER_REVOLUTION = 1024;

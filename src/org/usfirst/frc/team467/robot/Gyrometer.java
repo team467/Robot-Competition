@@ -55,9 +55,7 @@ public class Gyrometer extends GyroBase implements Gyro {
 	 * @return the gyro angle
 	 */
 	public double getYawRadians() {
-		if (RobotMap.robotID == RobotMap.RobotID.PreseasonBot) {
-			return Math.toRadians(imu.getAngleZ());
-		} else if (RobotMap.robotID == RobotMap.RobotID.Competition_1){
+		if (RobotMap.robotID == RobotMap.RobotID.Competition_1){
 			return Math.toRadians(-imu.getAngleX());
 		} else {
 			return 0;
@@ -78,9 +76,7 @@ public class Gyrometer extends GyroBase implements Gyro {
 	 * @return the gyro angle
 	 */
 	public double getRollRadians() {
-		if (RobotMap.robotID == RobotMap.RobotID.PreseasonBot) {
-			return Math.toRadians(imu.getAngleX());
-		} else if (RobotMap.robotID == RobotMap.RobotID.Competition_1){
+		if (RobotMap.robotID == RobotMap.RobotID.Competition_1){
 			return Math.toRadians(-imu.getAngleY());
 		} else {
 			return 0;
@@ -102,9 +98,7 @@ public class Gyrometer extends GyroBase implements Gyro {
 	 * @return the gyro angle
 	 */
 	public double getPitchRadians() {
-		if (RobotMap.robotID == RobotMap.RobotID.PreseasonBot) {
-			return Math.toRadians(imu.getAngleY());
-		} else if (RobotMap.robotID == RobotMap.RobotID.Competition_1){
+		if (RobotMap.robotID == RobotMap.RobotID.Competition_1){
 			return Math.toRadians(-imu.getAngleZ());
 		} else {
 			return 0;
