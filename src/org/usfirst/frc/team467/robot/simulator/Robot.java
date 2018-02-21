@@ -31,7 +31,7 @@ public class Robot {
 		
 		Logging.init();
 		
-		RobotMap.init(RobotID.PreseasonBot);
+		RobotMap.init(RobotID.Competition_1);
 		
 		RobotMap.useSimulator = true;
 		drive = DriveSimulator.getInstance(); 
@@ -149,11 +149,5 @@ public class Robot {
 		move12;
 	}
 		
-	public static void main(String[] args) {		
-		Robot robot = new Robot();
-		robot.robotInit();
-		robot.autonomousInit();
-		while(true) robot.autonomousPeriodic();
-	}
 
 }
