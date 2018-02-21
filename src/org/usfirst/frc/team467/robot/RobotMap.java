@@ -164,6 +164,7 @@ public class RobotMap {
 			HAS_ELEVATOR = true;
 			ELEVATOR_MOTOR_CHANNEL = 7;
 
+			// TODO Replace with empirical measured values
 			ELEVATOR_BOTTOM_TICKS = 764;
 			ELEVATOR_FLOOR_HEIGHT = 747;
 			ELEVATOR_SWITCH_HEIGHT = 636;
