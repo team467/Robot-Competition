@@ -51,7 +51,7 @@ public class Ramp {
 			drop();
 			break;
 		case NOT_EXIST:
-			LOGGER.info(name + " doesn't exist");
+			LOGGER.debug(name + " doesn't exist");
 			break;
 		}
 	}
