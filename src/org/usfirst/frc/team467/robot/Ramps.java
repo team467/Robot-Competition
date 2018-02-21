@@ -33,7 +33,7 @@ public class Ramps {
 	private int timeSinceRelease;
 
 	private Ramps() {
-		if (!RobotMap.HAS_RAMPS) {
+		if (!RobotMap.HAS_LEFT_RAMP && !RobotMap.HAS_RIGHT_RAMP) {
 			state = State.NOT_EXIST;
 			return;
 		}

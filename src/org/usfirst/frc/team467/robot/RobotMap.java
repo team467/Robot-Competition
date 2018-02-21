@@ -65,7 +65,6 @@ public class RobotMap {
 
 			HAS_ELEVATOR = false;
 			HAS_GRABBER = false;
-			HAS_RAMPS = false;
 			HAS_LEFT_RAMP = false;
 			HAS_RIGHT_RAMP = false;
 
@@ -93,7 +92,6 @@ public class RobotMap {
 
 			HAS_ELEVATOR = true;
 			ELEVATOR_MOTOR_CHANNEL = 1;
-			HAS_RAMPS = false;
 			HAS_LEFT_RAMP = false;
 			HAS_RIGHT_RAMP = false;
 
@@ -141,7 +139,6 @@ public class RobotMap {
 			RAMP_RIGHT_FORWARD_CHANNEL = 2;
 			RAMP_RIGHT_REVERSE_CHANNEL = 5;
 
-			HAS_RAMPS = true;
 			RAMP_RELEASE_FORWARD_CHANNEL = 0;
 			RAMP_RELEASE_REVERSE_CHANNEL = 3;
 
@@ -182,7 +179,6 @@ public class RobotMap {
 			RAMP_RIGHT_FORWARD_CHANNEL = 2;
 			RAMP_RIGHT_REVERSE_CHANNEL = 5;
 
-			HAS_RAMPS = true;
 			RAMP_RELEASE_FORWARD_CHANNEL = 0;
 			RAMP_RELEASE_REVERSE_CHANNEL = 3;
 
@@ -273,7 +269,6 @@ public class RobotMap {
 	public static int RAMP_RIGHT_FORWARD_CHANNEL;
 	public static int RAMP_RIGHT_REVERSE_CHANNEL;
 
-	public static boolean HAS_RAMPS;
 	public static int RAMP_RELEASE_FORWARD_CHANNEL;
 	public static int RAMP_RELEASE_REVERSE_CHANNEL;
 }

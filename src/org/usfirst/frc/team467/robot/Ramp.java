@@ -35,6 +35,7 @@ public class Ramp {
 		solenoid = new DoubleSolenoid(forwardChannel, reverseChannel);
 		this.name = name;
 		state = State.DOWN;
+		LOGGER.info("Ramp initialized: " + name);
 	}
 
 	public State getState() {
