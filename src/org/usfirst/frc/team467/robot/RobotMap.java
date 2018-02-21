@@ -45,7 +45,9 @@ public class RobotMap {
 		switch (id) {
 		case Board:
 			HAS_WHEELS = false;
+			DRIVEMOTOR_NUM = 0;
 			WHEEL_ENCODER_CODES_PER_REVOLUTION = 1024;
+
 			FORWARD_PANIC_ANGLE = 45;
 			BACKWARD_PANIC_ANGLE = -45;
 
@@ -56,24 +58,22 @@ public class RobotMap {
 
 			HAS_ELEVATOR = true;
 			ELEVATOR_MOTOR_CHANNEL = 1;
-
-			HAS_RAMPS = false;
-			RAMP_SOLENOID_CHANNEL = 0;
-
-			DRIVEMOTOR_NUM = 0;
+			HAS_LEFT_RAMP = false;
+			HAS_RIGHT_RAMP = false;
 
 			isDriveMotorInverted = new boolean[] { false, true, false, true };
 			break;
 		case Competition_1:
 			HAS_WHEELS = true;
+			DRIVEMOTOR_NUM = 4;
 			WHEEL_CIRCUMFERENCE = 19.74;
 			WHEEL_ENCODER_CODES_PER_REVOLUTION = 1024;
 			useSpeedControllers = true;
 			POSITION_ALLOWED_ERROR = (0.5 / RobotMap.WHEEL_CIRCUMFERENCE); // 1/2 inch
-
-			FORWARD_PANIC_ANGLE = 45;
-			BACKWARD_PANIC_ANGLE = -45;
-
+			
+			FORWARD_PANIC_ANGLE = 60;
+			BACKWARD_PANIC_ANGLE = -60;
+        
 			LEFT_LEAD_CHANNEL = 1;
 			LEFT_FOLLOWER_1_CHANNEL = 2;
 			LEFT_FOLLOWER_2_CHANNEL = 3;
@@ -83,13 +83,12 @@ public class RobotMap {
 			RIGHT_FOLLOWER_2_CHANNEL = 6;
 
 			HAS_ELEVATOR = true;
-			HAS_RAMPS = false;
 
 			HAS_GRABBER = true;
 			GRABBER_L_CHANNEL = 0; 
 			GRABBER_R_CHANNEL = 1;
 			OPTICAL_CHANNEL = 5;
-			DRIVEMOTOR_NUM = 4;
+
 			// TODO Assign values to the game piece variables, and make more as appropriate
 			ELEVATOR_MOTOR_CHANNEL = 7;
 			ELEVATOR_BOTTOM_TICKS = 764;
@@ -98,18 +97,29 @@ public class RobotMap {
 			ELEVATOR_LOW_SCALE_HEIGHT = 468;
 			ELEVATOR_TOP_TICKS = 357;
 
-			RAMP_SOLENOID_CHANNEL = 0;
+			HAS_LEFT_RAMP = true;
+			RAMP_LEFT_FORWARD_CHANNEL = 1;
+			RAMP_LEFT_REVERSE_CHANNEL = 4;
+			
+			HAS_RIGHT_RAMP = true;
+			RAMP_RIGHT_FORWARD_CHANNEL = 2;
+			RAMP_RIGHT_REVERSE_CHANNEL = 5;
+
+			RAMP_RELEASE_FORWARD_CHANNEL = 0;
+			RAMP_RELEASE_REVERSE_CHANNEL = 3;
+
 			AUTONOMOUS_DRIVE_TIMEOUT_MS = 500;
 			break;
 		case Competition_2:
 			HAS_WHEELS = true;
+			DRIVEMOTOR_NUM = 4;
 			WHEEL_CIRCUMFERENCE = 19.74;
 			WHEEL_ENCODER_CODES_PER_REVOLUTION = 1024;
 			useSpeedControllers = true;
 			POSITION_ALLOWED_ERROR = (0.5 / RobotMap.WHEEL_CIRCUMFERENCE); // 1/2 inch
 
-			FORWARD_PANIC_ANGLE = 45;
-			BACKWARD_PANIC_ANGLE = -45;
+			FORWARD_PANIC_ANGLE = 60;
+			BACKWARD_PANIC_ANGLE = -60;
 
 			LEFT_LEAD_CHANNEL = 1;
 			LEFT_FOLLOWER_1_CHANNEL = 2;
@@ -120,18 +130,31 @@ public class RobotMap {
 			RIGHT_FOLLOWER_2_CHANNEL = 6;
 
 			HAS_ELEVATOR = true;
-			HAS_RAMPS = true;
+			ELEVATOR_MOTOR_CHANNEL = 7;
+
+			// TODO Replace with empirical measured values
+			ELEVATOR_BOTTOM_TICKS = 764;
+			ELEVATOR_FLOOR_HEIGHT = 747;
+			ELEVATOR_SWITCH_HEIGHT = 636;
+			ELEVATOR_LOW_SCALE_HEIGHT = 468;
+			ELEVATOR_TOP_TICKS = 357;
 
 			HAS_GRABBER = true;
 			GRABBER_L_CHANNEL = 1; 
 			GRABBER_R_CHANNEL = 2;
 			OPTICAL_CHANNEL = 5;
 
-			DRIVEMOTOR_NUM = 4;
+			HAS_LEFT_RAMP = true;
+			RAMP_LEFT_FORWARD_CHANNEL = 1;
+			RAMP_LEFT_REVERSE_CHANNEL = 4;
+			
+			HAS_RIGHT_RAMP = true;
+			RAMP_RIGHT_FORWARD_CHANNEL = 2;
+			RAMP_RIGHT_REVERSE_CHANNEL = 5;
 
-			// TODO Assign values to the game piece variables, and make more as appropriate
-			ELEVATOR_MOTOR_CHANNEL = 0;
-			RAMP_SOLENOID_CHANNEL = 0;
+			RAMP_RELEASE_FORWARD_CHANNEL = 0;
+			RAMP_RELEASE_REVERSE_CHANNEL = 3;
+
 			AUTONOMOUS_DRIVE_TIMEOUT_MS = 500;
 			break;
 		}
@@ -211,6 +234,14 @@ public class RobotMap {
 	public static int ELEVATOR_LOW_SCALE_HEIGHT;
 	public static int ELEVATOR_TOP_TICKS;
 
-	public static boolean HAS_RAMPS;
-	public static int RAMP_SOLENOID_CHANNEL;
+	public static boolean HAS_LEFT_RAMP;
+	public static int RAMP_LEFT_FORWARD_CHANNEL;
+	public static int RAMP_LEFT_REVERSE_CHANNEL;
+
+	public static boolean HAS_RIGHT_RAMP;
+	public static int RAMP_RIGHT_FORWARD_CHANNEL;
+	public static int RAMP_RIGHT_REVERSE_CHANNEL;
+
+	public static int RAMP_RELEASE_FORWARD_CHANNEL;
+	public static int RAMP_RELEASE_REVERSE_CHANNEL;
 }
