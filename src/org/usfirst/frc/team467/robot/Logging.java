@@ -25,6 +25,8 @@ public class Logging {
 		Logger.getLogger(Grabber.class).setLevel(Level.DEBUG);
 		Logger.getLogger(MatchConfiguration.class).setLevel(Level.DEBUG);
 		Logger.getLogger(OpticalSensor.class).setLevel(Level.WARN);
+		Logger.getLogger(Ramp.class).setLevel(Level.INFO);
+		Logger.getLogger(Ramps.class).setLevel(Level.INFO);
 		Logger.getLogger(Robot.class).setLevel(Level.INFO);
 		Logger.getLogger(RobotShape.class).setLevel(Level.WARN);
 		Logger.getLogger(Rumbler.class).setLevel(Level.WARN);

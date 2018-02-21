@@ -23,7 +23,7 @@ public class Robot extends TimedRobot {
 	private static final Logger LOGGER = Logger.getLogger(Robot.class);
 	
 	// Robot objects
-	private DriverStation driverstation;
+	private DriverStation467 driverstation;
 	private Drive drive;
 	private ActionGroup autonomous;
 	private MatchConfiguration matchConfig;
@@ -31,7 +31,6 @@ public class Robot extends TimedRobot {
 	private Gyrometer gyro;
 	private Elevator elevator;
 	private Grabber grabber;
-	private TiltMonitor tiltMonitor;
 
 	int session;
 
@@ -40,6 +39,7 @@ public class Robot extends TimedRobot {
 	 */
 	double time;
 
+	private Ramps ramps;
 
 	/**
 	 * This function is run when the robot is first started up and should be used for any initialization code.
@@ -52,14 +52,13 @@ public class Robot extends TimedRobot {
 		RobotMap.init(RobotID.Competition_1);
 
 		// Make robot objects
-		driverstation = DriverStation.getInstance();
+		driverstation = DriverStation467.getInstance();
 		LOGGER.info("Initialized Driverstation");
 
 		drive = Drive.getInstance();
 		elevator = Elevator.getInstance();
 		grabber = Grabber.getInstance();
 		matchConfig = MatchConfiguration.getInstance();
-		tiltMonitor = TiltMonitor.getInstance();
 
 		gyro = Gyrometer.getInstance();
 		gyro.calibrate();
@@ -75,6 +74,7 @@ public class Robot extends TimedRobot {
 			cam.setFPS(15);
 		}
 		
+
 	}
 	
 	public void disabledInit() {
@@ -97,7 +97,7 @@ public class Robot extends TimedRobot {
 		driverstation.readInputs();
 //		matchConfig.load();
 //		autonomous = matchConfig.autonomousDecisionTree();
-		autonomous = Actions.rightBasicSwitch();
+		autonomous = Actions.rightBasicSwitchRight();
 		LOGGER.info("Init Autonomous:" + autonomous.getName());
 		autonomous.enable();
 		distance = Double.parseDouble(SmartDashboard.getString("DB/String 0", "0.0")); //198		
@@ -111,6 +111,7 @@ public class Robot extends TimedRobot {
 		drive.moveFeet(distance);
 //		drive.rotateByAngle(90);
 //		drive.logClosedLoopErrors();
+		autonomous.run();
 	}
 
 	public void teleopInit() {
@@ -141,6 +142,24 @@ public class Robot extends TimedRobot {
 			elevator.moveToHeight(Elevator.Stops.highScale);
 		}
 		
+		// Ramps state machines protect against conflicts
+		if (driverstation.getDeployButtonsDown()) {
+			LOGGER.debug("Deploy Buttons down");
+			ramps.deploy();
+		}
+
+		if (driverstation.getLeftRampButtonPressed()) {
+			LOGGER.debug("Left Ramp Button Pressed");
+			ramps.toggleLeftState();
+		}
+
+		if (driverstation.getRightRampButtonPressed()) {
+			LOGGER.debug("Right Ramp Button Pressed");
+			ramps.toggleRightState();
+		}
+		
+		ramps.periodic();
+
 		double speed = driverstation.getArcadeSpeed();
 		double turn = driverstation.getArcadeTurn();
 
@@ -150,7 +169,6 @@ public class Robot extends TimedRobot {
 		if (Math.abs(turn) < RobotMap.MIN_DRIVE_SPEED) {
 			turn = 0.0;
 		}
-
 
 		switch (driverstation.getDriveMode()) {
 

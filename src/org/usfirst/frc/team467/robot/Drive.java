@@ -115,7 +115,7 @@ public class Drive extends DifferentialDrive {
 
 	public void sendData() {
 		RobotData.getInstance().updateDrivePosition(getRightDistance(), getLeftDistance());
-	} // changed update to updateDrivePosition
+	}
 
 	/**
 	 * Does not drive drive motors and keeps steering angle at previous position.

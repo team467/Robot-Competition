@@ -16,7 +16,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class MatchConfiguration {
 
 	// Simulator variables
-	private String simulatedGameSpecificMessage = "LLL";
+	
+	private String simulatedGameSpecificMessage = "RRL";
 
 	private Alliance simulatedTeamColor = Alliance.Red;
 
@@ -219,38 +220,45 @@ public class MatchConfiguration {
 
 		case LEFT:
 			if(isSwitchOnSameSide() && !isScaleOnSameSide()) {
+				LOGGER.debug("Switch is on the same side and scale is on the opposite side | LEFT"); 
 				autonomous = Actions.leftAdvancedSwitchRightScale();
-				LOGGER.debug("isSwitchOnSameSide Left True -----------------------"); 
-			} else if(isScaleOnSameSide()) {
-				autonomous = Actions.leftBasicScaleLeft();
-				LOGGER.debug("LEFT SCALE ------------------------------ TRUE");
-			} else if(!isScaleOnSameSide()) {
-				autonomous = Actions.leftBasicScaleRight();
-				LOGGER.debug("LEFT Scale ----------------------------- False");
+			} else if (isSwitchOnSameSide() && isScaleOnSameSide()){
+				LOGGER.debug("Switch is on same side and scale is on same side | LEFT");
+				autonomous = Actions.leftAdvancedSwitch();
+			} else if(isScaleOnSameSide() && !isSwitchOnSameSide()) {
+				LOGGER.debug("Scale is on same sode and switch is on the opposite side | LEFT");
+				autonomous = Actions.leftAdvancedSwitchRightScaleLeft();
+			} else if(!isSwitchOnSameSide() && !isScaleOnSameSide()) {
+				LOGGER.debug("Switch is on the opposite side and the scale is on the opposite side | LEFT");
+				autonomous = Actions.leftAdvancedSwitchRightScaleRight();
 			} 
 
 			break;
 
-		case CENTER:
+		case CENTER: 
+			LOGGER.info("Entering Center");
 			if(isMySwitchToTheRight()) {
+				LOGGER.debug("The switch is to the right | CENTER");
 				autonomous = Actions.centerBasicSwitchRight();
-				LOGGER.debug("IsMySwitchToTheRight----------------------------Center True");
-			} else if(!isMySwitchToTheRight()) {
+			} else {
+				LOGGER.debug("The Switch is to the left | CENTER");
 				autonomous = Actions.centerBasicSwitchLeft();
-				LOGGER.debug("opposite code of isMySwitchToTheright()");
 			}
 			break;
 
 		case RIGHT: 
 			if(isSwitchOnSameSide() && !isScaleOnSameSide()) {
-				autonomous = Actions.rightBasicSwitch(); // place the advance version in here and remove the one before. 
-				LOGGER.debug("Right isSwitchOnSameSide-----------------------------true ");
-			} else if(isScaleOnSameSide()) {
-				autonomous = Actions.rightBasicScaleRight();
-				LOGGER.debug("Scale is on same side");
-			} else if(!isScaleOnSameSide()) {
-				autonomous = Actions.rightBasicScaleLeft();
-				LOGGER.debug("Scale is on opposite side");
+				LOGGER.debug("Switch is on same side and scale is on opposite side | RIGHT");
+				autonomous = Actions.rightAdvancedSwitchLeftScale();
+			} else if (isSwitchOnSameSide() && isScaleOnSameSide()) {
+				LOGGER.debug("Switch is on same side and scale is one same side | RIGHT");
+				autonomous = Actions.rightAdvancedSwitch();
+			} else if(isScaleOnSameSide() && !isSwitchOnSameSide()) {
+				LOGGER.debug("Scale is on same side and switich on opposite side | RIGHT");
+				autonomous = Actions.rightAdvancedSwitchLeftScaleRight();
+			} else if(!isScaleOnSameSide() && !isSwitchOnSameSide()) {
+				LOGGER.debug("Scale is on opposite side |RIGHT");
+				autonomous = Actions.rightAdvancedSwitchLeftScaleLeft();
 			}
 			break;
 
@@ -272,10 +280,10 @@ public class MatchConfiguration {
 		this.setAutoModeAndStartPosition();
 	}
 
-	public double matchTime(){
+	public double matchTime() {
 		double time = DriverStation.getInstance().getMatchTime();
 		LOGGER.info("Match Time=" + time);
-		return time;
+		return time + 20;
 	}
 
 	public TeamColor teamColor() {
@@ -318,7 +326,7 @@ public class MatchConfiguration {
 
 	public boolean isScaleOnSameSide() {
 		boolean isOnSameSide = false; 
-		if (teamColor== TeamColor.BLUE) {
+		if (teamColor == TeamColor.BLUE) {
 			if ((scale == Side.LEFT && startPosition == StartPosition.LEFT) || (scale == Side.RIGHT && startPosition == StartPosition.RIGHT)) {
 				isOnSameSide = true;
 				LOGGER.info("Scale is on Same side testing Blue");
@@ -334,15 +342,11 @@ public class MatchConfiguration {
 
 	public boolean isMySwitchToTheRight() {
 		boolean isOnRightSide = false;
-		if (teamColor == TeamColor.BLUE) {
-			if(blueSwitch == Side.RIGHT) {
-				isOnRightSide = true;
-			} else if(teamColor == TeamColor.RED) {
-				if(redSwitch == Side.RIGHT) {
-					isOnRightSide = true;
-				}
-			}
-		}
+		if (teamColor == TeamColor.BLUE && blueSwitch == Side.RIGHT) {
+			isOnRightSide = true;
+		} else if (teamColor == TeamColor.RED && redSwitch == Side.RIGHT) {
+			isOnRightSide = true;
+		} 
 		return isOnRightSide;
 	}
 }

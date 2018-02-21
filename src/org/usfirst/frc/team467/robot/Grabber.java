@@ -119,12 +119,13 @@ public class Grabber {
 			throttle = 0.0;
 		}
 		
-		if (DriverStation.getInstance().getNavJoystick().getLeftStickY() > 0.5 || DriverStation.getInstance().getNavJoystick().getLeftStickY() < -0.5) {
-			DriverStation.getInstance().getNavRumbler().rumble(25, 0.1);
-			DriverStation.getInstance().getDriverRumbler().rumble(25, 0.1);
+		if (DriverStation467.getInstance().getNavJoystick().getLeftStickY() > 0.5 
+				|| DriverStation467.getInstance().getNavJoystick().getLeftStickY() < -0.5) {
+			DriverStation467.getInstance().getNavRumbler().rumble(25, 0.1);
+			DriverStation467.getInstance().getDriverRumbler().rumble(25, 0.1);
 			if (hasCube()) {
-				DriverStation.getInstance().getNavRumbler().rumble(150, 1.0);
-				DriverStation.getInstance().getDriverRumbler().rumble(50, 1.0);
+				DriverStation467.getInstance().getNavRumbler().rumble(150, 1.0);
+				DriverStation467.getInstance().getDriverRumbler().rumble(50, 1.0);
 			}
 		}
 		

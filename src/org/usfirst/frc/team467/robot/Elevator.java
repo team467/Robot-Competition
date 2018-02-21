@@ -19,21 +19,23 @@ public class Elevator {
 	private MotorSafetyHelper m_safetyHelper;
 
 	private Stops targetHeight;
+	private int previousHeight;
 
 	private final int ALLOWABLE_ERROR_TICKS = 3;
 	private final int LIMIT_BUFFER = 10;
 
 	public enum Stops {
 		// null if no stop is desired
-		basement(761),
-		floor(747),
-		fieldSwitch(636),
-		lowScale(468),
-		highScale(358);
+		// height values measured empirically
+		basement(RobotMap.ELEVATOR_BOTTOM_TICKS),
+		floor(RobotMap.ELEVATOR_FLOOR_HEIGHT),
+		fieldSwitch(RobotMap.ELEVATOR_SWITCH_HEIGHT),
+		lowScale(RobotMap.ELEVATOR_LOW_SCALE_HEIGHT),
+		highScale(RobotMap.ELEVATOR_TOP_TICKS);
 		/**
 		 * Height in sensor units
 		 */
-		public final int height;
+		public int height;
 
 		Stops(int height) {
 			this.height = height;
@@ -81,9 +83,17 @@ public class Elevator {
 		heightController.configAllowableClosedloopError(0, ALLOWABLE_ERROR_TICKS, RobotMap.TALON_TIMEOUT);
 	}
 
-	private double getRawHeight() {
+	public void setHeights(int basement, int floor, int switchValue, int lowScale, int highScale) {
+		Stops.basement.height = basement;
+		Stops.floor.height = floor;
+		Stops.fieldSwitch.height = switchValue;
+		Stops.lowScale.height = lowScale;
+		Stops.highScale.height = highScale;
+	}
+
+	private int getRawHeight() {
 		if (!RobotMap.HAS_ELEVATOR) {
-			return 0.0;
+			return 0;
 		}
 		return heightController.getSelectedSensorPosition(0);
 	}
@@ -126,6 +136,7 @@ public class Elevator {
 	 * @param speed The velocity. Shall be a value between -1 and 1.
 	 */
 	public void move(double speed) {
+		previousHeight = getRawHeight();
 		SmartDashboard.putNumber("Elevator/Move Speed", speed);
 
 		if (!RobotMap.HAS_ELEVATOR) {
@@ -153,13 +164,18 @@ public class Elevator {
 
 	public void rumbleOnPresetHeights() {
 		double currentHeight = getRawHeight();
-		for(Stops stop: Stops.values()) {
-			if(stop.height == currentHeight) {
-				DriverStation.getInstance().getNavRumbler().rumble(150, 0.3);
+
+		for (Stops stop : Stops.values()) {
+			if ((previousHeight < stop.height && currentHeight >= stop.height)
+					|| (previousHeight > stop.height && currentHeight <= stop.height)) {
+				DriverStation467.getInstance().getNavRumbler().rumble(200, 0.8);
 			}
 		}
 	}
 
+	/**
+	 * Look for sensor slippage
+	 */
 	public void limitCheck() {
 		final int position = heightController.getSelectedSensorPosition(0);
 		if (position > RobotMap.ELEVATOR_BOTTOM_TICKS + LIMIT_BUFFER
@@ -171,9 +187,9 @@ public class Elevator {
 	}
 
 	public void telemetry() {
+		SmartDashboard.putString("Elevator/Control Mode", heightController.getControlMode().name());
 		SmartDashboard.putNumber("Elevator/Closed Loop Error", heightController.getClosedLoopError(0));
 		SmartDashboard.putNumber("Elevator/Current Ticks", heightController.getSelectedSensorPosition(0));
 		SmartDashboard.putNumber("Elevator/Target Ticks", targetHeight != null ? targetHeight.height : -1);
-		SmartDashboard.putString("Elevator/Control Mode", heightController.getControlMode().toString());
 	}
 }
