@@ -144,7 +144,7 @@ public class DriveSimulator {
 
 
 	public static void main(String[] args) {
-		RobotMap.init(RobotID.PreseasonBot);
+		RobotMap.init(RobotID.Competition_1);
 		DriveSimulator drive = DriveSimulator.getInstance();
 		drive.zero();
 		RobotData.getInstance().startingLocation(20, 0);

@@ -21,18 +21,21 @@ public class Ramp {
 
 	public enum State {
 		UP,
-		DOWN;
+		DOWN,
+		NOT_EXIST;
 	}
 
-	public Ramp(String name, int forwardChannel, int reverseChannel) {
-		if (!RobotMap.HAS_RAMPS) {
+	public Ramp(String name, int forwardChannel, int reverseChannel, boolean exists) {
+		if (!exists) {
 			LOGGER.info("No ramps");
+			state = State.NOT_EXIST;
 			return;
 		}
 
 		solenoid = new DoubleSolenoid(forwardChannel, reverseChannel);
 		this.name = name;
 		state = State.DOWN;
+		LOGGER.info("Ramp initialized: " + name);
 	}
 
 	public State getState() {
@@ -40,10 +43,6 @@ public class Ramp {
 	}
 
 	public void toggle() {
-		if (!RobotMap.HAS_RAMPS) {
-			return;
-		}
-
 		switch (state) {
 		case DOWN:
 			lift();
@@ -51,14 +50,13 @@ public class Ramp {
 		case UP:
 			drop();
 			break;
+		case NOT_EXIST:
+			LOGGER.debug(name + " doesn't exist");
+			break;
 		}
 	}
 
 	public void lift() {
-		if (!RobotMap.HAS_RAMPS) {
-			return;
-		}
-
 		if (state == State.DOWN) {
 			solenoid.set(DoubleSolenoid.Value.kForward);
 			LOGGER.info(name + " lifting");
@@ -67,10 +65,6 @@ public class Ramp {
 	}
 
 	public void drop() {
-		if (!RobotMap.HAS_RAMPS) {
-			return;
-		}
-
 		if (state == State.UP) {
 			solenoid.set(DoubleSolenoid.Value.kReverse);
 			LOGGER.info(name + " dropping");

@@ -7,6 +7,7 @@ import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.wpilibj.SpeedController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 //TalonSpeedControllerGroup
 public class TalonSpeedControllerGroup implements SpeedController {
@@ -47,9 +48,11 @@ public class TalonSpeedControllerGroup implements SpeedController {
 		leader.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, RobotMap.TALON_TIMEOUT);
 		leader.setSensorPhase(sensorIsInverted);
 		
-		// 687 based on 916
-		leader.configMotionCruiseVelocity(15000, RobotMap.TALON_TIMEOUT); //687 is 75 percent of the max speed, which is 916	
-		leader.configMotionAcceleration(20000, RobotMap.TALON_TIMEOUT);
+		int motionAcceleration = Integer.parseInt(SmartDashboard.getString("DB/String 3", "20000")); 
+		int motionCruiseVelocity = Integer.parseInt(SmartDashboard.getString("DB/String 8", "15000")); 
+
+		leader.configMotionCruiseVelocity(motionCruiseVelocity, RobotMap.TALON_TIMEOUT); 
+		leader.configMotionAcceleration(motionAcceleration, RobotMap.TALON_TIMEOUT);
 		leader.configNeutralDeadband(0.04, RobotMap.TALON_TIMEOUT);
 		zero();		
 	}

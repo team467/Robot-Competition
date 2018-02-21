@@ -23,7 +23,8 @@ public class Ramps {
 	public enum State {
 		START,
 		RELEASED,
-		DEPLOYED;
+		DEPLOYED,
+		NOT_EXIST;
 	}
 
 	/**
@@ -32,9 +33,13 @@ public class Ramps {
 	private int timeSinceRelease;
 
 	private Ramps() {
+		if (!RobotMap.HAS_LEFT_RAMP && !RobotMap.HAS_RIGHT_RAMP) {
+			state = State.NOT_EXIST;
+			return;
+		}
 		releaseSolenoid = new DoubleSolenoid(RobotMap.RAMP_RELEASE_FORWARD_CHANNEL, RobotMap.RAMP_RELEASE_REVERSE_CHANNEL);
-		left = new Ramp("Left", RobotMap.RAMP_LEFT_FORWARD_CHANNEL, RobotMap.RAMP_LEFT_REVERSE_CHANNEL);
-		right = new Ramp("Right", RobotMap.RAMP_RIGHT_FORWARD_CHANNEL, RobotMap.RAMP_RIGHT_REVERSE_CHANNEL);
+		left = new Ramp("Left", RobotMap.RAMP_LEFT_FORWARD_CHANNEL, RobotMap.RAMP_LEFT_REVERSE_CHANNEL, RobotMap.HAS_LEFT_RAMP);
+		right = new Ramp("Right", RobotMap.RAMP_RIGHT_FORWARD_CHANNEL, RobotMap.RAMP_RIGHT_REVERSE_CHANNEL, RobotMap.HAS_RIGHT_RAMP);
 	}
 
 	public static Ramps getInstance() {
@@ -45,8 +50,13 @@ public class Ramps {
 	}
 
 	public void deploy() {
-		if (state != State.START || DriverStation.getInstance().getMatchTime() > 30.0) {
-			// Only deploy from start configuration in the last 30 seconds
+		if (DriverStation.getInstance().getMatchTime() > 30.0) {
+			// Nothing gets past here unless you are in the last 30 seconds.
+			return;
+		}
+
+		if (state != State.START) {
+			// Only deploy from start configuration.
 			return;
 		}
 

@@ -7,7 +7,7 @@ public class RobotMap {
 	public static final int TALON_TIMEOUT = 10; // 10 ms is the recommended timeout
 
 	public enum RobotID {
-		PreseasonBot, Board, Competition_1, Competition_2
+		Board, Competition_1, Competition_2
 	};
 
 	public static final int FRONT_LEFT = 0;
@@ -45,39 +45,6 @@ public class RobotMap {
 	public static void init(RobotID id) {
 		robotID = id;
 		switch (id) {
-		case PreseasonBot:
-			HAS_WHEELS = true;
-			WHEEL_CIRCUMFERENCE = 19.74;
-			WHEEL_ENCODER_CODES_PER_REVOLUTION = 1024;
-			useSpeedControllers = true;
-			POSITION_ALLOWED_ERROR = (0.5 / RobotMap.WHEEL_CIRCUMFERENCE); // 1/2 inch
-
-			FORWARD_PANIC_ANGLE = 45;
-			BACKWARD_PANIC_ANGLE = -45;
-
-			LEFT_LEAD_CHANNEL = 1;
-			LEFT_FOLLOWER_1_CHANNEL = 2;
-			LEFT_FOLLOWER_2_CHANNEL = 3;
-			LEFT_DRIVE_SENSOR_IS_INVERTED = true;
-
-			RIGHT_LEAD_CHANNEL = 4;
-			RIGHT_FOLLOWER_1_CHANNEL = 5;
-			RIGHT_FOLLOWER_2_CHANNEL = 6;
-			RIGHT_DRIVE_SENSOR_IS_INVERTED = true;
-
-			HAS_ELEVATOR = false;
-			HAS_GRABBER = false;
-			HAS_RAMPS = false;
-
-			DRIVEMOTOR_NUM = 0;
-
-			// TODO Assign values to the game piece variables, and make more as appropriate
-			ELEVATOR_MOTOR_CHANNEL = 0;
-
-			AUTONOMOUS_DRIVE_TIMEOUT_MS = 1000;
-
-			isDriveMotorInverted = new boolean[] { false, true, false, true };
-			break;
 		case Board:
 			HAS_WHEELS = false;
 			DRIVEMOTOR_NUM = 0;
@@ -93,13 +60,9 @@ public class RobotMap {
 
 			HAS_ELEVATOR = true;
 			ELEVATOR_MOTOR_CHANNEL = 1;
-
-			HAS_RAMPS = false;
-			RAMP_SOLENOID_CHANNEL = 0;
-
-			DRIVEMOTOR_NUM = 0;
-			
 			HAS_CAMERA = true;
+			HAS_LEFT_RAMP = false;
+			HAS_RIGHT_RAMP = false;
 
 			isDriveMotorInverted = new boolean[] { false, true, false, true };
 			break;
@@ -141,10 +104,11 @@ public class RobotMap {
 			ELEVATOR_LOW_SCALE_HEIGHT = 468;
 			ELEVATOR_TOP_TICKS = 357;
 
-			HAS_RAMPS = true;
+			HAS_LEFT_RAMP = true;
 			RAMP_LEFT_FORWARD_CHANNEL = 1;
 			RAMP_LEFT_REVERSE_CHANNEL = 4;
-
+			
+			HAS_RIGHT_RAMP = true;
 			RAMP_RIGHT_FORWARD_CHANNEL = 2;
 			RAMP_RIGHT_REVERSE_CHANNEL = 5;
 
@@ -161,8 +125,8 @@ public class RobotMap {
 			useSpeedControllers = true;
 			POSITION_ALLOWED_ERROR = (0.5 / RobotMap.WHEEL_CIRCUMFERENCE); // 1/2 inch
 
-			FORWARD_PANIC_ANGLE = 45;
-			BACKWARD_PANIC_ANGLE = -45;
+			FORWARD_PANIC_ANGLE = 60;
+			BACKWARD_PANIC_ANGLE = -60;
 
 			LEFT_LEAD_CHANNEL = 1;
 			LEFT_FOLLOWER_1_CHANNEL = 2;
@@ -173,26 +137,33 @@ public class RobotMap {
 			RIGHT_FOLLOWER_2_CHANNEL = 6;
 
 			HAS_ELEVATOR = true;
-			ELEVATOR_MOTOR_CHANNEL = 0;
+			ELEVATOR_MOTOR_CHANNEL = 7;
+
+			// TODO Replace with empirical measured values
+			ELEVATOR_BOTTOM_TICKS = 764;
+			ELEVATOR_FLOOR_HEIGHT = 747;
+			ELEVATOR_SWITCH_HEIGHT = 636;
+			ELEVATOR_LOW_SCALE_HEIGHT = 468;
+			ELEVATOR_TOP_TICKS = 357;
 
 			HAS_GRABBER = true;
 			GRABBER_L_CHANNEL = 1; 
 			GRABBER_R_CHANNEL = 2;
 			OPTICAL_CHANNEL = 5;
 
-			DRIVEMOTOR_NUM = 4;
-			
 			HAS_CAMERA = false;
 
-			HAS_RAMPS = true;
+			HAS_LEFT_RAMP = true;
 			RAMP_LEFT_FORWARD_CHANNEL = 1;
 			RAMP_LEFT_REVERSE_CHANNEL = 4;
-
-			RAMP_LEFT_FORWARD_CHANNEL = 2;
-			RAMP_LEFT_REVERSE_CHANNEL = 5;
+			
+			HAS_RIGHT_RAMP = true;
+			RAMP_RIGHT_FORWARD_CHANNEL = 2;
+			RAMP_RIGHT_REVERSE_CHANNEL = 5;
 
 			RAMP_RELEASE_FORWARD_CHANNEL = 0;
 			RAMP_RELEASE_REVERSE_CHANNEL = 3;
+
 			AUTONOMOUS_DRIVE_TIMEOUT_MS = 500;
 			break;
 		}
@@ -220,7 +191,7 @@ public class RobotMap {
 	public static double MAX_SPEED;
 
 	public static boolean useSimulator = false;
-	public static boolean USE_FAKE_GAME_DATA = true;
+	public static boolean USE_FAKE_GAME_DATA = false;
 
 	public static final double MIN_DRIVE_SPEED = 0.1;
 
@@ -286,12 +257,11 @@ public class RobotMap {
 
 	public static boolean HAS_CAMERA;
 
-	public static boolean HAS_RAMPS;
-	public static int RAMP_SOLENOID_CHANNEL;
-	
+	public static boolean HAS_LEFT_RAMP;
 	public static int RAMP_LEFT_FORWARD_CHANNEL;
 	public static int RAMP_LEFT_REVERSE_CHANNEL;
 
+	public static boolean HAS_RIGHT_RAMP;
 	public static int RAMP_RIGHT_FORWARD_CHANNEL;
 	public static int RAMP_RIGHT_REVERSE_CHANNEL;
 

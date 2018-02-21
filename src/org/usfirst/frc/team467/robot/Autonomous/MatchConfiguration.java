@@ -119,10 +119,12 @@ public class MatchConfiguration {
 			break;
 
 		case "CENTER":
+			LOGGER.debug("Set start position in the center");
 			startPosition = StartPosition.CENTER;
 			break;
 
 		case "RIGHT":
+			LOGGER.debug("Set start position to right side");
 			startPosition = StartPosition.RIGHT;
 
 			break;

@@ -32,6 +32,7 @@ public class Robot {
 	public void robotInit() {
 
 		Logging.init();
+
 		RobotMap.init(RobotID.Competition_1);
 		RobotMap.useSimulator = true;
 
@@ -65,13 +66,6 @@ public class Robot {
 
 	public void autonomousPeriodic() {
 		autonomous.run();
-	}
-
-	public static void main(String[] args) {		
-		Robot robot = new Robot();
-		robot.robotInit();
-		robot.autonomousInit();
-		while(true) robot.autonomousPeriodic();
 	}
 
 }

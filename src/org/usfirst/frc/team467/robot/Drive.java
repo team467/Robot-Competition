@@ -86,8 +86,8 @@ public class Drive extends DifferentialDrive {
 		double kPRight = Double.parseDouble(SmartDashboard.getString("DB/String 7", "1.4")); // 1.4
 		double kPLeft = Double.parseDouble(SmartDashboard.getString("DB/String 2", "1.6")); // 1.6
 
-		double kIRight = Double.parseDouble(SmartDashboard.getString("DB/String 8", "0.0")); // 0.0
-		double kILeft = Double.parseDouble(SmartDashboard.getString("DB/String 3", "0.0")); // 0.0
+		double kIRight = 0.0;
+		double kILeft = 0.0;
 
 		double kDRight = Double.parseDouble(SmartDashboard.getString("DB/String 9", "165")); //165
 		double kDLeft = Double.parseDouble(SmartDashboard.getString("DB/String 4", "198")); //198

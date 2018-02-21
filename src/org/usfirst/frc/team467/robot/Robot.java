@@ -1,6 +1,5 @@
 package org.usfirst.frc.team467.robot;
 
-//import edu.wpi.first.wpilibj.networktables.NetworkTable;
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -85,32 +84,37 @@ public class Robot extends TimedRobot {
 		LOGGER.trace("Disabled Periodic");
 	}
 	
+	double tuningValue = 0.0;
+	
 	public void testInit() {
+		drive.setPIDs();
+		driverstation.readInputs();
+		tuningValue = Double.parseDouble(SmartDashboard.getString("DB/String 0", "0.0")); //198		
+		drive.zero();
 	}
 
 	public void testPeriodic() {
+		if (tuningValue <= 30.0 && tuningValue >= -30.0) {
+			drive.moveFeet(tuningValue);
+		} else {
+			drive.rotateByAngle(tuningValue);
+		}
+		drive.logClosedLoopErrors();
 	}
 
-	double distance = 0.0;
 	public void autonomousInit() {
 		drive.setPIDs();
 		driverstation.readInputs();
-//		matchConfig.load();
+		matchConfig.load();
 //		autonomous = matchConfig.autonomousDecisionTree();
 		autonomous = Actions.rightBasicSwitchRight();
 		LOGGER.info("Init Autonomous:" + autonomous.getName());
 		autonomous.enable();
-		distance = Double.parseDouble(SmartDashboard.getString("DB/String 0", "0.0")); //198		
-		drive.zero();
 		}
 
 	public void autonomousPeriodic() {
 		grabber.periodic();
 		elevator.move(0); // Will move to height if set.
-//	    autonomous.run();
-		drive.moveFeet(distance);
-//		drive.rotateByAngle(90);
-//		drive.logClosedLoopErrors();
 		autonomous.run();
 	}
 
