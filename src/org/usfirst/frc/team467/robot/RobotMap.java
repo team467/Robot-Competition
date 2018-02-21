@@ -104,7 +104,7 @@ public class RobotMap {
 			break;
 		case Competition_1:
 			HAS_WHEELS = true;
-			WHEEL_CIRCUMFERENCE = 19.11;
+			WHEEL_CIRCUMFERENCE = 18.74;
 			WHEEL_ENCODER_CODES_PER_REVOLUTION = 1024;
 			useSpeedControllers = true;
 			POSITION_ALLOWED_ERROR = (0.5 / RobotMap.WHEEL_CIRCUMFERENCE); // 1/2 inch
@@ -126,7 +126,7 @@ public class RobotMap {
 			HAS_RAMPS = false;
 
 			HAS_GRABBER = true;
-			HAS_CAMERA = true;
+			HAS_CAMERA = false;
 			
 			GRABBER_L_CHANNEL = 0; 
 			GRABBER_R_CHANNEL = 1;
@@ -139,7 +139,7 @@ public class RobotMap {
 			break;
 		case Competition_2:
 			HAS_WHEELS = true;
-			WHEEL_CIRCUMFERENCE = 19.11;
+			WHEEL_CIRCUMFERENCE = 19.74;
 			WHEEL_ENCODER_CODES_PER_REVOLUTION = 1024;
 			useSpeedControllers = true;
 			POSITION_ALLOWED_ERROR = (0.5 / RobotMap.WHEEL_CIRCUMFERENCE); // 1/2 inch
@@ -204,7 +204,7 @@ public class RobotMap {
 
 	// Robot Dimensions
 	public static double WHEEL_BASE_LENGTH = 3.33;
-	public static double WHEEL_BASE_WIDTH = 2.92; // TODO: MEASURE TRUE WHEEL BASE WIDTH
+	public static double WHEEL_BASE_WIDTH = 1.99; // TODO: MEASURE TRUE WHEEL BASE WIDTH
 
 	public static double CamToCenterWidthInches;
 	public static double CamToCenterLengthInches;	

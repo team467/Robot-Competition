@@ -196,6 +196,14 @@ public class Actions {
 		return mode;
 	}
 	
+	public static ActionGroup turn(double degrees) {
+		String actionGroupText = "Turn " + degrees + " feet";
+		ActionGroup mode = new ActionGroup(actionGroupText);
+		mode.addAction(zeroDistance());
+		mode.addAction(moveturn(degrees));
+		return mode;
+	}
+	
 	//SWITCH
 	
 	
@@ -250,12 +258,15 @@ public class Actions {
 	public static ActionGroup rightBasicSwitch() {
 		String actionGroupText = "Start on right, put cube on switch.";
 		ActionGroup mode = new ActionGroup(actionGroupText);
+		mode.addAction(grabCube());
 		mode.addAction(zeroDistance());
 		mode.addAction(moveDistanceForward(12.33)); // 12' 4"
 		mode.addAction(zeroDistance());
 		mode.addAction(moveturn(-90));
 		mode.addAction(zeroDistance());
+		mode.addAction(elevatorToSwitch());
 		mode.addAction(moveDistanceForward(1.479)); // 1' 5.75"
+		mode.addAction(releaseCube());
 		return mode; //works
 	}
 
@@ -635,8 +646,9 @@ public class Actions {
 	public static ActionGroup testAutoGrab() {
 		String actionGroupText = "Testing grab with a 2 foot move.";
 		ActionGroup mode = new ActionGroup(actionGroupText);
-		mode.addAction(grabCube());
-		mode.addAction(moveDistanceForward(2.0));
+		//mode.addAction(grabCube());
+		//mode.addAction(moveDistanceForward(2.0));
+		mode.addAction(elevatorToSwitch());
 		return mode;
 	}
 	

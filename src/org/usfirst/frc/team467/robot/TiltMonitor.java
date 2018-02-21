@@ -15,11 +15,12 @@ public class TiltMonitor {
 		}
 		return instance;
 	}
-	public void periodic() {
-		if (Gyrometer.getInstance().getPitchDegrees() > RobotMap.FORWARD_PANIC_ANGLE || 
-			Gyrometer.getInstance().getPitchDegrees() < RobotMap.BACKWARD_PANIC_ANGLE) {
-			LOGGER.debug("Pitch=" + Gyrometer.getInstance().getPitchDegrees());
-			Elevator.getInstance().moveToHeight(Elevator.Stops.floor);
-		}
-	}
+//	public void periodic() {
+//		if (Gyrometer.getInstance().getPitchDegrees() > RobotMap.FORWARD_PANIC_ANGLE || 
+//			Gyrometer.getInstance().getPitchDegrees() < RobotMap.BACKWARD_PANIC_ANGLE) {
+//			LOGGER.debug("Pitch=" + Gyrometer.getInstance().getPitchDegrees());
+//			Elevator.getInstance().moveToHeight(Elevator.Stops.floor);
+//			LOGGER.debug("pitch= " + Gyrometer.getInstance().getPitchDegrees());
+//		}
+//	}
 }

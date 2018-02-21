@@ -105,7 +105,8 @@ public class Elevator {
 
 		// If we're in position, stop.
 		final int error = targetHeight.height - heightController.getSelectedSensorPosition(0);
-		if (heightController.getControlMode() == ControlMode.MotionMagic && Math.abs(error) <= ALLOWABLE_ERROR_TICKS) {
+		if ((heightController.getControlMode() == ControlMode.MotionMagic || heightController.getControlMode() == ControlMode.Position)
+				&& Math.abs(error) <= ALLOWABLE_ERROR_TICKS) {
 			LOGGER.debug("automaticMove, clearing target,  trajectory=" + targetHeight.height
 					+ " pos=" + heightController.getSelectedSensorPosition(0) + " err=" + error);
 			targetHeight = null;

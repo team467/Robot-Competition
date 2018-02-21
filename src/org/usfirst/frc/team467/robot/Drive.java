@@ -130,7 +130,7 @@ public class Drive extends DifferentialDrive {
 	}
 
 	public void moveFeet(double distanceInFeet) {
-		moveFeet(distanceInFeet, 0, ControlMode.Position);
+		moveFeet(distanceInFeet, 0, ControlMode.MotionMagic);
 	}
 
 	public void rotateByAngle(double angleInDegrees) {

@@ -97,7 +97,7 @@ public class Robot extends TimedRobot {
 		driverstation.readInputs();
 //		matchConfig.load();
 //		autonomous = matchConfig.autonomousDecisionTree();
-		autonomous = Actions.moveDistance(5);
+		autonomous = Actions.rightBasicSwitch();
 		LOGGER.info("Init Autonomous:" + autonomous.getName());
 		autonomous.enable();
 		distance = Double.parseDouble(SmartDashboard.getString("DB/String 0", "0.0")); //198		
@@ -105,11 +105,11 @@ public class Robot extends TimedRobot {
 		}
 
 	public void autonomousPeriodic() {
-		tiltMonitor.periodic();
 		grabber.periodic();
 		elevator.move(0); // Will move to height if set.
-//		autonomous.run();
+//	    autonomous.run();
 		drive.moveFeet(distance);
+//		drive.rotateByAngle(90);
 //		drive.logClosedLoopErrors();
 	}
 
@@ -123,7 +123,6 @@ public class Robot extends TimedRobot {
 	 */
 	public void teleopPeriodic() {
 		driverstation.readInputs();
-		tiltMonitor.periodic();
 
 		grabber.grab(driverstation.getGrabThrottle());
 		elevator.move(driverstation.getElevatorSpeed());

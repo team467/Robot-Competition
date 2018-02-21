@@ -78,7 +78,7 @@ public class Grabber {
 			if(count > releaseCount) {
 				state = GrabberState.NEUTRAL;
 			} else {
-				speed = -1 * RobotMap.MAX_GRAB_SPEED;
+				speed = -0.8 * RobotMap.MAX_GRAB_SPEED;
 			}
 
 			break;

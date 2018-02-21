@@ -31,6 +31,7 @@ public class Logging {
 		Logger.getLogger(TalonSpeedControllerGroup.class).setLevel(Level.TRACE);
 		Logger.getLogger(VisionIntegration.class).setLevel(Level.WARN);
 		Logger.getLogger(XBoxJoystick467.class).setLevel(Level.WARN);
+		Logger.getLogger(TiltMonitor.class).setLevel(Level.DEBUG);
 	}
 
 	private static void setupDefaultLogging() {
