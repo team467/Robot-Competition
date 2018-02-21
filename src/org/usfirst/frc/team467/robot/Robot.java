@@ -167,6 +167,7 @@ public class Robot extends TimedRobot {
 		// TODO Drive class should handle MIN_DRIVE_SPEED
 		double left = driverstation.getArcadeSpeed();
 		double right = driverstation.getArcadeTurn();
+		drive.logClosedLoopErrors();
 
 		if (Math.abs(left) < RobotMap.MIN_DRIVE_SPEED) {
 			left = 0.0;

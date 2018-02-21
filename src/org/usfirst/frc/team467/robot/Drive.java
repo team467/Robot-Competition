@@ -199,7 +199,11 @@ public class Drive extends DifferentialDrive {
 	}
 	
 	public void setRamp(double elevatorHeight) {
-		double ramp = ((elevatorHeight * 4.8) / -407) + 9.21;
+		double max = 4.0;
+		double min = 0.2;
+		double yintercept =Math.abs( ((357 * (max-min))/(RobotMap.ELEVATOR_BOTTOM_TICKS - RobotMap.ELEVATOR_TOP_TICKS)) - max);
+		double ramp = ((elevatorHeight * ((max-min) / (RobotMap.ELEVATOR_BOTTOM_TICKS - RobotMap.ELEVATOR_TOP_TICKS))))+ + yintercept;
+	
 		left.setOpenLoopRamp(ramp);
 		right.setOpenLoopRamp(ramp);
 		LOGGER.debug("TILT: "+ Gyrometer.getInstance().getPitchDegrees());
