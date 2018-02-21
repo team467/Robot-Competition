@@ -45,8 +45,18 @@ public class Ramps {
 	}
 
 	public void deploy() {
-		if (state != State.START || DriverStation.getInstance().getMatchTime() > 30.0 || !RobotMap.HAS_RAMPS) {
-			// Only deploy from start configuration in the last 30 seconds if you have ramps
+		if (!RobotMap.HAS_RAMPS) {
+			// If you have no ramps, quit now.
+			return;
+		}
+
+		if (DriverStation.getInstance().getMatchTime() > 30.0) {
+			// Nothing gets past here unless you are in the last 30 seconds.
+			return;
+		}
+
+		if (state != State.START) {
+			// Only deploy from start configuration.
 			return;
 		}
 
