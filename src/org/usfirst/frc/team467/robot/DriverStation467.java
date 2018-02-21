@@ -127,7 +127,7 @@ public class DriverStation467 {
 	}
 
 	public double getArcadeTurn() {
-		return getDriveJoystick().turboSpeedAdjust(getDriveJoystick().getRightStickX());
+		return getDriveJoystick().turboSlowSpeed(getDriveJoystick().getRightStickX(), getArcadeSpeed());
 	}
 
 	public double getElevatorSpeed() {
