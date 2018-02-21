@@ -172,24 +172,24 @@ public class XBoxJoystick467 {
 
 	public double turboSpeedAdjust(double speed) {
 		if (getLeftTrigger() > 0.0) {
-			return turboFastSpeed(speed, getLeftTrigger()); 
+			// For some reason, up stick is negative, so we flip it;
+			return -turboFastSpeed(speed, getLeftTrigger()); 
 		} else {
-			return turboSlowSpeed(speed, getRightTrigger()); 
+			// For some reason, up stick is negative, so we flip it;
+			return -turboSlowSpeed(speed, getRightTrigger()); 
 		}   
 	}
 
 	public double turboFastSpeed(double speed, double factor) {
 		return (speed*(RobotMap.NORMAL_MAX_SPEED 
 				+ (RobotMap.FAST_MAX_SPEED-RobotMap.NORMAL_MAX_SPEED)
-				* factor))
-				* -1; // For some reason, up stick is negative, so we flip it;
+				* factor)); // For some reason, up stick is negative, so we flip it;
 	}
 
 	public double turboSlowSpeed(double speed, double factor) {
 		return (speed*(RobotMap.NORMAL_MAX_SPEED 
 				+ (RobotMap.SLOW_MAX_SPEED-RobotMap.NORMAL_MAX_SPEED)
-				* factor))
-				* -1; // For some reason, up stick is negative, so we flip it;
+				* factor)); // For some reason, up stick is negative, so we flip it;
 	}
 
 	public double getPOV() {
