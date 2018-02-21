@@ -170,23 +170,23 @@ public class XBoxJoystick467 {
 		LOGGER.debug(name + " Port: " + xbox.getPort());
 	}
 
-	public double turboSpeedAdjust() {
+	public double turboSpeedAdjust(double speed) {
 		if (getLeftTrigger() > 0.0) {
-			return turboFastSpeed(); 
+			return turboFastSpeed(speed); 
 		} else {
-			return turboSlowSpeed(); 
+			return turboSlowSpeed(speed); 
 		}   
 	}
 
-	public double turboFastSpeed() {
-		return (getLeftStickY()*(RobotMap.NORMAL_MAX_SPEED 
+	public double turboFastSpeed(double speed) {
+		return (speed*(RobotMap.NORMAL_MAX_SPEED 
 				+ (RobotMap.FAST_MAX_SPEED-RobotMap.NORMAL_MAX_SPEED)
 				* getLeftTrigger()))
 				* -1; // For some reason, up stick is negative, so we flip it;
 	}
 
-	public double turboSlowSpeed() {
-		return (getLeftStickY()*(RobotMap.NORMAL_MAX_SPEED 
+	public double turboSlowSpeed(double speed) {
+		return (speed*(RobotMap.NORMAL_MAX_SPEED 
 				+ (RobotMap.SLOW_MAX_SPEED-RobotMap.NORMAL_MAX_SPEED)
 				* getRightTrigger()))
 				* -1; // For some reason, up stick is negative, so we flip it;

@@ -197,5 +197,4 @@ public class Drive extends DifferentialDrive {
 		LOGGER.trace(ticks + " ticks = " + feet + " feet.");
 		return feet;
 	}
-
 }
