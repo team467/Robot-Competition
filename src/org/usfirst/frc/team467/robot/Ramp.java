@@ -18,17 +18,17 @@ public class Ramp {
 
 	private String name;
 	private State state;
-	private boolean exists;
 
 	public enum State {
 		UP,
-		DOWN;
+		DOWN,
+		NOT_EXIST;
 	}
 
 	public Ramp(String name, int forwardChannel, int reverseChannel, boolean exists) {
-		this.exists = exists;
 		if (!exists) {
 			LOGGER.info("No ramps");
+			state = State.NOT_EXIST;
 			return;
 		}
 
@@ -42,10 +42,6 @@ public class Ramp {
 	}
 
 	public void toggle() {
-		if (!exists) {
-			return;
-		}
-
 		switch (state) {
 		case DOWN:
 			lift();
@@ -53,14 +49,13 @@ public class Ramp {
 		case UP:
 			drop();
 			break;
+		case NOT_EXIST:
+			LOGGER.info(name + " doesn't exist");
+			break;
 		}
 	}
 
 	public void lift() {
-		if (!exists) {
-			return;
-		}
-
 		if (state == State.DOWN) {
 			solenoid.set(DoubleSolenoid.Value.kForward);
 			LOGGER.info(name + " lifting");
@@ -69,10 +64,6 @@ public class Ramp {
 	}
 
 	public void drop() {
-		if (!exists) {
-			return;
-		}
-
 		if (state == State.UP) {
 			solenoid.set(DoubleSolenoid.Value.kReverse);
 			LOGGER.info(name + " dropping");
@@ -81,10 +72,6 @@ public class Ramp {
 	}
 
 	public void telemetry() {
-		if (!exists) {
-			return;
-		}
-
 		SmartDashboard.putString("Ramps/" + name + "/State", state.name());
 	}
 }

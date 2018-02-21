@@ -23,7 +23,8 @@ public class Ramps {
 	public enum State {
 		START,
 		RELEASED,
-		DEPLOYED;
+		DEPLOYED,
+		NOT_EXIST;
 	}
 
 	/**
@@ -32,6 +33,10 @@ public class Ramps {
 	private int timeSinceRelease;
 
 	private Ramps() {
+		if (!RobotMap.HAS_RAMPS) {
+			state = State.NOT_EXIST;
+			return;
+		}
 		releaseSolenoid = new DoubleSolenoid(RobotMap.RAMP_RELEASE_FORWARD_CHANNEL, RobotMap.RAMP_RELEASE_REVERSE_CHANNEL);
 		left = new Ramp("Left", RobotMap.RAMP_LEFT_FORWARD_CHANNEL, RobotMap.RAMP_LEFT_REVERSE_CHANNEL, RobotMap.HAS_LEFT_RAMP);
 		right = new Ramp("Right", RobotMap.RAMP_RIGHT_FORWARD_CHANNEL, RobotMap.RAMP_RIGHT_REVERSE_CHANNEL, RobotMap.HAS_RIGHT_RAMP);
@@ -45,11 +50,6 @@ public class Ramps {
 	}
 
 	public void deploy() {
-		if (!RobotMap.HAS_RAMPS) {
-			// If you have no ramps, quit now.
-			return;
-		}
-
 		if (DriverStation.getInstance().getMatchTime() > 30.0) {
 			// Nothing gets past here unless you are in the last 30 seconds.
 			return;
