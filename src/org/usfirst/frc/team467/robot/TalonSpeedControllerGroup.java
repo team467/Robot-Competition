@@ -233,4 +233,12 @@ public class TalonSpeedControllerGroup implements SpeedController {
 		}
 		return leader.getSelectedSensorPosition(0);
 	}
+	
+	public void setOpenLoopRamp(double ramp) {
+		if (leader == null) {
+			LOGGER.trace("No drive system");
+			return;
+		}
+		leader.configOpenloopRamp(ramp, RobotMap.TALON_TIMEOUT);
+	}
 }

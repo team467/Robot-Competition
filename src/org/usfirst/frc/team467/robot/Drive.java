@@ -205,5 +205,16 @@ public class Drive extends DifferentialDrive {
 		LOGGER.trace(ticks + " ticks = " + feet + " feet.");
 		return feet;
 	}
+	
+	public void setRamp(double elevatorHeight) {
+		double max = 4.0;
+		double min = 0.2;
+		double yintercept =Math.abs( ((357 * (max-min))/(RobotMap.ELEVATOR_BOTTOM_TICKS - RobotMap.ELEVATOR_TOP_TICKS)) - max);
+		double ramp = ((elevatorHeight * ((max-min) / (RobotMap.ELEVATOR_BOTTOM_TICKS - RobotMap.ELEVATOR_TOP_TICKS))))+ + yintercept;
+	
+		left.setOpenLoopRamp(ramp);
+		right.setOpenLoopRamp(ramp);
+		LOGGER.debug("TILT: "+ Gyrometer.getInstance().getPitchDegrees());
+	}
 
 }
