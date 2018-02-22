@@ -17,7 +17,7 @@ public class MatchConfiguration {
 
 	// Simulator variables
 	
-	private String simulatedGameSpecificMessage = "RRL";
+	private String simulatedGameSpecificMessage = "LLL";
 
 	private Alliance simulatedTeamColor = Alliance.Red;
 

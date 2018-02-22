@@ -387,7 +387,11 @@ public class Actions {
 		String actionGroupText = "Start on left side, put cube on switch and second on left side of scale.";
 		ActionGroup mode = new ActionGroup(actionGroupText);
 		mode.addActions(leftBasicSwitchLeft());
+
 		// lift elevator to place cube into switch
+		mode.addAction(elevatorToSwitch());
+		mode.addAction(releaseCube());
+		
 		mode.addAction(zeroDistance());
 		mode.addAction(moveDistanceForward(-2.0)); 
 		mode.addAction(zeroDistance());
@@ -404,6 +408,7 @@ public class Actions {
 		mode.addAction(zeroDistance());
 		mode.addAction(moveDistanceForward(1.3)); 
 		// pick up cube
+		mode.addAction(grabCube());
 		mode.addAction(zeroDistance());
 		mode.addAction(moveDistanceForward(-1.3)); 
 		mode.addAction(zeroDistance());
@@ -419,6 +424,8 @@ public class Actions {
 		mode.addAction(zeroDistance());
 		mode.addAction(moveDistanceForward(0.375 + 0.521));
 		// lift elevator to place cube into scale
+		mode.addAction(elevatorToLowScale());
+		mode.addAction(releaseCube());
 		return mode;
 	}
 
@@ -428,6 +435,9 @@ public class Actions {
 		ActionGroup mode = new ActionGroup(actionGroupText);
 		mode.addActions(leftBasicScaleLeft());
 		// lift elevator to place cube into switch
+		mode.addAction(elevatorToSwitch());
+		mode.addAction(releaseCube());
+		
 		mode.addAction(zeroDistance());
 		mode.addAction(moveDistanceForward(-2.0));
 		mode.addAction(zeroDistance());
@@ -443,6 +453,8 @@ public class Actions {
 		mode.addAction(zeroDistance());
 		mode.addAction(moveDistanceForward(1.4));
 		// pick up cube
+		mode.addAction(grabCube());
+		
 		mode.addAction(zeroDistance());
 		mode.addAction(moveDistanceForward(-1.4));
 		mode.addAction(zeroDistance());
@@ -459,6 +471,8 @@ public class Actions {
 		mode.addAction(moveDistanceForward(3.1));
 		mode.addAction(zeroDistance());
 		// lift elevator to place cube into scale
+		mode.addAction(elevatorToLowScale());
+		mode.addAction(releaseCube());
 		return mode;
 	}
 
@@ -467,6 +481,9 @@ public class Actions {
 		ActionGroup mode = new ActionGroup(actionGroupText);
 		mode.addActions(leftBasicSwitchLeft());
 		// lift elevator to place cube into switch
+		mode.addAction(elevatorToSwitch());
+		mode.addAction(releaseCube());
+		
 		mode.addAction(zeroDistance());
 		mode.addAction(moveDistanceForward(-2.0));
 		mode.addAction(zeroDistance());
@@ -482,6 +499,8 @@ public class Actions {
 		mode.addAction(zeroDistance());
 		mode.addAction(moveDistanceForward(1.3));
 		// pick up cube
+		mode.addAction(grabCube());
+		
 		mode.addAction(zeroDistance());
 		mode.addAction(moveDistanceForward(-1.3));
 		mode.addAction(zeroDistance());
@@ -497,6 +516,9 @@ public class Actions {
 		mode.addAction(zeroDistance());
 		mode.addAction(moveDistanceForward(0.375 + 1.0 + 0.45));
 		// lift elevator to place cube into scale
+		mode.addAction(elevatorToLowScale());
+		mode.addAction(releaseCube());
+		
 		return mode;
 	}
 
@@ -518,6 +540,9 @@ public class Actions {
 		mode.addAction(zeroDistance());
 		mode.addAction(moveDistanceForward(1.475));
 		// lift elevator to place cube into switch
+		mode.addAction(elevatorToSwitch());
+		mode.addAction(releaseCube());
+		
 		mode.addAction(zeroDistance());
 		mode.addAction(moveDistanceForward(-2.0));
 		mode.addAction(zeroDistance());
@@ -533,6 +558,7 @@ public class Actions {
 		mode.addAction(zeroDistance());
 		mode.addAction(moveDistanceForward(1.3));
 		// pick up cube
+		mode.addAction(grabCube());
 		mode.addAction(zeroDistance());
 		mode.addAction(moveDistanceForward(-1.3));
 		mode.addAction(zeroDistance());
@@ -549,6 +575,8 @@ public class Actions {
 		mode.addAction(zeroDistance());
 		mode.addAction(moveDistanceForward(-2.0));
 		// lift elevator to place cube into scale
+		mode.addAction(elevatorToLowScale());
+		mode.addAction(releaseCube());
 		return mode;
 	}
 
@@ -570,6 +598,9 @@ public class Actions {
 		mode.addAction(zeroDistance());
 		mode.addAction(moveDistanceForward(1.475));
 		// lift elevator to place cube into switch
+		mode.addAction(elevatorToSwitch());
+		mode.addAction(releaseCube());
+		
 		mode.addAction(zeroDistance());
 		mode.addAction(moveDistanceForward(-1.475));
 		mode.addAction(zeroDistance());
@@ -585,6 +616,8 @@ public class Actions {
 		mode.addAction(zeroDistance());
 		mode.addAction(moveDistanceForward(1.3));
 		// pick up cube
+		mode.addAction(grabCube());
+		
 		mode.addAction(zeroDistance());
 		mode.addAction(moveDistanceForward(-1.3));
 		mode.addAction(zeroDistance());
@@ -602,6 +635,9 @@ public class Actions {
 		mode.addAction(zeroDistance());
 		mode.addAction(moveDistanceForward(-2.0));
 		// lift elevator to place cube into scale
+		mode.addAction(elevatorToLowScale());
+		mode.addAction(releaseCube());
+		
 		return mode;
 	}
 	
@@ -624,6 +660,9 @@ public class Actions {
 		ActionGroup mode = new ActionGroup(actionGroupText);
 		mode.addActions(rightBasicSwitchRight());
 		// lift elevator to place cube into switch
+		mode.addAction(elevatorToSwitch());
+		mode.addAction(releaseCube());
+		
 		mode.addAction(zeroDistance());
 		mode.addAction(moveDistanceForward(-2.0));
 		mode.addAction(zeroDistance());
@@ -640,6 +679,8 @@ public class Actions {
 		mode.addAction(zeroDistance());
 		mode.addAction(moveDistanceForward(1.3));
 		// pick up cube
+		mode.addAction(grabCube());
+		
 		mode.addAction(zeroDistance());
 		mode.addAction(moveDistanceForward(-1.3));
 		mode.addAction(zeroDistance());
@@ -655,6 +696,8 @@ public class Actions {
 		mode.addAction(zeroDistance());
 		mode.addAction(moveDistanceForward(0.375 + 0.521)); 
 		// lift elevator to place cube into scale
+		mode.addAction(elevatorToLowScale());
+		mode.addAction(releaseCube());
 		return mode;
 	}
 	public static ActionGroup rightAdvancedSwitchLeftScale() {
@@ -662,6 +705,9 @@ public class Actions {
 		ActionGroup mode = new ActionGroup(actionGroupText);
 		mode.addActions(rightBasicSwitchRight());
 		//lift elevator to place cube into right switch. 
+		mode.addAction(elevatorToSwitch());
+		mode.addAction(releaseCube());
+		
 		mode.addAction(zeroDistance());
 		mode.addAction(moveDistanceForward(-2.0)); 
 		mode.addAction(zeroDistance());
@@ -677,6 +723,8 @@ public class Actions {
 		mode.addAction(zeroDistance());
 		mode.addAction(moveDistanceForward(1.3));
 		// pick up cube
+		mode.addAction(grabCube());
+		
 		mode.addAction(zeroDistance());
 		mode.addAction(moveDistanceForward(-1.3));
 		mode.addAction(zeroDistance());
@@ -712,6 +760,9 @@ public class Actions {
 		mode.addAction(zeroDistance());
 		mode.addAction(moveDistanceForward(1.475));
 		// lift elevator to place cube into switch
+		mode.addAction(elevatorToSwitch());
+		mode.addAction(releaseCube());
+		
 		mode.addAction(zeroDistance());
 		mode.addAction(moveDistanceForward(-1.475));
 		mode.addAction(zeroDistance());
@@ -727,6 +778,8 @@ public class Actions {
 		mode.addAction(zeroDistance());
 		mode.addAction(moveDistanceForward(1.3));
 		// pick up cube
+		mode.addAction(grabCube());
+		
 		mode.addAction(zeroDistance());
 		mode.addAction(moveDistanceForward(-1.3));
 		mode.addAction(zeroDistance());
@@ -744,6 +797,8 @@ public class Actions {
 		mode.addAction(zeroDistance());
 		mode.addAction(moveDistanceForward(-2.0));
 		// lift elevator to place cube into scale
+		mode.addAction(elevatorToLowScale());
+		mode.addAction(releaseCube());
 		return mode;
 	}
 	
@@ -765,6 +820,9 @@ public class Actions {
 		mode.addAction(zeroDistance());
 		mode.addAction(moveDistanceForward(1.475));
 		// lift elevator to place cube into switch
+		mode.addAction(elevatorToSwitch());
+		mode.addAction(releaseCube());
+		
 		mode.addAction(zeroDistance());
 		mode.addAction(moveDistanceForward(-2.0));
 		mode.addAction(zeroDistance());
@@ -780,6 +838,8 @@ public class Actions {
 		mode.addAction(zeroDistance());
 		mode.addAction(moveDistanceForward(1.3));
 		// pick up cube
+		mode.addAction(grabCube());
+		
 		mode.addAction(zeroDistance());
 		mode.addAction(moveDistanceForward(-1.3));
 		mode.addAction(zeroDistance());
@@ -796,6 +856,8 @@ public class Actions {
 		mode.addAction(zeroDistance());
 		mode.addAction(moveDistanceForward(-2.0));
 		// lift elevator to place cube into scale
+		mode.addAction(elevatorToLowScale());
+		mode.addAction(releaseCube());
 		return mode;
 	}
 	
@@ -823,6 +885,9 @@ public class Actions {
 		mode.addAction(moveDistanceForward(1.479));
 		mode.addAction(zeroDistance());
 		//Drop cube, then find new cube
+		mode.addAction(releaseCube());
+		mode.addAction(grabCube());
+		
 		mode.addAction(moveDistanceForward(-2.0));
 		mode.addAction(zeroDistance());
 		mode.addAction(moveturn(-90));
@@ -838,6 +903,8 @@ public class Actions {
 		mode.addAction(zeroDistance());
 		mode.addAction(moveDistanceForward(1.3)); 
 		// pick up cube
+		mode.addAction(grabCube());
+		
 		mode.addAction(zeroDistance());
 		mode.addAction(moveDistanceForward(-1.3)); 
 		mode.addAction(zeroDistance());
@@ -853,6 +920,8 @@ public class Actions {
 		mode.addAction(zeroDistance());
 		mode.addAction(moveDistanceForward(0.375 + 0.521)); 
 		// lift elevator to place cube into scale
+		mode.addAction(elevatorToLowScale());
+		mode.addAction(releaseCube());
 		return mode;
 	}	
 	
@@ -875,6 +944,11 @@ public class Actions {
 		mode.addAction(moveDistanceForward(1.479));
 		mode.addAction(zeroDistance());
 		// lift elevator to place cube into switch, then find new cube
+		
+		mode.addAction(elevatorToSwitch());
+		mode.addAction(releaseCube());
+		mode.addAction(grabCube());
+		
 		mode.addAction(zeroDistance());
 		mode.addAction(moveDistanceForward(-2.0)); 
 		mode.addAction(zeroDistance());
@@ -890,6 +964,8 @@ public class Actions {
 		mode.addAction(zeroDistance());
 		mode.addAction(moveDistanceForward(1.3));
 		// pick up cube
+		mode.addAction(grabCube());
+		
 		mode.addAction(zeroDistance());
 		mode.addAction(moveDistanceForward(-1.3));
 		mode.addAction(zeroDistance());
@@ -905,6 +981,8 @@ public class Actions {
 		mode.addAction(zeroDistance());
 		mode.addAction(moveDistanceForward(0.375 + 1.0 + 0.45));
 		// lift elevator to place cube into scale
+		mode.addAction(elevatorToLowScale());
+		mode.addAction(releaseCube());
 		return mode;
 	}	
 	
@@ -927,6 +1005,11 @@ public class Actions {
 		mode.addAction(moveDistanceForward(1.479));
 		mode.addAction(zeroDistance());
 		//lift elevator to place cube into right switch, then find new cube
+		
+		mode.addAction(elevatorToSwitch());
+		mode.addAction(releaseCube());
+		mode.addAction(grabCube());
+		
 		mode.addAction(zeroDistance());
 		mode.addAction(moveDistanceForward(-2.0)); 
 		mode.addAction(zeroDistance());
@@ -942,6 +1025,8 @@ public class Actions {
 		mode.addAction(zeroDistance());
 		mode.addAction(moveDistanceForward(1.3));
 		// pick up cube
+		mode.addAction(grabCube());
+		
 		mode.addAction(zeroDistance());
 		mode.addAction(moveDistanceForward(-1.3));
 		mode.addAction(zeroDistance());
@@ -978,6 +1063,11 @@ public class Actions {
 		mode.addAction(moveDistanceForward(1.479));
 		mode.addAction(zeroDistance());
 		// lift elevator to place cube into switch, then find new cube
+		
+		mode.addAction(elevatorToSwitch());
+		mode.addAction(releaseCube());
+		mode.addAction(grabCube());
+		
 		mode.addAction(zeroDistance());
 		mode.addAction(moveDistanceForward(-2.0)); 
 		mode.addAction(zeroDistance());
@@ -994,6 +1084,8 @@ public class Actions {
 		mode.addAction(zeroDistance());
 		mode.addAction(moveDistanceForward(1.3)); 
 		// pick up cube
+		mode.addAction(grabCube());
+		
 		mode.addAction(zeroDistance());
 		mode.addAction(moveDistanceForward(-1.3));
 		mode.addAction(zeroDistance());
@@ -1009,6 +1101,8 @@ public class Actions {
 		mode.addAction(zeroDistance());
 		mode.addAction(moveDistanceForward(0.375 + 0.521)); 
 		// lift elevator to place cube into scale
+		mode.addAction(elevatorToLowScale());
+		mode.addAction(releaseCube());
 		return mode;
 	}	
 	

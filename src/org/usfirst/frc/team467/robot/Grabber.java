@@ -32,7 +32,7 @@ public class Grabber {
 	OpticalSensor os;
 
 	private Grabber() {
-		if (RobotMap.HAS_GRABBER) {
+		if (RobotMap.HAS_GRABBER && !RobotMap.useSimulator) {
 			left = new Spark(RobotMap.GRABBER_L_CHANNEL);
 			right = new Spark(RobotMap.GRABBER_R_CHANNEL);
 			os = OpticalSensor.getInstance();
@@ -87,8 +87,10 @@ public class Grabber {
 
 		}
 		
-		left.set(speed);
-		right.set(-1 * speed);
+		if (!RobotMap.useSimulator) {
+			left.set(speed);
+			right.set(-1 * speed);
+		}
 		count++;
 
 		// Save the previous state and check for current state.
