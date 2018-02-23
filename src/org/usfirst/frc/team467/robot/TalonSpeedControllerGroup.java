@@ -48,12 +48,6 @@ public class TalonSpeedControllerGroup implements SpeedController {
 		leader.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, RobotMap.TALON_TIMEOUT);
 		leader.setSensorPhase(sensorIsInverted);
 		
-		int motionAcceleration = Integer.parseInt(SmartDashboard.getString("DB/String 3", "20000")); 
-		int motionCruiseVelocity = Integer.parseInt(SmartDashboard.getString("DB/String 8", "15000")); 
-
-		leader.configMotionCruiseVelocity(motionCruiseVelocity, RobotMap.TALON_TIMEOUT); 
-		leader.configMotionAcceleration(motionAcceleration, RobotMap.TALON_TIMEOUT);
-		leader.configNeutralDeadband(0.04, RobotMap.TALON_TIMEOUT);
 		zero();		
 	}
 
@@ -102,6 +96,13 @@ public class TalonSpeedControllerGroup implements SpeedController {
 		leader.config_kI(0, i, RobotMap.TALON_TIMEOUT);
 		leader.config_kD(0, d, RobotMap.TALON_TIMEOUT);
 		leader.config_kF(0, f, RobotMap.TALON_TIMEOUT);
+		int motionAcceleration = Integer.parseInt(SmartDashboard.getString("DB/String 3", "20000")); 
+		int motionCruiseVelocity = Integer.parseInt(SmartDashboard.getString("DB/String 8", "15000")); 
+
+		leader.configMotionCruiseVelocity(motionCruiseVelocity, RobotMap.TALON_TIMEOUT); 
+		leader.configMotionAcceleration(motionAcceleration, RobotMap.TALON_TIMEOUT);
+		leader.configNeutralDeadband(0.04, RobotMap.TALON_TIMEOUT);
+
 	}
 
 	public void zero() {

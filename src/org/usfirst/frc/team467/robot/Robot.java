@@ -162,7 +162,7 @@ public class Robot extends TimedRobot {
 			ramps.toggleRightState();
 		}
 		
-		ramps.periodic();
+//		ramps.periodic();
 
 		double speed = driverstation.getArcadeSpeed();
 		double turn = driverstation.getArcadeTurn();

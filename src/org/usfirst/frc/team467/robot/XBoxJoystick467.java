@@ -35,16 +35,16 @@ public class XBoxJoystick467 {
 	public EnumMap<Axis, Double> axes = new EnumMap<>(Axis.class);
 
 	public enum Button {
-		a(0),
-		b(1),
-		x(2),
-		y(3),
-		BumperLeft(4),
-		BumperRight(5),
-		back(6),
-		start(7),
-		left(8),
-		right(9);
+		a(1),
+		b(2),
+		x(3),
+		y(4),
+		BumperLeft(5),
+		BumperRight(6),
+		back(7),
+		start(8),
+		left(9),
+		right(10);
 
 		public final int channel;
 
