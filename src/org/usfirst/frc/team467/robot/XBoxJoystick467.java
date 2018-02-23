@@ -170,26 +170,40 @@ public class XBoxJoystick467 {
 		LOGGER.debug(name + " Port: " + xbox.getPort());
 	}
 
-	public double turboSpeedAdjust(double speed) {
+	/**
+	 * Returns the drive speed, taking the turbo and slow triggers into account.
+	 */
+	public double getAdjustedSpeed() {
 		if (getLeftTrigger() > 0.0) {
-			// For some reason, up stick is negative, so we flip it;
-			return -turboFastSpeed(speed, getLeftTrigger()); 
+			// For some reason, up stick is negative, so we flip it
+			return turboFastSpeed(-getLeftStickY()); 
 		} else {
-			// For some reason, up stick is negative, so we flip it;
-			return -turboSlowSpeed(speed, getRightTrigger()); 
-		}   
+			return turboSlowSpeed(-getLeftStickY()); 
+		}
 	}
 
-	public double turboFastSpeed(double speed, double factor) {
-		return (speed*(RobotMap.NORMAL_MAX_SPEED 
-				+ (RobotMap.FAST_MAX_SPEED-RobotMap.NORMAL_MAX_SPEED)
-				* factor)); // For some reason, up stick is negative, so we flip it;
+	public double turboFastSpeed(double speed) {
+		return speed * weightedAverage(RobotMap.NORMAL_MAX_SPEED, RobotMap.FAST_MAX_SPEED, getLeftTrigger());
 	}
 
-	public double turboSlowSpeed(double speed, double factor) {
-		return (speed*(RobotMap.NORMAL_MAX_SPEED 
-				+ (RobotMap.SLOW_MAX_SPEED-RobotMap.NORMAL_MAX_SPEED)
-				* factor)); // For some reason, up stick is negative, so we flip it;
+	public double turboSlowSpeed(double speed) {
+		return speed * weightedAverage(RobotMap.NORMAL_MAX_SPEED, RobotMap.SLOW_MAX_SPEED, getRightTrigger());
+	}
+
+	/**
+	 * Returns the turn speed, which is slower when the robot is driving fast.
+	 */
+	public double getAdjustedTurnSpeed() {
+		return getRightStickX() * weightedAverage(RobotMap.NORMAL_TURN_MAX_SPEED, RobotMap.SLOW_TURN_MAX_SPEED, getAdjustedSpeed());
+	}
+
+	/**
+	 * Returns the weighted average of a and b.
+	 * a when factor = 0;
+	 * b when factor = 1
+	 */
+	public static double weightedAverage(double a, double b, double weight) {
+		return a*(1 - weight) + b*weight;
 	}
 
 	public double getPOV() {

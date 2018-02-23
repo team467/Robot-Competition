@@ -175,11 +175,9 @@ public class RobotMap {
 	public static final double NORMAL_MAX_SPEED = 0.6;
 	public static final double SLOW_MAX_SPEED = 0.35;
 
-	/**
-	 * The maximum revolutions per minute (RPM) of a wheel when in speed control mode.
-	 * Also for motion magic?
-	 */
-	public static double MAX_SPEED;
+	// TODO These values need to be tested on the robot and possibly adjusted.
+	public static final double NORMAL_TURN_MAX_SPEED = 0.6;
+	public static final double SLOW_TURN_MAX_SPEED = 0.4;
 
 	public static boolean useSimulator = false;
 
