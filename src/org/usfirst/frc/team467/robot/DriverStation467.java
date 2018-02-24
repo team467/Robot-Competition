@@ -15,6 +15,7 @@ public class DriverStation467 {
 
 	private static DriverStation467 station;
 
+
 	// Mapping of functions to Controller Buttons for normal operation
 	// TODO: Create enum for buttons
 	/**
@@ -50,6 +51,8 @@ public class DriverStation467 {
 		if (navJoy != null) {
 			navJoy.read();
 		}
+		driverRumbler.periodic();
+		navRumbler.periodic();
 	}
 
 	public void logJoystickIDs() {
@@ -86,11 +89,6 @@ public class DriverStation467 {
 		return 0.0;
 	}
 
-	public void periodic() {
-		driverRumbler.periodic();
-		navRumbler.periodic();
-	}
-
 	// All button mappings are accessed through the functions below
 
 	/**
@@ -100,17 +98,16 @@ public class DriverStation467 {
 	 * @return currently active drive mode.
 	 */
 	public DriveMode getDriveMode() {
-		// TODO: Set the drive mode based on the buttons pushed
-		return DriveMode.ArcadeDrive; // Update with the correct drive mode
+		return DriveMode.ArcadeDrive;
 	}
 
 	public boolean getTerminateAuto() {
-		// TODO Manually break out of autonoumous mode
+		// TODO: Manually break out of autonoumous mode
 		return true;
 	}
 
 	public ActionGroup getActionGroup() {
-		// TODO Get an action group if required
+		// TODO: Get an action group if required
 		return null; 
 	}
 
@@ -180,33 +177,6 @@ public class DriverStation467 {
 
 	public void driverSetRightRumble(double value) {
 		driverJoy.rightRumble(value);
-	}
-
-	public void setDriverRumble(double value) {
-		getDriveJoystick().setRumble(value);
-	}
-
-	/**
-	 * Set a value in 'Basic' tab of the driver station
-	 * 
-	 * @param slot position of the value to set (0-9)
-	 * @param value any string value
-	 */
-	public void set(int slot, String value) {
-		if (slot < 0 || slot > 9) {
-			return;
-		}
-		SmartDashboard.putString("DB/String " + slot, value);
-	}
-
-	/**
-	 * Set a value in 'Basic' tab of the driver station
-	 * 
-	 * @param slot position of the value to set (0-9)
-	 * @param value any integer value
-	 */
-	public void set(int slot, int value) {
-		set(slot, String.valueOf(value));
 	}
 
 }

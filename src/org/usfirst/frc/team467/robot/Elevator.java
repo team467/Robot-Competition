@@ -48,7 +48,7 @@ public class Elevator {
 	 */
 	public static Elevator getInstance() {
 		if (instance == null) {
-			if (!RobotMap.HAS_ELEVATOR) {
+			if (!RobotMap.HAS_ELEVATOR || RobotMap.useSimulator) {
 				instance = new Elevator(new NullSpeedController());
 			} else {
 				instance = new Elevator(new WPI_TalonSRX(RobotMap.ELEVATOR_MOTOR_CHANNEL));
@@ -58,10 +58,10 @@ public class Elevator {
 	}
 
 	private Elevator(SpeedController heightController) {
-		if (!RobotMap.HAS_ELEVATOR) {
+		if (!RobotMap.HAS_ELEVATOR || RobotMap.useSimulator) {
 			return;
 		}
-
+		
 		this.heightController = (WPI_TalonSRX) heightController;
 		configMotorParameters();
 
@@ -71,10 +71,11 @@ public class Elevator {
 
 	public void configMotorParameters() {
 		// Configure talon to be able to use the analog sensor.
-		this.heightController.configSelectedFeedbackSensor(FeedbackDevice.Analog, 0, RobotMap.TALON_TIMEOUT);
-		this.heightController.configSetParameter(ParamEnum.eFeedbackNotContinuous, 1, 0x00, 0x00, 0x00);
-		this.heightController.setInverted(false);
-		this.heightController.setSensorPhase(false);
+		if (!RobotMap.useSimulator) {
+		heightController.configSelectedFeedbackSensor(FeedbackDevice.Analog, 0, RobotMap.TALON_TIMEOUT);
+		heightController.configSetParameter(ParamEnum.eFeedbackNotContinuous, 1, 0x00, 0x00, 0x00);
+		heightController.setInverted(false);
+		heightController.setSensorPhase(false);
 
 		heightController.config_kP(0, 40.0, RobotMap.TALON_TIMEOUT);
 		heightController.config_kI(0, 0.0, RobotMap.TALON_TIMEOUT);
@@ -82,6 +83,7 @@ public class Elevator {
 		heightController.config_kF(0, 0.0, RobotMap.TALON_TIMEOUT);
 
 		heightController.configAllowableClosedloopError(0, ALLOWABLE_ERROR_TICKS, RobotMap.TALON_TIMEOUT);
+		}
 	}
 
 	public void setHeights(int basement, int floor, int switchValue, int lowScale, int highScale) {
@@ -93,7 +95,7 @@ public class Elevator {
 	}
 
 	private int getRawHeight() {
-		if (!RobotMap.HAS_ELEVATOR) {
+		if (!RobotMap.HAS_ELEVATOR || RobotMap.useSimulator) {
 			return 0;
 		}
 		return heightController.getSelectedSensorPosition(0);
@@ -102,7 +104,9 @@ public class Elevator {
 	public void moveToHeight(Stops target) {
 		// targetHeight member variable used in periodic function to reach the height
 		targetHeight = target;
-		SmartDashboard.putString("Elevator/Most Recent Target", target.toString());
+		if (!RobotMap.useSimulator) {
+			SmartDashboard.putString("Elevator/Most Recent Target", target.toString());
+		}
 	}
 
 	private void automaticMove() {
@@ -116,12 +120,15 @@ public class Elevator {
 
 		// If we're in position, stop.
 		final int error = targetHeight.height - heightController.getSelectedSensorPosition(0);
-		if (heightController.getControlMode() == ControlMode.Position && Math.abs(error) <= ALLOWABLE_ERROR_TICKS) {
+		if (!RobotMap.useSimulator) {
+		if ((heightController.getControlMode() == ControlMode.MotionMagic || heightController.getControlMode() == ControlMode.Position)
+				&& Math.abs(error) <= ALLOWABLE_ERROR_TICKS) {
 			LOGGER.debug("automaticMove, clearing target,  trajectory=" + targetHeight.height
 					+ " pos=" + heightController.getSelectedSensorPosition(0) + " err=" + error);
 			targetHeight = null;
 			heightController.disable();
 			return;
+		}
 		}
 
 		configMotorParameters();
@@ -139,7 +146,7 @@ public class Elevator {
 		previousHeight = getRawHeight();
 		SmartDashboard.putNumber("Elevator/Move Speed", speed);
 
-		if (!RobotMap.HAS_ELEVATOR) {
+		if (!RobotMap.HAS_ELEVATOR || RobotMap.useSimulator) {
 			return;
 		}
 
@@ -177,12 +184,14 @@ public class Elevator {
 	 * Look for sensor slippage
 	 */
 	public void limitCheck() {
-		final int position = heightController.getSelectedSensorPosition(0);
-		if (position > RobotMap.ELEVATOR_BOTTOM_TICKS + LIMIT_BUFFER
-				|| position < RobotMap.ELEVATOR_TOP_TICKS - LIMIT_BUFFER) {
-			LOGGER.error("HEIGHT SENSOR OUT OF EXPECTED RANGE ("
-					+ RobotMap.ELEVATOR_TOP_TICKS + " - "
-					+ RobotMap.ELEVATOR_BOTTOM_TICKS + "), found " + position);
+		if (!RobotMap.useSimulator) {
+			final int position = heightController.getSelectedSensorPosition(0);
+			if (position > RobotMap.ELEVATOR_BOTTOM_TICKS + LIMIT_BUFFER
+					|| position < RobotMap.ELEVATOR_TOP_TICKS - LIMIT_BUFFER) {
+				LOGGER.error("HEIGHT SENSOR OUT OF EXPECTED RANGE ("
+						+ RobotMap.ELEVATOR_TOP_TICKS + " - "
+						+ RobotMap.ELEVATOR_BOTTOM_TICKS + "), found " + position);
+		}
 		}
 	}
 

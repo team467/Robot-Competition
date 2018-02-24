@@ -10,8 +10,6 @@ import java.util.EnumMap;
 
 import org.apache.log4j.Logger;
 
-import org.apache.log4j.Logger;
-
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 
@@ -307,10 +305,6 @@ public class XBoxJoystick467 {
 
 	public void rightRumble(double value) {
 		xbox.setRumble(RumbleType.kRightRumble, value);
-	}
-
-	public void setRumble(RumbleType type, double value) {
-		xbox.setRumble(type, value);
 	}
 
 	public void setRumble(double value) {
