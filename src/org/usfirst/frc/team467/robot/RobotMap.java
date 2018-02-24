@@ -33,6 +33,8 @@ public class RobotMap {
 	public static int RIGHT_LEAD_CHANNEL;
 	public static int RIGHT_FOLLOWER_1_CHANNEL;
 	public static int RIGHT_FOLLOWER_2_CHANNEL;
+	
+	public static int ALLOWED_GRABBER_ERROR = 2; // in degrees
 
 	public static int AUTONOMOUS_DRIVE_TIMEOUT_MS;
 
@@ -58,6 +60,7 @@ public class RobotMap {
 
 			HAS_ELEVATOR = true;
 			ELEVATOR_MOTOR_CHANNEL = 1;
+			HAS_CAMERA = true;
 			HAS_LEFT_RAMP = false;
 			HAS_RIGHT_RAMP = false;
 
@@ -66,7 +69,7 @@ public class RobotMap {
 		case Competition_1:
 			HAS_WHEELS = true;
 			DRIVEMOTOR_NUM = 4;
-			WHEEL_CIRCUMFERENCE = 19.74;
+			WHEEL_CIRCUMFERENCE = 18.50;
 			WHEEL_ENCODER_CODES_PER_REVOLUTION = 1024;
 			useSpeedControllers = true;
 			POSITION_ALLOWED_ERROR = (0.5 / RobotMap.WHEEL_CIRCUMFERENCE); // 1/2 inch
@@ -77,14 +80,18 @@ public class RobotMap {
 			LEFT_LEAD_CHANNEL = 1;
 			LEFT_FOLLOWER_1_CHANNEL = 2;
 			LEFT_FOLLOWER_2_CHANNEL = 3;
+			LEFT_DRIVE_SENSOR_IS_INVERTED = true;
 
 			RIGHT_LEAD_CHANNEL = 4;
 			RIGHT_FOLLOWER_1_CHANNEL = 5;
 			RIGHT_FOLLOWER_2_CHANNEL = 6;
+			RIGHT_DRIVE_SENSOR_IS_INVERTED = true;
 
 			HAS_ELEVATOR = true;
 
 			HAS_GRABBER = true;
+			HAS_CAMERA = false;
+			
 			GRABBER_L_CHANNEL = 0; 
 			GRABBER_R_CHANNEL = 1;
 			OPTICAL_CHANNEL = 5;
@@ -144,6 +151,8 @@ public class RobotMap {
 			GRABBER_R_CHANNEL = 2;
 			OPTICAL_CHANNEL = 5;
 
+			HAS_CAMERA = false;
+
 			HAS_LEFT_RAMP = true;
 			RAMP_LEFT_FORWARD_CHANNEL = 1;
 			RAMP_LEFT_REVERSE_CHANNEL = 4;
@@ -174,7 +183,7 @@ public class RobotMap {
 	public static final double FAST_MAX_SPEED = 1.0;
 	public static final double NORMAL_MAX_SPEED = 0.6;
 	public static final double SLOW_MAX_SPEED = 0.35;
-
+	
 	/**
 	 * The maximum revolutions per minute (RPM) of a wheel when in speed control mode.
 	 * Also for motion magic?
@@ -182,12 +191,13 @@ public class RobotMap {
 	public static double MAX_SPEED;
 
 	public static boolean useSimulator = false;
+	public static boolean USE_FAKE_GAME_DATA = false;
 
 	public static final double MIN_DRIVE_SPEED = 0.1;
 
 	// Robot Dimensions
 	public static double WHEEL_BASE_LENGTH = 3.33;
-	public static double WHEEL_BASE_WIDTH = 2.92; // TODO: MEASURE TRUE WHEEL BASE WIDTH
+	public static double WHEEL_BASE_WIDTH = 1.99; // TODO: MEASURE TRUE WHEEL BASE WIDTH
 
 	public static double CamToCenterWidthInches;
 	public static double CamToCenterLengthInches;	
@@ -213,9 +223,29 @@ public class RobotMap {
 
 	// Game Pieces
 
+	// Elevator Constants
+	public static final double ELEVATOR_GEAR_CIRCUMFERENCE_IN_INCHES = 20; // TODO: SET
+	public static int ELEVATOR_HEIGHT_SENSOR_ID = 7; // TODO: SET
+	public static int ELEVATOR_INITIAL_TICKS = 123; // TODO: SET
+	public static double ELEVATOR_MIN_HEIGHT_IN_FEET = 0.0; // TODO: SET
+	public static double ELEVATOR_MAX_HEIGHT_IN_FEET = 8.0; // TODO: SET
+	public static int ELEVATOR_TICKS_PER_TURN = 20; // TODO: SET
+	public static int MAX_ELEVATOR_RPM = 20; // TODO: SET
+
 	public static boolean HAS_ELEVATOR;
 	public static int ELEVATOR_MOTOR_CHANNEL;
 	public static double MIN_LIFT_SPEED = 0.1;
+	public static final double ELEVATOR_HEIGHT_RANGE_INCHES = 94.5;
+	public static final double ELEVATOR_ERROR_TOLERANCE_INCHES = 1.0;
+
+	public static int ELEVATOR_BOTTOM_TICKS;
+	public static int ELEVATOR_FLOOR_HEIGHT;
+	public static int ELEVATOR_SWITCH_HEIGHT;
+	public static int ELEVATOR_LOW_SCALE_HEIGHT;
+	public static int ELEVATOR_TOP_TICKS;
+
+	// Ticks per inch is based on empirical measurements on the robot. Approximately 4.740...
+	public static final double ELEVATOR_TICKS_PER_INCH = (ELEVATOR_BOTTOM_TICKS - ELEVATOR_TOP_TICKS) / ELEVATOR_HEIGHT_RANGE_INCHES;
 
 	public static boolean HAS_GRABBER;
 	public static double MAX_GRAB_SPEED = 1.0;
@@ -225,14 +255,7 @@ public class RobotMap {
 	public static int GRABBER_R_CHANNEL;
 	public static int OPTICAL_CHANNEL;
 
-	public static final double ELEVATOR_HEIGHT_RANGE_INCHES = 94.5;
-	public static final double ELEVATOR_ERROR_TOLERANCE_INCHES = 1.0;
-
-	public static int ELEVATOR_BOTTOM_TICKS;
-	public static int ELEVATOR_FLOOR_HEIGHT;
-	public static int ELEVATOR_SWITCH_HEIGHT;
-	public static int ELEVATOR_LOW_SCALE_HEIGHT;
-	public static int ELEVATOR_TOP_TICKS;
+	public static boolean HAS_CAMERA;
 
 	public static boolean HAS_LEFT_RAMP;
 	public static int RAMP_LEFT_FORWARD_CHANNEL;

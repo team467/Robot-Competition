@@ -15,6 +15,7 @@ public class TiltMonitor {
 		}
 		return instance;
 	}
+
 	public void periodic() {
 		double pitchDegrees = Gyrometer.getInstance().getPitchDegrees();
 		if (pitchDegrees > RobotMap.FORWARD_PANIC_ANGLE || 

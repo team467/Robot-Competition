@@ -1,4 +1,5 @@
 package org.usfirst.frc.team467.robot;
+
 import edu.wpi.first.wpilibj.DigitalInput;
 
 public class OpticalSensor {
@@ -6,11 +7,12 @@ public class OpticalSensor {
 	private DigitalInput di;
 
 	private OpticalSensor() {
+		System.out.println(RobotMap.OPTICAL_CHANNEL);
 		di = new DigitalInput(RobotMap.OPTICAL_CHANNEL);
 	}
 
 	public static OpticalSensor getInstance() {
-		if (instance == null) {
+		if (instance == null && !RobotMap.useSimulator) {
 			instance = new OpticalSensor();
 		}
 
@@ -18,7 +20,7 @@ public class OpticalSensor {
 	}
 
 	public boolean detectedTarget() {
-		return di.get();
+		return !di.get();
 	}
 
 }
