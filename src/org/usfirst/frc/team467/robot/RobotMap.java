@@ -41,6 +41,17 @@ public class RobotMap {
 	public static boolean RIGHT_DRIVE_SENSOR_IS_INVERTED;
 	public static boolean LEFT_DRIVE_SENSOR_IS_INVERTED;
 	public static int DRIVEMOTOR_NUM;
+	
+	public static double RIGHT_DRIVE_PID_P;
+	public static double RIGHT_DRIVE_PID_I;
+	public static double RIGHT_DRIVE_PID_D;
+	public static double RIGHT_DRIVE_PID_F;
+
+	public static double LEFT_DRIVE_PID_P;
+	public static double LEFT_DRIVE_PID_I;
+	public static double LEFT_DRIVE_PID_D;
+	public static double LEFT_DRIVE_PID_F;
+	
 	// Initialize robot map. 
 	public static void init(RobotID id) {
 		robotID = id;
@@ -81,11 +92,19 @@ public class RobotMap {
 			LEFT_FOLLOWER_1_CHANNEL = 2;
 			LEFT_FOLLOWER_2_CHANNEL = 3;
 			LEFT_DRIVE_SENSOR_IS_INVERTED = true;
+			LEFT_DRIVE_PID_P = 1.6;
+			LEFT_DRIVE_PID_I = 0.0;
+			LEFT_DRIVE_PID_D = 140;
+			LEFT_DRIVE_PID_F = 1.11;
 
 			RIGHT_LEAD_CHANNEL = 4;
 			RIGHT_FOLLOWER_1_CHANNEL = 5;
 			RIGHT_FOLLOWER_2_CHANNEL = 6;
 			RIGHT_DRIVE_SENSOR_IS_INVERTED = true;
+			RIGHT_DRIVE_PID_P = 1.7;
+			RIGHT_DRIVE_PID_I = 0.0;
+			RIGHT_DRIVE_PID_D = 175;
+			RIGHT_DRIVE_PID_F = 1.14;
 
 			HAS_ELEVATOR = true;
 
@@ -132,10 +151,18 @@ public class RobotMap {
 			LEFT_LEAD_CHANNEL = 1;
 			LEFT_FOLLOWER_1_CHANNEL = 2;
 			LEFT_FOLLOWER_2_CHANNEL = 3;
+			LEFT_DRIVE_PID_P = 1.6;
+			LEFT_DRIVE_PID_I = 0.0;
+			LEFT_DRIVE_PID_D = 140;
+			LEFT_DRIVE_PID_F = 1.11;
 
 			RIGHT_LEAD_CHANNEL = 4;
 			RIGHT_FOLLOWER_1_CHANNEL = 5;
 			RIGHT_FOLLOWER_2_CHANNEL = 6;
+			RIGHT_DRIVE_PID_P = 1.7;
+			RIGHT_DRIVE_PID_I = 0.0;
+			RIGHT_DRIVE_PID_D = 175;
+			RIGHT_DRIVE_PID_F = 1.14;
 
 			HAS_ELEVATOR = true;
 			ELEVATOR_MOTOR_CHANNEL = 7;
@@ -187,9 +214,9 @@ public class RobotMap {
 	public static final double SLOW_MAX_SPEED = 0.35;
 
 	// TODO These values need to be tested on the robot and possibly adjusted.
-	public static final double NORMAL_TURN_MAX_SPEED = 0.6;
-	public static final double SLOW_TURN_MAX_SPEED = 0.4;
-	
+	public static final double NORMAL_TURN_MAX_SPEED = 0.8;
+	public static final double SLOW_TURN_MAX_SPEED = 0.6;
+
 	public static boolean useSimulator = false;
 	public static boolean USE_FAKE_GAME_DATA = false;
 

@@ -96,8 +96,10 @@ public class TalonSpeedControllerGroup implements SpeedController {
 		leader.config_kI(0, i, RobotMap.TALON_TIMEOUT);
 		leader.config_kD(0, d, RobotMap.TALON_TIMEOUT);
 		leader.config_kF(0, f, RobotMap.TALON_TIMEOUT);
-		int motionAcceleration = Integer.parseInt(SmartDashboard.getString("DB/String 3", "20000")); 
-		int motionCruiseVelocity = Integer.parseInt(SmartDashboard.getString("DB/String 8", "15000")); 
+//		int motionAcceleration = Integer.parseInt(SmartDashboard.getString("DB/String 3", "20000")); 
+//		int motionCruiseVelocity = Integer.parseInt(SmartDashboard.getString("DB/String 8", "15000")); 
+		int motionAcceleration = 600;
+		int motionCruiseVelocity = 675;
 
 		leader.configMotionCruiseVelocity(motionCruiseVelocity, RobotMap.TALON_TIMEOUT); 
 		leader.configMotionAcceleration(motionAcceleration, RobotMap.TALON_TIMEOUT);

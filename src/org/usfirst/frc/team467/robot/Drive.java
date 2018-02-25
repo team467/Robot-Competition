@@ -75,11 +75,11 @@ public class Drive extends DifferentialDrive {
 		super(left, right);
 		this.left = left;
 		this.right = right;
-
-		setPIDs();
+		
+		setPIDSFromRobotMap();
 	}
 
-	public void setPIDs() {
+	public void readPIDSFromSmartDashboard() {
 		double kFRight = Double.parseDouble(SmartDashboard.getString("DB/String 6", "1.2208")); // 0.0
 		double kFLeft = Double.parseDouble(SmartDashboard.getString("DB/String 1", "1.1168")); // 0.0
 
@@ -93,6 +93,22 @@ public class Drive extends DifferentialDrive {
 		double kDLeft = Double.parseDouble(SmartDashboard.getString("DB/String 4", "198")); //198
 
 		//		double kFall = 1023.0 / 1402.0;
+
+		left.setPIDF(kPLeft, kILeft, kDLeft, kFLeft);
+		right.setPIDF(kPRight, kIRight, kDRight, kFRight);
+	}
+	public void setPIDSFromRobotMap() {
+		double kFRight = RobotMap.RIGHT_DRIVE_PID_F;
+		double kFLeft = RobotMap.LEFT_DRIVE_PID_F;
+
+		double kPRight = RobotMap.RIGHT_DRIVE_PID_P;
+		double kPLeft = RobotMap.LEFT_DRIVE_PID_P;
+
+		double kIRight = RobotMap.RIGHT_DRIVE_PID_I;
+		double kILeft = RobotMap.LEFT_DRIVE_PID_I;
+
+		double kDRight = RobotMap.RIGHT_DRIVE_PID_D;
+		double kDLeft = RobotMap.LEFT_DRIVE_PID_D;
 
 		left.setPIDF(kPLeft, kILeft, kDLeft, kFLeft);
 		right.setPIDF(kPRight, kIRight, kDRight, kFRight);
