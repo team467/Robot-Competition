@@ -90,9 +90,10 @@ public class RobotMap {
 			HAS_ELEVATOR = true;
 
 			HAS_GRABBER = true;
+			GRABBER_INVERT = false;
 			HAS_CAMERA = false;
 
-			GRABBER_L_CHANNEL = 0; 
+			GRABBER_L_CHANNEL = 0;
 			GRABBER_R_CHANNEL = 1;
 			OPTICAL_CHANNEL = 5;
 
@@ -147,8 +148,9 @@ public class RobotMap {
 			ELEVATOR_TOP_TICKS = 357;
 
 			HAS_GRABBER = true;
-			GRABBER_L_CHANNEL = 1; 
-			GRABBER_R_CHANNEL = 2;
+			GRABBER_INVERT = true;
+			GRABBER_L_CHANNEL = 0; 
+			GRABBER_R_CHANNEL = 1;
 			OPTICAL_CHANNEL = 5;
 
 			HAS_CAMERA = false;
@@ -187,7 +189,7 @@ public class RobotMap {
 	// TODO These values need to be tested on the robot and possibly adjusted.
 	public static final double NORMAL_TURN_MAX_SPEED = 0.6;
 	public static final double SLOW_TURN_MAX_SPEED = 0.4;
-
+	
 	public static boolean useSimulator = false;
 	public static boolean USE_FAKE_GAME_DATA = false;
 
@@ -249,6 +251,7 @@ public class RobotMap {
 	public static double MAX_GRAB_SPEED = 1.0;
 	public static double MIN_GRAB_SPEED = 0.1;
 	public static double RELEASE_SPEED = -1.0;
+	public static boolean GRABBER_INVERT;
 	public static int GRABBER_L_CHANNEL;
 	public static int GRABBER_R_CHANNEL;
 	public static int OPTICAL_CHANNEL;
