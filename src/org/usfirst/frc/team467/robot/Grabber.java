@@ -34,7 +34,9 @@ public class Grabber {
 	private Grabber() {
 		if (RobotMap.HAS_GRABBER && !RobotMap.useSimulator) {
 			left = new Spark(RobotMap.GRABBER_L_CHANNEL);
+			left.setInverted(RobotMap.GRABBER_INVERT);
 			right = new Spark(RobotMap.GRABBER_R_CHANNEL);
+			right.setInverted(RobotMap.GRABBER_INVERT);
 			os = OpticalSensor.getInstance();
 		} else {
 			left = new NullSpeedController();
@@ -133,7 +135,7 @@ public class Grabber {
 		
 		LOGGER.debug("Grabber Throttle=" + throttle);
 		left.set(throttle * RobotMap.MAX_GRAB_SPEED);
-		right.set(-1 * throttle * RobotMap.MAX_GRAB_SPEED);
+		right.set(-throttle * RobotMap.MAX_GRAB_SPEED);
 
 		// Save the previous state and check for current state.
 		hadCube = hasCube;
