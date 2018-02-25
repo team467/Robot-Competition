@@ -33,7 +33,7 @@ public class RobotMap {
 	public static int RIGHT_LEAD_CHANNEL;
 	public static int RIGHT_FOLLOWER_1_CHANNEL;
 	public static int RIGHT_FOLLOWER_2_CHANNEL;
-	
+
 	public static int ALLOWED_GRABBER_ERROR = 2; // in degrees
 
 	public static int AUTONOMOUS_DRIVE_TIMEOUT_MS;
@@ -73,10 +73,10 @@ public class RobotMap {
 			WHEEL_ENCODER_CODES_PER_REVOLUTION = 1024;
 			useSpeedControllers = true;
 			POSITION_ALLOWED_ERROR = (0.5 / RobotMap.WHEEL_CIRCUMFERENCE); // 1/2 inch
-			
+
 			FORWARD_PANIC_ANGLE = 60;
 			BACKWARD_PANIC_ANGLE = -60;
-        
+
 			LEFT_LEAD_CHANNEL = 1;
 			LEFT_FOLLOWER_1_CHANNEL = 2;
 			LEFT_FOLLOWER_2_CHANNEL = 3;
@@ -90,9 +90,10 @@ public class RobotMap {
 			HAS_ELEVATOR = true;
 
 			HAS_GRABBER = true;
+			GRABBER_INVERT = false;
 			HAS_CAMERA = false;
-			
-			GRABBER_L_CHANNEL = 0; 
+
+			GRABBER_L_CHANNEL = 0;
 			GRABBER_R_CHANNEL = 1;
 			OPTICAL_CHANNEL = 5;
 
@@ -107,7 +108,7 @@ public class RobotMap {
 			HAS_LEFT_RAMP = true;
 			RAMP_LEFT_FORWARD_CHANNEL = 1;
 			RAMP_LEFT_REVERSE_CHANNEL = 4;
-			
+
 			HAS_RIGHT_RAMP = true;
 			RAMP_RIGHT_FORWARD_CHANNEL = 2;
 			RAMP_RIGHT_REVERSE_CHANNEL = 5;
@@ -147,8 +148,9 @@ public class RobotMap {
 			ELEVATOR_TOP_TICKS = 357;
 
 			HAS_GRABBER = true;
-			GRABBER_L_CHANNEL = 1; 
-			GRABBER_R_CHANNEL = 2;
+			GRABBER_INVERT = true;
+			GRABBER_L_CHANNEL = 0; 
+			GRABBER_R_CHANNEL = 1;
 			OPTICAL_CHANNEL = 5;
 
 			HAS_CAMERA = false;
@@ -156,7 +158,7 @@ public class RobotMap {
 			HAS_LEFT_RAMP = true;
 			RAMP_LEFT_FORWARD_CHANNEL = 1;
 			RAMP_LEFT_REVERSE_CHANNEL = 4;
-			
+
 			HAS_RIGHT_RAMP = true;
 			RAMP_RIGHT_FORWARD_CHANNEL = 2;
 			RAMP_RIGHT_REVERSE_CHANNEL = 5;
@@ -183,7 +185,7 @@ public class RobotMap {
 	public static final double FAST_MAX_SPEED = 1.0;
 	public static final double NORMAL_MAX_SPEED = 0.6;
 	public static final double SLOW_MAX_SPEED = 0.35;
-	
+
 	/**
 	 * The maximum revolutions per minute (RPM) of a wheel when in speed control mode.
 	 * Also for motion magic?
@@ -251,6 +253,7 @@ public class RobotMap {
 	public static double MAX_GRAB_SPEED = 1.0;
 	public static double MIN_GRAB_SPEED = 0.1;
 	public static double RELEASE_SPEED = -1.0;
+	public static boolean GRABBER_INVERT;
 	public static int GRABBER_L_CHANNEL;
 	public static int GRABBER_R_CHANNEL;
 	public static int OPTICAL_CHANNEL;
