@@ -87,7 +87,7 @@ public class Robot extends TimedRobot {
 	double tuningValue = 0.0;
 	
 	public void testInit() {
-		drive.setPIDs();
+		drive.readPIDSFromSmartDashboard();
 		driverstation.readInputs();
 		tuningValue = Double.parseDouble(SmartDashboard.getString("DB/String 0", "0.0")); //198		
 		drive.zero();
@@ -103,7 +103,6 @@ public class Robot extends TimedRobot {
 	}
 
 	public void autonomousInit() {
-		drive.setPIDs();
 		driverstation.readInputs();
 		matchConfig.load();
 //		autonomous = matchConfig.autonomousDecisionTree();

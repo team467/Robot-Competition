@@ -34,7 +34,7 @@ public class Drive extends DifferentialDrive {
 		if (instance == null) {
 			TalonSpeedControllerGroup left;
 			TalonSpeedControllerGroup right;
-			
+
 			LOGGER.info("Number of Motors:" + RobotMap.DRIVEMOTOR_NUM);
 			if (RobotMap.HAS_WHEELS && RobotMap.DRIVEMOTOR_NUM > 0) {
 				LOGGER.info("Creating  Lead Motors");
@@ -62,11 +62,11 @@ public class Drive extends DifferentialDrive {
 				right = new TalonSpeedControllerGroup(ControlMode.PercentOutput,
 						RobotMap.RIGHT_DRIVE_SENSOR_IS_INVERTED, rightLead, rightFollower1, rightFollower2);
 			} else {
-				 left = new TalonSpeedControllerGroup();
-				 right = new TalonSpeedControllerGroup();
+				left = new TalonSpeedControllerGroup();
+				right = new TalonSpeedControllerGroup();
 			}
 			instance = new Drive(left, right);
-	
+
 		}
 		return instance;
 	}
@@ -75,11 +75,11 @@ public class Drive extends DifferentialDrive {
 		super(left, right);
 		this.left = left;
 		this.right = right;
-
-		setPIDs();
+		
+		setPIDSFromRobotMap();
 	}
 
-	public void setPIDs() {
+	public void readPIDSFromSmartDashboard() {
 		double kFRight = Double.parseDouble(SmartDashboard.getString("DB/String 6", "1.2208")); // 0.0
 		double kFLeft = Double.parseDouble(SmartDashboard.getString("DB/String 1", "1.1168")); // 0.0
 
@@ -92,7 +92,23 @@ public class Drive extends DifferentialDrive {
 		double kDRight = Double.parseDouble(SmartDashboard.getString("DB/String 9", "165")); //165
 		double kDLeft = Double.parseDouble(SmartDashboard.getString("DB/String 4", "198")); //198
 
-//		double kFall = 1023.0 / 1402.0;
+		//		double kFall = 1023.0 / 1402.0;
+
+		left.setPIDF(kPLeft, kILeft, kDLeft, kFLeft);
+		right.setPIDF(kPRight, kIRight, kDRight, kFRight);
+	}
+	public void setPIDSFromRobotMap() {
+		double kFRight = RobotMap.RIGHT_DRIVE_PID_F;
+		double kFLeft = RobotMap.LEFT_DRIVE_PID_F;
+
+		double kPRight = RobotMap.RIGHT_DRIVE_PID_P;
+		double kPLeft = RobotMap.LEFT_DRIVE_PID_P;
+
+		double kIRight = RobotMap.RIGHT_DRIVE_PID_I;
+		double kILeft = RobotMap.LEFT_DRIVE_PID_I;
+
+		double kDRight = RobotMap.RIGHT_DRIVE_PID_D;
+		double kDLeft = RobotMap.LEFT_DRIVE_PID_D;
 
 		left.setPIDF(kPLeft, kILeft, kDLeft, kFLeft);
 		right.setPIDF(kPRight, kIRight, kDRight, kFRight);
@@ -205,16 +221,15 @@ public class Drive extends DifferentialDrive {
 		LOGGER.trace(ticks + " ticks = " + feet + " feet.");
 		return feet;
 	}
-	
+
 	public void setRamp(double elevatorHeight) {
 		double max = 4.0;
 		double min = 0.2;
 		double yintercept =Math.abs( ((357 * (max-min))/(RobotMap.ELEVATOR_BOTTOM_TICKS - RobotMap.ELEVATOR_TOP_TICKS)) - max);
 		double ramp = ((elevatorHeight * ((max-min) / (RobotMap.ELEVATOR_BOTTOM_TICKS - RobotMap.ELEVATOR_TOP_TICKS))))+ + yintercept;
-	
+
 		left.setOpenLoopRamp(ramp);
 		right.setOpenLoopRamp(ramp);
 		LOGGER.debug("TILT: "+ Gyrometer.getInstance().getPitchDegrees());
 	}
-
 }

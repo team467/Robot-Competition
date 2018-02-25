@@ -120,11 +120,11 @@ public class DriverStation467 {
 	}
 
 	public double getArcadeSpeed() {
-		return getDriveJoystick().turboSpeedAdjust();
+		return getDriveJoystick().getAdjustedSpeed();
 	}
 
 	public double getArcadeTurn() {
-		return getDriveJoystick().getRightStickX();
+		return getDriveJoystick().getAdjustedTurnSpeed();
 	}
 
 	public double getElevatorSpeed() {
@@ -134,6 +134,7 @@ public class DriverStation467 {
 	public boolean getDeployButtonsDown() {
 		return getNavJoystick().down(Button.BumperLeft) && getNavJoystick().down(Button.BumperRight);
 	}
+
 	public boolean getLeftRampButtonPressed() {
 		return getNavJoystick().getPOVleftPressed();
 	}
