@@ -22,15 +22,9 @@ public class Ramps {
 
 	public enum State {
 		START,
-		RELEASED,
 		DEPLOYED,
 		NOT_EXIST;
 	}
-
-	/**
-	 * Time in milliseconds
-	 */
-	private int timeSinceRelease;
 
 	private Ramps() {
 		if (!RobotMap.HAS_LEFT_RAMP && !RobotMap.HAS_RIGHT_RAMP) {
@@ -61,32 +55,8 @@ public class Ramps {
 		}
 
 		releaseSolenoid.set(DoubleSolenoid.Value.kForward);
-		state = State.RELEASED;
-		timeSinceRelease = 0;
+		state = State.DEPLOYED;
 		LOGGER.info("Deploying");
-	}
-
-	public void periodic() {
-		telemetry();
-
-		if (state != State.RELEASED) {
-			return;
-		}
-
-		if (timeSinceRelease >= 200) { // This code takes priority
-			left.drop();
-			right.drop();
-			LOGGER.info("Deployed");
-			state = State.DEPLOYED;
-			return;
-		} else if (timeSinceRelease >= 100) { // This code called first
-			left.lift();
-			right.lift();
-			LOGGER.info("Kicked");
-		}
-
-		timeSinceRelease += 20; // 20 ms per iteration
-		LOGGER.trace("time=" + timeSinceRelease);
 	}
 
 	// All functions below do not work if the ramps are not deployed
@@ -108,14 +78,12 @@ public class Ramps {
 
 	public void reset() {
 		state = State.START;
-		timeSinceRelease = 0;
 		left.drop();
 		right.drop();
 	}
 
 	public void telemetry() {
 		SmartDashboard.putString("Ramps/State", state.name());
-		SmartDashboard.putNumber("Ramps/Time Since Release", timeSinceRelease);
 		left.telemetry();
 		right.telemetry();
 	}
