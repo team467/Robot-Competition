@@ -213,6 +213,9 @@ public class RobotMap {
 	public static final double NORMAL_MAX_SPEED = 0.6;
 	public static final double SLOW_MAX_SPEED = 0.35;
 
+	public static final double ELEVATOR_HIGH_DRIVE_RAMP_TIME = 2.5;
+	public static final double ELEVATOR_LOW_DRIVE_RAMP_TIME = 0.0;
+
 	// TODO These values need to be tested on the robot and possibly adjusted.
 	public static final double NORMAL_TURN_MAX_SPEED = 0.8;
 	public static final double SLOW_TURN_MAX_SPEED = 0.6;

@@ -181,27 +181,18 @@ public class XBoxJoystick467 {
 	}
 
 	public double turboFastSpeed(double speed) {
-		return speed * weightedAverage(RobotMap.NORMAL_MAX_SPEED, RobotMap.FAST_MAX_SPEED, getLeftTrigger());
+		return speed * MathUtils.weightedAverage(RobotMap.NORMAL_MAX_SPEED, RobotMap.FAST_MAX_SPEED, getLeftTrigger());
 	}
 
 	public double turboSlowSpeed(double speed) {
-		return speed * weightedAverage(RobotMap.NORMAL_MAX_SPEED, RobotMap.SLOW_MAX_SPEED, getRightTrigger());
+		return speed * MathUtils.weightedAverage(RobotMap.NORMAL_MAX_SPEED, RobotMap.SLOW_MAX_SPEED, getRightTrigger());
 	}
 
 	/**
 	 * Returns the turn speed, which is slower when the robot is driving fast.
 	 */
 	public double getAdjustedTurnSpeed() {
-		return getRightStickX() * weightedAverage(RobotMap.NORMAL_TURN_MAX_SPEED, RobotMap.SLOW_TURN_MAX_SPEED, getAdjustedSpeed());
-	}
-
-	/**
-	 * Returns the weighted average of a and b.
-	 * a when factor = 0;
-	 * b when factor = 1
-	 */
-	public static double weightedAverage(double a, double b, double weight) {
-		return a*(1 - weight) + b*weight;
+		return getRightStickX() * MathUtils.weightedAverage(RobotMap.NORMAL_TURN_MAX_SPEED, RobotMap.SLOW_TURN_MAX_SPEED, getAdjustedSpeed());
 	}
 
 	public double getPOV() {
