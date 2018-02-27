@@ -228,6 +228,6 @@ public class Drive extends DifferentialDrive {
 
 		left.setOpenLoopRamp(ramp);
 		right.setOpenLoopRamp(ramp);
-		LOGGER.debug("Ramp: "+ ramp);
+		LOGGER.debug("Ramp time: "+ ramp);
 	}
 }
