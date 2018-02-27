@@ -60,26 +60,46 @@ public class Ramps {
 	}
 
 	// All functions below do not work if the ramps are not deployed
-	public void toggleLeftState() {
+	public void liftLeft() {
 		if (state != State.DEPLOYED) {
 			return;
 		}
 
-		left.toggle();
+		left.lift();
 	}
 
-	public void toggleRightState() {
+	public void dropLeft() {
 		if (state != State.DEPLOYED) {
 			return;
 		}
 
-		right.toggle();
+		left.drop();
+	}
+
+	public void liftRight() {
+		if (state != State.DEPLOYED) {
+			return;
+		}
+
+		right.lift();
+	}
+
+	public void dropRight() {
+		if (state != State.DEPLOYED) {
+			return;
+		}
+
+		right.drop();
 	}
 
 	public void reset() {
 		state = State.START;
 		left.drop();
 		right.drop();
+	}
+
+	public boolean isDeployed() {
+		return state == State.DEPLOYED;
 	}
 
 	public void telemetry() {
