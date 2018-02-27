@@ -128,29 +128,6 @@ public class Robot extends TimedRobot {
 	public void teleopPeriodic() {
 		driverstation.readInputs();
 
-		grabber.grab(driverstation.getGrabThrottle());
-		elevator.move(driverstation.getElevatorSpeed());
-
-		if (driverstation.getFloorHeightButtonPressed()) {
-			LOGGER.info("Dropping to bottom height");
-			elevator.moveToHeight(Elevator.Stops.floor);
-		} else if (driverstation.getSwitchHeightButtonPressed()) {
-			LOGGER.info("Lifting to switch height");
-			elevator.moveToHeight(Elevator.Stops.fieldSwitch);
-		} else if (driverstation.getLowScaleHeightButtonPressed()) {
-			LOGGER.info("Lifting to low scale height");
-			elevator.moveToHeight(Elevator.Stops.lowScale);
-		} else if (driverstation.getHighScaleHeightButtonPressed()) {
-			LOGGER.info("Lifting to high scale height");
-			elevator.moveToHeight(Elevator.Stops.highScale);
-		}
-
-		// Ramps state machines protect against conflicts
-		if (driverstation.getDeployButtonsDown()) {
-			LOGGER.debug("Deploy Buttons down");
-			ramps.deploy();
-		}
-
 		if (ramps.isDeployed()) {
 			if (driverstation.getLeftRampLiftButton()) {
 				ramps.liftLeft();
@@ -164,35 +141,59 @@ public class Robot extends TimedRobot {
 			if (driverstation.getRightRampDropButton()) {
 				ramps.dropRight();
 			}
+		} else {
+
+			grabber.grab(driverstation.getGrabThrottle());
+			elevator.move(driverstation.getElevatorSpeed());
+
+			if (driverstation.getFloorHeightButtonPressed()) {
+				LOGGER.info("Dropping to bottom height");
+				elevator.moveToHeight(Elevator.Stops.floor);
+			} else if (driverstation.getSwitchHeightButtonPressed()) {
+				LOGGER.info("Lifting to switch height");
+				elevator.moveToHeight(Elevator.Stops.fieldSwitch);
+			} else if (driverstation.getLowScaleHeightButtonPressed()) {
+				LOGGER.info("Lifting to low scale height");
+				elevator.moveToHeight(Elevator.Stops.lowScale);
+			} else if (driverstation.getHighScaleHeightButtonPressed()) {
+				LOGGER.info("Lifting to high scale height");
+				elevator.moveToHeight(Elevator.Stops.highScale);
+			}
+
+			// Ramps state machines protect against conflicts
+			if (driverstation.getDeployButtonsDown()) {
+				LOGGER.debug("Deploy Buttons down");
+				ramps.deploy();
+			}
+
+			double speed = driverstation.getArcadeSpeed();
+			double turn = driverstation.getArcadeTurn();
+
+			if (Math.abs(speed) < RobotMap.MIN_DRIVE_SPEED) {
+				speed = 0.0;
+			}
+			if (Math.abs(turn) < RobotMap.MIN_DRIVE_SPEED) {
+				turn = 0.0;
+			}
+
+			switch (driverstation.getDriveMode()) {
+
+			case ArcadeDrive:
+				drive.arcadeDrive(speed, turn, true);
+				break;
+			case CurvatureDrive:
+				drive.curvatureDrive(speed, turn, true);
+				break;
+			case TankDrive:	
+				double leftTank = driverstation.getDriveJoystick().getLeftStickY();
+				double rightTank = driverstation.getDriveJoystick().getRightStickY();
+				drive.tankDrive(leftTank, rightTank, true);
+				break;
+			default:
+			}
+
+			drive.logClosedLoopErrors();
 		}
-
-		double speed = driverstation.getArcadeSpeed();
-		double turn = driverstation.getArcadeTurn();
-
-		if (Math.abs(speed) < RobotMap.MIN_DRIVE_SPEED) {
-			speed = 0.0;
-		}
-		if (Math.abs(turn) < RobotMap.MIN_DRIVE_SPEED) {
-			turn = 0.0;
-		}
-
-		switch (driverstation.getDriveMode()) {
-
-		case ArcadeDrive:
-			drive.arcadeDrive(speed, turn, true);
-			break;
-		case CurvatureDrive:
-			drive.curvatureDrive(speed, turn, true);
-			break;
-		case TankDrive:	
-			double leftTank = driverstation.getDriveJoystick().getLeftStickY();
-			double rightTank = driverstation.getDriveJoystick().getRightStickY();
-			drive.tankDrive(leftTank, rightTank, true);
-			break;
-		default:
-		}
-
-		drive.logClosedLoopErrors();
 	}
 
 }
