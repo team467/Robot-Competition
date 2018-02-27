@@ -225,8 +225,8 @@ public class Drive extends DifferentialDrive {
 	public void setRamp(double elevatorHeight) {
 		double max = 4.0;
 		double min = 0.2;
-		double yintercept = Math.abs( ((357 * (max-min))/(RobotMap.ELEVATOR_BOTTOM_TICKS - RobotMap.ELEVATOR_TOP_TICKS)) - max);
-		double ramp = ((elevatorHeight * ((max-min) / (RobotMap.ELEVATOR_BOTTOM_TICKS - RobotMap.ELEVATOR_TOP_TICKS))))+ + yintercept;
+		double yintercept = Math.abs( ((RobotMap.ELEVATOR_TOP_TICKS * (max-min))/(RobotMap.ELEVATOR_BOTTOM_TICKS - RobotMap.ELEVATOR_TOP_TICKS)) - max);
+		double ramp = elevatorHeight * ((max-min) / (RobotMap.ELEVATOR_BOTTOM_TICKS - RobotMap.ELEVATOR_TOP_TICKS)) + yintercept;
 
 		left.setOpenLoopRamp(ramp);
 		right.setOpenLoopRamp(ramp);
