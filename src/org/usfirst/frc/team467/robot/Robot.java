@@ -62,6 +62,7 @@ public class Robot extends TimedRobot {
 		gyro = Gyrometer.getInstance();
 		gyro.calibrate();
 		gyro.reset();
+		ramps = Ramps.getInstance();
 
 		if (RobotMap.HAS_CAMERA) {
 			vision = VisionProcessing.getInstance();
