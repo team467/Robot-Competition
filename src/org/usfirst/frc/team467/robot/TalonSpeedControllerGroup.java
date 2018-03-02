@@ -73,7 +73,7 @@ public class TalonSpeedControllerGroup implements SpeedController {
 		talon.configPeakOutputReverse(-1.0, 0);
 
 		talon.configOpenloopRamp(0.2, RobotMap.TALON_TIMEOUT);
-//		talon.configClosedloopRamp(0.2, RobotMap.TALON_TIMEOUT);		
+//		talon.configClosedloopRamp(1.0, RobotMap.TALON_TIMEOUT);		
 	}
 
 	public void logClosedLoopErrors(String side) {
@@ -81,7 +81,7 @@ public class TalonSpeedControllerGroup implements SpeedController {
 			LOGGER.debug("No CLosed Loop errors");
 			return;
 		}
-		LOGGER.info(
+		LOGGER.debug(
 				side + ": Vel = " + leader.getSelectedSensorVelocity(0) +
 				" Pos = " + leader.getSelectedSensorPosition(0) +
 				" Err = " + leader.getClosedLoopError(0));
@@ -98,8 +98,8 @@ public class TalonSpeedControllerGroup implements SpeedController {
 		leader.config_kF(0, f, RobotMap.TALON_TIMEOUT);
 //		int motionAcceleration = Integer.parseInt(SmartDashboard.getString("DB/String 3", "20000")); 
 //		int motionCruiseVelocity = Integer.parseInt(SmartDashboard.getString("DB/String 8", "15000")); 
-		int motionAcceleration = 1700;
-		int motionCruiseVelocity = 500;
+		int motionAcceleration = 8000; //1700;
+		int motionCruiseVelocity = 8000; // 500;
 
 		leader.configMotionCruiseVelocity(motionCruiseVelocity, RobotMap.TALON_TIMEOUT); 
 		leader.configMotionAcceleration(motionAcceleration, RobotMap.TALON_TIMEOUT);

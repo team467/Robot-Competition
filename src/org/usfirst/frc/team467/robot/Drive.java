@@ -141,7 +141,7 @@ public class Drive extends DifferentialDrive {
 	}
 
 	public void moveFeet(double distanceInFeet) {
-		moveFeet(distanceInFeet, 0, ControlMode.Position);
+		moveFeet(distanceInFeet, 0, ControlMode.MotionMagic);
 	}
 
 	public void rotateByAngle(double angleInDegrees) {
@@ -206,14 +206,14 @@ public class Drive extends DifferentialDrive {
 	}
 
 	private double feetToTicks(double feet) {
-		double ticks = (feet / (RobotMap.WHEEL_CIRCUMFERENCE / 12)) * RobotMap.WHEEL_ENCODER_CODES_PER_REVOLUTION;
-		LOGGER.trace(feet + " feet = " + ticks + " ticks.");
+		double ticks = (feet / (RobotMap.WHEEL_CIRCUMFERENCE / 12.0)) * RobotMap.WHEEL_ENCODER_CODES_PER_REVOLUTION;
+		LOGGER.debug(feet + " feet = " + ticks + " ticks.");
 		return ticks;
 	}
 
 	private double ticksToFeet(double ticks) {
 		double feet = (ticks / RobotMap.WHEEL_ENCODER_CODES_PER_REVOLUTION) * (RobotMap.WHEEL_CIRCUMFERENCE / 12);
-		LOGGER.trace(ticks + " ticks = " + feet + " feet.");
+		LOGGER.debug(ticks + " ticks = " + feet + " feet.");
 		return feet;
 	}
 
@@ -223,6 +223,6 @@ public class Drive extends DifferentialDrive {
 
 		left.setOpenLoopRamp(ramp);
 		right.setOpenLoopRamp(ramp);
-		LOGGER.debug("Ramp time: "+ ramp);
+		LOGGER.trace("Ramp time: "+ ramp);
 	}
 }

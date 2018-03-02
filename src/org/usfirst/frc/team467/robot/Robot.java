@@ -91,7 +91,7 @@ public class Robot extends TimedRobot {
 	public void testInit() {
 //		drive.readPIDSFromSmartDashboard();
 		driverstation.readInputs();
-		tuningValue = 3; // Double.parseDouble(SmartDashboard.getString("DB/String 0", "0.0")); //198		
+		tuningValue = 12; // Double.parseDouble(SmartDashboard.getString("DB/String 0", "0.0")); //198		
 		drive.zero();
 	}
 
@@ -110,12 +110,14 @@ public class Robot extends TimedRobot {
 		//		autonomous = matchConfig.autonomousDecisionTree();
 		autonomous = Actions.simpleTest();
 		LOGGER.info("Init Autonomous:" + autonomous.getName());
+		drive.logClosedLoopErrors();
 		autonomous.enable();
 	}
 
 	public void autonomousPeriodic() {
 		grabber.periodic();
 		elevator.move(0); // Will move to height if set.
+		drive.logClosedLoopErrors();
 		autonomous.run();
 	}
 
