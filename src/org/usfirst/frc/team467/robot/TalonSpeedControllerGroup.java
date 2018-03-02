@@ -73,7 +73,7 @@ public class TalonSpeedControllerGroup implements SpeedController {
 		talon.configPeakOutputReverse(-1.0, 0);
 
 		talon.configOpenloopRamp(0.2, RobotMap.TALON_TIMEOUT);
-		talon.configClosedloopRamp(0.2, RobotMap.TALON_TIMEOUT);		
+//		talon.configClosedloopRamp(0.2, RobotMap.TALON_TIMEOUT);		
 	}
 
 	public void logClosedLoopErrors(String side) {
