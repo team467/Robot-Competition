@@ -81,7 +81,7 @@ public class TalonSpeedControllerGroup implements SpeedController {
 			LOGGER.debug("No CLosed Loop errors");
 			return;
 		}
-		LOGGER.debug(
+		LOGGER.info(
 				side + ": Vel = " + leader.getSelectedSensorVelocity(0) +
 				" Pos = " + leader.getSelectedSensorPosition(0) +
 				" Err = " + leader.getClosedLoopError(0));
