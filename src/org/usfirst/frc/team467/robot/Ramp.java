@@ -42,20 +42,6 @@ public class Ramp {
 		return state;
 	}
 
-	public void toggle() {
-		switch (state) {
-		case DOWN:
-			lift();
-			break;
-		case UP:
-			drop();
-			break;
-		case NOT_EXIST:
-			LOGGER.debug(name + " doesn't exist");
-			break;
-		}
-	}
-
 	public void lift() {
 		if (state == State.DOWN) {
 			solenoid.set(DoubleSolenoid.Value.kForward);

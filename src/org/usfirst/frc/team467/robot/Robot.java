@@ -20,7 +20,7 @@ import org.usfirst.frc.team467.robot.RobotMap.RobotID;
 
 public class Robot extends TimedRobot {
 	private static final Logger LOGGER = Logger.getLogger(Robot.class);
-	
+
 	// Robot objects
 	private DriverStation467 driverstation;
 	private Drive drive;
@@ -62,6 +62,7 @@ public class Robot extends TimedRobot {
 		gyro = Gyrometer.getInstance();
 		gyro.calibrate();
 		gyro.reset();
+		ramps = Ramps.getInstance();
 
 		if (RobotMap.HAS_CAMERA) {
 			vision = VisionProcessing.getInstance();
@@ -72,20 +73,20 @@ public class Robot extends TimedRobot {
 			cam.setResolution(320, 240);
 			cam.setFPS(15);
 		}
-		
+
 
 	}
-	
+
 	public void disabledInit() {
-		
+
 	}
 
 	public void disabledPeriodic() {
 		LOGGER.trace("Disabled Periodic");
 	}
-	
+
 	double tuningValue = 0.0;
-	
+
 	public void testInit() {
 		drive.readPIDSFromSmartDashboard();
 		driverstation.readInputs();
@@ -105,11 +106,11 @@ public class Robot extends TimedRobot {
 	public void autonomousInit() {
 		driverstation.readInputs();
 		matchConfig.load();
-//		autonomous = matchConfig.autonomousDecisionTree();
+		//		autonomous = matchConfig.autonomousDecisionTree();
 		autonomous = Actions.rightBasicSwitchRight();
 		LOGGER.info("Init Autonomous:" + autonomous.getName());
 		autonomous.enable();
-		}
+	}
 
 	public void autonomousPeriodic() {
 		grabber.periodic();
@@ -118,7 +119,7 @@ public class Robot extends TimedRobot {
 	}
 
 	public void teleopInit() {
-//		autonomous.terminate();
+		//		autonomous.terminate();
 		autonomous = Actions.doNothing();
 		driverstation.readInputs();
 	}
@@ -144,24 +145,27 @@ public class Robot extends TimedRobot {
 			LOGGER.info("Lifting to high scale height");
 			elevator.moveToHeight(Elevator.Stops.highScale);
 		}
-		
+
 		// Ramps state machines protect against conflicts
 		if (driverstation.getDeployButtonsDown()) {
 			LOGGER.debug("Deploy Buttons down");
 			ramps.deploy();
 		}
 
-		if (driverstation.getLeftRampButtonPressed()) {
-			LOGGER.debug("Left Ramp Button Pressed");
-			ramps.toggleLeftState();
+		if (ramps.isDeployed()) {
+			if (driverstation.getLeftRampLiftButton()) {
+				ramps.liftLeft();
+			}
+			if (driverstation.getLeftRampDropButton()) {
+				ramps.dropLeft();
+			}
+			if (driverstation.getRightRampLiftButton()) {
+				ramps.liftRight();
+			}
+			if (driverstation.getRightRampDropButton()) {
+				ramps.dropRight();
+			}
 		}
-
-		if (driverstation.getRightRampButtonPressed()) {
-			LOGGER.debug("Right Ramp Button Pressed");
-			ramps.toggleRightState();
-		}
-		
-//		ramps.periodic();
 
 		double speed = driverstation.getArcadeSpeed();
 		double turn = driverstation.getArcadeTurn();
@@ -188,7 +192,7 @@ public class Robot extends TimedRobot {
 			break;
 		default:
 		}
-		
+
 		drive.logClosedLoopErrors();
 	}
 
