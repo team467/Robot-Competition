@@ -48,7 +48,8 @@ public class Actions {
 		Grabber grabber = Grabber.getInstance();
 		return new Action(
 				"Grabbing cube",
-				new ActionGroup.RunOnce(() -> grabber.grab()));
+				new ActionGroup.Duration(2.0),
+				() -> grabber.grab(RobotMap.MAX_GRAB_SPEED));
 	}
 	
 	public static Action releaseCube() {

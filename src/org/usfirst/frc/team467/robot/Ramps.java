@@ -94,6 +94,7 @@ public class Ramps {
 
 	public void reset() {
 		state = State.START;
+		releaseSolenoid.set(DoubleSolenoid.Value.kReverse);
 		left.drop();
 		right.drop();
 	}

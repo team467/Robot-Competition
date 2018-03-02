@@ -4,7 +4,7 @@ package org.usfirst.frc.team467.robot;
  *
  */
 public class RobotMap {
-	public static final int TALON_TIMEOUT = 10; // 10 ms is the recommended timeout
+	public static final int TALON_TIMEOUT = 0; // 10 ms is the recommended timeout
 
 	public enum RobotID {
 		Board, Competition_1, Competition_2

@@ -63,6 +63,7 @@ public class Robot extends TimedRobot {
 		gyro.calibrate();
 		gyro.reset();
 		ramps = Ramps.getInstance();
+		ramps.reset();
 
 		if (RobotMap.HAS_CAMERA) {
 			vision = VisionProcessing.getInstance();
@@ -78,7 +79,7 @@ public class Robot extends TimedRobot {
 	}
 
 	public void disabledInit() {
-
+		ramps.reset();
 	}
 
 	public void disabledPeriodic() {

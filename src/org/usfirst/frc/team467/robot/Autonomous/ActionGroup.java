@@ -47,10 +47,10 @@ public class ActionGroup {
 			}
 		}
 
-		LOGGER.info("run " + action);
-		LOGGER.debug("Before doIt");
+//		LOGGER.info("run " + action);
+//		LOGGER.debug("Before doIt");
 		action.doIt();
-		LOGGER.debug("After doIt");
+//		LOGGER.debug("After doIt");
 	}
 
 	public boolean isComplete() {
@@ -119,15 +119,20 @@ public class ActionGroup {
 		 */
 		public Duration(double duration) {
 			durationMS = duration * 1000;
+			LOGGER.debug("durationMS=" + durationMS);
 		}
 
 		@Override
 		public boolean isDone() {
 			if (actionStartTimeMS < 0) {
 				actionStartTimeMS = System.currentTimeMillis();
+				LOGGER.debug("Action Start Time=" + actionStartTimeMS);
 			}
 
-			return System.currentTimeMillis() > durationMS + actionStartTimeMS;
+			long currentTime = System.currentTimeMillis();
+			LOGGER.debug("currentTime=" + currentTime);
+
+			return currentTime > durationMS + actionStartTimeMS;
 		}
 
 		public void reset() {
