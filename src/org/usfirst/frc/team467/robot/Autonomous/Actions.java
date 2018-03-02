@@ -8,7 +8,6 @@ import org.usfirst.frc.team467.robot.Elevator;
 import org.usfirst.frc.team467.robot.Elevator.Stops;
 import org.usfirst.frc.team467.robot.Grabber;
 import org.usfirst.frc.team467.robot.RobotMap;
-import org.usfirst.frc.team467.robot.simulator.DriveSimulator;
 
 import edu.wpi.first.wpilibj.Timer;
 
@@ -18,15 +17,9 @@ public class Actions {
 
 	public static final Action nothing(){
 		String actionText = "Do Nothing";
-		if (RobotMap.useSimulator) {
-			return new Action(actionText,
-					() -> DriveSimulator.getInstance().isStopped(),
-					() -> DriveSimulator.getInstance().moveFeet(0));
-		} else {
-			return new Action(actionText,
-					() -> Drive.getInstance().isStopped(),
-					() -> Drive.getInstance().moveFeet(0));
-		}
+		return new Action(actionText,
+				() -> Drive.getInstance().isStopped(),
+				() -> Drive.getInstance().moveFeet(0));
 	}
 
 	public static Action wait(double duration) {
@@ -101,15 +94,9 @@ public class Actions {
 	}
 		
 	public static Action zeroDistance() {
-		if (RobotMap.useSimulator) {
-			return new Action(
-					"Zeroing the distance",
-					new ActionGroup.RunOnce(() -> DriveSimulator.getInstance().zero()));
-		} else {
-			return new Action(
-					"Zeroing the distance",
-					new ActionGroup.RunOnce(() -> Drive.getInstance().zero()));
-		}
+		return new Action(
+				"Zeroing the distance",
+				new ActionGroup.RunOnce(() -> Drive.getInstance().zero()));
 	}
 	
 	/**
@@ -120,15 +107,9 @@ public class Actions {
 
 	public static Action moveDistanceForward(double distance) {
 		String actionText = "Move forward " + distance + " feet";
-		if (RobotMap.useSimulator) {
-			return new Action(actionText,
-					new ActionGroup.ReachDistance(distance),
-					() -> DriveSimulator.getInstance().moveFeet(distance));
-		} else {
-			return new Action(actionText,
-					new ActionGroup.ReachDistance(distance),
-					() -> Drive.getInstance().moveFeet(distance));
-		}
+		return new Action(actionText,
+				new ActionGroup.ReachDistance(distance),
+				() -> Drive.getInstance().moveFeet(distance));
 	}
 
 	/**
@@ -139,24 +120,14 @@ public class Actions {
 	public static Action moveturn(double rotationInDegrees) {
 		String actionText = "Rotate " + rotationInDegrees + " degrees.";
 	    double rotation = rotationInDegrees;
-	    if (RobotMap.useSimulator) {
-			return new Action(actionText,
-					new ActionGroup.ReachDistance(rotation),
-					() -> DriveSimulator.getInstance().rotateByAngle(rotation));
-	    } else {
-			return new Action(actionText,
-					new ActionGroup.ReachDistance(rotation),
-					() -> Drive.getInstance().rotateByAngle(rotation));
-	    }
+		return new Action(actionText,
+				new ActionGroup.ReachDistance(rotation),
+				() -> Drive.getInstance().rotateByAngle(rotation));
 	}
 
 	public static boolean moveDistanceComplete(double distance) {
 		double distanceMoved;
-		if (RobotMap.useSimulator) {
-			distanceMoved = DriveSimulator.getInstance().absoluteDistanceMoved();
-		} else {
-			distanceMoved = Drive.getInstance().absoluteDistanceMoved();
-		}
+		distanceMoved = Drive.getInstance().absoluteDistanceMoved();
 
 		LOGGER.debug("Distances - Target: " + Math.abs(distance) + " Moved: " + distanceMoved);
 		if (distanceMoved >= (Math.abs(distance) - RobotMap.POSITION_ALLOWED_ERROR)) {

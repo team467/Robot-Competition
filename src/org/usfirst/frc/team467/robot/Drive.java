@@ -3,7 +3,6 @@ package org.usfirst.frc.team467.robot;
 import java.text.DecimalFormat;
 
 import org.apache.log4j.Logger;
-import org.usfirst.frc.team467.robot.simulator.communications.RobotData;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
@@ -127,10 +126,6 @@ public class Drive extends DifferentialDrive {
 		LOGGER.trace("Zeroed the motor sensors.");
 		left.zero();
 		right.zero();
-	}
-
-	public void sendData() {
-		RobotData.getInstance().updateDrivePosition(getRightDistance(), getLeftDistance());
 	}
 
 	/**

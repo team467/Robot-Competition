@@ -7,7 +7,6 @@ import java.util.NoSuchElementException;
 import org.apache.log4j.Logger;
 import org.usfirst.frc.team467.robot.Drive;
 import org.usfirst.frc.team467.robot.RobotMap;
-import org.usfirst.frc.team467.robot.simulator.DriveSimulator;
 
 /**
  * Runs through a set of actions. <br>
@@ -146,11 +145,7 @@ public class ActionGroup {
 		@Override
 		public boolean isDone() {
 			lastPosition = currentPosition;
-			if (RobotMap.useSimulator) {
-				currentPosition = DriveSimulator.getInstance().absoluteDistanceMoved();
-			} else {
-				currentPosition = Drive.getInstance().absoluteDistanceMoved();
-			}
+			currentPosition = Drive.getInstance().absoluteDistanceMoved();
 			LOGGER.debug("Distances - Target: " + Math.abs(distance) + " Moved: " + currentPosition);
 			if (currentPosition > 0.0 && lastPosition == currentPosition) {
 				increment++;
