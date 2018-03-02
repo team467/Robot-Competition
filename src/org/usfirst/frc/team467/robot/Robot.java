@@ -107,7 +107,7 @@ public class Robot extends TimedRobot {
 		driverstation.readInputs();
 		matchConfig.load();
 		//		autonomous = matchConfig.autonomousDecisionTree();
-		autonomous = Actions.rightBasicSwitchRight();
+		autonomous = Actions.simpleTest();
 		LOGGER.info("Init Autonomous:" + autonomous.getName());
 		autonomous.enable();
 	}
