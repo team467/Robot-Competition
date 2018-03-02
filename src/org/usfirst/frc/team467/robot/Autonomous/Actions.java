@@ -206,6 +206,24 @@ public class Actions {
 		return mode;
 	}
 
+    public static ActionGroup simpleTest() {
+        String actionGroupText = "Simplified version of leftbasicswitchleft.";
+        ActionGroup mode = new ActionGroup(actionGroupText);
+//        mode.addAction(zeroDistance());
+//        mode.addAction(grabCube());
+        mode.addAction(zeroDistance());
+        mode.addAction(moveDistanceForward(12.0));
+//        mode.addAction(zeroDistance());
+//        mode.addAction(moveturn(90));
+//        mode.addAction(zeroDistance());
+//        mode.addAction(elevatorToSwitch());
+//        mode.addAction(zeroDistance());
+//        mode.addAction(moveDistanceForward(2.0));
+//        mode.addAction(zeroDistance());
+//        mode.addAction(releaseCube());
+        return mode;
+    }
+
 	public static ActionGroup centerBasicSwitchRight() {
 		String actionGroupText = "Start in center, put cube on right switch.";
 		ActionGroup mode = new ActionGroup(actionGroupText);
