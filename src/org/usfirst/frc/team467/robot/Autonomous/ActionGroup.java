@@ -48,7 +48,9 @@ public class ActionGroup {
 		}
 
 		LOGGER.info("run " + action);
+		LOGGER.debug("Before doIt");
 		action.doIt();
+		LOGGER.debug("After doIt");
 	}
 
 	public boolean isComplete() {

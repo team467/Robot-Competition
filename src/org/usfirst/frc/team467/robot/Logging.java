@@ -16,20 +16,20 @@ public class Logging {
 		setupDefaultLogging();
 
 		// Enable extra logging for classes you want to debug
-		Logger.getLogger(ActionGroup.class).setLevel(Level.WARN);
-		Logger.getLogger(Drive.class).setLevel(Level.DEBUG);
+		Logger.getLogger(ActionGroup.class).setLevel(Level.DEBUG);
+		Logger.getLogger(Drive.class).setLevel(Level.INFO);
 		Logger.getLogger(Elevator.class).setLevel(Level.INFO);
-		Logger.getLogger(Grabber.class).setLevel(Level.DEBUG);
-		Logger.getLogger(MatchConfiguration.class).setLevel(Level.DEBUG);
+		Logger.getLogger(Grabber.class).setLevel(Level.INFO);
+		Logger.getLogger(MatchConfiguration.class).setLevel(Level.INFO);
 		Logger.getLogger(OpticalSensor.class).setLevel(Level.WARN);
 		Logger.getLogger(Ramp.class).setLevel(Level.INFO);
 		Logger.getLogger(Ramps.class).setLevel(Level.INFO);
 		Logger.getLogger(Robot.class).setLevel(Level.INFO);
 		Logger.getLogger(Rumbler.class).setLevel(Level.WARN);
-		Logger.getLogger(TalonSpeedControllerGroup.class).setLevel(Level.TRACE);
+		Logger.getLogger(TalonSpeedControllerGroup.class).setLevel(Level.INFO);
 		Logger.getLogger(VisionIntegration.class).setLevel(Level.WARN);
 		Logger.getLogger(XBoxJoystick467.class).setLevel(Level.WARN);
-		Logger.getLogger(TiltMonitor.class).setLevel(Level.DEBUG);
+		Logger.getLogger(TiltMonitor.class).setLevel(Level.INFO);
 	}
 
 	private static void setupDefaultLogging() {
