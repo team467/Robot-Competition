@@ -57,6 +57,11 @@ public class Ramp {
 			state = State.DOWN;
 		}
 	}
+	
+	public void reset() {
+		solenoid.set(DoubleSolenoid.Value.kReverse);
+		state = State.DOWN;
+	}
 
 	public void telemetry() {
 		SmartDashboard.putString("Ramps/" + name + "/State", state.name());

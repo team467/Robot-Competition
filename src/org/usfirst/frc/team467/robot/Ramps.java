@@ -93,10 +93,14 @@ public class Ramps {
 	}
 
 	public void reset() {
+		if (!RobotMap.HAS_LEFT_RAMP || !RobotMap.HAS_RIGHT_RAMP) {
+			return;
+		}
+
 		state = State.START;
 		releaseSolenoid.set(DoubleSolenoid.Value.kReverse);
-		left.drop();
-		right.drop();
+		left.reset();
+		right.reset();
 	}
 
 	public boolean isDeployed() {
