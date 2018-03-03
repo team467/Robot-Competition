@@ -80,6 +80,7 @@ public class Robot extends TimedRobot {
 
 	public void disabledInit() {
 		ramps.reset();
+		drive.logClosedLoopErrors();
 	}
 
 	public void disabledPeriodic() {
@@ -91,7 +92,7 @@ public class Robot extends TimedRobot {
 	public void testInit() {
 //		drive.readPIDSFromSmartDashboard();
 		driverstation.readInputs();
-		tuningValue = 12; // Double.parseDouble(SmartDashboard.getString("DB/String 0", "0.0")); //198		
+		tuningValue = 3; // Double.parseDouble(SmartDashboard.getString("DB/String 0", "0.0")); //198		
 		drive.zero();
 	}
 
@@ -111,20 +112,23 @@ public class Robot extends TimedRobot {
 		autonomous = Actions.simpleTest();
 		LOGGER.info("Init Autonomous:" + autonomous.getName());
 		drive.logClosedLoopErrors();
+		drive.configPeakOutput(1.0);
 		autonomous.enable();
 	}
 
 	public void autonomousPeriodic() {
 		grabber.periodic();
 		elevator.move(0); // Will move to height if set.
-		drive.logClosedLoopErrors();
+//		drive.logClosedLoopErrors();
 		autonomous.run();
 	}
 
 	public void teleopInit() {
 		//		autonomous.terminate();
 		autonomous = Actions.doNothing();
+		drive.configPeakOutput(1.0);
 		driverstation.readInputs();
+		ramps.reset();
 	}
 	/**
 	 * This function is called periodically during operator control

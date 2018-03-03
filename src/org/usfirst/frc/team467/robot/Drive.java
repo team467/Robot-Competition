@@ -112,6 +112,11 @@ public class Drive extends DifferentialDrive {
 		left.setPIDF(kPLeft, kILeft, kDLeft, kFLeft);
 		right.setPIDF(kPRight, kIRight, kDRight, kFRight);
 	}
+	
+	public void configPeakOutput(double percentOut) {
+		left.configPeakOutput(percentOut);
+		right.configPeakOutput(percentOut);
+	}
 
 	public void logClosedLoopErrors() {
 		left.logClosedLoopErrors("Left");
@@ -141,7 +146,7 @@ public class Drive extends DifferentialDrive {
 	}
 
 	public void moveFeet(double distanceInFeet) {
-		moveFeet(distanceInFeet, 0, ControlMode.MotionMagic);
+		moveFeet(distanceInFeet, 0, ControlMode.Position);
 	}
 
 	public void rotateByAngle(double angleInDegrees) {
@@ -173,6 +178,8 @@ public class Drive extends DifferentialDrive {
 		LOGGER.debug("Current Position - Right: " + df.format(getRightDistance()) + " Left: "
 				+ df.format(getLeftDistance()));
 
+//		left.movePosition(leftDistTicks/2);
+//		right.movePosition(rightDistTicks/2);
 		left.set(mode, leftDistTicks);
 		right.set(mode, rightDistTicks);
 	}

@@ -48,7 +48,7 @@ public class Actions {
 		Grabber grabber = Grabber.getInstance();
 		return new Action(
 				"Grabbing cube",
-				new ActionGroup.Duration(2.0),
+				new ActionGroup.Duration(1.0),
 				() -> grabber.grab(RobotMap.MAX_GRAB_SPEED));
 	}
 	
@@ -109,7 +109,7 @@ public class Actions {
 	public static Action moveDistanceForward(double distance) {
 		String actionText = "Move forward " + distance + " feet";
 		return new Action(actionText,
-				new ActionGroup.ReachDistance(distance),
+				() -> {return false;}, // new ActionGroup.ReachDistance(distance),
 				() -> Drive.getInstance().moveFeet(distance));
 	}
 
@@ -215,7 +215,7 @@ public class Actions {
         mode.addAction(zeroDistance());
         mode.addAction(elevatorToSwitch());
         mode.addAction(zeroDistance());
-        mode.addAction(moveDistanceForward(12.0));
+        mode.addAction(moveDistanceForward(3.0));
 //        mode.addAction(zeroDistance());
 //        mode.addAction(moveturn(90));
 //        mode.addAction(zeroDistance());

@@ -159,6 +159,11 @@ public class TalonSpeedControllerGroup implements SpeedController {
 	public void set(double speed) {
 		set(controlMode, speed);
 	}
+	
+	public void configPeakOutput(double percentOut) {
+		leader.configPeakOutputForward(percentOut, RobotMap.TALON_TIMEOUT);
+		leader.configPeakOutputReverse(-percentOut, RobotMap.TALON_TIMEOUT);
+	}
 
 	public void set(ControlMode controlMode, double outputValue) {
 		if (leader == null) {
@@ -243,5 +248,21 @@ public class TalonSpeedControllerGroup implements SpeedController {
 			return;
 		}
 		leader.configOpenloopRamp(ramp, RobotMap.TALON_TIMEOUT);
+	}
+	
+	public void movePosition(double targetDistance) {
+		if (leader == null) {
+			LOGGER.trace("No Drive System");
+			return;
+		}
+		double distanceMoved = leader.getSelectedSensorPosition(0);
+		double distanceToGo;
+		if (targetDistance > 0) {
+			distanceToGo = Math.min(targetDistance, distanceMoved + 1024);
+		} else {
+			distanceToGo = Math.max(targetDistance, distanceMoved - 1024);
+		}
+		LOGGER.info("target=" + targetDistance + " sensor=" + distanceMoved + " toGo=" + distanceToGo);
+		set(ControlMode.Position, distanceToGo);
 	}
 }
