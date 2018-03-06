@@ -3,6 +3,7 @@ package org.usfirst.frc.team467.robot;
 import java.text.DecimalFormat;
 
 import org.apache.log4j.Logger;
+import org.usfirst.frc.team467.robot.Autonomous.AutoDrive;
 import org.usfirst.frc.team467.robot.simulator.communications.RobotData;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
@@ -11,7 +12,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public class Drive extends DifferentialDrive {
+public class Drive extends DifferentialDrive implements AutoDrive {
 	private ControlMode controlMode;
 
 	private static final Logger LOGGER = Logger.getLogger(Drive.class);
@@ -130,6 +131,7 @@ public class Drive extends DifferentialDrive {
 		return controlMode;
 	}
 
+	@Override
 	public void zero() {
 		LOGGER.trace("Zeroed the motor sensors.");
 		left.zero();
@@ -148,14 +150,17 @@ public class Drive extends DifferentialDrive {
 		left.stopMotor();
 	}
 
+	@Override
 	public boolean isStopped() {
 		return left.isStopped() && right.isStopped();
 	}
 
+	@Override
 	public void moveFeet(double distanceInFeet) {
 		moveFeet(distanceInFeet, 0, ControlMode.Position);
 	}
 
+	@Override
 	public void rotateByAngle(double angleInDegrees) {
 		moveFeet(0, angleInDegrees, ControlMode.Position);
 	}
@@ -169,6 +174,7 @@ public class Drive extends DifferentialDrive {
 	 *            enter positive degrees for left turn and enter negative degrees
 	 *            for right turn
 	 */
+	@Override
 	public void moveFeet(double straightDistanceInFeet, double rotationInDegrees, ControlMode mode) {
 
 		LOGGER.trace("Automated move of " + straightDistanceInFeet + " feet and " + rotationInDegrees + " degree turn.");

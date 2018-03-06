@@ -15,6 +15,7 @@ import org.usfirst.frc.team467.robot.simulator.DriveSimulator;
  */
 public class ActionGroup {
 	private static final Logger LOGGER = Logger.getLogger(ActionGroup.class);
+	private static AutoDrive drive = (RobotMap.useSimulator) ? DriveSimulator.getInstance() : Drive.getInstance();
 	private String name;
 	private LinkedList<Action> agenda;
 	private final LinkedList<Action> master;
@@ -150,11 +151,7 @@ public class ActionGroup {
 		@Override
 		public boolean isDone() {
 			lastPosition = currentPosition;
-			if (RobotMap.useSimulator) {
-				currentPosition = DriveSimulator.getInstance().absoluteDistanceMoved();
-			} else {
-				currentPosition = Drive.getInstance().absoluteDistanceMoved();
-			}
+			currentPosition = drive.absoluteDistanceMoved();
 			LOGGER.debug("Distances - Target: " + Math.abs(distance) + " Moved: " + currentPosition);
 			if (currentPosition > 0.0 && lastPosition == currentPosition) {
 				increment++;

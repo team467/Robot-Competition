@@ -16,7 +16,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class MatchConfiguration {
 
 	// Simulator variables
-	
+
 	private String simulatedGameSpecificMessage = "LLL";
 
 	private Alliance simulatedTeamColor = Alliance.Red;
@@ -78,7 +78,7 @@ public class MatchConfiguration {
 		}
 		return instance;
 	}
-	
+
 	public void setAllianceColor(){
 		Alliance color; 
 
@@ -112,7 +112,6 @@ public class MatchConfiguration {
 		LOGGER.info( "AutoMode: '" + autoMode + "'");
 
 		switch (autoMode) {
-
 		case "LEFT":
 			LOGGER.debug("Set start position to left side");
 			startPosition = StartPosition.LEFT;
