@@ -109,7 +109,7 @@ public class Actions {
 	public static Action moveDistanceForward(double distance) {
 		String actionText = "Move forward " + distance + " feet";
 		return new Action(actionText,
-				() -> {return false;}, // new ActionGroup.ReachDistance(distance),
+				new ActionGroup.ReachDistance(distance),
 				() -> Drive.getInstance().moveFeet(distance));
 	}
 
