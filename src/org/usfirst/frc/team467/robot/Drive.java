@@ -173,33 +173,39 @@ public class Drive extends DifferentialDrive {
 		double angleInRadians = Math.toRadians(rotationInDegrees);
 		double turnDistanceInFeet = radius * angleInRadians; // This is the distance we want to turn.
 
-		// Get the current positions to determine if the request is above the max individual request
-		double currentRightPosition = getRightDistance();
-		double currentLeftPosition = getLeftDistance();
-		
-		// Get the difference to correct for drift and move it back to straight
-		double difference = (currentRightPosition - currentLeftPosition) / 2.0;
-		
-		double targetRightDistance = straightDistanceInFeet - turnDistanceInFeet;
+		// The target includes both the straight and turn components. A positive turn is to the right, 
+		// so right goes backward and left forward.
 		double targetLeftDistance = straightDistanceInFeet + turnDistanceInFeet;
-
+		double targetRightDistance = straightDistanceInFeet - turnDistanceInFeet;
+		
+		// Store the sign so that all math works the same forward and backward using absolute values,
+		// with direction corrected at the end.
+		double leftSign = Math.signum(targetLeftDistance);
+		double rightSign = Math.signum(targetRightDistance);
+		
+		// Get the current positions to determine if the request is above the max individual request
+		double currentLeftPosition = getLeftDistance();
+		double currentRightPosition = getRightDistance();
+		LOGGER.trace("Current Position - Right: " + df.format(currentRightPosition) + " Left: "
+				+ df.format(currentLeftPosition));
+		
+		// Get the average to correct for drift and move it back to straight
+		// Use absolute values so that direction is ignored.
+		double average = (Math.abs(currentRightPosition) + Math.abs(currentLeftPosition)) / 2.0;
+		
 		// Use the minimum to go either the max allowed distance or to the target
-		double moveRightDistance = Math.min(targetRightDistance, (MAX_FEET_PER_CYCLE + currentRightPosition - difference));
-		double moveLeftDistance = Math.min(targetLeftDistance, (MAX_FEET_PER_CYCLE + currentLeftPosition + difference));
-				
+		double moveLeftDistance = leftSign * Math.min(Math.abs(targetLeftDistance), (MAX_FEET_PER_CYCLE + average));
+		double moveRightDistance = rightSign * Math.min(Math.abs(targetRightDistance), (MAX_FEET_PER_CYCLE + average));
+		LOGGER.trace("Distance in Feet - Right: " + df.format(moveRightDistance) + " Left: "
+				+ df.format(moveLeftDistance));
+
 		// Converts turn angle in ticks to degrees, then to radians.
-		double rightDistTicks = -1 * feetToTicks(moveRightDistance);
 		double leftDistTicks = feetToTicks(moveLeftDistance);
+		double rightDistTicks = feetToTicks(moveRightDistance);
 
-		LOGGER.trace("Distance in Feet - Right: " + df.format(ticksToFeet(rightDistTicks)) + " Left: "
-				+ df.format(ticksToFeet(leftDistTicks)));
-		LOGGER.trace("Current Position - Right: " + df.format(getRightDistance()) + " Left: "
-				+ df.format(getLeftDistance()));
-
-//		left.movePosition(leftDistTicks/2);
-//		right.movePosition(rightDistTicks/2);
+		// The right motor is reversed
 		left.set(mode, leftDistTicks);
-		right.set(mode, rightDistTicks);
+		right.set(mode, (-1 * rightDistTicks));
 	}
 	
 	public double getLeftDistance() {
