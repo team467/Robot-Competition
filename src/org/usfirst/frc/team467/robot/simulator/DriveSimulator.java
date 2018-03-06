@@ -47,9 +47,6 @@ public class DriveSimulator implements AutoDrive {
 		return instance;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.usfirst.frc.team467.robot.simulator.Drive#zeroPosition()
-	 */
 	@Override
 	public void zero() {
 		rightPositionReading = 0;
@@ -58,23 +55,14 @@ public class DriveSimulator implements AutoDrive {
 		data.zero();
 	}
 
-	/* (non-Javadoc)
-	 * @see org.usfirst.frc.team467.robot.simulator.Drive#rightPosition()
-	 */
 	public double rightPosition() {
 		return rightPositionReading;//absoluteRightPositionReadingOffset + rightPositionReading;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.usfirst.frc.team467.robot.simulator.Drive#leftPosition()
-	 */
 	public double leftPosition() {
 		return leftPositionReading;//absoluteLeftPositionReadingOffset + leftPositionReading;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.usfirst.frc.team467.robot.simulator.Drive#setMaxMotionMagicSpeed(double)
-	 */
 	public void setMaxMotionMagicSpeed(double percentOfMaxSpeed) {
 		if (percentOfMaxSpeed < 0) {
 			percentOfMaxSpeed = 0;
@@ -84,17 +72,11 @@ public class DriveSimulator implements AutoDrive {
 		maxFeetPerPeriod = RobotMap.WHEEL_CIRCUMFERENCE / 12 * percentOfMaxSpeed * MAX_RPM / 60 / 1000;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.usfirst.frc.team467.robot.simulator.Drive#moveFeet(double)
-	 */
 	@Override
 	public void moveFeet(double distance) {
 		moveFeet(distance, 0, null);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.usfirst.frc.team467.robot.simulator.Drive#moveFeet(double, double)
-	 */
 	@Override
 	public void moveFeet(double distance, double rotation, ControlMode mode) {
 
@@ -137,17 +119,11 @@ public class DriveSimulator implements AutoDrive {
 
 	}
 
-	/* (non-Javadoc)
-	 * @see org.usfirst.frc.team467.robot.simulator.Drive#isStopped()
-	 */
 	@Override
 	public boolean isStopped() {
 		return !isMoving;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.usfirst.frc.team467.robot.simulator.Drive#absoluteDistanceMoved()
-	 */
 	@Override
 	public double absoluteDistanceMoved() {
 		double absoluteLeftDistance =  Math.abs(leftPositionReading);
@@ -159,25 +135,8 @@ public class DriveSimulator implements AutoDrive {
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see org.usfirst.frc.team467.robot.simulator.Drive#rotateByAngle(double)
-	 */
 	@Override
 	public void rotateByAngle(double rotation) {
 		moveFeet(0, rotation, null);
-
 	}
-
-	public static void main(String[] args) {
-		RobotMap.init(RobotID.Competition_1);
-		DriveSimulator drive = DriveSimulator.getInstance();
-		drive.zero();
-		RobotData.getInstance().startingLocation(20, 0);
-
-		do {
-			drive.rotateByAngle(360+90);
-		} while (!drive.isStopped());	
-
-	}
-
 }
