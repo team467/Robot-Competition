@@ -3,6 +3,7 @@ package org.usfirst.frc.team467.robot;
 import java.text.DecimalFormat;
 
 import org.apache.log4j.Logger;
+import org.usfirst.frc.team467.robot.simulator.communications.RobotData;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
@@ -135,6 +136,10 @@ public class Drive extends DifferentialDrive {
 		right.zero();
 	}
 
+	public void sendData() {
+		RobotData.getInstance().updateDrivePosition(getRightDistance(), getLeftDistance());
+	}
+
 	/**
 	 * Does not drive drive motors and keeps steering angle at previous position.
 	 */
@@ -155,7 +160,7 @@ public class Drive extends DifferentialDrive {
 		moveFeet(0, angleInDegrees, ControlMode.Position);
 	}
 	
-	public static final double MAX_FEET_PER_CYCLE = 3.0;
+	public static final double POSITION_GAIN_FEET = 3.0;
 
 	/**
 	 * 
@@ -194,8 +199,8 @@ public class Drive extends DifferentialDrive {
 		double average = (Math.abs(currentRightPosition) + Math.abs(currentLeftPosition)) / 2.0;
 		
 		// Use the minimum to go either the max allowed distance or to the target
-		double moveLeftDistance = leftSign * Math.min(Math.abs(targetLeftDistance), (MAX_FEET_PER_CYCLE + average));
-		double moveRightDistance = rightSign * Math.min(Math.abs(targetRightDistance), (MAX_FEET_PER_CYCLE + average));
+		double moveLeftDistance = leftSign * Math.min(Math.abs(targetLeftDistance), (POSITION_GAIN_FEET + average));
+		double moveRightDistance = rightSign * Math.min(Math.abs(targetRightDistance), (POSITION_GAIN_FEET + average));
 		LOGGER.trace("Distance in Feet - Right: " + df.format(moveRightDistance) + " Left: "
 				+ df.format(moveLeftDistance));
 

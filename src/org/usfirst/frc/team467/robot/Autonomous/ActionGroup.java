@@ -7,6 +7,7 @@ import java.util.NoSuchElementException;
 import org.apache.log4j.Logger;
 import org.usfirst.frc.team467.robot.Drive;
 import org.usfirst.frc.team467.robot.RobotMap;
+import org.usfirst.frc.team467.robot.simulator.DriveSimulator;
 
 /**
  * Runs through a set of actions. <br>
@@ -47,9 +48,8 @@ public class ActionGroup {
 			}
 		}
 
-		LOGGER.info("run " + action);
+        LOGGER.info("run " + action);
 		action.doIt();
-		LOGGER.debug("After doIt");
 	}
 
 	public boolean isComplete() {
@@ -60,7 +60,6 @@ public class ActionGroup {
 		LOGGER.debug("Terminating Process");
 		agenda.clear();
 		action = null;
-//		Drive.getInstance().aiming.reset();
 	}
 
 	public void addAction(Action action) {
@@ -151,7 +150,11 @@ public class ActionGroup {
 		@Override
 		public boolean isDone() {
 			lastPosition = currentPosition;
-			currentPosition = Drive.getInstance().absoluteDistanceMoved();
+			if (RobotMap.useSimulator) {
+				currentPosition = DriveSimulator.getInstance().absoluteDistanceMoved();
+			} else {
+				currentPosition = Drive.getInstance().absoluteDistanceMoved();
+			}
 			LOGGER.debug("Distances - Target: " + Math.abs(distance) + " Moved: " + currentPosition);
 			if (currentPosition > 0.0 && lastPosition == currentPosition) {
 				increment++;
