@@ -48,7 +48,7 @@ public class Robot extends TimedRobot {
 		Logging.init();
 
 		// Initialize RobotMap
-		RobotMap.init(RobotID.Competition_2);
+		RobotMap.init(RobotID.Competition_1);
 
 		// Make robot objects
 		driverstation = DriverStation467.getInstance();
@@ -90,13 +90,17 @@ public class Robot extends TimedRobot {
 	double tuningValue = 0.0;
 
 	public void testInit() {
-//		drive.readPIDSFromSmartDashboard();
+		drive.setPIDSFromRobotMap();
 		driverstation.readInputs();
-		tuningValue = 3; // Double.parseDouble(SmartDashboard.getString("DB/String 0", "0.0")); //198		
+		tuningValue = Double.parseDouble(SmartDashboard.getString("DB/String 0", "0.0"));
+		tuningValue = 90.0;
+		
 		drive.zero();
+		LOGGER.info("Tuning value init = " + tuningValue);
 	}
 
 	public void testPeriodic() {
+		LOGGER.info("Tuning value per = " + tuningValue);
 		if (tuningValue <= 30.0 && tuningValue >= -30.0) {
 			drive.moveFeet(tuningValue);
 		} else {
