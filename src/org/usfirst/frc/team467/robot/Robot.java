@@ -89,9 +89,9 @@ public class Robot extends TimedRobot {
 	double tuningValue = 0.0;
 
 	public void testInit() {
-//		drive.readPIDSFromSmartDashboard();
+		drive.readPIDSFromSmartDashboard();
 		driverstation.readInputs();
-		tuningValue = 3; // Double.parseDouble(SmartDashboard.getString("DB/String 0", "0.0")); //198		
+		tuningValue = Double.parseDouble(SmartDashboard.getString("DB/String 0", "0.0"));
 		drive.zero();
 	}
 
