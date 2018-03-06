@@ -155,7 +155,7 @@ public class Drive extends DifferentialDrive {
 		moveFeet(0, angleInDegrees, ControlMode.Position);
 	}
 	
-	public static final double MAX_FEET_PER_CYCLE = 3.0;
+	public static final double POSITION_GAIN_FEET = 3.0;
 
 	/**
 	 * 
@@ -184,20 +184,18 @@ public class Drive extends DifferentialDrive {
 		double targetLeftDistance = straightDistanceInFeet + turnDistanceInFeet;
 
 		// Use the minimum to go either the max allowed distance or to the target
-		double moveRightDistance = Math.min(targetRightDistance, (MAX_FEET_PER_CYCLE + currentRightPosition - difference));
-		double moveLeftDistance = Math.min(targetLeftDistance, (MAX_FEET_PER_CYCLE + currentLeftPosition + difference));
+		double moveRightDistance = Math.min(targetRightDistance, (currentRightPosition + POSITION_GAIN_FEET - difference));
+		double moveLeftDistance = Math.min(targetLeftDistance, (currentLeftPosition + POSITION_GAIN_FEET + difference));
 				
 		// Converts turn angle in ticks to degrees, then to radians.
-		double rightDistTicks = -1 * feetToTicks(moveRightDistance);
+		double rightDistTicks = -feetToTicks(moveRightDistance);
 		double leftDistTicks = feetToTicks(moveLeftDistance);
 
-		LOGGER.trace("Distance in Feet - Right: " + df.format(ticksToFeet(rightDistTicks)) + " Left: "
-				+ df.format(ticksToFeet(leftDistTicks)));
-		LOGGER.trace("Current Position - Right: " + df.format(getRightDistance()) + " Left: "
-				+ df.format(getLeftDistance()));
+		LOGGER.trace("Distance in Feet - Right: " + df.format(ticksToFeet(rightDistTicks))
+									  + " Left: " + df.format(ticksToFeet(leftDistTicks)));
+		LOGGER.trace("Current Position - Right: " + df.format(getRightDistance())
+									  + " Left: " + df.format(getLeftDistance()));
 
-//		left.movePosition(leftDistTicks/2);
-//		right.movePosition(rightDistTicks/2);
 		left.set(mode, leftDistTicks);
 		right.set(mode, rightDistTicks);
 	}
