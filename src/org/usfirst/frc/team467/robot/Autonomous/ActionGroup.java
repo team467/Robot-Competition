@@ -48,6 +48,7 @@ public class ActionGroup {
 			}
 		}
 
+        LOGGER.info("run " + action);
 		action.doIt();
 	}
 
@@ -59,7 +60,6 @@ public class ActionGroup {
 		LOGGER.debug("Terminating Process");
 		agenda.clear();
 		action = null;
-//		Drive.getInstance().aiming.reset();
 	}
 
 	public void addAction(Action action) {
