@@ -241,10 +241,10 @@ public class Actions {
         ActionGroup mode = new ActionGroup(actionGroupText);
         mode.addAction(zeroDistance());
         mode.addAction(grabCube());
+//        mode.addAction(zeroDistance());
+//        mode.addAction(elevatorToSwitch());
         mode.addAction(zeroDistance());
-        mode.addAction(elevatorToSwitch());
-        mode.addAction(zeroDistance());
-        mode.addAction(moveDistanceForward(3.0));
+        mode.addAction(moveDistanceForward(-6.0));
 //        mode.addAction(zeroDistance());
 //        mode.addAction(moveturn(90));
 //        mode.addAction(zeroDistance());

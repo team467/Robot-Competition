@@ -9,12 +9,9 @@ public class RobotMap {
 	public enum RobotID {
 		Board, Competition_1, Competition_2
 	};
-
-	public static final int FRONT_LEFT = 0;
-	public static final int FRONT_RIGHT = 1;
-	public static final int BACK_LEFT = 2;
-	public static final int BACK_RIGHT = 3;
-
+	
+	final static int PID_SLOT_DRIVE = 0;
+	final static int PID_SLOT_TURN = 1;
 	/*	* The lowest value is 196.0, the maximum value is 3741.0. The middle is 1968.5
 	 * New max: 2980, new min:956.5
 	 * 16.9 ticks = 1 inch
@@ -42,11 +39,21 @@ public class RobotMap {
 	public static boolean LEFT_DRIVE_SENSOR_IS_INVERTED;
 	public static int DRIVEMOTOR_NUM;
 	
+	public static double RIGHT_TURN_PID_P;
+	public static double RIGHT_TURN_PID_I;
+	public static double RIGHT_TURN_PID_D;
+	public static double RIGHT_TURN_PID_F;
+	
 	public static double RIGHT_DRIVE_PID_P;
 	public static double RIGHT_DRIVE_PID_I;
 	public static double RIGHT_DRIVE_PID_D;
 	public static double RIGHT_DRIVE_PID_F;
 
+	public static double LEFT_TURN_PID_P;
+	public static double LEFT_TURN_PID_I;
+	public static double LEFT_TURN_PID_D;
+	public static double LEFT_TURN_PID_F;
+	
 	public static double LEFT_DRIVE_PID_P;
 	public static double LEFT_DRIVE_PID_I;
 	public static double LEFT_DRIVE_PID_D;
@@ -83,7 +90,7 @@ public class RobotMap {
 			WHEEL_CIRCUMFERENCE = 18.50;
 			WHEEL_ENCODER_CODES_PER_REVOLUTION = 1024;
 			useSpeedControllers = true;
-			POSITION_ALLOWED_ERROR = (0.5 / RobotMap.WHEEL_CIRCUMFERENCE); // 1/2 inch
+			POSITION_ALLOWED_ERROR = (0.05 / RobotMap.WHEEL_CIRCUMFERENCE); // 1/2 inch
 
 			FORWARD_PANIC_ANGLE = 60;
 			BACKWARD_PANIC_ANGLE = -60;
@@ -104,11 +111,22 @@ public class RobotMap {
 			RIGHT_FOLLOWER_2_CHANNEL = 6;
 			RIGHT_DRIVE_SENSOR_IS_INVERTED = true;
 			
-			// linear PIDS
+			// linear PIDs
 			RIGHT_DRIVE_PID_P = 0.875;
 			RIGHT_DRIVE_PID_I = 0.0;
-			RIGHT_DRIVE_PID_D = 180.0;
+			RIGHT_DRIVE_PID_D = 200.0;
 			RIGHT_DRIVE_PID_F = 0.0;
+
+			//Turn PIDs
+			LEFT_TURN_PID_P = 1.75;
+			LEFT_TURN_PID_I = 0.0;
+			LEFT_TURN_PID_D = 180.0;
+			LEFT_TURN_PID_F = 0.0;
+			
+			RIGHT_TURN_PID_P = 1.75;
+			RIGHT_TURN_PID_I = 0.0;
+			RIGHT_TURN_PID_D = 180.0;
+			RIGHT_TURN_PID_F = 0.0;
 
 			HAS_ELEVATOR = true;
 
@@ -156,20 +174,34 @@ public class RobotMap {
 			LEFT_FOLLOWER_1_CHANNEL = 2;
 			LEFT_FOLLOWER_2_CHANNEL = 3;
 			LEFT_DRIVE_SENSOR_IS_INVERTED = true;
-			LEFT_DRIVE_PID_P = 0.39; // 1.3;
+			//linear PIDS
+			LEFT_DRIVE_PID_P = 0.875;
 			LEFT_DRIVE_PID_I = 0.0;
-			LEFT_DRIVE_PID_D = 0.0; // 150.0;
-			LEFT_DRIVE_PID_F = 0.0; // 0.98;
-
+			LEFT_DRIVE_PID_D = 180.0;
+			LEFT_DRIVE_PID_F = 0.0;
+			
 			RIGHT_LEAD_CHANNEL = 4;
 			RIGHT_FOLLOWER_1_CHANNEL = 5;
 			RIGHT_FOLLOWER_2_CHANNEL = 6;
-			RIGHT_DRIVE_SENSOR_IS_INVERTED = true;
-			RIGHT_DRIVE_PID_P = 0.366; // 1.22;
+			RIGHT_DRIVE_SENSOR_IS_INVERTED = true;			
+			// linear PIDs
+			RIGHT_DRIVE_PID_P = 0.875;
 			RIGHT_DRIVE_PID_I = 0.0;
-			RIGHT_DRIVE_PID_D = 0.0; // 120.0;
-			RIGHT_DRIVE_PID_F = 0.0; // 0.98;
+			RIGHT_DRIVE_PID_D = 180.0;
+			RIGHT_DRIVE_PID_F = 0.0;
 
+			//Turn PIDs
+			LEFT_TURN_PID_P = 1.75;
+			LEFT_TURN_PID_I = 0.0;
+			LEFT_TURN_PID_D = 180.0;
+			LEFT_TURN_PID_F = 0.0;
+			
+			RIGHT_TURN_PID_P = 1.75;
+			RIGHT_TURN_PID_I = 0.0;
+			RIGHT_TURN_PID_D = 180.0;
+			RIGHT_TURN_PID_F = 0.0;
+		
+			
 			HAS_ELEVATOR = true;
 			ELEVATOR_MOTOR_CHANNEL = 7;
 

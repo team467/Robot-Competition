@@ -96,10 +96,11 @@ public class Drive extends DifferentialDrive {
 		double kFRight = Double.parseDouble(SmartDashboard.getString("DB/String 9", "1.2208")); // 0.0
 		//		double kFall = 1023.0 / 1402.0;
 
-		left.setPIDF(kPLeft, kILeft, kDLeft, kFLeft);
-		right.setPIDF(kPRight, kIRight, kDRight, kFRight);
+		left.setPIDF(0, kPLeft, kILeft, kDLeft, kFLeft);
+		right.setPIDF(0, kPRight, kIRight, kDRight, kFRight);
 	}
 	public void setPIDSFromRobotMap() {
+		// Set drive PIDs
 		double kFRight = RobotMap.RIGHT_DRIVE_PID_F;
 		double kFLeft = RobotMap.LEFT_DRIVE_PID_F;
 
@@ -112,8 +113,24 @@ public class Drive extends DifferentialDrive {
 		double kDRight = RobotMap.RIGHT_DRIVE_PID_D;
 		double kDLeft = RobotMap.LEFT_DRIVE_PID_D;
 
-		left.setPIDF(kPLeft, kILeft, kDLeft, kFLeft);
-		right.setPIDF(kPRight, kIRight, kDRight, kFRight);
+		left.setPIDF(RobotMap.PID_SLOT_DRIVE, kPLeft, kILeft, kDLeft, kFLeft);
+		right.setPIDF(RobotMap.PID_SLOT_DRIVE, kPRight, kIRight, kDRight, kFRight);
+		
+		// Set turn PIDs
+		kFRight = RobotMap.RIGHT_TURN_PID_F;
+		kFLeft = RobotMap.LEFT_TURN_PID_F;
+
+		kPRight = RobotMap.RIGHT_TURN_PID_P;
+		kPLeft = RobotMap.LEFT_TURN_PID_P;
+
+		kIRight = RobotMap.RIGHT_TURN_PID_I;
+		kILeft = RobotMap.LEFT_TURN_PID_I;
+
+		kDRight = RobotMap.RIGHT_TURN_PID_D;
+		kDLeft = RobotMap.LEFT_TURN_PID_D;
+
+		left.setPIDF(RobotMap.PID_SLOT_TURN, kPLeft, kILeft, kDLeft, kFLeft);
+		right.setPIDF(RobotMap.PID_SLOT_TURN, kPRight, kIRight, kDRight, kFRight);
 	}
 	
 	public void configPeakOutput(double percentOut) {
@@ -153,10 +170,12 @@ public class Drive extends DifferentialDrive {
 	}
 
 	public void moveFeet(double distanceInFeet) {
+		left.setPIDSlot(RobotMap.PID_SLOT_DRIVE);
+		right.setPIDSlot(RobotMap.PID_SLOT_DRIVE);
 		moveFeet(distanceInFeet, distanceInFeet);
 	}
 	
-	public static final double POSITION_GAIN_FEET = 3.0;
+	public static final double POSITION_GAIN_FEET = 2.5;
 
 	/**
 	 * 
@@ -166,8 +185,12 @@ public class Drive extends DifferentialDrive {
 	 *            for right turn
 	 */
 	public void rotateByAngle(double rotationInDegrees) {
+		left.setPIDSlot(RobotMap.PID_SLOT_TURN);
+		right.setPIDSlot(RobotMap.PID_SLOT_TURN);
 
 		LOGGER.trace("Automated move of " + rotationInDegrees + " degree turn.");
+		
+		rotationInDegrees *= 1.06;
 
 		// Convert the turn to a distance based on the circumference of the robot wheel base.
 		double radius = RobotMap.WHEEL_BASE_WIDTH / 2;
