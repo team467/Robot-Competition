@@ -48,7 +48,7 @@ public class Robot extends TimedRobot {
 		Logging.init();
 
 		// Initialize RobotMap
-		RobotMap.init(RobotID.Competition_2);
+		RobotMap.init(RobotID.Competition_1);
 
 		// Make robot objects
 		driverstation = DriverStation467.getInstance();
@@ -93,6 +93,7 @@ public class Robot extends TimedRobot {
 		drive.setPIDSFromRobotMap();
 		driverstation.readInputs();
 		tuningValue = Double.parseDouble(SmartDashboard.getString("DB/String 0", "0.0"));
+		tuningValue = 90.0;
 		drive.zero();
 	}
 
@@ -102,7 +103,7 @@ public class Robot extends TimedRobot {
 		} else {
 			drive.rotateByAngle(tuningValue);
 		}
-		drive.logClosedLoopErrors();
+		//drive.logClosedLoopErrors();
 	}
 
 	public void autonomousInit() {

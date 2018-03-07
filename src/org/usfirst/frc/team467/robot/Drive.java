@@ -153,11 +153,7 @@ public class Drive extends DifferentialDrive {
 	}
 
 	public void moveFeet(double distanceInFeet) {
-		moveFeet(distanceInFeet, 0, ControlMode.Position);
-	}
-
-	public void rotateByAngle(double angleInDegrees) {
-		moveFeet(0, angleInDegrees, ControlMode.Position);
+		moveFeet(distanceInFeet, distanceInFeet);
 	}
 	
 	public static final double POSITION_GAIN_FEET = 3.0;
@@ -169,20 +165,29 @@ public class Drive extends DifferentialDrive {
 	 *            enter positive degrees for left turn and enter negative degrees
 	 *            for right turn
 	 */
-	public void moveFeet(double straightDistanceInFeet, double rotationInDegrees, ControlMode mode) {
+	public void rotateByAngle(double rotationInDegrees) {
 
-		LOGGER.trace("Automated move of " + straightDistanceInFeet + " feet and " + rotationInDegrees + " degree turn.");
+		LOGGER.trace("Automated move of " + rotationInDegrees + " degree turn.");
 
 		// Convert the turn to a distance based on the circumference of the robot wheel base.
 		double radius = RobotMap.WHEEL_BASE_WIDTH / 2;
 		double angleInRadians = Math.toRadians(rotationInDegrees);
 		double turnDistanceInFeet = radius * angleInRadians; // This is the distance we want to turn.
+		moveFeet(turnDistanceInFeet, - turnDistanceInFeet);
+	}
+	
+	/**
+	 * 
+	 * @param distanceInFeet
+	 * @param rotationInDegrees
+	 *            enter positive degrees for left turn and enter negative degrees
+	 *            for right turn
+	 */
+	public void moveFeet(double targetLeftDistance , double targetRightDistance) {
 
-		// The target includes both the straight and turn components. A positive turn is to the right, 
-		// so right goes backward and left forward.
-		double targetLeftDistance = straightDistanceInFeet + turnDistanceInFeet;
-		double targetRightDistance = straightDistanceInFeet - turnDistanceInFeet;
-		
+		LOGGER.trace("Automated move of right: "+ targetRightDistance +" left: "+ targetLeftDistance + " feet ");
+
+		// Convert the turn to a distance based on the circumference of the robot wheel base.
 		// Store the sign so that all math works the same forward and backward using absolute values,
 		// with direction corrected at the end.
 		double leftSign = Math.signum(targetLeftDistance);
@@ -209,8 +214,9 @@ public class Drive extends DifferentialDrive {
 		double rightDistTicks = feetToTicks(moveRightDistance);
 
 		// The right motor is reversed
-		left.set(mode, leftDistTicks);
-		right.set(mode, (-1 * rightDistTicks));
+		left.set(ControlMode.Position, leftDistTicks);
+		
+		right.set(ControlMode.Position, -1.0 * rightDistTicks);
 	}
 	
 	public double getLeftDistance() {
