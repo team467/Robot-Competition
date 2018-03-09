@@ -175,6 +175,12 @@ public class ActionGroup {
 		}
 	}
 
+	static class ReachAngle extends ReachDistance {
+		public ReachAngle(double rotationInDegrees) {
+			super(Drive.degreesToFeet(rotationInDegrees));
+		}
+	}
+
 	public String getName() {
 		return name;
 	}

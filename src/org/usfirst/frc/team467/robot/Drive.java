@@ -190,13 +190,23 @@ public class Drive extends DifferentialDrive {
 
 		LOGGER.trace("Automated move of " + rotationInDegrees + " degree turn.");
 		
-		rotationInDegrees *= 1.06;
+		double turnDistanceInFeet = degreesToFeet(rotationInDegrees);
+		moveFeet(turnDistanceInFeet, - turnDistanceInFeet);
+	}
+
+	/**
+	 * Convert angle in degrees to wheel distance in feet (arc length).
+	 */
+	public static double degreesToFeet(double degrees) {
+		// Adjust requested degrees because the robot predictably undershoots. Value was found empirically.
+		degrees *= 1.06;
 
 		// Convert the turn to a distance based on the circumference of the robot wheel base.
 		double radius = RobotMap.WHEEL_BASE_WIDTH / 2;
-		double angleInRadians = Math.toRadians(rotationInDegrees);
-		double turnDistanceInFeet = radius * angleInRadians; // This is the distance we want to turn.
-		moveFeet(turnDistanceInFeet, - turnDistanceInFeet);
+		double angleInRadians = Math.toRadians(degrees);
+		double distanceInFeet = radius * angleInRadians; // This is the distance we want to turn.
+		
+		return distanceInFeet;
 	}
 	
 	/**
@@ -258,14 +268,9 @@ public class Drive extends DifferentialDrive {
 	 * @return the absolute distance moved in feet
 	 */
 	public double absoluteDistanceMoved() {
-		double lowestAbsDist;
 		double leftLeadSensorPos = Math.abs(getLeftDistance());
 		double rightLeadSensorPos = Math.abs(getRightDistance());
-		if (leftLeadSensorPos >= rightLeadSensorPos) {
-			lowestAbsDist = rightLeadSensorPos;
-		} else {
-			lowestAbsDist = leftLeadSensorPos;
-		}
+		double lowestAbsDist = Math.min(leftLeadSensorPos, rightLeadSensorPos);
 		LOGGER.debug("The absolute distance moved: " + lowestAbsDist);
 		return lowestAbsDist;
 	}
