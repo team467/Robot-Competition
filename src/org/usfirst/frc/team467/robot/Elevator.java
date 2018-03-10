@@ -192,7 +192,7 @@ public class Elevator {
 				LOGGER.error("HEIGHT SENSOR OUT OF EXPECTED RANGE ("
 						+ RobotMap.ELEVATOR_TOP_TICKS + " - "
 						+ RobotMap.ELEVATOR_BOTTOM_TICKS + "), found " + position);
-		}
+			}
 		}
 	}
 
