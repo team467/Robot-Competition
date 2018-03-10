@@ -280,9 +280,22 @@ public class Drive extends DifferentialDrive {
 		return feet;
 	}
 
+	/**
+	 * Sets the ramp time based on the elevator height if driving straight or about to drive straight,
+	 * or sets the ramp time to the minimum if turning in place or stopped.
+	 * 
+	 * @param elevatorHeight
+	 */
 	public void setRamp(int elevatorHeight) {
-		double heightPercent = (double) (RobotMap.ELEVATOR_BOTTOM_TICKS - elevatorHeight) / (RobotMap.ELEVATOR_BOTTOM_TICKS - RobotMap.ELEVATOR_TOP_TICKS);
-		double ramp = MathUtils.weightedAverage(RobotMap.ELEVATOR_LOW_DRIVE_RAMP_TIME, RobotMap.ELEVATOR_HIGH_DRIVE_RAMP_TIME, heightPercent);
+		double ramp;
+		
+		if (Math.abs(left.sensorSpeed() - right.sensorSpeed()) > (2 * RobotMap.MIN_DRIVE_SPEED) ||
+				DriverStation467.getInstance().getArcadeSpeed() >= RobotMap.MIN_DRIVE_SPEED) { // If told to drive straight or is driving straight
+			double heightPercent = (double) (RobotMap.ELEVATOR_BOTTOM_TICKS - elevatorHeight) / (RobotMap.ELEVATOR_BOTTOM_TICKS - RobotMap.ELEVATOR_TOP_TICKS);
+			ramp = MathUtils.weightedAverage(RobotMap.ELEVATOR_LOW_DRIVE_RAMP_TIME, RobotMap.ELEVATOR_HIGH_DRIVE_RAMP_TIME, heightPercent);
+		} else { // Stopped or turning in place
+			ramp = RobotMap.ELEVATOR_LOW_DRIVE_RAMP_TIME;
+		}
 
 		left.setOpenLoopRamp(ramp);
 		right.setOpenLoopRamp(ramp);
