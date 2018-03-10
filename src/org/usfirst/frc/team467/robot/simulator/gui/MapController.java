@@ -9,10 +9,13 @@ import org.usfirst.frc.team467.robot.simulator.draw.FieldShape;
 import org.usfirst.frc.team467.robot.simulator.draw.PowerCubeShape;
 import org.usfirst.frc.team467.robot.simulator.draw.RobotShape;
 
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.scene.Group;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 
@@ -55,6 +58,24 @@ public class MapController {
 	private Button startButton;
 
 	/**
+	 * The select box for choosing the autonomous mode
+	 */
+	@FXML
+	private ChoiceBox<String> teamColor;
+
+	/**
+	 * The select box for choosing the autonomous mode
+	 */
+	@FXML
+	private ChoiceBox<String> gameSpecificMessage;
+
+	/**
+	 * The select box for choosing the autonomous mode
+	 */
+	@FXML
+	private ChoiceBox<String> autonomousMode;
+
+	/**
 	 * The timer for redrawing the robot after it moves
 	 */
 	private ScheduledExecutorService timer;
@@ -68,6 +89,7 @@ public class MapController {
 	 * The shapes for drawing for robot and field and other objects
 	 */
 	private RobotShape robotShape = new RobotShape();
+	private Group robotGroup = null; // for adding and remove robot on map
 	private FieldShape fieldShape = new FieldShape();
 	private ArrayList<PowerCubeShape> cubes = new ArrayList<PowerCubeShape>();
 	
@@ -75,6 +97,7 @@ public class MapController {
 	 * Initialize method, automatically called by @{link FXMLLoader}
 	 */
 	public void initialize() {
+		
 		this.robotActive = false;
 		fieldShape.context(field.getGraphicsContext2D());
 		
@@ -88,11 +111,14 @@ public class MapController {
 		double blueSwitchCubeOffsetX = 85.25; //next to blue alliance station
 		double blueSwitchCubeOffsetY = 439.2;
 			
-			for (int i = 0; i < 6; i++) {
-				cubes.add(new PowerCubeShape(blueSwitchCubeOffsetX + i * 2.34 * 12.0, blueSwitchCubeOffsetY)); // 1.25' in between each cube ; y-coordinate is same for 6 cubes
-			}
-			
-	
+		for (int i = 0; i < 6; i++) {
+			cubes.add(new PowerCubeShape(blueSwitchCubeOffsetX + i * 2.34 * 12.0, blueSwitchCubeOffsetY)); // 1.25' in between each cube ; y-coordinate is same for 6 cubes
+		}
+		
+		for (PowerCubeShape cube : cubes) {
+			robotArea.getChildren().add(cube.createPowerCube());
+		}
+		
 	}
 		
 		
@@ -104,13 +130,23 @@ public class MapController {
 	@FXML
 	protected void startRobot() {
 		
-		if (!this.robotActive) {
-				
-			robotArea.getChildren().add(robotShape.createRobotShape());
-			for (PowerCubeShape cube : cubes) {
-				robotArea.getChildren().add(cube.createPowerCube());
-			}
+		SimulatedData.autoMode = autonomousMode.getValue();
+		SimulatedData.gameSpecificMessage = gameSpecificMessage.getValue();
+		if (teamColor.getValue().equalsIgnoreCase("Red")) {
+			SimulatedData.teamColor = Alliance.Red;	
+		} else {
+			SimulatedData.teamColor = Alliance.Blue;
+		}
 			
+		if (!this.robotActive) {
+
+			if (robotGroup != null) {
+				robotArea.getChildren().remove(robotGroup);
+				robotShape = new RobotShape();
+			}
+			robotGroup = robotShape.createRobotShape();
+			robotArea.getChildren().add(robotGroup);
+
 			robotActive = true;
 			robotShape.init();
 			update();
