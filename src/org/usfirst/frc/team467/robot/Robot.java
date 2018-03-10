@@ -102,7 +102,7 @@ public class Robot extends TimedRobot {
 		} else {
 			drive.rotateByAngle(tuningValue);
 		}
-		drive.logClosedLoopErrors();
+		//drive.logClosedLoopErrors();
 	}
 
 	public void autonomousInit() {
