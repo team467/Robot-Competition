@@ -91,9 +91,6 @@ public class RobotMap {
 			WHEEL_ENCODER_CODES_PER_REVOLUTION = 1024;
 			useSpeedControllers = true;
 			
-			POSITION_ALLOWED_ERROR = ALLOWED_ERROR_INCHES / RobotMap.WHEEL_CIRCUMFERENCE;
-			POSITION_ALLOWABLE_CLOSED_LOOP_ERROR = (int) (POSITION_ALLOWED_ERROR * 1024 * 0.95); 	// This is in encoder ticks
-
 			FORWARD_PANIC_ANGLE = 60;
 			BACKWARD_PANIC_ANGLE = -60;
 
@@ -165,9 +162,6 @@ public class RobotMap {
 			WHEEL_CIRCUMFERENCE = 19.74;
 			WHEEL_ENCODER_CODES_PER_REVOLUTION = 1024;
 			useSpeedControllers = true;
-			
-			POSITION_ALLOWED_ERROR = ALLOWED_ERROR_INCHES / RobotMap.WHEEL_CIRCUMFERENCE;
-			POSITION_ALLOWABLE_CLOSED_LOOP_ERROR = (int) (POSITION_ALLOWED_ERROR * 1024 * 0.95); 	// This is in encoder ticks
 
 			FORWARD_PANIC_ANGLE = 60;
 			BACKWARD_PANIC_ANGLE = -60;
@@ -236,6 +230,9 @@ public class RobotMap {
 			AUTONOMOUS_DRIVE_TIMEOUT_MS = 500;
 			break;
 		}
+		//These calculations can be made after the robot-specific constants are set. 
+		POSITION_ALLOWED_ERROR = ALLOWED_ERROR_INCHES / RobotMap.WHEEL_CIRCUMFERENCE;
+		POSITION_ALLOWABLE_CLOSED_LOOP_ERROR = (int) (POSITION_ALLOWED_ERROR * 1024 * 0.95); 	// This is in encoder ticks
 	}
 
 	// Global robot constants

@@ -64,7 +64,7 @@ public class TalonSpeedControllerGroup implements SpeedController {
 	private void initMotor(WPI_TalonSRX talon) {
 		talon.set(ControlMode.PercentOutput, 0);
 		talon.selectProfileSlot(0, 0);
-		talon.configAllowableClosedloopError(0, RobotMap.VELOCITY_ALLOWABLE_CLOSED_LOOP_ERROR, 0);
+		talon.configAllowableClosedloopError(0, RobotMap.POSITION_ALLOWABLE_CLOSED_LOOP_ERROR, 0);
 
 		//Note: -1 and 1 are the max outputs
 		talon.configNominalOutputReverse(0.0, 0);		
