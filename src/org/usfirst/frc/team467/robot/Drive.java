@@ -289,7 +289,7 @@ public class Drive extends DifferentialDrive {
 	public void setRamp(int elevatorHeight) {
 		double ramp;
 		LOGGER.debug("Speed left=" + left.sensorSpeed() + " right=" + right.sensorSpeed());
-		if (Math.abs(left.sensorSpeed() - right.sensorSpeed()) > (RobotMap.MAX_SENSOR_SPEED_DIFFERENCE) ||
+		if (Math.abs(left.sensorSpeed() - right.sensorSpeed()) > (RobotMap.TURN_IN_PLACE_DETECT_TOLERANCE) ||
 				DriverStation467.getInstance().getArcadeSpeed() >= RobotMap.MIN_DRIVE_SPEED) { // If driving straight or told to drive straight
 			double heightPercent = (double) (RobotMap.ELEVATOR_BOTTOM_TICKS - elevatorHeight) / (RobotMap.ELEVATOR_BOTTOM_TICKS - RobotMap.ELEVATOR_TOP_TICKS);
 			ramp = MathUtils.weightedAverage(RobotMap.ELEVATOR_LOW_DRIVE_RAMP_TIME, RobotMap.ELEVATOR_HIGH_DRIVE_RAMP_TIME, heightPercent);
