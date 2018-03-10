@@ -2,6 +2,7 @@ package org.usfirst.frc.team467.robot.Autonomous;
 
 import org.apache.log4j.Logger;
 import org.usfirst.frc.team467.robot.RobotMap;
+import org.usfirst.frc.team467.robot.simulator.gui.SimulatedData;
 
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -14,14 +15,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  *
  */
 public class MatchConfiguration {
-
-	// Simulator variables
-	
-	private String simulatedGameSpecificMessage = "LLL";
-
-	private Alliance simulatedTeamColor = Alliance.Red;
-
-	private String simulatedAutoMode = "Left";
 
 	private static MatchConfiguration instance;
 
@@ -39,13 +32,6 @@ public class MatchConfiguration {
 		RIGHT;
 	}
 
-	public enum StartPosition {
-		UNKNOWN,
-		LEFT,
-		CENTER,
-		RIGHT;
-	}
-
 	private TeamColor teamColor;
 
 	private Side redSwitch;
@@ -54,18 +40,18 @@ public class MatchConfiguration {
 
 	private Side scale;
 
-	private StartPosition startPosition;
+	private String autoMode = "None"; 
 
 	private ActionGroup autonomous;
+
+	private String[] autoList = {"None", "Left_Switch_Only", "Left_Basic", "Left_Advanced", 
+			"Center", "Right_Switch_Only", "Right_Basic", "Right_Advanced"};
 
 	private MatchConfiguration() {
 		teamColor = TeamColor.UNKNOWN;
 		redSwitch = Side.UNKNOWN;
 		blueSwitch = Side.UNKNOWN;
 		scale = Side.UNKNOWN;
-		startPosition = StartPosition.UNKNOWN;
-
-		String[] autoList = {"None", "Left", "Center", "Right"};
 
 		NetworkTableInstance tableInstance = NetworkTableInstance.getDefault();
 		NetworkTable table  = tableInstance.getTable("SmartDashboard");
@@ -83,7 +69,7 @@ public class MatchConfiguration {
 		Alliance color; 
 
 		if (RobotMap.useSimulator) {
-			color = simulatedTeamColor;
+			color = SimulatedData.teamColor;
 		} else {
 			color = DriverStation.getInstance().getAlliance();
 		}
@@ -101,39 +87,14 @@ public class MatchConfiguration {
 	}
 
 	public void setAutoModeAndStartPosition() {
-		String autoMode; 
 
 		if (RobotMap.useSimulator) {
-			autoMode = simulatedAutoMode.toUpperCase();
+			autoMode = SimulatedData.autoMode;
 		} else {
-			autoMode = SmartDashboard.getString("Auto Selector", "none").toUpperCase();
+			autoMode = SmartDashboard.getString("Auto Selector", "None");
 		}
 
 		LOGGER.info( "AutoMode: '" + autoMode + "'");
-
-		switch (autoMode) {
-
-		case "LEFT":
-			LOGGER.debug("Set start position to left side");
-			startPosition = StartPosition.LEFT;
-			break;
-
-		case "CENTER":
-			LOGGER.debug("Set start position in the center");
-			startPosition = StartPosition.CENTER;
-			break;
-
-		case "RIGHT":
-			LOGGER.debug("Set start position to right side");
-			startPosition = StartPosition.RIGHT;
-
-			break;
-
-		case "NONE":
-		default:
-			LOGGER.debug("Start position unknown");
-			startPosition = StartPosition.UNKNOWN;
-		}
 
 	}
 
@@ -142,7 +103,7 @@ public class MatchConfiguration {
 
 		if (RobotMap.USE_FAKE_GAME_DATA) {
 			if (RobotMap.useSimulator) {
-				gameData = simulatedGameSpecificMessage;
+				gameData = SimulatedData.gameSpecificMessage.toUpperCase();
 			} else {
 				gameData = SmartDashboard.getString("DB/String 5", "LLL");
 			}
@@ -218,9 +179,32 @@ public class MatchConfiguration {
 		LOGGER.debug("Entering decision tree");
 		autonomous = Actions.doNothing();
 
-		switch(startPosition) {
+		switch(autoMode) {
 
-		case LEFT:
+		case "Left_Basic":
+			if(isSwitchOnSameSide() && !isScaleOnSameSide()) {
+				LOGGER.debug("Switch is on the same side and scale is on the opposite side | LEFT"); 
+				autonomous = Actions.leftBasicSwitchLeft();
+			} else if (isSwitchOnSameSide() && isScaleOnSameSide()){
+				LOGGER.debug("Switch is on same side and scale is on same side | LEFT");
+				autonomous = Actions.leftBasicScaleLeft();
+			} else if(!isSwitchOnSameSide() && !isScaleOnSameSide()) {
+				LOGGER.debug("Switch is on the opposite side and the scale is on the opposite side | LEFT");
+				autonomous = Actions.leftBasicScaleRight();
+			} 
+			break;
+
+		case "Left_Switch_Only":
+			if(isSwitchOnSameSide()) {
+				LOGGER.debug("Switch is on the same side | LEFT"); 
+				autonomous = Actions.leftBasicSwitchLeft();
+			} else {
+				LOGGER.debug("Switch is on the opposite side | LEFT");
+				autonomous = Actions.goStraight();
+			}
+			break;
+
+		case "Left_Advanced":
 			if(isSwitchOnSameSide() && !isScaleOnSameSide()) {
 				LOGGER.debug("Switch is on the same side and scale is on the opposite side | LEFT"); 
 				autonomous = Actions.leftAdvancedSwitchRightScale();
@@ -237,7 +221,7 @@ public class MatchConfiguration {
 
 			break;
 
-		case CENTER: 
+		case "Center": 
 			LOGGER.info("Entering Center");
 			if(isMySwitchToTheRight()) {
 				LOGGER.debug("The switch is to the right | CENTER");
@@ -248,7 +232,30 @@ public class MatchConfiguration {
 			}
 			break;
 
-		case RIGHT: 
+		case "Right_Basic": 
+			if(isSwitchOnSameSide() && !isScaleOnSameSide()) {
+				LOGGER.debug("Switch is on same side and scale is on opposite side | RIGHT");
+				autonomous = Actions.rightBasicSwitchRight();
+			} else if (isSwitchOnSameSide() && isScaleOnSameSide()) {
+				LOGGER.debug("Switch is on same side and scale is one same side | RIGHT");
+				autonomous = Actions.rightBasicScaleRight();
+			} else if(isScaleOnSameSide() && !isSwitchOnSameSide()) {
+				LOGGER.debug("Scale is on same side and switich on opposite side | RIGHT");
+				autonomous = Actions.rightBasicScaleLeft();
+			}
+			break;
+
+		case "Right_Switch_Only": 
+			if(isSwitchOnSameSide()) {
+				LOGGER.debug("Switch is on same side| RIGHT");
+				autonomous = Actions.rightBasicSwitchRight();
+			} else {
+				LOGGER.debug("Switch is on opposite side| RIGHT");
+				autonomous = Actions.goStraight();
+			}
+			break;
+
+		case "Right_Advanced":
 			if(isSwitchOnSameSide() && !isScaleOnSameSide()) {
 				LOGGER.debug("Switch is on same side and scale is on opposite side | RIGHT");
 				autonomous = Actions.rightAdvancedSwitchLeftScale();
@@ -264,7 +271,7 @@ public class MatchConfiguration {
 			}
 			break;
 
-		case UNKNOWN:
+		case "None":
 		default:
 			autonomous = Actions.doNothing();
 			LOGGER.info("DO NOTHING! ------------------------------------------------" + Actions.doNothing());
@@ -304,20 +311,27 @@ public class MatchConfiguration {
 		return scale;
 	}
 
-	public StartPosition startPosition() {
-		return startPosition;
-	}
-
 	public boolean isSwitchOnSameSide() {
 		boolean isOnSameSide = false;
+		boolean onLeft = false;
+		boolean onRight = false;
+		
+		if (autoMode.startsWith("Left")) {
+			onLeft = true;
+		}
+		
+		if (autoMode.startsWith("Right")) {
+			onRight = true;
+		}
+		
 		if (teamColor == TeamColor.BLUE) {
-			if ((blueSwitch == Side.LEFT && startPosition == StartPosition.LEFT) || (blueSwitch == Side.RIGHT && startPosition == StartPosition.RIGHT)) {
+			if ((blueSwitch == Side.LEFT && onLeft) || (blueSwitch == Side.RIGHT && onRight)) {
 				isOnSameSide = true;
 				LOGGER.info("isSwitchOnSameSide Left and Right | Blue");
 			}
 		} else {
 			if (teamColor == TeamColor.RED) {
-				if (redSwitch == Side.LEFT && startPosition == StartPosition.LEFT || (redSwitch == Side.RIGHT && startPosition == StartPosition.RIGHT)) {
+				if ((redSwitch == Side.LEFT && onLeft) || (redSwitch == Side.RIGHT && onRight)) {
 					isOnSameSide = true;
 					LOGGER.info("isSwitchOnSameSide Left and Right | Red");
 				}
@@ -328,13 +342,24 @@ public class MatchConfiguration {
 
 	public boolean isScaleOnSameSide() {
 		boolean isOnSameSide = false; 
+		boolean onLeft = false;
+		boolean onRight = false;
+		
+		if (autoMode.startsWith("Left")) {
+			onLeft = true;
+		}
+		
+		if (autoMode.startsWith("Right")) {
+			onRight = true;
+		}
+		
 		if (teamColor == TeamColor.BLUE) {
-			if ((scale == Side.LEFT && startPosition == StartPosition.LEFT) || (scale == Side.RIGHT && startPosition == StartPosition.RIGHT)) {
+			if ((scale == Side.LEFT && onLeft) || (scale == Side.RIGHT && onRight)) {
 				isOnSameSide = true;
 				LOGGER.info("Scale is on Same side testing Blue");
 			}
 		} else if (teamColor == TeamColor.RED) {
-			if ((scale == Side.LEFT && startPosition == StartPosition.LEFT) || (scale == Side.RIGHT && startPosition == StartPosition.RIGHT)) {
+			if ((scale == Side.LEFT && onLeft) || (scale == Side.RIGHT && onRight)) {
 				isOnSameSide = true;
 				LOGGER.info("Scale is on same side of testing Red");
 			}
