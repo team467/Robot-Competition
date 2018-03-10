@@ -29,9 +29,9 @@ public class PowerCubeShape {
 	public Group createPowerCube() {
 		powerCubeShape = new Rectangle(CUBE_BASE_LENGTH_INCHES, CUBE_BASE_LENGTH_INCHES, Color.YELLOW);
 		powerCubeShape.relocate(FieldShape.FIELD_OFFSET_Y, FieldShape.FIELD_OFFSET_X);
-		powerCubeShape.setVisible(false);
 		
 		cubeShape.getChildren().add(powerCubeShape);
+		cubeShape.setVisible(false);
 		
 		return cubeShape;
 	}
@@ -39,7 +39,7 @@ public class PowerCubeShape {
 	public void draw() {
 			cubeShape.relocate(FieldShape.FIELD_OFFSET_Y + y_pos,
 					(FieldShape.FIELD_OFFSET_X + x_pos));
-			powerCubeShape.setVisible(true);
+			cubeShape.setVisible(true);
 	}
 }
 
