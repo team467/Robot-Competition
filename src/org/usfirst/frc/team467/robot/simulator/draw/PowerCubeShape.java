@@ -34,6 +34,7 @@ public class PowerCubeShape {
 		powerCubeShape.relocate(FieldShape.FIELD_OFFSET_Y, FieldShape.FIELD_OFFSET_X);
 		
 		cubeShape.getChildren().add(powerCubeShape);
+		cubeShape.setVisible(false);
 		
 		return cubeShape;
 	}
@@ -41,6 +42,7 @@ public class PowerCubeShape {
 	public void draw() {
 			cubeShape.relocate(FieldShape.FIELD_OFFSET_Y + y_pos,
 					(FieldShape.FIELD_OFFSET_X + x_pos));
+			cubeShape.setVisible(true);
 	}
 }
 
