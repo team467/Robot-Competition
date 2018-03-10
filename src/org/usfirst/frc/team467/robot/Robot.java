@@ -72,8 +72,6 @@ public class Robot extends TimedRobot {
 			cam.setResolution(320, 240);
 			cam.setFPS(15);
 		}
-
-
 	}
 
 	public void disabledInit() {
