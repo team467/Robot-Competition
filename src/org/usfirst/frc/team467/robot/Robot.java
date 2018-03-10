@@ -134,6 +134,7 @@ public class Robot extends TimedRobot {
 
 		grabber.grab(driverstation.getGrabThrottle());
 		elevator.move(driverstation.getElevatorSpeed());
+		drive.setRamp(elevator.getHeight());
 
 		if (driverstation.getFloorHeightButtonPressed()) {
 			LOGGER.info("Dropping to bottom height");
@@ -196,7 +197,6 @@ public class Robot extends TimedRobot {
 		default:
 		}
 
-		drive.setRamp(elevator.getHeight());
 		drive.logClosedLoopErrors();
 	}
 
