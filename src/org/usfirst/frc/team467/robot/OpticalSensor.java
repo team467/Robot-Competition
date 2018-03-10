@@ -7,7 +7,6 @@ public class OpticalSensor {
 	private DigitalInput di;
 
 	private OpticalSensor() {
-		System.out.println(RobotMap.OPTICAL_CHANNEL);
 		if (!RobotMap.useSimulator) {
 			di = new DigitalInput(RobotMap.OPTICAL_CHANNEL);
 		}
@@ -28,5 +27,4 @@ public class OpticalSensor {
 			return false;
 		}
 	}
-
 }
