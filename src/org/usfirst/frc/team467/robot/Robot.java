@@ -196,6 +196,7 @@ public class Robot extends TimedRobot {
 		default:
 		}
 
+		drive.setRamp(elevator.getHeight());
 		drive.logClosedLoopErrors();
 	}
 
