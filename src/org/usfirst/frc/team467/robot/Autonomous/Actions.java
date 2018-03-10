@@ -195,6 +195,14 @@ public class Actions {
 		return mode;
 	}
 	
+	public static ActionGroup goStraight(){
+        String actionGroupText = "Just go straight past the line.";
+        ActionGroup mode = new ActionGroup(actionGroupText);
+		mode.addActions(start());
+        mode.addActions(move(10.0));
+		return mode;
+	}
+
     public static ActionGroup simpleTest() {
         String actionGroupText = "Simplified version of leftbasicswitchleft.";
         ActionGroup mode = new ActionGroup(actionGroupText);
