@@ -87,25 +87,23 @@ public class TalonSpeedControllerGroup implements SpeedController {
 				" Err = " + leader.getClosedLoopError(0));
 	}
 
-	public void setPIDF(double p, double i, double d, double f){
+	public void setPIDF(int slotId, double p, double i, double d, double f){
 		if (!RobotMap.HAS_WHEELS) {
 			LOGGER.debug("No PIDF");
 			return;
 		}
-		leader.config_kP(0, p, RobotMap.TALON_TIMEOUT);
-		leader.config_kI(0, i, RobotMap.TALON_TIMEOUT);
-		leader.config_kD(0, d, RobotMap.TALON_TIMEOUT);
-		leader.config_kF(0, f, RobotMap.TALON_TIMEOUT);
-//		int motionAcceleration = Integer.parseInt(SmartDashboard.getString("DB/String 3", "20000")); 
-//		int motionCruiseVelocity = Integer.parseInt(SmartDashboard.getString("DB/String 8", "15000")); 
-		int motionAcceleration = 8000; //1700;
-		int motionCruiseVelocity = 8000; // 500;
+		leader.config_kP(slotId, p, RobotMap.TALON_TIMEOUT);
+		leader.config_kI(slotId, i, RobotMap.TALON_TIMEOUT);
+		leader.config_kD(slotId, d, RobotMap.TALON_TIMEOUT);
+		leader.config_kF(slotId, f, RobotMap.TALON_TIMEOUT);
 
-		leader.configMotionCruiseVelocity(motionCruiseVelocity, RobotMap.TALON_TIMEOUT); 
-		leader.configMotionAcceleration(motionAcceleration, RobotMap.TALON_TIMEOUT);
 		leader.configNeutralDeadband(0.04, RobotMap.TALON_TIMEOUT);
+	}
+	public void setPIDSlot(int slot){
+		leader.selectProfileSlot(slot, 0);
 
 	}
+	
 
 	public void zero() {
 		if (!RobotMap.HAS_WHEELS) {

@@ -125,13 +125,9 @@ public class ActionGroup {
 		public boolean isDone() {
 			if (actionStartTimeMS < 0) {
 				actionStartTimeMS = System.currentTimeMillis();
-				LOGGER.debug("Action Start Time=" + actionStartTimeMS);
 			}
 
-			long currentTime = System.currentTimeMillis();
-			LOGGER.debug("currentTime=" + currentTime);
-
-			return currentTime > durationMS + actionStartTimeMS;
+			return System.currentTimeMillis() > durationMS + actionStartTimeMS;
 		}
 
 		public void reset() {
@@ -169,6 +165,12 @@ public class ActionGroup {
 				LOGGER.debug("Still moving");
 				return false;
 			}
+		}
+	}
+
+	static class ReachAngle extends ReachDistance {
+		public ReachAngle(double rotationInDegrees) {
+			super(Drive.degreesToFeet(rotationInDegrees));
 		}
 	}
 

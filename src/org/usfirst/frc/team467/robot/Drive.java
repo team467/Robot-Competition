@@ -81,26 +81,27 @@ public class Drive extends DifferentialDrive implements AutoDrive {
 	}
 
 	public void readPIDSFromSmartDashboard() {
-		
-
 		double kPLeft = Double.parseDouble(SmartDashboard.getString("DB/String 1", "1.6")); // 1.6
 		double kPRight = Double.parseDouble(SmartDashboard.getString("DB/String 6", "1.4")); // 1.4
-		
 
 		double kIRight = 0.0;
 		double kILeft = 0.0;
-		
+
 		double kDLeft = Double.parseDouble(SmartDashboard.getString("DB/String 3", "198")); //198
 		double kDRight = Double.parseDouble(SmartDashboard.getString("DB/String 8", "165")); //165
-		
+
 		double kFLeft = Double.parseDouble(SmartDashboard.getString("DB/String 4", "1.1168")); // 0.0
 		double kFRight = Double.parseDouble(SmartDashboard.getString("DB/String 9", "1.2208")); // 0.0
-		//		double kFall = 1023.0 / 1402.0;
 
-		left.setPIDF(kPLeft, kILeft, kDLeft, kFLeft);
-		right.setPIDF(kPRight, kIRight, kDRight, kFRight);
+		left.setPIDF(RobotMap.PID_SLOT_DRIVE, kPLeft, kILeft, kDLeft, kFLeft);
+		right.setPIDF(RobotMap.PID_SLOT_DRIVE, kPRight, kIRight, kDRight, kFRight);
+
+		left.setPIDF(RobotMap.PID_SLOT_TURN, kPLeft, kILeft, kDLeft, kFLeft);
+		right.setPIDF(RobotMap.PID_SLOT_TURN, kPRight, kIRight, kDRight, kFRight);
 	}
+
 	public void setPIDSFromRobotMap() {
+		// Set drive PIDs
 		double kFRight = RobotMap.RIGHT_DRIVE_PID_F;
 		double kFLeft = RobotMap.LEFT_DRIVE_PID_F;
 
@@ -113,10 +114,26 @@ public class Drive extends DifferentialDrive implements AutoDrive {
 		double kDRight = RobotMap.RIGHT_DRIVE_PID_D;
 		double kDLeft = RobotMap.LEFT_DRIVE_PID_D;
 
-		left.setPIDF(kPLeft, kILeft, kDLeft, kFLeft);
-		right.setPIDF(kPRight, kIRight, kDRight, kFRight);
+		left.setPIDF(RobotMap.PID_SLOT_DRIVE, kPLeft, kILeft, kDLeft, kFLeft);
+		right.setPIDF(RobotMap.PID_SLOT_DRIVE, kPRight, kIRight, kDRight, kFRight);
+
+		// Set turn PIDs
+		kFRight = RobotMap.RIGHT_TURN_PID_F;
+		kFLeft = RobotMap.LEFT_TURN_PID_F;
+
+		kPRight = RobotMap.RIGHT_TURN_PID_P;
+		kPLeft = RobotMap.LEFT_TURN_PID_P;
+
+		kIRight = RobotMap.RIGHT_TURN_PID_I;
+		kILeft = RobotMap.LEFT_TURN_PID_I;
+
+		kDRight = RobotMap.RIGHT_TURN_PID_D;
+		kDLeft = RobotMap.LEFT_TURN_PID_D;
+
+		left.setPIDF(RobotMap.PID_SLOT_TURN, kPLeft, kILeft, kDLeft, kFLeft);
+		right.setPIDF(RobotMap.PID_SLOT_TURN, kPRight, kIRight, kDRight, kFRight);
 	}
-	
+
 	public void configPeakOutput(double percentOut) {
 		left.configPeakOutput(percentOut);
 		right.configPeakOutput(percentOut);
@@ -157,53 +174,64 @@ public class Drive extends DifferentialDrive implements AutoDrive {
 
 	@Override
 	public void moveFeet(double distanceInFeet) {
-		moveFeet(distanceInFeet, 0, ControlMode.Position);
-	}
-
-	@Override
-	public void rotateByAngle(double angleInDegrees) {
-		moveFeet(0, angleInDegrees, ControlMode.Position);
+		left.setPIDSlot(RobotMap.PID_SLOT_DRIVE);
+		right.setPIDSlot(RobotMap.PID_SLOT_DRIVE);
+		moveFeet(distanceInFeet, distanceInFeet);
 	}
 	
-	public static final double POSITION_GAIN_FEET = 3.0;
+	public static final double POSITION_GAIN_FEET = 2.5;
 
 	/**
 	 * 
-	 * @param distanceInFeet
 	 * @param rotationInDegrees
 	 *            enter positive degrees for left turn and enter negative degrees
 	 *            for right turn
 	 */
-	@Override
-	public void moveFeet(double straightDistanceInFeet, double rotationInDegrees, ControlMode mode) {
+	public void rotateByAngle(double rotationInDegrees) {
+		left.setPIDSlot(RobotMap.PID_SLOT_TURN);
+		right.setPIDSlot(RobotMap.PID_SLOT_TURN);
 
-		LOGGER.trace("Automated move of " + straightDistanceInFeet + " feet and " + rotationInDegrees + " degree turn.");
+		LOGGER.trace("Automated move of " + rotationInDegrees + " degree turn.");
+		
+		double turnDistanceInFeet = degreesToFeet(rotationInDegrees);
+		moveFeet(turnDistanceInFeet, - turnDistanceInFeet);
+	}
+
+	/**
+	 * Convert angle in degrees to wheel distance in feet (arc length).
+	 */
+	public static double degreesToFeet(double degrees) {
+		// Adjust requested degrees because the robot predictably undershoots. Value was found empirically.
+		degrees *= 1.06;
 
 		// Convert the turn to a distance based on the circumference of the robot wheel base.
 		double radius = RobotMap.WHEEL_BASE_WIDTH / 2;
-		double angleInRadians = Math.toRadians(rotationInDegrees);
-		double turnDistanceInFeet = radius * angleInRadians; // This is the distance we want to turn.
-
-		// The target includes both the straight and turn components. A positive turn is to the right, 
-		// so right goes backward and left forward.
-		double targetLeftDistance = straightDistanceInFeet + turnDistanceInFeet;
-		double targetRightDistance = straightDistanceInFeet - turnDistanceInFeet;
+		double angleInRadians = Math.toRadians(degrees);
+		double distanceInFeet = radius * angleInRadians; // This is the distance we want to turn.
 		
+		return distanceInFeet;
+	}
+
+	public void moveFeet(double targetLeftDistance , double targetRightDistance) {
+
+		LOGGER.trace("Automated move of right: "+ targetRightDistance +" left: "+ targetLeftDistance + " feet ");
+
+		// Convert the turn to a distance based on the circumference of the robot wheel base.
 		// Store the sign so that all math works the same forward and backward using absolute values,
 		// with direction corrected at the end.
 		double leftSign = Math.signum(targetLeftDistance);
 		double rightSign = Math.signum(targetRightDistance);
-		
+
 		// Get the current positions to determine if the request is above the max individual request
 		double currentLeftPosition = getLeftDistance();
 		double currentRightPosition = getRightDistance();
 		LOGGER.trace("Current Position - Right: " + df.format(currentRightPosition) + " Left: "
 				+ df.format(currentLeftPosition));
-		
+
 		// Get the average to correct for drift and move it back to straight
 		// Use absolute values so that direction is ignored.
-		double average = (Math.abs(currentRightPosition) + Math.abs(currentLeftPosition)) / 2.0;
-		
+		double average = 0.5 * (Math.abs(currentRightPosition) + Math.abs(currentLeftPosition));
+
 		// Use the minimum to go either the max allowed distance or to the target
 		double moveLeftDistance = leftSign * Math.min(Math.abs(targetLeftDistance), (POSITION_GAIN_FEET + average));
 		double moveRightDistance = rightSign * Math.min(Math.abs(targetRightDistance), (POSITION_GAIN_FEET + average));
@@ -215,8 +243,9 @@ public class Drive extends DifferentialDrive implements AutoDrive {
 		double rightDistTicks = feetToTicks(moveRightDistance);
 
 		// The right motor is reversed
-		left.set(mode, leftDistTicks);
-		right.set(mode, (-1 * rightDistTicks));
+		left.set(ControlMode.Position, leftDistTicks);
+		
+		right.set(ControlMode.Position, -rightDistTicks);
 	}
 	
 	public double getLeftDistance() {
@@ -225,7 +254,7 @@ public class Drive extends DifferentialDrive implements AutoDrive {
 	}
 
 	public double getRightDistance() {
-		double rightLeadSensorPos = -1 * ticksToFeet(right.sensorPosition());
+		double rightLeadSensorPos = -ticksToFeet(right.sensorPosition());
 		return rightLeadSensorPos;
 	}
 
@@ -235,14 +264,9 @@ public class Drive extends DifferentialDrive implements AutoDrive {
 	 * @return the absolute distance moved in feet
 	 */
 	public double absoluteDistanceMoved() {
-		double lowestAbsDist;
 		double leftLeadSensorPos = Math.abs(getLeftDistance());
 		double rightLeadSensorPos = Math.abs(getRightDistance());
-		if (leftLeadSensorPos >= rightLeadSensorPos) {
-			lowestAbsDist = rightLeadSensorPos;
-		} else {
-			lowestAbsDist = leftLeadSensorPos;
-		}
+		double lowestAbsDist = Math.min(leftLeadSensorPos, rightLeadSensorPos);
 		LOGGER.debug("The absolute distance moved: " + lowestAbsDist);
 		return lowestAbsDist;
 	}

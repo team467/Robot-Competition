@@ -1,12 +1,11 @@
 package org.usfirst.frc.team467.robot.Autonomous;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
-
 public interface AutoDrive {
 
 	void moveFeet(double distance);
+	void rotateByAngle(double rotationInDegrees);
 
-	void moveFeet(double distance, double rotation, ControlMode mode);
+	void moveFeet(double leftDistance, double rightDistance);
 
 	boolean isStopped();
 
@@ -16,8 +15,6 @@ public interface AutoDrive {
 	 * @return the absolute distance moved in feet
 	 */
 	double absoluteDistanceMoved();
-
-	void rotateByAngle(double rotation);
 
 	void zero();
 }

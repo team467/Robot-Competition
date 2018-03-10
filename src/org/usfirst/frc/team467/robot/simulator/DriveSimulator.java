@@ -74,15 +74,11 @@ public class DriveSimulator implements AutoDrive {
 
 	@Override
 	public void moveFeet(double distance) {
-		moveFeet(distance, 0, null);
+		moveFeet(distance, distance);
 	}
 
 	@Override
-	public void moveFeet(double distance, double rotation, ControlMode mode) {
-
-		double rotationInRadians = Math.toRadians(rotation);
-		double leftDistance = distance + rotationInRadians * (RobotMap.WHEEL_BASE_WIDTH / 2);
-		double rightDistance = distance - rotationInRadians * (RobotMap.WHEEL_BASE_WIDTH / 2);
+	public void moveFeet(double leftDistance, double rightDistance) {
 
 		if (leftPositionReading == leftDistance && rightPositionReading == rightDistance) {
 			isMoving = false;
@@ -137,6 +133,20 @@ public class DriveSimulator implements AutoDrive {
 
 	@Override
 	public void rotateByAngle(double rotation) {
-		moveFeet(0, rotation, null);
+		double turnDistanceInFeet = degreesToFeet(rotation);
+		moveFeet(turnDistanceInFeet, -turnDistanceInFeet);
+	}
+
+	/**
+	 * Convert angle in degrees to wheel distance in feet (arc length).
+	 */
+	public static double degreesToFeet(double degrees) {
+
+		// Convert the turn to a distance based on the circumference of the robot wheel base.
+		double radius = RobotMap.WHEEL_BASE_WIDTH / 2;
+		double angleInRadians = Math.toRadians(degrees);
+		double distanceInFeet = radius * angleInRadians; // This is the distance we want to turn.
+		
+		return distanceInFeet;
 	}
 }
