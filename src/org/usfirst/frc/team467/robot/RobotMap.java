@@ -91,9 +91,6 @@ public class RobotMap {
 			WHEEL_ENCODER_CODES_PER_REVOLUTION = 1024;
 			useSpeedControllers = true;
 			
-			// Allowed error expressed as (inches / circumference)
-			POSITION_ALLOWED_ERROR = 1.0 / RobotMap.WHEEL_CIRCUMFERENCE;
-
 			FORWARD_PANIC_ANGLE = 60;
 			BACKWARD_PANIC_ANGLE = -60;
 
@@ -165,7 +162,6 @@ public class RobotMap {
 			WHEEL_CIRCUMFERENCE = 19.74;
 			WHEEL_ENCODER_CODES_PER_REVOLUTION = 1024;
 			useSpeedControllers = true;
-			POSITION_ALLOWED_ERROR = (0.5 / RobotMap.WHEEL_CIRCUMFERENCE); // 1/2 inch
 
 			FORWARD_PANIC_ANGLE = 60;
 			BACKWARD_PANIC_ANGLE = -60;
@@ -234,6 +230,9 @@ public class RobotMap {
 			AUTONOMOUS_DRIVE_TIMEOUT_MS = 500;
 			break;
 		}
+		//These calculations can be made after the robot-specific constants are set. 
+		POSITION_ALLOWED_ERROR = ALLOWED_ERROR_INCHES / RobotMap.WHEEL_CIRCUMFERENCE;
+		POSITION_ALLOWABLE_CLOSED_LOOP_ERROR = (int) (POSITION_ALLOWED_ERROR * 1024 * 0.95); 	// This is in encoder ticks
 	}
 
 	// Global robot constants
@@ -243,9 +242,10 @@ public class RobotMap {
 	public static boolean useSpeedControllers;
 	public static final int VELOCITY_PID_PROFILE = 0;
 	public static final int POSITION_PID_PROFILE = 1;
-	public static double POSITION_ALLOWED_ERROR = (0.5 / RobotMap.WHEEL_CIRCUMFERENCE); // 1/2 inch
-	public static int VELOCITY_ALLOWABLE_CLOSED_LOOP_ERROR = 50; 	// This is in encoder ticks
-	public static int POSITION_ALLOWABLE_CLOSED_LOOP_ERROR = (int) (POSITION_ALLOWED_ERROR * 1024 * 0.95); 	// This is in encoder ticks
+	
+	public static double ALLOWED_ERROR_INCHES = 0.5;
+	public static double POSITION_ALLOWED_ERROR;
+	public static int POSITION_ALLOWABLE_CLOSED_LOOP_ERROR;
 
 	public static final double FAST_MAX_SPEED = 1.0;
 	public static final double NORMAL_MAX_SPEED = 0.6;
