@@ -124,13 +124,9 @@ public class ActionGroup {
 		public boolean isDone() {
 			if (actionStartTimeMS < 0) {
 				actionStartTimeMS = System.currentTimeMillis();
-				LOGGER.debug("Action Start Time=" + actionStartTimeMS);
 			}
 
-			long currentTime = System.currentTimeMillis();
-			LOGGER.debug("currentTime=" + currentTime);
-
-			return currentTime > durationMS + actionStartTimeMS;
+			return System.currentTimeMillis() > durationMS + actionStartTimeMS;
 		}
 
 		public void reset() {
