@@ -4,7 +4,7 @@ package org.usfirst.frc.team467.robot;
  *
  */
 public class RobotMap {
-	public static final int TALON_TIMEOUT = 10; // 10 ms is the recommended timeout
+	public static final int TALON_TIMEOUT = 0; // 10 ms is the recommended timeout
 
 	public enum RobotID {
 		Board, Competition_1, Competition_2
@@ -92,19 +92,23 @@ public class RobotMap {
 			LEFT_FOLLOWER_1_CHANNEL = 2;
 			LEFT_FOLLOWER_2_CHANNEL = 3;
 			LEFT_DRIVE_SENSOR_IS_INVERTED = true;
-			LEFT_DRIVE_PID_P = 1.6;
+			
+			//linear PIDS
+			LEFT_DRIVE_PID_P = 0.875;
 			LEFT_DRIVE_PID_I = 0.0;
-			LEFT_DRIVE_PID_D = 140;
-			LEFT_DRIVE_PID_F = 1.11;
+			LEFT_DRIVE_PID_D = 180.0;
+			LEFT_DRIVE_PID_F = 0.0;
 
 			RIGHT_LEAD_CHANNEL = 4;
 			RIGHT_FOLLOWER_1_CHANNEL = 5;
 			RIGHT_FOLLOWER_2_CHANNEL = 6;
 			RIGHT_DRIVE_SENSOR_IS_INVERTED = true;
-			RIGHT_DRIVE_PID_P = 1.7;
+			
+			// linear PIDS
+			RIGHT_DRIVE_PID_P = 0.875;
 			RIGHT_DRIVE_PID_I = 0.0;
-			RIGHT_DRIVE_PID_D = 175;
-			RIGHT_DRIVE_PID_F = 1.14;
+			RIGHT_DRIVE_PID_D = 180.0;
+			RIGHT_DRIVE_PID_F = 0.0;
 
 			HAS_ELEVATOR = true;
 
@@ -151,28 +155,30 @@ public class RobotMap {
 			LEFT_LEAD_CHANNEL = 1;
 			LEFT_FOLLOWER_1_CHANNEL = 2;
 			LEFT_FOLLOWER_2_CHANNEL = 3;
-			LEFT_DRIVE_PID_P = 1.6;
+			LEFT_DRIVE_SENSOR_IS_INVERTED = true;
+			LEFT_DRIVE_PID_P = 0.39; // 1.3;
 			LEFT_DRIVE_PID_I = 0.0;
-			LEFT_DRIVE_PID_D = 140;
-			LEFT_DRIVE_PID_F = 1.11;
+			LEFT_DRIVE_PID_D = 0.0; // 150.0;
+			LEFT_DRIVE_PID_F = 0.0; // 0.98;
 
 			RIGHT_LEAD_CHANNEL = 4;
 			RIGHT_FOLLOWER_1_CHANNEL = 5;
 			RIGHT_FOLLOWER_2_CHANNEL = 6;
-			RIGHT_DRIVE_PID_P = 1.7;
+			RIGHT_DRIVE_SENSOR_IS_INVERTED = true;
+			RIGHT_DRIVE_PID_P = 0.366; // 1.22;
 			RIGHT_DRIVE_PID_I = 0.0;
-			RIGHT_DRIVE_PID_D = 175;
-			RIGHT_DRIVE_PID_F = 1.14;
+			RIGHT_DRIVE_PID_D = 0.0; // 120.0;
+			RIGHT_DRIVE_PID_F = 0.0; // 0.98;
 
 			HAS_ELEVATOR = true;
 			ELEVATOR_MOTOR_CHANNEL = 7;
 
 			// TODO Replace with empirical measured values
-			ELEVATOR_BOTTOM_TICKS = 764;
-			ELEVATOR_FLOOR_HEIGHT = 747;
-			ELEVATOR_SWITCH_HEIGHT = 636;
-			ELEVATOR_LOW_SCALE_HEIGHT = 468;
-			ELEVATOR_TOP_TICKS = 357;
+			ELEVATOR_BOTTOM_TICKS = 785;
+			ELEVATOR_FLOOR_HEIGHT = 768;
+			ELEVATOR_SWITCH_HEIGHT = 657;
+			ELEVATOR_LOW_SCALE_HEIGHT = 489;
+			ELEVATOR_TOP_TICKS = 358;
 
 			HAS_GRABBER = true;
 			GRABBER_INVERT = true;
@@ -217,7 +223,7 @@ public class RobotMap {
 	public static final double ELEVATOR_LOW_DRIVE_RAMP_TIME = 0.0;
 
 	// TODO These values need to be tested on the robot and possibly adjusted.
-	public static final double NORMAL_TURN_MAX_SPEED = 0.8;
+	public static final double NORMAL_TURN_MAX_SPEED = 1.0;
 	public static final double SLOW_TURN_MAX_SPEED = 0.6;
 
 	public static boolean useSimulator = false;

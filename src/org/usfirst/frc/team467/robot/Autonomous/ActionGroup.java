@@ -48,7 +48,7 @@ public class ActionGroup {
 			}
 		}
 
-		LOGGER.info("run " + action);
+        LOGGER.info("run " + action);
 		action.doIt();
 	}
 
@@ -60,7 +60,6 @@ public class ActionGroup {
 		LOGGER.debug("Terminating Process");
 		agenda.clear();
 		action = null;
-//		Drive.getInstance().aiming.reset();
 	}
 
 	public void addAction(Action action) {
@@ -118,15 +117,20 @@ public class ActionGroup {
 		 */
 		public Duration(double duration) {
 			durationMS = duration * 1000;
+			LOGGER.debug("durationMS=" + durationMS);
 		}
 
 		@Override
 		public boolean isDone() {
 			if (actionStartTimeMS < 0) {
 				actionStartTimeMS = System.currentTimeMillis();
+				LOGGER.debug("Action Start Time=" + actionStartTimeMS);
 			}
 
-			return System.currentTimeMillis() > durationMS + actionStartTimeMS;
+			long currentTime = System.currentTimeMillis();
+			LOGGER.debug("currentTime=" + currentTime);
+
+			return currentTime > durationMS + actionStartTimeMS;
 		}
 
 		public void reset() {

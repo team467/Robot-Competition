@@ -55,7 +55,8 @@ public class Actions {
 		Grabber grabber = Grabber.getInstance();
 		return new Action(
 				"Grabbing cube",
-				new ActionGroup.RunOnce(() -> grabber.grab()));
+				new ActionGroup.Duration(1.0),
+				() -> grabber.grab(RobotMap.MAX_GRAB_SPEED));
 	}
 	
 	public static Action releaseCube() {
@@ -234,6 +235,24 @@ public class Actions {
 		mode.addAction(moveDistanceForward(4.34)); 
 		return mode;
 	}
+
+    public static ActionGroup simpleTest() {
+        String actionGroupText = "Simplified version of leftbasicswitchleft.";
+        ActionGroup mode = new ActionGroup(actionGroupText);
+        mode.addAction(zeroDistance());
+        mode.addAction(grabCube());
+        mode.addAction(zeroDistance());
+        mode.addAction(elevatorToSwitch());
+        mode.addAction(zeroDistance());
+        mode.addAction(moveDistanceForward(3.0));
+//        mode.addAction(zeroDistance());
+//        mode.addAction(moveturn(90));
+//        mode.addAction(zeroDistance());
+//        mode.addAction(moveDistanceForward(2.0));
+//        mode.addAction(zeroDistance());
+//        mode.addAction(releaseCube());
+        return mode;
+    }
 
 	public static ActionGroup centerBasicSwitchRight() {
 		String actionGroupText = "Start in center, put cube on right switch.";
