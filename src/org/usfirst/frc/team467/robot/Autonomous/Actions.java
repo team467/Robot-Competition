@@ -135,15 +135,14 @@ public class Actions {
 	 */
 	public static Action moveturn(double rotationInDegrees) {
 		String actionText = "Rotate " + rotationInDegrees + " degrees.";
-	    double rotation = rotationInDegrees;
 	    if (RobotMap.useSimulator) {
 			return new Action(actionText,
-					new ActionGroup.ReachDistance(rotation),
-					() -> DriveSimulator.getInstance().rotateByAngle(rotation));
+					new ActionGroup.ReachAngle(rotationInDegrees),
+					() -> DriveSimulator.getInstance().rotateByAngle(rotationInDegrees));
 	    } else {
 			return new Action(actionText,
-					new ActionGroup.ReachDistance(rotation),
-					() -> Drive.getInstance().rotateByAngle(rotation));
+					new ActionGroup.ReachAngle(rotationInDegrees),
+					() -> Drive.getInstance().rotateByAngle(rotationInDegrees));
 	    }
 	}
 
@@ -206,9 +205,15 @@ public class Actions {
     public static ActionGroup simpleTest() {
         String actionGroupText = "Simplified version of leftbasicswitchleft.";
         ActionGroup mode = new ActionGroup(actionGroupText);
-		mode.addActions(start());
-        mode.addActions(move(-6.0));
-//        mode.addActions(turn(90));
+//		mode.addActions(start());
+        mode.addActions(move(4.0));
+        mode.addActions(turn(90));
+        mode.addActions(move(4.0));
+        mode.addActions(turn(90));
+        mode.addActions(move(4.0));
+        mode.addActions(turn(90));
+        mode.addActions(move(4.0));
+        mode.addActions(turn(90));
 //        mode.addActions(moveDistance(2.0));
 //        mode.addAction(releaseCube());
         return mode;
