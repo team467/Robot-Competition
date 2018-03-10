@@ -11,6 +11,7 @@ import org.usfirst.frc.team467.robot.Autonomous.ActionGroup;
 import org.usfirst.frc.team467.robot.Autonomous.MatchConfiguration;
 import org.usfirst.frc.team467.robot.simulator.communications.RobotData;
 import org.usfirst.frc.team467.robot.simulator.gui.MapController;
+import org.usfirst.frc.team467.robot.simulator.gui.SimulatedData;
 
 /**
  * The simulated robot
@@ -41,7 +42,7 @@ public class Robot {
 		matchConfig = MatchConfiguration.getInstance();
 
 		data = RobotData.getInstance();
-		data.startServer();
+//		data.startServer();
 
 		LOGGER.info("Started the robot simulator");
 
@@ -60,8 +61,16 @@ public class Robot {
 	public void autonomousInit() {
 		drive.zero();
 		matchConfig.load();
-		data.startingLocation(2.5, 0);
+		
+		if (SimulatedData.autoMode.startsWith("Left")) {
+			data.startingLocation(2.5, 0);
+		} else if (SimulatedData.autoMode.startsWith("Center")) {
+			data.startingLocation(12.5, 0);
+		} else { // Right
+			data.startingLocation(21.58, 0);
+		}		
 		data.send();
+
 		autonomous = matchConfig.autonomousDecisionTree();
 	}
 
