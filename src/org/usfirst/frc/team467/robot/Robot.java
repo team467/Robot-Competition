@@ -31,8 +31,6 @@ public class Robot extends TimedRobot {
 	private Elevator elevator;
 	private Grabber grabber;
 
-	int session;
-
 	/**
 	 * Time in milliseconds
 	 */
