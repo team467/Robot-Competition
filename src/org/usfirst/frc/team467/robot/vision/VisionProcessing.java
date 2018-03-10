@@ -116,9 +116,9 @@ public class VisionProcessing {
 	 * @return ArrayList<MatOfPoint> output from Find_Contours.
 	 */
 	public void findContoursOutput() {
-		System.out.println("COUNT: " + pipeline.filterContoursOutput().size());
+		LOGGER.debug("COUNT: " + pipeline.filterContoursOutput().size());
 		for (MatOfPoint points : pipeline.convexHullsOutput()) {
-			System.out.println("Test " + points);
+			LOGGER.debug("Test " + points);
 		}
 	}
 
