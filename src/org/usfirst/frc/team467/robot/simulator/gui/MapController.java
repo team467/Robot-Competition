@@ -26,31 +26,31 @@ import javafx.scene.layout.Pane;
  * 
  */
 public class MapController {
-	
+
 	/**
 	 * The overall window, including the buttons
 	 */
 	@FXML
 	private BorderPane mapUI;
-	
+
 	/**
 	 * The field pane, it needs to be separate from the canvas to allow overlays
 	 */
 	@FXML
 	private BorderPane fieldMap;
-	
+
 	/**
 	 * The field window pane
 	 */
 	@FXML
 	private Canvas field;
-	
+
 	/**
 	 * The overlay window pane for the robot
 	 */
 	@FXML
 	private Pane robotArea;
-	
+
 	/**
 	 * The start button for beginning the match
 	 */
@@ -84,7 +84,7 @@ public class MapController {
 	 * Flag to start getting the robot's moves
 	 */
 	private boolean robotActive;
-	
+
 	/**
 	 * The shapes for drawing for robot and field and other objects
 	 */
@@ -92,36 +92,36 @@ public class MapController {
 	private Group robotGroup = null; // for adding and remove robot on map
 	private FieldShape fieldShape = new FieldShape();
 	private ArrayList<PowerCubeShape> cubes = new ArrayList<PowerCubeShape>();
-	
+
 	/**
 	 * Initialize method, automatically called by @{link FXMLLoader}
 	 */
 	public void initialize() {
-		
+
 		this.robotActive = false;
 		fieldShape.context(field.getGraphicsContext2D());
-		
+
 		double redSwitchCubeOffsetX = 85.25; //next to red alliance station
 		double redSwitchCubeOffsetY = 196;
-		
-			for (int i = 0; i < 6; i++) {
-				cubes.add(new PowerCubeShape(redSwitchCubeOffsetX + i * 2.34 * 12.0, redSwitchCubeOffsetY)); // 1.25' in between each cube ; y-coordinate is same for 6 cubes
-			}
-	
+
+		for (int i = 0; i < 6; i++) {
+			cubes.add(new PowerCubeShape(redSwitchCubeOffsetX + i * 2.34 * 12.0, redSwitchCubeOffsetY)); // 1.25' in between each cube ; y-coordinate is same for 6 cubes
+		}
+
 		double blueSwitchCubeOffsetX = 85.25; //next to blue alliance station
 		double blueSwitchCubeOffsetY = 439.2;
-			
+
 		for (int i = 0; i < 6; i++) {
 			cubes.add(new PowerCubeShape(blueSwitchCubeOffsetX + i * 2.34 * 12.0, blueSwitchCubeOffsetY)); // 1.25' in between each cube ; y-coordinate is same for 6 cubes
 		}
-		
+
 		for (PowerCubeShape cube : cubes) {
 			robotArea.getChildren().add(cube.createPowerCube());
 		}
-		
+
 	}
-		
-		
+
+
 
 	/**
 	 * The action triggered by pushing the button on the GUI. It creates a thread that monitors
@@ -129,7 +129,7 @@ public class MapController {
 	 */
 	@FXML
 	protected void startRobot() {
-		
+
 		SimulatedData.autoMode = autonomousMode.getValue();
 		SimulatedData.gameSpecificMessage = gameSpecificMessage.getValue();
 		if (teamColor.getValue().equalsIgnoreCase("Red")) {
@@ -137,7 +137,7 @@ public class MapController {
 		} else {
 			SimulatedData.teamColor = Alliance.Blue;
 		}
-			
+
 		if (!this.robotActive) {
 
 			if (robotGroup != null) {
@@ -150,7 +150,7 @@ public class MapController {
 			robotActive = true;
 			robotShape.init();
 			update();
-			
+
 			// The robot runs it's cycle every 20 ms
 			Runnable simulatedPeriodic = new Runnable() {
 
@@ -165,14 +165,14 @@ public class MapController {
 
 			// update the button content
 			this.startButton.setText("Stop");
-			
+
 		} else {
 			// the camera is not active at this point
 			robotActive = false;
-			
+
 			// update the button content
 			this.startButton.setText("Start");
-			
+
 			// stop the timer
 			stopAcquisition();
 		}
@@ -193,28 +193,28 @@ public class MapController {
 			}
 		}
 	}
-	
+
 	/**
 	 * Periodically updates the robot and field shape
 	 */
 	public void update() {
 		Platform.runLater(() -> {
 			fieldShape.draw();
-		
+
 			for (PowerCubeShape cube : cubes) {
 				cube.draw();
 			}
-			
+
 			robotShape.draw();
 		});
 
 	}
-	
+
 	/**
 	 * On application close, stop the threads and release any resources.
 	 */
 	protected void setClosed() {
 		this.stopAcquisition();
 	}
-	
+
 }
