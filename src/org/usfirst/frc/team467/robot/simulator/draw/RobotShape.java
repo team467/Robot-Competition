@@ -78,11 +78,11 @@ public class RobotShape {
 
 	public Group createRobotShape() {
 
-		chassisShape = new Rectangle(RobotMap.WHEEL_BASE_LENGTH*12/2, RobotMap.WHEEL_BASE_WIDTH*12 , Color.DARKSLATEGREY);
+		chassisShape = new Rectangle(RobotMap.BUMPER_LENGTH*12/2, RobotMap.BUMPER_WIDTH*12 , Color.DARKSLATEGREY);
 		chassisShape.relocate(FieldShape.FIELD_OFFSET_Y, FieldShape.FIELD_OFFSET_X);
 
-		elevatorShape = new Rectangle(RobotMap.WHEEL_BASE_LENGTH*12/2, (RobotMap.WHEEL_BASE_WIDTH*12 - 4), Color.WHITESMOKE);
-		elevatorShape.relocate(FieldShape.FIELD_OFFSET_Y + (RobotMap.WHEEL_BASE_LENGTH/2) * 12, (FieldShape.FIELD_OFFSET_X + 2));
+		elevatorShape = new Rectangle(RobotMap.BUMPER_LENGTH*12/2, (RobotMap.BUMPER_WIDTH*12 - 4), Color.WHITESMOKE);
+		elevatorShape.relocate(FieldShape.FIELD_OFFSET_Y + (RobotMap.BUMPER_LENGTH/2) * 12, (FieldShape.FIELD_OFFSET_X + 2));
 		
 		robotShape.setBlendMode(BlendMode.SRC_OVER);
 		robotShape.getChildren().add(chassisShape);

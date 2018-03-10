@@ -266,6 +266,8 @@ public class RobotMap {
 	// Robot Dimensions
 	public static double WHEEL_BASE_LENGTH = 3.33;
 	public static double WHEEL_BASE_WIDTH = 1.99; // TODO: MEASURE TRUE WHEEL BASE WIDTH
+	public static double BUMPER_LENGTH = 3.33;
+	public static double BUMPER_WIDTH = 2.92;
 
 	public static double CamToCenterWidthInches;
 	public static double CamToCenterLengthInches;	
