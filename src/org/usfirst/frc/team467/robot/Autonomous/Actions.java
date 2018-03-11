@@ -256,7 +256,7 @@ public class Actions {
 		mode.addActions(start());
 		mode.addActions(move(12.33)); 
 		mode.addActions(turn(-90));
-		mode.addActions(move(2.5)); // 1' 5.75"
+		mode.addActions(move(1.479)); // 1' 5.75"
 		mode.addAction(releaseCube());
 		mode.addAction(pauseGrabber());
 		return mode;
@@ -281,11 +281,10 @@ public class Actions {
 		mode.addActions(start());
 		mode.addActions(move(18.14));
 		mode.addActions(turn(90));
-		mode.addActions(move(19.08));
-		mode.addActions(turn(-90));
-		mode.addActions(move(7.19));
-		mode.addActions(turn(-90));
-		mode.addActions(move(0.375));
+		mode.addActions(move(17.4));
+		mode.addAction(elevatorToHighScale());
+		mode.addActions(turn(-100));
+		mode.addActions(move(3.4));
 		mode.addAction(releaseCube());
 		return mode;
 	}
@@ -326,11 +325,10 @@ public class Actions {
 		mode.addActions(start());
 		mode.addActions(move(18.14));
 		mode.addActions(turn(-90));
-		mode.addActions(move(19.08));
-		mode.addActions(turn(90));
-		mode.addActions(move(7.19));
-		mode.addActions(turn(90));
-		mode.addActions(move(0.375));
+		mode.addActions(move(17.4));
+		mode.addAction(elevatorToHighScale());
+		mode.addActions(turn(100));
+		mode.addActions(move(3.4));
 		mode.addAction(releaseCube());
 		return mode;
 	}
@@ -348,95 +346,57 @@ public class Actions {
 
 	//ADVANCED - LEFT
 
-	public static ActionGroup leftAdvancedScaleLeftSwitch() {
-		String actionGroupText = "Start on left side, put cube on switch and second on left side of scale.";
+	public static ActionGroup leftAdvancedScaleLeftSwitchLeft() {
+		String actionGroupText = "Start on left side, put cube on left scale and second on left switch.";
 		ActionGroup mode = new ActionGroup(actionGroupText);
-		mode.addActions(leftBasicSwitchLeft());
+		mode.addActions(leftBasicScaleLeft());
 
 		// pick up cube
 		mode.addActions(move(-2.0)); 
-		mode.addActions(turn(-90)); 
+		mode.addAction(elevatorToFloor());
+		mode.addActions(turn(90)); 
 		mode.addActions(move(5.81)); 
-		mode.addActions(turn(120)); 
-		//mode.addActions(move(4.08)); 
+		mode.addActions(turn(-53)); 
+		mode.addActions(move(4.5)); 
 		mode.addAction(grabCube());
-		//mode.addActions(move(-4.08));
-		mode.addActions(turn(-120));
-		mode.addActions(move(7.0));
-		mode.addActions(turn(90));
-		mode.addActions(move(1.0));
-		mode.addAction(elevatorToHighScale());
+		
+		// release cube into switch
+		mode.addActions(turn(15));
+		mode.addActions(move(0.5));
+		mode.addAction(elevatorToSwitch());
 		mode.addAction(releaseCube());
-		mode.addActions(move(-1.0));
-		mode.addActions(turn(-90));
-
-		// lift elevator to place cube into scale
+		mode.addAction(pauseGrabber());
 		return mode;
 	}
 
-//This is a duplicate of LeftAdvancedSwitch and it is not the updated one.
-//This needs to be looked at.
-//	public static ActionGroup leftAdvancedScaleLeftSwitch() {
-//		String actionGroupText = "Start on left side, put cube on left scale and second on left switch.";
-//		ActionGroup mode = new ActionGroup(actionGroupText);
-//		mode.addActions(leftBasicScaleLeft());
-//
-//		// pick up cube
-//		mode.addActions(move(-2.0));
-//		mode.addActions(turn(90));
-//		mode.addActions(move(7.19));
-//		mode.addActions(turn(-90));
-//		mode.addActions(move(4.08 + 1.0));
-//		mode.addActions(turn(90));
-//		mode.addActions(move(1.4));
-//		mode.addAction(grabCube());
-//		
-//		mode.addActions(move(-1.4));
-//		mode.addActions(turn(-90));
-//		mode.addActions(move(-5.08));
-//		mode.addActions(turn(90));
-//		mode.addActions(move(5.81));
-//		mode.addActions(turn(-90));
-//		mode.addActions(move(3.1));
-//
-//		// lift elevator to place cube into scale
-//		mode.addAction(elevatorToHighScale());
-//		mode.addAction(releaseCube());
-//		return mode;
-//	}
-
-	public static ActionGroup leftAdvancedSwitchRightScale() {
+	public static ActionGroup leftAdvancedSwitchLeftScaleRight() {
 		String actionGroupText = "Start on left side, put cube on left switch and second on right scale.";
 		ActionGroup mode = new ActionGroup(actionGroupText);
 		mode.addActions(leftBasicSwitchLeft());
 
-		// pick up cube
+		//pick up cube
 		mode.addActions(move(-2.0));
 		mode.addActions(turn(-90));
 		mode.addActions(move(5.81));
 		mode.addActions(turn(90));
-		mode.addActions(move(2.0 + 11.7083 + 1.083 + 1.083));
-		mode.addActions(turn(90));
-		mode.addActions(move(1.3));
+		mode.addActions(move(2.0 + 12.0));
+		mode.addActions(turn(50));
+		mode.addActions(move(1.5));
 		mode.addAction(grabCube());
-		
-		mode.addActions(move(-1.3));
-		mode.addActions(turn(-90));
-		mode.addActions(move(5.2057));
-		mode.addActions(turn(-90));
-		mode.addActions(move(7.19));
-		mode.addActions(turn(-90));
-		mode.addActions(move(0.375 + 1.0 + 0.45));
-
-		// lift elevator to place cube into scale
-		mode.addAction(elevatorToLowScale());
+		mode.addActions(move(-1.5));
+				
+		// place cube in scale
+		mode.addActions(turn(-50));
+		mode.addActions(move(4.0));
+		mode.addAction(elevatorToHighScale());
+		mode.addActions(turn(-100));
+		mode.addActions(move(3.4));
 		mode.addAction(releaseCube());
-
 		return mode;
 	}
 
 	public static ActionGroup leftAdvancedSwitchRightScaleRight() {
-		String actionGroupText = "Start on left side, put cube on right switch and second on right scale.";
+		String actionGroupText = "Start on left side, put cube on right scale and second on right switch.";
 		ActionGroup mode = new ActionGroup(actionGroupText);
 
 		mode.addActions(move(18.14));
@@ -526,59 +486,53 @@ public class Actions {
 		return mode;
 	}
 
-	//right
+	//RIGHT
 
-	public static ActionGroup rightAdvancedSwitch() {
-		String actionGroupText = "Start on Right side, put cube on switch and second on Right side of scale.";
+	public static ActionGroup rightAdvancedScaleRightSwitchRight() {
+		String actionGroupText = "Start on Right side, put cube on right scale and second on right switch.";
 		ActionGroup mode = new ActionGroup(actionGroupText);
-		mode.addActions(rightBasicSwitchRight());
+		mode.addActions(rightBasicScaleRight());
 
 		// pick up cube
-		mode.addActions(move(-2.0));
-		mode.addActions(turn(90)); 
-		mode.addActions(move(5.81));
-		mode.addActions(turn(-120)); 
-		mode.addActions(move(4.08)); 
+		mode.addActions(move(-2.0)); 
+		mode.addAction(elevatorToFloor());
+		mode.addActions(turn(-90)); 
+		mode.addActions(move(5.81)); 
+		mode.addActions(turn(53)); 
+		mode.addActions(move(4.5)); 
 		mode.addAction(grabCube());
-		mode.addActions(move(-4.08));
-		mode.addActions(turn(120));
-		mode.addActions(move(7.0));
-		mode.addActions(turn(-90));
-		mode.addActions(move(1.0));
-		mode.addAction(elevatorToHighScale());
+		
+		// release cube into switch
+		mode.addActions(turn(-15));
+		mode.addActions(move(0.5));
+		mode.addAction(elevatorToSwitch());
 		mode.addAction(releaseCube());
-		mode.addActions(move(-1.0));
-		mode.addActions(turn(90));
-
-		// lift elevator to place cube into scale
 		return mode;
 	}
-	public static ActionGroup rightAdvancedSwitchLeftScale() {
+	
+	public static ActionGroup rightAdvancedSwitchRightScaleLeft() {
 		String actionGroupText = "Start on right side, put cube on right switch and second on left scale.";
 		ActionGroup mode = new ActionGroup(actionGroupText);
 		mode.addActions(rightBasicSwitchRight());
 
-		// pick up cube
-		mode.addActions(move(-2.0)); 
+		//pick up cube
+		mode.addActions(move(-2.0));
 		mode.addActions(turn(90));
 		mode.addActions(move(5.81));
 		mode.addActions(turn(-90));
-		mode.addActions(move(2.0 + 11.7083 + 1.083 + 1.083));
-		mode.addActions(turn(-90));
+		mode.addActions(move(2.0 + 12.0));
+		mode.addActions(turn(-50));
+		mode.addActions(move(1.5));
 		mode.addAction(grabCube());
-		mode.addActions(move(1.3));
-		mode.addActions(move(-1.3));
-		mode.addActions(turn(90));
-		mode.addActions(move(5.2057));
-		mode.addActions(turn(90));
-		mode.addActions(move(7.19));
-		mode.addActions(turn(90));
-		mode.addActions(move(0.375 + 1.0 + 0.45));
-
-		// lift elevator to place cube into scale
+		mode.addActions(move(-1.5));
+		
+		// place cube in scale
+		mode.addActions(turn(50));
+		mode.addActions(move(4.0));
 		mode.addAction(elevatorToHighScale());
+		mode.addActions(turn(100));
+		mode.addActions(move(3.4));
 		mode.addAction(releaseCube());
-
 		return mode;
 	}
 
