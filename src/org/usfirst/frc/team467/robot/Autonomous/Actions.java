@@ -230,7 +230,7 @@ public class Actions {
 	public static ActionGroup testGrab() {
 		String actionGroupText = "Testing grab with a 2 foot move.";
 		ActionGroup mode = new ActionGroup(actionGroupText);
-		//mode.addAction(elevatorToFloor());
+		mode.addAction(elevatorToFloor());
 		mode.addAction(grabCubeWhileDriving(2));
 		return mode;
 	}
