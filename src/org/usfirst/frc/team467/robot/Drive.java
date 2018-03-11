@@ -171,6 +171,34 @@ public class Drive extends DifferentialDrive implements AutoDrive {
 	public boolean isStopped() {
 		return left.isStopped() && right.isStopped();
 	}
+	
+	/**
+	 * Used for tuning PIDs only, does not use carrot drive or left right balancing 
+	 */
+	public void tuneForward(double distanceInFeet, int pidSlot) {
+		tuneMove(distanceInFeet, distanceInFeet, pidSlot);
+	}
+	
+	/**
+	 * Used for tuning PIDs only, does not use carrot drive or left right balancing 
+	 */
+	public void tuneTurn(double rotationInDegrees, int pidSlot) {
+		double turnDistanceInFeet = degreesToFeet(rotationInDegrees);
+		tuneMove(turnDistanceInFeet, -turnDistanceInFeet, pidSlot);
+	}
+	
+	/**
+	 * Used for tuning PIDs only, does not use carrot drive or left right balancing 
+	 */
+	public void tuneMove(double leftDistance, double rightDistance, int pidSlot) {
+		left.setPIDSlot(pidSlot);
+		right.setPIDSlot(pidSlot);
+		LOGGER.info("Target: L: " + leftDistance + " R: " + rightDistance 
+				+ " Current L: " + getLeftDistance()  + " R: " + getRightDistance());
+		left.set(ControlMode.Position, feetToTicks(leftDistance));
+		// The right motor is reversed
+		right.set(ControlMode.Position, -feetToTicks(rightDistance));
+	}
 
 	@Override
 	public void moveLinearFeet(double distanceInFeet) {
