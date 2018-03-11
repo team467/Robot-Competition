@@ -169,6 +169,25 @@ public class Drive extends DifferentialDrive {
 		return left.isStopped() && right.isStopped();
 	}
 
+	public void tuneForward(double distanceInFeet, int pidSlot) {
+		tuneMove(distanceInFeet, distanceInFeet, pidSlot);
+	}
+	
+	public void tuneTurn(double rotationInDegrees, int pidSlot) {
+		double turnDistanceInFeet = degreesToFeet(rotationInDegrees);
+		tuneMove(turnDistanceInFeet, -turnDistanceInFeet, pidSlot);
+	}
+	
+	public void tuneMove(double leftDistance, double rightDistance, int pidSlot) {
+		left.setPIDSlot(pidSlot);
+		right.setPIDSlot(pidSlot);
+		LOGGER.info("Target: L: " + leftDistance + " R: " + rightDistance 
+				+ " Current L: " + getLeftDistance()  + " R: " + getRightDistance());
+		left.set(ControlMode.Position, feetToTicks(leftDistance));
+		// The right motor is reversed
+		right.set(ControlMode.Position, -feetToTicks(rightDistance));
+	}
+	
 	public void moveFeet(double distanceInFeet) {
 		left.setPIDSlot(RobotMap.PID_SLOT_DRIVE);
 		right.setPIDSlot(RobotMap.PID_SLOT_DRIVE);
