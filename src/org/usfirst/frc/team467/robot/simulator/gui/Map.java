@@ -17,11 +17,11 @@ import javafx.stage.WindowEvent;
  * It creates and handle the main window with its resources (style, graphics, etc.). 
  */
 public class Map extends Application {
-	
+
 	public static void main(String[] args) {
 		launch(args);
 	}
-	
+
 	/**
 	 * Starts the window and connects the event handler.
 	 */
@@ -30,10 +30,10 @@ public class Map extends Application {
 		try {
 			// Load the FXML resource
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("Map.fxml"));
-			
+
 			// Store the root element so that the controllers can use it
 			BorderPane root = (BorderPane) loader.load();
-			
+
 			// Create and style a scene
 			Scene scene = new Scene(root, 950, 450);
 

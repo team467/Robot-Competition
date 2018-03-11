@@ -48,7 +48,7 @@ public class Robot extends TimedRobot {
 		Logging.init();
 
 		// Initialize RobotMap
-		RobotMap.init(RobotID.Competition_1);
+		RobotMap.init(RobotID.Competition_2);
 
 		// Make robot objects
 		driverstation = DriverStation467.getInstance();
@@ -98,7 +98,7 @@ public class Robot extends TimedRobot {
 
 	public void testPeriodic() {
 		if (tuningValue <= 30.0 && tuningValue >= -30.0) {
-			drive.moveFeet(tuningValue);
+			drive.moveLinearFeet(tuningValue);
 		} else {
 			drive.rotateByAngle(tuningValue);
 		}
