@@ -358,16 +358,16 @@ public class Actions {
 		mode.addActions(turn(-90)); 
 		mode.addActions(move(5.81)); 
 		mode.addActions(turn(120)); 
-		//mode.addActions(move(4.08)); 
+		mode.addActions(move(4.0)); 
 		mode.addAction(grabCube());
-		//mode.addActions(move(-4.08));
+		mode.addActions(move(-4.0));
 		mode.addActions(turn(-120));
 		mode.addActions(move(7.0));
 		mode.addActions(turn(90));
-		mode.addActions(move(1.0));
+		mode.addActions(move(0.9));
 		mode.addAction(elevatorToHighScale());
 		mode.addAction(releaseCube());
-		mode.addActions(move(-1.0));
+		mode.addActions(move(-0.9));
 		mode.addActions(turn(-90));
 
 		// lift elevator to place cube into scale

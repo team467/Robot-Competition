@@ -126,8 +126,9 @@ public class DriveSimulator implements AutoDrive {
 		double absoluteRightDistance = Math.abs(rightPositionReading);
 		if (absoluteLeftDistance < absoluteRightDistance) {
 			return absoluteRightDistance;
+		} else {
+			return absoluteLeftDistance;
 		}
-		return absoluteLeftDistance;
 	}
 
 	@Override
