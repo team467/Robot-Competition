@@ -1,5 +1,7 @@
 package org.usfirst.frc.team467.robot.Autonomous;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -142,7 +144,8 @@ public class ActionGroup {
 		public ReachDistance(double distance) {
 			this.distance = distance;
 		}
-
+	
+	
 		@Override
 		public boolean isDone() {
 			lastPosition = currentPosition;
@@ -180,4 +183,43 @@ public class ActionGroup {
 	public String getName() {
 		return name;
 	}
+	static class ConcurrentActions implements Action.Activity{
+		List<Action.Activity> activities = new ArrayList<Action.Activity>();
+		
+		public ConcurrentActions(Action.Activity... activities) {
+			this.activities = Arrays.asList(activities);			
+		}
+		
+		@Override
+		public void doIt() {
+			for(Action.Activity activity : activities) {
+				activity.doIt();
+				
+			}
+			
+		}	
+	}
+	static class multicondition implements Action.Condition{
+		ArrayList<Action.Condition> conditions = new ArrayList<Action.Condition>();		
+		
+		public void multicondition(){		
+		}
+		
+		public void add(Action.Condition condition) {
+			conditions.add(condition);
+			
+		}
+
+		@Override
+		public boolean isDone() {
+		for(Action.Condition condition : conditions) {
+			if(condition.isDone()) {
+				return condition.isDone();		
+			}
+			
+		}
+			return false;
+		}
+	}
 }
+
