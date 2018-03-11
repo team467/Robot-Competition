@@ -148,8 +148,9 @@ public class ActionGroup {
 		public boolean isDone() {
 			lastPosition = currentPosition;
 			currentPosition = drive.absoluteDistanceMoved();
-			LOGGER.debug("Distances - Target: " + Math.abs(distance) + " Moved: " + currentPosition);
-			if (currentPosition > 0.0 && (lastPosition - currentPosition) > 0.1 ) {
+			LOGGER.debug("Distances - Target: " + Math.abs(distance) + " Moved: " + currentPosition + " Increment: " + increment);
+			if (currentPosition > 0.0 && Math.abs(lastPosition - currentPosition) < 0.1 ) {
+           // if (currentPosition > 0.0 && (lastPosition - currentPosition) > 0.1 ) {
 				increment++;
 			} else {
 				increment = 0;
