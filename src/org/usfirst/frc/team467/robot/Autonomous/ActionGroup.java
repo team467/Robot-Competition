@@ -9,6 +9,7 @@ import java.util.NoSuchElementException;
 import org.apache.log4j.Logger;
 import org.usfirst.frc.team467.robot.Drive;
 import org.usfirst.frc.team467.robot.RobotMap;
+import org.usfirst.frc.team467.robot.Autonomous.Action.Activity;
 import org.usfirst.frc.team467.robot.simulator.DriveSimulator;
 
 /**
@@ -183,7 +184,8 @@ public class ActionGroup {
 		return name;
 	}
 	static class ConcurrentActions implements Action.Activity{
-		List<Action.Activity> activities = new ArrayList<Action.Activity>();
+
+		private List<Activity> activities;
 
 		public ConcurrentActions(Action.Activity... activities) {
 			this.activities = Arrays.asList(activities);			
@@ -198,7 +200,7 @@ public class ActionGroup {
 		}	
 	}
 	static class MultiCondition implements Action.Condition{
-		List<Action.Condition> conditions = new ArrayList<Action.Condition>();		
+		private List<Action.Condition> conditions;	
 
 		public MultiCondition(Action.Condition... conditions){	
 			this.conditions = Arrays.asList(conditions);
