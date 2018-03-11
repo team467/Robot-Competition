@@ -31,8 +31,6 @@ public class Robot extends TimedRobot {
 	private Elevator elevator;
 	private Grabber grabber;
 
-	int session;
-
 	/**
 	 * Time in milliseconds
 	 */
@@ -48,7 +46,7 @@ public class Robot extends TimedRobot {
 		Logging.init();
 
 		// Initialize RobotMap
-		RobotMap.init(RobotID.Competition_1);
+		RobotMap.init(RobotID.Competition_2);
 
 		// Make robot objects
 		driverstation = DriverStation467.getInstance();
@@ -74,8 +72,6 @@ public class Robot extends TimedRobot {
 			cam.setResolution(320, 240);
 			cam.setFPS(15);
 		}
-
-
 	}
 
 	public void disabledInit() {
@@ -98,7 +94,7 @@ public class Robot extends TimedRobot {
 
 	public void testPeriodic() {
 		if (tuningValue <= 30.0 && tuningValue >= -30.0) {
-			drive.moveFeet(tuningValue);
+			drive.moveLinearFeet(tuningValue);
 		} else {
 			drive.rotateByAngle(tuningValue);
 		}
@@ -108,7 +104,7 @@ public class Robot extends TimedRobot {
 	public void autonomousInit() {
 		driverstation.readInputs();
 //		matchConfig.load();
-		//		autonomous = matchConfig.autonomousDecisionTree();
+//		autonomous = matchConfig.autonomousDecisionTree();
 		autonomous = Actions.testGrab();
 		LOGGER.info("Init Autonomous:" + autonomous.getName());
 		drive.logClosedLoopErrors();
@@ -124,7 +120,7 @@ public class Robot extends TimedRobot {
 	}
 
 	public void teleopInit() {
-		//		autonomous.terminate();
+//		autonomous.terminate();
 		autonomous = Actions.doNothing();
 		drive.configPeakOutput(1.0);
 		driverstation.readInputs();
@@ -138,6 +134,7 @@ public class Robot extends TimedRobot {
 
 		grabber.grab(driverstation.getGrabThrottle());
 		elevator.move(driverstation.getElevatorSpeed());
+		drive.setRamp(elevator.getHeight());
 
 		if (driverstation.getFloorHeightButtonPressed()) {
 			LOGGER.info("Dropping to bottom height");

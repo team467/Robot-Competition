@@ -7,7 +7,6 @@ import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.wpilibj.SpeedController;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 //TalonSpeedControllerGroup
 public class TalonSpeedControllerGroup implements SpeedController {
@@ -238,6 +237,14 @@ public class TalonSpeedControllerGroup implements SpeedController {
 			return 0;
 		}
 		return leader.getSelectedSensorPosition(0);
+	}
+
+	public int sensorSpeed() {
+		if (leader == null) {
+			LOGGER.trace("No drive system");
+			return 0;
+		}
+		return leader.getSelectedSensorVelocity(0);
 	}
 	
 	public void setOpenLoopRamp(double ramp) {

@@ -91,7 +91,7 @@ public class Grabber {
 		
 		if (!RobotMap.useSimulator) {
 			left.set(speed);
-			right.set(-1 * speed);
+			right.set(-speed);
 		}
 		count++;
 

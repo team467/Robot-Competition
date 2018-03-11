@@ -3,6 +3,7 @@ package org.usfirst.frc.team467.robot;
 import java.text.DecimalFormat;
 
 import org.apache.log4j.Logger;
+import org.usfirst.frc.team467.robot.Autonomous.AutoDrive;
 import org.usfirst.frc.team467.robot.simulator.communications.RobotData;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
@@ -11,7 +12,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public class Drive extends DifferentialDrive {
+public class Drive extends DifferentialDrive implements AutoDrive {
 	private ControlMode controlMode;
 
 	private static final Logger LOGGER = Logger.getLogger(Drive.class);
@@ -147,6 +148,7 @@ public class Drive extends DifferentialDrive {
 		return controlMode;
 	}
 
+	@Override
 	public void zero() {
 		LOGGER.trace("Zeroed the motor sensors.");
 		left.zero();
@@ -165,6 +167,7 @@ public class Drive extends DifferentialDrive {
 		left.stopMotor();
 	}
 
+	@Override
 	public boolean isStopped() {
 		return left.isStopped() && right.isStopped();
 	}
@@ -196,8 +199,10 @@ public class Drive extends DifferentialDrive {
 		// The right motor is reversed
 		right.set(ControlMode.Position, -feetToTicks(rightDistance));
 	}
-	
-	public void moveFeet(double distanceInFeet) {
+
+	@Override
+	public void moveLinearFeet(double distanceInFeet) {
+		
 		left.setPIDSlot(RobotMap.PID_SLOT_DRIVE);
 		right.setPIDSlot(RobotMap.PID_SLOT_DRIVE);
 		moveFeet(distanceInFeet, distanceInFeet);
@@ -207,7 +212,6 @@ public class Drive extends DifferentialDrive {
 
 	/**
 	 * 
-	 * @param distanceInFeet
 	 * @param rotationInDegrees
 	 *            enter positive degrees for left turn and enter negative degrees
 	 *            for right turn
@@ -308,9 +312,21 @@ public class Drive extends DifferentialDrive {
 		return feet;
 	}
 
+	/**
+	 * Sets the ramp time based on the elevator height in sensor ticks if driving straight or about to drive straight,
+	 * or sets the ramp time to the minimum if turning in place or stopped.
+	 * 
+	 * @param elevatorHeight
+	 */
 	public void setRamp(int elevatorHeight) {
-		double heightPercent = (double) (RobotMap.ELEVATOR_BOTTOM_TICKS - elevatorHeight) / (RobotMap.ELEVATOR_BOTTOM_TICKS - RobotMap.ELEVATOR_TOP_TICKS);
-		double ramp = MathUtils.weightedAverage(RobotMap.ELEVATOR_LOW_DRIVE_RAMP_TIME, RobotMap.ELEVATOR_HIGH_DRIVE_RAMP_TIME, heightPercent);
+		double ramp;
+		if (Math.abs(left.sensorSpeed() - right.sensorSpeed()) > (RobotMap.TURN_IN_PLACE_DETECT_TOLERANCE) ||
+				Math.abs(DriverStation467.getInstance().getArcadeSpeed()) >= RobotMap.MIN_DRIVE_SPEED) { // If driving straight or told to drive straight
+			double heightPercent = (double) (RobotMap.ELEVATOR_BOTTOM_TICKS - elevatorHeight) / (RobotMap.ELEVATOR_BOTTOM_TICKS - RobotMap.ELEVATOR_TOP_TICKS);
+			ramp = MathUtils.weightedAverage(RobotMap.ELEVATOR_LOW_DRIVE_RAMP_TIME, RobotMap.ELEVATOR_HIGH_DRIVE_RAMP_TIME, heightPercent);
+		} else { // Stopped or turning in place
+			ramp = RobotMap.ELEVATOR_LOW_DRIVE_RAMP_TIME;
+		}
 
 		left.setOpenLoopRamp(ramp);
 		right.setOpenLoopRamp(ramp);

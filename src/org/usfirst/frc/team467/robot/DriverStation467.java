@@ -3,8 +3,6 @@ package org.usfirst.frc.team467.robot;
 import org.usfirst.frc.team467.robot.XBoxJoystick467.Button;
 import org.usfirst.frc.team467.robot.Autonomous.ActionGroup;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
 public class DriverStation467 {
 
 	private XBoxJoystick467 driverJoy;
@@ -120,7 +118,7 @@ public class DriverStation467 {
 	}
 
 	public double getArcadeSpeed() {
-		return getDriveJoystick().getAdjustedSpeed();
+		return getDriveJoystick().getAdjustedSpeed(-driverJoy.getLeftStickY());
 	}
 
 	public double getArcadeTurn() {
