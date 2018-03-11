@@ -168,16 +168,25 @@ public class Drive extends DifferentialDrive {
 	public boolean isStopped() {
 		return left.isStopped() && right.isStopped();
 	}
-
+	
+	/**
+	 * Used for tuning PIDs only, does not use carrot drive or left right balancing 
+	 */
 	public void tuneForward(double distanceInFeet, int pidSlot) {
 		tuneMove(distanceInFeet, distanceInFeet, pidSlot);
 	}
 	
+	/**
+	 * Used for tuning PIDs only, does not use carrot drive or left right balancing 
+	 */
 	public void tuneTurn(double rotationInDegrees, int pidSlot) {
 		double turnDistanceInFeet = degreesToFeet(rotationInDegrees);
 		tuneMove(turnDistanceInFeet, -turnDistanceInFeet, pidSlot);
 	}
 	
+	/**
+	 * Used for tuning PIDs only, does not use carrot drive or left right balancing 
+	 */
 	public void tuneMove(double leftDistance, double rightDistance, int pidSlot) {
 		left.setPIDSlot(pidSlot);
 		right.setPIDSlot(pidSlot);
