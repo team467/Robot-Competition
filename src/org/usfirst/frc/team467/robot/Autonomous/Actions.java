@@ -18,21 +18,21 @@ public class Actions {
 		String actionText = "Do Nothing";
 		return new Action(actionText,
 				() -> drive.isStopped(),
-				() -> drive.moveForwardFeet(0));
+				() -> drive.moveLinearFeet(0));
 	}
 
 	public static Action wait(double duration) {
 		String actionText = "Do Nothing";
 		return new Action(actionText,
 				new ActionGroup.Duration(duration),
-				() -> drive.moveForwardFeet(0));
+				() -> drive.moveLinearFeet(0));
 	}
 
 	public static final Action nothingForever(){
 		String actionText = "Do Nothing";
 		return new Action(actionText,
 				() -> false,
-				() -> drive.moveForwardFeet(0));
+				() -> drive.moveLinearFeet(0));
 	}
 
 	public static ActionGroup doNothing(){
@@ -112,7 +112,7 @@ public class Actions {
 		String actionText = "Move forward " + distance + " feet";
 		return new Action(actionText,
 				new ActionGroup.ReachDistance(distance),
-				() -> drive.moveForwardFeet(distance));
+				() -> drive.moveLinearFeet(distance));
 	}
 
 	/**

@@ -5,7 +5,7 @@ package org.usfirst.frc.team467.robot.Autonomous;
  */
 public interface AutoDrive {
 
-	void moveForwardFeet(double distance);
+	void moveLinearFeet(double distance);
 	void rotateByAngle(double rotationInDegrees);
 
 	/**

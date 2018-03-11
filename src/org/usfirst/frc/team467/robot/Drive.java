@@ -173,7 +173,7 @@ public class Drive extends DifferentialDrive implements AutoDrive {
 	}
 
 	@Override
-	public void moveForwardFeet(double distanceInFeet) {
+	public void moveLinearFeet(double distanceInFeet) {
 		left.setPIDSlot(RobotMap.PID_SLOT_DRIVE);
 		right.setPIDSlot(RobotMap.PID_SLOT_DRIVE);
 		moveFeet(distanceInFeet, distanceInFeet);
