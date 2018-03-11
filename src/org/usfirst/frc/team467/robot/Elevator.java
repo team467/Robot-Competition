@@ -165,9 +165,12 @@ public class Elevator {
 			heightController.disable();
 		}
 
-		Drive.getInstance().setRamp(previousHeight);
 		limitCheck();
 		telemetry();
+	}
+
+	public int getHeight() {
+		return previousHeight;
 	}
 
 	public void rumbleOnPresetHeights() {
