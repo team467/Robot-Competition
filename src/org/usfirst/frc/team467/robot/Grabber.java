@@ -1,6 +1,8 @@
 package org.usfirst.frc.team467.robot;
 
 import org.apache.log4j.Logger;
+import org.usfirst.frc.team467.robot.Autonomous.AutoDrive;
+import org.usfirst.frc.team467.robot.simulator.DriveSimulator;
 
 import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.SpeedController;
@@ -8,6 +10,7 @@ import edu.wpi.first.wpilibj.SpeedController;
 public class Grabber {
 
 	public enum GrabberState {
+		STARTGRAB,
 		GRAB,
 		NEUTRAL,
 		RELEASE
@@ -29,7 +32,8 @@ public class Grabber {
 	private SpeedController right;
 	private boolean hadCube = false;
 	private boolean hasCube = false;
-	OpticalSensor os;
+	private OpticalSensor os;
+	private static AutoDrive drive;
 
 	private Grabber() {
 		if (RobotMap.HAS_GRABBER && !RobotMap.useSimulator) {
@@ -38,14 +42,18 @@ public class Grabber {
 			right = new Spark(RobotMap.GRABBER_R_CHANNEL);
 			right.setInverted(RobotMap.GRABBER_INVERT);
 			os = OpticalSensor.getInstance();
+			drive = Drive.getInstance();
+			//drivesimulator = null;
 		} else {
 			left = new NullSpeedController();
 			right = new NullSpeedController();
 			os = OpticalSensor.getInstance();
+			drive = DriveSimulator.getInstance();
+			//drive = null;
 		}
 
-		grabCount = GRAB_TIME_MS/20;
-		releaseCount = RELEASE_TIME_MS/20;
+		//grabCount = GRAB_TIME_MS/20;
+		//releaseCount = RELEASE_TIME_MS/20;
 	}
 
 	public static Grabber getInstance() {
@@ -63,12 +71,24 @@ public class Grabber {
 		
 		double speed = 0.0;
 		switch (state) {
+		
+		case STARTGRAB:
+			if(hasCube()) {
+				state = GrabberState.NEUTRAL;
+			}
+			else {
+				speed = RobotMap.MAX_GRAB_SPEED;
+			}
+			break;
 
 		case GRAB:
-			if(hasCube() || count > grabCount) {
+			if(hasCube()) { 
 				state = GrabberState.NEUTRAL;
+				//count = 0;
 			} else {
 				speed = RobotMap.MAX_GRAB_SPEED;
+				drive.moveFeet(2.08);     // tester
+			
 			}
 			break;
 
@@ -77,12 +97,7 @@ public class Grabber {
 			break; 
 
 		case RELEASE:
-			if(count > releaseCount) {
-				state = GrabberState.NEUTRAL;
-			} else {
-				speed = -0.8 * RobotMap.MAX_GRAB_SPEED;
-			}
-
+			speed = -RobotMap.MAX_GRAB_SPEED;
 			break;
 
 		default:
@@ -91,23 +106,25 @@ public class Grabber {
 		
 		if (!RobotMap.useSimulator) {
 			left.set(speed);
-			right.set(-speed);
+			right.set(-1 * speed);
 		}
-		count++;
+		//count++;
 
 		// Save the previous state and check for current state.
 		hadCube = hasCube;
 		hasCube = os.detectedTarget();
 	}
+	
+	public void startGrab() {
+		state = GrabberState.STARTGRAB;
+	}
 
 	public void grab() {
 		state = GrabberState.GRAB;
-		count = 0;
 	}
 
 	public void release() {
 		state = GrabberState.RELEASE;
-		count = 0;
 	}
 
 	public void pause() {
@@ -145,10 +162,17 @@ public class Grabber {
 	}
 
 	public boolean justGotCube() {
+		if(!RobotMap.useSimulator) {
 		return (!hadCube && hasCube());
+		}
+		
+		else return false;
 	}
 	
 	public boolean hasCube() {
+		if(!RobotMap.useSimulator) {
 		return (os.detectedTarget() && RobotMap.HAS_GRABBER);
+		}
+		else return false;
 	}
 }

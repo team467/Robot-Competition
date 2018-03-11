@@ -93,6 +93,8 @@ public class RobotMap {
 			
 			// Allowed error expressed as (inches / circumference)
 			POSITION_ALLOWED_ERROR = 1.0 / RobotMap.WHEEL_CIRCUMFERENCE;
+			
+			//1.8849
 
 			FORWARD_PANIC_ANGLE = 60;
 			BACKWARD_PANIC_ANGLE = -60;
@@ -140,11 +142,11 @@ public class RobotMap {
 			// TODO Assign values to the game piece variables, and make more as appropriate
 			HAS_ELEVATOR = true;
 			ELEVATOR_MOTOR_CHANNEL = 7;
-			ELEVATOR_BOTTOM_TICKS = 764;
-			ELEVATOR_FLOOR_HEIGHT = 747;
-			ELEVATOR_SWITCH_HEIGHT = 636;
-			ELEVATOR_LOW_SCALE_HEIGHT = 468;
-			ELEVATOR_TOP_TICKS = 357;
+			ELEVATOR_BOTTOM_TICKS = 839;
+			ELEVATOR_FLOOR_HEIGHT = 822;
+			ELEVATOR_SWITCH_HEIGHT = 711;
+			ELEVATOR_LOW_SCALE_HEIGHT = 543;
+			ELEVATOR_TOP_TICKS = 443;
 
 			HAS_LEFT_RAMP = true;
 			RAMP_LEFT_FORWARD_CHANNEL = 1;
