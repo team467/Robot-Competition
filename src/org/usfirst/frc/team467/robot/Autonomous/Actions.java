@@ -56,10 +56,10 @@ public class Actions {
 				() -> grabber.grab());
 	}
 	
-	public static Action startGrabCube() {
+	public static Action lockCube() {
 		Grabber grabber = Grabber.getInstance();
 		return new Action(
-				"Grabbing cube",
+				"Starting: Locking cube",
 				new ActionGroup.Duration(0.5),
 				//new ActionGroup.RunOnce(
 				() -> grabber.startGrab());
@@ -172,7 +172,7 @@ public class Actions {
 	public static ActionGroup start() {
 		String actionGroupText = "Lower grabber down and move elevator to safe height";
 		ActionGroup mode = new ActionGroup(actionGroupText);
-		mode.addAction(startGrabCube());
+		mode.addAction(lockCube());
 		mode.addAction(elevatorToSwitch());
 		return mode;
 	}
