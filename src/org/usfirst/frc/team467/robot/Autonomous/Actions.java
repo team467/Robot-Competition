@@ -70,7 +70,7 @@ public class Actions {
 		return new Action(
 				"Releasing cube",
 				//new ActionGroup.RunOnce(
-				new ActionGroup.Duration(1.0),
+				new ActionGroup.Duration(0.5),
 				() -> grabber.release());
 	}
 
@@ -235,6 +235,7 @@ public class Actions {
 		mode.addActions(turn(90));
 		mode.addActions(move(4.34)); 
 		mode.addAction(releaseCube());
+		mode.addAction(pauseGrabber());
 		return mode;
 	}
 
@@ -246,8 +247,9 @@ public class Actions {
 		mode.addActions(turn(90));
 		mode.addActions(move(4.27)); 
 		mode.addActions(turn(-90));
-		mode.addActions(move(4.34));
+		mode.addActions(move(4.84)); //Original: 4.34. Needs 0.5 foot more
 		mode.addAction(releaseCube());
+		mode.addAction(pauseGrabber());
 		return mode;
 	}
 
@@ -273,6 +275,7 @@ public class Actions {
 		mode.addActions(turn(90));
 		mode.addActions(move(0.375));
 		mode.addAction(releaseCube());
+		mode.addAction(pauseGrabber());
 		return mode;
 	}
 
@@ -288,6 +291,7 @@ public class Actions {
 		mode.addActions(turn(-90));
 		mode.addActions(move(0.375));
 		mode.addAction(releaseCube());
+		mode.addAction(pauseGrabber());
 		return mode;
 	}
 
@@ -303,6 +307,7 @@ public class Actions {
 		mode.addActions(turn(90));
 		mode.addActions(move(0.375));
 		mode.addAction(releaseCube());
+		mode.addAction(pauseGrabber());
 		return mode;
 	}
 
@@ -318,6 +323,7 @@ public class Actions {
 		mode.addActions(turn(-90));
 		mode.addActions(move(0.375));
 		mode.addAction(releaseCube());
+		mode.addAction(pauseGrabber());
 		return mode;
 	}
 
@@ -333,6 +339,7 @@ public class Actions {
 		mode.addActions(turn(90));
 		mode.addActions(move(0.375));
 		mode.addAction(releaseCube());
+		mode.addAction(pauseGrabber());
 		return mode;
 	}
 
@@ -340,12 +347,13 @@ public class Actions {
 		String actionGroupText = "Start on right, put cube on right scale";
 		ActionGroup mode = new ActionGroup(actionGroupText);
 		mode.addActions(start());
-		mode.addActions(move(21.33));  //reducing by 2 feet. Original: 25.33
+		mode.addActions(move(23.33));  //reducing by 2 feet. Original: 25.33
 		mode.addAction(Actions.elevatorToHighScale());
 		mode.addActions(turn(-90));
 		mode.addActions(move(1.5));
 		mode.addActions(move(1.0));
 		mode.addAction(releaseCube());
+		mode.addAction(pauseGrabber());
 		return mode;
 	}
 
@@ -370,6 +378,7 @@ public class Actions {
 		mode.addActions(move(0.9));
 		mode.addAction(elevatorToHighScale());
 		mode.addAction(releaseCube());
+		mode.addAction(pauseGrabber());
 		mode.addActions(move(-0.9));
 		mode.addActions(turn(-90));
 
@@ -534,26 +543,24 @@ public class Actions {
 	public static ActionGroup rightAdvancedSwitch() {
 		String actionGroupText = "Start on Right side, put cube on switch and second on Right side of scale.";
 		ActionGroup mode = new ActionGroup(actionGroupText);
-		mode.addActions(rightBasicSwitchRight());
+		mode.addActions(rightBasicScaleRight());
 
 		// pick up cube
-		mode.addActions(move(-2.0));
-		mode.addActions(turn(90)); 
-		mode.addActions(move(5.81));
-		mode.addActions(turn(-120)); 
-		mode.addActions(move(4.08)); 
-		mode.addAction(grabCube());
-		mode.addActions(move(-4.08));
-		mode.addActions(turn(120));
-		mode.addActions(move(7.0));
-		mode.addActions(turn(-90));
-		mode.addActions(move(1.0));
-		mode.addAction(elevatorToHighScale());
-		mode.addAction(releaseCube());
 		mode.addActions(move(-1.0));
-		mode.addActions(turn(90));
-
-		// lift elevator to place cube into scale
+		mode.addActions(move(-1.0));
+		mode.addAction(elevatorToFloor());
+		mode.addActions(turn(-90)); 
+		mode.addActions(move(5.81));
+		mode.addActions(turn(53)); 
+		mode.addActions(move(4.5)); 
+		mode.addAction(grabCube());
+		
+		//release cube into switch
+		mode.addActions(turn(-15));
+		mode.addActions(move(0.5));
+		mode.addAction(elevatorToSwitch());
+		mode.addAction(releaseCube());
+		mode.addAction(pauseGrabber());
 		return mode;
 	}
 	public static ActionGroup rightAdvancedSwitchLeftScale() {
@@ -581,6 +588,7 @@ public class Actions {
 		// lift elevator to place cube into scale
 		mode.addAction(elevatorToHighScale());
 		mode.addAction(releaseCube());
+		mode.addAction(pauseGrabber());
 
 		return mode;
 	}
