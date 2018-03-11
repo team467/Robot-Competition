@@ -86,7 +86,7 @@ public class Grabber {
 				//count = 0;
 			} else {
 				speed = RobotMap.MAX_GRAB_SPEED;
-				drive.moveFeet(2.08);     // tester
+				drive.moveLinearFeet(2.08);     // tester
 			
 			}
 			break;

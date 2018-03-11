@@ -31,8 +31,6 @@ public class Robot extends TimedRobot {
 	private Elevator elevator;
 	private Grabber grabber;
 
-	int session;
-
 	/**
 	 * Time in milliseconds
 	 */
@@ -75,8 +73,6 @@ public class Robot extends TimedRobot {
 			cam.setResolution(320, 240);
 			cam.setFPS(15);
 		}
-
-
 	}
 
 	public void disabledInit() {
@@ -99,7 +95,7 @@ public class Robot extends TimedRobot {
 
 	public void testPeriodic() {
 		if (tuningValue <= 30.0 && tuningValue >= -30.0) {
-			drive.moveFeet(tuningValue);
+			drive.moveLinearFeet(tuningValue);
 		} else {
 			drive.rotateByAngle(tuningValue);
 		}
@@ -125,7 +121,7 @@ public class Robot extends TimedRobot {
 	}
 
 	public void teleopInit() {
-		//		autonomous.terminate();
+//		autonomous.terminate();
 		autonomous = Actions.doNothing();
 		drive.configPeakOutput(1.0);
 		driverstation.readInputs();
@@ -139,6 +135,7 @@ public class Robot extends TimedRobot {
 
 		grabber.grab(driverstation.getGrabThrottle());
 		elevator.move(driverstation.getElevatorSpeed());
+		drive.setRamp(elevator.getHeight());
 
 		if (driverstation.getFloorHeightButtonPressed()) {
 			LOGGER.info("Dropping to bottom height");

@@ -171,9 +171,37 @@ public class Drive extends DifferentialDrive implements AutoDrive {
 	public boolean isStopped() {
 		return left.isStopped() && right.isStopped();
 	}
+	
+	/**
+	 * Used for tuning PIDs only, does not use carrot drive or left right balancing 
+	 */
+	public void tuneForward(double distanceInFeet, int pidSlot) {
+		tuneMove(distanceInFeet, distanceInFeet, pidSlot);
+	}
+	
+	/**
+	 * Used for tuning PIDs only, does not use carrot drive or left right balancing 
+	 */
+	public void tuneTurn(double rotationInDegrees, int pidSlot) {
+		double turnDistanceInFeet = degreesToFeet(rotationInDegrees);
+		tuneMove(turnDistanceInFeet, -turnDistanceInFeet, pidSlot);
+	}
+	
+	/**
+	 * Used for tuning PIDs only, does not use carrot drive or left right balancing 
+	 */
+	public void tuneMove(double leftDistance, double rightDistance, int pidSlot) {
+		left.setPIDSlot(pidSlot);
+		right.setPIDSlot(pidSlot);
+		LOGGER.info("Target: L: " + leftDistance + " R: " + rightDistance 
+				+ " Current L: " + getLeftDistance()  + " R: " + getRightDistance());
+		left.set(ControlMode.Position, feetToTicks(leftDistance));
+		// The right motor is reversed
+		right.set(ControlMode.Position, -feetToTicks(rightDistance));
+	}
 
 	@Override
-	public void moveFeet(double distanceInFeet) {
+	public void moveLinearFeet(double distanceInFeet) {
 		left.setPIDSlot(RobotMap.PID_SLOT_DRIVE);
 		right.setPIDSlot(RobotMap.PID_SLOT_DRIVE);
 		moveFeet(distanceInFeet, distanceInFeet);
@@ -283,9 +311,21 @@ public class Drive extends DifferentialDrive implements AutoDrive {
 		return feet;
 	}
 
+	/**
+	 * Sets the ramp time based on the elevator height in sensor ticks if driving straight or about to drive straight,
+	 * or sets the ramp time to the minimum if turning in place or stopped.
+	 * 
+	 * @param elevatorHeight
+	 */
 	public void setRamp(int elevatorHeight) {
-		double heightPercent = (double) (RobotMap.ELEVATOR_BOTTOM_TICKS - elevatorHeight) / (RobotMap.ELEVATOR_BOTTOM_TICKS - RobotMap.ELEVATOR_TOP_TICKS);
-		double ramp = MathUtils.weightedAverage(RobotMap.ELEVATOR_LOW_DRIVE_RAMP_TIME, RobotMap.ELEVATOR_HIGH_DRIVE_RAMP_TIME, heightPercent);
+		double ramp;
+		if (Math.abs(left.sensorSpeed() - right.sensorSpeed()) > (RobotMap.TURN_IN_PLACE_DETECT_TOLERANCE) ||
+				Math.abs(DriverStation467.getInstance().getArcadeSpeed()) >= RobotMap.MIN_DRIVE_SPEED) { // If driving straight or told to drive straight
+			double heightPercent = (double) (RobotMap.ELEVATOR_BOTTOM_TICKS - elevatorHeight) / (RobotMap.ELEVATOR_BOTTOM_TICKS - RobotMap.ELEVATOR_TOP_TICKS);
+			ramp = MathUtils.weightedAverage(RobotMap.ELEVATOR_LOW_DRIVE_RAMP_TIME, RobotMap.ELEVATOR_HIGH_DRIVE_RAMP_TIME, heightPercent);
+		} else { // Stopped or turning in place
+			ramp = RobotMap.ELEVATOR_LOW_DRIVE_RAMP_TIME;
+		}
 
 		left.setOpenLoopRamp(ramp);
 		right.setOpenLoopRamp(ramp);

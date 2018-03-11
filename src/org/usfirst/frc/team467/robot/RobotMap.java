@@ -263,6 +263,9 @@ public class RobotMap {
 
 	public static final double MIN_DRIVE_SPEED = 0.1;
 
+//	How far the sensor speeds can be and still be considered turning in place, in sensor units per 100 ms
+	public static final int TURN_IN_PLACE_DETECT_TOLERANCE = 150;
+
 	// Robot Dimensions
 	public static double WHEEL_BASE_LENGTH = 3.33;
 	public static double WHEEL_BASE_WIDTH = 1.99; // TODO: MEASURE TRUE WHEEL BASE WIDTH
