@@ -110,7 +110,7 @@ public class Robot extends TimedRobot {
 		driverstation.readInputs();
 		matchConfig.load();
 		autonomous = matchConfig.autonomousDecisionTree();
-		autonomous = Actions.rightBasicSwitchRight();
+		autonomous = Actions.rightBasicScaleRight();
 		//autonomous = Actions
 		LOGGER.info("Init Autonomous:" + autonomous.getName());
 		drive.logClosedLoopErrors();

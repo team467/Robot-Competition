@@ -188,9 +188,10 @@ public class Actions {
     public static ActionGroup simpleTest() {
         String actionGroupText = "Simplified version of leftbasicswitchleft.";
         ActionGroup mode = new ActionGroup(actionGroupText);
+        mode.addActions(move(23));
 		//mode.addActions(start());
         //mode.addActions(move(4.0));
-        mode.addActions(turn(-90));
+        //mode.addActions(turn(-90));
         /*mode.addActions(move(4.0));
         mode.addActions(turn(-90));
         mode.addActions(move(4.0));
@@ -339,9 +340,11 @@ public class Actions {
 		String actionGroupText = "Start on right, put cube on right scale";
 		ActionGroup mode = new ActionGroup(actionGroupText);
 		mode.addActions(start());
-		mode.addActions(move(25.33));
+		mode.addActions(move(21.33));  //reducing by 2 feet. Original: 25.33
+		mode.addAction(Actions.elevatorToHighScale());
 		mode.addActions(turn(-90));
-		mode.addActions(move(0.5));
+		mode.addActions(move(1.5));
+		mode.addActions(move(1.0));
 		mode.addAction(releaseCube());
 		return mode;
 	}
