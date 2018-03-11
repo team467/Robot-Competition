@@ -67,7 +67,7 @@ public class Actions {
 		
 		return new Action(
 				"Grabbing cube and driving forward",
-				new ActionGroup.ReachDistance(2),
+				new ActionGroup.ReachDistance(distance),
 				concurrentaction);
 	}
 	

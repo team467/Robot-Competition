@@ -145,7 +145,6 @@ public class ActionGroup {
 			this.distance = distance;
 		}
 	
-	
 		@Override
 		public boolean isDone() {
 			lastPosition = currentPosition;
@@ -185,39 +184,33 @@ public class ActionGroup {
 	}
 	static class ConcurrentActions implements Action.Activity{
 		List<Action.Activity> activities = new ArrayList<Action.Activity>();
-		
+
 		public ConcurrentActions(Action.Activity... activities) {
 			this.activities = Arrays.asList(activities);			
 		}
-		
+
 		@Override
 		public void doIt() {
 			for(Action.Activity activity : activities) {
 				activity.doIt();
-				
 			}
-			
+
 		}	
 	}
-	static class multicondition implements Action.Condition{
-		ArrayList<Action.Condition> conditions = new ArrayList<Action.Condition>();		
-		
-		public void multicondition(){		
-		}
-		
-		public void add(Action.Condition condition) {
-			conditions.add(condition);
-			
+	static class MultiCondition implements Action.Condition{
+		List<Action.Condition> conditions = new ArrayList<Action.Condition>();		
+
+		public MultiCondition(Action.Condition... conditions){	
+			this.conditions = Arrays.asList(conditions);
 		}
 
 		@Override
 		public boolean isDone() {
-		for(Action.Condition condition : conditions) {
-			if(condition.isDone()) {
-				return condition.isDone();		
+			for(Action.Condition condition : conditions) {
+				if(condition.isDone()) {
+					return condition.isDone();		
+				}
 			}
-			
-		}
 			return false;
 		}
 	}
