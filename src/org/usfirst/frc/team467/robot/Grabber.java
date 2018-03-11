@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj.SpeedController;
 public class Grabber {
 
 	public enum GrabberState {
-		STARTGRAB,
+		START_GRAB,
 		GRAB,
 		NEUTRAL,
 		RELEASE
@@ -19,10 +19,9 @@ public class Grabber {
 	public static final int GRAB_TIME_MS = 1000;
 	public static final int RELEASE_TIME_MS = 1000;
 
-	private int grabCount = 0;
-	private int releaseCount = 0;
-	private int count = 0;
-
+	/* private int grabCount = 0;
+	private int releaseCount = 0; */
+	
 	private GrabberState state = GrabberState.NEUTRAL;
 
 	private static final Logger LOGGER = Logger.getLogger(Grabber.class);
@@ -72,7 +71,7 @@ public class Grabber {
 		double speed = 0.0;
 		switch (state) {
 		
-		case STARTGRAB:
+		case START_GRAB:
 			if(hasCube()) {
 				state = GrabberState.NEUTRAL;
 			}
@@ -116,7 +115,7 @@ public class Grabber {
 	}
 	
 	public void startGrab() {
-		state = GrabberState.STARTGRAB;
+		state = GrabberState.START_GRAB;
 	}
 
 	public void grab() {
