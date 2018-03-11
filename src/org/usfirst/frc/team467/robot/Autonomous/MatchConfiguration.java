@@ -44,8 +44,8 @@ public class MatchConfiguration {
 
 	private ActionGroup autonomous;
 
-	private String[] autoList = {"None", "Left_Switch_Only", "Left_Basic", "Left_Advanced", 
-			"Center", "Right_Switch_Only", "Right_Basic", "Right_Advanced"};
+	private String[] autoList = {"None", "Left_Switch_Only", "Left_Basic", "Left_Prefer_Scale", "Left_Prefer_Switch", 
+			"Center", "Right_Switch_Only", "Right_Basic", "Right_Prefer_Scale", "Right_Prefer_Switch"};
 
 	private MatchConfiguration() {
 		teamColor = TeamColor.UNKNOWN;
@@ -206,7 +206,7 @@ public class MatchConfiguration {
 			}
 			break;
 
-		case "Left_Advanced":
+		case "Left_Prefer_Scale":
 			if(isSwitchOnSameSide() && !isScaleOnSameSide()) {
 				LOGGER.debug("Switch is on the same side and scale is on the opposite side | LEFT"); 
 				autonomous = Actions.leftAdvancedSwitchLeftScaleRight();
@@ -215,7 +215,7 @@ public class MatchConfiguration {
 				autonomous = Actions.leftAdvancedScaleLeftSwitchLeft();
 			} else if(isScaleOnSameSide() && !isSwitchOnSameSide()) {
 				LOGGER.debug("Scale is on same sode and switch is on the opposite side | LEFT");
-				autonomous = Actions.leftAdvancedSwitchRightScaleLeft();
+				autonomous = Actions.leftAdvancedScaleLeftScaleLeft();
 			} else if(!isSwitchOnSameSide() && !isScaleOnSameSide()) {
 				LOGGER.debug("Switch is on the opposite side and the scale is on the opposite side | LEFT");
 				autonomous = Actions.leftAdvancedSwitchRightScaleRight();
@@ -260,7 +260,7 @@ public class MatchConfiguration {
 			}
 			break;
 
-		case "Right_Advanced":
+		case "Right_Prefer_Scale":
 			if(isSwitchOnSameSide() && !isScaleOnSameSide()) {
 				LOGGER.debug("Switch is on same side and scale is on opposite side | RIGHT");
 				autonomous = Actions.rightAdvancedSwitchRightScaleLeft();
