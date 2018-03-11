@@ -3,6 +3,7 @@ package org.usfirst.frc.team467.robot;
 import java.text.DecimalFormat;
 
 import org.apache.log4j.Logger;
+import org.usfirst.frc.team467.robot.Autonomous.AutoDrive;
 import org.usfirst.frc.team467.robot.simulator.communications.RobotData;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
@@ -11,7 +12,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public class Drive extends DifferentialDrive {
+public class Drive extends DifferentialDrive implements AutoDrive {
 	private ControlMode controlMode;
 
 	private static final Logger LOGGER = Logger.getLogger(Drive.class);
@@ -147,6 +148,7 @@ public class Drive extends DifferentialDrive {
 		return controlMode;
 	}
 
+	@Override
 	public void zero() {
 		LOGGER.trace("Zeroed the motor sensors.");
 		left.zero();
@@ -165,11 +167,13 @@ public class Drive extends DifferentialDrive {
 		left.stopMotor();
 	}
 
+	@Override
 	public boolean isStopped() {
 		return left.isStopped() && right.isStopped();
 	}
 
-	public void moveFeet(double distanceInFeet) {
+	@Override
+	public void moveLinearFeet(double distanceInFeet) {
 		left.setPIDSlot(RobotMap.PID_SLOT_DRIVE);
 		right.setPIDSlot(RobotMap.PID_SLOT_DRIVE);
 		moveFeet(distanceInFeet, distanceInFeet);
@@ -179,7 +183,6 @@ public class Drive extends DifferentialDrive {
 
 	/**
 	 * 
-	 * @param distanceInFeet
 	 * @param rotationInDegrees
 	 *            enter positive degrees for left turn and enter negative degrees
 	 *            for right turn

@@ -61,7 +61,7 @@ public class Elevator {
 		if (!RobotMap.HAS_ELEVATOR || RobotMap.useSimulator) {
 			return;
 		}
-		
+
 		this.heightController = (WPI_TalonSRX) heightController;
 		configMotorParameters();
 
@@ -72,17 +72,17 @@ public class Elevator {
 	public void configMotorParameters() {
 		// Configure talon to be able to use the analog sensor.
 		if (!RobotMap.useSimulator) {
-		heightController.configSelectedFeedbackSensor(FeedbackDevice.Analog, 0, RobotMap.TALON_TIMEOUT);
-		heightController.configSetParameter(ParamEnum.eFeedbackNotContinuous, 1, 0x00, 0x00, 0x00);
-		heightController.setInverted(false);
-		heightController.setSensorPhase(false);
+			heightController.configSelectedFeedbackSensor(FeedbackDevice.Analog, 0, RobotMap.TALON_TIMEOUT);
+			heightController.configSetParameter(ParamEnum.eFeedbackNotContinuous, 1, 0x00, 0x00, 0x00);
+			heightController.setInverted(false);
+			heightController.setSensorPhase(false);
 
-		heightController.config_kP(0, 40.0, RobotMap.TALON_TIMEOUT);
-		heightController.config_kI(0, 0.0, RobotMap.TALON_TIMEOUT);
-		heightController.config_kD(0, 5.0, RobotMap.TALON_TIMEOUT);
-		heightController.config_kF(0, 0.0, RobotMap.TALON_TIMEOUT);
+			heightController.config_kP(0, 40.0, RobotMap.TALON_TIMEOUT);
+			heightController.config_kI(0, 0.0, RobotMap.TALON_TIMEOUT);
+			heightController.config_kD(0, 5.0, RobotMap.TALON_TIMEOUT);
+			heightController.config_kF(0, 0.0, RobotMap.TALON_TIMEOUT);
 
-		heightController.configAllowableClosedloopError(0, ALLOWABLE_ERROR_TICKS, RobotMap.TALON_TIMEOUT);
+			heightController.configAllowableClosedloopError(0, ALLOWABLE_ERROR_TICKS, RobotMap.TALON_TIMEOUT);
 		}
 	}
 
@@ -121,14 +121,14 @@ public class Elevator {
 		// If we're in position, stop.
 		final int error = targetHeight.height - heightController.getSelectedSensorPosition(0);
 		if (!RobotMap.useSimulator) {
-		if ((heightController.getControlMode() == ControlMode.MotionMagic || heightController.getControlMode() == ControlMode.Position)
-				&& Math.abs(error) <= ALLOWABLE_ERROR_TICKS) {
-			LOGGER.debug("automaticMove, clearing target,  trajectory=" + targetHeight.height
-					+ " pos=" + heightController.getSelectedSensorPosition(0) + " err=" + error);
-			targetHeight = null;
-			heightController.disable();
-			return;
-		}
+			if ((heightController.getControlMode() == ControlMode.MotionMagic || heightController.getControlMode() == ControlMode.Position)
+					&& Math.abs(error) <= ALLOWABLE_ERROR_TICKS) {
+				LOGGER.debug("automaticMove, clearing target,  trajectory=" + targetHeight.height
+						+ " pos=" + heightController.getSelectedSensorPosition(0) + " err=" + error);
+				targetHeight = null;
+				heightController.disable();
+				return;
+			}
 		}
 
 		configMotorParameters();
