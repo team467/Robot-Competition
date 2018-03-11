@@ -18,21 +18,21 @@ public class Actions {
 		String actionText = "Do Nothing";
 		return new Action(actionText,
 				() -> drive.isStopped(),
-				() -> drive.moveFeet(0));
+				() -> drive.moveForwardFeet(0));
 	}
 
 	public static Action wait(double duration) {
 		String actionText = "Do Nothing";
 		return new Action(actionText,
 				new ActionGroup.Duration(duration),
-				() -> drive.moveFeet(0));
+				() -> drive.moveForwardFeet(0));
 	}
 
 	public static final Action nothingForever(){
 		String actionText = "Do Nothing";
 		return new Action(actionText,
 				() -> false,
-				() -> drive.moveFeet(0));
+				() -> drive.moveForwardFeet(0));
 	}
 
 	public static ActionGroup doNothing(){
@@ -108,12 +108,11 @@ public class Actions {
 	 * @param Distance moves robot in feet.
 	 * @return
 	 */
-
 	public static Action moveDistanceForward(double distance) {
 		String actionText = "Move forward " + distance + " feet";
 		return new Action(actionText,
 				new ActionGroup.ReachDistance(distance),
-				() -> drive.moveFeet(distance));
+				() -> drive.moveForwardFeet(distance));
 	}
 
 	/**
@@ -165,8 +164,8 @@ public class Actions {
 		return mode;
 	}
 	
-	public static ActionGroup goStraight(){
-        String actionGroupText = "Just go straight past the line.";
+	public static ActionGroup crossAutoLine(){
+        String actionGroupText = "Go straight to cross the auto line.";
         ActionGroup mode = new ActionGroup(actionGroupText);
 		mode.addActions(start());
         mode.addActions(move(10.0));
@@ -641,6 +640,7 @@ public class Actions {
 		mode.addActions(turn(90));
 		mode.addAction(grabCube());
 		mode.addActions(move(1.3));
+
 		mode.addActions(move(-1.3));
 		mode.addActions(turn(-90));
 		mode.addActions(move(-6.5));
@@ -724,6 +724,7 @@ public class Actions {
 		mode.addActions(turn(90));
 		mode.addAction(grabCube());
 		mode.addActions(move(1.3));
+
 		mode.addActions(move(-1.3));
 		mode.addActions(turn(-90));
 		mode.addActions(move(5.2057));
@@ -749,6 +750,7 @@ public class Actions {
 		mode.addActions(move(8.33));
 		mode.addActions(turn(-90));
 		mode.addActions(move(1.479));
+
 		//lift elevator to place cube into right switch, then find new cube	
 		mode.addAction(elevatorToSwitch());
 		mode.addAction(releaseCube());
@@ -797,6 +799,7 @@ public class Actions {
 		mode.addActions(turn(-90));
 		mode.addAction(grabCube());
 		mode.addActions(move(1.3));
+
 		mode.addActions(move(-1.3));
 		mode.addActions(turn(90)); 
 		mode.addActions(move(-4.08)); 
