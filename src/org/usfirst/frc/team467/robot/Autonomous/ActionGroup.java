@@ -1,6 +1,5 @@
 package org.usfirst.frc.team467.robot.Autonomous;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
