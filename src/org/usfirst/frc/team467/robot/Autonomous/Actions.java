@@ -6,6 +6,7 @@ import org.usfirst.frc.team467.robot.Elevator;
 import org.usfirst.frc.team467.robot.Elevator.Stops;
 import org.usfirst.frc.team467.robot.Grabber;
 import org.usfirst.frc.team467.robot.RobotMap;
+import org.usfirst.frc.team467.robot.Autonomous.ActionGroup.ConcurrentActions;
 import org.usfirst.frc.team467.robot.simulator.DriveSimulator;
 
 public class Actions {
@@ -53,6 +54,21 @@ public class Actions {
 				"Grabbing cube",
 				new ActionGroup.Duration(1.0),
 				() -> grabber.grab(RobotMap.MAX_GRAB_SPEED));
+	}
+	
+	public static Action grabCubeWhileDriving(double distance) {
+		Grabber grabber = Grabber.getInstance();
+		Drive drive = Drive.getInstance();
+		Elevator elevator = Elevator.getInstance();
+		drive.zero();
+		ConcurrentActions concurrentaction = new ConcurrentActions(
+				() -> grabber.grab(RobotMap.MAX_GRAB_SPEED),
+				() -> drive.moveFeet(distance));
+		
+		return new Action(
+				"Grabbing cube and driving forward",
+				new ActionGroup.ReachDistance(distance),
+				concurrentaction);
 	}
 	
 	public static Action releaseCube() {
@@ -214,9 +230,8 @@ public class Actions {
 	public static ActionGroup testGrab() {
 		String actionGroupText = "Testing grab with a 2 foot move.";
 		ActionGroup mode = new ActionGroup(actionGroupText);
-		mode.addAction(grabCube());
-		mode.addActions(move(2.0));
-		mode.addAction(elevatorToSwitch());
+		mode.addAction(elevatorToFloor());
+		mode.addAction(grabCubeWhileDriving(2));
 		return mode;
 	}
 	

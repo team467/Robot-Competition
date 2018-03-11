@@ -46,7 +46,7 @@ public class Robot extends TimedRobot {
 		Logging.init();
 
 		// Initialize RobotMap
-		RobotMap.init(RobotID.Competition_2);
+		RobotMap.init(RobotID.Competition_1);
 
 		// Make robot objects
 		driverstation = DriverStation467.getInstance();
@@ -105,7 +105,7 @@ public class Robot extends TimedRobot {
 		driverstation.readInputs();
 //		matchConfig.load();
 //		autonomous = matchConfig.autonomousDecisionTree();
-		autonomous = Actions.simpleTest();
+		autonomous = Actions.testGrab();
 		LOGGER.info("Init Autonomous:" + autonomous.getName());
 		drive.logClosedLoopErrors();
 		drive.configPeakOutput(1.0);
