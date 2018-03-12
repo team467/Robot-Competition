@@ -19,7 +19,7 @@ public class Elevator {
 	private MotorSafetyHelper m_safetyHelper;
 
 	private Stops targetHeight;
-	private int previousHeight = RobotMap.ELEVATOR_BOTTOM_TICKS;
+	private int previousHeight;
 
 	private final int ALLOWABLE_ERROR_TICKS = 3;
 	private final int LIMIT_BUFFER = 10;
@@ -64,6 +64,7 @@ public class Elevator {
 
 		this.heightController = (WPI_TalonSRX) heightController;
 		configMotorParameters();
+		previousHeight = RobotMap.ELEVATOR_BOTTOM_TICKS;
 
 		targetHeight = null;
 		m_safetyHelper = new MotorSafetyHelper(this.heightController);
