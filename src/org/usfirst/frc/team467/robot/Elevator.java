@@ -19,7 +19,7 @@ public class Elevator {
 	private MotorSafetyHelper m_safetyHelper;
 
 	private Stops targetHeight;
-	private int previousHeight;
+	private int previousHeight = RobotMap.ELEVATOR_BOTTOM_TICKS;
 
 	private final int ALLOWABLE_ERROR_TICKS = 3;
 	private final int LIMIT_BUFFER = 10;
