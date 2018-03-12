@@ -64,7 +64,6 @@ public class Elevator {
 
 		this.heightController = (WPI_TalonSRX) heightController;
 		configMotorParameters();
-		previousHeight = RobotMap.ELEVATOR_BOTTOM_TICKS;
 
 		targetHeight = null;
 		m_safetyHelper = new MotorSafetyHelper(this.heightController);
@@ -97,7 +96,7 @@ public class Elevator {
 
 	private int getRawHeight() {
 		if (!RobotMap.HAS_ELEVATOR || RobotMap.useSimulator) {
-			return 0;
+			return RobotMap.ELEVATOR_BOTTOM_TICKS;
 		}
 		return heightController.getSelectedSensorPosition(0);
 	}
