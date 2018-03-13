@@ -96,7 +96,7 @@ public class Elevator {
 
 	private int getRawHeight() {
 		if (!RobotMap.HAS_ELEVATOR || RobotMap.useSimulator) {
-			return 0;
+			return RobotMap.ELEVATOR_BOTTOM_TICKS;
 		}
 		return heightController.getSelectedSensorPosition(0);
 	}
@@ -165,9 +165,12 @@ public class Elevator {
 			heightController.disable();
 		}
 
-		Drive.getInstance().setRamp(previousHeight);
 		limitCheck();
 		telemetry();
+	}
+
+	public int getHeight() {
+		return previousHeight;
 	}
 
 	public void rumbleOnPresetHeights() {

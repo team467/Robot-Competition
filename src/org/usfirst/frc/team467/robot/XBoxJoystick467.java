@@ -171,12 +171,12 @@ public class XBoxJoystick467 {
 	/**
 	 * Returns the drive speed, taking the turbo and slow triggers into account.
 	 */
-	public double getAdjustedSpeed() {
+	public double getAdjustedSpeed(double speed) {
 		if (getLeftTrigger() > 0.0) {
 			// For some reason, up stick is negative, so we flip it
-			return turboFastSpeed(-getLeftStickY()); 
+			return turboFastSpeed(speed); 
 		} else {
-			return turboSlowSpeed(-getLeftStickY()); 
+			return turboSlowSpeed(speed); 
 		}
 	}
 
@@ -192,7 +192,7 @@ public class XBoxJoystick467 {
 	 * Returns the turn speed, which is slower when the robot is driving fast.
 	 */
 	public double getAdjustedTurnSpeed() {
-		return getRightStickX() * MathUtils.weightedAverage(RobotMap.NORMAL_TURN_MAX_SPEED, RobotMap.SLOW_TURN_MAX_SPEED, getAdjustedSpeed());
+		return getAdjustedSpeed(getRightStickX()) * MathUtils.weightedAverage(RobotMap.NORMAL_TURN_MAX_SPEED, RobotMap.SLOW_TURN_MAX_SPEED, getAdjustedSpeed(-getLeftStickY()));
 	}
 
 	public double getPOV() {

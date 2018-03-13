@@ -14,7 +14,7 @@ public class TalonSpeedControllerGroup implements SpeedController {
 	private WPI_TalonSRX leader;
 	private WPI_TalonSRX follower1;
 	private WPI_TalonSRX follower2;
-	
+
 	private int previousSensorPosition;
 
 	private ControlMode controlMode = ControlMode.PercentOutput;
@@ -46,7 +46,7 @@ public class TalonSpeedControllerGroup implements SpeedController {
 		//only have sensor on leader
 		leader.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, RobotMap.TALON_TIMEOUT);
 		leader.setSensorPhase(sensorIsInverted);
-		
+
 		zero();		
 	}
 
@@ -102,7 +102,7 @@ public class TalonSpeedControllerGroup implements SpeedController {
 		leader.selectProfileSlot(slot, 0);
 
 	}
-	
+
 
 	public void zero() {
 		if (!RobotMap.HAS_WHEELS) {
@@ -156,8 +156,13 @@ public class TalonSpeedControllerGroup implements SpeedController {
 	public void set(double speed) {
 		set(controlMode, speed);
 	}
-	
+
 	public void configPeakOutput(double percentOut) {
+		if (leader == null) {
+			LOGGER.trace("No drive system");
+			return;
+		}
+
 		leader.configPeakOutputForward(percentOut, RobotMap.TALON_TIMEOUT);
 		leader.configPeakOutputReverse(-percentOut, RobotMap.TALON_TIMEOUT);
 	}
@@ -167,6 +172,7 @@ public class TalonSpeedControllerGroup implements SpeedController {
 			LOGGER.trace("No drive system");
 			return;
 		}
+
 		leader.set(controlMode, outputValue);
 		if (follower1 != null) {
 			follower1.follow(leader);
@@ -181,7 +187,9 @@ public class TalonSpeedControllerGroup implements SpeedController {
 		if (leader == null) {
 			LOGGER.trace("No drive system");
 			return;
-		}		leader.setInverted(isInverted);
+		}
+
+		leader.setInverted(isInverted);
 		if (follower1 != null) {
 			follower1.setInverted(isInverted);
 		}
@@ -205,6 +213,7 @@ public class TalonSpeedControllerGroup implements SpeedController {
 			LOGGER.trace("No drive system");
 			return;
 		}
+
 		leader.stopMotor();
 		if (follower1 != null) {
 			follower1.stopMotor();
@@ -219,6 +228,7 @@ public class TalonSpeedControllerGroup implements SpeedController {
 			LOGGER.trace("No drive system");
 			return true;
 		}
+
 		int leaderSensorPosition = leader.getSelectedSensorPosition(0);
 		boolean isStopped = false;
 
@@ -227,6 +237,7 @@ public class TalonSpeedControllerGroup implements SpeedController {
 		} else if (leaderSensorPosition == previousSensorPosition) {
 			isStopped = true;
 		}
+
 		previousSensorPosition = leaderSensorPosition;
 		return isStopped;
 	}
@@ -236,29 +247,43 @@ public class TalonSpeedControllerGroup implements SpeedController {
 			LOGGER.trace("No drive system");
 			return 0;
 		}
+
 		return leader.getSelectedSensorPosition(0);
 	}
-	
+
+	public int sensorSpeed() {
+		if (leader == null) {
+			LOGGER.trace("No drive system");
+			return 0;
+		}
+
+		return leader.getSelectedSensorVelocity(0);
+	}
+
 	public void setOpenLoopRamp(double ramp) {
 		if (leader == null) {
 			LOGGER.trace("No drive system");
 			return;
 		}
+
 		leader.configOpenloopRamp(ramp, RobotMap.TALON_TIMEOUT);
 	}
-	
+
 	public void movePosition(double targetDistance) {
 		if (leader == null) {
 			LOGGER.trace("No Drive System");
 			return;
 		}
+
 		double distanceMoved = leader.getSelectedSensorPosition(0);
 		double distanceToGo;
+
 		if (targetDistance > 0) {
 			distanceToGo = Math.min(targetDistance, distanceMoved + 1024);
 		} else {
 			distanceToGo = Math.max(targetDistance, distanceMoved - 1024);
 		}
+
 		LOGGER.info("target=" + targetDistance + " sensor=" + distanceMoved + " toGo=" + distanceToGo);
 		set(ControlMode.Position, distanceToGo);
 	}

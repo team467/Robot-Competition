@@ -202,7 +202,7 @@ public class MatchConfiguration {
 				autonomous = Actions.leftBasicSwitchLeft();
 			} else {
 				LOGGER.debug("Switch is on the opposite side | LEFT");
-				autonomous = Actions.goStraight();
+				autonomous = Actions.crossAutoLine();
 			}
 			break;
 
@@ -262,7 +262,7 @@ public class MatchConfiguration {
 				autonomous = Actions.rightBasicSwitchRight();
 			} else {
 				LOGGER.debug("Switch is on opposite side| RIGHT");
-				autonomous = Actions.goStraight();
+				autonomous = Actions.crossAutoLine();
 			}
 			break;
 

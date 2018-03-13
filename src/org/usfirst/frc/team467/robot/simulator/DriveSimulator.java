@@ -73,7 +73,7 @@ public class DriveSimulator implements AutoDrive {
 	}
 
 	@Override
-	public void moveFeet(double distance) {
+	public void moveLinearFeet(double distance) {
 		moveFeet(distance, distance);
 	}
 
