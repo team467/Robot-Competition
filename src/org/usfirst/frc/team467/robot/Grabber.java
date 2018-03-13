@@ -87,7 +87,6 @@ public class Grabber {
 			} else {
 				speed = RobotMap.MAX_GRAB_SPEED;
 				drive.moveLinearFeet(2.08);     // tester
-			
 			}
 			break;
 
@@ -96,7 +95,7 @@ public class Grabber {
 			break; 
 
 		case RELEASE:
-			speed = -1 * RobotMap.MAX_GRAB_SPEED;
+			speed = -RobotMap.MAX_GRAB_SPEED;
 			break;
 
 		default:
@@ -105,7 +104,7 @@ public class Grabber {
 
 		if (!RobotMap.useSimulator) {
 			left.set(speed);
-			right.set(-1 * speed);
+			right.set(-speed);
 		}
 		//count++;
 
