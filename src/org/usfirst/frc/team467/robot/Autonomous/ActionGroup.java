@@ -216,7 +216,7 @@ public class ActionGroup {
 		public boolean isDone() {
 			for(Action.Condition condition : conditions) {
 				if(condition.isDone()) {
-					return condition.isDone();		
+					return true;		
 				}
 			}
 			return false;

@@ -7,6 +7,8 @@ import org.usfirst.frc.team467.robot.Elevator.Stops;
 import org.usfirst.frc.team467.robot.Grabber;
 import org.usfirst.frc.team467.robot.RobotMap;
 import org.usfirst.frc.team467.robot.Autonomous.ActionGroup.ConcurrentActions;
+import org.usfirst.frc.team467.robot.Autonomous.ActionGroup.MultiCondition;
+import org.usfirst.frc.team467.robot.Autonomous.ActionGroup.ReachDistance;
 import org.usfirst.frc.team467.robot.simulator.DriveSimulator;
 
 public class Actions {
@@ -71,13 +73,17 @@ public class Actions {
 		Drive drive = Drive.getInstance();
 		Elevator elevator = Elevator.getInstance();
 		drive.zero();
+		MultiCondition multicondition = new MultiCondition(
+				new ActionGroup.ReachDistance(distance), 
+				() -> grabber.hasCube());
+		
 		ConcurrentActions concurrentaction = new ConcurrentActions(
 				() -> grabber.grab(RobotMap.MAX_GRAB_SPEED),
 				() -> drive.moveLinearFeet(distance));
 
 		return new Action(
 				"Grabbing cube and driving forward",
-				new ActionGroup.ReachDistance(distance),
+				multicondition,
 				concurrentaction);
 	}
 
@@ -187,7 +193,7 @@ public class Actions {
 	public static ActionGroup start() {
 		String actionGroupText = "Lower grabber down and move elevator to safe height";
 		ActionGroup mode = new ActionGroup(actionGroupText);
-		mode.addAction(lockCube());
+//		mode.addAction(lockCube());
 		mode.addAction(elevatorToSwitch());
 		return mode;
 	}
@@ -203,7 +209,9 @@ public class Actions {
 	public static ActionGroup simpleTest() {
 		String actionGroupText = "Simplified version of leftbasicswitchleft.";
 		ActionGroup mode = new ActionGroup(actionGroupText);
-		mode.addActions(move(23));
+		mode.addAction(moveturn(53));
+		mode.addAction(zeroDistance());
+		mode.addAction(grabCubeWhileDriving(5.5));
 		//mode.addActions(start());
 		//mode.addActions(move(4.0));
 		//mode.addActions(turn(-90));
@@ -365,7 +373,7 @@ public class Actions {
 		mode.addAction(Actions.elevatorToHighScale());
 		mode.addActions(turn(-90));
 		mode.addActions(move(1.5));
-		mode.addActions(move(1.0));
+//		mode.addActions(move(1.0));
 		mode.addAction(releaseCube());
 		mode.addAction(pauseGrabber());
 		return mode;
@@ -383,8 +391,9 @@ public class Actions {
 		mode.addActions(turn(-90)); 
 		mode.addActions(move(5.81)); 
 		mode.addActions(turn(120)); 
-		mode.addActions(move(4.0)); 
-		mode.addAction(grabCube());
+		//mode.addActions(move(4.0)
+		//mode.addActions(grabCube())
+		mode.addAction(grabCubeWhileDriving(4.0));
 		mode.addActions(move(-4.0));
 		mode.addActions(turn(-120));
 		mode.addActions(move(7.0));
@@ -443,8 +452,10 @@ public class Actions {
 		mode.addActions(turn(90));
 		mode.addActions(move(2.0 + 11.7083 + 1.083 + 1.083));
 		mode.addActions(turn(90));
-		mode.addActions(move(1.3));
-		mode.addAction(grabCube());
+		//mode.addActions(move(1.3));
+		//mode.addAction(grabCube());
+		mode.addAction(grabCubeWhileDriving(1.3));
+
 
 		mode.addActions(move(-1.3));
 		mode.addActions(turn(-90));
@@ -485,8 +496,10 @@ public class Actions {
 		mode.addActions(turn(-90));
 		mode.addActions(move(4.2));
 		mode.addActions(turn(-90));
-		mode.addActions(move(1.3));
-		mode.addAction(grabCube());
+//		mode.addActions(move(1.3));
+//		mode.addAction(grabCube());
+		mode.addAction(grabCubeWhileDriving(1.3));
+
 
 		mode.addActions(move(-1.3));
 		mode.addActions(turn(90));
@@ -564,14 +577,15 @@ public class Actions {
 
 		// pick up cube
 		mode.addActions(move(-1.0));
-		mode.addActions(move(-1.0));
+//		mode.addActions(move(-1.0));
 		mode.addAction(elevatorToFloor());
 		mode.addActions(turn(-90)); 
 		mode.addActions(move(5.81));
-		mode.addActions(turn(53)); 
-		mode.addActions(move(4.5)); 
-		mode.addAction(grabCube());
-
+		mode.addActions(turn(53));
+//		mode.addActions(move(4.5)); 
+//		mode.addAction(grabCube());
+		mode.addAction(zeroDistance());
+		mode.addAction(grabCubeWhileDriving(5.5));
 		//release cube into switch
 		mode.addActions(turn(-15));
 		mode.addActions(move(0.5));
