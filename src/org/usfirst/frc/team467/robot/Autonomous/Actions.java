@@ -160,6 +160,7 @@ public class Actions {
 		mode.addAction(moveDistanceForward(distance));
 		return mode;
 	}
+	
 
 	public static ActionGroup turn(double degrees) {
 		String actionGroupText = "Turn " + degrees + " degrees";
@@ -212,6 +213,11 @@ public class Actions {
 	}
 
 	//SWITCH - BASIC
+	/*
+	 * 
+	 * 
+	 * 
+	 */
 
 	public static ActionGroup leftBasicSwitchLeft() {
 		String actionGroupText = "Start on left side, put cube on switch.";
@@ -256,13 +262,18 @@ public class Actions {
 		mode.addActions(start());
 		mode.addActions(move(12.33)); 
 		mode.addActions(turn(-90));
-		mode.addActions(move(1.479)); // 1' 5.75"
+		mode.addActions(move(1.479)); 
 		mode.addAction(releaseCube());
 		mode.addAction(pauseGrabber());
 		return mode;
 	}
 
 	//SCALE - BASIC
+	/*
+	 * 
+	 * 
+	 * 
+	 */
 
 	public static ActionGroup leftBasicScaleLeft() {
 		String actionGroupText = "Start on left, put cube on left scale";
@@ -289,35 +300,35 @@ public class Actions {
 		return mode;
 	}
 
-	public static ActionGroup centerBasicScaleLeft(){
-		String actionGroupText = "Start in center, put cube on left scale";
-		ActionGroup mode = new ActionGroup(actionGroupText);
-		mode.addActions(start());
-		mode.addActions(move(4.0));
-		mode.addActions(turn(-90));
-		mode.addActions(move(10.0));
-		mode.addActions(turn(90));
-		mode.addActions(move(21.33));
-		mode.addActions(turn(90));
-		mode.addActions(move(0.375));
-		mode.addAction(releaseCube());
-		return mode;
-	}
-
-	public static ActionGroup centerBasicScaleRight(){
-		String actionGroupText = "Start in center, put cube on right scale";
-		ActionGroup mode = new ActionGroup(actionGroupText);
-		mode.addActions(start());
-		mode.addActions(move(4.0));
-		mode.addActions(turn(90));
-		mode.addActions(move(9.08));
-		mode.addActions(turn(-90));
-		mode.addActions(move(21.33));
-		mode.addActions(turn(-90));
-		mode.addActions(move(0.375));
-		mode.addAction(releaseCube());
-		return mode;
-	}
+//	public static ActionGroup centerBasicScaleLeft(){
+//		String actionGroupText = "Start in center, put cube on left scale";
+//		ActionGroup mode = new ActionGroup(actionGroupText);
+//		mode.addActions(start());
+//		mode.addActions(move(4.0));
+//		mode.addActions(turn(-90));
+//		mode.addActions(move(10.0));
+//		mode.addActions(turn(90));
+//		mode.addActions(move(21.33));
+//		mode.addActions(turn(90));
+//		mode.addActions(move(0.375));
+//		mode.addAction(releaseCube());
+//		return mode;
+//	}
+//
+//	public static ActionGroup centerBasicScaleRight(){
+//		String actionGroupText = "Start in center, put cube on right scale";
+//		ActionGroup mode = new ActionGroup(actionGroupText);
+//		mode.addActions(start());
+//		mode.addActions(move(4.0));
+//		mode.addActions(turn(90));
+//		mode.addActions(move(9.08));
+//		mode.addActions(turn(-90));
+//		mode.addActions(move(21.33));
+//		mode.addActions(turn(-90));
+//		mode.addActions(move(0.375));
+//		mode.addAction(releaseCube());
+//		return mode;
+//	}
 
 	public static ActionGroup rightBasicScaleLeft(){
 		String actionGroupText = "Start on right, put cube on left scale";
@@ -344,7 +355,17 @@ public class Actions {
 		return mode;
 	}
 
-	//ADVANCED - LEFT
+	//ADVANCED
+	/*
+	 * 
+	 * 
+	 */
+	
+	//LEFT - PREFER SCALE
+	/*
+	 * 
+	 * 
+	 */
 
 	public static ActionGroup leftAdvancedScaleLeftSwitchLeft() {
 		String actionGroupText = "Start on left side, put cube on left scale and second on left switch.";
@@ -395,7 +416,7 @@ public class Actions {
 		return mode;
 	}
 
-	public static ActionGroup leftAdvancedSwitchRightScaleRight() {
+	public static ActionGroup leftAdvancedScaleRightSwitchRight() {
 		String actionGroupText = "Start on left side, put cube on right scale and second on right switch.";
 		ActionGroup mode = new ActionGroup(actionGroupText);
 
@@ -454,7 +475,6 @@ public class Actions {
 		// release cube into scale
 		mode.addActions(move(-2.0));
 		mode.addActions(turn(-37 - 80));
-
 		return mode;
 	}
 
@@ -467,7 +487,11 @@ public class Actions {
 		return mode;
 	}
 
-	//RIGHT
+	//RIGHT - PREFER SCALE
+	/*
+	 * 
+	 * 
+	 */
 
 	public static ActionGroup rightAdvancedScaleRightSwitchRight() {
 		String actionGroupText = "Start on Right side, put cube on right scale and second on right switch.";
@@ -517,8 +541,8 @@ public class Actions {
 		return mode;
 	}
 
-	public static ActionGroup rightAdvancedSwitchLeftScaleRight() {
-		String actionGroupText = "Start on Right side, put cube on left switch and second on right scale.";
+	public static ActionGroup rightAdvancedScaleLeftSwitchLeft() {
+		String actionGroupText = "Start on Right side, put cube on left scale and second on left switch.";
 		ActionGroup mode = new ActionGroup(actionGroupText);
 
 		mode.addActions(move(18.14));
@@ -558,8 +582,8 @@ public class Actions {
 		return mode;
 	}
 
-	public static ActionGroup rightAdvancedSwitchLeftScaleLeft() {
-		String actionGroupText = "Start on Right side, put cube on left switch and second on left scale.";
+	public static ActionGroup rightAdvancedScaleRightScaleRight() {
+		String actionGroupText = "Start on Right side, put cube on right scale and second on right scale.";
 		ActionGroup mode = new ActionGroup(actionGroupText);
 
 		mode.addActions(move(18.14));
@@ -598,6 +622,14 @@ public class Actions {
 		
 		return mode;
 	}
+	
+	
+	
+	
+	
+	
+	
+	
 
 	//center
 

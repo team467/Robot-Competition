@@ -67,11 +67,13 @@
 							<String fx:value="Left_Basic" />
 							<String fx:value="Left_Prefer_Scale" />
 							<String fx:value="Left_Prefer_Switch" />
+							<String fx:value="Left_Side_Only"
 							<String fx:value="Center" />
 							<String fx:value="Right_Switch_Only" />
 							<String fx:value="Right_Basic" />
 							<String fx:value="Right_Prefer_Scale" />
 							<String fx:value="Right_Prefer_Switch" />
+							<String fx:value="Right_Side_Only" />
 						</FXCollections>
 					</items>
 					<FlowPane.margin>
