@@ -44,8 +44,8 @@ public class MatchConfiguration {
 
 	private ActionGroup autonomous;
 
-	private String[] autoList = {"None", "Left_Switch_Only", "Left_Basic", "Left_Advanced", 
-			"Center", "Right_Switch_Only", "Right_Basic", "Right_Advanced"};
+	private String[] autoList = {"None", "Just_Go_Forward", "Left_Switch_Only", "Left_Basic", "Left_Advanced", "Left_Our_Side_Only",
+			"Center", "Right_Switch_Only", "Right_Basic", "Right_Advanced", "Right_Our_Side_Only"};
 
 	private MatchConfiguration() {
 		teamColor = TeamColor.UNKNOWN;
@@ -177,47 +177,16 @@ public class MatchConfiguration {
 
 		LOGGER.debug("Entering decision tree");
 		autonomous = Actions.doNothing();
+		
+		if (autoMode.startsWith("Left")) {
+			Actions.startOnLeft();
+		}
 
 		switch(autoMode) {
 
-		case "Left_Basic":
-			if(isSwitchOnSameSide() && !isScaleOnSameSide()) {
-				LOGGER.debug("Switch is on the same side and scale is on the opposite side | LEFT"); 
-				autonomous = Actions.leftBasicSwitchLeft();
-			} else if (isSwitchOnSameSide() && isScaleOnSameSide()){
-				LOGGER.debug("Switch is on same side and scale is on same side | LEFT");
-				autonomous = Actions.leftBasicScaleLeft();
-			} else if(!isSwitchOnSameSide() && !isScaleOnSameSide()) {
-				LOGGER.debug("Switch is on the opposite side and the scale is on the opposite side | LEFT");
-				autonomous = Actions.leftBasicScaleRight();
-			} 
-			break;
-
-		case "Left_Switch_Only":
-			if(isSwitchOnSameSide()) {
-				LOGGER.debug("Switch is on the same side | LEFT"); 
-				autonomous = Actions.leftBasicSwitchLeft();
-			} else {
-				LOGGER.debug("Switch is on the opposite side | LEFT");
-				autonomous = Actions.crossAutoLine();
-			}
-			break;
-
-		case "Left_Advanced":
-			if(isSwitchOnSameSide() && !isScaleOnSameSide()) {
-				LOGGER.debug("Switch is on the same side and scale is on the opposite side | LEFT"); 
-				autonomous = Actions.leftAdvancedSwitchRightScale();
-			} else if (isSwitchOnSameSide() && isScaleOnSameSide()){
-				LOGGER.debug("Switch is on same side and scale is on same side | LEFT");
-				autonomous = Actions.leftAdvancedSwitch();
-			} else if(isScaleOnSameSide() && !isSwitchOnSameSide()) {
-				LOGGER.debug("Scale is on same sode and switch is on the opposite side | LEFT");
-				autonomous = Actions.leftAdvancedSwitchRightScaleLeft();
-			} else if(!isSwitchOnSameSide() && !isScaleOnSameSide()) {
-				LOGGER.debug("Switch is on the opposite side and the scale is on the opposite side | LEFT");
-				autonomous = Actions.leftAdvancedSwitchRightScaleRight();
-			} 
-
+		case "Just_Go_Forward": 
+			LOGGER.debug("Just going forward.");
+			autonomous = Actions.crossAutoLine();
 			break;
 
 		case "Center": 
@@ -231,42 +200,62 @@ public class MatchConfiguration {
 			}
 			break;
 
-		case "Right_Basic": 
-			if(isSwitchOnSameSide() && !isScaleOnSameSide()) {
-				LOGGER.debug("Switch is on same side and scale is on opposite side | RIGHT");
-				autonomous = Actions.rightBasicSwitchRight();
-			} else if (isSwitchOnSameSide() && isScaleOnSameSide()) {
-				LOGGER.debug("Switch is on same side and scale is one same side | RIGHT");
-				autonomous = Actions.rightBasicScaleRight();
-			} else if(isScaleOnSameSide() && !isSwitchOnSameSide()) {
-				LOGGER.debug("Scale is on same side and switich on opposite side | RIGHT");
-				autonomous = Actions.rightBasicScaleLeft();
-			}
-			break;
-
+		case "Left_Switch_Only":
 		case "Right_Switch_Only": 
 			if(isSwitchOnSameSide()) {
-				LOGGER.debug("Switch is on same side| RIGHT");
-				autonomous = Actions.rightBasicSwitchRight();
+				LOGGER.debug("Going for switch on our side.");
+				autonomous = Actions.basicSwitchOurSide();
 			} else {
-				LOGGER.debug("Switch is on opposite side| RIGHT");
+				LOGGER.debug("Switch is on opposite side, just going forward");
 				autonomous = Actions.crossAutoLine();
 			}
 			break;
 
+		case "Left_Basic":
+		case "Right_Basic":
+			if (isScaleOnSameSide()) {
+				LOGGER.debug("Going for scale on our side.");
+				autonomous = Actions.basicScaleOurSide();
+			} else if (isSwitchOnSameSide()) {
+				LOGGER.debug("Going for switch on our side.");
+				autonomous = Actions.basicSwitchOurSide();
+			} else {
+				LOGGER.debug("Going for scale on opposite side.");
+				autonomous = Actions.basicScaleOppositeSide();
+			}
+			break;
+
+		case "Left_Advanced":
 		case "Right_Advanced":
-			if(isSwitchOnSameSide() && !isScaleOnSameSide()) {
-				LOGGER.debug("Switch is on same side and scale is on opposite side | RIGHT");
-				autonomous = Actions.rightAdvancedSwitchLeftScale();
-			} else if (isSwitchOnSameSide() && isScaleOnSameSide()) {
-				LOGGER.debug("Switch is on same side and scale is one same side | RIGHT");
-				autonomous = Actions.rightAdvancedSwitch();
-			} else if(isScaleOnSameSide() && !isSwitchOnSameSide()) {
-				LOGGER.debug("Scale is on same side and switich on opposite side | RIGHT");
-				autonomous = Actions.rightAdvancedSwitchLeftScaleRight();
+			if (isSwitchOnSameSide() && isScaleOnSameSide()) {
+				LOGGER.debug("Switch and scale are on our side.");
+				autonomous = Actions.advancedSwitchOurSideScaleOurSide();
+			} else if(isSwitchOnSameSide() && !isScaleOnSameSide()) {
+				LOGGER.debug("Switch is on our side, scale opposite.");
+				autonomous = Actions.advancedSwitchOurSideScaleOpposite();
+			} else if(!isSwitchOnSameSide() && isScaleOnSameSide()) {
+				LOGGER.debug("Switch is on opposite side, scale our side.");
+				autonomous = Actions.advancedSwitchOppositeScaleOurSide();
 			} else if(!isScaleOnSameSide() && !isSwitchOnSameSide()) {
-				LOGGER.debug("Scale is on opposite side |RIGHT");
-				autonomous = Actions.rightAdvancedSwitchLeftScaleLeft();
+				LOGGER.debug("Switch and scale are on opposite side.");
+				autonomous = Actions.advancedSwitchOppositeScaleOpposite();
+			}
+			break;
+
+		case "Left_Our_Side_Only":
+		case "Right_Our_Side_Only":
+			if (isSwitchOnSameSide() && isScaleOnSameSide()) {
+				LOGGER.debug("Switch and scale are on our side.");
+				autonomous = Actions.advancedSwitchOurSideScaleOurSide();
+			} else if(isSwitchOnSameSide() && !isScaleOnSameSide()) {
+				LOGGER.debug("Switch is on our side, scale opposite.");
+				autonomous = Actions.advancedSwitchOurSideScaleOpposite();
+			} else if(!isSwitchOnSameSide() && isScaleOnSameSide()) {
+				LOGGER.debug("Switch is on opposite side, scale our side.");
+				autonomous = Actions.advancedSwitchOppositeScaleOurSide();
+			} else if(!isScaleOnSameSide() && !isSwitchOnSameSide()) {
+				LOGGER.debug("Switch and scale are on opposite side. Just go forward.");
+				autonomous = Actions.crossAutoLine();
 			}
 			break;
 
