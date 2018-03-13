@@ -51,7 +51,7 @@ public class ActionGroup {
 			}
 		}
 
-        LOGGER.info("run " + action);
+		LOGGER.info("run " + action);
 		action.doIt();
 	}
 
@@ -151,11 +151,20 @@ public class ActionGroup {
 			lastPosition = currentPosition;
 			currentPosition = drive.absoluteDistanceMoved();
 			LOGGER.debug("Distances - Target: " + Math.abs(distance) + " Moved: " + currentPosition);
-			if (currentPosition > 0.0 && lastPosition == currentPosition) {
-				increment++;
+			if (RobotMap.useSimulator) {
+				if (currentPosition > 0.0 && lastPosition == currentPosition) {
+					increment++;
+				} else {
+					increment = 0;
+				}
 			} else {
-				increment = 0;
+				if (currentPosition > 0.0 && Math.abs(lastPosition - currentPosition) < 0.01 ) {
+					increment++;
+				} else {
+					increment = 0;
+				}
 			}
+
 			// Each iteration is 20 ms.
 			//the increment check checks to see how long the robot is stopping for, if it is stopped for longer than (RobotMap.AUTONOMOUS_DRIVE_TIMEOUT_MS / 20) then the robot is done.
 			if (increment >= (RobotMap.AUTONOMOUS_DRIVE_TIMEOUT_MS / 20)) {
@@ -206,7 +215,7 @@ public class ActionGroup {
 		public boolean isDone() {
 			for(Action.Condition condition : conditions) {
 				if(condition.isDone()) {
-					return condition.isDone();		
+					return true;		
 				}
 			}
 			return false;

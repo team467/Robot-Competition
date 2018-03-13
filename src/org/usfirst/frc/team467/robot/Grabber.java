@@ -168,9 +168,6 @@ public class Grabber {
 	}
 
 	public boolean hasCube() {
-		if(!RobotMap.useSimulator) {
-		return (os.detectedTarget() && RobotMap.HAS_GRABBER);
-		}
-		else return false;
+		return (!RobotMap.useSimulator && RobotMap.HAS_GRABBER && os.detectedTarget());
 	}
 }
