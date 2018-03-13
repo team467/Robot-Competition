@@ -67,7 +67,7 @@ public class Grabber {
 		if (!RobotMap.HAS_GRABBER) {
 			return;
 		}
-		
+
 		double speed = 0.0;
 		switch (state) {
 		
@@ -102,7 +102,7 @@ public class Grabber {
 		default:
 
 		}
-		
+
 		if (!RobotMap.useSimulator) {
 			left.set(speed);
 			right.set(-1 * speed);
@@ -111,7 +111,7 @@ public class Grabber {
 
 		// Save the previous state and check for current state.
 		hadCube = hasCube;
-		hasCube = os.detectedTarget();
+		hasCube = hasCube();
 	}
 	
 	public void startGrab() {
@@ -138,7 +138,7 @@ public class Grabber {
 		if (Math.abs(throttle) < RobotMap.MIN_GRAB_SPEED) {
 			throttle = 0.0;
 		}
-		
+
 		if (!RobotMap.useSimulator) {
 			if (DriverStation467.getInstance().getNavJoystick().getLeftStickY() > 0.5 
 					|| DriverStation467.getInstance().getNavJoystick().getLeftStickY() < -0.5) {
@@ -150,14 +150,14 @@ public class Grabber {
 				}
 			}
 		}
-		
+
 		LOGGER.debug("Grabber Throttle=" + throttle);
 		left.set(throttle * RobotMap.MAX_GRAB_SPEED);
 		right.set(-throttle * RobotMap.MAX_GRAB_SPEED);
 
 		// Save the previous state and check for current state.
 		hadCube = hasCube;
-		hasCube = os.detectedTarget();
+		hasCube = hasCube();
 	}
 
 	public boolean justGotCube() {
@@ -167,11 +167,8 @@ public class Grabber {
 		
 		else return false;
 	}
-	
+
 	public boolean hasCube() {
-		if(!RobotMap.useSimulator) {
-		return (os.detectedTarget() && RobotMap.HAS_GRABBER);
-		}
-		else return false;
+		return (!RobotMap.useSimulator && RobotMap.HAS_GRABBER && os.detectedTarget());
 	}
 }

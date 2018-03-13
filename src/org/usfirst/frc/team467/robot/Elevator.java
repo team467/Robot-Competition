@@ -96,7 +96,7 @@ public class Elevator {
 
 	private int getRawHeight() {
 		if (!RobotMap.HAS_ELEVATOR || RobotMap.useSimulator) {
-			return 0;
+			return RobotMap.ELEVATOR_BOTTOM_TICKS;
 		}
 		return heightController.getSelectedSensorPosition(0);
 	}
