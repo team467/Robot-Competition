@@ -62,14 +62,12 @@ public class Robot {
 		drive.zero();
 		matchConfig.load();
 		
-		double offset = 0.492;
-		
 		if (SimulatedData.autoMode.startsWith("Left")) {
-			data.startingLocation(2.5+offset, 0);
+			data.startingLocation(2.5, 0);
 		} else if (SimulatedData.autoMode.startsWith("Center")) {
-			data.startingLocation(12.5+offset, 0);
+			data.startingLocation(12.5, 0);
 		} else { // Right
-			data.startingLocation(21.58+offset, 0);
+			data.startingLocation(21.58, 0);
 		}		
 		data.send();
 

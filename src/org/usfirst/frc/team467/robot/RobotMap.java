@@ -90,7 +90,7 @@ public class RobotMap {
 			WHEEL_CIRCUMFERENCE = 18.50;
 			WHEEL_ENCODER_CODES_PER_REVOLUTION = 1024;
 			useSpeedControllers = true;
-			
+
 			FORWARD_PANIC_ANGLE = 60;
 			BACKWARD_PANIC_ANGLE = -60;
 
@@ -269,6 +269,8 @@ public class RobotMap {
 	// Robot Dimensions
 	public static double WHEEL_BASE_LENGTH = 3.33;
 	public static double WHEEL_BASE_WIDTH = 1.99; // TODO: MEASURE TRUE WHEEL BASE WIDTH
+	public static double BUMPER_LENGTH = 3.33;
+	public static double BUMPER_WIDTH = 2.92;
 
 	public static double CamToCenterWidthInches;
 	public static double CamToCenterLengthInches;	

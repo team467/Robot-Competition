@@ -249,7 +249,7 @@ public class MatchConfiguration {
 				autonomous = Actions.advancedSwitchOurSideScaleOurSide();
 			} else if(isSwitchOnSameSide() && !isScaleOnSameSide()) {
 				LOGGER.debug("Switch is on our side, scale opposite.");
-				autonomous = Actions.advancedSwitchOurSideScaleOpposite();
+				autonomous = Actions.basicSwitchOurSide();
 			} else if(!isSwitchOnSameSide() && isScaleOnSameSide()) {
 				LOGGER.debug("Switch is on opposite side, scale our side.");
 				autonomous = Actions.advancedSwitchOppositeScaleOurSide();

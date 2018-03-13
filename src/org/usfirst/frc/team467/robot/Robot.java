@@ -103,12 +103,9 @@ public class Robot extends TimedRobot {
 
 	public void autonomousInit() {
 		driverstation.readInputs();
-//		matchConfig.load();
-//		autonomous = matchConfig.autonomousDecisionTree();
-		autonomous = Actions.testGrab();
+		matchConfig.load();
+		autonomous = matchConfig.autonomousDecisionTree();
 		LOGGER.info("Init Autonomous:" + autonomous.getName());
-		drive.logClosedLoopErrors();
-		drive.configPeakOutput(1.0);
 		autonomous.enable();
 	}
 
