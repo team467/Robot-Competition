@@ -68,23 +68,27 @@ public class Actions {
 				() -> grabber.startGrab());
 	}
 
-	public static Action grabCubeWhileDriving(double distance) {
+	public static ActionGroup grabAndMoveLinear(double distance) {
 		Grabber grabber = Grabber.getInstance();
 		Drive drive = Drive.getInstance();
-		Elevator elevator = Elevator.getInstance();
-		drive.zero();
+
+		ActionGroup group = new ActionGroup("Grab and Move Linear");
+		group.addAction(zeroDistance());
+
 		MultiCondition multicondition = new MultiCondition(
-				new ActionGroup.ReachDistance(distance), 
+				new ReachDistance(distance), 
 				() -> grabber.hasCube());
-		
+
 		ConcurrentActions concurrentaction = new ConcurrentActions(
 				() -> grabber.grab(RobotMap.MAX_GRAB_SPEED),
 				() -> drive.moveLinearFeet(distance));
 
-		return new Action(
+		group.addAction(new Action(
 				"Grabbing cube and driving forward",
 				multicondition,
-				concurrentaction);
+				concurrentaction));
+
+		return group;
 	}
 
 	public static Action releaseCube() {
@@ -145,7 +149,7 @@ public class Actions {
 	public static Action moveDistanceForward(double distance) {
 		String actionText = "Move forward " + distance + " feet";
 		return new Action(actionText,
-				new ActionGroup.ReachDistance(distance),
+				new ReachDistance(distance),
 				() -> drive.moveLinearFeet(distance));
 	}
 
@@ -157,7 +161,7 @@ public class Actions {
 	public static Action moveturn(double rotationInDegrees) {
 		String actionText = "Rotate " + rotationInDegrees + " degrees.";
 		return new Action(actionText,
-				new ActionGroup.ReachDistance(rotationInDegrees),
+				new ReachDistance(rotationInDegrees),
 				() -> drive.rotateByAngle(rotationInDegrees));
 	}
 
@@ -210,8 +214,7 @@ public class Actions {
 		String actionGroupText = "Simplified version of leftbasicswitchleft.";
 		ActionGroup mode = new ActionGroup(actionGroupText);
 		mode.addAction(moveturn(53));
-		mode.addAction(zeroDistance());
-		mode.addAction(grabCubeWhileDriving(5.5));
+		mode.addActions(grabAndMoveLinear(5.5));
 		//mode.addActions(start());
 		//mode.addActions(move(4.0));
 		//mode.addActions(turn(-90));
@@ -230,7 +233,7 @@ public class Actions {
 		String actionGroupText = "Testing grab with a 2 foot move.";
 		ActionGroup mode = new ActionGroup(actionGroupText);
 		mode.addAction(elevatorToFloor());
-		mode.addAction(grabCubeWhileDriving(2));
+		mode.addActions(grabAndMoveLinear(2));
 		return mode;
 	}
 
@@ -393,7 +396,7 @@ public class Actions {
 		mode.addActions(turn(120)); 
 		//mode.addActions(move(4.0)
 		//mode.addActions(grabCube())
-		mode.addAction(grabCubeWhileDriving(4.0));
+		mode.addActions(grabAndMoveLinear(4.0));
 		mode.addActions(move(-4.0));
 		mode.addActions(turn(-120));
 		mode.addActions(move(7.0));
@@ -454,7 +457,7 @@ public class Actions {
 		mode.addActions(turn(90));
 		//mode.addActions(move(1.3));
 		//mode.addAction(grabCube());
-		mode.addAction(grabCubeWhileDriving(1.3));
+		mode.addActions(grabAndMoveLinear(1.3));
 
 
 		mode.addActions(move(-1.3));
@@ -498,7 +501,7 @@ public class Actions {
 		mode.addActions(turn(-90));
 //		mode.addActions(move(1.3));
 //		mode.addAction(grabCube());
-		mode.addAction(grabCubeWhileDriving(1.3));
+		mode.addActions(grabAndMoveLinear(1.3));
 
 
 		mode.addActions(move(-1.3));
@@ -584,8 +587,7 @@ public class Actions {
 		mode.addActions(turn(53));
 //		mode.addActions(move(4.5)); 
 //		mode.addAction(grabCube());
-		mode.addAction(zeroDistance());
-		mode.addAction(grabCubeWhileDriving(5.5));
+		mode.addActions(grabAndMoveLinear(5.5));
 		//release cube into switch
 		mode.addActions(turn(-15));
 		mode.addActions(move(0.5));
