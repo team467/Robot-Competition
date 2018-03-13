@@ -361,7 +361,7 @@ public class Actions {
 		String actionGroupText = "Start on right, put cube on right scale";
 		ActionGroup mode = new ActionGroup(actionGroupText);
 		mode.addActions(start());
-		mode.addActions(move(23.33));  //reducing by 2 feet. Original: 25.33
+		mode.addActions(move(25.33));  //reducing by 4 feet. Original: 25.33
 		mode.addAction(Actions.elevatorToHighScale());
 		mode.addActions(turn(-90));
 		mode.addActions(move(1.5));
@@ -457,6 +457,7 @@ public class Actions {
 		// lift elevator to place cube into scale
 		mode.addAction(elevatorToLowScale());
 		mode.addAction(releaseCube());
+		mode.addAction(pauseGrabber());
 
 		return mode;
 	}
@@ -499,6 +500,7 @@ public class Actions {
 		// lift elevator to place cube into scale
 		mode.addAction(elevatorToHighScale());
 		mode.addAction(releaseCube());
+		mode.addAction(pauseGrabber());
 		return mode;
 	}
 
@@ -539,6 +541,7 @@ public class Actions {
 		// lift elevator to place cube into scale
 		mode.addAction(elevatorToLowScale());
 		mode.addAction(releaseCube());
+		mode.addAction(pauseGrabber());
 
 		return mode;
 	}
@@ -645,6 +648,7 @@ public class Actions {
 		// lift elevator to place cube into scale
 		mode.addAction(elevatorToHighScale());
 		mode.addAction(releaseCube());
+		mode.addAction(pauseGrabber());
 
 		return mode;
 	}
@@ -687,6 +691,7 @@ public class Actions {
 		// lift elevator to place cube into scale
 		mode.addAction(elevatorToHighScale());
 		mode.addAction(releaseCube());
+		mode.addAction(pauseGrabber());
 
 		return mode;
 	}
@@ -729,6 +734,7 @@ public class Actions {
 		// lift elevator to place cube into scale
 		mode.addAction(elevatorToHighScale());
 		mode.addAction(releaseCube());
+		mode.addAction(pauseGrabber());
 
 		return mode;
 	}	
@@ -770,6 +776,7 @@ public class Actions {
 		// lift elevator to place cube into scale
 		mode.addAction(elevatorToLowScale());
 		mode.addAction(releaseCube());
+		mode.addAction(pauseGrabber());
 
 		return mode;
 	}	
@@ -845,6 +852,7 @@ public class Actions {
 		// lift elevator to place cube into scale
 		mode.addAction(elevatorToHighScale());
 		mode.addAction(releaseCube());
+		mode.addAction(pauseGrabber());
 
 		return mode;
 	}

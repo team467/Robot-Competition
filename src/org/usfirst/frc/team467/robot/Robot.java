@@ -47,7 +47,6 @@ public class Robot extends TimedRobot {
 
 		// Initialize RobotMap
 		RobotMap.init(RobotID.Competition_1);
-		RobotMap.USE_FAKE_GAME_DATA = true;
 
 		// Make robot objects
 		driverstation = DriverStation467.getInstance();

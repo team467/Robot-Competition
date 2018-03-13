@@ -126,6 +126,9 @@ public class RobotMap {
 			RIGHT_TURN_PID_D = 180.0;
 			RIGHT_TURN_PID_F = 0.0;
 
+			useSimulator = false;
+			USE_FAKE_GAME_DATA = true;
+			
 			HAS_GRABBER = true;
 			GRABBER_INVERT = false;
 			HAS_CAMERA = false;
@@ -135,7 +138,7 @@ public class RobotMap {
 			OPTICAL_CHANNEL = 5;
 
 			// TODO Assign values to the game piece variables, and make more as appropriate
-			HAS_ELEVATOR = true;
+			HAS_ELEVATOR = false;
 			ELEVATOR_MOTOR_CHANNEL = 7;
 			ELEVATOR_BOTTOM_TICKS = 839;
 			ELEVATOR_FLOOR_HEIGHT = 822;
@@ -215,6 +218,9 @@ public class RobotMap {
 			OPTICAL_CHANNEL = 5;
 
 			HAS_CAMERA = false;
+			
+			useSimulator = false;
+			USE_FAKE_GAME_DATA = false;
 
 			HAS_LEFT_RAMP = true;
 			RAMP_LEFT_FORWARD_CHANNEL = 1;
