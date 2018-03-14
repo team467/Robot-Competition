@@ -1,8 +1,6 @@
 package org.usfirst.frc.team467.robot;
 
 import org.apache.log4j.Logger;
-import org.usfirst.frc.team467.robot.Autonomous.AutoDrive;
-import org.usfirst.frc.team467.robot.simulator.DriveSimulator;
 
 import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.SpeedController;
@@ -32,7 +30,6 @@ public class Grabber {
 	private boolean hadCube = false;
 	private boolean hasCube = false;
 	private OpticalSensor os;
-	private static AutoDrive drive;
 
 	private Grabber() {
 		if (RobotMap.HAS_GRABBER && !RobotMap.useSimulator) {
@@ -41,18 +38,13 @@ public class Grabber {
 			right = new Spark(RobotMap.GRABBER_R_CHANNEL);
 			right.setInverted(RobotMap.GRABBER_INVERT);
 			os = OpticalSensor.getInstance();
-			drive = Drive.getInstance();
 			//drivesimulator = null;
 		} else {
 			left = new NullSpeedController();
 			right = new NullSpeedController();
 			os = OpticalSensor.getInstance();
-			drive = DriveSimulator.getInstance();
-			//drive = null;
 		}
 
-		//grabCount = GRAB_TIME_MS/20;
-		//releaseCount = RELEASE_TIME_MS/20;
 	}
 
 	public static Grabber getInstance() {
@@ -86,7 +78,6 @@ public class Grabber {
 				//count = 0;
 			} else {
 				speed = RobotMap.MAX_GRAB_SPEED;
-				drive.moveLinearFeet(2.08);     // tester
 			}
 			break;
 
