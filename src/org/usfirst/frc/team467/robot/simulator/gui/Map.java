@@ -46,11 +46,7 @@ public class Map extends Application {
 
 			// Set the proper behavior on closing the application
 			MapController controller = loader.getController();
-			primaryStage.setOnCloseRequest((new EventHandler<WindowEvent>() {
-				public void handle(WindowEvent we) {
-					controller.setClosed();
-				}
-			}));
+			primaryStage.setOnCloseRequest((WindowEvent we) -> controller.setClosed());
 
 		} catch (Exception e) {
 			e.printStackTrace();
