@@ -80,7 +80,7 @@ public class Drive extends DifferentialDrive implements AutoDrive {
 		setPIDSFromRobotMap();
 	}
 
-	public void readPIDSFromSmartDashboard() {
+	public void readPIDSFromSmartDashboard(int pidSlot) {
 		double kPLeft = Double.parseDouble(SmartDashboard.getString("DB/String 1", "1.6")); // 1.6
 		double kPRight = Double.parseDouble(SmartDashboard.getString("DB/String 6", "1.4")); // 1.4
 
@@ -93,11 +93,8 @@ public class Drive extends DifferentialDrive implements AutoDrive {
 		double kFLeft = Double.parseDouble(SmartDashboard.getString("DB/String 4", "1.1168")); // 0.0
 		double kFRight = Double.parseDouble(SmartDashboard.getString("DB/String 9", "1.2208")); // 0.0
 
-		left.setPIDF(RobotMap.PID_SLOT_DRIVE, kPLeft, kILeft, kDLeft, kFLeft);
-		right.setPIDF(RobotMap.PID_SLOT_DRIVE, kPRight, kIRight, kDRight, kFRight);
-
-		left.setPIDF(RobotMap.PID_SLOT_TURN, kPLeft, kILeft, kDLeft, kFLeft);
-		right.setPIDF(RobotMap.PID_SLOT_TURN, kPRight, kIRight, kDRight, kFRight);
+		left.setPIDF(pidSlot, kPLeft, kILeft, kDLeft, kFLeft);
+		right.setPIDF(pidSlot, kPRight, kIRight, kDRight, kFRight);
 	}
 
 	public void setPIDSFromRobotMap() {
@@ -207,7 +204,7 @@ public class Drive extends DifferentialDrive implements AutoDrive {
 		moveFeet(distanceInFeet, distanceInFeet);
 	}
 	
-	public static final double POSITION_GAIN_FEET = 2.5;
+	public static double POSITION_GAIN_FEET = 4.0; // 2.5
 
 	/**
 	 * 
@@ -242,6 +239,8 @@ public class Drive extends DifferentialDrive implements AutoDrive {
 
 	public void moveFeet(double targetLeftDistance , double targetRightDistance) {
 
+//		POSITION_GAIN_FEET = Double.parseDouble(SmartDashboard.getString("DB/String 0", "2.5")); // 1.6
+		
 		LOGGER.trace("Automated move of right: "+ targetRightDistance +" left: "+ targetLeftDistance + " feet ");
 
 		// Convert the turn to a distance based on the circumference of the robot wheel base.

@@ -72,10 +72,10 @@ public class Actions {
 				() -> grabber.startGrab());
 	}
 
-	public static Action grabCubeWhileDriving(double distance) {
+	public static ActionGroup grabAndMoveLinear(double distance) {
 		Grabber grabber = Grabber.getInstance();
-		Drive drive = Drive.getInstance();
-		drive.zero();
+		ActionGroup group = new ActionGroup("grab and move Linear");
+		group.addAction(zeroDistance());
 		MultiCondition multicondition = new MultiCondition(
 				new ActionGroup.ReachDistance(distance), 
 				() -> grabber.hasCube());
@@ -84,10 +84,11 @@ public class Actions {
 				() -> grabber.grab(RobotMap.MAX_GRAB_SPEED),
 				() -> drive.moveLinearFeet(distance));
 
-		return new Action(
+		group.addAction(new Action(
 				"Grabbing cube and driving forward",
 				multicondition,
-				concurrentaction);
+				concurrentaction));
+		return group;
 	}
 
 	public static Action releaseCube() {
@@ -196,7 +197,6 @@ public class Actions {
 	public static ActionGroup start() {
 		String actionGroupText = "Lower grabber down and move elevator to safe height";
 		ActionGroup mode = new ActionGroup(actionGroupText);
-		mode.addAction(lockCube());
 		mode.addAction(elevatorToSwitch());
 		return mode;
 	}
@@ -229,7 +229,7 @@ public class Actions {
 		String actionGroupText = "Testing grab with a 2 foot move.";
 		ActionGroup mode = new ActionGroup(actionGroupText);
 		mode.addAction(elevatorToFloor());
-		mode.addAction(grabCubeWhileDriving(2));
+		mode.addActions(grabAndMoveLinear(2));
 		return mode;
 	}
 
@@ -269,7 +269,7 @@ public class Actions {
 		mode.addActions(start());
 		mode.addActions(move(12.33)); 
 		mode.addActions(turn(-90));
-		mode.addActions(move(1.479)); 
+		mode.addActions(move(2.0)); 
 		mode.addAction(releaseCube());
 		mode.addAction(pauseGrabber());
 		return mode;
@@ -282,7 +282,7 @@ public class Actions {
 		mode.addActions(move(25.33));
 		mode.addAction(elevatorToHighScale());
 		mode.addActions(turn(-90));
-		mode.addActions(move(0.375)); // .5
+		mode.addActions(move(1.0));
 		mode.addAction(releaseCube());
 		mode.addAction(pauseGrabber());
 		return mode;
@@ -315,13 +315,12 @@ public class Actions {
 		mode.addAction(elevatorToFloor());
 		mode.addActions(turn(-90)); 
 		mode.addActions(move(5.81)); 
-		mode.addActions(turn(53));
-		mode.addActions(move(4.5));
-		mode.addAction(grabCube());
+		mode.addActions(turn(50));
+		mode.addActions(grabAndMoveLinear(5.8));
 
 		// release cube into switch
-		mode.addActions(turn(-15));
-		mode.addActions(move(0.5));
+//		mode.addActions(turn(-15));
+//		mode.addActions(move(0.5));
 		mode.addAction(elevatorToSwitch());
 		mode.addAction(releaseCube());
 		mode.addAction(pauseGrabber());
