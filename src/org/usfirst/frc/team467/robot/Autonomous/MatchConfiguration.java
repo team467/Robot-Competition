@@ -180,7 +180,12 @@ public class MatchConfiguration {
 		
 		if (autoMode.startsWith("Left")) {
 			Actions.startOnLeft();
+		} else if (autoMode.startsWith("Right")) {
+			Actions.startOnRight();
+		} else {
+			Actions.startInCenter();
 		}
+
 
 		switch(autoMode) {
 

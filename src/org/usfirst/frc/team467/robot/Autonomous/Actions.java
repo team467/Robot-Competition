@@ -22,6 +22,14 @@ public class Actions {
 		mirrorTurns = -1.0;
 	}
 	
+	public static void startOnRight() {
+		mirrorTurns = 1.0;
+	}
+	
+	public static void startInCenter() {
+		mirrorTurns = 1.0;
+	}
+	
 	public static final Action nothing(){
 		String actionText = "Do Nothing";
 		return new Action(actionText,
