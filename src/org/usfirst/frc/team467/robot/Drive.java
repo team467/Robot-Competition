@@ -3,6 +3,7 @@ package org.usfirst.frc.team467.robot;
 import java.text.DecimalFormat;
 
 import org.apache.log4j.Logger;
+import org.usfirst.frc.team467.robot.Elevator.Stops;
 import org.usfirst.frc.team467.robot.Autonomous.AutoDrive;
 import org.usfirst.frc.team467.robot.simulator.communications.RobotData;
 
@@ -23,6 +24,8 @@ public class Drive extends DifferentialDrive implements AutoDrive {
 
 	private final TalonSpeedControllerGroup left;
 	private final TalonSpeedControllerGroup right;
+	
+	double carrotLength;
 
 	// Private constructor
 
@@ -76,7 +79,9 @@ public class Drive extends DifferentialDrive implements AutoDrive {
 		super(left, right);
 		this.left = left;
 		this.right = right;
-
+		
+		carrotLength = POSITION_GAIN_FEET;
+		
 		setPIDSFromRobotMap();
 	}
 
@@ -204,7 +209,17 @@ public class Drive extends DifferentialDrive implements AutoDrive {
 		moveFeet(distanceInFeet, distanceInFeet);
 	}
 	
-	public static double POSITION_GAIN_FEET = 4.0; // 2.5
+	public static final double POSITION_GAIN_FEET = 4.0;
+
+	public void setCarrotLength() {
+		carrotLength = POSITION_GAIN_FEET;
+		int elevatorHeight = Elevator.getInstance().getHeight();
+		if (elevatorHeight > Stops.highScale.height) {
+			carrotLength -= 1.5;
+		} else if (elevatorHeight > Stops.lowScale.height) {
+			carrotLength -= 0.5;
+		}
+	}
 
 	/**
 	 * 
@@ -239,7 +254,7 @@ public class Drive extends DifferentialDrive implements AutoDrive {
 
 	public void moveFeet(double targetLeftDistance , double targetRightDistance) {
 
-//		POSITION_GAIN_FEET = Double.parseDouble(SmartDashboard.getString("DB/String 0", "2.5")); // 1.6
+//		carrotLength = Double.parseDouble(SmartDashboard.getString("DB/String 0", "4.0"));
 		
 		LOGGER.trace("Automated move of right: "+ targetRightDistance +" left: "+ targetLeftDistance + " feet ");
 
@@ -260,8 +275,8 @@ public class Drive extends DifferentialDrive implements AutoDrive {
 		double average = 0.5 * (Math.abs(currentRightPosition) + Math.abs(currentLeftPosition));
 
 		// Use the minimum to go either the max allowed distance or to the target
-		double moveLeftDistance = leftSign * Math.min(Math.abs(targetLeftDistance), (POSITION_GAIN_FEET + average));
-		double moveRightDistance = rightSign * Math.min(Math.abs(targetRightDistance), (POSITION_GAIN_FEET + average));
+		double moveLeftDistance = leftSign * Math.min(Math.abs(targetLeftDistance), (carrotLength + average));
+		double moveRightDistance = rightSign * Math.min(Math.abs(targetRightDistance), (carrotLength + average));
 		LOGGER.trace("Distance in Feet - Right: " + df.format(moveRightDistance) + " Left: "
 				+ df.format(moveLeftDistance));
 

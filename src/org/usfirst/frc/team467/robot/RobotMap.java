@@ -263,6 +263,7 @@ public class RobotMap {
 	// TODO These values need to be tested on the robot and possibly adjusted.
 	public static final double NORMAL_TURN_MAX_SPEED = 1.0;
 	public static final double SLOW_TURN_MAX_SPEED = 0.6;
+	public static final double MAX_CARROT_LENGTH = 4.0;
 
 	public static boolean useSimulator = false;
 	public static boolean USE_FAKE_GAME_DATA = false;
