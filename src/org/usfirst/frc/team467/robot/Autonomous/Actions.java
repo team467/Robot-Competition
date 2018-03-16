@@ -170,7 +170,7 @@ public class Actions {
 	public static Action moveturn(double rotationInDegrees) {
 		String actionText = "Rotate " + rotationInDegrees + " degrees.";
 		return new Action(actionText,
-				new ActionGroup.ReachDistance(rotationInDegrees),
+				new ActionGroup.ReachAngle(rotationInDegrees),
 				() -> drive.rotateByAngle(rotationInDegrees));
 	}
 
@@ -264,7 +264,7 @@ public class Actions {
 		mode.addActions(start());
 		mode.addActions(move(4.0));
 		mode.addActions(turn(90));
-		mode.addActions(move(4.27)); 
+		mode.addActions(move(4.27));
 		mode.addActions(turn(-90));
 		mode.addActions(move(4.34));
 		mode.addAction(releaseCube());
@@ -276,11 +276,11 @@ public class Actions {
 		String actionGroupText = "Put cube on our side switch.";
 		ActionGroup mode = new ActionGroup(actionGroupText);
 		mode.addActions(start());
-		mode.addActions(move(12.33)); 
+		mode.addActions(move(12.33));
 		mode.addActions(turn(-90));
-		mode.addActions(move(2.0)); 
-		mode.addAction(releaseCube());
-		mode.addAction(pauseGrabber());
+//		mode.addActions(move(2.0)); 
+//		mode.addAction(releaseCube());
+//		mode.addAction(pauseGrabber());
 		return mode;
 	}
 
@@ -291,7 +291,7 @@ public class Actions {
 		mode.addActions(move(23.33));
 		mode.addAction(elevatorToHighScale());
 		mode.addActions(move(2.0));
-		mode.addActions(turn(-95));
+		mode.addActions(turn(-100));
 		mode.addActions(move(0.375));
 		mode.addAction(releaseCube());
 		mode.addAction(pauseGrabber());

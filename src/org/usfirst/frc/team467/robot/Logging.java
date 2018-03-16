@@ -19,9 +19,9 @@ public class Logging {
 		setupDefaultLogging();
 
 		// Enable extra logging for classes you want to debug
-//		Logger.getLogger(Action.class).setLevel(Level.INFO);
+		Logger.getLogger(Action.class).setLevel(Level.DEBUG);
 //		Logger.getLogger(Drive.class).setLevel(Level.TRACE);
-		Logger.getLogger(ActionGroup.class).setLevel(Level.WARN);
+		Logger.getLogger(ActionGroup.class).setLevel(Level.DEBUG);
 //		Logger.getLogger(DriveSimulator.class).setLevel(Level.WARN);
 //		Logger.getLogger(Elevator.class).setLevel(Level.INFO);
 //		Logger.getLogger(Grabber.class).setLevel(Level.INFO);

@@ -232,7 +232,8 @@ public class Drive extends DifferentialDrive implements AutoDrive {
 		LOGGER.trace("Automated move of " + rotationInDegrees + " degree turn.");
 		
 		double turnDistanceInFeet = degreesToFeet(rotationInDegrees);
-		moveFeet(turnDistanceInFeet, - turnDistanceInFeet);
+//		moveFeet(turnDistanceInFeet, - turnDistanceInFeet);
+		tuneMove(turnDistanceInFeet, - turnDistanceInFeet, RobotMap.PID_SLOT_TURN);
 	}
 
 	/**

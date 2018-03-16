@@ -180,25 +180,25 @@ public class RobotMap {
 			RIGHT_DRIVE_SENSOR_IS_INVERTED = true;
 
 			// Linear PIDS
-			LEFT_DRIVE_PID_P = 0.65;
+			LEFT_DRIVE_PID_P = 0.70;
 			LEFT_DRIVE_PID_I = 0.0;
 			LEFT_DRIVE_PID_D = 650.0;
 			LEFT_DRIVE_PID_F = 0.0;
 
-			RIGHT_DRIVE_PID_P = 0.45;
+			RIGHT_DRIVE_PID_P = 0.52;
 			RIGHT_DRIVE_PID_I = 0;
 			RIGHT_DRIVE_PID_D = 340.0;
 			RIGHT_DRIVE_PID_F = 0.0;
 
 			// Turn PIDs
-			LEFT_TURN_PID_P = 1.25;
+			LEFT_TURN_PID_P = 0.95; //0.80;
 			LEFT_TURN_PID_I = 0.0;
-			LEFT_TURN_PID_D = 650.0;
+			LEFT_TURN_PID_D = 180.0;
 			LEFT_TURN_PID_F = 0.0;
 
-			RIGHT_TURN_PID_P = 1.05;
+			RIGHT_TURN_PID_P = 0.77; //0.62;
 			RIGHT_TURN_PID_I = 0.0;
-			RIGHT_TURN_PID_D = 340.0;
+			RIGHT_TURN_PID_D = 180.0;
 			RIGHT_TURN_PID_F = 0.0;
 
 			HAS_ELEVATOR = true;
@@ -233,7 +233,7 @@ public class RobotMap {
 			RAMP_RELEASE_FORWARD_CHANNEL = 0;
 			RAMP_RELEASE_REVERSE_CHANNEL = 3;
 
-			AUTONOMOUS_DRIVE_TIMEOUT_MS = 500;
+			AUTONOMOUS_DRIVE_TIMEOUT_MS = 1000;
 			break;
 		}
 		//These calculations can be made after the robot-specific constants are set. 
@@ -263,7 +263,7 @@ public class RobotMap {
 	// TODO These values need to be tested on the robot and possibly adjusted.
 	public static final double NORMAL_TURN_MAX_SPEED = 1.0;
 	public static final double SLOW_TURN_MAX_SPEED = 0.6;
-	public static final double MAX_CARROT_LENGTH = 3.0;
+	public static final double MAX_CARROT_LENGTH = 6.0;
 
 	public static boolean useSimulator = false;
 	public static boolean USE_FAKE_GAME_DATA = false;
