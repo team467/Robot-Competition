@@ -162,7 +162,7 @@ public class RobotMap {
 		case Competition_2:
 			HAS_WHEELS = true;
 			DRIVEMOTOR_NUM = 4;
-			WHEEL_CIRCUMFERENCE = 19.74;
+			WHEEL_CIRCUMFERENCE = 18.86; //19.74;
 			WHEEL_ENCODER_CODES_PER_REVOLUTION = 1024;
 			useSpeedControllers = true;
 
@@ -180,25 +180,25 @@ public class RobotMap {
 			RIGHT_DRIVE_SENSOR_IS_INVERTED = true;
 
 			// Linear PIDS
-			LEFT_DRIVE_PID_P = 0.4;
+			LEFT_DRIVE_PID_P = 0.65;
 			LEFT_DRIVE_PID_I = 0.0;
-			LEFT_DRIVE_PID_D = 190.0;
+			LEFT_DRIVE_PID_D = 650.0;
 			LEFT_DRIVE_PID_F = 0.0;
 
-			RIGHT_DRIVE_PID_P = 0.35;
+			RIGHT_DRIVE_PID_P = 0.45;
 			RIGHT_DRIVE_PID_I = 0;
-			RIGHT_DRIVE_PID_D = 190.0;
+			RIGHT_DRIVE_PID_D = 340.0;
 			RIGHT_DRIVE_PID_F = 0.0;
 
 			// Turn PIDs
-			LEFT_TURN_PID_P = 0.4;
+			LEFT_TURN_PID_P = 1.25;
 			LEFT_TURN_PID_I = 0.0;
-			LEFT_TURN_PID_D = 190.0;
+			LEFT_TURN_PID_D = 650.0;
 			LEFT_TURN_PID_F = 0.0;
 
-			RIGHT_TURN_PID_P = 0.35;
+			RIGHT_TURN_PID_P = 1.05;
 			RIGHT_TURN_PID_I = 0.0;
-			RIGHT_TURN_PID_D = 190.0;
+			RIGHT_TURN_PID_D = 340.0;
 			RIGHT_TURN_PID_F = 0.0;
 
 			HAS_ELEVATOR = true;
