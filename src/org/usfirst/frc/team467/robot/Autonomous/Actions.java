@@ -85,8 +85,9 @@ public class Actions {
 		ActionGroup group = new ActionGroup("grab and move Linear");
 		group.addAction(zeroDistance());
 		MultiCondition multicondition = new MultiCondition(
-				new ActionGroup.ReachDistance(distance), 
-				() -> grabber.hasCube());
+				new ActionGroup.ReachDistance(distance)//, 
+			//	() -> grabber.hasCube()
+				);
 		
 		ConcurrentActions concurrentaction = new ConcurrentActions(
 				() -> grabber.grab(RobotMap.MAX_GRAB_SPEED),
@@ -287,10 +288,11 @@ public class Actions {
 		String actionGroupText = "Put cube on our side scale";
 		ActionGroup mode = new ActionGroup(actionGroupText);
 		mode.addActions(start());
-		mode.addActions(move(25.33));
+		mode.addActions(move(23.33));
 		mode.addAction(elevatorToHighScale());
-		mode.addActions(turn(-90));
-		mode.addActions(move(1.0));
+		mode.addActions(move(2.0));
+		mode.addActions(turn(-95));
+		mode.addActions(move(0.375));
 		mode.addAction(releaseCube());
 		mode.addAction(pauseGrabber());
 		return mode;
@@ -305,7 +307,7 @@ public class Actions {
 		mode.addActions(move(17.4));
 		mode.addActions(turn(100));
 		mode.addAction(elevatorToHighScale());
-		mode.addActions(move(3.4));
+		mode.addActions(move(3.0));
 		mode.addAction(releaseCube());
 		mode.addAction(pauseGrabber());
 		return mode;
@@ -319,13 +321,23 @@ public class Actions {
 		mode.addActions(basicScaleOurSide());
 
 		// pick up cube
-		mode.addActions(move(-2.0)); 
+		mode.addActions(move(-1.0)); 
 		mode.addAction(elevatorToFloor());
-		mode.addActions(turn(-90)); 
-		mode.addActions(move(5.81)); 
-		mode.addActions(turn(50));
-		mode.addActions(grabAndMoveLinear(5.8));
-
+		mode.addActions(turn(-68)); 
+		mode.addActions(grabAndMoveLinear(10.42));
+		mode.addActions(grabAndMoveLinear(-1.0));		
+		mode.addAction(elevatorToSwitch());
+		mode.addActions(move(1.0));
+		mode.addAction(releaseCube());
+		mode.addAction(pauseGrabber());
+		
+//		mode.addActions(move(-1.0)); 
+//		mode.addAction(elevatorToFloor());
+//		mode.addActions(turn(-90)); 
+//		mode.addActions(move(5.81)); 
+//		mode.addActions(turn(50));
+//		mode.addActions(grabAndMoveLinear(5.8));
+//
 		// release cube into switch
 //		mode.addActions(turn(-15));
 //		mode.addActions(move(0.5));
@@ -342,14 +354,14 @@ public class Actions {
 
 		//pick up cube
 		mode.addActions(move(-2.0));
+		mode.addAction(elevatorToFloor());
 		mode.addActions(turn(90));
 		mode.addActions(move(5.81));
 		mode.addActions(turn(-90));
-		mode.addActions(move(2.0 + 12.0));
+		mode.addActions(move(14.0));
 		mode.addActions(turn(-50));
-		mode.addActions(move(1.5));
-		mode.addAction(grabCube());
-		mode.addActions(move(-1.5));
+		mode.addActions(grabAndMoveLinear(1.5));
+		mode.addActions(grabAndMoveLinear(-1.5));
 		
 		// place cube in scale
 		mode.addActions(turn(50));
@@ -367,14 +379,24 @@ public class Actions {
 		ActionGroup mode = new ActionGroup(actionGroupText);
 		mode.addActions(basicScaleOurSide());
 
-		// pick up cube
-		mode.addActions(move(-2.0)); 
+		mode.addActions(move(-1.0)); 
 		mode.addAction(elevatorToFloor());
-		mode.addActions(turn(-90)); 
-		mode.addActions(move(5.81)); 
-		mode.addActions(turn(53)); 
-		mode.addActions(move(4.5)); 
-		mode.addAction(grabCube());
+		mode.addActions(turn(-68)); 
+		mode.addActions(grabAndMoveLinear(10.42));
+		mode.addActions(grabAndMoveLinear(-1.0));		
+		mode.addAction(elevatorToSwitch());
+		mode.addActions(move(1.0));
+		mode.addAction(releaseCube());
+		mode.addAction(pauseGrabber());
+		
+// previous-
+//		mode.addActions(move(-2.0)); 
+//		mode.addAction(elevatorToFloor());
+//		mode.addActions(turn(-90)); 
+//		mode.addActions(move(5.81)); 
+//		mode.addActions(turn(53)); 
+//		mode.addActions(move(4.5)); 
+//		mode.addAction(grabCube());
 
 		return mode;
 	}

@@ -129,7 +129,7 @@ public class RobotMap {
 			useSimulator = false;
 			USE_FAKE_GAME_DATA = true;
 			
-			HAS_GRABBER = true;
+			HAS_GRABBER = false;
 			GRABBER_INVERT = false;
 			HAS_CAMERA = false;
 
@@ -138,7 +138,7 @@ public class RobotMap {
 			OPTICAL_CHANNEL = 5;
 
 			// TODO Assign values to the game piece variables, and make more as appropriate
-			HAS_ELEVATOR = false;
+			HAS_ELEVATOR = true;
 			ELEVATOR_MOTOR_CHANNEL = 7;
 			ELEVATOR_BOTTOM_TICKS = 839;
 			ELEVATOR_FLOOR_HEIGHT = 822;
@@ -263,7 +263,7 @@ public class RobotMap {
 	// TODO These values need to be tested on the robot and possibly adjusted.
 	public static final double NORMAL_TURN_MAX_SPEED = 1.0;
 	public static final double SLOW_TURN_MAX_SPEED = 0.6;
-	public static final double MAX_CARROT_LENGTH = 4.0;
+	public static final double MAX_CARROT_LENGTH = 3.0;
 
 	public static boolean useSimulator = false;
 	public static boolean USE_FAKE_GAME_DATA = false;

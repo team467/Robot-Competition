@@ -80,7 +80,7 @@ public class Drive extends DifferentialDrive implements AutoDrive {
 		this.left = left;
 		this.right = right;
 		
-		carrotLength = POSITION_GAIN_FEET;
+		carrotLength = RobotMap.MAX_CARROT_LENGTH;
 		
 		setPIDSFromRobotMap();
 	}
@@ -209,15 +209,13 @@ public class Drive extends DifferentialDrive implements AutoDrive {
 		moveFeet(distanceInFeet, distanceInFeet);
 	}
 	
-	public static final double POSITION_GAIN_FEET = 4.0;
-
 	public void setCarrotLength() {
-		carrotLength = POSITION_GAIN_FEET;
+		carrotLength = RobotMap.MAX_CARROT_LENGTH;
 		int elevatorHeight = Elevator.getInstance().getHeight();
 		if (elevatorHeight > Stops.highScale.height) {
-			carrotLength -= 1.5;
+			carrotLength -= 0.0;
 		} else if (elevatorHeight > Stops.lowScale.height) {
-			carrotLength -= 0.5;
+			carrotLength -= 0.0;
 		}
 	}
 

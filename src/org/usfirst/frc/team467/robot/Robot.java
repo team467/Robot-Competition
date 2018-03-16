@@ -46,7 +46,7 @@ public class Robot extends TimedRobot {
 		Logging.init();
 
 		// Initialize RobotMap
-		RobotMap.init(RobotID.Competition_2);
+		RobotMap.init(RobotID.Competition_1);
 
 		// Make robot objects
 		driverstation = DriverStation467.getInstance();
