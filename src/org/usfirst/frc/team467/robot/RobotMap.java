@@ -34,6 +34,7 @@ public class RobotMap {
 	public static int ALLOWED_GRABBER_ERROR = 2; // in degrees
 
 	public static int AUTONOMOUS_DRIVE_TIMEOUT_MS;
+	public static int AUTONOMOUS_TURN_TIMEOUT_MS;
 
 	public static boolean RIGHT_DRIVE_SENSOR_IS_INVERTED;
 	public static boolean LEFT_DRIVE_SENSOR_IS_INVERTED;
@@ -158,6 +159,7 @@ public class RobotMap {
 			RAMP_RELEASE_REVERSE_CHANNEL = 3;
 
 			AUTONOMOUS_DRIVE_TIMEOUT_MS = 500;
+			AUTONOMOUS_TURN_TIMEOUT_MS = 1000;
 			break;
 		case Competition_2:
 			HAS_WHEELS = true;
@@ -233,7 +235,8 @@ public class RobotMap {
 			RAMP_RELEASE_FORWARD_CHANNEL = 0;
 			RAMP_RELEASE_REVERSE_CHANNEL = 3;
 
-			AUTONOMOUS_DRIVE_TIMEOUT_MS = 1500;
+			AUTONOMOUS_DRIVE_TIMEOUT_MS = 1000;
+			AUTONOMOUS_TURN_TIMEOUT_MS = 1500;
 			break;
 		}
 		//These calculations can be made after the robot-specific constants are set. 
