@@ -325,25 +325,12 @@ public class Actions {
 		mode.addAction(elevatorToFloor());
 		mode.addActions(turn(-68)); 
 		mode.addActions(grabAndMoveLinear(10.42));
-		mode.addActions(grabAndMoveLinear(-1.0));		
+		mode.addActions(grabAndMoveLinear(-1.0));	
+		mode.addAction(pauseGrabber());
 		mode.addAction(elevatorToSwitch());
 		mode.addActions(move(1.0));
-		mode.addAction(releaseCube());
-		mode.addAction(pauseGrabber());
+		//mode.addAction(releaseCube());
 		
-//		mode.addActions(move(-1.0)); 
-//		mode.addAction(elevatorToFloor());
-//		mode.addActions(turn(-90)); 
-//		mode.addActions(move(5.81)); 
-//		mode.addActions(turn(50));
-//		mode.addActions(grabAndMoveLinear(5.8));
-//
-		// release cube into switch
-//		mode.addActions(turn(-15));
-//		mode.addActions(move(0.5));
-		mode.addAction(elevatorToSwitch());
-		mode.addAction(releaseCube());
-		mode.addAction(pauseGrabber());
 		return mode;
 	}
 

@@ -251,13 +251,13 @@ public class MatchConfiguration {
 		case "Right_Our_Side_Only":
 			if (isSwitchOnSameSide() && isScaleOnSameSide()) {
 				LOGGER.debug("Switch and scale are on our side.");
-				autonomous = Actions.advancedSwitchOurSideScaleOurSide();
+				autonomous = Actions.basicScaleOurSide();
 			} else if(isSwitchOnSameSide() && !isScaleOnSameSide()) {
 				LOGGER.debug("Switch is on our side, scale opposite.");
 				autonomous = Actions.basicSwitchOurSide();
 			} else if(!isSwitchOnSameSide() && isScaleOnSameSide()) {
 				LOGGER.debug("Switch is on opposite side, scale our side.");
-				autonomous = Actions.advancedSwitchOppositeScaleOurSide();
+				autonomous = Actions.basicScaleOurSide();
 			} else if(!isScaleOnSameSide() && !isSwitchOnSameSide()) {
 				LOGGER.debug("Switch and scale are on opposite side. Just go forward.");
 				autonomous = Actions.crossAutoLine();

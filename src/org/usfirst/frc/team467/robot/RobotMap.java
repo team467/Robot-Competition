@@ -220,7 +220,7 @@ public class RobotMap {
 			HAS_CAMERA = false;
 			
 			useSimulator = false;
-			USE_FAKE_GAME_DATA = true;
+			USE_FAKE_GAME_DATA = false;
 
 			HAS_LEFT_RAMP = true;
 			RAMP_LEFT_FORWARD_CHANNEL = 1;
