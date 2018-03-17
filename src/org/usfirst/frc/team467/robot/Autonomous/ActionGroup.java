@@ -51,7 +51,7 @@ public class ActionGroup {
 			}
 		}
 
-		LOGGER.info("run " + action);
+		LOGGER.debug("run " + action);
 		action.doIt();
 	}
 
@@ -159,7 +159,7 @@ public class ActionGroup {
 					increment = 0;
 				}
 			} else {
-				if (currentPosition > 0.0 && Math.abs(lastPosition - currentPosition) < 0.01 ) {
+				if (currentPosition > 0.1 && Math.abs(lastPosition - currentPosition) < 0.01 ) {
 					increment++;
 				} else {
 					increment = 0;
