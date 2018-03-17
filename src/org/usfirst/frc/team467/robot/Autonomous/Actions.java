@@ -355,8 +355,8 @@ public class Actions {
 		mode.addActions(move(4.0));
 		mode.addActions(turn(100));
 		mode.addAction(elevatorToHighScale());
-		mode.addActions(move(3.4));
-		mode.addAction(releaseCube());
+//		mode.addActions(move(3.4));
+//		mode.addAction(releaseCube());
 		mode.addAction(pauseGrabber());
 		return mode;
 	}
@@ -372,8 +372,6 @@ public class Actions {
 		mode.addActions(grabAndMoveLinear(10.42));
 		mode.addActions(grabAndMoveLinear(-1.0));		
 		mode.addAction(elevatorToSwitch());
-		mode.addActions(move(1.0));
-		mode.addAction(releaseCube());
 		mode.addAction(pauseGrabber());
 		
 // previous-
