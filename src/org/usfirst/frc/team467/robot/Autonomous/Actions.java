@@ -250,9 +250,9 @@ public class Actions {
 		mode.addActions(start());
 		mode.addActions(move(4.0)); 
 		mode.addActions(turn(-90));
-		mode.addActions(move(5.27)); 
+		mode.addActions(move(5.77)); 
 		mode.addActions(turn(90));
-		mode.addActions(move(4.34)); 
+		mode.addActions(move(4.34));
 		mode.addAction(releaseCube());
 		mode.addAction(pauseGrabber());
 		return mode;
