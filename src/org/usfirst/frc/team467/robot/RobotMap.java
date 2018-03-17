@@ -193,14 +193,14 @@ public class RobotMap {
 			RIGHT_DRIVE_PID_F = 0.0;
 
 			// Turn PIDs
-			LEFT_TURN_PID_P = 0.95; //0.80;
+			LEFT_TURN_PID_P = 1.0; //0.80;
 			LEFT_TURN_PID_I = 0.0;
-			LEFT_TURN_PID_D = 180.0;
+			LEFT_TURN_PID_D = 512.0;
 			LEFT_TURN_PID_F = 0.0;
 
-			RIGHT_TURN_PID_P = 0.77; //0.62;
+			RIGHT_TURN_PID_P = 1.0; //0.62;
 			RIGHT_TURN_PID_I = 0.0;
-			RIGHT_TURN_PID_D = 180.0;
+			RIGHT_TURN_PID_D = 512.0;
 			RIGHT_TURN_PID_F = 0.0;
 
 			HAS_ELEVATOR = true;

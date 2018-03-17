@@ -241,7 +241,7 @@ public class Drive extends DifferentialDrive implements AutoDrive {
 	 */
 	public static double degreesToFeet(double degrees) {
 		// Adjust requested degrees because the robot predictably undershoots. Value was found empirically.
-		degrees *= 1.06;
+		//degrees *= 1.06;
 
 		// Convert the turn to a distance based on the circumference of the robot wheel base.
 		double radius = RobotMap.WHEEL_BASE_WIDTH / 2;
