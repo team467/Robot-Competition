@@ -233,7 +233,7 @@ public class RobotMap {
 			RAMP_RELEASE_FORWARD_CHANNEL = 0;
 			RAMP_RELEASE_REVERSE_CHANNEL = 3;
 
-			AUTONOMOUS_DRIVE_TIMEOUT_MS = 1000;
+			AUTONOMOUS_DRIVE_TIMEOUT_MS = 1500;
 			break;
 		}
 		//These calculations can be made after the robot-specific constants are set. 
