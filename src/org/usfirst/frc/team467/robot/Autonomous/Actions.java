@@ -249,6 +249,8 @@ public class Actions {
 		ActionGroup mode = new ActionGroup(actionGroupText);
 		mode.addActions(start());
 		mode.addActions(move(4.0)); 
+//		mode.addActions(turn(-35));
+//		mode.addActions(move(4.9));
 		mode.addActions(turn(-90));
 		mode.addActions(move(5.77)); 
 		mode.addActions(turn(90));
@@ -288,11 +290,11 @@ public class Actions {
 		String actionGroupText = "Put cube on our side scale";
 		ActionGroup mode = new ActionGroup(actionGroupText);
 		mode.addActions(start());
-		mode.addActions(move(23.33));
+		mode.addActions(move(22.88));
 		mode.addAction(elevatorToHighScale());
 		mode.addActions(move(2.0));
 		mode.addActions(turn(-100));
-		mode.addActions(move(0.375));
+		mode.addActions(move(0.625));
 		mode.addAction(releaseCube());
 		mode.addAction(pauseGrabber());
 		return mode;

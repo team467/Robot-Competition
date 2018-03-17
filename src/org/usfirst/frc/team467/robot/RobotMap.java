@@ -195,12 +195,12 @@ public class RobotMap {
 			// Turn PIDs
 			LEFT_TURN_PID_P = 1.0; //0.80;
 			LEFT_TURN_PID_I = 0.0;
-			LEFT_TURN_PID_D = 512.0;
+			LEFT_TURN_PID_D = 480.0;
 			LEFT_TURN_PID_F = 0.0;
 
 			RIGHT_TURN_PID_P = 1.0; //0.62;
 			RIGHT_TURN_PID_I = 0.0;
-			RIGHT_TURN_PID_D = 512.0;
+			RIGHT_TURN_PID_D = 480.0;
 			RIGHT_TURN_PID_F = 0.0;
 
 			HAS_ELEVATOR = true;
@@ -235,8 +235,8 @@ public class RobotMap {
 			RAMP_RELEASE_FORWARD_CHANNEL = 0;
 			RAMP_RELEASE_REVERSE_CHANNEL = 3;
 
-			AUTONOMOUS_DRIVE_TIMEOUT_MS = 1000;
-			AUTONOMOUS_TURN_TIMEOUT_MS = 1500;
+			AUTONOMOUS_DRIVE_TIMEOUT_MS = 200;
+			AUTONOMOUS_TURN_TIMEOUT_MS = 200;
 			break;
 		}
 		//These calculations can be made after the robot-specific constants are set. 
