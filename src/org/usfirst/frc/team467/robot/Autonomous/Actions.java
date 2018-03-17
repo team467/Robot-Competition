@@ -278,9 +278,9 @@ public class Actions {
 		mode.addActions(start());
 		mode.addActions(move(12.33));
 		mode.addActions(turn(-90));
-//		mode.addActions(move(2.0)); 
-//		mode.addAction(releaseCube());
-//		mode.addAction(pauseGrabber());
+		mode.addActions(move(2.0)); 
+		mode.addAction(releaseCube());
+		mode.addAction(pauseGrabber());
 		return mode;
 	}
 
