@@ -19,9 +19,9 @@ public class Logging {
 		setupDefaultLogging();
 
 		// Enable extra logging for classes you want to debug
-		Logger.getLogger(Action.class).setLevel(Level.INFO);
+		Logger.getLogger(Action.class).setLevel(Level.WARN);
 //		Logger.getLogger(Drive.class).setLevel(Level.TRACE);
-		Logger.getLogger(ActionGroup.class).setLevel(Level.INFO);
+		Logger.getLogger(ActionGroup.class).setLevel(Level.WARN);
 //		Logger.getLogger(DriveSimulator.class).setLevel(Level.WARN);
 //		Logger.getLogger(Elevator.class).setLevel(Level.INFO);
 //		Logger.getLogger(Grabber.class).setLevel(Level.INFO);
@@ -29,7 +29,7 @@ public class Logging {
 //		Logger.getLogger(OpticalSensor.class).setLevel(Level.WARN);
 //		Logger.getLogger(Ramp.class).setLevel(Level.INFO);
 //		Logger.getLogger(Ramps.class).setLevel(Level.INFO);
-//		Logger.getLogger(Robot.class).setLevel(Level.INFO);
+		Logger.getLogger(Robot.class).setLevel(Level.INFO);
 //		Logger.getLogger(RobotShape.class).setLevel(Level.WARN);
 //		Logger.getLogger(Rumbler.class).setLevel(Level.WARN);
 //		Logger.getLogger(TalonSpeedControllerGroup.class).setLevel(Level.INFO);

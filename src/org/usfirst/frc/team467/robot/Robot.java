@@ -88,6 +88,7 @@ public class Robot extends TimedRobot {
 		NetworkTableInstance tableInstance = NetworkTableInstance.getDefault();
 		NetworkTable table  = tableInstance.getTable("SmartDashboard");
 		table.getEntry("Auto List").setStringArray(autoList);
+		LOGGER.info("Selected Auto Mode: " + SmartDashboard.getString("Auto Selector", "None"));
 	}
 
 	double tuningValue = 0.0;
@@ -118,6 +119,7 @@ public class Robot extends TimedRobot {
 		matchConfig.load();
 		autonomous = matchConfig.autonomousDecisionTree();
 		LOGGER.info("Init Autonomous:" + autonomous.getName());
+		ramps.reset();
 		autonomous.enable();
 	}
 
