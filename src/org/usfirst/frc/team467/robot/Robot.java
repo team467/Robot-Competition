@@ -1,6 +1,8 @@
 package org.usfirst.frc.team467.robot;
 
 import edu.wpi.cscore.UsbCamera;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -81,6 +83,11 @@ public class Robot extends TimedRobot {
 
 	public void disabledPeriodic() {
 		LOGGER.trace("Disabled Periodic");
+		String[] autoList = {"None", "Just_Go_Forward", "Left_Switch_Only", "Left_Basic", "Left_Advanced", "Left_Our_Side_Only",
+				"Center", "Right_Switch_Only", "Right_Basic", "Right_Advanced", "Right_Our_Side_Only"};
+		NetworkTableInstance tableInstance = NetworkTableInstance.getDefault();
+		NetworkTable table  = tableInstance.getTable("SmartDashboard");
+		table.getEntry("Auto List").setStringArray(autoList);
 	}
 
 	double tuningValue = 0.0;
