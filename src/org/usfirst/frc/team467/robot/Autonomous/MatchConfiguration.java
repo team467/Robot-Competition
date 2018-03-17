@@ -210,8 +210,11 @@ public class MatchConfiguration {
 			if(isSwitchOnSameSide()) {
 				LOGGER.debug("Going for switch on our side.");
 				autonomous = Actions.basicSwitchOurSide();
+			} else if (isScaleOnSameSide()) {
+				LOGGER.debug("Switch is on opposite side so going for scale on our side");
+				autonomous = Actions.basicScaleOurSide();
 			} else {
-				LOGGER.debug("Switch is on opposite side, just going forward");
+				LOGGER.debug("Switch and scale on opposite side, just going forward");
 				autonomous = Actions.crossAutoLine();
 			}
 			break;
@@ -266,7 +269,7 @@ public class MatchConfiguration {
 
 		case "None":
 		default:
-			autonomous = Actions.doNothing();
+			autonomous = Actions.crossAutoLine();
 			LOGGER.info("DO NOTHING! ------------------------------------------------" + Actions.doNothing());
 		}
 
