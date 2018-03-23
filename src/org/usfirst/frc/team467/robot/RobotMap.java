@@ -71,14 +71,14 @@ public class RobotMap {
 			FORWARD_PANIC_ANGLE = 45;
 			BACKWARD_PANIC_ANGLE = -45;
 
-			HAS_GRABBER = true;
+			HAS_GRABBER = false;
 			GRABBER_L_CHANNEL = 0;
 			GRABBER_R_CHANNEL = 1;
 			OPTICAL_CHANNEL = 5;
 
-			HAS_ELEVATOR = true;
+			HAS_ELEVATOR = false;
 			ELEVATOR_MOTOR_CHANNEL = 1;
-			HAS_CAMERA = true;
+			HAS_CAMERA = false;
 			HAS_LEFT_RAMP = false;
 			HAS_RIGHT_RAMP = false;
 

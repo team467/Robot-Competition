@@ -1,7 +1,7 @@
 package org.usfirst.frc.team467.robot;
 
 import edu.wpi.cscore.UsbCamera;
-import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -31,7 +31,7 @@ public class Robot extends TimedRobot {
 	private Gyrometer gyro;
 	private Elevator elevator;
 	private Grabber grabber;
-	private NetworkTable table;
+	private NetworkTableInstance table;
 
 	/**
 	 * Time in milliseconds
@@ -48,9 +48,8 @@ public class Robot extends TimedRobot {
 		Logging.init();
 
 		// Delete all Network Table keys; relevant ones will be added when they are set
-		for (String key : table.getKeys()) {
-			table.delete(key);
-		}
+		table = NetworkTableInstance.getDefault();
+		table.deleteAllEntries();
 
 		// Initialize RobotMap
 		RobotMap.init(RobotID.Competition_2);
