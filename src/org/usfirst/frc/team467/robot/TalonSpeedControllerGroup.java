@@ -86,6 +86,15 @@ public class TalonSpeedControllerGroup implements SpeedController {
 				" Err = " + leader.getClosedLoopError(0));
 	}
 
+	public void logTelemetry(String side) {
+		if (!RobotMap.HAS_WHEELS) {
+			LOGGER.debug("No CLosed Loop errors");
+			return;
+		}
+		LOGGER.debug(side + ": Vel = " + leader.getSelectedSensorVelocity(0) +
+				" Pos = " + leader.getSelectedSensorPosition(0));
+	}
+
 	public void setPIDF(int slotId, double p, double i, double d, double f){
 		if (!RobotMap.HAS_WHEELS) {
 			LOGGER.debug("No PIDF");

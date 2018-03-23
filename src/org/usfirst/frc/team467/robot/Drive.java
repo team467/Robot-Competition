@@ -144,6 +144,11 @@ public class Drive extends DifferentialDrive implements AutoDrive {
 		right.logClosedLoopErrors("Right");
 	}
 
+	public void logTelemetry() {
+		left.logTelemetry("Left");
+		right.logTelemetry("Right");
+	}
+
 	public ControlMode getControlMode() {
 		return controlMode;
 	}

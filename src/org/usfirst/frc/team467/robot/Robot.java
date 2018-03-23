@@ -203,7 +203,7 @@ public class Robot extends TimedRobot {
 		default:
 		}
 
-		drive.logClosedLoopErrors();
+		drive.logTelemetry();
 	}
 
 }
