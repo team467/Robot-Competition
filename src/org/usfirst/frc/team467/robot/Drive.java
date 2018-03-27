@@ -15,7 +15,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Drive extends DifferentialDrive implements AutoDrive {
 	private ControlMode controlMode;
 
-	private static final Logger LOGGER = Logger.getLogger(Drive.class);
+    private static final Logger LOGGER = Logger.getLogger(Drive.class);
+    private static final Logger TELEMETRY = Logger.getLogger("telemetry");
 	private DecimalFormat df = new DecimalFormat("####0.00");
 
 	// Single instance of this class
@@ -144,9 +145,11 @@ public class Drive extends DifferentialDrive implements AutoDrive {
 		right.logClosedLoopErrors("Right");
 	}
 
-	public void logTelemetry() {
-		left.logTelemetry("Left");
-		right.logTelemetry("Right");
+	public void logTelemetry(double speed, double turn) {
+	    TELEMETRY.info(String.format("%f,%f,%f,%f,%f,%f",
+	            speed, turn,
+	            left.getSensorVelocity(), left.getSensorPosition(),
+	            right.getSensorVelocity(), right.getSensorPosition()));
 	}
 
 	public ControlMode getControlMode() {
@@ -332,6 +335,8 @@ public class Drive extends DifferentialDrive implements AutoDrive {
 			ramp = RobotMap.ELEVATOR_LOW_DRIVE_RAMP_TIME;
 		}
 
+		// JHP HACK We can't accurately measure elevator height.
+		ramp = 0.0;
 		left.setOpenLoopRamp(ramp);
 		right.setOpenLoopRamp(ramp);
 		LOGGER.trace("Ramp time: "+ ramp);

@@ -192,7 +192,7 @@ public class Elevator {
 			final int position = heightController.getSelectedSensorPosition(0);
 			if (position > RobotMap.ELEVATOR_BOTTOM_TICKS + LIMIT_BUFFER
 					|| position < RobotMap.ELEVATOR_TOP_TICKS - LIMIT_BUFFER) {
-				LOGGER.error("HEIGHT SENSOR OUT OF EXPECTED RANGE ("
+				LOGGER.info("HEIGHT SENSOR OUT OF EXPECTED RANGE ("
 						+ RobotMap.ELEVATOR_TOP_TICKS + " - "
 						+ RobotMap.ELEVATOR_BOTTOM_TICKS + "), found " + position);
 			}

@@ -52,7 +52,7 @@ public class Robot extends TimedRobot {
 		table.deleteAllEntries();
 
 		// Initialize RobotMap
-		RobotMap.init(RobotID.Competition_2);
+		RobotMap.init(RobotID.Competition_1);
 
 		// Make robot objects
 		driverstation = DriverStation467.getInstance();
@@ -188,9 +188,9 @@ public class Robot extends TimedRobot {
 		}
 
 		switch (driverstation.getDriveMode()) {
-
 		case ArcadeDrive:
 			drive.arcadeDrive(speed, turn, true);
+//	        drive.logTelemetry(speed, turn);
 			break;
 		case CurvatureDrive:
 			drive.curvatureDrive(speed, turn, true);
@@ -203,7 +203,6 @@ public class Robot extends TimedRobot {
 		default:
 		}
 
-		drive.logTelemetry();
 	}
 
 }

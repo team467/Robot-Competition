@@ -248,8 +248,8 @@ public class RobotMap {
 	public static int POSITION_ALLOWABLE_CLOSED_LOOP_ERROR;
 
 	public static final double FAST_MAX_SPEED = 1.0;
-	public static final double NORMAL_MAX_SPEED = 0.6;
-	public static final double SLOW_MAX_SPEED = 0.35;
+	public static final double NORMAL_MAX_SPEED = 0.8;
+	public static final double SLOW_MAX_SPEED = 0.5;
 
 	public static final double ELEVATOR_HIGH_DRIVE_RAMP_TIME = 2.5;
 	public static final double ELEVATOR_LOW_DRIVE_RAMP_TIME = 0.0;
