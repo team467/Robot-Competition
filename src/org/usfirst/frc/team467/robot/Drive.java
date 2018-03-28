@@ -37,7 +37,7 @@ public class Drive extends DifferentialDrive implements AutoDrive {
 			TalonSpeedControllerGroup left;
 			TalonSpeedControllerGroup right;
 
-			LOGGER.info("Number of Motors:" + RobotMap.DRIVEMOTOR_NUM);
+			LOGGER.info("Number of Motors: {}", RobotMap.DRIVEMOTOR_NUM);
 			if (RobotMap.HAS_WHEELS && RobotMap.DRIVEMOTOR_NUM > 0) {
 				LOGGER.info("Creating  Lead Motors");
 				WPI_TalonSRX leftLead = new WPI_TalonSRX(RobotMap.LEFT_LEAD_CHANNEL);
