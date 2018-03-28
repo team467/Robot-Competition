@@ -148,8 +148,8 @@ public class Drive extends DifferentialDrive implements AutoDrive {
 	public void logTelemetry(double speed, double turn) {
 	    TELEMETRY.info(String.format("%f,%f,%f,%f,%f,%f",
 	            speed, turn,
-	            left.getSensorVelocity(), left.getSensorPosition(),
-	            right.getSensorVelocity(), right.getSensorPosition()));
+	            ticksToFeet(left.getSensorVelocity()), ticksToFeet(left.getSensorPosition()),
+	            ticksToFeet(right.getSensorVelocity()), ticksToFeet(right.getSensorPosition())));
 	}
 
 	public ControlMode getControlMode() {
