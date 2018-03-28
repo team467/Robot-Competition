@@ -16,10 +16,6 @@ public class Grabber {
 
 	public static final int GRAB_TIME_MS = 1000;
 	public static final int RELEASE_TIME_MS = 1000;
-
-	/* private int grabCount = 0;
-	private int releaseCount = 0; */
-	
 	private GrabberState state = GrabberState.NEUTRAL;
 
 	private static final Logger LOGGER = Logger.getLogger(Grabber.class);
@@ -38,7 +34,6 @@ public class Grabber {
 			right = new Spark(RobotMap.GRABBER_R_CHANNEL);
 			right.setInverted(RobotMap.GRABBER_INVERT);
 			os = OpticalSensor.getInstance();
-			//drivesimulator = null;
 		} else {
 			left = new NullSpeedController();
 			right = new NullSpeedController();
@@ -75,7 +70,6 @@ public class Grabber {
 		case GRAB:
 			if(hasCube()) { 
 				state = GrabberState.NEUTRAL;
-				//count = 0;
 			} else {
 				speed = RobotMap.MAX_GRAB_SPEED;
 			}
@@ -97,8 +91,7 @@ public class Grabber {
 			left.set(speed);
 			right.set(-speed);
 		}
-		//count++;
-
+		
 		// Save the previous state and check for current state.
 		hadCube = hasCube;
 		hasCube = hasCube();

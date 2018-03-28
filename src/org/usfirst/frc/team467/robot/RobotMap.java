@@ -111,9 +111,9 @@ public class RobotMap {
 			LEFT_DRIVE_PID_D = 180.0;
 			LEFT_DRIVE_PID_F = 0.0;
 
-			RIGHT_DRIVE_PID_P = 0.900;
+			RIGHT_DRIVE_PID_P = 0.875;
 			RIGHT_DRIVE_PID_I = 0.0;
-			RIGHT_DRIVE_PID_D = 185.0;
+			RIGHT_DRIVE_PID_D = 200.0;
 			RIGHT_DRIVE_PID_F = 0.0;
 
 			// Turn PIDs
