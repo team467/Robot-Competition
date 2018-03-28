@@ -16,29 +16,38 @@ import org.usfirst.frc.team467.robot.simulator.draw.RobotShape;
 
 public class Logging {
 	public static void init() {
-		setupDefaultLogging();
+		final LoggerContext ctx = (LoggerContext) LogManager.getContext(false);
+		final Configuration config = ctx.getConfiguration();
+		
+		// Modify all the loggers
+		config.addLogger(Robot.class.getName(), new LoggerConfig(Robot.class.getName(), Level.INFO, true));
+// LOOGER.info("WRITE SOMETHING IN HERE WITH: {}" WriteVaribleHere(), andHereIfThereIsAnotherOne());		
+		ctx.updateLoggers();
+		
 
-		// Enable extra logging for classes you want to debug
-//		Logger.getLogger(Action.class).setLevel(Level.INFO);
-		Logger.getLogger(Drive.class).setLevel(Level.DEBUG);
-        Logger.getLogger(ActionGroup.class).setLevel(Level.INFO);
-        Logger.getLogger("telemetry").setLevel(Level.INFO);
-//		Logger.getLogger(DriveSimulator.class).setLevel(Level.WARN);
-//		Logger.getLogger(Elevator.class).setLevel(Level.INFO);
-//		Logger.getLogger(Grabber.class).setLevel(Level.INFO);
-//		Logger.getLogger(MatchConfiguration.class).setLevel(Level.INFO);
-//		Logger.getLogger(OpticalSensor.class).setLevel(Level.WARN);
-//		Logger.getLogger(Ramp.class).setLevel(Level.INFO);
-//		Logger.getLogger(Ramps.class).setLevel(Level.INFO);
-//		Logger.getLogger(Robot.class).setLevel(Level.INFO);
-//		Logger.getLogger(RobotShape.class).setLevel(Level.WARN);
-//		Logger.getLogger(Rumbler.class).setLevel(Level.WARN);
-//		Logger.getLogger(TalonSpeedControllerGroup.class).setLevel(Level.INFO);
-//		Logger.getLogger(VisionIntegration.class).setLevel(Level.WARN);
-//		Logger.getLogger(XBoxJoystick467.class).setLevel(Level.WARN);
-//		Logger.getLogger(TiltMonitor.class).setLevel(Level.INFO);
+		 Enable extra logging for classes you want to debug
+		config.addLogger(Action.class.getName(), new LoggerConfig(Action.class.getName(), Level.INFO, true));
+		config.addLogger(Drive.class.getName(), new LoggerConfig(Drive.class.getName(), Level.TRACE, true));
+		config.addLogger(ActionGroup.class.getName(), new LoggerConfig(ActionGroup.class.getName(), Level.WARN, true));
+		config.addLogger(DriveSimulator.class.getName(), new LoggerConfig(DriveSimulator.class.getName(), Level.WARN, true));
+		config.addLogger(Elevator.class.getName(), new LoggerConfig(Elevator.class.getName(), Level.INFO, true));
+		config.addLogger(Grabber.class.getName(), new LoggerConfig(Grabber.class.getName(), Level.INFO, true));
+		config.addLogger(MatchConfiguration.class.getName(), new LoggerConfig(MatchConfiguration.class.getName(), Level.INFO, true));
+		config.addLogger(OpticalSensor.class.getName(), new LoggerConfig(OpticalSensor.class.getName(), Level.WARN, true));
+		config.addLogger(Ramp.class.getName(), new LoggerConfig(Ramp.class.getName(), Level.INFO, true));
+		config.addLogger(Ramps.class.getName(), new LoggerConfig(Ramps.class.getName(), Level.INFO, true));
+		config.addLogger(org.usfirst.frc.team467.robot.simulator.Robot.class.getName(), 
+				new LoggerConfig(org.usfirst.frc.team467.robot.simulator.Robot.class.getName(), Level.INFO, true));
+		config.addLogger(RobotShape.class.getName(), new LoggerConfig(RobotShape.class.getName(), Level.WARN, true));
+		config.addLogger(Rumbler.class.getName(), new LoggerConfig(Rumbler.class.getName(), Level.WARN, true));
+		config.addLogger(TalonSpeedControllerGroup.class.getName(), new LoggerConfig(TalonSpeedControllerGroup.class.getName(), Level.INFO, true));
+		config.addLogger(VisionIntegration.class.getName(), new LoggerConfig(VisionIntegration.class.getName(), Level.WARN, true));
+		config.addLogger(XBoxJoystick467.class.getName(), new LoggerConfig(XBoxJoystick467.class.getName(), Level.WARN, true));
+		config.addLogger(TiltMonitor.class.getName(), new LoggerConfig(TiltMonitor.class.getName(), Level.INFO, true));
+
+		
 	}
-
+	
 	private static void setupDefaultLogging() {
 		// Create a logging appender that writes our pattern to the console.
 		// Our pattern looks like the following:
