@@ -4,6 +4,7 @@ import org.apache.log4j.Logger;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.VelocityMeasPeriod;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.wpilibj.SpeedController;
@@ -72,7 +73,11 @@ public class TalonSpeedControllerGroup implements SpeedController {
 		talon.configPeakOutputReverse(-1.0, 0);
 
 		talon.configOpenloopRamp(0.2, RobotMap.TALON_TIMEOUT);
-//		talon.configClosedloopRamp(1.0, RobotMap.TALON_TIMEOUT);		
+//		talon.configClosedloopRamp(1.0, RobotMap.TALON_TIMEOUT);
+		
+		talon.configVelocityMeasurementPeriod(VelocityMeasPeriod.Period_10Ms, 0);
+		talon.configVelocityMeasurementWindow(2, 0);
+		
 	}
 
 	public void logClosedLoopErrors(String side) {

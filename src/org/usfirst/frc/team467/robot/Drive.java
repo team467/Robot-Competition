@@ -146,10 +146,13 @@ public class Drive extends DifferentialDrive implements AutoDrive {
 	}
 
 	public void logTelemetry(double speed, double turn) {
+	    // Log the speed and turn inputs, as well as the speed and position of each side.
+	    // For the speed we need to convert from ticks to feet and from per 100ms to per seconds.
+	    // For position we need to convert from ticks to feet.
 	    TELEMETRY.info(String.format("%f,%f,%f,%f,%f,%f",
 	            speed, turn,
-	            ticksToFeet(left.getSensorVelocity()), ticksToFeet(left.getSensorPosition()),
-	            ticksToFeet(right.getSensorVelocity()), ticksToFeet(right.getSensorPosition())));
+	            ticksToFeet(10*left.getSensorVelocity()), ticksToFeet(left.getSensorPosition()),
+	            ticksToFeet(10*right.getSensorVelocity()), ticksToFeet(right.getSensorPosition())));
 	}
 
 	public ControlMode getControlMode() {
