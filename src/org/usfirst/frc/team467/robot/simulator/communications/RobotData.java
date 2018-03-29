@@ -5,8 +5,9 @@ package org.usfirst.frc.team467.robot.simulator.communications;
 
 import java.util.ArrayList;
 
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.usfirst.frc.team467.robot.Elevator;
 import org.usfirst.frc.team467.robot.Elevator.Stops;
 import org.usfirst.frc.team467.robot.simulator.gui.Coordinate;
@@ -28,13 +29,11 @@ public class RobotData {
 	private NetworkTableInstance tableInstance;
 	private NetworkTable table;
 	
-	private static final Logger LOGGER = Logger.getLogger(RobotData.class); 
+	private static final Logger LOGGER = LogManager.getLogger(RobotData.class); 
 	
 	private static RobotData instance = null;
 	
-	private RobotData() {
-		LOGGER.setLevel(Level.DEBUG);
-		
+	private RobotData() {		
 		tableInstance = NetworkTableInstance.getDefault();
 		table = tableInstance.getTable("datatable").getSubTable("/robotmapdata");
 		

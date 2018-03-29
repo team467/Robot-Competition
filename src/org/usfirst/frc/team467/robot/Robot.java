@@ -6,7 +6,8 @@ import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.usfirst.frc.team467.robot.Autonomous.ActionGroup;
 import org.usfirst.frc.team467.robot.Autonomous.Actions;
 import org.usfirst.frc.team467.robot.Autonomous.MatchConfiguration;
@@ -20,7 +21,7 @@ import org.usfirst.frc.team467.robot.RobotMap.RobotID;
  */
 
 public class Robot extends TimedRobot {
-	private static final Logger LOGGER = Logger.getLogger(Robot.class);
+	private static final Logger LOGGER = LogManager.getLogger(Robot.class);
 
 	// Robot objects
 	private DriverStation467 driverstation;
@@ -112,7 +113,7 @@ public class Robot extends TimedRobot {
 //		matchConfig.load();
 //		autonomous = matchConfig.autonomousDecisionTree();
 		autonomous = Actions.testGrab();
-		LOGGER.info("Init Autonomous:" + autonomous.getName());
+		LOGGER.info("Init Autonomous: {}", autonomous.getName());
 		drive.logClosedLoopErrors();
 		drive.configPeakOutput(1.0);
 		autonomous.enable();

@@ -2,7 +2,8 @@ package org.usfirst.frc.team467.robot.vision;
 
 import java.util.ArrayList;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
 import org.opencv.core.Point;
@@ -27,7 +28,7 @@ public class VisionProcessing {
 	public double cubeWidth;
 
 	private DetectPowerCubePipeline pipeline;
-	private static final Logger LOGGER = Logger.getLogger(VisionProcessing.class);
+	private static final Logger LOGGER = LogManager.getLogger(VisionProcessing.class);
 	private static VisionProcessing instance;
 
 	private double windowWidth;
@@ -91,8 +92,8 @@ public class VisionProcessing {
 			for (MatOfPoint points : pipeline.convexHullsOutput()) {
 				Rect box = Imgproc.boundingRect(points);
 				boundingBoxes.add(box);
-				// LOGGER.info("ADDED Bounding BOX X:" + box.x + " Y: " + box.y + " H: " +
-				// box.height + " W: " + box.width);
+				// LOGGER.info("ADDED Bounding BOX X: {} Y: {} H: {} W: {}", box.x, box.y,
+				// box.height, box.width);
 				cubeCenterPointY = (box.height / 2) + box.y;
 				cubeCenterPointX = (box.width / 2) + box.x;
 				Imgproc.rectangle(source, new Point(box.x, box.y), new Point(box.x + box.width, box.y + box.height),
@@ -116,9 +117,9 @@ public class VisionProcessing {
 	 * @return ArrayList<MatOfPoint> output from Find_Contours.
 	 */
 	public void findContoursOutput() {
-		LOGGER.debug("COUNT: " + pipeline.filterContoursOutput().size());
+		LOGGER.debug("COUNT: {}", pipeline.filterContoursOutput().size());
 		for (MatOfPoint points : pipeline.convexHullsOutput()) {
-			LOGGER.debug("Test " + points);
+			LOGGER.debug("Test {}", points);
 		}
 	}
 

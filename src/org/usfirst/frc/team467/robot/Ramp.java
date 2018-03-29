@@ -1,6 +1,7 @@
 package org.usfirst.frc.team467.robot;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -11,9 +12,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * and then sets the appropriate state when it finishes.
  */
 public class Ramp {
-	private static final Logger LOGGER = Logger.getLogger(Ramp.class);
-
-	// Compressor automatically set to closedLoopControl when Solenoid is declared
+	
+    private static final Logger LOGGER = LogManager.getLogger(Drive.class);
+    // Compressor automatically set to closedLoopControl when Solenoid is declared
 	private DoubleSolenoid solenoid;
 
 	private String name;
@@ -35,7 +36,7 @@ public class Ramp {
 		solenoid = new DoubleSolenoid(forwardChannel, reverseChannel);
 		this.name = name;
 		state = State.DOWN;
-		LOGGER.info("Ramp initialized: " + name);
+		LOGGER.info("Ramp initialized: {}", name);
 	}
 
 	public State getState() {
@@ -45,7 +46,7 @@ public class Ramp {
 	public void lift() {
 		if (state == State.DOWN) {
 			solenoid.set(DoubleSolenoid.Value.kForward);
-			LOGGER.info(name + " lifting");
+			LOGGER.info("Lifting = {}", name);
 			state = State.UP;
 		}
 	}
@@ -53,7 +54,7 @@ public class Ramp {
 	public void drop() {
 		if (state == State.UP) {
 			solenoid.set(DoubleSolenoid.Value.kReverse);
-			LOGGER.info(name + " dropping");
+			LOGGER.info("Dropping = {}", name);
 			state = State.DOWN;
 		}
 	}

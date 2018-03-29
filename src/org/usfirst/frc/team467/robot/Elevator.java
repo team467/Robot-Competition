@@ -1,10 +1,11 @@
 package org.usfirst.frc.team467.robot;
 
-import org.apache.log4j.Logger;
-
 import edu.wpi.first.wpilibj.MotorSafetyHelper;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.ctre.phoenix.ParamEnum;
 import com.ctre.phoenix.motorcontrol.ControlMode;
@@ -13,7 +14,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 public class Elevator {
 	private static Elevator instance;
-	private static final Logger LOGGER = Logger.getLogger(Elevator.class);
+	private static final Logger LOGGER = LogManager.getLogger(Elevator.class);
 
 	private WPI_TalonSRX heightController;
 	private MotorSafetyHelper m_safetyHelper;
@@ -123,8 +124,8 @@ public class Elevator {
 		if (!RobotMap.useSimulator) {
 			if ((heightController.getControlMode() == ControlMode.MotionMagic || heightController.getControlMode() == ControlMode.Position)
 					&& Math.abs(error) <= ALLOWABLE_ERROR_TICKS) {
-				LOGGER.debug("automaticMove, clearing target,  trajectory=" + targetHeight.height
-						+ " pos=" + heightController.getSelectedSensorPosition(0) + " err=" + error);
+				LOGGER.debug("automaticMove, clearing target,  trajectory = {} pos = {} err = {}", targetHeight.height,
+						  heightController.getSelectedSensorPosition(0), error);
 				targetHeight = null;
 				heightController.disable();
 				return;
@@ -132,7 +133,7 @@ public class Elevator {
 		}
 
 		configMotorParameters();
-		LOGGER.debug("Moving to height=" + targetHeight.height);
+		LOGGER.debug("Moving to height= {}", targetHeight.height);
 
 		heightController.set(ControlMode.Position, targetHeight.height);
 	}

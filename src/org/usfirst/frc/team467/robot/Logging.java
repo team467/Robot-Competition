@@ -2,11 +2,11 @@ package org.usfirst.frc.team467.robot;
 
 import java.io.IOException;
 
-import org.apache.log4j.ConsoleAppender;
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
-import org.apache.log4j.PatternLayout;
-import org.apache.log4j.RollingFileAppender;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.core.LoggerContext;
+import org.apache.logging.log4j.core.config.Configuration;
+import org.apache.logging.log4j.core.config.LoggerConfig;
 import org.usfirst.frc.team467.robot.Autonomous.Action;
 import org.usfirst.frc.team467.robot.Autonomous.ActionGroup;
 import org.usfirst.frc.team467.robot.vision.VisionIntegration;
@@ -22,10 +22,8 @@ public class Logging {
 		// Modify all the loggers
 		config.addLogger(Robot.class.getName(), new LoggerConfig(Robot.class.getName(), Level.INFO, true));
 // LOOGER.info("WRITE SOMETHING IN HERE WITH: {}" WriteVaribleHere(), andHereIfThereIsAnotherOne());		
-		ctx.updateLoggers();
 		
-
-		 Enable extra logging for classes you want to debug
+		// Enable extra logging for classes you want to debug
 		config.addLogger(Action.class.getName(), new LoggerConfig(Action.class.getName(), Level.INFO, true));
 		config.addLogger(Drive.class.getName(), new LoggerConfig(Drive.class.getName(), Level.TRACE, true));
 		config.addLogger(ActionGroup.class.getName(), new LoggerConfig(ActionGroup.class.getName(), Level.WARN, true));
@@ -45,6 +43,7 @@ public class Logging {
 		config.addLogger(XBoxJoystick467.class.getName(), new LoggerConfig(XBoxJoystick467.class.getName(), Level.WARN, true));
 		config.addLogger(TiltMonitor.class.getName(), new LoggerConfig(TiltMonitor.class.getName(), Level.INFO, true));
 
+		ctx.updateLoggers();
 		
 	}
 	
@@ -53,20 +52,17 @@ public class Logging {
 		// Our pattern looks like the following:
 		// 42ms INFO MyClass - This is my info message
 		String pattern = "%rms %p %c - %m%n";
-		PatternLayout layout = new PatternLayout(pattern);
-		Logger.getRootLogger().addAppender(new ConsoleAppender(layout));
-		try {
-			RollingFileAppender rollingFileAppender = new RollingFileAppender(layout, "/home/admin/log/Robot467.log");
-			rollingFileAppender.setMaxBackupIndex(20);
-			rollingFileAppender.setMaximumFileSize(1_000_000);
-			rollingFileAppender.rollOver();
-			Logger.getRootLogger().addAppender(rollingFileAppender);
-		} catch (IOException e) {
-			System.out.println("Failed to create log file appender: " + e.getMessage());
-		}
+//		PatternLayout layout = new PatternLayout(pattern);
+//		Logger.getRootLogger().addAppender(new ConsoleAppender(layout));
+//		try {
+//			RollingFileAppender rollingFileAppender = new RollingFileAppender(layout, "/home/admin/log/Robot467.log");
+//			rollingFileAppender.setMaxBackupIndex(20);
+//			rollingFileAppender.setMaximumFileSize(1_000_000);
+//			rollingFileAppender.rollOver();
+//			Logger.getRootLogger().addAppender(rollingFileAppender);
+//		} catch (IOException e) {
+//			System.out.println("Failed to create log file appender: " + e.getMessage());
+//		}
 
-
-		// Set the default log level to INFO.
-		Logger.getRootLogger().setLevel(Level.ERROR); // changing log level
 	}
 }
