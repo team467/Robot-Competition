@@ -51,7 +51,7 @@ public class ActionGroup {
 			}
 		}
 
-        LOGGER.info("run " + action);
+		LOGGER.debug("run " + action);
 		action.doIt();
 	}
 
@@ -142,6 +142,7 @@ public class ActionGroup {
 		private double currentPosition = 0.0;
 		private double lastPosition = 0.0;
 		private int increment = 0;
+		protected double timeout = RobotMap.AUTONOMOUS_DRIVE_TIMEOUT_MS;
 		public ReachDistance(double distance) {
 			this.distance = distance;
 		}
@@ -151,14 +152,23 @@ public class ActionGroup {
 			lastPosition = currentPosition;
 			currentPosition = drive.absoluteDistanceMoved();
 			LOGGER.debug("Distances - Target: " + Math.abs(distance) + " Moved: " + currentPosition);
-			if (currentPosition > 0.0 && lastPosition == currentPosition) {
-				increment++;
+			if (RobotMap.useSimulator) {
+				if (currentPosition > 0.0 && lastPosition == currentPosition) {
+					increment++;
+				} else {
+					increment = 0;
+				}
 			} else {
-				increment = 0;
+				if (currentPosition > 0.2 && Math.abs(lastPosition - currentPosition) < 0.01 ) {
+					increment++;
+				} else {
+					increment = 0;
+				}
 			}
+
 			// Each iteration is 20 ms.
 			//the increment check checks to see how long the robot is stopping for, if it is stopped for longer than (RobotMap.AUTONOMOUS_DRIVE_TIMEOUT_MS / 20) then the robot is done.
-			if (increment >= (RobotMap.AUTONOMOUS_DRIVE_TIMEOUT_MS / 20)) {
+			if (increment >= (timeout / 20)) {
 				return true;
 			} else if (currentPosition >= (Math.abs(distance) - RobotMap.POSITION_ALLOWED_ERROR)) {
 				LOGGER.debug("Finished moving");
@@ -173,6 +183,7 @@ public class ActionGroup {
 	static class ReachAngle extends ReachDistance {
 		public ReachAngle(double rotationInDegrees) {
 			super(Drive.degreesToFeet(rotationInDegrees));
+			timeout = RobotMap.AUTONOMOUS_TURN_TIMEOUT_MS;
 		}
 	}
 
@@ -206,7 +217,7 @@ public class ActionGroup {
 		public boolean isDone() {
 			for(Action.Condition condition : conditions) {
 				if(condition.isDone()) {
-					return condition.isDone();		
+					return true;		
 				}
 			}
 			return false;
