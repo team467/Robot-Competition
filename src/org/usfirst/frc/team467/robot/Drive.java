@@ -225,6 +225,7 @@ public class Drive extends DifferentialDrive implements AutoDrive {
 	 *            enter positive degrees for left turn and enter negative degrees
 	 *            for right turn
 	 */
+	
 	public void rotateByAngle(double rotationInDegrees) {
 		left.setPIDSlot(RobotMap.PID_SLOT_TURN);
 		right.setPIDSlot(RobotMap.PID_SLOT_TURN);
