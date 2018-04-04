@@ -181,22 +181,21 @@ public class XBoxJoystick467 {
 	}
 
 	public double turboFastSpeed(double speed) {
+		// Speed multiplied by acceleration determined by left trigger
 		return speed * MathUtils.weightedAverage(RobotMap.NORMAL_MAX_SPEED, RobotMap.FAST_MAX_SPEED, getLeftTrigger());
-		//speed multiplied by acceleration determined by left trigger
 	}
 
 	public double turboSlowSpeed(double speed) {
+		// Speed multiplied by deceleration determined by right trigger
 		return speed * MathUtils.weightedAverage(RobotMap.NORMAL_MAX_SPEED, RobotMap.SLOW_MAX_SPEED, getRightTrigger());
-		//speed multiplied by deceleration determined by right trigger
 	}
 
 	/**
 	 * Returns the turn speed, which is slower when the robot is driving fast.
 	 */
 	public double getAdjustedTurnSpeed() {
-		return getAdjustedSpeed(
-				getRightStickX()) * MathUtils.weightedAverage(RobotMap.NORMAL_TURN_MAX_SPEED, RobotMap.SLOW_TURN_MAX_SPEED, 
-				Math.abs(getAdjustedSpeed(-1 * getLeftStickY())));
+		return getAdjustedSpeed(getRightStickX()) * MathUtils.weightedAverage(
+			RobotMap.NORMAL_TURN_MAX_SPEED, RobotMap.SLOW_TURN_MAX_SPEED, Math.abs(getAdjustedSpeed(-getLeftStickY())));
 	}
 
 	public double getPOV() {
@@ -243,14 +242,14 @@ public class XBoxJoystick467 {
 	private double calculateStickAngle(double stickX, double stickY) {
 		if (stickY == 0.0) {
 			// In Y deadzone avoid divide by zero error
-			return (stickX > 0.0) ? Math.PI / 2 : (-1 * Math.PI) / 2;
+			return (stickX > 0.0) ? Math.PI / 2 : (-Math.PI) / 2;
 		}
 
 		// Return value in range -PI to PI
-		double stickAngle = LookUpTable.getArcTan(stickX / -1 * stickY);
+		double stickAngle = LookUpTable.getArcTan(stickX / -stickY);
 
 		if (stickY > 0) {
-			stickAngle += (stickX > 0) ? Math.PI : -1 * Math.PI;
+			stickAngle += (stickX > 0) ? Math.PI : -Math.PI;
 		}
 
 		return (stickAngle);

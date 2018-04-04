@@ -3,6 +3,7 @@ package org.usfirst.frc.team467.robot;
 import java.text.DecimalFormat;
 
 import org.apache.log4j.Logger;
+import org.usfirst.frc.team467.robot.Elevator.Stops;
 import org.usfirst.frc.team467.robot.Autonomous.AutoDrive;
 import org.usfirst.frc.team467.robot.simulator.communications.RobotData;
 
@@ -23,6 +24,8 @@ public class Drive extends DifferentialDrive implements AutoDrive {
 
 	private final TalonSpeedControllerGroup left;
 	private final TalonSpeedControllerGroup right;
+	
+	double carrotLength;
 
 	// Private constructor
 
@@ -76,11 +79,13 @@ public class Drive extends DifferentialDrive implements AutoDrive {
 		super(left, right);
 		this.left = left;
 		this.right = right;
-
+		
+		carrotLength = RobotMap.MAX_CARROT_LENGTH;
+		
 		setPIDSFromRobotMap();
 	}
 
-	public void readPIDSFromSmartDashboard() {
+	public void readPIDSFromSmartDashboard(int pidSlot) {
 		double kPLeft = Double.parseDouble(SmartDashboard.getString("DB/String 1", "1.6")); // 1.6
 		double kPRight = Double.parseDouble(SmartDashboard.getString("DB/String 6", "1.4")); // 1.4
 
@@ -93,11 +98,8 @@ public class Drive extends DifferentialDrive implements AutoDrive {
 		double kFLeft = Double.parseDouble(SmartDashboard.getString("DB/String 4", "1.1168")); // 0.0
 		double kFRight = Double.parseDouble(SmartDashboard.getString("DB/String 9", "1.2208")); // 0.0
 
-		left.setPIDF(RobotMap.PID_SLOT_DRIVE, kPLeft, kILeft, kDLeft, kFLeft);
-		right.setPIDF(RobotMap.PID_SLOT_DRIVE, kPRight, kIRight, kDRight, kFRight);
-
-		left.setPIDF(RobotMap.PID_SLOT_TURN, kPLeft, kILeft, kDLeft, kFLeft);
-		right.setPIDF(RobotMap.PID_SLOT_TURN, kPRight, kIRight, kDRight, kFRight);
+		left.setPIDF(pidSlot, kPLeft, kILeft, kDLeft, kFLeft);
+		right.setPIDF(pidSlot, kPRight, kIRight, kDRight, kFRight);
 	}
 
 	public void setPIDSFromRobotMap() {
@@ -207,7 +209,15 @@ public class Drive extends DifferentialDrive implements AutoDrive {
 		moveFeet(distanceInFeet, distanceInFeet);
 	}
 	
-	public static final double POSITION_GAIN_FEET = 2.5;
+	public void setCarrotLength() {
+		carrotLength = RobotMap.MAX_CARROT_LENGTH;
+		int elevatorHeight = Elevator.getInstance().getHeight();
+		if (elevatorHeight > Stops.highScale.height) {
+			carrotLength -= 0.0;
+		} else if (elevatorHeight > Stops.lowScale.height) {
+			carrotLength -= 0.0;
+		}
+	}
 
 	/**
 	 * 
@@ -223,15 +233,14 @@ public class Drive extends DifferentialDrive implements AutoDrive {
 		LOGGER.trace("Automated move of " + rotationInDegrees + " degree turn.");
 		
 		double turnDistanceInFeet = degreesToFeet(rotationInDegrees);
-		moveFeet(turnDistanceInFeet, - turnDistanceInFeet);
+//		moveFeet(turnDistanceInFeet, - turnDistanceInFeet);
+		tuneMove(turnDistanceInFeet, - turnDistanceInFeet, RobotMap.PID_SLOT_TURN);
 	}
 
 	/**
 	 * Convert angle in degrees to wheel distance in feet (arc length).
 	 */
 	public static double degreesToFeet(double degrees) {
-		// Adjust requested degrees because the robot predictably undershoots. Value was found empirically.
-		degrees *= 1.06;
 
 		// Convert the turn to a distance based on the circumference of the robot wheel base.
 		double radius = RobotMap.WHEEL_BASE_WIDTH / 2;
@@ -243,6 +252,8 @@ public class Drive extends DifferentialDrive implements AutoDrive {
 
 	public void moveFeet(double targetLeftDistance , double targetRightDistance) {
 
+//		carrotLength = Double.parseDouble(SmartDashboard.getString("DB/String 0", "4.0"));
+		
 		LOGGER.trace("Automated move of right: "+ targetRightDistance +" left: "+ targetLeftDistance + " feet ");
 
 		// Convert the turn to a distance based on the circumference of the robot wheel base.
@@ -262,8 +273,8 @@ public class Drive extends DifferentialDrive implements AutoDrive {
 		double average = 0.5 * (Math.abs(currentRightPosition) + Math.abs(currentLeftPosition));
 
 		// Use the minimum to go either the max allowed distance or to the target
-		double moveLeftDistance = leftSign * Math.min(Math.abs(targetLeftDistance), (POSITION_GAIN_FEET + average));
-		double moveRightDistance = rightSign * Math.min(Math.abs(targetRightDistance), (POSITION_GAIN_FEET + average));
+		double moveLeftDistance = leftSign * Math.min(Math.abs(targetLeftDistance), (carrotLength + average));
+		double moveRightDistance = rightSign * Math.min(Math.abs(targetRightDistance), (carrotLength + average));
 		LOGGER.trace("Distance in Feet - Right: " + df.format(moveRightDistance) + " Left: "
 				+ df.format(moveLeftDistance));
 

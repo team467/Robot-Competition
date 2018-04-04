@@ -54,7 +54,7 @@ public class Ramps {
 			return;
 		}
 
-		releaseSolenoid.set(DoubleSolenoid.Value.kForward);
+		releaseSolenoid.set(DoubleSolenoid.Value.kReverse);
 		state = State.DEPLOYED;
 		LOGGER.info("Deploying");
 	}
@@ -98,7 +98,7 @@ public class Ramps {
 		}
 
 		state = State.START;
-		releaseSolenoid.set(DoubleSolenoid.Value.kReverse);
+		releaseSolenoid.set(DoubleSolenoid.Value.kForward);
 		left.reset();
 		right.reset();
 	}
