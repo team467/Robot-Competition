@@ -2,6 +2,7 @@ package org.usfirst.frc.team467.robot;
 
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -32,14 +33,15 @@ public class Robot extends TimedRobot {
 	private Gyrometer gyro;
 	private Elevator elevator;
 	private Grabber grabber;
+	private Ramps ramps;
+
 	private NetworkTableInstance table;
+	private NetworkTable dashboard;
 
 	/**
 	 * Time in milliseconds
 	 */
 	double time;
-
-	private Ramps ramps;
 
 	/**
 	 * This function is run when the robot is first started up and should be used for any initialization code.
@@ -50,7 +52,7 @@ public class Robot extends TimedRobot {
 
 		// Delete all Network Table keys; relevant ones will be added when they are set
 		table = NetworkTableInstance.getDefault();
-		table.deleteAllEntries();
+		dashboard  = table.getTable("SmartDashboard");
 
 		// Initialize RobotMap
 		RobotMap.init(RobotID.Competition_1);
@@ -64,11 +66,10 @@ public class Robot extends TimedRobot {
 		grabber = Grabber.getInstance();
 		matchConfig = MatchConfiguration.getInstance();
 
-		gyro = Gyrometer.getInstance();
-		gyro.calibrate();
-		gyro.reset();
 		ramps = Ramps.getInstance();
 		ramps.reset();
+
+		drive.configPeakOutput(1.0);
 
 		if (RobotMap.HAS_CAMERA) {
 			vision = VisionProcessing.getInstance();
@@ -83,17 +84,15 @@ public class Robot extends TimedRobot {
 
 	public void disabledInit() {
 		ramps.reset();
-		drive.logClosedLoopErrors();
+//		drive.logClosedLoopErrors();
 	}
 
 	public void disabledPeriodic() {
 		LOGGER.trace("Disabled Periodic");
 		String[] autoList = {"None", "Just_Go_Forward", "Left_Switch_Only", "Left_Basic", "Left_Advanced", "Left_Our_Side_Only",
 				"Center", "Right_Switch_Only", "Right_Basic", "Right_Advanced", "Right_Our_Side_Only"};
-		NetworkTableInstance tableInstance = NetworkTableInstance.getDefault();
-		NetworkTable table  = tableInstance.getTable("SmartDashboard");
-		table.getEntry("Auto List").setStringArray(autoList);
-		LOGGER.info("Selected Auto Mode: " + SmartDashboard.getString("Auto Selector", "None"));
+		dashboard.getEntry("Auto List").setStringArray(autoList);
+//		LOGGER.info("Selected Auto Mode: " + SmartDashboard.getString("Auto Selector", "None"));
 	}
 
 	double tuningValue = 0.0;
@@ -102,6 +101,7 @@ public class Robot extends TimedRobot {
 		drive.setPIDSFromRobotMap();
 		driverstation.readInputs();
 		tuningValue = Double.parseDouble(SmartDashboard.getString("DB/String 0", "0.0"));
+		LOGGER.debug("Tuning Value: " + tuningValue);
 		if (tuningValue <= 30.0 && tuningValue >= -30.0) {
 			drive.readPIDSFromSmartDashboard(RobotMap.PID_SLOT_DRIVE);
 		} else {
@@ -135,7 +135,6 @@ public class Robot extends TimedRobot {
 	}
 
 	public void teleopInit() {
-//		autonomous.terminate();
 		autonomous = Actions.doNothing();
 		drive.configPeakOutput(1.0);
 		driverstation.readInputs();

@@ -99,6 +99,8 @@ public class Drive extends DifferentialDrive implements AutoDrive {
 		double kFLeft = Double.parseDouble(SmartDashboard.getString("DB/String 4", "1.1168")); // 0.0
 		double kFRight = Double.parseDouble(SmartDashboard.getString("DB/String 9", "1.2208")); // 0.0
 
+		carrotLength = Double.parseDouble(SmartDashboard.getString("DB/String 5", "2.5"));
+
 		left.setPIDF(pidSlot, kPLeft, kILeft, kDLeft, kFLeft);
 		right.setPIDF(pidSlot, kPRight, kIRight, kDRight, kFRight);
 	}
@@ -220,16 +222,6 @@ public class Drive extends DifferentialDrive implements AutoDrive {
 		moveFeet(distanceInFeet, distanceInFeet);
 	}
 	
-	public void setCarrotLength() {
-		carrotLength = RobotMap.MAX_CARROT_LENGTH;
-		int elevatorHeight = Elevator.getInstance().getHeight();
-		if (elevatorHeight > Stops.highScale.height) {
-			carrotLength -= 0.0;
-		} else if (elevatorHeight > Stops.lowScale.height) {
-			carrotLength -= 0.0;
-		}
-	}
-
 	/**
 	 * 
 	 * @param rotationInDegrees
@@ -244,14 +236,23 @@ public class Drive extends DifferentialDrive implements AutoDrive {
 		LOGGER.trace("Automated move of " + rotationInDegrees + " degree turn.");
 		
 		double turnDistanceInFeet = degreesToFeet(rotationInDegrees);
-//		moveFeet(turnDistanceInFeet, - turnDistanceInFeet);
-		tuneMove(turnDistanceInFeet, - turnDistanceInFeet, RobotMap.PID_SLOT_TURN);
+		moveFeet(turnDistanceInFeet, - turnDistanceInFeet);
+//		tuneMove(turnDistanceInFeet, - turnDistanceInFeet, RobotMap.PID_SLOT_TURN);
 	}
 
 	/**
 	 * Convert angle in degrees to wheel distance in feet (arc length).
 	 */
 	public static double degreesToFeet(double degrees) {
+		
+		double turnConstant = 15.8;
+		
+		// Add a constant
+		if (degrees < 0) {
+			degrees -= turnConstant;
+		} else if (degrees > 0) {
+			degrees += turnConstant;
+		}
 
 		// Convert the turn to a distance based on the circumference of the robot wheel base.
 		double radius = RobotMap.WHEEL_BASE_WIDTH / 2;
@@ -263,8 +264,6 @@ public class Drive extends DifferentialDrive implements AutoDrive {
 
 	public void moveFeet(double targetLeftDistance , double targetRightDistance) {
 
-//		carrotLength = Double.parseDouble(SmartDashboard.getString("DB/String 0", "4.0"));
-		
 		LOGGER.trace("Automated move of right: "+ targetRightDistance +" left: "+ targetLeftDistance + " feet ");
 
 		// Convert the turn to a distance based on the circumference of the robot wheel base.
