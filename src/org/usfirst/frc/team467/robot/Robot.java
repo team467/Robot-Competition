@@ -8,7 +8,8 @@ import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.usfirst.frc.team467.robot.Autonomous.ActionGroup;
 import org.usfirst.frc.team467.robot.Autonomous.Actions;
 import org.usfirst.frc.team467.robot.Autonomous.MatchConfiguration;
@@ -22,7 +23,7 @@ import org.usfirst.frc.team467.robot.RobotMap.RobotID;
  */
 
 public class Robot extends TimedRobot {
-	private static final Logger LOGGER = Logger.getLogger(Robot.class);
+	private static final Logger LOGGER = LogManager.getLogger(Robot.class);
 
 	// Robot objects
 	private DriverStation467 driverstation;
@@ -123,7 +124,7 @@ public class Robot extends TimedRobot {
 		driverstation.readInputs();
 		matchConfig.load();
 		autonomous = matchConfig.autonomousDecisionTree();
-		LOGGER.info("Init Autonomous:" + autonomous.getName());
+		LOGGER.info("Init Autonomous: {}", autonomous.getName());
 		ramps.reset();
 		autonomous.enable();
 	}

@@ -3,7 +3,8 @@
  */
 package org.usfirst.frc.team467.robot.simulator;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.usfirst.frc.team467.robot.Logging;
 import org.usfirst.frc.team467.robot.RobotMap;
 import org.usfirst.frc.team467.robot.RobotMap.RobotID;
@@ -18,7 +19,7 @@ import org.usfirst.frc.team467.robot.simulator.gui.SimulatedData;
  */
 public class Robot {
 
-	private static final Logger LOGGER = Logger.getLogger(Robot.class);
+	private static final Logger LOGGER = LogManager.getLogger(Robot.class);
 
 	DriveSimulator drive;
 

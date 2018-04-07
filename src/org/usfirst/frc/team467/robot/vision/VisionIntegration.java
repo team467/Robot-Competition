@@ -1,6 +1,7 @@
 package org.usfirst.frc.team467.robot.vision;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.usfirst.frc.team467.robot.Drive;
 import org.usfirst.frc.team467.robot.Grabber;
 import org.usfirst.frc.team467.robot.OpticalSensor;
@@ -15,7 +16,7 @@ public class VisionIntegration {
 	private VisionProcessing vision = VisionProcessing.getInstance();
 	private Grabber grabber = Grabber.getInstance();
 	private DriverStation driverstation = DriverStation.getInstance();
-	private static final Logger LOGGER = Logger.getLogger(VisionIntegration.class);
+	private static final Logger LOGGER = LogManager.getLogger(VisionIntegration.class);
 
 	public static VisionIntegration getInstance() {
 		if (instance == null) {
