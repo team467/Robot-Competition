@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.SpeedController;
 public class Grabber {
 
 	public enum GrabberState {
+		START_GRAB,
 		GRAB,
 		NEUTRAL,
 		RELEASE
@@ -15,11 +16,6 @@ public class Grabber {
 
 	public static final int GRAB_TIME_MS = 1000;
 	public static final int RELEASE_TIME_MS = 1000;
-
-	private int grabCount = 0;
-	private int releaseCount = 0;
-	private int count = 0;
-
 	private GrabberState state = GrabberState.NEUTRAL;
 
 	private static final Logger LOGGER = Logger.getLogger(Grabber.class);
@@ -29,7 +25,7 @@ public class Grabber {
 	private SpeedController right;
 	private boolean hadCube = false;
 	private boolean hasCube = false;
-	OpticalSensor os;
+	private OpticalSensor os;
 
 	private Grabber() {
 		if (RobotMap.HAS_GRABBER && !RobotMap.useSimulator) {
@@ -44,8 +40,6 @@ public class Grabber {
 			os = OpticalSensor.getInstance();
 		}
 
-		grabCount = GRAB_TIME_MS/20;
-		releaseCount = RELEASE_TIME_MS/20;
 	}
 
 	public static Grabber getInstance() {
@@ -63,9 +57,18 @@ public class Grabber {
 
 		double speed = 0.0;
 		switch (state) {
+		
+		case START_GRAB:
+			if(hasCube()) {
+				state = GrabberState.NEUTRAL;
+			}
+			else {
+				speed = RobotMap.MAX_GRAB_SPEED;
+			}
+			break;
 
 		case GRAB:
-			if(hasCube() || count > grabCount) {
+			if(hasCube()) { 
 				state = GrabberState.NEUTRAL;
 			} else {
 				speed = RobotMap.MAX_GRAB_SPEED;
@@ -77,12 +80,7 @@ public class Grabber {
 			break; 
 
 		case RELEASE:
-			if(count > releaseCount) {
-				state = GrabberState.NEUTRAL;
-			} else {
-				speed = -0.8 * RobotMap.MAX_GRAB_SPEED;
-			}
-
+			speed = -RobotMap.MAX_GRAB_SPEED;
 			break;
 
 		default:
@@ -93,21 +91,22 @@ public class Grabber {
 			left.set(speed);
 			right.set(-speed);
 		}
-		count++;
-
+		
 		// Save the previous state and check for current state.
 		hadCube = hasCube;
 		hasCube = hasCube();
 	}
+	
+	public void startGrab() {
+		state = GrabberState.START_GRAB;
+	}
 
 	public void grab() {
 		state = GrabberState.GRAB;
-		count = 0;
 	}
 
 	public void release() {
 		state = GrabberState.RELEASE;
-		count = 0;
 	}
 
 	public void pause() {
@@ -145,10 +144,14 @@ public class Grabber {
 	}
 
 	public boolean justGotCube() {
+		if(!RobotMap.useSimulator) {
 		return (!hadCube && hasCube());
+		}
+		
+		else return false;
 	}
 
 	public boolean hasCube() {
-		return (RobotMap.HAS_GRABBER && os.detectedTarget());
+		return (!RobotMap.useSimulator && RobotMap.HAS_GRABBER && os.detectedTarget());
 	}
 }

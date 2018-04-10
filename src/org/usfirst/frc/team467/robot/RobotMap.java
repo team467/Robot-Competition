@@ -34,6 +34,7 @@ public class RobotMap {
 	public static int ALLOWED_GRABBER_ERROR = 2; // in degrees
 
 	public static int AUTONOMOUS_DRIVE_TIMEOUT_MS;
+	public static int AUTONOMOUS_TURN_TIMEOUT_MS;
 
 	public static boolean RIGHT_DRIVE_SENSOR_IS_INVERTED;
 	public static boolean LEFT_DRIVE_SENSOR_IS_INVERTED;
@@ -71,14 +72,14 @@ public class RobotMap {
 			FORWARD_PANIC_ANGLE = 45;
 			BACKWARD_PANIC_ANGLE = -45;
 
-			HAS_GRABBER = true;
+			HAS_GRABBER = false;
 			GRABBER_L_CHANNEL = 0;
 			GRABBER_R_CHANNEL = 1;
 			OPTICAL_CHANNEL = 5;
 
-			HAS_ELEVATOR = true;
+			HAS_ELEVATOR = false;
 			ELEVATOR_MOTOR_CHANNEL = 1;
-			HAS_CAMERA = true;
+			HAS_CAMERA = false;
 			HAS_LEFT_RAMP = false;
 			HAS_RIGHT_RAMP = false;
 
@@ -90,7 +91,7 @@ public class RobotMap {
 			WHEEL_CIRCUMFERENCE = 18.50;
 			WHEEL_ENCODER_CODES_PER_REVOLUTION = 1024;
 			useSpeedControllers = true;
-			
+
 			FORWARD_PANIC_ANGLE = 60;
 			BACKWARD_PANIC_ANGLE = -60;
 
@@ -126,7 +127,10 @@ public class RobotMap {
 			RIGHT_TURN_PID_D = 180.0;
 			RIGHT_TURN_PID_F = 0.0;
 
-			HAS_GRABBER = true;
+			useSimulator = false;
+			USE_FAKE_GAME_DATA = true;
+			
+			HAS_GRABBER = false;
 			GRABBER_INVERT = false;
 			HAS_CAMERA = false;
 
@@ -157,11 +161,12 @@ public class RobotMap {
 			RAMP_RELEASE_REVERSE_CHANNEL = 3;
 
 			AUTONOMOUS_DRIVE_TIMEOUT_MS = 500;
+			AUTONOMOUS_TURN_TIMEOUT_MS = 1000;
 			break;
 		case Competition_2:
 			HAS_WHEELS = true;
 			DRIVEMOTOR_NUM = 4;
-			WHEEL_CIRCUMFERENCE = 19.74;
+			WHEEL_CIRCUMFERENCE = 18.86; //19.74;
 			WHEEL_ENCODER_CODES_PER_REVOLUTION = 1024;
 			useSpeedControllers = true;
 
@@ -179,25 +184,25 @@ public class RobotMap {
 			RIGHT_DRIVE_SENSOR_IS_INVERTED = true;
 
 			// Linear PIDS
-			LEFT_DRIVE_PID_P = 0.875;
+			LEFT_DRIVE_PID_P = 0.70;
 			LEFT_DRIVE_PID_I = 0.0;
-			LEFT_DRIVE_PID_D = 180.0;
+			LEFT_DRIVE_PID_D = 650.0;
 			LEFT_DRIVE_PID_F = 0.0;
 
-			RIGHT_DRIVE_PID_P = 0.875;
-			RIGHT_DRIVE_PID_I = 0.0;
-			RIGHT_DRIVE_PID_D = 180.0;
+			RIGHT_DRIVE_PID_P = 0.52;
+			RIGHT_DRIVE_PID_I = 0;
+			RIGHT_DRIVE_PID_D = 340.0;
 			RIGHT_DRIVE_PID_F = 0.0;
 
 			// Turn PIDs
-			LEFT_TURN_PID_P = 1.75;
+			LEFT_TURN_PID_P = 1.0; //0.80;
 			LEFT_TURN_PID_I = 0.0;
-			LEFT_TURN_PID_D = 180.0;
+			LEFT_TURN_PID_D = 480.0;
 			LEFT_TURN_PID_F = 0.0;
 
-			RIGHT_TURN_PID_P = 1.75;
+			RIGHT_TURN_PID_P = 1.0; //0.62;
 			RIGHT_TURN_PID_I = 0.0;
-			RIGHT_TURN_PID_D = 180.0;
+			RIGHT_TURN_PID_D = 480.0;
 			RIGHT_TURN_PID_F = 0.0;
 
 			HAS_ELEVATOR = true;
@@ -217,6 +222,9 @@ public class RobotMap {
 			OPTICAL_CHANNEL = 5;
 
 			HAS_CAMERA = false;
+			
+			useSimulator = false;
+			USE_FAKE_GAME_DATA = false;
 
 			HAS_LEFT_RAMP = true;
 			RAMP_LEFT_FORWARD_CHANNEL = 1;
@@ -229,7 +237,8 @@ public class RobotMap {
 			RAMP_RELEASE_FORWARD_CHANNEL = 0;
 			RAMP_RELEASE_REVERSE_CHANNEL = 3;
 
-			AUTONOMOUS_DRIVE_TIMEOUT_MS = 500;
+			AUTONOMOUS_DRIVE_TIMEOUT_MS = 200;
+			AUTONOMOUS_TURN_TIMEOUT_MS = 200;
 			break;
 		}
 		//These calculations can be made after the robot-specific constants are set. 
@@ -250,8 +259,8 @@ public class RobotMap {
 	public static int POSITION_ALLOWABLE_CLOSED_LOOP_ERROR;
 
 	public static final double FAST_MAX_SPEED = 1.0;
-	public static final double NORMAL_MAX_SPEED = 0.6;
-	public static final double SLOW_MAX_SPEED = 0.35;
+	public static final double NORMAL_MAX_SPEED = 0.8;
+	public static final double SLOW_MAX_SPEED = 0.5;
 
 	public static final double ELEVATOR_HIGH_DRIVE_RAMP_TIME = 2.5;
 	public static final double ELEVATOR_LOW_DRIVE_RAMP_TIME = 0.0;
@@ -259,6 +268,7 @@ public class RobotMap {
 	// TODO These values need to be tested on the robot and possibly adjusted.
 	public static final double NORMAL_TURN_MAX_SPEED = 1.0;
 	public static final double SLOW_TURN_MAX_SPEED = 0.6;
+	public static final double MAX_CARROT_LENGTH = 6.0;
 
 	public static boolean useSimulator = false;
 	public static boolean USE_FAKE_GAME_DATA = false;
@@ -271,6 +281,8 @@ public class RobotMap {
 	// Robot Dimensions
 	public static double WHEEL_BASE_LENGTH = 3.33;
 	public static double WHEEL_BASE_WIDTH = 1.99; // TODO: MEASURE TRUE WHEEL BASE WIDTH
+	public static double BUMPER_LENGTH = 3.33;
+	public static double BUMPER_WIDTH = 2.92;
 
 	public static double CamToCenterWidthInches;
 	public static double CamToCenterLengthInches;	
