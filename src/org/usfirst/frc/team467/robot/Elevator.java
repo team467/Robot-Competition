@@ -28,20 +28,27 @@ public class Elevator {
 	public enum Stops {
 		// null if no stop is desired
 		// height values measured empirically
-		basement(RobotMap.ELEVATOR_BOTTOM_TICKS),
-		floor(RobotMap.ELEVATOR_FLOOR_HEIGHT),
-		fieldSwitch(RobotMap.ELEVATOR_SWITCH_HEIGHT),
-		lowScale(RobotMap.ELEVATOR_LOW_SCALE_HEIGHT),
-		highScale(RobotMap.ELEVATOR_TOP_TICKS);
+		basement(RobotMap.ELEVATOR_BOTTOM),
+		floor(RobotMap.ELEVATOR_FLOOR),
+		fieldSwitch(RobotMap.ELEVATOR_SWITCH),
+		lowScale(RobotMap.ELEVATOR_LOW_SCALE),
+		highScale(RobotMap.ELEVATOR_TOP);
 
 		/**
 		 * Height in sensor units
 		 */
 		public int height;
 
-		Stops(int height) {
-			this.height = height;
+		Stops(double heightProportion) {
+			height = heightTicksFromProportion(heightProportion);
 		}
+	}
+
+	/**
+	 * 0.0 is the bottom, 1.0 is the top
+	 */
+	private static int heightTicksFromProportion(double proportion) {
+		return (int)((1.0 - proportion)*RobotMap.ELEVATOR_BOTTOM_TICKS + proportion*RobotMap.ELEVATOR_TOP_TICKS);
 	}
 
 	/**
@@ -85,14 +92,6 @@ public class Elevator {
 
 			heightController.configAllowableClosedloopError(0, ALLOWABLE_ERROR_TICKS, RobotMap.TALON_TIMEOUT);
 		}
-	}
-
-	public void setHeights(int basement, int floor, int switchValue, int lowScale, int highScale) {
-		Stops.basement.height = basement;
-		Stops.floor.height = floor;
-		Stops.fieldSwitch.height = switchValue;
-		Stops.lowScale.height = lowScale;
-		Stops.highScale.height = highScale;
 	}
 
 	private int getRawHeight() {

@@ -141,11 +141,13 @@ public class RobotMap {
 			// TODO Assign values to the game piece variables, and make more as appropriate
 			HAS_ELEVATOR = true;
 			ELEVATOR_MOTOR_CHANNEL = 7;
-			ELEVATOR_BOTTOM_TICKS = 839;
-			ELEVATOR_FLOOR_HEIGHT = 822;
-			ELEVATOR_SWITCH_HEIGHT = 711;
-			ELEVATOR_LOW_SCALE_HEIGHT = 543;
-			ELEVATOR_TOP_TICKS = 443;
+
+			ELEVATOR_BOTTOM_TICKS = 881;
+			ELEVATOR_TOP_TICKS = 557;
+
+			ELEVATOR_FLOOR = 0.042;
+			ELEVATOR_SWITCH = 0.315;
+			ELEVATOR_LOW_SCALE = 0.729;
 
 			HAS_LEFT_RAMP = true;
 			RAMP_LEFT_FORWARD_CHANNEL = 1;
@@ -206,12 +208,12 @@ public class RobotMap {
 			HAS_ELEVATOR = true;
 			ELEVATOR_MOTOR_CHANNEL = 7;
 
-			// TODO Replace with empirical measured values
 			ELEVATOR_BOTTOM_TICKS = 785;
-			ELEVATOR_FLOOR_HEIGHT = 768;
-			ELEVATOR_SWITCH_HEIGHT = 657;
-			ELEVATOR_LOW_SCALE_HEIGHT = 489;
 			ELEVATOR_TOP_TICKS = 358;
+
+			ELEVATOR_FLOOR = 0.040;
+			ELEVATOR_SWITCH = 0.300;
+			ELEVATOR_LOW_SCALE = 0.693;
 
 			HAS_GRABBER = true;
 			GRABBER_INVERT = true;
@@ -322,13 +324,13 @@ public class RobotMap {
 	public static final double ELEVATOR_ERROR_TOLERANCE_INCHES = 1.0;
 
 	public static int ELEVATOR_BOTTOM_TICKS;
-	public static int ELEVATOR_FLOOR_HEIGHT;
-	public static int ELEVATOR_SWITCH_HEIGHT;
-	public static int ELEVATOR_LOW_SCALE_HEIGHT;
 	public static int ELEVATOR_TOP_TICKS;
-
-	// Ticks per inch is based on empirical measurements on the robot. Approximately 4.740...
-	public static final double ELEVATOR_TICKS_PER_INCH = (ELEVATOR_BOTTOM_TICKS - ELEVATOR_TOP_TICKS) / ELEVATOR_HEIGHT_RANGE_INCHES;
+	
+	public static double ELEVATOR_BOTTOM = 0.0;
+	public static double ELEVATOR_FLOOR;
+	public static double ELEVATOR_SWITCH;
+	public static double ELEVATOR_LOW_SCALE;
+	public static double ELEVATOR_TOP = 1.0;
 
 	public static boolean HAS_GRABBER;
 	public static double MAX_GRAB_SPEED = 1.0;
