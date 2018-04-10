@@ -88,7 +88,7 @@ public class RobotMap {
 		case Competition_1:
 			HAS_WHEELS = true;
 			DRIVEMOTOR_NUM = 4;
-			WHEEL_CIRCUMFERENCE = 18.50;
+			WHEEL_CIRCUMFERENCE = 19.02;//18.50;
 			WHEEL_ENCODER_CODES_PER_REVOLUTION = 1024;
 			useSpeedControllers = true;
 
@@ -130,7 +130,7 @@ public class RobotMap {
 			useSimulator = false;
 			USE_FAKE_GAME_DATA = true;
 			
-			HAS_GRABBER = false;
+			HAS_GRABBER = true;
 			GRABBER_INVERT = false;
 			HAS_CAMERA = false;
 
@@ -139,7 +139,7 @@ public class RobotMap {
 			OPTICAL_CHANNEL = 5;
 
 			// TODO Assign values to the game piece variables, and make more as appropriate
-			HAS_ELEVATOR = true;
+			HAS_ELEVATOR = false;
 			ELEVATOR_MOTOR_CHANNEL = 7;
 
 			ELEVATOR_BOTTOM_TICKS = 881;
@@ -268,7 +268,7 @@ public class RobotMap {
 	// TODO These values need to be tested on the robot and possibly adjusted.
 	public static final double NORMAL_TURN_MAX_SPEED = 1.0;
 	public static final double SLOW_TURN_MAX_SPEED = 0.6;
-	public static final double MAX_CARROT_LENGTH = 2.5;
+	public static final double MAX_CARROT_LENGTH = 4.0;
 
 	public static boolean useSimulator = false;
 	public static boolean USE_FAKE_GAME_DATA = false;
