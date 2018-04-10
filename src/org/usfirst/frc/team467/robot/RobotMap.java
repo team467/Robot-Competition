@@ -139,7 +139,7 @@ public class RobotMap {
 			OPTICAL_CHANNEL = 5;
 
 			// TODO Assign values to the game piece variables, and make more as appropriate
-			HAS_ELEVATOR = false;
+			HAS_ELEVATOR = true;
 			ELEVATOR_MOTOR_CHANNEL = 7;
 
 			ELEVATOR_BOTTOM_TICKS = 881;
@@ -259,7 +259,7 @@ public class RobotMap {
 	public static int POSITION_ALLOWABLE_CLOSED_LOOP_ERROR;
 
 	public static final double FAST_MAX_SPEED = 1.0;
-	public static final double NORMAL_MAX_SPEED = 0.8;
+	public static final double NORMAL_MAX_SPEED = 0.9;
 	public static final double SLOW_MAX_SPEED = 0.5;
 
 	public static final double ELEVATOR_HIGH_DRIVE_RAMP_TIME = 2.5;
@@ -267,7 +267,7 @@ public class RobotMap {
 
 	// TODO These values need to be tested on the robot and possibly adjusted.
 	public static final double NORMAL_TURN_MAX_SPEED = 1.0;
-	public static final double SLOW_TURN_MAX_SPEED = 0.6;
+	public static final double SLOW_TURN_MAX_SPEED = 0.8;
 	public static final double MAX_CARROT_LENGTH = 4.0;
 
 	public static boolean useSimulator = false;
