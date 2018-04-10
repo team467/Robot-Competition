@@ -130,7 +130,7 @@ public class RobotMap {
 			useSimulator = false;
 			USE_FAKE_GAME_DATA = true;
 			
-			HAS_GRABBER = false;
+			HAS_GRABBER = true;
 			GRABBER_INVERT = false;
 			HAS_CAMERA = false;
 
