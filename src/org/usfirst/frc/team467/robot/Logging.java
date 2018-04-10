@@ -1,5 +1,7 @@
 package org.usfirst.frc.team467.robot;
 
+import java.io.IOException;
+
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.LoggerContext;
@@ -24,8 +26,8 @@ public class Logging {
 		// Enable extra logging for classes you want to debug
 
 		config.addLogger(Action.class.getName(), new LoggerConfig(Action.class.getName(), Level.INFO, true));
-		config.addLogger(Drive.class.getName(), new LoggerConfig(Drive.class.getName(), Level.INFO, true));
-		config.addLogger(ActionGroup.class.getName(), new LoggerConfig(ActionGroup.class.getName(), Level.INFO, true));
+		config.addLogger(Drive.class.getName(), new LoggerConfig(Drive.class.getName(), Level.TRACE, true));
+		config.addLogger(ActionGroup.class.getName(), new LoggerConfig(ActionGroup.class.getName(), Level.WARN, true));
 		config.addLogger(DriveSimulator.class.getName(), new LoggerConfig(DriveSimulator.class.getName(), Level.WARN, true));
 		config.addLogger(Elevator.class.getName(), new LoggerConfig(Elevator.class.getName(), Level.INFO, true));
 		config.addLogger(Grabber.class.getName(), new LoggerConfig(Grabber.class.getName(), Level.DEBUG, true));
