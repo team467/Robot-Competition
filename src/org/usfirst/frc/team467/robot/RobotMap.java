@@ -107,13 +107,13 @@ public class RobotMap {
 
 			//Linear PIDS
 			LEFT_DRIVE_PID_P = 2.025;
-			LEFT_DRIVE_PID_I = 0.0003;
+			LEFT_DRIVE_PID_I = 0.0;
 			LEFT_DRIVE_PID_D = 400.0;
 			LEFT_DRIVE_PID_F = 0.0;
 
 			RIGHT_DRIVE_PID_P = 2.025;
-			RIGHT_DRIVE_PID_I = 0.0003;
-			RIGHT_DRIVE_PID_D = 400.0;
+			RIGHT_DRIVE_PID_I = 0.0;
+			RIGHT_DRIVE_PID_D = 512.0;
 			RIGHT_DRIVE_PID_F = 0.0;
 
 			// Turn PIDs
