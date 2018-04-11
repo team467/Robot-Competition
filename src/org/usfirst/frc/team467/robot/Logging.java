@@ -26,11 +26,11 @@ public class Logging {
 		// Enable extra logging for classes you want to debug
 
 		config.addLogger(Action.class.getName(), new LoggerConfig(Action.class.getName(), Level.INFO, true));
-		config.addLogger(Drive.class.getName(), new LoggerConfig(Drive.class.getName(), Level.TRACE, true));
+		config.addLogger(Drive.class.getName(), new LoggerConfig(Drive.class.getName(), Level.INFO, true));
 		config.addLogger(ActionGroup.class.getName(), new LoggerConfig(ActionGroup.class.getName(), Level.WARN, true));
 		config.addLogger(DriveSimulator.class.getName(), new LoggerConfig(DriveSimulator.class.getName(), Level.WARN, true));
 		config.addLogger(Elevator.class.getName(), new LoggerConfig(Elevator.class.getName(), Level.INFO, true));
-		config.addLogger(Grabber.class.getName(), new LoggerConfig(Grabber.class.getName(), Level.DEBUG, true));
+		config.addLogger(Grabber.class.getName(), new LoggerConfig(Grabber.class.getName(), Level.INFO, true));
 		config.addLogger(MatchConfiguration.class.getName(), new LoggerConfig(MatchConfiguration.class.getName(), Level.INFO, true));
 		config.addLogger(OpticalSensor.class.getName(), new LoggerConfig(OpticalSensor.class.getName(), Level.WARN, true));
 		config.addLogger(Ramp.class.getName(), new LoggerConfig(Ramp.class.getName(), Level.INFO, true));

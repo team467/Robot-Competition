@@ -106,14 +106,14 @@ public class RobotMap {
 			RIGHT_DRIVE_SENSOR_IS_INVERTED = true;
 
 			//Linear PIDS
-			LEFT_DRIVE_PID_P = 0.875;
-			LEFT_DRIVE_PID_I = 0.0;
-			LEFT_DRIVE_PID_D = 180.0;
+			LEFT_DRIVE_PID_P = 2.025;
+			LEFT_DRIVE_PID_I = 0.0003;
+			LEFT_DRIVE_PID_D = 400.0;
 			LEFT_DRIVE_PID_F = 0.0;
 
-			RIGHT_DRIVE_PID_P = 0.875;
-			RIGHT_DRIVE_PID_I = 0.0;
-			RIGHT_DRIVE_PID_D = 200.0;
+			RIGHT_DRIVE_PID_P = 2.025;
+			RIGHT_DRIVE_PID_I = 0.0003;
+			RIGHT_DRIVE_PID_D = 400.0;
 			RIGHT_DRIVE_PID_F = 0.0;
 
 			// Turn PIDs
@@ -139,7 +139,7 @@ public class RobotMap {
 			OPTICAL_CHANNEL = 5;
 
 			// TODO Assign values to the game piece variables, and make more as appropriate
-			HAS_ELEVATOR = true;
+			HAS_ELEVATOR = false;
 			ELEVATOR_MOTOR_CHANNEL = 7;
 
 			ELEVATOR_BOTTOM_TICKS = 881;
