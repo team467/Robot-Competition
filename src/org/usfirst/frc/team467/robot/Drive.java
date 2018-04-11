@@ -102,8 +102,6 @@ public class Drive extends DifferentialDrive implements AutoDrive {
 		double kFLeft = Double.parseDouble(SmartDashboard.getString("DB/String 4", "1.1168")); // 0.0
 		double kFRight = Double.parseDouble(SmartDashboard.getString("DB/String 9", "1.2208")); // 0.0
 
-		carrotLength = Double.parseDouble(SmartDashboard.getString("DB/String 5", "2.5"));
-
 		left.setPIDF(pidSlot, kPLeft, kILeft, kDLeft, kFLeft);
 		right.setPIDF(pidSlot, kPRight, kIRight, kDRight, kFRight);
 	}
