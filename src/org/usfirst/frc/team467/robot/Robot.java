@@ -56,7 +56,7 @@ public class Robot extends TimedRobot {
 		dashboard  = table.getTable("SmartDashboard");
 
 		// Initialize RobotMap
-		RobotMap.init(RobotID.Competition_1);
+		RobotMap.init(RobotID.Competition_2);
 
 		// Make robot objects
 		driverstation = DriverStation467.getInstance();
