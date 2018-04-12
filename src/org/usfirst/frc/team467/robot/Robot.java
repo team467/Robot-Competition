@@ -93,7 +93,7 @@ public class Robot extends TimedRobot {
 		String[] autoList = {"None", "Just_Go_Forward", "Left_Switch_Only", "Left_Basic", "Left_Advanced", "Left_Our_Side_Only",
 				"Center", "Right_Switch_Only", "Right_Basic", "Right_Advanced", "Right_Our_Side_Only"};
 		dashboard.getEntry("Auto List").setStringArray(autoList);
-//		LOGGER.info("Selected Auto Mode: " + SmartDashboard.getString("Auto Selector", "None"));
+		LOGGER.info("Selected Auto Mode: " + SmartDashboard.getString("Auto Selector", "None"));
 	}
 
 	double tuningValue = 0.0;
