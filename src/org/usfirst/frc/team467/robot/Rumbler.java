@@ -14,9 +14,13 @@ public class Rumbler {
 		this.controller = controller;
 	}
 
+	/**
+	 * @param durationMS Rumble duration in milliseconds
+	 * @param intensity Squared input
+	 */
 	void rumble(int durationMS, double intensity) {
 		this.durationMS = durationMS;
-		this.intensity = intensity; 
+		this.intensity = intensity*intensity;
 		LOGGER.debug("rumble duration= {} rumble intensity= {}", durationMS, intensity);
 	}
 

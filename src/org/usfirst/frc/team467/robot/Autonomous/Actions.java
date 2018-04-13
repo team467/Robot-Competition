@@ -324,8 +324,10 @@ public class Actions {
 		// pick up cube
 		mode.addActions(move(-1.0)); 
 		mode.addAction(elevatorToFloor());
+		mode.addAction(zeroDistance()); //Wait doesn't zero
+		mode.addAction(wait(0.5));
 		mode.addActions(turn(-68)); 
-		mode.addActions(grabAndMoveLinear(9.8));
+		mode.addActions(grabAndMoveLinear(9.3));
 		
 		// Move To Switch 
 		mode.addActions(grabAndMoveLinear(-1.0));	
@@ -381,13 +383,15 @@ public class Actions {
 		//Go to pick up cube
 		mode.addActions(move(-1.0)); 
 		mode.addAction(elevatorToFloor());
-		mode.addActions(turn(-68)); 
-		mode.addActions(grabAndMoveLinear(9.8));
+		mode.addAction(zeroDistance()); //Wait doesn't zero
+		mode.addAction(wait(0.5));
+		mode.addActions(turn(-60)); 
+		mode.addActions(grabAndMoveLinear(9.3));
 		
 		//Return to Scale
-		mode.addActions(grabAndMoveLinear(-9.8));		
+		mode.addActions(grabAndMoveLinear(-9.3));		
 		mode.addAction(elevatorToSwitch());
-		mode.addActions(turn(68));
+		mode.addActions(turn(60));
 		mode.addActions(move(1.0));
 		mode.addAction(releaseCube());
 		mode.addAction(pauseGrabber());

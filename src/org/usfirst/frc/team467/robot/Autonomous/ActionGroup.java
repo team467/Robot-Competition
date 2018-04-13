@@ -161,7 +161,7 @@ public class ActionGroup {
 					increment = 0;
 				}
 			} else {
-				if (currentPosition > 0.2 && Math.abs(lastPosition - currentPosition) < 0.01 ) {
+				if (currentPosition > 0.3 && Math.abs(lastPosition - currentPosition) < 0.01 ) {
 					increment++;
 				} else {
 					increment = 0;

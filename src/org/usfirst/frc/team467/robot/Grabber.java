@@ -124,15 +124,18 @@ public class Grabber {
 		}
 
 		if (!RobotMap.useSimulator) {
-			if (DriverStation467.getInstance().getNavJoystick().getLeftStickY() > 0.5 
-					|| DriverStation467.getInstance().getNavJoystick().getLeftStickY() < -0.5) {
-				DriverStation467.getInstance().getNavRumbler().rumble(25, 0.1);
-				DriverStation467.getInstance().getDriverRumbler().rumble(25, 0.1);
+			if (Math.abs(DriverStation467.getInstance().getNavJoystick().getLeftStickY()) > 0.5) {
+				DriverStation467.getInstance().getNavRumbler().rumble(25, 0.2);
+				DriverStation467.getInstance().getDriverRumbler().rumble(25, 0.2);
 				if (hasCube()) {
 					DriverStation467.getInstance().getNavRumbler().rumble(150, 1.0);
 					DriverStation467.getInstance().getDriverRumbler().rumble(50, 1.0);
 				}
 			}
+		}
+
+		if (throttle > 0.0) {
+			throttle *= 0.7;
 		}
 
 		LOGGER.debug("Grabber Throttle= {}", throttle);
