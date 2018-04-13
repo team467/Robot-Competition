@@ -166,7 +166,7 @@ public class RobotMap {
 		case Competition_2:
 			HAS_WHEELS = true;
 			DRIVEMOTOR_NUM = 4;
-			WHEEL_CIRCUMFERENCE = 18.86; //19.74;
+			WHEEL_CIRCUMFERENCE = 18.00; //19.74;
 			WHEEL_ENCODER_CODES_PER_REVOLUTION = 1024;
 			useSpeedControllers = true;
 
@@ -184,32 +184,32 @@ public class RobotMap {
 			RIGHT_DRIVE_SENSOR_IS_INVERTED = true;
 
 			// Linear PIDS
-			LEFT_DRIVE_PID_P = 0.70;
+			LEFT_DRIVE_PID_P = 1.0;
 			LEFT_DRIVE_PID_I = 0.0;
-			LEFT_DRIVE_PID_D = 650.0;
+			LEFT_DRIVE_PID_D = 450.0;
 			LEFT_DRIVE_PID_F = 0.0;
 
-			RIGHT_DRIVE_PID_P = 0.52;
-			RIGHT_DRIVE_PID_I = 0;
-			RIGHT_DRIVE_PID_D = 340.0;
+			RIGHT_DRIVE_PID_P = 1.0;
+			RIGHT_DRIVE_PID_I = 0.0;
+			RIGHT_DRIVE_PID_D = 450.0;
 			RIGHT_DRIVE_PID_F = 0.0;
 
 			// Turn PIDs
-			LEFT_TURN_PID_P = 1.0; //0.80;
+			LEFT_TURN_PID_P = 1.0;
 			LEFT_TURN_PID_I = 0.0;
-			LEFT_TURN_PID_D = 480.0;
+			LEFT_TURN_PID_D = 450.0;
 			LEFT_TURN_PID_F = 0.0;
 
-			RIGHT_TURN_PID_P = 1.0; //0.62;
+			RIGHT_TURN_PID_P = 1.0;
 			RIGHT_TURN_PID_I = 0.0;
-			RIGHT_TURN_PID_D = 480.0;
+			RIGHT_TURN_PID_D = 450.0;
 			RIGHT_TURN_PID_F = 0.0;
 
 			HAS_ELEVATOR = true;
 			ELEVATOR_MOTOR_CHANNEL = 7;
 
-			ELEVATOR_BOTTOM_TICKS = 926;
-			ELEVATOR_TOP_TICKS = 499;
+			ELEVATOR_BOTTOM_TICKS = 630;
+			ELEVATOR_TOP_TICKS = 195;
 
 			ELEVATOR_FLOOR = 0.040;
 			ELEVATOR_SWITCH = 0.300;
@@ -268,7 +268,7 @@ public class RobotMap {
 	// TODO These values need to be tested on the robot and possibly adjusted.
 	public static final double NORMAL_TURN_MAX_SPEED = 1.0;
 	public static final double SLOW_TURN_MAX_SPEED = 0.8;
-	public static final double MAX_CARROT_LENGTH = 2.5;
+	public static final double MAX_CARROT_LENGTH = 4.0;
 
 	public static boolean useSimulator = false;
 	public static boolean USE_FAKE_GAME_DATA = false;

@@ -244,9 +244,8 @@ public class Drive extends DifferentialDrive implements AutoDrive {
 	 * Convert angle in degrees to wheel distance in feet (arc length).
 	 */
 	public static double degreesToFeet(double degrees) {
-		
-		double turnConstant = 15.8;
-		
+		double turnConstant = 12.0;
+
 		// Add a constant
 		if (degrees < 0) {
 			degrees -= turnConstant;

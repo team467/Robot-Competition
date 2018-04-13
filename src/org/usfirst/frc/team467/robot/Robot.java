@@ -54,6 +54,7 @@ public class Robot extends TimedRobot {
 		// Delete all Network Table keys; relevant ones will be added when they are set
 		table = NetworkTableInstance.getDefault();
 		dashboard  = table.getTable("SmartDashboard");
+		//table.deleteAllEntries();
 
 		// Initialize RobotMap
 		RobotMap.init(RobotID.Competition_2);
@@ -91,7 +92,7 @@ public class Robot extends TimedRobot {
 	public void disabledPeriodic() {
 		LOGGER.trace("Disabled Periodic");
 		String[] autoList = {"None", "Just_Go_Forward", "Left_Switch_Only", "Left_Basic", "Left_Advanced", "Left_Our_Side_Only",
-				"Center", "Right_Switch_Only", "Right_Basic", "Right_Advanced", "Right_Our_Side_Only"};
+				"Center", "Center_Advanced", "Right_Switch_Only", "Right_Basic", "Right_Advanced", "Right_Our_Side_Only"};
 		dashboard.getEntry("Auto List").setStringArray(autoList);
 		LOGGER.info("Selected Auto Mode: " + SmartDashboard.getString("Auto Selector", "None"));
 	}
@@ -102,7 +103,7 @@ public class Robot extends TimedRobot {
 		drive.setPIDSFromRobotMap();
 		driverstation.readInputs();
 		tuningValue = Double.parseDouble(SmartDashboard.getString("DB/String 0", "0.0"));
-		LOGGER.debug("Tuning Value: " + tuningValue);
+		LOGGER.info("Tuning Value: " + tuningValue);
 		if (tuningValue <= 30.0 && tuningValue >= -30.0) {
 			drive.readPIDSFromSmartDashboard(RobotMap.PID_SLOT_DRIVE);
 		} else {

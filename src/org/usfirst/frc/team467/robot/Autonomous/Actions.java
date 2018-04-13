@@ -249,11 +249,11 @@ public class Actions {
 		String actionGroupText = "Start in center, put cube on left switch.";
 		ActionGroup mode = new ActionGroup(actionGroupText);
 		mode.addActions(start());
-		mode.addActions(move(4.0)); 
+		mode.addActions(move(3.5)); 
 		mode.addActions(turn(-90));
 		mode.addActions(move(5.27));//5.77 
 		mode.addActions(turn(90));
-		mode.addActions(move(4.34));//4.34
+		mode.addActions(move(4.84));//4.34
 		mode.addAction(releaseCube());
 		mode.addAction(pauseGrabber());
 		return mode;
@@ -263,11 +263,11 @@ public class Actions {
 		String actionGroupText = "Start in center, put cube on right switch.";
 		ActionGroup mode = new ActionGroup(actionGroupText);
 		mode.addActions(start());
-		mode.addActions(move(4.0));
+		mode.addActions(move(3.5));
 		mode.addActions(turn(90));
 		mode.addActions(move(4.27));
 		mode.addActions(turn(-90));
-		mode.addActions(move(4.34));
+		mode.addActions(move(4.84));
 		mode.addAction(releaseCube());
 		mode.addAction(pauseGrabber());
 		return mode;
@@ -289,7 +289,7 @@ public class Actions {
 		String actionGroupText = "Put cube on our side scale";
 		ActionGroup mode = new ActionGroup(actionGroupText);
 		mode.addActions(start());
-		mode.addActions(move(23.33));
+		mode.addActions(move(22.83));
 		mode.addAction(elevatorToHighScale());
 		mode.addActions(move(2.0));
 		mode.addActions(turn(-95));
@@ -322,21 +322,23 @@ public class Actions {
 		mode.addActions(basicScaleOurSide());
 
 		// pick up cube
-		mode.addActions(move(-1.25)); 
+		mode.addActions(move(-1.0)); 
 		mode.addAction(elevatorToFloor());
 		mode.addActions(turn(-68)); 
 		mode.addActions(grabAndMoveLinear(9.8));
+		
+		// Move To Switch 
 		mode.addActions(grabAndMoveLinear(-1.0));	
 		mode.addAction(elevatorToSwitch());
 		mode.addActions(move(1.0));
+		
 		mode.addAction(releaseCube());
 		mode.addAction(pauseGrabber());
 		
-//		mode.addAction(elevatorToSwitch());
-//		mode.addAction(releaseCube());
-//		mode.addAction(pauseGrabber());
+		//Get read for teleop 
+		mode.addActions(move(-1.0));
+		mode.addAction(elevatorToFloor());
 
-		//
 		return mode;
 	}
 
@@ -350,20 +352,24 @@ public class Actions {
 		mode.addAction(elevatorToFloor());
 		mode.addActions(turn(90));
 		mode.addActions(move(5.81));
-		mode.addActions(turn(-90));
-		mode.addActions(move(14.0));
-		mode.addActions(turn(-50));
-		mode.addActions(grabAndMoveLinear(1.5));
-		mode.addActions(grabAndMoveLinear(-1.5));
+		mode.addActions(turn(-125));
+		mode.addActions(grabAndMoveLinear(3.2));
+		mode.addActions(grabAndMoveLinear(-3.2));
+		
+		//Go to far scale
+		mode.addActions(turn(35));
+		mode.addActions(move(18.0));
 		
 		//place cube in scale 
-		mode.addActions(turn(50));
-		mode.addActions(move(4.0));
 		mode.addActions(turn(100));
 		mode.addAction(elevatorToHighScale());
-//		mode.addActions(move(3.4));
-//		mode.addAction(releaseCube());
-//		mode.addAction(pauseGrabber());
+		mode.addActions(move(3.4));
+		mode.addAction(releaseCube());
+		mode.addAction(pauseGrabber());
+		
+		//Get ready for teleop
+		mode.addActions(move(-1.25));
+		mode.addAction(elevatorToFloor());
 		return mode;
 	}
 
@@ -372,16 +378,23 @@ public class Actions {
 		ActionGroup mode = new ActionGroup(actionGroupText);
 		mode.addActions(basicScaleOurSide());
 
-		mode.addActions(move(-1.25)); 
+		//Go to pick up cube
+		mode.addActions(move(-1.0)); 
 		mode.addAction(elevatorToFloor());
 		mode.addActions(turn(-68)); 
 		mode.addActions(grabAndMoveLinear(9.8));
-		mode.addActions(grabAndMoveLinear(-1.0));		
+		
+		//Return to Scale
+		mode.addActions(grabAndMoveLinear(-9.8));		
 		mode.addAction(elevatorToSwitch());
+		mode.addActions(turn(68));
 		mode.addActions(move(1.0));
 		mode.addAction(releaseCube());
 		mode.addAction(pauseGrabber());
 		
+		//Get ready for teleop 
+		mode.addActions(move(-1.25));
+		mode.addAction(elevatorToFloor());
 		return mode;
 	}
 
@@ -392,5 +405,42 @@ public class Actions {
 		
 		return mode;
 	}
+	
+	public static ActionGroup advancedCenterRightExchange() {
+		String actionGroupText = "Start in center, put cube on right switch and second in exchange";
+		ActionGroup mode = new ActionGroup(actionGroupText);
+		mode.addActions(centerBasicSwitchRight());
+		
+		mode.addActions(move(-5.7));
+		mode.addAction(elevatorToFloor());
+		mode.addActions(turn(-45));
+		mode.addActions(grabAndMoveLinear(4.6));
+		mode.addActions(grabAndMoveLinear(-1.5));
+		mode.addActions(turn(-90));
+		mode.addActions(move(6.1));
+		mode.addActions(turn(-45));
+		mode.addActions(move(0.7));
+		mode.addAction(releaseCube());
+		mode.addAction(pauseGrabber());
+		
+		return mode;
+	}
 
+	public static ActionGroup advancedCenterLeftExchange() {
+		String actionGroupText = "Start in center, put cube on left switch and second in exchange";
+		ActionGroup mode = new ActionGroup(actionGroupText);
+		mode.addActions(centerBasicSwitchLeft());
+		
+		mode.addActions(move(-5.9));
+		mode.addAction(elevatorToFloor());
+		mode.addActions(turn(45));
+		mode.addActions(grabAndMoveLinear(4.8));
+		mode.addActions(grabAndMoveLinear(-1.6));
+		mode.addActions(turn(135));
+		mode.addActions(move(4.5));
+		mode.addAction(releaseCube());
+		mode.addAction(pauseGrabber());
+		
+		return mode;
+	}
 }
