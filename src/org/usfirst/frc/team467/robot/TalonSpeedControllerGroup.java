@@ -110,6 +110,7 @@ public class TalonSpeedControllerGroup implements SpeedController {
 
 		leader.configNeutralDeadband(0.04, RobotMap.TALON_TIMEOUT);
 	}
+
 	public void setPIDSlot(int slot){
 		leader.selectProfileSlot(slot, 0);
 
