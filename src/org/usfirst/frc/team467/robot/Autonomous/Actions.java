@@ -277,7 +277,7 @@ public class Actions {
 		String actionGroupText = "Put cube on our side switch.";
 		ActionGroup mode = new ActionGroup(actionGroupText);
 		mode.addActions(start());
-		mode.addActions(move(12.33));
+		mode.addActions(move(11.83));
 		mode.addActions(turn(-90));
 		mode.addActions(move(2.0)); 
 		mode.addAction(releaseCube());
@@ -303,9 +303,9 @@ public class Actions {
 		String actionGroupText = "Put cube on opposite side scale";
 		ActionGroup mode = new ActionGroup(actionGroupText);
 		mode.addActions(start());
-		mode.addActions(move(18.14));
+		mode.addActions(move(17.5));//17.64
 		mode.addActions(turn(-90));
-		mode.addActions(move(17.4));
+		mode.addActions(move(17.4));//17.4
 		mode.addActions(turn(100));
 		mode.addAction(elevatorToHighScale());
 		mode.addActions(move(3.0));
@@ -353,7 +353,7 @@ public class Actions {
 		mode.addActions(move(-2.0));
 		mode.addAction(elevatorToFloor());
 		mode.addActions(turn(90));
-		mode.addActions(move(5.81));
+		mode.addActions(move(6.31));
 		mode.addActions(turn(-125));
 		mode.addActions(grabAndMoveLinear(3.2));
 		mode.addActions(grabAndMoveLinear(-3.2));
