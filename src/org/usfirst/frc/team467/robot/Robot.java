@@ -85,6 +85,7 @@ public class Robot extends TimedRobot {
 	}
 
 	public void disabledInit() {
+		LOGGER.info("Init Disabled");
 		ramps.reset();
 //		drive.logClosedLoopErrors();
 	}
@@ -100,6 +101,7 @@ public class Robot extends TimedRobot {
 	double tuningValue = 0.0;
 
 	public void testInit() {
+		LOGGER.info("Init Test");
 		drive.setPIDSFromRobotMap();
 		driverstation.readInputs();
 		tuningValue = Double.parseDouble(SmartDashboard.getString("DB/String 0", "0.0"));
@@ -137,6 +139,7 @@ public class Robot extends TimedRobot {
 	}
 
 	public void teleopInit() {
+		LOGGER.info("Init Teleop");
 		autonomous = Actions.doNothing();
 		drive.configPeakOutput(1.0);
 		driverstation.readInputs();

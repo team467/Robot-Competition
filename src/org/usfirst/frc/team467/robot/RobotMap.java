@@ -226,11 +226,11 @@ public class RobotMap {
 			useSimulator = false;
 			USE_FAKE_GAME_DATA = false;
 
-			HAS_LEFT_RAMP = true;
+			HAS_LEFT_RAMP = false;
 			RAMP_LEFT_FORWARD_CHANNEL = 1;
 			RAMP_LEFT_REVERSE_CHANNEL = 4;
 
-			HAS_RIGHT_RAMP = true;
+			HAS_RIGHT_RAMP = false;
 			RAMP_RIGHT_FORWARD_CHANNEL = 2;
 			RAMP_RIGHT_REVERSE_CHANNEL = 5;
 
