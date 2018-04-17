@@ -1,6 +1,7 @@
 package org.usfirst.frc.team467.robot.Autonomous;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.usfirst.frc.team467.robot.RobotMap;
 import org.usfirst.frc.team467.robot.simulator.gui.SimulatedData;
 
@@ -18,7 +19,7 @@ public class MatchConfiguration {
 
 	private static MatchConfiguration instance;
 
-	private static final Logger LOGGER = Logger.getLogger(MatchConfiguration.class);
+	private static final Logger LOGGER = LogManager.getLogger(MatchConfiguration.class);
 
 	public enum TeamColor {
 		UNKNOWN,
@@ -45,7 +46,7 @@ public class MatchConfiguration {
 	private ActionGroup autonomous;
 
 	private String[] autoList = {"None", "Just_Go_Forward", "Left_Switch_Only", "Left_Basic", "Left_Advanced", "Left_Our_Side_Only",
-			"Center", "Right_Switch_Only", "Right_Basic", "Right_Advanced", "Right_Our_Side_Only"};
+			"Center", "Center_Advanced", "Right_Switch_Only", "Right_Basic", "Right_Advanced", "Right_Our_Side_Only"};
 
 	private MatchConfiguration() {
 		teamColor = TeamColor.UNKNOWN;
@@ -94,7 +95,7 @@ public class MatchConfiguration {
 			autoMode = SmartDashboard.getString("Auto Selector", "None");
 		}
 
-		LOGGER.info( "AutoMode: '" + autoMode + "'");
+		LOGGER.info( "AutoMode: {} '", autoMode);
 	}
 
 	public void setSides() {
@@ -110,14 +111,14 @@ public class MatchConfiguration {
 			gameData = DriverStation.getInstance().getGameSpecificMessage();
 		}
 
-		LOGGER.debug("gameData: " + gameData);
+		LOGGER.debug("gameData: {}", gameData);
 
 		// String will be three letters, such as 'LRL' or 'RRR' or 'RRL'
 		if(gameData.length() > 0) {
 
 			// Our switch
 			if(gameData.charAt(0) == 'L') {
-				LOGGER.debug("TeamColor: "+ teamColor);
+				LOGGER.debug("TeamColor: {}", teamColor);
 				if (teamColor == TeamColor.BLUE ) {
 					blueSwitch = Side.LEFT;
 					LOGGER.info("Our Switch Blue LEFT");
@@ -204,6 +205,17 @@ public class MatchConfiguration {
 				autonomous = Actions.centerBasicSwitchLeft();
 			}
 			break;
+			
+		case "Center_Advanced":
+			LOGGER.info("Entering Center_Advanced");
+			if(isMySwitchToTheRight()) {
+				LOGGER.debug("The switch is to the right | CENTER");
+				autonomous = Actions.advancedCenterRightExchange();
+			} else {
+				LOGGER.debug("The Switch is to the left | CENTER");
+				autonomous = Actions.advancedCenterLeftExchange();
+			}
+			break;
 
 		case "Left_Switch_Only":
 		case "Right_Switch_Only": 
@@ -267,7 +279,7 @@ public class MatchConfiguration {
 		case "None":
 		default:
 			autonomous = Actions.crossAutoLine();
-			LOGGER.info("DO NOTHING! ------------------------------------------------" + Actions.doNothing());
+			LOGGER.info("DO NOTHING! ------------------------------------------------ {}", Actions.doNothing());
 		}
 
 		autonomous.enable();
@@ -284,7 +296,7 @@ public class MatchConfiguration {
 
 	public double matchTime() {
 		double time = DriverStation.getInstance().getMatchTime();
-		LOGGER.info("Match Time=" + time);
+		LOGGER.info("Match Time= {}", time);
 		return time + 20;
 	}
 

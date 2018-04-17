@@ -1,10 +1,11 @@
 package org.usfirst.frc.team467.robot;
 
-import org.apache.log4j.Logger;
-
 import edu.wpi.first.wpilibj.MotorSafetyHelper;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.ctre.phoenix.ParamEnum;
 import com.ctre.phoenix.motorcontrol.ControlMode;
@@ -13,7 +14,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 public class Elevator {
 	private static Elevator instance;
-	private static final Logger LOGGER = Logger.getLogger(Elevator.class);
+	private static final Logger LOGGER = LogManager.getLogger(Elevator.class);
 
 	private WPI_TalonSRX heightController;
 	private MotorSafetyHelper m_safetyHelper;
@@ -27,20 +28,27 @@ public class Elevator {
 	public enum Stops {
 		// null if no stop is desired
 		// height values measured empirically
-		basement(RobotMap.ELEVATOR_BOTTOM_TICKS),
-		floor(RobotMap.ELEVATOR_FLOOR_HEIGHT),
-		fieldSwitch(RobotMap.ELEVATOR_SWITCH_HEIGHT),
-		lowScale(RobotMap.ELEVATOR_LOW_SCALE_HEIGHT),
-		highScale(RobotMap.ELEVATOR_TOP_TICKS);
+		basement(RobotMap.ELEVATOR_BOTTOM),
+		floor(RobotMap.ELEVATOR_FLOOR),
+		fieldSwitch(RobotMap.ELEVATOR_SWITCH),
+		lowScale(RobotMap.ELEVATOR_LOW_SCALE),
+		highScale(RobotMap.ELEVATOR_TOP);
 
 		/**
 		 * Height in sensor units
 		 */
 		public int height;
 
-		Stops(int height) {
-			this.height = height;
+		Stops(double heightProportion) {
+			height = heightTicksFromProportion(heightProportion);
 		}
+	}
+
+	/**
+	 * 0.0 is the bottom, 1.0 is the top
+	 */
+	private static int heightTicksFromProportion(double proportion) {
+		return (int)((1.0 - proportion)*RobotMap.ELEVATOR_BOTTOM_TICKS + proportion*RobotMap.ELEVATOR_TOP_TICKS);
 	}
 
 	/**
@@ -86,14 +94,6 @@ public class Elevator {
 		}
 	}
 
-	public void setHeights(int basement, int floor, int switchValue, int lowScale, int highScale) {
-		Stops.basement.height = basement;
-		Stops.floor.height = floor;
-		Stops.fieldSwitch.height = switchValue;
-		Stops.lowScale.height = lowScale;
-		Stops.highScale.height = highScale;
-	}
-
 	private int getRawHeight() {
 		if (!RobotMap.HAS_ELEVATOR || RobotMap.useSimulator) {
 			return RobotMap.ELEVATOR_BOTTOM_TICKS;
@@ -123,8 +123,8 @@ public class Elevator {
 		if (!RobotMap.useSimulator) {
 			if ((heightController.getControlMode() == ControlMode.MotionMagic || heightController.getControlMode() == ControlMode.Position)
 					&& Math.abs(error) <= ALLOWABLE_ERROR_TICKS) {
-				LOGGER.debug("automaticMove, clearing target,  trajectory=" + targetHeight.height
-						+ " pos=" + heightController.getSelectedSensorPosition(0) + " err=" + error);
+				LOGGER.debug("automaticMove, clearing target,  trajectory = {} pos = {} err = {}", targetHeight.height,
+						  heightController.getSelectedSensorPosition(0), error);
 				targetHeight = null;
 				heightController.disable();
 				return;
@@ -132,7 +132,7 @@ public class Elevator {
 		}
 
 		configMotorParameters();
-		LOGGER.debug("Moving to height=" + targetHeight.height);
+		LOGGER.debug("Moving to height= {}", targetHeight.height);
 
 		heightController.set(ControlMode.Position, targetHeight.height);
 	}

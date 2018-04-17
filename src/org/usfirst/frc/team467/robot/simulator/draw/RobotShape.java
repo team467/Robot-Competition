@@ -5,7 +5,8 @@ package org.usfirst.frc.team467.robot.simulator.draw;
 
 import java.text.DecimalFormat;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.usfirst.frc.team467.robot.Elevator.Stops;
 import org.usfirst.frc.team467.robot.RobotMap;
 import org.usfirst.frc.team467.robot.simulator.Robot;
@@ -25,7 +26,7 @@ public class RobotShape {
 	public static final boolean RUN_LOCAL = true;
 	private Robot robot; // For local processing
 		
-	private static final Logger LOGGER = Logger.getLogger(RobotShape.class);
+	private static final Logger LOGGER = LogManager.getLogger(RobotShape.class);
 	private DecimalFormat df = new DecimalFormat("####0.00");
 	
 	// Robot Shapes
@@ -118,12 +119,12 @@ public class RobotShape {
 		double averageMove = (leftDistance + rightDistance) / 2;
 		double leftArcLength = (leftDistance - averageMove);
 		double rightArcLength = (rightDistance - averageMove);
-		LOGGER.debug("Moves: Left = " + df.format(leftArcLength) + " Right = " + df.format(rightArcLength) + " Average = " + averageMove);
+		LOGGER.debug("Moves: Left = {} Right = {} Average = {}", df.format(leftArcLength), df.format(rightArcLength), averageMove);
 		
 		double leftTheta = leftArcLength / radius;
 		double rightTheta = rightArcLength / radius;
 		double theta = (rightTheta - leftTheta) /2;
-		LOGGER.debug("Thetas: Left = " + df.format(leftTheta) + " Right = " + df.format(rightTheta));
+		LOGGER.debug("Thetas: Left = {} Right = {}", df.format(leftTheta), df.format(rightTheta));
 		
 		double tempLeftX = radius * Math.cos(theta);
 		double tempLeftY = radius * Math.sin(theta);
@@ -147,7 +148,7 @@ public class RobotShape {
 		left.y = currentCoordinate.y + absoluteCoordinate.y + radius * Math.sin(mapHeadingAngle);
 		right.x = currentCoordinate.x + absoluteCoordinate.x + radius * Math.cos(mapHeadingAngle);
 		right.y = currentCoordinate.y + absoluteCoordinate.y + -1 * radius * Math.sin(mapHeadingAngle);
-		LOGGER.debug("Screen Postion: [ " + df.format(Math.toDegrees(mapHeadingAngle)) + ", " + left + ", " + right + "]");
+		LOGGER.debug("Screen Postion: [ {}, {}, {}]", df.format(Math.toDegrees(mapHeadingAngle)), left, right);
 		
 	}
 

@@ -1,6 +1,7 @@
 package org.usfirst.frc.team467.robot;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.SpeedController;
@@ -18,7 +19,7 @@ public class Grabber {
 	public static final int RELEASE_TIME_MS = 1000;
 	private GrabberState state = GrabberState.NEUTRAL;
 
-	private static final Logger LOGGER = Logger.getLogger(Grabber.class);
+	private static final Logger LOGGER = LogManager.getLogger(Grabber.class);
 
 	private static Grabber instance;
 	private SpeedController left;
@@ -123,10 +124,9 @@ public class Grabber {
 		}
 
 		if (!RobotMap.useSimulator) {
-			if (DriverStation467.getInstance().getNavJoystick().getLeftStickY() > 0.5 
-					|| DriverStation467.getInstance().getNavJoystick().getLeftStickY() < -0.5) {
-				DriverStation467.getInstance().getNavRumbler().rumble(25, 0.1);
-				DriverStation467.getInstance().getDriverRumbler().rumble(25, 0.1);
+			if (Math.abs(DriverStation467.getInstance().getNavJoystick().getLeftStickY()) > 0.5) {
+				DriverStation467.getInstance().getNavRumbler().rumble(25, 0.2);
+				DriverStation467.getInstance().getDriverRumbler().rumble(25, 0.2);
 				if (hasCube()) {
 					DriverStation467.getInstance().getNavRumbler().rumble(150, 1.0);
 					DriverStation467.getInstance().getDriverRumbler().rumble(50, 1.0);
@@ -134,7 +134,11 @@ public class Grabber {
 			}
 		}
 
-		LOGGER.debug("Grabber Throttle=" + throttle);
+		if (throttle > 0.0) {
+			throttle *= 0.7;
+		}
+
+		LOGGER.debug("Grabber Throttle= {}", throttle);
 		left.set(throttle * RobotMap.MAX_GRAB_SPEED);
 		right.set(-throttle * RobotMap.MAX_GRAB_SPEED);
 

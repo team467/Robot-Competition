@@ -69,6 +69,7 @@
 							<String fx:value="Left_Advanced" />
 							<String fx:value="Left_Our_Side_Only" />
 							<String fx:value="Center" />
+							<String fx:value="Center_Advanced" />
 							<String fx:value="Right_Switch_Only" />
 							<String fx:value="Right_Basic" />
 							<String fx:value="Right_Advanced" />

@@ -5,7 +5,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.usfirst.frc.team467.robot.Drive;
 import org.usfirst.frc.team467.robot.RobotMap;
 import org.usfirst.frc.team467.robot.Autonomous.Action.Activity;
@@ -16,7 +17,7 @@ import org.usfirst.frc.team467.robot.simulator.DriveSimulator;
  * Can be used in Autonomous and also Teleop routines.
  */
 public class ActionGroup {
-	private static final Logger LOGGER = Logger.getLogger(ActionGroup.class);
+	private static final Logger LOGGER = LogManager.getLogger(ActionGroup.class);
 	private static AutoDrive drive = (RobotMap.useSimulator) ? DriveSimulator.getInstance() : Drive.getInstance();
 	private String name;
 	private LinkedList<Action> agenda;
@@ -37,7 +38,7 @@ public class ActionGroup {
 			try {
 				if (!agenda.isEmpty()) {
 					action = agenda.pop();
-					LOGGER.info("----- Starting action: " + action.description + " -----");
+					LOGGER.info("----- Starting action: {} -----", action.description);
 				} else {
 					// Stop everything forever
 					if (action != null) {
@@ -51,7 +52,7 @@ public class ActionGroup {
 			}
 		}
 
-		LOGGER.debug("run " + action);
+        LOGGER.info("run {}", action);
 		action.doIt();
 	}
 
@@ -120,7 +121,7 @@ public class ActionGroup {
 		 */
 		public Duration(double duration) {
 			durationMS = duration * 1000;
-			LOGGER.debug("durationMS=" + durationMS);
+			LOGGER.debug("durationMS= {}", durationMS);
 		}
 
 		@Override
@@ -151,7 +152,8 @@ public class ActionGroup {
 		public boolean isDone() {
 			lastPosition = currentPosition;
 			currentPosition = drive.absoluteDistanceMoved();
-			LOGGER.debug("Distances - Target: " + Math.abs(distance) + " Moved: " + currentPosition);
+
+            LOGGER.debug("Distances - Target: {} Moved: {}", Math.abs(distance), currentPosition);
 			if (RobotMap.useSimulator) {
 				if (currentPosition > 0.0 && lastPosition == currentPosition) {
 					increment++;
@@ -159,7 +161,7 @@ public class ActionGroup {
 					increment = 0;
 				}
 			} else {
-				if (currentPosition > 0.2 && Math.abs(lastPosition - currentPosition) < 0.01 ) {
+				if (currentPosition > 0.3 && Math.abs(lastPosition - currentPosition) < 0.01 ) {
 					increment++;
 				} else {
 					increment = 0;
@@ -176,6 +178,7 @@ public class ActionGroup {
 			} else {
 				LOGGER.debug("Still moving");
 				return false;
+				
 			}
 		}
 	}
