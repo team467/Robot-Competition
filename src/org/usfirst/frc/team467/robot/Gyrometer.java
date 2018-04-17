@@ -41,7 +41,10 @@ public class Gyrometer extends GyroBase implements Gyro {
 	public void reset() {
 		imu.reset();
 	}
-
+	
+	public void zero() {
+		reset();
+	}
 	/*
 	 * Calibrate gyro
 	 */
@@ -124,5 +127,4 @@ public class Gyrometer extends GyroBase implements Gyro {
 		// TODO Auto-generated method stub
 		return 0;
 	}
-
 }

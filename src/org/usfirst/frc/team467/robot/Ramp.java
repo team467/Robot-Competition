@@ -46,7 +46,7 @@ public class Ramp {
 	public void lift() {
 		if (state == State.DOWN) {
 			solenoid.set(DoubleSolenoid.Value.kForward);
-			LOGGER.info("Lifting = {}", name);
+			LOGGER.info("{} lifting", name);
 			state = State.UP;
 		}
 	}
