@@ -233,6 +233,8 @@ public class RobotMap {
 			HAS_RIGHT_RAMP = false;
 			RAMP_RIGHT_FORWARD_CHANNEL = 2;
 			RAMP_RIGHT_REVERSE_CHANNEL = 5;
+			
+			
 
 			RAMP_RELEASE_FORWARD_CHANNEL = 0;
 			RAMP_RELEASE_REVERSE_CHANNEL = 3;
@@ -355,6 +357,6 @@ public class RobotMap {
 	public static int RAMP_RELEASE_REVERSE_CHANNEL;
 	
 	public static boolean GRABBER_SOLENOID_EXISTS = false;
-	public static int GRABBER_OPEN_FORWARD_CHANNEL;
-	public static int GRABBER_CLOSE_REVERSE_CHANNEL;
+	public static int GRABBER_OPEN_CHANNEL = 0;//redo
+	public static int GRABBER_CLOSE_CHANNEL = 1;//redo
 }

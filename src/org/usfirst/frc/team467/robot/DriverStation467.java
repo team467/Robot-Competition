@@ -164,7 +164,9 @@ public class DriverStation467 {
 	public boolean getHighScaleHeightButtonPressed() {
 		return getNavJoystick().pressed(Button.x);
 	}
-
+	public boolean getGrabberButtonPressed() {
+		return getNavJoystick().pressed(Button.BumperRight);
+	}
 	public double getGrabThrottle() {
 		return getNavJoystick().getLeftStickY();
 	}

@@ -6,6 +6,7 @@ import org.usfirst.frc.team467.robot.Drive;
 import org.usfirst.frc.team467.robot.Elevator;
 import org.usfirst.frc.team467.robot.Elevator.Stops;
 import org.usfirst.frc.team467.robot.Grabber;
+import org.usfirst.frc.team467.robot.GrabberSolenoid;
 import org.usfirst.frc.team467.robot.RobotMap;
 import org.usfirst.frc.team467.robot.Autonomous.ActionGroup.ConcurrentActions;
 import org.usfirst.frc.team467.robot.Autonomous.ActionGroup.MultiCondition;
@@ -66,11 +67,17 @@ public class Actions {
 
 	public static Action grabCube() {
 		Grabber grabber = Grabber.getInstance();
+		GrabberSolenoid grabbersolenoid = GrabberSolenoid.getInstance();
+		
+		ConcurrentActions concurrentaction = new ConcurrentActions(
+				() -> grabber.grab(RobotMap.MAX_GRAB_SPEED),
+				() -> grabbersolenoid.open());
+		
 		return new Action(
 				"Grabbing cube",
 				new ActionGroup.Duration(1.0),
 				//new ActionGroup.RunOnce(
-				() -> grabber.grab());
+				() -> concurrentaction.doIt());
 	}
 	
 	public static Action lockCube() {
@@ -103,11 +110,12 @@ public class Actions {
 
 	public static Action releaseCube() {
 		Grabber grabber = Grabber.getInstance();
+		GrabberSolenoid grabbersolenoid = GrabberSolenoid.getInstance();
 		return new Action(
 				"Releasing cube",
 				//new ActionGroup.RunOnce(
 				new ActionGroup.Duration(1.0),
-				() -> grabber.release());
+				() -> grabbersolenoid.open());
 	}
 
 	public static Action pauseGrabber() {
