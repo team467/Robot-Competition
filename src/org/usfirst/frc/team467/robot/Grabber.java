@@ -2,6 +2,7 @@ package org.usfirst.frc.team467.robot;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.usfirst.frc.team467.robot.GrabberSolenoid.State;
 
 import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.SpeedController;
@@ -27,6 +28,9 @@ public class Grabber {
 	private boolean hadCube = false;
 	private boolean hasCube = false;
 	private OpticalSensor os;
+	private GrabberSolenoid solenoid;
+	
+	private boolean grabberButtonDown = false;
 
 	private Grabber() {
 		if (RobotMap.HAS_GRABBER && !RobotMap.useSimulator) {
@@ -35,6 +39,7 @@ public class Grabber {
 			right = new Spark(RobotMap.GRABBER_R_CHANNEL);
 			right.setInverted(RobotMap.GRABBER_INVERT);
 			os = OpticalSensor.getInstance();
+			solenoid = GrabberSolenoid.getInstance();
 		} else {
 			left = new NullSpeedController();
 			right = new NullSpeedController();
@@ -141,7 +146,21 @@ public class Grabber {
 		LOGGER.debug("Grabber Throttle= {}", throttle);
 		left.set(throttle * RobotMap.MAX_GRAB_SPEED);
 		right.set(-throttle * RobotMap.MAX_GRAB_SPEED);
-
+		
+		if(DriverStation467.getInstance().getGrabberButtonPressed()) {
+			grabberButtonDown = true;
+		}
+		else if(DriverStation467.getInstance().grabberClosedPressed()) {
+			grabberButtonDown = false;
+		}
+		
+		if(grabberButtonDown) {
+			solenoid.open();
+		}
+		else {
+			solenoid.close();
+		}
+		
 		// Save the previous state and check for current state.
 		hadCube = hasCube;
 		hasCube = hasCube();

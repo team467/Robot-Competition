@@ -35,7 +35,7 @@ public class Robot extends TimedRobot {
 	private Elevator elevator;
 	private Grabber grabber;
 	private Ramps ramps;
-	private GrabberSolenoid grabbersolenoid;
+	//private GrabberSolenoid grabbersolenoid;
 
 	private NetworkTableInstance table;
 	private NetworkTable dashboard;
@@ -56,7 +56,7 @@ public class Robot extends TimedRobot {
 		table = NetworkTableInstance.getDefault();
 		dashboard  = table.getTable("SmartDashboard");
 		//table.deleteAllEntries();
-		grabbersolenoid = grabbersolenoid.getInstance();
+		//grabbersolenoid = grabbersolenoid.getInstance();
 		// Initialize RobotMap
 		RobotMap.init(RobotID.Competition_2);
 
@@ -171,11 +171,11 @@ public class Robot extends TimedRobot {
 		}
 		
 		//grabber open and close
-		if(driverstation.getGrabberButtonPressed()) {
-			grabbersolenoid.open();
-		} else {
-			grabbersolenoid.close();
-		}
+		//if(driverstation.getGrabberButtonPressed()) {
+			//grabbersolenoid.open();
+		//} else {
+			//grabbersolenoid.close();
+		//}
 		
 		// Ramps state machines protect against conflicts
 		if (driverstation.getDeployButtonsDown()) {
