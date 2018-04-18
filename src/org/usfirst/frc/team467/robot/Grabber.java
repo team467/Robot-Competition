@@ -109,7 +109,6 @@ public class Grabber {
 	}
 
 	public void grab() {
-		solenoid.open();
 		state = GrabberState.GRAB;
 	}
 
