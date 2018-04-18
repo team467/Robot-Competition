@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 
 public class GrabberSolenoid{
 	private static final Logger LOGGER = LogManager.getLogger(GrabberSolenoid.class);
+	private boolean toggle = false;
 	
     DoubleSolenoid solenoid;
     State state;
@@ -58,5 +59,5 @@ public class GrabberSolenoid{
         close();
         state = State.CLOSE;
     }
-
+    	
 }

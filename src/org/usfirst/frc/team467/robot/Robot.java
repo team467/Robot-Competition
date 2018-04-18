@@ -171,9 +171,9 @@ public class Robot extends TimedRobot {
 		}
 		
 		//grabber open and close
-		if(driverstation.getOpenGrabberButtonPressed()) {
+		if(driverstation.getGrabberButtonPressed()) {
 			grabber.open();
-		} else if(driverstation.getCloseGrabberButtonPressed()){
+		} else {
 			grabber.close();
 		}
 		

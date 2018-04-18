@@ -279,7 +279,6 @@ public class XBoxJoystick467 {
 	public double getRightTrigger() {
 		return axes.get(Axis.rightTrigger);
 	}
-
 	/**
 	 * Calculate the angle of this joystick.
 	 *

@@ -90,15 +90,6 @@ public class Grabber {
 		case RELEASE:
 			speed = -RobotMap.MAX_GRAB_SPEED;
 			break;
-			
-		case OPEN:
-			solenoid.open();
-			break;
-			
-		case CLOSE:
-			solenoid.close();
-			break;
-			
 		default:
 
 		}
@@ -118,6 +109,7 @@ public class Grabber {
 	}
 
 	public void grab() {
+		solenoid.open();
 		state = GrabberState.GRAB;
 	}
 
@@ -129,12 +121,12 @@ public class Grabber {
 		state = GrabberState.NEUTRAL;
 	}
 	
-	public void open() {
-		state = GrabberState.OPEN;
+	public void close() {
+		solenoid.close();
 	}
 	
-	public void close() {
-		state = GrabberState.CLOSE;
+	public void open() {
+		solenoid.open();
 	}
 
 	public void grab(double throttle) {
