@@ -44,17 +44,21 @@ public class Climber {
 	//	}
 
 	public void climbUp() {
-		if (DriverStation.getInstance().getMatchTime() >= 30.0) {
+		if (DriverStation.getInstance().getMatchTime() <= 30.0) {
 			climbController.set(ControlMode.PercentOutput, RobotMap.CLIMBER_SPEED);
+			LOGGER.info("Climbing up.");
+		} else {
+			LOGGER.info("Too early to climb up.");
 		}
-		//LOGGER.info("Climb Up {}", DriverStation467.getInstance().getClimbUp());
 	}
 
 	public void climbDown() {
-		if (DriverStation.getInstance().getMatchTime() >= 30.0) {
+		if (DriverStation.getInstance().getMatchTime() <= 30.0) {
 			climbController.set(ControlMode.PercentOutput, -1 * RobotMap.CLIMBER_SPEED);
+			LOGGER.info("Climbing down.");
+		} else {
+			LOGGER.info("Too early to climb down.");
 		}
-		//LOGGER.info("Climb Down");
 	}
 	
 	public void neutral() {
