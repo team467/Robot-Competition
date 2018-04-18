@@ -1,13 +1,13 @@
 package org.usfirst.frc.team467.robot;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.Solenoid;
 
 public class GrabberSolenoid{
 	private static final Logger LOGGER = LogManager.getLogger(GrabberSolenoid.class);
 	private boolean toggle = false;
 	
-    DoubleSolenoid solenoid;
+    Solenoid solenoid;
     State state;
    
 	private static GrabberSolenoid instance;
@@ -30,7 +30,7 @@ public class GrabberSolenoid{
             state = State.NONEXISTENT;
             return;
         }
-        solenoid = new DoubleSolenoid(RobotMap.GRABBER_OPEN_CHANNEL, RobotMap.GRABBER_CLOSE_CHANNEL);
+        solenoid = new Solenoid(RobotMap.GRABBER_OPEN_CHANNEL);
         state = State.CLOSE;
         
     }
@@ -42,14 +42,14 @@ public class GrabberSolenoid{
     public void open() {
         if(state == State.CLOSE) {
         	LOGGER.info("Grabber Opening");
-            solenoid.set(DoubleSolenoid.Value.kForward);
+            solenoid.set(true);
             state = State.OPEN;
         }
     }
     
     public void close() {
         if(state == State.OPEN) {
-            solenoid.set(DoubleSolenoid.Value.kReverse);
+            solenoid.set(false);
             LOGGER.info("Grabber Closing");
             state = State.CLOSE;
         }

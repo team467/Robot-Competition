@@ -356,7 +356,7 @@ public class RobotMap {
 	public static int RAMP_RELEASE_FORWARD_CHANNEL;
 	public static int RAMP_RELEASE_REVERSE_CHANNEL;
 	
-	public static boolean GRABBER_SOLENOID_EXISTS = false;
+	public static boolean GRABBER_SOLENOID_EXISTS = true;
 	public static int GRABBER_OPEN_CHANNEL = 0;//redo
-	public static int GRABBER_CLOSE_CHANNEL = 1;//redo
+	public static int GRABBER_CLOSE_CHANNEL;//redo
 }
