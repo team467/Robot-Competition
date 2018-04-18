@@ -56,9 +56,9 @@ public class Robot extends TimedRobot {
 		table = NetworkTableInstance.getDefault();
 		dashboard  = table.getTable("SmartDashboard");
 		//table.deleteAllEntries();
-		grabbersolenoid = grabbersolenoid.getInstance();
+		grabbersolenoid = GrabberSolenoid.getInstance();
 		// Initialize RobotMap
-		RobotMap.init(RobotID.Competition_2);
+		RobotMap.init(RobotID.Competition_1);
 
 		// Make robot objects
 		driverstation = DriverStation467.getInstance();
@@ -68,7 +68,7 @@ public class Robot extends TimedRobot {
 		elevator = Elevator.getInstance();
 		grabber = Grabber.getInstance();
 		matchConfig = MatchConfiguration.getInstance();
-
+		grabbersolenoid = GrabberSolenoid.getInstance();
 		ramps = Ramps.getInstance();
 		ramps.reset();
 
@@ -145,6 +145,7 @@ public class Robot extends TimedRobot {
 		drive.configPeakOutput(1.0);
 		driverstation.readInputs();
 		ramps.reset();
+		grabbersolenoid.reset();
 	}
 	/**
 	 * This function is called periodically during operator control
@@ -155,6 +156,15 @@ public class Robot extends TimedRobot {
 		grabber.grab(driverstation.getGrabThrottle());
 		elevator.move(driverstation.getElevatorSpeed());
 		drive.setRamp(elevator.getHeight());
+		
+		//grabber open and close
+		if(driverstation.grabberClosedPressed()) {
+			LOGGER.info("Grabber Open");
+			grabbersolenoid.open();
+		}else {
+			LOGGER.info("Grabber Closed");
+			grabbersolenoid.close();
+		}
 
 		if (driverstation.getFloorHeightButtonPressed()) {
 			LOGGER.info("Dropping to bottom height");

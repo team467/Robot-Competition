@@ -139,7 +139,7 @@ public class RobotMap {
 			OPTICAL_CHANNEL = 5;
 
 			// TODO Assign values to the game piece variables, and make more as appropriate
-			HAS_ELEVATOR = false;
+			HAS_ELEVATOR = true;
 			ELEVATOR_MOTOR_CHANNEL = 7;
 
 			ELEVATOR_BOTTOM_TICKS = 881;
@@ -149,11 +149,11 @@ public class RobotMap {
 			ELEVATOR_SWITCH = 0.315;
 			ELEVATOR_LOW_SCALE = 0.729;
 
-			HAS_LEFT_RAMP = true;
+			HAS_LEFT_RAMP = false;
 			RAMP_LEFT_FORWARD_CHANNEL = 1;
 			RAMP_LEFT_REVERSE_CHANNEL = 4;
 
-			HAS_RIGHT_RAMP = true;
+			HAS_RIGHT_RAMP = false;
 			RAMP_RIGHT_FORWARD_CHANNEL = 2;
 			RAMP_RIGHT_REVERSE_CHANNEL = 5;
 
@@ -357,6 +357,5 @@ public class RobotMap {
 	public static int RAMP_RELEASE_REVERSE_CHANNEL;
 	
 	public static boolean GRABBER_SOLENOID_EXISTS = true;
-	public static int GRABBER_OPEN_CHANNEL = 0;//redo
-	public static int GRABBER_CLOSE_CHANNEL;//redo
+	public static int GRABBER_OPEN_CHANNEL = 0; //redo
 }
