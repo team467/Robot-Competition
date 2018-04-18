@@ -14,8 +14,8 @@ public class Grabber {
 		GRAB,
 		NEUTRAL,
 		RELEASE,
-		OPEN,
-		CLOSE
+		//OPEN,
+		//CLOSE
 	}
 
 	public static final int GRAB_TIME_MS = 1000;
@@ -35,7 +35,7 @@ public class Grabber {
 	private boolean grabberButtonDown = false;
 
 	private Grabber() {
-		if (RobotMap.HAS_GRABBER && !RobotMap.useSimulator) {
+		if (RobotMap.HAS_GRABBER && !RobotMap.useSimulator && RobotMap.GRABBER_SOLENOID_EXISTS) {
 			left = new Spark(RobotMap.GRABBER_L_CHANNEL);
 			left.setInverted(RobotMap.GRABBER_INVERT);
 			right = new Spark(RobotMap.GRABBER_R_CHANNEL);
@@ -110,14 +110,17 @@ public class Grabber {
 
 	public void grab() {
 		state = GrabberState.GRAB;
+		solenoid.open();
 	}
 
 	public void release() {
 		state = GrabberState.RELEASE;
+		solenoid.open();
 	}
 
 	public void pause() {
 		state = GrabberState.NEUTRAL;
+		solenoid.close();
 	}
 	
 	public void close() {

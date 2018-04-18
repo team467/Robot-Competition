@@ -139,7 +139,7 @@ public class RobotMap {
 			OPTICAL_CHANNEL = 5;
 
 			// TODO Assign values to the game piece variables, and make more as appropriate
-			HAS_ELEVATOR = true;
+			HAS_ELEVATOR = false;
 			ELEVATOR_MOTOR_CHANNEL = 7;
 
 			ELEVATOR_BOTTOM_TICKS = 881;

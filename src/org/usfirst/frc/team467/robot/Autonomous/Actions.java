@@ -75,15 +75,14 @@ public class Actions {
 		ActionGroup group = new ActionGroup("grab cube with solenoid");
 		
 		ConcurrentActions closeGrabberAndGrab = new ConcurrentActions(
-				() -> grabber.close(),
-				() -> grabber.grab(RobotMap.MAX_GRAB_SPEED));
+				() -> grabber.grab());
 		
 		MultiCondition grabbing10OrStopWhenHaveCube = new MultiCondition(
 				new ActionGroup.Duration(10),
 				() -> grabber.hasCube()
 				);
 		
-		group.addAction(openGrabber());
+		//group.addAction(openGrabber());
 		
 		group.addAction( new Action(
 				"Grabbing",
@@ -106,12 +105,12 @@ public class Actions {
 				() -> grabber.startGrab());
 	}
 
-	public static Action openGrabber() {
+	/*public static Action openGrabber() {
 		Grabber grabber = Grabber.getInstance();
 		return new Action(
 				"Opening grabber",
-				new ActionGroup.RunOnce(() -> grabber.open()));
-	}
+				new ActionGroup.RunOnce(() -> grabber.open);
+	}*/
 
 	/**
 	 * 
@@ -142,12 +141,12 @@ public class Actions {
 
 	public static Action releaseCube() {
 		Grabber grabber = Grabber.getInstance();
-		GrabberSolenoid grabbersolenoid = GrabberSolenoid.getInstance();
+		//GrabberSolenoid grabbersolenoid = GrabberSolenoid.getInstance();
 		return new Action(
 				"Releasing cube",
 				//new ActionGroup.RunOnce(
 				new ActionGroup.Duration(1.0),
-				() -> grabbersolenoid.open());
+				() -> grabber.release());
 	}
 
 	public static Action pauseGrabber() {

@@ -5,7 +5,7 @@ import edu.wpi.first.wpilibj.Solenoid;
 
 public class GrabberSolenoid{
 	private static final Logger LOGGER = LogManager.getLogger(GrabberSolenoid.class);
-	private boolean toggle = false;
+	//private boolean toggle = false;
 	
     Solenoid solenoid;
     State state;

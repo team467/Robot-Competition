@@ -35,7 +35,7 @@ public class Robot extends TimedRobot {
 	private Elevator elevator;
 	private Grabber grabber;
 	private Ramps ramps;
-	private GrabberSolenoid grabbersolenoid;
+	//private GrabberSolenoid grabbersolenoid;
 
 	private NetworkTableInstance table;
 	private NetworkTable dashboard;
@@ -56,7 +56,7 @@ public class Robot extends TimedRobot {
 		table = NetworkTableInstance.getDefault();
 		dashboard  = table.getTable("SmartDashboard");
 		//table.deleteAllEntries();
-		grabbersolenoid = GrabberSolenoid.getInstance();
+	//	grabbersolenoid = GrabberSolenoid.getInstance();
 		// Initialize RobotMap
 		RobotMap.init(RobotID.Competition_1);
 
@@ -68,7 +68,7 @@ public class Robot extends TimedRobot {
 		elevator = Elevator.getInstance();
 		grabber = Grabber.getInstance();
 		matchConfig = MatchConfiguration.getInstance();
-		grabbersolenoid = GrabberSolenoid.getInstance();
+		//grabbersolenoid = GrabberSolenoid.getInstance();
 		ramps = Ramps.getInstance();
 		ramps.reset();
 
@@ -145,7 +145,7 @@ public class Robot extends TimedRobot {
 		drive.configPeakOutput(1.0);
 		driverstation.readInputs();
 		ramps.reset();
-		grabbersolenoid.reset();
+		//grabbersolenoid.reset();
 	}
 	/**
 	 * This function is called periodically during operator control
@@ -158,12 +158,19 @@ public class Robot extends TimedRobot {
 		drive.setRamp(elevator.getHeight());
 		
 		//grabber open and close
-		if(driverstation.grabberClosedPressed()) {
+		if(driverstation.getGrabberButtonPressed()) {
+			grabber.open();
+		} else {
+			grabber.close();
+		}
+		
+		//grabber open and close
+		if(driverstation.getGrabberButtonPressed()) {
 			LOGGER.info("Grabber Open");
-			grabbersolenoid.open();
+			grabber.open();
 		}else {
 			LOGGER.info("Grabber Closed");
-			grabbersolenoid.close();
+			grabber.close();
 		}
 
 		if (driverstation.getFloorHeightButtonPressed()) {
@@ -178,13 +185,6 @@ public class Robot extends TimedRobot {
 		} else if (driverstation.getHighScaleHeightButtonPressed()) {
 			LOGGER.info("Lifting to high scale height");
 			elevator.moveToHeight(Elevator.Stops.highScale);
-		}
-		
-		//grabber open and close
-		if(driverstation.getGrabberButtonPressed()) {
-			grabber.open();
-		} else {
-			grabber.close();
 		}
 		
 		// Ramps state machines protect against conflicts
