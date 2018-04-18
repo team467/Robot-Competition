@@ -13,7 +13,9 @@ public class Grabber {
 		START_GRAB,
 		GRAB,
 		NEUTRAL,
-		RELEASE
+		RELEASE,
+		OPEN,
+		CLOSE
 	}
 
 	public static final int GRAB_TIME_MS = 1000;
@@ -88,7 +90,15 @@ public class Grabber {
 		case RELEASE:
 			speed = -RobotMap.MAX_GRAB_SPEED;
 			break;
-
+			
+		case OPEN:
+			solenoid.open();
+			break;
+			
+		case CLOSE:
+			solenoid.close();
+			break;
+			
 		default:
 
 		}
@@ -117,6 +127,14 @@ public class Grabber {
 
 	public void pause() {
 		state = GrabberState.NEUTRAL;
+	}
+	
+	public void open() {
+		state = GrabberState.OPEN;
+	}
+	
+	public void close() {
+		state = GrabberState.CLOSE;
 	}
 
 	public void grab(double throttle) {
@@ -147,19 +165,6 @@ public class Grabber {
 		left.set(throttle * RobotMap.MAX_GRAB_SPEED);
 		right.set(-throttle * RobotMap.MAX_GRAB_SPEED);
 		
-		if(DriverStation467.getInstance().getGrabberButtonPressed()) {
-			grabberButtonDown = true;
-		}
-		else if(DriverStation467.getInstance().grabberClosedPressed()) {
-			grabberButtonDown = false;
-		}
-		
-		if(grabberButtonDown) {
-			solenoid.open();
-		}
-		else {
-			solenoid.close();
-		}
 		
 		// Save the previous state and check for current state.
 		hadCube = hasCube;

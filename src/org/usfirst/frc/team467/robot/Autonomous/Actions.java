@@ -64,20 +64,40 @@ public class Actions {
 				"Print custom message",
 				new ActionGroup.RunOnce(() -> LOGGER.info(message)));
 	}
-
-	public static Action grabCube() {
+	/**
+	 * 
+	 * @param OpeningTime :time the grabber opens
+	 * @return
+	 */
+	public static ActionGroup grabCube(double OpeningTime) {
 		Grabber grabber = Grabber.getInstance();
 		GrabberSolenoid grabbersolenoid = GrabberSolenoid.getInstance();
+		ActionGroup group = new ActionGroup("grab cube with solenoid");
 		
-		ConcurrentActions concurrentaction = new ConcurrentActions(
-				() -> grabber.grab(RobotMap.MAX_GRAB_SPEED),
-				() -> grabbersolenoid.open());
+		ConcurrentActions grabCubeAndOpen = new ConcurrentActions(
+				() -> grabbersolenoid.open(),
+				() -> grabber.grab(RobotMap.MAX_GRAB_SPEED));
 		
-		return new Action(
-				"Grabbing cube",
-				new ActionGroup.Duration(1.0),
-				//new ActionGroup.RunOnce(
-				() -> concurrentaction.doIt());
+		ConcurrentActions closeGrabberAndGrab = new ConcurrentActions(
+				() -> grabbersolenoid.close(),
+				() -> grabber.grab(RobotMap.MAX_GRAB_SPEED));
+		
+		MultiCondition grabbing10OrStopWhenHaveCube = new MultiCondition(
+				new ActionGroup.Duration(10),
+				() -> grabber.hasCube()
+				);
+		
+		group.addAction( new Action(
+				"Opening grabber to get cube",
+				new ActionGroup.Duration(OpeningTime),
+				grabCubeAndOpen));
+		
+		group.addAction(new Action(
+				"Closing grabber on cube",
+				grabbing10OrStopWhenHaveCube,
+				closeGrabberAndGrab
+				));
+		return group;
 	}
 	
 	public static Action lockCube() {
@@ -87,8 +107,13 @@ public class Actions {
 				new ActionGroup.Duration(0.5),
 				() -> grabber.startGrab());
 	}
-
-	public static ActionGroup grabAndMoveLinear(double distance) {
+	/**
+	 * 
+	 * @param distance
+	 * @param openingTime :time the grabber opens
+	 * @return
+	 */
+	public static ActionGroup grabAndMoveLinear(double distance, double openingTime) {
 		Grabber grabber = Grabber.getInstance();
 		ActionGroup group = new ActionGroup("grab and move Linear");
 		group.addAction(zeroDistance());
@@ -98,7 +123,7 @@ public class Actions {
 				);
 		
 		ConcurrentActions concurrentaction = new ConcurrentActions(
-				() -> grabber.grab(RobotMap.MAX_GRAB_SPEED),
+				() -> grabCube(openingTime),
 				() -> drive.moveLinearFeet(distance));
 
 		group.addAction(new Action(
@@ -247,7 +272,7 @@ public class Actions {
 		String actionGroupText = "Testing grab with a 2 foot move.";
 		ActionGroup mode = new ActionGroup(actionGroupText);
 		mode.addAction(elevatorToFloor());
-		mode.addActions(grabAndMoveLinear(2));
+		mode.addActions(grabAndMoveLinear(2,10)); //TODO redefine the grabber opening time
 		return mode;
 	}
 
@@ -335,10 +360,10 @@ public class Actions {
 		mode.addAction(zeroDistance()); //Wait doesn't zero
 		mode.addAction(wait(0.5));
 		mode.addActions(turn(-68)); 
-		mode.addActions(grabAndMoveLinear(9.3));
+		mode.addActions(grabAndMoveLinear(9.3, 10)); //TODO redefine the grabber opening time
 		
 		// Move To Switch 
-		mode.addActions(grabAndMoveLinear(-1.0));	
+		mode.addActions(grabAndMoveLinear(-1.0, 10 ));	//TODO redefine the grabber opening time
 		mode.addAction(elevatorToSwitch());
 		mode.addActions(move(1.0));
 		
@@ -363,8 +388,8 @@ public class Actions {
 		mode.addActions(turn(90));
 		mode.addActions(move(6.31));
 		mode.addActions(turn(-125));
-		mode.addActions(grabAndMoveLinear(3.2));
-		mode.addActions(grabAndMoveLinear(-3.2));
+		mode.addActions(grabAndMoveLinear(3.2, 10));//TODO redefine the grabber opening time
+		mode.addActions(grabAndMoveLinear(-3.2, 10));//TODO redefine the grabber opening time
 		
 		//Go to far scale
 		mode.addActions(turn(35));
@@ -394,10 +419,10 @@ public class Actions {
 		mode.addAction(zeroDistance()); //Wait doesn't zero
 		mode.addAction(wait(0.5));
 		mode.addActions(turn(-60)); 
-		mode.addActions(grabAndMoveLinear(9.3));
+		mode.addActions(grabAndMoveLinear(9.3, 10));//TODO redefine the grabber opening time
 		
 		//Return to Scale
-		mode.addActions(grabAndMoveLinear(-9.3));		
+		mode.addActions(grabAndMoveLinear(-9.3, 10));//TODO redefine the grabber opening time	
 		mode.addAction(elevatorToSwitch());
 		mode.addActions(turn(60));
 		mode.addActions(move(1.0));
@@ -426,8 +451,8 @@ public class Actions {
 		mode.addActions(move(-5.7));
 		mode.addAction(elevatorToFloor());
 		mode.addActions(turn(-45));
-		mode.addActions(grabAndMoveLinear(4.6));
-		mode.addActions(grabAndMoveLinear(-1.5));
+		mode.addActions(grabAndMoveLinear(4.6, 10));//TODO redefine the grabber opening time
+		mode.addActions(grabAndMoveLinear(-1.5, 10));//TODO redefine the grabber opening time
 		mode.addActions(turn(-90));
 		mode.addActions(move(6.1));
 		mode.addActions(turn(-45));
@@ -446,8 +471,8 @@ public class Actions {
 		mode.addActions(move(-5.9));
 		mode.addAction(elevatorToFloor());
 		mode.addActions(turn(45));
-		mode.addActions(grabAndMoveLinear(4.8));
-		mode.addActions(grabAndMoveLinear(-1.6));
+		mode.addActions(grabAndMoveLinear(4.8,10));//TODO redefine the grabber opening time
+		mode.addActions(grabAndMoveLinear(-1.6,10));//TODO redefine the grabber opening time
 		mode.addActions(turn(135));
 		mode.addActions(move(4.5));
 		mode.addAction(releaseCube());

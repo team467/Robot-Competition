@@ -164,8 +164,17 @@ public class DriverStation467 {
 	public boolean getHighScaleHeightButtonPressed() {
 		return getNavJoystick().pressed(Button.x);
 	}
-	public boolean getGrabberButtonPressed() {
+	
+	public boolean getOpenGrabberButtonPressed() {
 		if(getNavJoystick().getRightTrigger() > 0.2) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	public boolean getCloseGrabberButtonPressed() {
+		if(getNavJoystick().getLeftTrigger() > 0.2) {
 			return true;
 		} else {
 			return false;
