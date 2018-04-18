@@ -24,7 +24,7 @@ public class Logging {
 // LOOGER.info("WRITE SOMETHING IN HERE WITH: {}" WriteVaribleHere(), andHereIfThereIsAnotherOne());		
 		
 		// Enable extra logging for classes you want to debug
-
+		config.addLogger(Climber.class.getName(), new LoggerConfig(Climber.class.getName(), Level.INFO, true));
 //		config.addLogger(Action.class.getName(), new LoggerConfig(Action.class.getName(), Level.INFO, true));
 		config.addLogger(Drive.class.getName(), new LoggerConfig(Drive.class.getName(), Level.INFO, true));
 //		config.addLogger(ActionGroup.class.getName(), new LoggerConfig(ActionGroup.class.getName(), Level.WARN, true));

@@ -87,6 +87,7 @@ public class DriverStation467 {
 		return 0.0;
 	}
 
+
 	// All button mappings are accessed through the functions below
 
 	/**
@@ -129,8 +130,12 @@ public class DriverStation467 {
 		return getNavJoystick().getRightStickY();
 	}
 
-	public boolean getDeployButtonsDown() {
-		return getNavJoystick().down(Button.BumperLeft) && getNavJoystick().down(Button.BumperRight);
+	public boolean getClimbUp() {
+		return getNavJoystick().down(Button.BumperRight);
+	}
+	
+	public boolean getClimbDown() {
+		 return getNavJoystick().down(Button.BumperLeft);
 	}
 
 	public boolean getLeftRampLiftButton() {

@@ -77,8 +77,11 @@ public class RobotMap {
 			GRABBER_R_CHANNEL = 1;
 			OPTICAL_CHANNEL = 5;
 
+			HAS_CLIMBER = true;
+			CLIMBER_MOTOR_CHANNEL = 1;
+					
 			HAS_ELEVATOR = false;
-			ELEVATOR_MOTOR_CHANNEL = 1;
+			//ELEVATOR_MOTOR_CHANNEL = 1;
 			HAS_CAMERA = false;
 			HAS_LEFT_RAMP = false;
 			HAS_RIGHT_RAMP = false;
@@ -126,7 +129,10 @@ public class RobotMap {
 			RIGHT_TURN_PID_I = 0.0;
 			RIGHT_TURN_PID_D = 180.0;
 			RIGHT_TURN_PID_F = 0.0;
-
+			
+			HAS_CLIMBER = false;
+			CLIMBER_MOTOR_CHANNEL = 8;
+			
 			useSimulator = false;
 			USE_FAKE_GAME_DATA = true;
 			
@@ -205,6 +211,9 @@ public class RobotMap {
 			RIGHT_TURN_PID_D = 450.0;
 			RIGHT_TURN_PID_F = 0.0;
 
+			HAS_CLIMBER = true;
+			CLIMBER_MOTOR_CHANNEL = 8;
+			
 			HAS_ELEVATOR = true;
 			ELEVATOR_MOTOR_CHANNEL = 7;
 
@@ -239,6 +248,7 @@ public class RobotMap {
 
 			AUTONOMOUS_DRIVE_TIMEOUT_MS = 200;
 			AUTONOMOUS_TURN_TIMEOUT_MS = 300;
+			
 			break;
 		}
 		//These calculations can be made after the robot-specific constants are set. 
@@ -272,7 +282,6 @@ public class RobotMap {
 
 	public static boolean useSimulator = false;
 	public static boolean USE_FAKE_GAME_DATA = false;
-
 	public static final double MIN_DRIVE_SPEED = 0.1;
 
 //	How far the sensor speeds can be and still be considered turning in place, in sensor units per 100 ms
@@ -317,6 +326,9 @@ public class RobotMap {
 	public static int ELEVATOR_TICKS_PER_TURN = 20; // TODO: SET
 	public static int MAX_ELEVATOR_RPM = 20; // TODO: SET
 
+	public static boolean HAS_CLIMBER;
+	public static int CLIMBER_MOTOR_CHANNEL;
+	
 	public static boolean HAS_ELEVATOR;
 	public static int ELEVATOR_MOTOR_CHANNEL;
 	public static double MIN_LIFT_SPEED = 0.1;
@@ -353,4 +365,7 @@ public class RobotMap {
 
 	public static int RAMP_RELEASE_FORWARD_CHANNEL;
 	public static int RAMP_RELEASE_REVERSE_CHANNEL;
+	
+	//climber constants
+	public static double CLIMBER_SPEED = 0.5;
 }
