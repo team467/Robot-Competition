@@ -176,4 +176,8 @@ public class Grabber {
 	public boolean hasCube() {
 		return (!RobotMap.useSimulator && RobotMap.HAS_GRABBER && os.detectedTarget());
 	}
+	
+	public void reset() {
+		solenoid.reset();
+	}
 }

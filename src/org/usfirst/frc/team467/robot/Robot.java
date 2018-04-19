@@ -145,7 +145,7 @@ public class Robot extends TimedRobot {
 		drive.configPeakOutput(1.0);
 		driverstation.readInputs();
 		ramps.reset();
-		//grabbersolenoid.reset();
+		grabber.reset();
 	}
 	/**
 	 * This function is called periodically during operator control
@@ -156,13 +156,6 @@ public class Robot extends TimedRobot {
 		grabber.grab(driverstation.getGrabThrottle());
 		elevator.move(driverstation.getElevatorSpeed());
 		drive.setRamp(elevator.getHeight());
-		
-		//grabber open and close
-		if(driverstation.getGrabberButtonPressed()) {
-			grabber.open();
-		} else {
-			grabber.close();
-		}
 		
 		//grabber open and close
 		if(driverstation.getGrabberButtonPressed()) {
