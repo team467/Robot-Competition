@@ -159,11 +159,11 @@ public class Robot extends TimedRobot {
 		
 		//grabber open and close
 		if(driverstation.getGrabberButtonPressed()) {
+			LOGGER.info("Grabber Close");
+			grabber.close();
+		}else {
 			LOGGER.info("Grabber Open");
 			grabber.open();
-		}else {
-			LOGGER.info("Grabber Closed");
-			grabber.close();
 		}
 
 		if (driverstation.getFloorHeightButtonPressed()) {

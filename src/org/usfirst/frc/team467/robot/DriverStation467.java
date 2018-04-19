@@ -166,7 +166,7 @@ public class DriverStation467 {
 	}
 	
 	public boolean getGrabberButtonPressed() {
-		return getNavJoystick().getRightTrigger() > 0.95;
+		return getNavJoystick().getLeftTrigger() > 0.95;
 	}
 	
 	
