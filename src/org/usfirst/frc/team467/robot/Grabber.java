@@ -30,18 +30,20 @@ public class Grabber {
 	private boolean hadCube = false;
 	private boolean hasCube = false;
 	private OpticalSensor os;
-	private GrabberSolenoid solenoid;
+	private GrabberSolenoid rightGrab;
+	private GrabberSolenoid leftGrab;
 	
-	private boolean grabberButtonDown = false;
+	//private boolean grabberButtonDown = false;
 
 	private Grabber() {
-		if (RobotMap.HAS_GRABBER && !RobotMap.useSimulator && RobotMap.GRABBER_SOLENOID_EXISTS) {
+		if (RobotMap.HAS_GRABBER && !RobotMap.useSimulator && RobotMap.RIGHT_GRABBER_SOLENOID_EXISTS) {
 			left = new Spark(RobotMap.GRABBER_L_CHANNEL);
 			left.setInverted(RobotMap.GRABBER_INVERT);
 			right = new Spark(RobotMap.GRABBER_R_CHANNEL);
 			right.setInverted(RobotMap.GRABBER_INVERT);
 			os = OpticalSensor.getInstance();
-			solenoid = GrabberSolenoid.getInstance();
+			rightGrab = new GrabberSolenoid("right Grabber", RobotMap.RIGHT_GRABBER_FORWARD_CHANNEL, RobotMap.RIGHT_GRABBER_REVERSE_CHANNEL, RobotMap.RIGHT_GRABBER_SOLENOID_EXISTS);
+			leftGrab = new GrabberSolenoid("left Grabber", RobotMap.RIGHT_GRABBER_FORWARD_CHANNEL, RobotMap.RIGHT_GRABBER_REVERSE_CHANNEL, RobotMap.LEFT_GRABBER_SOLENOID_EXISTS);
 		} else {
 			left = new NullSpeedController();
 			right = new NullSpeedController();
@@ -110,25 +112,56 @@ public class Grabber {
 
 	public void grab() {
 		state = GrabberState.GRAB;
-		solenoid.open();
+		rightOpen();
+		leftOpen();
 	}
 
 	public void release() {
 		state = GrabberState.RELEASE;
-		solenoid.open();
+		rightOpen();
+		leftOpen();
 	}
 
 	public void pause() {
 		state = GrabberState.NEUTRAL;
-		solenoid.close();
+		leftClose();
+		rightClose();
 	}
 	
-	public void close() {
-		solenoid.close();
+	public void rightClose() {
+		if(rightGrab.exists()) {
+			rightGrab.close();
+			} else {
+				LOGGER.info("Right Solenoid does not exist");
+				return;
+			}
 	}
 	
-	public void open() {
-		solenoid.open();
+	public void rightOpen() {
+		if(rightGrab.exists()) {
+			rightGrab.open();
+		} else {
+			LOGGER.info("Right Solenoid does not exist");
+			return;
+		}
+	}
+	
+	public void leftClose() {
+		if(leftGrab.exists()) {
+			leftGrab.close();
+			} else {
+				LOGGER.info("Left solenoid does not exist");
+				return;
+			}
+	}
+	
+	public void leftOpen() {
+		if(leftGrab.exists()) {
+			leftGrab.open();
+		} else {
+			LOGGER.info("Left solenoid does not exist");
+			return;
+		}
 	}
 
 	public void grab(double throttle) {
@@ -178,6 +211,6 @@ public class Grabber {
 	}
 	
 	public void reset() {
-		solenoid.reset();
+		rightGrab.reset();
 	}
 }

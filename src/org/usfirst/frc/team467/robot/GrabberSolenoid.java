@@ -8,7 +8,8 @@ public class GrabberSolenoid{
 	private static final Logger LOGGER = LogManager.getLogger(GrabberSolenoid.class);
 	//private boolean toggle = false;
 	
-    DoubleSolenoid solenoids;
+    DoubleSolenoid solenoid;
+    DoubleSolenoid solenoidLeft;
     State state;
    
 	private static GrabberSolenoid instance;
@@ -19,38 +20,41 @@ public class GrabberSolenoid{
         NONEXISTENT;
     }
     
-    public static GrabberSolenoid getInstance() {
-		if (instance == null) {
-			instance = new GrabberSolenoid();
-		}
-		return instance;
-    }
-    public GrabberSolenoid() {
-        if(!RobotMap.GRABBER_SOLENOID_EXISTS) {
+//    public static GrabberSolenoid getInstance() {
+//		if (instance == null) {
+//			instance = new GrabberSolenoid();
+//		}
+//		return instance;
+//    }
+    public GrabberSolenoid(String name, int forwardChannel, int reverseChannel, boolean exists) {
+        if(!exists) {
         	LOGGER.info("Could not detect grabber solenoids");
             state = State.NONEXISTENT;
             return;
         }
-        solenoids = new DoubleSolenoid(RobotMap.GRABBER_FORWARD_CHANNEL, RobotMap.GRABBER_REVERSE_CHANNEL);
-        state = State.CLOSE;
         
+        solenoid = new DoubleSolenoid(forwardChannel, reverseChannel);
+        state = State.CLOSE;
+    	LOGGER.info("Grabber solenoid initialized: {}", name); 
     }
     
     public State getGrabberState() {
         return state;
     }
-    
+    public boolean exists() {
+    	return (state != State.NONEXISTENT);
+    }
     public void open() {
         if(state == State.CLOSE) {
         	LOGGER.info("Grabber Opening");
-            solenoids.set(DoubleSolenoid.Value.kForward);
+            solenoid.set(DoubleSolenoid.Value.kForward);
             state = State.OPEN;
         }
     }
     
     public void close() {
         if(state == State.OPEN) {
-            solenoids.set(DoubleSolenoid.Value.kReverse);
+            solenoid.set(DoubleSolenoid.Value.kReverse);
             LOGGER.info("Grabber Closing");
             state = State.CLOSE;
         }

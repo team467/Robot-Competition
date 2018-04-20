@@ -158,14 +158,20 @@ public class Robot extends TimedRobot {
 		drive.setRamp(elevator.getHeight());
 		
 		//grabber open and close
-		if(driverstation.getGrabberButtonPressed()) {
+		if(driverstation.getGrabberButtonPressedRight()) {
 			LOGGER.info("Grabber Close");
-			grabber.close();
+			grabber.rightOpen();
 		}else {
 			LOGGER.info("Grabber Open");
-			grabber.open();
+			grabber.rightClose();
 		}
-
+		
+		if(driverstation.getGrabberButtonPressedLeft()) {
+			grabber.leftOpen();
+		} else {
+			grabber.leftClose();
+		}
+		
 		if (driverstation.getFloorHeightButtonPressed()) {
 			LOGGER.info("Dropping to bottom height");
 			elevator.moveToHeight(Elevator.Stops.floor);

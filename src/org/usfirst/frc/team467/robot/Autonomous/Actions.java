@@ -71,7 +71,6 @@ public class Actions {
 	 */
 	public static ActionGroup grabCube(double OpeningTime) {
 		Grabber grabber = Grabber.getInstance();
-		GrabberSolenoid grabbersolenoid = GrabberSolenoid.getInstance();
 		ActionGroup group = new ActionGroup("grab cube with solenoid");
 		
 		ConcurrentActions closeGrabberAndGrab = new ConcurrentActions(

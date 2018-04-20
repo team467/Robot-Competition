@@ -104,6 +104,10 @@ public class RobotMap {
 			RIGHT_FOLLOWER_1_CHANNEL = 5;
 			RIGHT_FOLLOWER_2_CHANNEL = 6;
 			RIGHT_DRIVE_SENSOR_IS_INVERTED = true;
+			
+			RIGHT_GRABBER_SOLENOID_EXISTS = true;
+			LEFT_GRABBER_SOLENOID_EXISTS = false;
+
 
 			//Linear PIDS
 			LEFT_DRIVE_PID_P = 2.025;
@@ -182,6 +186,9 @@ public class RobotMap {
 			RIGHT_FOLLOWER_1_CHANNEL = 5;
 			RIGHT_FOLLOWER_2_CHANNEL = 6;
 			RIGHT_DRIVE_SENSOR_IS_INVERTED = true;
+			
+			RIGHT_GRABBER_SOLENOID_EXISTS = true;
+			LEFT_GRABBER_SOLENOID_EXISTS = true;
 
 			// Linear PIDS
 			LEFT_DRIVE_PID_P = 1.0;
@@ -356,7 +363,8 @@ public class RobotMap {
 	public static int RAMP_RELEASE_FORWARD_CHANNEL;
 	public static int RAMP_RELEASE_REVERSE_CHANNEL;
 	
-	public static boolean GRABBER_SOLENOID_EXISTS = true;
-	public static int GRABBER_FORWARD_CHANNEL = 0; //redo
-	public static int GRABBER_REVERSE_CHANNEL = 1;
+	public static boolean RIGHT_GRABBER_SOLENOID_EXISTS;
+	public static boolean LEFT_GRABBER_SOLENOID_EXISTS;
+	public static int RIGHT_GRABBER_FORWARD_CHANNEL = 1; //redo
+	public static int RIGHT_GRABBER_REVERSE_CHANNEL = 0;
 }
