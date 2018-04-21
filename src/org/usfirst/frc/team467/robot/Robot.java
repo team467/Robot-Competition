@@ -160,18 +160,18 @@ public class Robot extends TimedRobot {
 		//grabber open and close
 		if(driverstation.getGrabberButtonPressedRight()) {
 			LOGGER.info("Right grabber Open");
-			grabber.rightOpen();
+			grabber.rightClose();
 		}else {
 			LOGGER.info("Right grabber Close");
-			grabber.rightClose();
+			grabber.rightOpen();
 		}
 		
 		if(driverstation.getGrabberButtonPressedLeft()) {
 			LOGGER.info("Left grabber Open");
-			grabber.leftOpen();
+			grabber.leftClose();
 		} else {
 			LOGGER.info("Left grabber Close");
-			grabber.leftClose();
+			grabber.leftOpen();
 		}
 		
 		if (driverstation.getFloorHeightButtonPressed()) {
