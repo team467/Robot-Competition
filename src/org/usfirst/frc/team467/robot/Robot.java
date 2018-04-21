@@ -38,11 +38,7 @@ public class Robot extends TimedRobot {
 	private Elevator elevator;
 	private Grabber grabber;
 	private Ramps ramps;
-<<<<<<< HEAD
-	//private GrabberSolenoid grabbersolenoid;
-=======
 	private Climber climber;
->>>>>>> Climber
 
 	private NetworkTableInstance table;
 	private NetworkTable dashboard;
