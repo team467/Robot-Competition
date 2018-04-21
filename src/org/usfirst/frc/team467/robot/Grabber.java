@@ -191,6 +191,7 @@ public class Grabber {
 			}
 		}
 
+		// Slower for intake
 		if (throttle > 0.0) {
 			throttle *= 0.7;
 		}
