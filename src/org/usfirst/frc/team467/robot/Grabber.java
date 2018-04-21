@@ -42,8 +42,8 @@ public class Grabber {
 			right = new Spark(RobotMap.GRABBER_R_CHANNEL);
 			right.setInverted(RobotMap.GRABBER_INVERT);
 			os = OpticalSensor.getInstance();
-			rightGrab = new GrabberSolenoid("right Grabber", RobotMap.RIGHT_GRABBER_FORWARD_CHANNEL, RobotMap.RIGHT_GRABBER_REVERSE_CHANNEL, RobotMap.RIGHT_GRABBER_SOLENOID_EXISTS);
-			leftGrab = new GrabberSolenoid("left Grabber", RobotMap.RIGHT_GRABBER_FORWARD_CHANNEL, RobotMap.RIGHT_GRABBER_REVERSE_CHANNEL, RobotMap.LEFT_GRABBER_SOLENOID_EXISTS);
+			rightGrab = GrabberSolenoid.getRightInstance();
+			leftGrab = GrabberSolenoid.getLeftInstance();
 		} else {
 			left = new NullSpeedController();
 			right = new NullSpeedController();
@@ -112,18 +112,25 @@ public class Grabber {
 
 	public void grab() {
 		state = GrabberState.GRAB;
-		rightOpen();
-		leftOpen();
+		open();
 	}
 
 	public void release() {
 		state = GrabberState.RELEASE;
-		rightOpen();
-		leftOpen();
+		open();
 	}
 
 	public void pause() {
 		state = GrabberState.NEUTRAL;
+		close();
+	}
+	
+	public void open() {
+		leftOpen();
+		rightOpen();
+	}
+	
+	public void close() {
 		leftClose();
 		rightClose();
 	}

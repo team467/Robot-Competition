@@ -9,10 +9,11 @@ public class GrabberSolenoid{
 	//private boolean toggle = false;
 	
     DoubleSolenoid solenoid;
-    DoubleSolenoid solenoidLeft;
+   // DoubleSolenoid solenoidLeft;
     State state;
    
-	private static GrabberSolenoid instance;
+	private static GrabberSolenoid rightInstance;
+	private static GrabberSolenoid leftInstance;
 	
     public enum State {
         OPEN, 
@@ -36,6 +37,20 @@ public class GrabberSolenoid{
         solenoid = new DoubleSolenoid(forwardChannel, reverseChannel);
         state = State.CLOSE;
     	LOGGER.info("Grabber solenoid initialized: {}", name); 
+    }
+    
+    public static GrabberSolenoid getRightInstance() {
+    	if(rightInstance == null) {
+    		rightInstance = new GrabberSolenoid("right Grabber", RobotMap.RIGHT_GRABBER_FORWARD_CHANNEL, RobotMap.RIGHT_GRABBER_REVERSE_CHANNEL, RobotMap.RIGHT_GRABBER_SOLENOID_EXISTS);
+    	}
+    	return rightInstance;
+    }
+    
+    public static GrabberSolenoid getLeftInstance() {
+    	if(leftInstance == null) {
+    		leftInstance =  new GrabberSolenoid("left Grabber", RobotMap.LEFT_GRABBER_FORWARD_CHANNEL, RobotMap.LEFT_GRABBER_REVERSE_CHANNEL, RobotMap.LEFT_GRABBER_SOLENOID_EXISTS);
+    	}
+    	return leftInstance;
     }
     
     public State getGrabberState() {
