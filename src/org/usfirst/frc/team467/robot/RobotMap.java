@@ -381,13 +381,14 @@ public class RobotMap {
 	public static int RAMP_RELEASE_FORWARD_CHANNEL;
 	public static int RAMP_RELEASE_REVERSE_CHANNEL;
 	
-	
 	public static boolean RIGHT_GRABBER_SOLENOID_EXISTS;
 	public static boolean LEFT_GRABBER_SOLENOID_EXISTS;
 	public static int RIGHT_GRABBER_FORWARD_CHANNEL = 1; //redo
 	public static int RIGHT_GRABBER_REVERSE_CHANNEL = 0;
 	public static int LEFT_GRABBER_FORWARD_CHANNEL = 2;
 	public static int LEFT_GRABBER_REVERSE_CHANNEL = 3;
+
 	//climber constants
 	public static double CLIMBER_SPEED = 0.5;
+
 }
