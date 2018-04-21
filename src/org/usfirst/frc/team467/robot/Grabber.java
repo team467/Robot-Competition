@@ -192,9 +192,9 @@ public class Grabber {
 		}
 
 		// Slower for intake
-		if (throttle > 0.0) {
-			throttle *= 0.7;
-		}
+//		if (throttle > 0.0) {
+//			throttle *= 0.7;
+//		}
 
 		LOGGER.debug("Grabber Throttle= {}", throttle);
 		left.set(throttle * RobotMap.MAX_GRAB_SPEED);
