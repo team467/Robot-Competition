@@ -339,20 +339,33 @@ public class Drive extends DifferentialDrive implements AutoDrive {
 	 * 
 	 * @param elevatorHeight
 	 */
-	public void setRamp(int elevatorHeight) {
-		double ramp;
-		if (Math.abs(left.sensorSpeed() - right.sensorSpeed()) > (RobotMap.TURN_IN_PLACE_DETECT_TOLERANCE) ||
-				Math.abs(DriverStation467.getInstance().getArcadeSpeed()) >= RobotMap.MIN_DRIVE_SPEED) { // If driving straight or told to drive straight
-			double heightPercent = (double) (RobotMap.ELEVATOR_BOTTOM_TICKS - elevatorHeight) / (RobotMap.ELEVATOR_BOTTOM_TICKS - RobotMap.ELEVATOR_TOP_TICKS);
-			ramp = MathUtils.weightedAverage(RobotMap.ELEVATOR_LOW_DRIVE_RAMP_TIME, RobotMap.ELEVATOR_HIGH_DRIVE_RAMP_TIME, heightPercent);
-		} else { // Stopped or turning in place
-			ramp = RobotMap.ELEVATOR_LOW_DRIVE_RAMP_TIME;
-		}
+	public void setRamp() {
+		left.setOpenLoopRamp(RobotMap.CLIMBER_RAMP_TIME);
+		right.setOpenLoopRamp(RobotMap.CLIMBER_RAMP_TIME);
 
-		// JHP HACK We can't accurately measure elevator height.
-		ramp = 0.0;
-		left.setOpenLoopRamp(ramp);
-		right.setOpenLoopRamp(ramp);
-		LOGGER.trace("Ramp time: {}", ramp);
+
+		
+//		if (Math.abs(left.sensorSpeed() - right.sensorSpeed()) > (RobotMap.TURN_IN_PLACE_DETECT_TOLERANCE) ||
+//				Math.abs(DriverStation467.getInstance().getArcadeSpeed()) >= RobotMap.MIN_DRIVE_SPEED) { // If driving straight or told to drive straight
+//			double heightPercent = (double) (RobotMap.ELEVATOR_BOTTOM_TICKS - elevatorHeight) / (RobotMap.ELEVATOR_BOTTOM_TICKS - RobotMap.ELEVATOR_TOP_TICKS);
+//			ramp = MathUtils.weightedAverage(RobotMap.ELEVATOR_LOW_DRIVE_RAMP_TIME, RobotMap.ELEVATOR_HIGH_DRIVE_RAMP_TIME, heightPercent);
+//		} else { // Stopped or turning in place
+//			ramp = RobotMap.ELEVATOR_LOW_DRIVE_RAMP_TIME;
+//		}
+//
+//		ramp = 0.0;
+//		left.setOpenLoopRamp(ramp);
+//		right.setOpenLoopRamp(ramp);
+//		LOGGER.trace("Ramp time: {}", ramp);
+	}
+	
+	public void setClimberSpeed(double speed) {
+		left.set(speed);
+		right.set(speed);
+//		if (Math.abs(DriverStation467.getInstance().getClimberSpeed()) >= RobotMap.CLIMB_MIN_DRIVE_SPEED) {
+//			
+//		} else {
+//			return;
+//		}
 	}
 }

@@ -181,6 +181,14 @@ public class XBoxJoystick467 {
 		}
 	}
 
+//	public double getCLimberAdjustedSpeed(double speed) {
+//		if (getRightTrigger() > 0.0) {
+//			return turboFastSpeed(speed); 
+//		} else {
+//			return turboSlowSpeed(speed); 
+//		} 
+//	}
+	
 	public double turboFastSpeed(double speed) {
 		// Speed multiplied by acceleration determined by left trigger
 		return speed * MathUtils.weightedAverage(RobotMap.NORMAL_MAX_SPEED, RobotMap.FAST_MAX_SPEED, getLeftTrigger());
