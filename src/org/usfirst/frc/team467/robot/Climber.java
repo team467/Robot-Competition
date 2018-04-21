@@ -26,23 +26,6 @@ public class Climber {
 		return instance;
 	}
 
-
-	//	public void climb () {
-	//		DriverStation467 station = DriverStation467.getInstance();
-	//		if (!station.getClimbUp() && !station.getClimbDown()) {
-	//
-	//		}
-	//		else if (station.getClimbUp() && climb) {
-	//			climbUp(RobotMap.CLIMBER_SPEED);
-	//			LOGGER.info("ClimbUp");
-	//		}
-	//		else if (station.getClimbDown() && climb) {
-	//			climbDown(RobotMap.CLIMBER_SPEED);
-	//			LOGGER.info("ClimbDown");
-	//		}
-	//		
-	//	}
-
 	public void climbUp() {
 		if (DriverStation.getInstance().getMatchTime() <= 30.0) {
 			climbController.set(ControlMode.PercentOutput, RobotMap.CLIMBER_SPEED);
