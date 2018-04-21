@@ -117,7 +117,6 @@ public class Grabber {
 
 	public void release() {
 		state = GrabberState.RELEASE;
-		open();
 	}
 
 	public void pause() {
