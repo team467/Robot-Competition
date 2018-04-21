@@ -79,7 +79,7 @@ public class RobotMap {
 
 			HAS_CLIMBER = true;
 			CLIMBER_MOTOR_CHANNEL = 1;
-					
+
 			HAS_ELEVATOR = false;
 			//ELEVATOR_MOTOR_CHANNEL = 1;
 			HAS_CAMERA = false;
@@ -129,13 +129,13 @@ public class RobotMap {
 			RIGHT_TURN_PID_I = 0.0;
 			RIGHT_TURN_PID_D = 180.0;
 			RIGHT_TURN_PID_F = 0.0;
-			
+
 			HAS_CLIMBER = false;
 			CLIMBER_MOTOR_CHANNEL = 8;
-			
+
 			useSimulator = false;
 			USE_FAKE_GAME_DATA = true;
-			
+
 			HAS_GRABBER = true;
 			GRABBER_INVERT = false;
 			HAS_CAMERA = false;
@@ -168,6 +168,9 @@ public class RobotMap {
 
 			AUTONOMOUS_DRIVE_TIMEOUT_MS = 500;
 			AUTONOMOUS_TURN_TIMEOUT_MS = 1000;
+
+			CLIMBER_RAMP_TIME = 30;
+
 			break;
 		case Competition_2:
 			HAS_WHEELS = true;
@@ -213,7 +216,7 @@ public class RobotMap {
 
 			HAS_CLIMBER = true;
 			CLIMBER_MOTOR_CHANNEL = 8;
-			
+
 			HAS_ELEVATOR = true;
 			ELEVATOR_MOTOR_CHANNEL = 7;
 
@@ -231,7 +234,7 @@ public class RobotMap {
 			OPTICAL_CHANNEL = 5;
 
 			HAS_CAMERA = false;
-			
+
 			useSimulator = false;
 			USE_FAKE_GAME_DATA = false;
 
@@ -248,7 +251,7 @@ public class RobotMap {
 
 			AUTONOMOUS_DRIVE_TIMEOUT_MS = 200;
 			AUTONOMOUS_TURN_TIMEOUT_MS = 300;
-			
+
 			break;
 		}
 		//These calculations can be made after the robot-specific constants are set. 
@@ -263,7 +266,7 @@ public class RobotMap {
 	public static boolean useSpeedControllers;
 	public static final int VELOCITY_PID_PROFILE = 0;
 	public static final int POSITION_PID_PROFILE = 1;
-	
+
 	public static double ALLOWED_ERROR_INCHES = 0.5;
 	public static double POSITION_ALLOWED_ERROR;
 	public static int POSITION_ALLOWABLE_CLOSED_LOOP_ERROR;
@@ -283,8 +286,9 @@ public class RobotMap {
 	public static boolean useSimulator = false;
 	public static boolean USE_FAKE_GAME_DATA = false;
 	public static final double MIN_DRIVE_SPEED = 0.1;
+	public static final double CLIMB_MIN_DRIVE_SPEED = 0.3;
 
-//	How far the sensor speeds can be and still be considered turning in place, in sensor units per 100 ms
+	//	How far the sensor speeds can be and still be considered turning in place, in sensor units per 100 ms
 	public static final int TURN_IN_PLACE_DETECT_TOLERANCE = 150;
 
 	// Robot Dimensions
@@ -328,7 +332,7 @@ public class RobotMap {
 
 	public static boolean HAS_CLIMBER;
 	public static int CLIMBER_MOTOR_CHANNEL;
-	
+
 	public static boolean HAS_ELEVATOR;
 	public static int ELEVATOR_MOTOR_CHANNEL;
 	public static double MIN_LIFT_SPEED = 0.1;
@@ -337,7 +341,7 @@ public class RobotMap {
 
 	public static int ELEVATOR_BOTTOM_TICKS;
 	public static int ELEVATOR_TOP_TICKS;
-	
+
 	public static double ELEVATOR_BOTTOM = 0.0;
 	public static double ELEVATOR_FLOOR;
 	public static double ELEVATOR_SWITCH;
@@ -363,9 +367,11 @@ public class RobotMap {
 	public static int RAMP_RIGHT_FORWARD_CHANNEL;
 	public static int RAMP_RIGHT_REVERSE_CHANNEL;
 
+	public static int CLIMBER_RAMP_TIME;
+
 	public static int RAMP_RELEASE_FORWARD_CHANNEL;
 	public static int RAMP_RELEASE_REVERSE_CHANNEL;
-	
+
 	//climber constants
 	public static double CLIMBER_SPEED = 0.5;
 }
