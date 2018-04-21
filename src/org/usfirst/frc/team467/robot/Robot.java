@@ -156,24 +156,16 @@ public class Robot extends TimedRobot {
 		grabber.grab(driverstation.getGrabThrottle());
 		elevator.move(driverstation.getElevatorSpeed());
 		drive.setRamp(elevator.getHeight());
-		
+
 		//grabber open and close
-		if(driverstation.getGrabberButtonPressedRight()) {
-			LOGGER.info("Right grabber Open");
-			grabber.rightClose();
-		}else {
-			LOGGER.info("Right grabber Close");
-			grabber.rightOpen();
-		}
-		
-		if(driverstation.getGrabberButtonPressedLeft()) {
-			LOGGER.info("Left grabber Open");
-			grabber.leftClose();
+		if(driverstation.getGrabberOpen()) {
+			LOGGER.info("Grabber Open");
+			grabber.open();
 		} else {
-			LOGGER.info("Left grabber Close");
-			grabber.leftOpen();
+			LOGGER.info("Grabber Close");
+			grabber.close();
 		}
-		
+
 		if (driverstation.getFloorHeightButtonPressed()) {
 			LOGGER.info("Dropping to bottom height");
 			elevator.moveToHeight(Elevator.Stops.floor);

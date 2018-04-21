@@ -62,14 +62,14 @@ public class GrabberSolenoid{
     public void open() {
         if(state == State.CLOSE) {
         	LOGGER.info("Grabber Opening");
-            solenoid.set(DoubleSolenoid.Value.kForward);
+            solenoid.set(DoubleSolenoid.Value.kReverse);
             state = State.OPEN;
         }
     }
     
     public void close() {
         if(state == State.OPEN) {
-            solenoid.set(DoubleSolenoid.Value.kReverse);
+            solenoid.set(DoubleSolenoid.Value.kForward);
             LOGGER.info("Grabber Closing");
             state = State.CLOSE;
         }
