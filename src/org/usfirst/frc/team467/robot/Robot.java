@@ -59,7 +59,6 @@ public class Robot extends TimedRobot {
 		table = NetworkTableInstance.getDefault();
 		dashboard  = table.getTable("SmartDashboard");
 		//table.deleteAllEntries();
-	//	grabbersolenoid = GrabberSolenoid.getInstance();
 		// Initialize RobotMap
 		RobotMap.init(RobotID.Competition_1);
 
@@ -71,9 +70,6 @@ public class Robot extends TimedRobot {
 		grabber = Grabber.getInstance();
 		matchConfig = MatchConfiguration.getInstance();
 		climber = Climber.getInstance();
-
-//		drive = Drive.getInstance();
-//		drive.configPeakOutput(1.0);
 
 		if (RobotMap.HAS_CAMERA) {
 			vision = VisionProcessing.getInstance();
@@ -184,9 +180,6 @@ public class Robot extends TimedRobot {
 		if (driverstation.getClimbUp()) {
 			LOGGER.debug("Climb Up");
 			climber.climbUp();
-		} else if (driverstation.getClimbDown()) {
-			LOGGER.debug("Climb Down");
-			climber.climbDown();
 		} else {
 			climber.neutral();
 			LOGGER.debug("Not climbing");

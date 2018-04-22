@@ -9,7 +9,6 @@ public class GrabberSolenoid{
 	//private boolean toggle = false;
 	
     DoubleSolenoid solenoid;
-   // DoubleSolenoid solenoidLeft;
     State state;
    
 	private static GrabberSolenoid rightInstance;
@@ -21,15 +20,9 @@ public class GrabberSolenoid{
         NONEXISTENT;
     }
     
-//    public static GrabberSolenoid getInstance() {
-//		if (instance == null) {
-//			instance = new GrabberSolenoid();
-//		}
-//		return instance;
-//    }
     public GrabberSolenoid(String name, int forwardChannel, int reverseChannel, boolean exists) {
         if(!exists) {
-        	LOGGER.info("Could not detect grabber solenoids");
+        	LOGGER.info("Could not create grabber solenoid");
             state = State.NONEXISTENT;
             return;
         }

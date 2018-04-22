@@ -67,7 +67,6 @@ public class Actions {
 
 	public static ActionGroup grabCube() {
 		Grabber grabber = Grabber.getInstance();
-		ActionGroup group = new ActionGroup("grab cube with solenoid");
 		
 		ConcurrentActions closeGrabberAndGrab = new ConcurrentActions(
 				() -> grabber.grab());
@@ -78,6 +77,7 @@ public class Actions {
 				);
 		
 		//group.addAction(openGrabber());
+		ActionGroup group = new ActionGroup("grab cube with solenoid");
 		
 		group.addAction( new Action(
 				"Grabbing",
@@ -107,15 +107,7 @@ public class Actions {
 				new ActionGroup.RunOnce(() -> grabber.open);
 	}*/
 
-	/**
-	 * 
-	 * @param distance
-	 * @param openingTime :time the grabber opens
-	 * @return
-	 */
-	
 	public static ActionGroup grabAndMoveLinear(double distance) {
-		Grabber grabber = Grabber.getInstance();
 		ActionGroup group = new ActionGroup("grab and move Linear");
 		group.addAction(zeroDistance());
 		MultiCondition multicondition = new MultiCondition(
@@ -136,7 +128,6 @@ public class Actions {
 
 	public static Action releaseCube() {
 		Grabber grabber = Grabber.getInstance();
-		//GrabberSolenoid grabbersolenoid = GrabberSolenoid.getInstance();
 		return new Action(
 				"Releasing cube",
 				//new ActionGroup.RunOnce(

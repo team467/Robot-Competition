@@ -87,7 +87,6 @@ public class DriverStation467 {
 		return 0.0;
 	}
 
-
 	// All button mappings are accessed through the functions below
 
 	/**
@@ -122,10 +121,6 @@ public class DriverStation467 {
 		return getDriveJoystick().getAdjustedSpeed(-driverJoy.getLeftStickY());
 	}
 	
-//	public double getClimberSpeed() {
-//		return getNavJoystick().getCLimberAdjustedSpeed(-navJoy.getRightTrigger());
-//	}
-
 	public double getArcadeTurn() {
 		return getDriveJoystick().getAdjustedTurnSpeed();
 	}
@@ -138,10 +133,6 @@ public class DriverStation467 {
 		 return getNavJoystick().getRightTrigger() > 0.9;
 	}
 	
-	public boolean getClimbDown() {
-		 return getNavJoystick().getLeftTrigger() > 0.9;
-	}
-
 	public boolean getLeftRampLiftButton() {
 		return getNavJoystick().getPOV() == 0;
 	}

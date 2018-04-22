@@ -13,9 +13,7 @@ public class Grabber {
 		START_GRAB,
 		GRAB,
 		NEUTRAL,
-		RELEASE,
-		//OPEN,
-		//CLOSE
+		RELEASE
 	}
 
 	public static final int GRAB_TIME_MS = 1000;
@@ -32,18 +30,18 @@ public class Grabber {
 	private OpticalSensor os;
 	private GrabberSolenoid rightGrab;
 	private GrabberSolenoid leftGrab;
-	
+
 	//private boolean grabberButtonDown = false;
 
 	private Grabber() {
-		if (RobotMap.HAS_GRABBER && !RobotMap.useSimulator && RobotMap.RIGHT_GRABBER_SOLENOID_EXISTS) {
+		if (RobotMap.HAS_GRABBER && !RobotMap.useSimulator) {
 			left = new Spark(RobotMap.GRABBER_L_CHANNEL);
 			left.setInverted(RobotMap.GRABBER_INVERT);
 			right = new Spark(RobotMap.GRABBER_R_CHANNEL);
 			right.setInverted(RobotMap.GRABBER_INVERT);
 			os = OpticalSensor.getInstance();
-			rightGrab = GrabberSolenoid.getRightInstance();
 			leftGrab = GrabberSolenoid.getLeftInstance();
+			rightGrab = GrabberSolenoid.getRightInstance();
 		} else {
 			left = new NullSpeedController();
 			right = new NullSpeedController();
@@ -67,7 +65,7 @@ public class Grabber {
 
 		double speed = 0.0;
 		switch (state) {
-		
+
 		case START_GRAB:
 			if(hasCube()) {
 				state = GrabberState.NEUTRAL;
@@ -100,17 +98,18 @@ public class Grabber {
 			left.set(speed);
 			right.set(-speed);
 		}
-		
+
 		// Save the previous state and check for current state.
 		hadCube = hasCube;
 		hasCube = hasCube();
 	}
-	
+
 	public void startGrab() {
 		state = GrabberState.START_GRAB;
 	}
 
 	public void grab() {
+		//only used by auto
 		state = GrabberState.GRAB;
 		open();
 	}
@@ -123,50 +122,46 @@ public class Grabber {
 		state = GrabberState.NEUTRAL;
 		close();
 	}
-	
+
 	public void open() {
 		leftOpen();
 		rightOpen();
 	}
-	
+
 	public void close() {
 		leftClose();
 		rightClose();
 	}
-	
+
 	public void rightClose() {
 		if(rightGrab.exists()) {
 			rightGrab.close();
-			} else {
-				LOGGER.info("Right Solenoid does not exist");
-				return;
-			}
+		} else {
+			LOGGER.info("Right Solenoid does not exist");
+		}
 	}
-	
+
 	public void rightOpen() {
 		if(rightGrab.exists()) {
 			rightGrab.open();
 		} else {
 			LOGGER.info("Right Solenoid does not exist");
-			return;
 		}
 	}
-	
+
 	public void leftClose() {
 		if(leftGrab.exists()) {
 			leftGrab.close();
-			} else {
-				LOGGER.info("Left solenoid does not exist");
-				return;
-			}
+		} else {
+			LOGGER.info("Left solenoid does not exist");
+		}
 	}
-	
+
 	public void leftOpen() {
 		if(leftGrab.exists()) {
 			leftGrab.open();
 		} else {
 			LOGGER.info("Left solenoid does not exist");
-			return;
 		}
 	}
 
@@ -191,15 +186,14 @@ public class Grabber {
 		}
 
 		// Slower for intake
-//		if (throttle > 0.0) {
-//			throttle *= 0.7;
-//		}
+		//		if (throttle > 0.0) {
+		//			throttle *= 0.7;
+		//		}
 
 		LOGGER.debug("Grabber Throttle= {}", throttle);
 		left.set(throttle * RobotMap.MAX_GRAB_SPEED);
 		right.set(-throttle * RobotMap.MAX_GRAB_SPEED);
-		
-		
+
 		// Save the previous state and check for current state.
 		hadCube = hasCube;
 		hasCube = hasCube();
@@ -207,16 +201,16 @@ public class Grabber {
 
 	public boolean justGotCube() {
 		if(!RobotMap.useSimulator) {
-		return (!hadCube && hasCube());
+			return (!hadCube && hasCube());
 		}
-		
+
 		else return false;
 	}
 
 	public boolean hasCube() {
 		return (!RobotMap.useSimulator && RobotMap.HAS_GRABBER && os.detectedTarget());
 	}
-	
+
 	public void reset() {
 		rightGrab.reset();
 	}

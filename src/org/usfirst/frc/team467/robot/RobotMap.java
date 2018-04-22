@@ -30,7 +30,7 @@ public class RobotMap {
 	public static int RIGHT_LEAD_CHANNEL;
 	public static int RIGHT_FOLLOWER_1_CHANNEL;
 	public static int RIGHT_FOLLOWER_2_CHANNEL;
-
+	
 	public static int ALLOWED_GRABBER_ERROR = 2; // in degrees
 
 	public static int AUTONOMOUS_DRIVE_TIMEOUT_MS;
@@ -78,7 +78,7 @@ public class RobotMap {
 			OPTICAL_CHANNEL = 5;
 
 			HAS_CLIMBER = true;
-			CLIMBER_MOTOR_CHANNEL = 1;
+			CLIMB_MOTOR_CONTROLLER_LEADER = 1;
 
 			HAS_ELEVATOR = false;
 			//ELEVATOR_MOTOR_CHANNEL = 1;
@@ -110,7 +110,8 @@ public class RobotMap {
 			
 			RIGHT_GRABBER_SOLENOID_EXISTS = true;
 			LEFT_GRABBER_SOLENOID_EXISTS = false;
-
+			
+			CLIMB_MOTOR_CONTROLLER_LEADER = 8;
 
 			//Linear PIDS
 			LEFT_DRIVE_PID_P = 2.025;
@@ -135,7 +136,8 @@ public class RobotMap {
 			RIGHT_TURN_PID_F = 0.0;
 
 			HAS_CLIMBER = false;
-			CLIMBER_MOTOR_CHANNEL = 8;
+			CLIMB_MOTOR_CONTROLLER_LEADER = 8;
+			CLIMB_MOTOR_CONTROLLER_FOLLOWER1 = 9; //find out what motor controller have
 
 			useSimulator = false;
 			USE_FAKE_GAME_DATA = true;
@@ -196,6 +198,8 @@ public class RobotMap {
 			RIGHT_FOLLOWER_2_CHANNEL = 6;
 			RIGHT_DRIVE_SENSOR_IS_INVERTED = true;
 			
+			CLIMB_MOTOR_CONTROLLER_LEADER = 8;
+			
 			RIGHT_GRABBER_SOLENOID_EXISTS = true;
 			LEFT_GRABBER_SOLENOID_EXISTS = true;
 
@@ -222,7 +226,8 @@ public class RobotMap {
 			RIGHT_TURN_PID_F = 0.0;
 
 			HAS_CLIMBER = true;
-			CLIMBER_MOTOR_CHANNEL = 8;
+			CLIMB_MOTOR_CONTROLLER_LEADER = 8;
+			CLIMB_MOTOR_CONTROLLER_FOLLOWER1 = 9; //figure out what motor controller this is
 
 			HAS_ELEVATOR = true;
 			ELEVATOR_MOTOR_CHANNEL = 7;
@@ -252,8 +257,6 @@ public class RobotMap {
 			HAS_RIGHT_RAMP = false;
 			RAMP_RIGHT_FORWARD_CHANNEL = 2;
 			RAMP_RIGHT_REVERSE_CHANNEL = 5;
-			
-			
 
 			RAMP_RELEASE_FORWARD_CHANNEL = 0;
 			RAMP_RELEASE_REVERSE_CHANNEL = 3;
@@ -340,7 +343,10 @@ public class RobotMap {
 	public static int MAX_ELEVATOR_RPM = 20; // TODO: SET
 
 	public static boolean HAS_CLIMBER;
-	public static int CLIMBER_MOTOR_CHANNEL;
+	public static int CLIMB_MOTOR_CONTROLLER_LEADER;
+	public static int CLIMB_MOTOR_CONTROLLER_FOLLOWER1;
+	public static int CLIMBER_RAMP_TIME;
+	public static double CLIMBER_SPEED = 0.5;
 
 	public static boolean HAS_ELEVATOR;
 	public static int ELEVATOR_MOTOR_CHANNEL;
@@ -376,8 +382,6 @@ public class RobotMap {
 	public static int RAMP_RIGHT_FORWARD_CHANNEL;
 	public static int RAMP_RIGHT_REVERSE_CHANNEL;
 
-	public static int CLIMBER_RAMP_TIME;
-
 	public static int RAMP_RELEASE_FORWARD_CHANNEL;
 	public static int RAMP_RELEASE_REVERSE_CHANNEL;
 	
@@ -387,8 +391,5 @@ public class RobotMap {
 	public static int RIGHT_GRABBER_REVERSE_CHANNEL = 0;
 	public static int LEFT_GRABBER_FORWARD_CHANNEL = 2;
 	public static int LEFT_GRABBER_REVERSE_CHANNEL = 3;
-
-	//climber constants
-	public static double CLIMBER_SPEED = 0.5;
-
+	
 }
