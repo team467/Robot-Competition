@@ -180,14 +180,6 @@ public class XBoxJoystick467 {
 			return turboSlowSpeed(speed); 
 		}
 	}
-
-//	public double getCLimberAdjustedSpeed(double speed) {
-//		if (getRightTrigger() > 0.0) {
-//			return turboFastSpeed(speed); 
-//		} else {
-//			return turboSlowSpeed(speed); 
-//		} 
-//	}
 	
 	public double turboFastSpeed(double speed) {
 		// Speed multiplied by acceleration determined by left trigger
