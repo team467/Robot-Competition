@@ -16,21 +16,21 @@ public class Climber {
 
 	private WPI_TalonSRX climbController;
 
-	private Climber(SpeedController heightController) {
+	public Climber(SpeedController heightController) {
 		if (!RobotMap.HAS_CLIMBER) {
 			return;
 		}
-
+		
 		climbController = (WPI_TalonSRX) heightController;
-		climbController.configOpenloopRamp(RobotMap.CLIMBER_RAMP_TIME, RobotMap.TALON_TIMEOUT);
+		setOpenLoopRamp();
 	}
-
-
+	
 	public static Climber getInstance() {
 		if (instance == null) {
 			if (!RobotMap.HAS_CLIMBER) {
 			} else {
 				instance = new Climber(new WPI_TalonSRX(RobotMap.CLIMBER_MOTOR_CHANNEL));
+				
 			}
 		}
 		return instance;
@@ -57,6 +57,9 @@ public class Climber {
 	public void neutral() {
 		climbController.set(ControlMode.PercentOutput, 0);
 		//LOGGER.info("Climber stopped");
-	}
+	}	
 
+	public void setOpenLoopRamp() {
+		climbController.configOpenloopRamp(RobotMap.CLIMBER_RAMP_TIME, RobotMap.TALON_TIMEOUT);
+	}
 }
