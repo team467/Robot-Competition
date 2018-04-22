@@ -20,9 +20,15 @@ public class Climber {
 		if (!RobotMap.HAS_CLIMBER) {
 			return;
 		}
-		WPI_TalonSRX climbMotor1 = new WPI_TalonSRX(1);
-		WPI_TalonSRX climbMotor2 = new WPI_TalonSRX(2);
-		climbController = new TalonSpeedControllerGroup(ControlMode.PercentOutput, false, climbMotor1, climbMotor2);
+		
+		if(RobotMap.HAS_CLIMBER) {
+			WPI_TalonSRX climbMotorLeader = new WPI_TalonSRX(RobotMap.CLIMB_MOTOR_CONTROLLER_LEADER);
+			WPI_TalonSRX climbMotorFollower1 = new WPI_TalonSRX(RobotMap.CLIMB_MOTOR_CONTROLLER_FOLLOWER1);
+			climbController = new TalonSpeedControllerGroup(ControlMode.PercentOutput, false, climbMotorLeader, climbMotorFollower1);
+			LOGGER.info("Created climber Motors");
+		} else {
+			LOGGER.info("Not enough climb motors, no climb capabilities");
+		}
 	}
 	
 	public static Climber getInstance() {

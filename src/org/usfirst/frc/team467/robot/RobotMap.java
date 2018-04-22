@@ -86,6 +86,7 @@ public class RobotMap {
 			HAS_LEFT_RAMP = false;
 			HAS_RIGHT_RAMP = false;
 
+			
 			isDriveMotorInverted = new boolean[] { false, true, false, true };
 			break;
 		case Competition_1:
@@ -137,7 +138,7 @@ public class RobotMap {
 
 			HAS_CLIMBER = false;
 			CLIMB_MOTOR_CONTROLLER_LEADER = 8;
-			CLIMB_MOTOR_CONTROLLER_FOLLOWER1 = 9; //find out what motor controller have
+			CLIMB_MOTOR_CONTROLLER_FOLLOWER1 = 9;
 
 			useSimulator = false;
 			USE_FAKE_GAME_DATA = true;
@@ -198,7 +199,9 @@ public class RobotMap {
 			RIGHT_FOLLOWER_2_CHANNEL = 6;
 			RIGHT_DRIVE_SENSOR_IS_INVERTED = true;
 			
+			HAS_CLIMBER = false;
 			CLIMB_MOTOR_CONTROLLER_LEADER = 8;
+			CLIMB_MOTOR_CONTROLLER_FOLLOWER1 = 9;
 			
 			RIGHT_GRABBER_SOLENOID_EXISTS = true;
 			LEFT_GRABBER_SOLENOID_EXISTS = true;
