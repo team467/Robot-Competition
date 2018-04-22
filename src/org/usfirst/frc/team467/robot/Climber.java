@@ -22,7 +22,6 @@ public class Climber {
 		}
 		
 		climbController = (WPI_TalonSRX) heightController;
-		setOpenLoopRamp();
 	}
 	
 	public static Climber getInstance() {
