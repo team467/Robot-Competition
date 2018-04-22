@@ -37,7 +37,7 @@ public class Robot extends TimedRobot {
 	private Gyrometer gyro;
 	private Elevator elevator;
 	private Grabber grabber;
-	private Ramps ramps;
+	//private Ramps ramps;
 	private Climber climber;
 
 	private NetworkTableInstance table;
@@ -70,6 +70,10 @@ public class Robot extends TimedRobot {
 		grabber = Grabber.getInstance();
 		matchConfig = MatchConfiguration.getInstance();
 		climber = Climber.getInstance();
+		
+		drive = Drive.getInstance();
+		drive.configPeakOutput(1.0);
+
 
 		if (RobotMap.HAS_CAMERA) {
 			vision = VisionProcessing.getInstance();
@@ -125,7 +129,7 @@ public class Robot extends TimedRobot {
 		matchConfig.load();
 		autonomous = matchConfig.autonomousDecisionTree();
 		LOGGER.info("Init Autonomous: {}", autonomous.getName());
-		ramps.reset();
+		//ramps.reset();
 		autonomous.enable();
 	}
 
@@ -140,7 +144,6 @@ public class Robot extends TimedRobot {
 		autonomous = Actions.doNothing();
 //		drive.configPeakOutput(1.0);
 		driverstation.readInputs();
-		ramps.reset();
 		grabber.reset();
 	}
 	/**
@@ -185,21 +188,21 @@ public class Robot extends TimedRobot {
 			LOGGER.debug("Not climbing");
 		}
 
-		
-		if (ramps.isDeployed()) {
-			if (driverstation.getLeftRampLiftButton()) {
-				ramps.liftLeft();
-			}
-			if (driverstation.getLeftRampDropButton()) {
-				ramps.dropLeft();
-			}
-			if (driverstation.getRightRampLiftButton()) {
-				ramps.liftRight();
-			}
-			if (driverstation.getRightRampDropButton()) {
-				ramps.dropRight();
-			}
-		}
+//		
+//		if (ramps.isDeployed()) {
+//			if (driverstation.getLeftRampLiftButton()) {
+//				ramps.liftLeft();
+//			}
+//			if (driverstation.getLeftRampDropButton()) {
+//				ramps.dropLeft();
+//			}
+//			if (driverstation.getRightRampLiftButton()) {
+//				ramps.liftRight();
+//			}
+//			if (driverstation.getRightRampDropButton()) {
+//				ramps.dropRight();
+//			}
+//		}
 
 		double speed = driverstation.getArcadeSpeed();
 		double turn = driverstation.getArcadeTurn();

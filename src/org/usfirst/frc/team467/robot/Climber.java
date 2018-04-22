@@ -13,6 +13,8 @@ import edu.wpi.first.wpilibj.MotorSafetyHelper;
 public class Climber {
 	private static final Logger LOGGER = LogManager.getLogger(Climber.class);
 	private static Climber instance;
+	WPI_TalonSRX climbMotorLeader;
+	WPI_TalonSRX climbMotorFollower1;
 
 	private TalonSpeedControllerGroup climbController;
 
@@ -22,8 +24,8 @@ public class Climber {
 		}
 		
 		if(RobotMap.HAS_CLIMBER) {
-			WPI_TalonSRX climbMotorLeader = new WPI_TalonSRX(RobotMap.CLIMB_MOTOR_CONTROLLER_LEADER);
-			WPI_TalonSRX climbMotorFollower1 = new WPI_TalonSRX(RobotMap.CLIMB_MOTOR_CONTROLLER_FOLLOWER1);
+			climbMotorLeader = new WPI_TalonSRX(RobotMap.CLIMB_MOTOR_CONTROLLER_LEADER);
+			climbMotorFollower1 = new WPI_TalonSRX(RobotMap.CLIMB_MOTOR_CONTROLLER_FOLLOWER1);
 			climbController = new TalonSpeedControllerGroup(ControlMode.PercentOutput, false, climbMotorLeader, climbMotorFollower1);
 			LOGGER.info("Created climber Motors");
 		} else {
@@ -57,7 +59,7 @@ public class Climber {
 	}	
 
 	public void setOpenLoopRamp() {
-		climbController.setOpenLoopRamp((RobotMap.CLIMBER_RAMP_TIME));
+		climbController.setOpenLoopRamp(RobotMap.CLIMBER_RAMP_TIME);
 		
 	}
 }

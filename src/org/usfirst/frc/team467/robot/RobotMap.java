@@ -110,9 +110,10 @@ public class RobotMap {
 			RIGHT_DRIVE_SENSOR_IS_INVERTED = true;
 			
 			RIGHT_GRABBER_SOLENOID_EXISTS = true;
-			LEFT_GRABBER_SOLENOID_EXISTS = false;
+			LEFT_GRABBER_SOLENOID_EXISTS = true;
 			
-			CLIMB_MOTOR_CONTROLLER_LEADER = 8;
+			CLIMB_MOTOR_CONTROLLER_LEADER = 11;
+			CLIMB_MOTOR_CONTROLLER_FOLLOWER1 = 12;
 
 			//Linear PIDS
 			LEFT_DRIVE_PID_P = 2.025;
@@ -136,9 +137,9 @@ public class RobotMap {
 			RIGHT_TURN_PID_D = 180.0;
 			RIGHT_TURN_PID_F = 0.0;
 
-			HAS_CLIMBER = false;
-			CLIMB_MOTOR_CONTROLLER_LEADER = 8;
-			CLIMB_MOTOR_CONTROLLER_FOLLOWER1 = 9;
+			HAS_CLIMBER = true;
+			CLIMB_MOTOR_CONTROLLER_LEADER = 11;
+			CLIMB_MOTOR_CONTROLLER_FOLLOWER1 = 12;
 
 			useSimulator = false;
 			USE_FAKE_GAME_DATA = true;
@@ -176,7 +177,7 @@ public class RobotMap {
 			AUTONOMOUS_DRIVE_TIMEOUT_MS = 500;
 			AUTONOMOUS_TURN_TIMEOUT_MS = 1000;
 
-			CLIMBER_RAMP_TIME = 30;
+			CLIMBER_RAMP_TIME = 0.5;
 
 			break;
 		case Competition_2:
@@ -200,8 +201,9 @@ public class RobotMap {
 			RIGHT_DRIVE_SENSOR_IS_INVERTED = true;
 			
 			HAS_CLIMBER = false;
-			CLIMB_MOTOR_CONTROLLER_LEADER = 8;
-			CLIMB_MOTOR_CONTROLLER_FOLLOWER1 = 9;
+			CLIMB_MOTOR_CONTROLLER_LEADER = 11;
+			CLIMB_MOTOR_CONTROLLER_FOLLOWER1 = 12;
+			CLIMBER_RAMP_TIME = 0.5;
 			
 			RIGHT_GRABBER_SOLENOID_EXISTS = true;
 			LEFT_GRABBER_SOLENOID_EXISTS = true;
@@ -227,10 +229,6 @@ public class RobotMap {
 			RIGHT_TURN_PID_I = 0.0;
 			RIGHT_TURN_PID_D = 450.0;
 			RIGHT_TURN_PID_F = 0.0;
-
-			HAS_CLIMBER = true;
-			CLIMB_MOTOR_CONTROLLER_LEADER = 8;
-			CLIMB_MOTOR_CONTROLLER_FOLLOWER1 = 9; //figure out what motor controller this is
 
 			HAS_ELEVATOR = true;
 			ELEVATOR_MOTOR_CHANNEL = 7;
@@ -348,8 +346,8 @@ public class RobotMap {
 	public static boolean HAS_CLIMBER;
 	public static int CLIMB_MOTOR_CONTROLLER_LEADER;
 	public static int CLIMB_MOTOR_CONTROLLER_FOLLOWER1;
-	public static int CLIMBER_RAMP_TIME;
-	public static double CLIMBER_SPEED = 0.5;
+	public static double CLIMBER_RAMP_TIME;
+	public static double CLIMBER_SPEED = 1.0;
 
 	public static boolean HAS_ELEVATOR;
 	public static int ELEVATOR_MOTOR_CHANNEL;
