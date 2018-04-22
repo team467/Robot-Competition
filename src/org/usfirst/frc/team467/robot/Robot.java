@@ -1,10 +1,12 @@
 package org.usfirst.frc.team467.robot;
 
 import edu.wpi.cscore.UsbCamera;
+
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.CameraServer;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -15,6 +17,7 @@ import org.usfirst.frc.team467.robot.Autonomous.Actions;
 import org.usfirst.frc.team467.robot.Autonomous.MatchConfiguration;
 import org.usfirst.frc.team467.robot.vision.VisionProcessing;
 import org.usfirst.frc.team467.robot.RobotMap.RobotID;
+import org.usfirst.frc.team467.robot.Climber;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to each mode, as described in the
@@ -34,7 +37,8 @@ public class Robot extends TimedRobot {
 	private Gyrometer gyro;
 	private Elevator elevator;
 	private Grabber grabber;
-	private Ramps ramps;
+	//private Ramps ramps;
+	private Climber climber;
 
 	private NetworkTableInstance table;
 	private NetworkTable dashboard;
@@ -55,23 +59,21 @@ public class Robot extends TimedRobot {
 		table = NetworkTableInstance.getDefault();
 		dashboard  = table.getTable("SmartDashboard");
 		//table.deleteAllEntries();
-
 		// Initialize RobotMap
-		RobotMap.init(RobotID.Competition_2);
+		RobotMap.init(RobotID.Competition_1);
 
 		// Make robot objects
 		driverstation = DriverStation467.getInstance();
 		LOGGER.info("Initialized Driverstation");
 
-		drive = Drive.getInstance();
 		elevator = Elevator.getInstance();
 		grabber = Grabber.getInstance();
 		matchConfig = MatchConfiguration.getInstance();
-
-		ramps = Ramps.getInstance();
-		ramps.reset();
-
+		climber = Climber.getInstance();
+		
+		drive = Drive.getInstance();
 		drive.configPeakOutput(1.0);
+
 
 		if (RobotMap.HAS_CAMERA) {
 			vision = VisionProcessing.getInstance();
@@ -86,7 +88,6 @@ public class Robot extends TimedRobot {
 
 	public void disabledInit() {
 		LOGGER.info("Init Disabled");
-		ramps.reset();
 //		drive.logClosedLoopErrors();
 	}
 
@@ -95,7 +96,7 @@ public class Robot extends TimedRobot {
 		String[] autoList = {"None", "Just_Go_Forward", "Left_Switch_Only", "Left_Basic", "Left_Advanced", "Left_Our_Side_Only",
 				"Center", "Center_Advanced", "Right_Switch_Only", "Right_Basic", "Right_Advanced", "Right_Our_Side_Only"};
 		dashboard.getEntry("Auto List").setStringArray(autoList);
-		LOGGER.info("Selected Auto Mode: " + SmartDashboard.getString("Auto Selector", "None"));
+//		LOGGER.info("Selected Auto Mode: " + SmartDashboard.getString("Auto Selector", "None"));
 	}
 
 	double tuningValue = 0.0;
@@ -120,7 +121,7 @@ public class Robot extends TimedRobot {
 		} else {
 			drive.tuneTurn(tuningValue, RobotMap.PID_SLOT_TURN);
 		}
-		//drive.logClosedLoopErrors();
+		drive.logClosedLoopErrors();
 	}
 
 	public void autonomousInit() {
@@ -128,7 +129,7 @@ public class Robot extends TimedRobot {
 		matchConfig.load();
 		autonomous = matchConfig.autonomousDecisionTree();
 		LOGGER.info("Init Autonomous: {}", autonomous.getName());
-		ramps.reset();
+		//ramps.reset();
 		autonomous.enable();
 	}
 
@@ -141,19 +142,28 @@ public class Robot extends TimedRobot {
 	public void teleopInit() {
 		LOGGER.info("Init Teleop");
 		autonomous = Actions.doNothing();
-		drive.configPeakOutput(1.0);
+//		drive.configPeakOutput(1.0);
 		driverstation.readInputs();
-		ramps.reset();
+		grabber.reset();
 	}
 	/**
 	 * This function is called periodically during operator control
 	 */
 	public void teleopPeriodic() {
+		LOGGER.debug("Match time {}", DriverStation.getInstance().getMatchTime());
 		driverstation.readInputs();
 
 		grabber.grab(driverstation.getGrabThrottle());
 		elevator.move(driverstation.getElevatorSpeed());
-		drive.setRamp(elevator.getHeight());
+
+		//grabber open and close
+		if(driverstation.getGrabberOpen()) {
+			LOGGER.info("Grabber Open");
+			grabber.open();
+		} else {
+			LOGGER.info("Grabber Close");
+			grabber.close();
+		}
 
 		if (driverstation.getFloorHeightButtonPressed()) {
 			LOGGER.info("Dropping to bottom height");
@@ -168,27 +178,31 @@ public class Robot extends TimedRobot {
 			LOGGER.info("Lifting to high scale height");
 			elevator.moveToHeight(Elevator.Stops.highScale);
 		}
-
+		
 		// Ramps state machines protect against conflicts
-		if (driverstation.getDeployButtonsDown()) {
-			LOGGER.debug("Deploy Buttons down");
-			ramps.deploy();
+		if (driverstation.getClimbUp()) {
+			LOGGER.debug("Climb Up");
+			climber.climbUp();
+		} else {
+			climber.neutral();
+			LOGGER.debug("Not climbing");
 		}
 
-		if (ramps.isDeployed()) {
-			if (driverstation.getLeftRampLiftButton()) {
-				ramps.liftLeft();
-			}
-			if (driverstation.getLeftRampDropButton()) {
-				ramps.dropLeft();
-			}
-			if (driverstation.getRightRampLiftButton()) {
-				ramps.liftRight();
-			}
-			if (driverstation.getRightRampDropButton()) {
-				ramps.dropRight();
-			}
-		}
+//		
+//		if (ramps.isDeployed()) {
+//			if (driverstation.getLeftRampLiftButton()) {
+//				ramps.liftLeft();
+//			}
+//			if (driverstation.getLeftRampDropButton()) {
+//				ramps.dropLeft();
+//			}
+//			if (driverstation.getRightRampLiftButton()) {
+//				ramps.liftRight();
+//			}
+//			if (driverstation.getRightRampDropButton()) {
+//				ramps.dropRight();
+//			}
+//		}
 
 		double speed = driverstation.getArcadeSpeed();
 		double turn = driverstation.getArcadeTurn();

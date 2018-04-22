@@ -120,7 +120,7 @@ public class DriverStation467 {
 	public double getArcadeSpeed() {
 		return getDriveJoystick().getAdjustedSpeed(-driverJoy.getLeftStickY());
 	}
-
+	
 	public double getArcadeTurn() {
 		return getDriveJoystick().getAdjustedTurnSpeed();
 	}
@@ -129,10 +129,10 @@ public class DriverStation467 {
 		return getNavJoystick().getRightStickY();
 	}
 
-	public boolean getDeployButtonsDown() {
-		return getNavJoystick().down(Button.BumperLeft) && getNavJoystick().down(Button.BumperRight);
+	public boolean getClimbUp() {
+		 return getNavJoystick().getRightTrigger() > 0.9;
 	}
-
+	
 	public boolean getLeftRampLiftButton() {
 		return getNavJoystick().getPOV() == 0;
 	}
@@ -164,7 +164,11 @@ public class DriverStation467 {
 	public boolean getHighScaleHeightButtonPressed() {
 		return getNavJoystick().pressed(Button.x);
 	}
-
+	
+	public boolean getGrabberOpen() {
+		return getNavJoystick().down(Button.BumperLeft);
+	}
+	
 	public double getGrabThrottle() {
 		return getNavJoystick().getLeftStickY();
 	}

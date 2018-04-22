@@ -349,10 +349,19 @@ public class Drive extends DifferentialDrive implements AutoDrive {
 			ramp = RobotMap.ELEVATOR_LOW_DRIVE_RAMP_TIME;
 		}
 
-		// JHP HACK We can't accurately measure elevator height.
 		ramp = 0.0;
 		left.setOpenLoopRamp(ramp);
 		right.setOpenLoopRamp(ramp);
 		LOGGER.trace("Ramp time: {}", ramp);
+	}
+	
+	public void setClimberSpeed(double speed) {
+		left.set(speed);
+		right.set(speed);
+//		if (Math.abs(DriverStation467.getInstance().getClimberSpeed()) >= RobotMap.CLIMB_MIN_DRIVE_SPEED) {
+//			
+//		} else {
+//			return;
+//		}
 	}
 }
