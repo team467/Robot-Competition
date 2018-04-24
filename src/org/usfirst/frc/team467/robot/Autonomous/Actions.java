@@ -69,11 +69,12 @@ public class Actions {
 		Grabber grabber = Grabber.getInstance();
 		
 		ConcurrentActions closeGrabberAndGrab = new ConcurrentActions(
-				() -> grabber.grab());
+				() -> grabber.close(),
+				() -> grabber.grab()
+				);
 		
 		MultiCondition grabbing1secOrStopWhenHaveCube = new MultiCondition(
-				new ActionGroup.Duration(1.0),
-				() -> grabber.hasCube()
+				new ActionGroup.Duration(1.0)
 				);
 		
 		//group.addAction(openGrabber());
@@ -81,14 +82,20 @@ public class Actions {
 		
 		group.addAction( new Action(
 				"Grabbing",
-				new ActionGroup.Duration(1.0),
-				() -> grabber.grab()));
+				new ActionGroup.Duration(2.0),
+				() -> grabber.grabAndOpen()));
 		
 		group.addAction(new Action(
 				"Closing grabber on cube",
 				grabbing1secOrStopWhenHaveCube,
 				closeGrabberAndGrab
 				));
+		
+		group.addAction(new Action(
+				"Stoping Wheels",
+			new ActionGroup.Duration(1.0),
+			() -> grabber.pause()
+			));
 		return group;
 	}
 	
@@ -100,12 +107,12 @@ public class Actions {
 				() -> grabber.startGrab());
 	}
 
-	/*public static Action openGrabber() {
-		Grabber grabber = Grabber.getInstance();
-		return new Action(
-				"Opening grabber",
-				new ActionGroup.RunOnce(() -> grabber.open);
-	}*/
+//	public static Action openGrabber() {
+//		Grabber grabber = Grabber.getInstance();
+//		return new Action(
+//				"Opening grabber",
+//				new ActionGroup.RunOnce(() -> grabber.open);
+//	}
 
 	public static ActionGroup grabAndMoveLinear(double distance) {
 		ActionGroup group = new ActionGroup("grab and move Linear");
@@ -263,8 +270,8 @@ public class Actions {
 	public static ActionGroup testGrab() {
 		String actionGroupText = "Testing grab with a 2 foot move.";
 		ActionGroup mode = new ActionGroup(actionGroupText);
-		mode.addAction(elevatorToFloor());
-		mode.addActions(grabAndMoveLinear(2)); 
+		//mode.addAction(elevatorToFloor());
+		mode.addActions(grabCube()); 
 		return mode;
 	}
 

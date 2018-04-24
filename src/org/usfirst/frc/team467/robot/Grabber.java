@@ -27,7 +27,7 @@ public class Grabber {
 	private SpeedController right;
 	private boolean hadCube = false;
 	private boolean hasCube = false;
-	//private OpticalSensor os;
+	private OpticalSensor os;
 	private GrabberSolenoid rightGrab;
 	private GrabberSolenoid leftGrab;
 
@@ -39,13 +39,13 @@ public class Grabber {
 			left.setInverted(RobotMap.GRABBER_INVERT);
 			right = new Spark(RobotMap.GRABBER_R_CHANNEL);
 			right.setInverted(RobotMap.GRABBER_INVERT);
-			//os = OpticalSensor.getInstance();
+			os = OpticalSensor.getInstance();
 			leftGrab = GrabberSolenoid.getLeftInstance();
 			rightGrab = GrabberSolenoid.getRightInstance();
 		} else {
 			left = new NullSpeedController();
 			right = new NullSpeedController();
-			//os = OpticalSensor.getInstance();
+			os = OpticalSensor.getInstance();
 		}
 
 	}
@@ -76,11 +76,11 @@ public class Grabber {
 			break;
 
 		case GRAB:
-			if(hasCube()) { 
-				state = GrabberState.NEUTRAL;
-			} else {
+		//	if(hasCube()) { 
+		//		state = GrabberState.NEUTRAL;
+		//	} else {
 				speed = RobotMap.MAX_GRAB_SPEED;
-			}
+		//	}
 			break;
 
 		case NEUTRAL:
@@ -111,7 +111,16 @@ public class Grabber {
 	public void grab() {
 		//only used by auto
 		state = GrabberState.GRAB;
+	}
+	
+	public void grabAndOpen() {
+		state = GrabberState.GRAB;
 		open();
+	}
+	
+	public void  grabAndClose(){
+		state = GrabberState.GRAB;
+		close();
 	}
 
 	public void release() {
@@ -208,7 +217,7 @@ public class Grabber {
 	}
 
 	public boolean hasCube() {
-		return (!RobotMap.useSimulator && RobotMap.HAS_GRABBER); // && os.detectedTarget());
+		return (!RobotMap.useSimulator && RobotMap.HAS_GRABBER && os.detectedTarget());
 	}
 
 	public void reset() {
