@@ -3,9 +3,9 @@ package frc.robot.drive.motorcontrol.pathplanning;
 public class SplineCourseData {
     public double x;
     public double y;
-    public double yaw;
+    public double heading;
     public double k;
-    public double s;
+    public double step;
 
     public static double[] vectorize(SplineCourseData[] course, String variable) {
         double[] vector = new double[course.length];
@@ -18,15 +18,15 @@ public class SplineCourseData {
             case "y":
                 vector[i] = course[i].y;
                 break;
-            case "yaw":
-                vector[i] = course[i].yaw;
+            case "heading":
+                vector[i] = course[i].heading;
                 break;
             case "k":
                 vector[i] = course[i].k;
                 break;
-            case "s":
+            case "step":
             default:
-                vector[i] = course[i].s;
+                vector[i] = course[i].step;
                 break;
             }
         }

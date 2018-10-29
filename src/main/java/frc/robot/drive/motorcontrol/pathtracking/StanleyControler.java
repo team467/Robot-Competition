@@ -1,6 +1,7 @@
 package frc.robot.drive.motorcontrol.pathtracking;
 
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -33,11 +34,11 @@ public class StanleyControler {
     }
 
     /**
-     * Yaw (right or left twist) angle
+     * Heading angle
      */
-    private double yaw = 0.0;
-    public double yaw() {
-        return yaw;
+    private double heading = 0.0;
+    public double heading() {
+        return heading;
     }
 
     /**
@@ -47,7 +48,6 @@ public class StanleyControler {
     public double velocity() {
         return velocity;
     }
-
 
     /**
      * Control gain
@@ -102,7 +102,7 @@ public class StanleyControler {
         double initialVelocity) {
             this.fieldX = initialFieldPositionX;
             this.fieldY = initialFieldPostitionY;
-            this.yaw = initialFacing;
+            this.heading = initialFacing;
             this.velocity = initialVelocity;
     }
 
@@ -115,11 +115,11 @@ public class StanleyControler {
      */
     public void update(double acceleration, double delta) {
         delta = Utils.clip(delta, -maxSteer, maxSteer);
-        fieldX += velocity * Math.cos(yaw) * timeIncrement;
-        fieldY += velocity * Math.sin(yaw)  * timeIncrement;
-        yaw += velocity / RobotMap.WHEEL_BASE_WIDTH * Math.tan(delta) * timeIncrement;
-        yaw = Utils.normalizeAngle(yaw);
+        fieldX += velocity * Math.cos(heading) * timeIncrement;
+        fieldY += velocity * Math.sin(heading)  * timeIncrement;
         velocity += acceleration * timeIncrement;
+        heading += velocity / RobotMap.WHEEL_BASE_WIDTH * Math.tan(delta) * timeIncrement;
+        heading = Utils.normalizeAngle(heading);
     }
 
     /**
@@ -137,20 +137,20 @@ public class StanleyControler {
      *
      * @param planX
      * @param planY
-     * @param planYaw
+     * @param planHeading
      * @param indexOfLastTarget
      * @return
      */
-    public double stanleyControl(double[] planX, double[] planY, double[] planYaw, int indexOfLastTarget) {
+    public double stanleyControl(double[] planX, double[] planY, double[] planHeading, int indexOfLastTarget) {
 
-        double frontAxleError = calculateTargetIndex(planX, planY);
+        double frontAxleError = calculateTargetIndexAndFrontAxleError(planX, planY);
 
         if (indexOfLastTarget >= currentTargetIndex) {
             currentTargetIndex = indexOfLastTarget;
         }
 
         // thetaE corrects the heading error
-        double thetaE = Utils.normalizeAngle(planYaw[currentTargetIndex] - yaw);
+        double thetaE = Utils.normalizeAngle(planHeading[currentTargetIndex] - heading);
         // thetaD corrects the cross track error
         double thetaD = Math.atan2(controlGain * frontAxleError, velocity);
         // Change in steering control
@@ -166,33 +166,33 @@ public class StanleyControler {
      * @param planY
      * @return float the front axle error
      */
-    public double calculateTargetIndex(double[] planX, double[] planY) {
+    public double calculateTargetIndexAndFrontAxleError(double[] planX, double[] planY) {
         // Calculate the position of the  front axle
-        double fX = fieldX + RobotMap.WHEEL_BASE_LENGTH * Math.cos(yaw);
-        double fY = fieldY + RobotMap.WHEEL_BASE_LENGTH * Math.sin(yaw);
+        double actualXPos = fieldX + RobotMap.WHEEL_BASE_WIDTH * Math.cos(heading);
+        double actualYPos = fieldY + RobotMap.WHEEL_BASE_WIDTH * Math.sin(heading);
 
         // Search nearest point index
-        double[] dX = new double[planX.length];
+        double[] diffActualXtoPlanXs = new double[planX.length];
         for (int i=0; i < planX.length; i++) {
-            dX[i] = fX - planX[i];
+            diffActualXtoPlanXs[i] = actualXPos - planX[i];
         }
 
-        double[] dY = new double[planY.length];
+        double[] diffActualYtoPlanYs = new double[planY.length];
         for (int i=0; i < planY.length; i++) {
-            dY[i] = fY - planY[i];
+            diffActualYtoPlanYs[i] = actualYPos - planY[i];
         }
 
-        ArrayList<Double> d = new ArrayList<>();
-        for (int i = 0; i < dX.length; i++) {
-            d.add(Math.sqrt(Math.pow(dX[i], 2) + Math.pow(dY[i], 2)));
+        ArrayList<Double> lengthActualPositionToPlanPositions = new ArrayList<>();
+        for (int i = 0; i < diffActualXtoPlanXs.length; i++) {
+            lengthActualPositionToPlanPositions.add(Math.sqrt(Math.pow(diffActualXtoPlanXs[i], 2) + Math.pow(diffActualYtoPlanYs[i], 2)));
         }
 
-        frontAxleError = Collections.min(d);
+        frontAxleError = Collections.min(lengthActualPositionToPlanPositions);
 
-        currentTargetIndex = d.indexOf(frontAxleError);
+        currentTargetIndex = lengthActualPositionToPlanPositions.indexOf(frontAxleError);
 
-        double targetYaw = Utils.normalizeAngle(Math.atan2(fY - planY[currentTargetIndex], fX - planX[currentTargetIndex]) - yaw);
-        if (targetYaw > 0.0) {
+        double targetHeading = Utils.normalizeAngle(Math.atan2(actualYPos - planY[currentTargetIndex], actualXPos - planX[currentTargetIndex]) - heading);
+        if (targetHeading > 0.0) {
             frontAxleError = -frontAxleError;
         }
 
@@ -213,14 +213,21 @@ public class StanleyControler {
         SplineCourseData[] course = Spline2D.calculateSplineCourse(ax, ay, 0.1);
         double[] courseX = SplineCourseData.vectorize(course, "x");
         double[] courseY = SplineCourseData.vectorize(course, "y");
-        double[] courseYaw = SplineCourseData.vectorize(course, "yaw");
+        double[] courseHeading = SplineCourseData.vectorize(course, "heading");
+
+        DecimalFormat df = new DecimalFormat("#0.0");
+        System.out.println("x\ty\theading\tk\tstep");
+        for (SplineCourseData datum : course) {
+            System.out.println(df.format(datum.x) + "\t" + df.format(datum.y) + "\t" + df.format(Math.toDegrees(datum.heading)) + "\t" 
+                + df.format(datum.k) + "\t" + df.format(datum.step));
+        }
         // cx, cy, cyaw, ck, s = cubic_spline_planner.calc_spline_course(ax, ay, ds=0.1)
 
         double targetSpeed = 30.0 / 3.6;  // [m/s]
 
         double maxSimulationTime = 100.0;
 
-        // Initial state (x & y position, yaw, velocity)
+        // Initial state (x & y position, heading, velocity)
         StanleyControler state = new StanleyControler(-0.0, 5.0, Math.toRadians(20.0), 0.0);
 
         int lastIndex = course.length - 1;
@@ -229,24 +236,24 @@ public class StanleyControler {
         x.add(state.fieldX);
         ArrayList<Double> y = new ArrayList<Double>();
         y.add(state.fieldY);
-        ArrayList<Double> yaw = new ArrayList<Double>();
-        yaw.add(state.yaw);
+        ArrayList<Double> heading = new ArrayList<Double>();
+        heading.add(state.heading);
         ArrayList<Double> velocity = new ArrayList<Double>();
         velocity.add(state.velocity);
         ArrayList<Double> t = new ArrayList<Double>();
         t.add(0.0);
-        state.calculateTargetIndex(ax, ay);
+        state.calculateTargetIndexAndFrontAxleError(ax, ay);
         int targetIndex = state.currentTargetIndex();
 
         while (maxSimulationTime >= time && lastIndex > targetIndex) {
             double acceleration = state.pidControl(targetSpeed, state.velocity());
-            double delta = state.stanleyControl(courseX, courseY, courseYaw, targetIndex);
+            double delta = state.stanleyControl(courseX, courseY, courseHeading, targetIndex);
             targetIndex = state.currentTargetIndex();
             state.update(acceleration, delta);
             time += state.timeIncrement();
             x.add(state.fieldX());
             y.add(state.fieldY());
-            yaw.add(state.yaw());
+            heading.add(state.heading());
             velocity.add(state.velocity());
             t.add(time);
             }

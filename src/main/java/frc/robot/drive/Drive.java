@@ -9,6 +9,7 @@ import frc.robot.usercontrol.DriverStation467;
 import frc.robot.utilities.MathUtils;
 import frc.robot.RobotMap;
 import frc.robot.Autonomous.AutoDrive;
+import frc.robot.drive.motorcontrol.pathtracking.FieldPosition;
 import frc.robot.simulator.communications.RobotData;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
@@ -29,6 +30,8 @@ public class Drive extends DifferentialDrive implements AutoDrive {
 
 	private final TalonSpeedControllerGroup left;
 	private final TalonSpeedControllerGroup right;
+
+	private FieldPosition fieldState = FieldPosition.getInstance();
 	
 	double carrotLength;
 
@@ -75,6 +78,7 @@ public class Drive extends DifferentialDrive implements AutoDrive {
 				right = new TalonSpeedControllerGroup();
 			}
 			instance = new Drive(left, right);
+			instance.zero();
 
 		}
 		return instance;
@@ -170,6 +174,7 @@ public class Drive extends DifferentialDrive implements AutoDrive {
 		LOGGER.trace("Zeroed the motor sensors.");
 		left.zero();
 		right.zero();
+		fieldState.zeroSensors();
 	}
 
 	public void sendData() {
@@ -214,6 +219,7 @@ public class Drive extends DifferentialDrive implements AutoDrive {
 		left.set(ControlMode.Position, feetToTicks(leftDistance));
 		// The right motor is reversed
 		right.set(ControlMode.Position, -feetToTicks(rightDistance));
+		fieldState.update(getLeftDistance(), getRightDistance());
 	}
 
 	@Override
@@ -228,7 +234,7 @@ public class Drive extends DifferentialDrive implements AutoDrive {
 	 * PIDs and the turn PIDs, so the straight PIDs are used.
 	 * 
 	 * @param distanceInFeet the distance to move forward
-	 * @param degrees the turn distance in degrees, with clockwise hand turns as positive
+	 * @param degrees the turn distance in degrees, with counter clockwise hand turns as positive
 	 */
 	public void moveWithTurn(double distanceInFeet, double degrees) {
 		left.setPIDSlot(RobotMap.PID_SLOT_DRIVE);
@@ -237,7 +243,7 @@ public class Drive extends DifferentialDrive implements AutoDrive {
 		LOGGER.trace("Automated move of {} with {} degree turn.", distanceInFeet, degrees);
 		
 		double turnDistanceInFeet = degreesToFeet(degrees);
-		moveFeet((distanceInFeet + turnDistanceInFeet), (distanceInFeet - turnDistanceInFeet));
+		moveFeet((distanceInFeet - turnDistanceInFeet), (distanceInFeet + turnDistanceInFeet));
 	}
 	
 	/**
@@ -312,6 +318,8 @@ public class Drive extends DifferentialDrive implements AutoDrive {
 		left.set(ControlMode.Position, leftDistTicks);
 		
 		right.set(ControlMode.Position, -rightDistTicks);
+
+		fieldState.update(getLeftDistance(), getRightDistance());
 	}
 	
 	public double getLeftDistance() {
@@ -348,6 +356,31 @@ public class Drive extends DifferentialDrive implements AutoDrive {
 		double feet = (ticks / RobotMap.WHEEL_ENCODER_CODES_PER_REVOLUTION) * (RobotMap.WHEEL_CIRCUMFERENCE / 12);
 		LOGGER.trace("Ticks = {} feet = {}",ticks, feet);
 		return feet;
+	}
+
+	// This section overrides the standard Differential Drive class functions to capture the move state
+
+	public void arcadeDrive(double xSpeed, double zRotation) {
+		this.arcadeDrive(xSpeed, zRotation, true);
+	}
+
+	public void arcadeDrive(double xSpeed, double zRotation, boolean squaredInputs) {
+		super.arcadeDrive(xSpeed, zRotation, squaredInputs);
+		fieldState.update(this.getLeftDistance(), this.getRightDistance());
+	}
+
+	public void tankDrive(double leftSpeed, double rightSpeed) {
+		this.tankDrive(leftSpeed, rightSpeed, true);
+	}
+
+	public void tankDrive(double leftSpeed, double rightSpeed, boolean squaredInputs) {
+		super.tankDrive(leftSpeed, rightSpeed, squaredInputs);
+		fieldState.update(this.getLeftDistance(), this.getRightDistance());
+	}
+
+	public void curvatureDrive(double xSpeed, double zRotation, boolean isQuickTurn) {
+		super.curvatureDrive(xSpeed, zRotation, isQuickTurn);
+		fieldState.update(this.getLeftDistance(), this.getRightDistance());
 	}
 
 	/**

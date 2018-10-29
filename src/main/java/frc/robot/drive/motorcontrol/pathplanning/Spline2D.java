@@ -71,7 +71,7 @@ public class Spline2D {
         return curvature;
     }
 
-    private double calculateYaw(double point) throws OutOfRangeException {
+    private double calculateHeading(double point) throws OutOfRangeException {
         double firstDerivativeX = splineX.calculateFirstDerivative(point);
         double firstDerivativeY = splineY.calculateFirstDerivative(point);
         double yaw = Math.atan2(firstDerivativeY, firstDerivativeX);
@@ -91,9 +91,9 @@ public class Spline2D {
             courseData[i] = new SplineCourseData();
             courseData[i].x = xy[0];
             courseData[i].y = xy[1];
-            courseData[i].yaw = spline.calculateYaw(s[i]);
+            courseData[i].heading = spline.calculateHeading(s[i]);
             courseData[i].k = spline.calculateCurvature(s[i]);
-            courseData[i].s = s[i];
+            courseData[i].step = s[i];
         }
 
 
@@ -103,8 +103,6 @@ public class Spline2D {
     public static void test2dSpline() {
 
         System.out.println("Spline 2D Test");
-        // double[] x = {-2.5,  0.0};
-        // double[] y = { 0.7, -6.0};
         double[] x = {-2.5,  0.0, 2.5, 5.0, 7.5, 3.0, -1.0};
         double[] y = { 0.7, -6.0, 5.0, 6.5, 0.0, 5.0, -2.0};
         double step = 0.1; // [m] distance of each intepolated points
@@ -120,9 +118,9 @@ public class Spline2D {
         for (int i = 0; i < course.length; i++) {
             rx[i] = course[i].x;
             ry[i] = course[i].y;
-            ryaw[i] = Math.toDegrees(course[i].yaw);
+            ryaw[i] = Math.toDegrees(course[i].heading);
             rk[i] = course[i].k;
-            s[i] = course[i].s;
+            s[i] = course[i].step;
         }
 
         Plot plt1 = Plot.create();

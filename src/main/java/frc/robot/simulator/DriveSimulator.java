@@ -10,10 +10,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import frc.robot.RobotMap;
 import frc.robot.Autonomous.AutoDrive;
-import frc.robot.RobotMap.RobotID;
 import frc.robot.simulator.communications.RobotData;
-
-import com.ctre.phoenix.motorcontrol.ControlMode;
 
 /**
  * Simulates the motors driving. Will be replaced by a simulated motor eventually.
