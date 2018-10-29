@@ -17,6 +17,7 @@ import frc.robot.Autonomous.MatchConfiguration;
 import frc.robot.vision.VisionProcessing;
 import frc.robot.RobotMap.RobotID;
 import frc.robot.drive.Drive;
+import frc.robot.drive.motorcontrol.TestMotorControl;
 import frc.robot.gamepieces.Climber;
 import frc.robot.gamepieces.Elevator;
 import frc.robot.gamepieces.Grabber;
@@ -104,26 +105,29 @@ public class Robot extends TimedRobot {
 
 	double tuningValue = 0.0;
 
+	TestMotorControl testMotorControl;
 	public void testInit() {
 		LOGGER.info("Init Test");
+		testMotorControl = new TestMotorControl();
 		drive.setPIDSFromRobotMap();
 		driverstation.readInputs();
-		tuningValue = Double.parseDouble(SmartDashboard.getString("DB/String 0", "0.0"));
-		LOGGER.info("Tuning Value: " + tuningValue);
-		if (tuningValue <= 30.0 && tuningValue >= -30.0) {
-			drive.readPIDSFromSmartDashboard(RobotMap.PID_SLOT_DRIVE);
-		} else {
-			drive.readPIDSFromSmartDashboard(RobotMap.PID_SLOT_TURN);
-		}
+		// tuningValue = Double.parseDouble(SmartDashboard.getString("DB/String 0", "0.0"));
+		// LOGGER.info("Tuning Value: " + tuningValue);
+		// if (tuningValue <= 30.0 && tuningValue >= -30.0) {
+		// 	drive.readPIDSFromSmartDashboard(RobotMap.PID_SLOT_DRIVE);
+		// } else {
+		// 	drive.readPIDSFromSmartDashboard(RobotMap.PID_SLOT_TURN);
+		// }
 		drive.zero();
 	}
 
 	public void testPeriodic() {
-		if (tuningValue <= 30.0 && tuningValue >= -30.0) {
-			drive.tuneForward(tuningValue, RobotMap.PID_SLOT_DRIVE);
-		} else {
-			drive.tuneTurn(tuningValue, RobotMap.PID_SLOT_TURN);
-		}
+		// if (tuningValue <= 30.0 && tuningValue >= -30.0) {
+		// 	drive.tuneForward(tuningValue, RobotMap.PID_SLOT_DRIVE);
+		// } else {
+		// 	drive.tuneTurn(tuningValue, RobotMap.PID_SLOT_TURN);
+		// }
+		testMotorControl.periodic();
 		drive.logClosedLoopErrors();
 	}
 
