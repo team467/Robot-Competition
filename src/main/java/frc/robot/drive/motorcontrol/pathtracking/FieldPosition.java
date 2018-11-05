@@ -135,7 +135,7 @@ public class FieldPosition {
 
             heading = newHeading;
         }
-        double width = Math.sqrt(Math.pow((rightX - leftX), 2) + Math.pow((rightY - leftY), 2));
+        // double width = Math.sqrt(Math.pow((rightX - leftX), 2) + Math.pow((rightY - leftY), 2));
         // System.out.println("Width : " + df.format(width));
         // System.out.println();
 

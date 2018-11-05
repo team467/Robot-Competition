@@ -5,11 +5,11 @@ package frc.robot.simulator;
 
 import java.text.DecimalFormat;
 
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
 import frc.robot.RobotMap;
-import frc.robot.Autonomous.AutoDrive;
+import frc.robot.drive.AutoDrive;
 import frc.robot.simulator.communications.RobotData;
 
 /**
@@ -69,6 +69,22 @@ public class DriveSimulator implements AutoDrive {
 			percentOfMaxSpeed = 1;
 		}
 		maxFeetPerPeriod = RobotMap.WHEEL_CIRCUMFERENCE / 12 * percentOfMaxSpeed * MAX_RPM / 60 / 1000;
+	}
+
+	/**
+	 * This is used for testing the new controllers. It cannot use both the straight
+	 * PIDs and the turn PIDs, so the straight PIDs are used.
+	 * 
+	 * @param distanceInFeet the distance to move forward
+	 * @param degrees the turn distance in degrees, with counter clockwise hand turns as positive
+	 */
+	@Override
+	public void moveWithTurn(double distanceInFeet, double degrees) {
+
+		LOGGER.trace("Simulated automated move of {} with {} degree turn.", distanceInFeet, degrees);
+		
+		double turnDistanceInFeet = degreesToFeet(degrees);
+		moveFeet((distanceInFeet - turnDistanceInFeet), (distanceInFeet + turnDistanceInFeet));
 	}
 
 	@Override

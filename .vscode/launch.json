@@ -6,24 +6,24 @@
   "configurations": [
     {
       "type": "java",
-      "name": "CodeLens (Launch) - StanleyControler",
+      "name": "CodeLens (Launch) - Map",
       "request": "launch",
       "cwd": "${workspaceFolder}",
       "console": "internalConsole",
       "stopOnEntry": false,
-      "mainClass": "frc.robot.drive.motorcontrol.pathtracking.StanleyControler",
+      "mainClass": "frc.robot.simulator.gui.Map",
       "args": "",
       "projectName": "Robot2019-Competition"
     },
     {
       "type": "java",
-      "name": "CodeLens (Launch) - FieldPosition",
+      "name": "CodeLens (Launch) - Main",
       "request": "launch",
       "cwd": "${workspaceFolder}",
       "console": "internalConsole",
       "stopOnEntry": false,
-      "mainClass": "frc.robot.drive.motorcontrol.pathtracking.FieldPosition",
-      "args": "",
+      "mainClass": "frc.robot.simulator.gui.Main",
+      "args": "--add-modules', 'javafx.controls",
       "projectName": "Robot2019-Competition"
     },
     {

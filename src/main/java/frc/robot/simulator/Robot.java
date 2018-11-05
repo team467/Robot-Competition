@@ -7,6 +7,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import frc.robot.RobotMap;
 import frc.robot.RobotMap.RobotID;
+import frc.robot.drive.motorcontrol.TestMotorControl;
 import frc.robot.Autonomous.ActionGroup;
 import frc.robot.Autonomous.MatchConfiguration;
 import frc.robot.simulator.communications.RobotData;
@@ -28,6 +29,8 @@ public class Robot {
 	RobotData data;
 
 	ActionGroup autonomous;
+
+	TestMotorControl testMotorControl;
 
 	private MatchConfiguration matchConfig;
 
@@ -60,9 +63,12 @@ public class Robot {
 	 * Right: (21.58, 0)
 	 */
 	public void autonomousInit() {
+		LOGGER.info("Init Test");
+
 		drive.zero();
 		matchConfig.load();
 		
+		testMotorControl = new TestMotorControl();
 		if (SimulatedData.autoMode.startsWith("Left")) {
 			data.startingLocation(2.5, 0);
 		} else if (SimulatedData.autoMode.startsWith("Center")) {
@@ -76,6 +82,8 @@ public class Robot {
 	}
 
 	public void autonomousPeriodic() {
-		autonomous.run();
+//		autonomous.run();
+		testMotorControl.periodic();
 	}
+
 }

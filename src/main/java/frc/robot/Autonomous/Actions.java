@@ -2,6 +2,8 @@ package frc.robot.Autonomous;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import frc.robot.drive.AutoDrive;
 import frc.robot.drive.Drive;
 import frc.robot.gamepieces.Elevator;
 import frc.robot.gamepieces.Grabber;

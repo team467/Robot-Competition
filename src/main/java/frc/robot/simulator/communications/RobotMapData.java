@@ -65,18 +65,20 @@ public class RobotMapData implements Serializable, Cloneable {
 	 * Puts the data onto the network table.
 	 */
 	public void send(NetworkTable table) {
-		table.getEntry("/startingLocation/x").setDouble(startingLocation.x);
-		table.getEntry("/startingLocation/y").setDouble(startingLocation.y);
-		table.getEntry("/rightDistance").setDouble(rightPosition);
-		table.getEntry("/leftDistance").setDouble(leftPosition);
-		table.getEntry("/isZeroed").setBoolean(isZeroed);
-		table.getEntry("/headingAngle").setDouble(headingAngle);
-		table.getEntry("/elevatorHeight").setDouble(elevatorHeight);
-		table.getEntry("/grabberHasCube").setBoolean(grabberHasCube);
-		table.getEntry("/visionSeesCube").setBoolean(visionSeesCube);
-		table.getEntry("/cubeMinDistance").setDouble(cubeMinDistance);
-		table.getEntry("/cubeMaxDistance").setDouble(cubeMaxDistance);
-		table.getEntry("/angleToCube").setDouble(angleToCube);
+		if (table != null) {
+			table.getEntry("/startingLocation/x").setDouble(startingLocation.x);
+			table.getEntry("/startingLocation/y").setDouble(startingLocation.y);
+			table.getEntry("/rightDistance").setDouble(rightPosition);
+			table.getEntry("/leftDistance").setDouble(leftPosition);
+			table.getEntry("/isZeroed").setBoolean(isZeroed);
+			table.getEntry("/headingAngle").setDouble(headingAngle);
+			table.getEntry("/elevatorHeight").setDouble(elevatorHeight);
+			table.getEntry("/grabberHasCube").setBoolean(grabberHasCube);
+			table.getEntry("/visionSeesCube").setBoolean(visionSeesCube);
+			table.getEntry("/cubeMinDistance").setDouble(cubeMinDistance);
+			table.getEntry("/cubeMaxDistance").setDouble(cubeMaxDistance);
+			table.getEntry("/angleToCube").setDouble(angleToCube);
+		}
 	}
 	
 	/**

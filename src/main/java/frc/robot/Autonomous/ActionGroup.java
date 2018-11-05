@@ -7,6 +7,8 @@ import java.util.NoSuchElementException;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import frc.robot.drive.AutoDrive;
 import frc.robot.drive.Drive;
 import frc.robot.RobotMap;
 import frc.robot.Autonomous.Action.Activity;

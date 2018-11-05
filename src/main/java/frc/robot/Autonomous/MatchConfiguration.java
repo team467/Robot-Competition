@@ -54,9 +54,10 @@ public class MatchConfiguration {
 		blueSwitch = Side.UNKNOWN;
 		scale = Side.UNKNOWN;
 
-		NetworkTableInstance tableInstance = NetworkTableInstance.getDefault();
-		NetworkTable table  = tableInstance.getTable("SmartDashboard");
-		table.getEntry("Auto List").setStringArray(autoList);
+		// TODO: Fix when we figure out how to load native WPI lib modules
+		// NetworkTableInstance tableInstance = NetworkTableInstance.getDefault();
+		// NetworkTable table  = tableInstance.getTable("SmartDashboard");
+		// table.getEntry("Auto List").setStringArray(autoList);
 	}
 
 	public static MatchConfiguration getInstance() {

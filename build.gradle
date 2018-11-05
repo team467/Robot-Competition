@@ -1,23 +1,42 @@
-plugins {
-    id "java"
-    id "edu.wpi.first.GradleRIO" version "2019.0.0-alpha-3"
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.google.gradle:osdetector-gradle-plugin:1.6.0'
+    }
 }
 
-def ROBOT_CLASS = "frc.robot.Robot"
+plugins {
+    id "java"
+    id "edu.wpi.first.GradleRIO" version "2019.1.1-beta-1"
+}
+
+apply plugin: 'application'
+apply plugin: 'com.google.osdetector'
+
+
+ext.platform = osdetector.os == 'osx' ? 'mac' : osdetector.os == 'windows' ? 'win' : osdetector.os
 
 // Need to add repositories to gather standard java libraries such as Apache
 repositories {
     jcenter()
     mavenCentral()
     google()
+    gradlePluginPortal()
     maven { url "https://jitpack.io" } // Allows the addition of Github projects as dependencies
+    maven { url "http://first.wpi.edu/FRC/roborio/maven/development" }
+//    maven { url "http://first.wpi.edu/FRC/roborio/maven/release/" }
+    maven { url "http://devsite.ctr-electronics.com/maven/release/" }
 }
+
+def ROBOT_MAIN_CLASS = "frc.robot.Robot"
 
 // Define my targets (RoboRIO) and artifacts (deployable files)
 // This is added by GradleRIO's backing project EmbeddedTools.
 deploy {
     targets {
-        target("roborio", edu.wpi.first.gradlerio.frc.RoboRIO) {
+        roboRIO("roborio") {
             // Team number is loaded either from the .wpilib/wpilib_preferences.json
             // or from command line. If not found an exception will be thrown.
             // You can use getTeamOrDefault(team) instead of getTeamNumber if you
@@ -26,26 +45,53 @@ deploy {
         }
     }
     artifacts {
-        artifact('frcJava', edu.wpi.first.gradlerio.frc.FRCJavaArtifact) {
+        frcJavaArtifact('frcJava') {
             targets << "roborio"
             // Debug can be overridden by command line, for use with VSCode
             debug = getDebugOrDefault(false)
         }
+        // Built in artifact to deploy arbitrary files to the roboRIO.
+        fileTreeArtifact('frcStaticFileDeploy') {
+            // The directory below is the local directory to deploy
+            files = fileTree(dir: 'src/main/deploy')
+            // Deploy to RoboRIO target, into /home/lvuser/deploy
+            targets << "roborio"
+            directory = '/home/lvuser/deploy'
+        }
     }
 }
 
-// Defining my dependencies. In this case, WPILib (+ friends), CTRE Toolsuite (Talon SRX)
-// and NavX.
+// Defining my dependencies. In this case, WPILib (+ friends), and vendor libraries.
+// Also defines JUnit 4.
 dependencies {
     compile wpilib()
-    compile ctre()
-    compile navx()
+    compile javaVendorLibraries()
+    nativeZip jniRoboRIOVendorLibraries()
+    nativeDesktopZip jniDesktopVendorLibraries()
+    testCompile 'junit:junit:4.12'
+
+    // Had to manually load for now. Expect WPILIB to add auomatic handling
+    compile group: 'com.ctre.phoenix', name: 'wpiapi-java', version: '5.9.2'
+    compile group: 'com.ctre.phoenix', name: 'core', version: '5.9.2'
+    compile group: 'com.ctre.phoenix', name: 'api-java', version: '5.9.2'
 
     compile group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.3'
     compile group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.3'
 
     // https://mvnrepository.com/artifact/org.apache.commons/commons-math3
     compile group: 'org.apache.commons', name: 'commons-math3', version: '3.6.1'
+
+    compile "org.openjfx:javafx-base:11:$platform"
+    compile "org.openjfx:javafx-graphics:11:$platform"
+    compile "org.openjfx:javafx-controls:11:$platform"
+    compile "org.openjfx:javafx-fxml:11:$platform"
+    
+    // // OpenCV
+    // https://mvnrepository.com/artifact/org.bytedeco/javacpp
+    compile group: 'org.bytedeco', name: 'javacpp', version: '1.4.3'
+    compile group: 'org.bytedeco', name: 'javacv', version: '1.4.3'
+    compile group: 'org.bytedeco.javacpp-presets', name: 'opencv', version: '3.4.3-1.4.3'
+    compile group: 'org.bytedeco.javacpp-presets', name: 'ffmpeg', version: '4.0.2-1.4.3'
 
     compile 'com.github.sh0nk:matplotlib4j:0.4.0'
 }
@@ -54,17 +100,31 @@ dependencies {
 // in order to make them all available at runtime. Also adding the manifest so WPILib
 // knows where to look for our Robot Class.
 jar {
-    from configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
-    manifest edu.wpi.first.gradlerio.GradleRIOPlugin.javaManifest(ROBOT_CLASS)
-}
-
-// Force Java 8 Compatibility mode for deployed code, in case the develoment
-// system is using Java 10.
-compileJava {
-    sourceCompatibility = 1.8
-    targetCompatibility = 1.8
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    manifest edu.wpi.first.gradlerio.GradleRIOPlugin.javaManifest(ROBOT_MAIN_CLASS)
 }
 
 wrapper {
     gradleVersion = '4.9'
 }
+
+compileJava {
+    doFirst {
+        options.compilerArgs = [
+                '--module-path', classpath.asPath,
+                '--add-modules', 'javafx.controls'
+        ]
+    }
+}
+
+run {
+    doFirst {
+        jvmArgs = [
+                '--module-path', classpath.asPath,
+                '--add-modules', 'javafx.controls'
+        ]
+    }
+}
+
+mainClassName = 'frc.robot.simulator.gui.Map'
+

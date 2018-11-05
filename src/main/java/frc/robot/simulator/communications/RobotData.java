@@ -34,9 +34,10 @@ public class RobotData {
 	
 	private static RobotData instance = null;
 	
-	private RobotData() {		
-		tableInstance = NetworkTableInstance.getDefault();
-		table = tableInstance.getTable("datatable").getSubTable("/robotmapdata");
+	private RobotData() {
+		// TODO: Fix when we figure out how to load native WPI lib modules
+		// tableInstance = NetworkTableInstance.getDefault();
+		// table = tableInstance.getTable("datatable").getSubTable("/robotmapdata");
 		
 		dataRow = new RobotMapData();
 		isZeroed = false;

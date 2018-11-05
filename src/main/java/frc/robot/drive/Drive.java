@@ -2,18 +2,17 @@ package frc.robot.drive;
 
 import java.text.DecimalFormat;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import frc.robot.usercontrol.DriverStation467;
 import frc.robot.utilities.MathUtils;
 import frc.robot.RobotMap;
-import frc.robot.Autonomous.AutoDrive;
 import frc.robot.drive.motorcontrol.pathtracking.FieldPosition;
 import frc.robot.simulator.communications.RobotData;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
