@@ -6,6 +6,28 @@
   "configurations": [
     {
       "type": "java",
+      "name": "CodeLens (Launch) - StanleyControler",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "console": "internalConsole",
+      "stopOnEntry": false,
+      "mainClass": "frc.robot.drive.motorcontrol.pathtracking.StanleyControler",
+      "args": "",
+      "projectName": "Robot2019-Competition"
+    },
+    {
+      "type": "java",
+      "name": "CodeLens (Launch) - Spline2D",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "console": "internalConsole",
+      "stopOnEntry": false,
+      "mainClass": "frc.robot.drive.motorcontrol.pathplanning.Spline2D",
+      "args": "",
+      "projectName": "Robot2019-Competition"
+    },
+    {
+      "type": "java",
       "name": "CodeLens (Launch) - Map",
       "request": "launch",
       "cwd": "${workspaceFolder}",

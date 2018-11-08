@@ -13,6 +13,13 @@ public class FieldPosition {
 
     	// Single instance of this class
 	private static FieldPosition instance = null;
+    public static FieldPosition getInstance() {
+        if (instance == null) {
+            instance = new FieldPosition();
+        }
+        return instance;
+    }
+
 
     private static double RADIUS = RobotMap.WHEEL_BASE_WIDTH / 2;
 
@@ -24,7 +31,7 @@ public class FieldPosition {
     private double x = 0.0;
     public double x() { return x; }
     private double y = 0.0;
-    public double y() { return x; }
+    public double y() { return y; }
     private double heading = 0.0;
     public double heading() { return heading; }
     private double changeInHeading = 0.0;
@@ -47,13 +54,6 @@ public class FieldPosition {
     private double lastLeftSensorReading = 0.0;
 
     private double lastRightSensorReading = 0.0;
-
-    public static FieldPosition getInstance() {
-        if (instance == null) {
-            instance = new FieldPosition();
-        }
-        return instance;
-    }
 
     public FieldPosition() {
         heading = Math.toRadians(90.0);
@@ -103,26 +103,33 @@ public class FieldPosition {
 
         double leftMove = (leftSensorReading - lastLeftSensorReading);
         double rightMove = (rightSensorReading - lastRightSensorReading);
+        System.out.println("Prev Readings (Left, Right): " + df.format(lastLeftSensorReading) + ", " + df.format(lastRightSensorReading));
+        System.out.println("Current Reading (Left, Right): " + df.format(leftSensorReading) + ", " + df.format(rightSensorReading));
+
+        // Normalize to + or - 180 degrees
         changeInHeading = Utils.normalizeAngle((rightMove - leftMove) / (2 * RADIUS));
-        // System.out.println("Change in Heading: " + df.format(Math.toDegrees(changeInHeading)));
-        // System.out.println("Original Position: (" + df.format(leftX) + ", " + df.format(leftY) + "), (" + df.format(rightX) + ", " + df.format(rightY) + ")" );
+        // Round to a single tick
+        changeInHeading = (double) Math.round(changeInHeading * RobotMap.WHEEL_ENCODER_CODES_PER_REVOLUTION) / (double) RobotMap.WHEEL_ENCODER_CODES_PER_REVOLUTION;
+
+        //         System.out.println("Change in Heading: " + df.format(Math.toDegrees(changeInHeading)));
+         System.out.println("Original Position: (" + df.format(leftX) + ", " + df.format(leftY) + "), (" + df.format(rightX) + ", " + df.format(rightY) + ")" );
 
         double currentVelocity = (leftMove + rightMove) / (2*period); // inches per ms
         accelleration = (currentVelocity - velocity) / period;
         // System.out.println("Previous Velocity: " + df.format(1000/12*velocity) + " Velocity: " + df.format(1000/12*currentVelocity) + " Accelleration: " + df.format(1000/12*accelleration) + " period " + period);
 
         if (changeInHeading == 0) {
-            leftX = leftX - leftMove * Math.cos(heading + leftWheelPosition);
-            leftY = leftY - leftMove * Math.sin(heading + leftWheelPosition);
-            rightX = rightX + leftMove * Math.cos(heading + rightWheelPosition);
-            rightY = rightY + leftMove * Math.sin(heading + rightWheelPosition);
+            leftX = leftX - leftMove * Math.sin(heading + leftWheelPosition);
+            leftY = leftY - leftMove * Math.cos(heading + leftWheelPosition);
+            rightX = rightX + rightMove * Math.sin(heading + rightWheelPosition);
+            rightY = rightY + rightMove * Math.cos(heading + rightWheelPosition);
         } else {
             double newHeading = heading + changeInHeading;
             double turnRadius = leftMove / changeInHeading;
             double centerX = leftX + Math.cos(heading + leftWheelPosition) * turnRadius;
             double centerY = leftY + Math.sin(heading + leftWheelPosition) * turnRadius;;
             leftX = centerX - turnRadius * Math.cos(newHeading + leftWheelPosition);
-            leftY = centerY - turnRadius * Math.sin(newHeading + leftWheelPosition);
+            leftY = centerY - turnRadius * Math.cos(newHeading + leftWheelPosition);
             // System.out.println("Left Turn Circle: center = (" + df.format(centerX) + ", " + df.format(centerY) + ") radius = " + df.format(turnRadius));
     
             turnRadius = rightMove / changeInHeading;

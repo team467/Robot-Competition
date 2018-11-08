@@ -24,9 +24,9 @@ public class TestMotorControl {
         controller = new PathCorrection();
 
         // Target course waypoints
-        double[] ax = {0.0, 2.0};
-        double[] ay = {0.0, 2.0};
-        double stepSize = 0.1;
+        double[] ax = {0.0, 0.0};
+        double[] ay = {0.0, 3.0};
+        double stepSize = 1.0;
 
         //splineFunction
         course = Spline2D.calculateSplineCourse(ax, ay, stepSize);
@@ -35,7 +35,7 @@ public class TestMotorControl {
 
     public void periodic() {
         controller.stanleyControl();
-        System.out.println(state);
+//        System.out.println(state);
     }
 
 }

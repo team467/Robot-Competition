@@ -10,6 +10,7 @@ import org.apache.logging.log4j.Logger;
 
 import frc.robot.RobotMap;
 import frc.robot.drive.AutoDrive;
+import frc.robot.drive.motorcontrol.pathtracking.FieldPosition;
 import frc.robot.simulator.communications.RobotData;
 
 /**
@@ -24,6 +25,7 @@ public class DriveSimulator implements AutoDrive {
 	private double maxFeetPerPeriod; // Period is 20 ms
 
 	RobotData data = RobotData.getInstance();
+	FieldPosition fieldPosition = FieldPosition.getInstance();
 
 	Logger LOGGER = LogManager.getLogger(DriveSimulator.class);
 
@@ -35,7 +37,7 @@ public class DriveSimulator implements AutoDrive {
 	private boolean isMoving = false;
 
 	private DriveSimulator() {
-		maxFeetPerPeriod = RobotMap.WHEEL_CIRCUMFERENCE / 12 * MAX_RPM / 60 / 5000; // actually 60/500
+		maxFeetPerPeriod = 0.1;// RobotMap.WHEEL_CIRCUMFERENCE / 12 * MAX_RPM / 60 / 5000; // actually 60/500
 		zero();
 	}
 
@@ -52,6 +54,7 @@ public class DriveSimulator implements AutoDrive {
 		leftPositionReading = 0;
 		isMoving = false;
 		data.zero();
+		fieldPosition.zeroSensors();
 	}
 
 	public double rightPosition() {
@@ -81,7 +84,8 @@ public class DriveSimulator implements AutoDrive {
 	@Override
 	public void moveWithTurn(double distanceInFeet, double degrees) {
 
-		LOGGER.trace("Simulated automated move of {} with {} degree turn.", distanceInFeet, degrees);
+		LOGGER.trace("Simulated automated move of {} with {} degree turn.", df.format(distanceInFeet), df.format(degrees));
+		System.out.println("Simulated automated move of " + df.format(distanceInFeet) + " with " + df.format(degrees) + " degree turn.");
 		
 		double turnDistanceInFeet = degreesToFeet(degrees);
 		moveFeet((distanceInFeet - turnDistanceInFeet), (distanceInFeet + turnDistanceInFeet));
@@ -122,11 +126,19 @@ public class DriveSimulator implements AutoDrive {
 			rightPositionReading = rightDistance;
 		}
 
+		// Round to the Ticks per revolution
+		leftPositionReading = (double) Math.round(leftPositionReading * RobotMap.WHEEL_ENCODER_CODES_PER_REVOLUTION) / (double) RobotMap.WHEEL_ENCODER_CODES_PER_REVOLUTION;
+		rightPositionReading = (double) Math.round(rightPositionReading * RobotMap.WHEEL_ENCODER_CODES_PER_REVOLUTION) / (double) RobotMap.WHEEL_ENCODER_CODES_PER_REVOLUTION;
+
 		LOGGER.debug("Left Target: {} Right Target: {}", df.format(leftDistance), df.format(rightDistance));
 		LOGGER.debug("Left Move: {}", df.format(leftPositionReading) 
 				+ " Right Move: {}", df.format(rightPositionReading));
 
+		System.out.println("Left Target: " + df.format(leftDistance) + " Right Target: " + df.format(rightDistance));
+		System.out.println("Left Move: " + df.format(leftPositionReading) + " Right Move: " +  df.format(rightPositionReading));
+
 		data.updateDrivePosition(rightPosition(), leftPosition());
+		fieldPosition.update(leftPositionReading, rightPositionReading);
 
 	}
 
