@@ -6,6 +6,39 @@
   "configurations": [
     {
       "type": "java",
+      "name": "CodeLens (Launch) - TestRunner",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "console": "internalConsole",
+      "stopOnEntry": false,
+      "mainClass": "frc.robot.TestRunner",
+      "args": "",
+      "projectName": "Robot2019-Competition"
+    },
+    {
+      "type": "java",
+      "name": "CodeLens (Launch) - TestRunner",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "console": "internalConsole",
+      "stopOnEntry": false,
+      "mainClass": "TestRunner",
+      "args": "",
+      "projectName": "Robot2019-Competition"
+    },
+    {
+      "type": "java",
+      "name": "CodeLens (Launch) - FieldPosition",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "console": "internalConsole",
+      "stopOnEntry": false,
+      "mainClass": "frc.robot.drive.motorcontrol.pathtracking.FieldPosition",
+      "args": "",
+      "projectName": "Robot2019-Competition"
+    },
+    {
+      "type": "java",
       "name": "CodeLens (Launch) - StanleyControler",
       "request": "launch",
       "cwd": "${workspaceFolder}",
