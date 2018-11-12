@@ -1,6 +1,5 @@
 package frc.robot.drive.motorcontrol.pathtracking;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -19,7 +18,7 @@ public class PathCorrection {
     
     private FieldPosition fieldState = FieldPosition.getInstance();
 
-    private DecimalFormat df = new DecimalFormat("#0.0");
+//    private DecimalFormat df = new DecimalFormat("#0.0");
 
     /**
      * Maximum steering angle of the vehicle in radians
@@ -52,11 +51,11 @@ public class PathCorrection {
         planHeading = SplineCourseData.vectorize(course, "heading");
         targetIndex = -1;
 
-        System.out.print("Course: { ");
-        for (int i = 1; i < planX.length; i++) {
-            System.out.print("(" + df.format(planX[i]) + ", " + df.format(planY[i]) + "), ");
-        }
-        System.out.println(" }");
+        // System.out.print("Course: { ");
+        // for (int i = 1; i < planX.length; i++) {
+        //     System.out.print("(" + df.format(planX[i]) + ", " + df.format(planY[i]) + "), ");
+        // }
+        // System.out.println(" }");
     }
 
 
@@ -94,7 +93,7 @@ public class PathCorrection {
 //            System.out.println("Y -- Current: " + fieldState.y() + " Plan: " + planY[i] + " Diff: " + diffActualYtoPlanYs[i]);
         }
 
-        ArrayList<Double> lengthActualPositionToPlanPositions = new ArrayList<>();
+        ArrayList<Double> lengthActualPositionToPlanPositions = new ArrayList<Double>();
         for (int i = 0; i < diffActualXtoPlanXs.length; i++) {
             double distanceToWaypoint = Math.sqrt(Math.pow(diffActualXtoPlanXs[i], 2) + Math.pow(diffActualYtoPlanYs[i], 2));
             lengthActualPositionToPlanPositions.add(distanceToWaypoint);
