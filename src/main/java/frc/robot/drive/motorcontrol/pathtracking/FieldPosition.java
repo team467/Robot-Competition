@@ -55,7 +55,7 @@ public class FieldPosition {
 
     private double lastRightSensorReading = 0.0;
 
-    public FieldPosition() {
+    private FieldPosition() {
         heading = Math.toRadians(90.0);
         changeInHeading = 0.0;
         x = 0.0;
@@ -71,7 +71,7 @@ public class FieldPosition {
         baseTime = timestamp = System.currentTimeMillis();
     }
 
-    public void init(
+    public FieldPosition init(
         double initialXPosition, 
         double initialYPosition, 
         double initialHeading, 
@@ -90,21 +90,24 @@ public class FieldPosition {
         lastLeftSensorReading = leftSensorReading;
         lastRightSensorReading = rightSensorReading;
         baseTime = timestamp = System.currentTimeMillis();
+        return this;
     }
 
-    public void zeroSensors() {
+    public FieldPosition zeroSensors() {
         this.lastLeftSensorReading = 0.0;
         this.lastRightSensorReading = 0.0;
+        return this;
     }
 
-    public void update(double leftSensorReading, double rightSensorReading) {
+    public FieldPosition update(double leftSensorReading, double rightSensorReading) {
         long currentTime = System.currentTimeMillis();
         double period = (currentTime - timestamp);
 
         double leftMove = (leftSensorReading - lastLeftSensorReading);
         double rightMove = (rightSensorReading - lastRightSensorReading);
-        System.out.println("Prev Readings (Left, Right): " + df.format(lastLeftSensorReading) + ", " + df.format(lastRightSensorReading));
-        System.out.println("Current Reading (Left, Right): " + df.format(leftSensorReading) + ", " + df.format(rightSensorReading));
+        // System.out.println("Original Position: (" + df.format(leftX) + ", " + df.format(leftY) + "), (" + df.format(rightX) + ", " + df.format(rightY) + ")" );
+        // System.out.println("Prev Readings (Left, Right): " + df.format(lastLeftSensorReading) + ", " + df.format(lastRightSensorReading));
+        // System.out.println("Current Reading (Left, Right): " + df.format(leftSensorReading) + ", " + df.format(rightSensorReading));
 
         // Normalize to + or - 180 degrees
         changeInHeading = Utils.normalizeAngle((rightMove - leftMove) / (2 * RADIUS));
@@ -112,25 +115,24 @@ public class FieldPosition {
         changeInHeading = (double) Math.round(changeInHeading * RobotMap.WHEEL_ENCODER_CODES_PER_REVOLUTION) / (double) RobotMap.WHEEL_ENCODER_CODES_PER_REVOLUTION;
 
         //         System.out.println("Change in Heading: " + df.format(Math.toDegrees(changeInHeading)));
-         System.out.println("Original Position: (" + df.format(leftX) + ", " + df.format(leftY) + "), (" + df.format(rightX) + ", " + df.format(rightY) + ")" );
 
         double currentVelocity = (leftMove + rightMove) / (2*period); // inches per ms
         accelleration = (currentVelocity - velocity) / period;
         // System.out.println("Previous Velocity: " + df.format(1000/12*velocity) + " Velocity: " + df.format(1000/12*currentVelocity) + " Accelleration: " + df.format(1000/12*accelleration) + " period " + period);
 
         if (changeInHeading == 0) {
-            leftX = leftX - leftMove * Math.sin(heading + leftWheelPosition);
-            leftY = leftY - leftMove * Math.cos(heading + leftWheelPosition);
-            rightX = rightX + rightMove * Math.sin(heading + rightWheelPosition);
-            rightY = rightY + rightMove * Math.cos(heading + rightWheelPosition);
+            leftX = leftX + leftMove * Math.cos(heading);
+            leftY = leftY + leftMove * Math.sin(heading);
+            rightX = rightX + rightMove * Math.cos(heading);
+            rightY = rightY + rightMove * Math.sin(heading);
         } else {
             double newHeading = heading + changeInHeading;
             double turnRadius = leftMove / changeInHeading;
             double centerX = leftX + Math.cos(heading + leftWheelPosition) * turnRadius;
             double centerY = leftY + Math.sin(heading + leftWheelPosition) * turnRadius;;
             leftX = centerX - turnRadius * Math.cos(newHeading + leftWheelPosition);
-            leftY = centerY - turnRadius * Math.cos(newHeading + leftWheelPosition);
-            // System.out.println("Left Turn Circle: center = (" + df.format(centerX) + ", " + df.format(centerY) + ") radius = " + df.format(turnRadius));
+            leftY = centerY - turnRadius * Math.sin(newHeading + leftWheelPosition);
+//            System.out.println("Left Turn Circle: center = (" + df.format(centerX) + ", " + df.format(centerY) + ") radius = " + df.format(turnRadius));
     
             turnRadius = rightMove / changeInHeading;
             centerX = rightX - Math.cos(heading + rightWheelPosition) * turnRadius;
@@ -138,10 +140,10 @@ public class FieldPosition {
             rightX = centerX + turnRadius * Math.cos(newHeading + rightWheelPosition);
             rightY = centerY + turnRadius * Math.sin(newHeading + rightWheelPosition);
             // System.out.println("Right Turn Circle: center = (" + df.format(centerX) + ", " + df.format(centerY) + ") radius = " + df.format(turnRadius));
-            // System.out.println("New Position: (" + df.format(leftX) + ", " + df.format(leftY) + "), (" + df.format(rightX) + ", " + df.format(rightY) + ")" );
-
+            
             heading = newHeading;
         }
+//        System.out.println("New Position: (" + df.format(leftX) + ", " + df.format(leftY) + "), (" + df.format(rightX) + ", " + df.format(rightY) + ")" );
         // double width = Math.sqrt(Math.pow((rightX - leftX), 2) + Math.pow((rightY - leftY), 2));
         // System.out.println("Width : " + df.format(width));
         // System.out.println();
@@ -152,6 +154,8 @@ public class FieldPosition {
         timestamp = currentTime;
         x = (leftX + rightX) / 2;
         y = (leftY + rightY) / 2;
+        
+        return this;
     }
 
     public String toString() {
@@ -174,15 +178,36 @@ public class FieldPosition {
     public static void main(String[] args) throws InterruptedException {
         FieldPosition position = FieldPosition.getInstance();
         position.init(0, 0, 90.0, 0.0, 0, 0);
+        System.out.println(position);
+        System.out.println();
+
         double leftPosition =  Math.PI;
         double rightPosition =  Math.PI/2;
         Thread.sleep(20);
         position.update(leftPosition, rightPosition);
+        System.out.println(position);
+        System.out.println();
+
+        leftPosition +=  3;
+        rightPosition +=  3;
+        Thread.sleep(20);
+        position.update(leftPosition, rightPosition);
+        System.out.println(position);
+        System.out.println();
+
         leftPosition +=  Math.PI/2;
         rightPosition +=  Math.PI;
         Thread.sleep(20);
         position.update(leftPosition, rightPosition);
         System.out.println(position);
+        System.out.println();
+
+        leftPosition +=  3;
+        rightPosition +=  3;
+        Thread.sleep(20);
+        position.update(leftPosition, rightPosition);
+        System.out.println(position);
+        System.out.println();
     }
 
 }
