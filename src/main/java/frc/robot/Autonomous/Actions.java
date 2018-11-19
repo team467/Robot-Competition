@@ -1,4 +1,4 @@
-package frc.robot.Autonomous;
+package frc.robot.autonomous;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -9,8 +9,8 @@ import frc.robot.gamepieces.Elevator;
 import frc.robot.gamepieces.Grabber;
 import frc.robot.gamepieces.Elevator.Stops;
 import frc.robot.RobotMap;
-import frc.robot.Autonomous.ActionGroup.ConcurrentActions;
-import frc.robot.Autonomous.ActionGroup.MultiCondition;
+import frc.robot.autonomous.ActionGroup.ConcurrentActions;
+import frc.robot.autonomous.ActionGroup.MultiCondition;
 import frc.robot.simulator.DriveSimulator;
 
 public class Actions {

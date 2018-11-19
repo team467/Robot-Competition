@@ -7,7 +7,7 @@ import org.apache.logging.log4j.core.config.Configuration;
 import org.apache.logging.log4j.core.config.LoggerConfig;
 
 import frc.robot.Robot;
-import frc.robot.Autonomous.MatchConfiguration;
+import frc.robot.autonomous.MatchConfiguration;
 import frc.robot.drive.Drive;
 import frc.robot.gamepieces.Climber;
 import frc.robot.gamepieces.Elevator;

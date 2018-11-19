@@ -1,4 +1,4 @@
-package frc.robot.Autonomous;
+package frc.robot.autonomous;
 
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -11,7 +11,7 @@ import org.apache.logging.log4j.Logger;
 import frc.robot.drive.AutoDrive;
 import frc.robot.drive.Drive;
 import frc.robot.RobotMap;
-import frc.robot.Autonomous.Action.Activity;
+import frc.robot.autonomous.Action.Activity;
 import frc.robot.simulator.DriveSimulator;
 
 /**

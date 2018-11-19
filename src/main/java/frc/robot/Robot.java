@@ -7,13 +7,12 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import frc.robot.Autonomous.ActionGroup;
-import frc.robot.Autonomous.Actions;
-import frc.robot.Autonomous.MatchConfiguration;
+import frc.robot.autonomous.ActionGroup;
+import frc.robot.autonomous.Actions;
+import frc.robot.autonomous.MatchConfiguration;
 import frc.robot.vision.VisionProcessing;
 import frc.robot.RobotMap.RobotID;
 import frc.robot.drive.Drive;
