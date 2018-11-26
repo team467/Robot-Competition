@@ -42,7 +42,7 @@ public class WpiTalonSrx extends TalonSrx implements SpeedController, Sendable, 
 	// ------ set/get routines for WPILIB interfaces ------//
 	@Override
 	public void set(double speed) {
-		_speed = speed;
+		this._speed = speed;
 		set(ControlMode.PercentOutput, _speed);
 		_safetyHelper.feed();
 	}

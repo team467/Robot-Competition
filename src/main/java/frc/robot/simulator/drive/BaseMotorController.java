@@ -154,7 +154,7 @@ public abstract class BaseMotorController implements com.ctre.phoenix.motorcontr
     switch (m_controlMode) {
     case PercentOutput:
       // case TimedPercentOutput:
-      PhysicalMotorManager.set4(m_handle, m_sendMode.value, demand0, demand1, demand1Type.value);
+      PhysicalMotorManager.set4(m_handle, m_sendMode, demand0, demand1, demand1Type);
       break;
     case Follower:
       /* did caller specify device ID */
@@ -168,22 +168,22 @@ public abstract class BaseMotorController implements com.ctre.phoenix.motorcontr
       }
       /* single precision guarantees 16bits of integral precision,
        * so float/double cast on work is safe */
-       PhysicalMotorManager.set4(m_handle, m_sendMode.value, (double)work, demand1, demand1Type.value);
+       PhysicalMotorManager.set4(m_handle, m_sendMode, (double)work, demand1, demand1Type);
       break;
     case Velocity:
     case Position:
     case MotionMagic:
     case MotionProfile:
     case MotionProfileArc:
-      PhysicalMotorManager.set4(m_handle, m_sendMode.value, demand0, demand1, demand1Type.value);
+      PhysicalMotorManager.set4(m_handle, m_sendMode, demand0, demand1, demand1Type);
       break;
     case Current:
-      PhysicalMotorManager.setDemand(m_handle, m_sendMode.value, (int) (1000. * demand0), 0); /* milliamps */
+      PhysicalMotorManager.setDemand(m_handle, m_sendMode, (int) (1000. * demand0), 0); /* milliamps */
       break;
     case Disabled:
       /* fall thru... */
     default:
-      PhysicalMotorManager.setDemand(m_handle, m_sendMode.value, 0, 0);
+      PhysicalMotorManager.setDemand(m_handle, m_sendMode, 0, 0);
       break;
     }
 
@@ -677,6 +677,7 @@ public abstract class BaseMotorController implements com.ctre.phoenix.motorcontr
   public int getSelectedSensorPosition(int pidIdx) {
     return PhysicalMotorManager.getSelectedSensorPosition(m_handle, pidIdx);
   }
+  
   public int getSelectedSensorPosition() {
     int pidIdx = 0;
     return getSelectedSensorPosition(pidIdx);

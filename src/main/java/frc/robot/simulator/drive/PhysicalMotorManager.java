@@ -19,7 +19,7 @@ class PhysicalMotorManager {
 
   // Current power
   private double outputPower = 0.0;
-  private double auxOutputPower = 0.0;
+  private double auxillaryPower = 0.0;
 
   // Current state information
   private int currentSensorReading;
@@ -86,6 +86,7 @@ class PhysicalMotorManager {
   private int faults = 0;
   private int stickyFaults = 0;
 
+  private PhysicalMotor physicalMotor = null;
   // --------------------- Constructors -----------------------------//
 
   /**
@@ -95,7 +96,47 @@ class PhysicalMotorManager {
    */
   private PhysicalMotorManager(int arbId) {
     this.arbId = arbId;
+    physicalMotor = PhysicalMotor.createMotor(arbId);
   }
+
+  private void set(ControlMode controlMode) {
+
+    switch (controlMode) {
+
+      // TODO: Fill in mode conversions
+      case Current:
+        break;
+
+      case  Velocity:
+        break;
+
+      case Position:
+        break;
+
+      case Disabled:
+       break;
+
+      case Follower:
+        break;
+
+      case MotionMagic:
+        break;
+
+      case MotionProfile:
+        break;
+
+      case MotionProfileArc:
+        break;
+
+      case PercentOutput:
+        physicalMotor.voltage(outputPower * maxVoltage);
+        break;
+
+      default:
+    }
+  }
+
+  // Static Manager calls // 
 
   static long create(int arbId) {
     PhysicalMotorManager motor = new PhysicalMotorManager(arbId);
@@ -114,17 +155,22 @@ class PhysicalMotorManager {
     return (int) handle;
   }
 
-  static void set4(long handle, int controlModeValue, double demand0,
-       double demand1, int demand1TypeValue) {
+  static void set4(long handle, ControlMode controlMode, double demand0,
+       double demand1, DemandType demand1Type) {
 
     PhysicalMotorManager motor = motors.get(handle);
-//    motor.setOutputByDemandType(demand0, demand1Type, demand1);
+    // System.err.println("Set 4 demand0= " + demand0 + " handle= " 
+    //     + handle + " control mode = " + controlMode);
+    motor.setOutputByDemandType(demand0, demand1Type, demand1);
+    motor.set(controlMode);
   }
 
-  static void setDemand(long handle, int controlModeValue, int demand,
+  static void setDemand(long handle, ControlMode controlMode, int demand,
     int demandTypeValue) {
 
     PhysicalMotorManager motor = motors.get(handle);
+    motor.outputPower = demand;
+    motor.set(controlMode);
     //motor.setOutputByDemandType(demand0, demand1Type, demand1);
 
   }
@@ -135,18 +181,21 @@ class PhysicalMotorManager {
     switch (demand1Type) {
 
       case AuxPID:
-        auxOutputPower = demand1;
+        outputPower = demand0;
+        auxillaryPower = demand1;
         break;
 
       case ArbitraryFeedForward:
         outputPower = demand0 + demand1;
+        auxillaryPower = 0.0;
         break;
 
       case Neutral:
       default:
         outputPower = demand0;
+        auxillaryPower = 0.0;
     }
-
+//    System.err.println("Output power: " + outputPower + " Aux Power: " + auxillaryPower);
   }
 
   /**
@@ -533,9 +582,9 @@ class PhysicalMotorManager {
    * @return Position of selected sensor (in raw sensor units).
    */
   static int getSelectedSensorPosition(long handle, int pidIdx) {
-    // return MotControllerJNI.GetSelectedSensorPosition(m_handle, pidIdx);
-    // TODO Figure out status frames
-    return 0;
+    PhysicalMotorManager motor = motors.get(handle);
+    int sensorPosition = motor.physicalMotor.sensorPosition(pidIdx);
+    return sensorPosition;
   }
 
   /**

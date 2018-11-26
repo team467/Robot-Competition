@@ -13,6 +13,7 @@ import frc.robot.gamepieces.Climber;
 import frc.robot.gamepieces.Elevator;
 import frc.robot.gamepieces.Grabber;
 import frc.robot.gamepieces.GrabberSolenoid;
+import frc.robot.simulator.drive.PhysicalMotor;
 
 public class Logging {
 	public static void init() {
@@ -32,6 +33,7 @@ public class Logging {
 		config.addLogger(Elevator.class.getName(), new LoggerConfig(Elevator.class.getName(), Level.INFO, true));
 		config.addLogger(Grabber.class.getName(), new LoggerConfig(Grabber.class.getName(), Level.INFO, true));
 		config.addLogger(MatchConfiguration.class.getName(), new LoggerConfig(MatchConfiguration.class.getName(), Level.INFO, true));
+		config.addLogger(PhysicalMotor.class.getName(), new LoggerConfig(PhysicalMotor.class.getName(), Level.DEBUG, true));
 //		config.addLogger(OpticalSensor.class.getName(), new LoggerConfig(OpticalSensor.class.getName(), Level.WARN, true));
 //		config.addLogger(Ramp.class.getName(), new LoggerConfig(Ramp.class.getName(), Level.INFO, true));
 //		config.addLogger(Ramps.class.getName(), new LoggerConfig(Ramps.class.getName(), Level.INFO, true));

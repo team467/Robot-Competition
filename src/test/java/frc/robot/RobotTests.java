@@ -6,6 +6,7 @@ import org.junit.runner.RunWith;
 
 @RunWith(JUnitPlatform.class)
 @SelectPackages({
-    "frc.robot.drive.motorcontrol.pathtracking"
+    "frc.robot.drive.motorcontrol.pathtracking",
+    "frc.robot.simulator.drive"
 })
 public class RobotTests {}
