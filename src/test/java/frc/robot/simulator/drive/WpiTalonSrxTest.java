@@ -40,10 +40,10 @@ public class WpiTalonSrxTest {
   @Test
   @DisplayName("Forward full speed")
   void testBasicForwardFullSpeed() {
-    int numberOfIterations = 100;
+    int numberOfIterations = 250;
     int robotIterationTime = 20; // TODO: Set in Robot Map
     int initialSensorPosition = motor.getSelectedSensorPosition();
-//    System.err.println("Sensor Position: " + lastSensorPosition);
+    // System.err.println("Initial Sensor Position: " + initialSensorPosition);
     for (int i = 0; i < numberOfIterations; i++) {
       LOGGER.trace("SIMULATOR|DRIVE|TEST", "Testing forward full speed");
       double forwardSpeed = 1.0;
@@ -54,9 +54,9 @@ public class WpiTalonSrxTest {
         fail("Test thread interupted", e);
         LOGGER.trace("SIMULATOR|DRIVE|TEST", e);
       }
-      // System.err.println("Sensor Positions: " + currentSensorPosition + " > " + lastSensorPosition);
     }
     int currentSensorPosition = motor.getSelectedSensorPosition();
+    // System.err.println("Sensor Positions: " + currentSensorPosition + " > " + initialSensorPosition);
     boolean moved = (currentSensorPosition > initialSensorPosition) ? true : false;
     assert(moved);
     // TODO: Determine the exact amount it should have moved and check to see if move is correct

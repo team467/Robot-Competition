@@ -207,8 +207,7 @@ public class TalonSrx extends BaseMotorController
 	 *            blocking or checking is performed.
 	 */
 	public ErrorCode configPeakCurrentLimit(int amps, int timeoutMs) {
-		int retval =  PhysicalMotorManager.configPeakCurrentLimit(m_handle, amps, timeoutMs);
-		return ErrorCode.valueOf(retval);
+		return  PhysicalMotorManager.configPeakCurrentLimit(m_handle, amps, timeoutMs);
 	}
 	public ErrorCode configPeakCurrentLimit(int amps) {
 		int timeoutMs = 0;
@@ -235,9 +234,9 @@ public class TalonSrx extends BaseMotorController
 	 *            blocking or checking is performed.
 	 */
 	public ErrorCode configPeakCurrentDuration(int milliseconds, int timeoutMs) {
-		int retval = PhysicalMotorManager.configPeakCurrentDuration(m_handle, milliseconds, timeoutMs);
-		return ErrorCode.valueOf(retval);
+		return PhysicalMotorManager.configPeakCurrentDuration(m_handle, milliseconds, timeoutMs);
 	}
+
 	public ErrorCode configPeakCurrentDuration(int milliseconds) {
 		int timeoutMs = 0;
 		return configPeakCurrentDuration( milliseconds,  timeoutMs);
@@ -264,8 +263,7 @@ public class TalonSrx extends BaseMotorController
 	 *            blocking or checking is performed.
 	 */
 	public ErrorCode configContinuousCurrentLimit(int amps, int timeoutMs) {
-		int retval =  PhysicalMotorManager.configContinuousCurrentLimit(m_handle, amps, timeoutMs);
-		return ErrorCode.valueOf(retval);
+		return  PhysicalMotorManager.configContinuousCurrentLimit(m_handle, amps, timeoutMs);
 	}
 	public ErrorCode configContinuousCurrentLimit(int amps) {
 		int timeoutMs = 0;

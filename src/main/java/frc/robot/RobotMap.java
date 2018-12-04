@@ -4,7 +4,9 @@ package frc.robot;
  *
  */
 public class RobotMap {
-	public static final int TALON_TIMEOUT = 0; // 10 ms is the recommended timeout
+
+	// 0 is non-blocking (i.e. it doesn't wait for a response before going to the next statement)
+	public static final int TALON_TIMEOUT = 0; 
 
 	public enum RobotID {
 		Board, Competition_1, Competition_2
