@@ -9,7 +9,6 @@ import frc.robot.drive.motorcontrol.pathtracking.FieldPosition;
 import frc.robot.simulator.communications.RobotData;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
@@ -30,6 +29,7 @@ public class Drive extends DifferentialDrive implements AutoDrive {
 	private final TalonSpeedControllerGroup left;
 	private final TalonSpeedControllerGroup right;
 
+  private RobotData data = RobotData.getInstance();
 	private FieldPosition fieldState = FieldPosition.getInstance();
 	
 	double carrotLength;
@@ -49,23 +49,23 @@ public class Drive extends DifferentialDrive implements AutoDrive {
 			LOGGER.info("Number of Motors: {}", RobotMap.DRIVEMOTOR_NUM);
 			if (RobotMap.HAS_WHEELS && RobotMap.DRIVEMOTOR_NUM > 0) {
 				LOGGER.info("Creating  Lead Motors");
-				WPI_TalonSRX leftLead = new WPI_TalonSRX(RobotMap.LEFT_LEAD_CHANNEL);
-				WPI_TalonSRX rightLead = new WPI_TalonSRX(RobotMap.RIGHT_LEAD_CHANNEL);
-				WPI_TalonSRX leftFollower1 = null;
-				WPI_TalonSRX rightFollower1 = null;
-				WPI_TalonSRX leftFollower2 = null;
-				WPI_TalonSRX rightFollower2= null;
+				WpiTalonSrxInterface leftLead = TalonProxy.create(RobotMap.LEFT_LEAD_CHANNEL);
+				WpiTalonSrxInterface rightLead = TalonProxy.create(RobotMap.RIGHT_LEAD_CHANNEL);
+				WpiTalonSrxInterface leftFollower1 = null;
+				WpiTalonSrxInterface rightFollower1 = null;
+				WpiTalonSrxInterface leftFollower2 = null;
+				WpiTalonSrxInterface rightFollower2= null;
 
 				if (RobotMap.DRIVEMOTOR_NUM > 2) {
-					LOGGER.info("Creating  first set of follower motors");
-					leftFollower1 = new WPI_TalonSRX(RobotMap.LEFT_FOLLOWER_1_CHANNEL);
-					rightFollower1 = new WPI_TalonSRX(RobotMap.RIGHT_FOLLOWER_1_CHANNEL);
+					LOGGER.info("Creating first set of follower motors");
+					leftFollower1 = TalonProxy.create(RobotMap.LEFT_FOLLOWER_1_CHANNEL);
+					rightFollower1 = TalonProxy.create(RobotMap.RIGHT_FOLLOWER_1_CHANNEL);
 				}
 
 				if (RobotMap.DRIVEMOTOR_NUM > 4) {
 					LOGGER.info("Creating second set of follower motors");
-					leftFollower2 = new WPI_TalonSRX(RobotMap.LEFT_FOLLOWER_2_CHANNEL);
-					rightFollower2 = new WPI_TalonSRX(RobotMap.RIGHT_FOLLOWER_2_CHANNEL);
+					leftFollower2 = TalonProxy.create(RobotMap.LEFT_FOLLOWER_2_CHANNEL);
+					rightFollower2 = TalonProxy.create(RobotMap.RIGHT_FOLLOWER_2_CHANNEL);
 				}
 
 				left = new TalonSpeedControllerGroup(ControlMode.PercentOutput,
@@ -173,6 +173,7 @@ public class Drive extends DifferentialDrive implements AutoDrive {
 		LOGGER.trace("Zeroed the motor sensors.");
 		left.zero();
 		right.zero();
+		data.zero();
 		fieldState.zeroSensors();
 	}
 
@@ -218,6 +219,7 @@ public class Drive extends DifferentialDrive implements AutoDrive {
 		left.set(ControlMode.Position, feetToTicks(leftDistance));
 		// The right motor is reversed
 		right.set(ControlMode.Position, -feetToTicks(rightDistance));
+		data.updateDrivePosition(getRightDistance(), getLeftDistance());
 		fieldState.update(getLeftDistance(), getRightDistance());
 	}
 
@@ -313,11 +315,11 @@ public class Drive extends DifferentialDrive implements AutoDrive {
 		double leftDistTicks = feetToTicks(moveLeftDistance);
 		double rightDistTicks = feetToTicks(moveRightDistance);
 
-		// The right motor is reversed
 		left.set(ControlMode.Position, leftDistTicks);
-		
+		// The right motor is reversed
 		right.set(ControlMode.Position, -rightDistTicks);
 
+		data.updateDrivePosition(getRightDistance(), getLeftDistance());
 		fieldState.update(getLeftDistance(), getRightDistance());
 	}
 	
@@ -365,7 +367,8 @@ public class Drive extends DifferentialDrive implements AutoDrive {
 
 	public void arcadeDrive(double xSpeed, double zRotation, boolean squaredInputs) {
 		super.arcadeDrive(xSpeed, zRotation, squaredInputs);
-		fieldState.update(this.getLeftDistance(), this.getRightDistance());
+		data.updateDrivePosition(getRightDistance(), getLeftDistance());
+		fieldState.update(getLeftDistance(), getRightDistance());
 	}
 
 	public void tankDrive(double leftSpeed, double rightSpeed) {
@@ -374,12 +377,14 @@ public class Drive extends DifferentialDrive implements AutoDrive {
 
 	public void tankDrive(double leftSpeed, double rightSpeed, boolean squaredInputs) {
 		super.tankDrive(leftSpeed, rightSpeed, squaredInputs);
-		fieldState.update(this.getLeftDistance(), this.getRightDistance());
+		data.updateDrivePosition(getRightDistance(), getLeftDistance());
+		fieldState.update(getLeftDistance(), getRightDistance());
 	}
 
 	public void curvatureDrive(double xSpeed, double zRotation, boolean isQuickTurn) {
 		super.curvatureDrive(xSpeed, zRotation, isQuickTurn);
-		fieldState.update(this.getLeftDistance(), this.getRightDistance());
+		data.updateDrivePosition(getRightDistance(), getLeftDistance());
+		fieldState.update(getLeftDistance(), getRightDistance());
 	}
 
 	/**

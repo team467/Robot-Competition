@@ -14,9 +14,9 @@ import frc.robot.RobotMap;
 //TalonSpeedControllerGroup
 public class TalonSpeedControllerGroup implements SpeedController {
 	private static final Logger LOGGER = LogManager.getLogger(TalonSpeedControllerGroup.class);
-	private WPI_TalonSRX leader;
-	private WPI_TalonSRX follower1;
-	private WPI_TalonSRX follower2;
+	private WpiTalonSrxInterface leader;
+	private WpiTalonSrxInterface follower1;
+	private WpiTalonSrxInterface follower2;
 
 	private int previousSensorPosition;
 
@@ -29,7 +29,7 @@ public class TalonSpeedControllerGroup implements SpeedController {
 	}
 
 	public TalonSpeedControllerGroup(ControlMode controlMode, boolean sensorIsInverted,
-			WPI_TalonSRX leader, WPI_TalonSRX follower1, WPI_TalonSRX follower2) {
+		WpiTalonSrxInterface leader, WpiTalonSrxInterface follower1, WpiTalonSrxInterface follower2) {
 		if (!RobotMap.HAS_WHEELS) {
 			leader = null;
 			follower1 = null;
@@ -54,16 +54,16 @@ public class TalonSpeedControllerGroup implements SpeedController {
 	}
 
 	public TalonSpeedControllerGroup(ControlMode controlMode, boolean sensorIsInverted,
-			WPI_TalonSRX leader, WPI_TalonSRX follower1) {
+			WpiTalonSrxInterface leader, WpiTalonSrxInterface follower1) {
 		this(controlMode, sensorIsInverted, leader, follower1, null);
 	}
 
 	public TalonSpeedControllerGroup(ControlMode controlMode, boolean sensorIsInverted,
-			WPI_TalonSRX leader) {
+		WpiTalonSrxInterface leader) {
 		this(controlMode, sensorIsInverted, leader, null, null);
 	}
 
-	private void initMotor(WPI_TalonSRX talon) {
+	private void initMotor(WpiTalonSrxInterface talon) {
 		talon.set(ControlMode.PercentOutput, 0);
 		talon.selectProfileSlot(0, 0);
 		talon.configAllowableClosedloopError(0, RobotMap.POSITION_ALLOWABLE_CLOSED_LOOP_ERROR, 0);

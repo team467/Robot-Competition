@@ -31,8 +31,7 @@ public class PhysicalMotor implements Runnable, PIDOutput, PIDSource {
   // Simulation Information
   public static final double MAX_RPM = 821;
 
-
-  public static final int MOTOR_TIME_SLICE_IN_MS = 1;
+  public static final int MOTOR_TIME_SLICE_IN_MS = 2;
 
   // Iteration period is 20 ms
   public static final double ROBOT_TIME_SLICE_IN_MS = 20.0;
@@ -40,7 +39,7 @@ public class PhysicalMotor implements Runnable, PIDOutput, PIDSource {
   private static final double MAX_SPEED_PER_PERIOD = MAX_RPM
   / (60.0 * 1000.0 / MOTOR_TIME_SLICE_IN_MS);
 
-  private static final double ROBOT_FASTEST_RAMP_RATE_IN_SECONDS_TO_FULL = 2;
+  static final double ROBOT_FASTEST_RAMP_RATE_IN_SECONDS_TO_FULL = 1;
 
   private double openLoopRampRateSecondsToFull = ROBOT_FASTEST_RAMP_RATE_IN_SECONDS_TO_FULL;
   private double closedLoopRampRateSecondsToFull = ROBOT_FASTEST_RAMP_RATE_IN_SECONDS_TO_FULL;
@@ -89,11 +88,10 @@ public class PhysicalMotor implements Runnable, PIDOutput, PIDSource {
    * This simulation uses the WPI Library implimentation;
    */
   private PIDController[] pidController = new PIDController[NUMBER_CLOSED_LOOPS];
-  private PIDSourceType pidSourceType = PIDSourceType.kRate;
+  private PIDSourceType pidSourceType = PIDSourceType.kDisplacement;
   private static final int NUMBER_SAVE_SLOTS = 4;
   private ClosedLoopParameter[] closedLoopParameters = new ClosedLoopParameter[NUMBER_SAVE_SLOTS];
   private int pidParamSlotIndex[] = new int[NUMBER_CLOSED_LOOPS];
-  private int targetPosition = 0;
 
   // General motor information
   private int id = 0;
@@ -119,8 +117,9 @@ public class PhysicalMotor implements Runnable, PIDOutput, PIDSource {
     isOpenLoop = true;
 
     // Period is half the motor thread time to allow for the PID control to update based inputs
-    double pidPeriod = ((double)MOTOR_TIME_SLICE_IN_MS/1000.0/2);
-    pidSourceType = PIDSourceType.kRate;
+//    double pidPeriod = ((double)MOTOR_TIME_SLICE_IN_MS/1000.0/2);
+    double pidPeriod = 0.10;
+    pidSourceType = PIDSourceType.kDisplacement;
     for (int i = 0; i < closedLoopParameters.length; i++) {
       closedLoopParameters[i] = new ClosedLoopParameter();
       // TODO: Load from file to emulate saving
@@ -134,7 +133,10 @@ public class PhysicalMotor implements Runnable, PIDOutput, PIDSource {
         closedLoopParameters[pidParamSlotIndex[i]].p, closedLoopParameters[pidParamSlotIndex[i]].i, 
         closedLoopParameters[pidParamSlotIndex[i]].d, closedLoopParameters[pidParamSlotIndex[i]].f, 
         this /* PID Source */, this /* PID Output */, pidPeriod);
+      pidController[i].setOutputRange(-1.0, 1.0);
+      pidController[i].setName("Simulated Motor " + id, "PID Controller: " + i);
     }
+    
     revolutions = 0.0;
     iterationCount = 0; // Used for velocity smoothing
     configVelocityMeasurementPeriod(VelocityMeasPeriod.Period_100Ms);
@@ -540,6 +542,9 @@ public class PhysicalMotor implements Runnable, PIDOutput, PIDSource {
 
   void set4(ControlMode controlMode, double demand0, double demand1, DemandType demand1Type) {
 
+    double totalDemand = demand0 + demand1;
+    this.controlMode = controlMode;
+
     switch (controlMode) {
 
       // TODO: Fill in mode conversions
@@ -550,6 +555,7 @@ public class PhysicalMotor implements Runnable, PIDOutput, PIDSource {
       case Disabled:
         isOpenLoop = true;
         voltage(0);
+        pidController[closedLoopIndex].disable();;
         enabled = false;
         break;
 
@@ -571,19 +577,20 @@ public class PhysicalMotor implements Runnable, PIDOutput, PIDSource {
 
       case PercentOutput:
         isOpenLoop = true;
-        voltage(demand0 * maxVoltage);
+        voltage(totalDemand * maxVoltage);
+        pidController[closedLoopIndex].disable();
         break;
 
       case Position:
         isOpenLoop = false;
-        pidController[closedLoopIndex].setSetpoint(demand0);
-        voltage(pidController[closedLoopIndex].get() * maxVoltage);
+        pidController[closedLoopIndex].setSetpoint(totalDemand);
+        pidController[closedLoopIndex].enable();
         break;
 
       case Velocity:
         isOpenLoop = false;
-        pidController[closedLoopIndex].setSetpoint(demand0);
-        voltage(pidController[closedLoopIndex].get() * maxVoltage);
+        pidController[closedLoopIndex].setSetpoint(totalDemand);
+        pidController[closedLoopIndex].enable();
         break;
 
       default:
@@ -599,7 +606,7 @@ public class PhysicalMotor implements Runnable, PIDOutput, PIDSource {
    */
   PhysicalMotor voltage(double voltage) {
 
-    if (voltage <= (neutralDeadband * maxVoltage)) {
+    if (Math.abs(voltage) <= (neutralDeadband * maxVoltage)) {
       voltage = 0.0;
       // Not that if there is a nominal output, the voltage will be raised to 
       // nominal even if the input is within the deadband.
@@ -629,6 +636,7 @@ public class PhysicalMotor implements Runnable, PIDOutput, PIDSource {
         this.voltage = Math.signum(voltage) * batteryVoltage;
       }
       simulatedTargetVelocity = (this.voltage / ROBOT_MAX_THEORETICAL_VOLTAGE) * MAX_SPEED_PER_PERIOD;
+      // System.err.println("Simulated Target Velocity: " + simulatedTargetVelocity);
     }
 
     LOGGER.trace("", "Set voltage: {} ROBOT_MAX_THEORETICAL_VOLTAGE: {} "
@@ -686,6 +694,7 @@ public class PhysicalMotor implements Runnable, PIDOutput, PIDSource {
       return ErrorCode.InvalidParamValue;
     }
     sensors[closedLoopIndex] = sensorPosition;
+    revolutions = sensorPosition / RobotMap.WHEEL_ENCODER_CODES_PER_REVOLUTION;
     return ErrorCode.OK;
   }
 
@@ -715,7 +724,8 @@ public class PhysicalMotor implements Runnable, PIDOutput, PIDSource {
       return 0;
     }
     if (this.controlMode == ControlMode.Position) {
-      return (targetPosition - position(closedLoopIndex));
+      return (int) pidController[closedLoopIndex].getError();
+//      return (targetPosition - position(closedLoopIndex));
     } else if (controlMode == ControlMode.Velocity)  {
       int targetSensorVelocity = 
           (int) (simulatedTargetVelocity * RobotMap.WHEEL_ENCODER_CODES_PER_REVOLUTION);
@@ -735,10 +745,8 @@ public class PhysicalMotor implements Runnable, PIDOutput, PIDSource {
       try {
         double velocityDiffFromTarget = simulatedTargetVelocity - simulationVelocity;
 
-        // System.err.printf("Target Speed: %s Current Speed: %s Diff: %s\n", 
-        // df.format(targetSpeed), df.format(velocity), df.format(velocityDiffFromTarget));
-        LOGGER.debug("SIMULATOR|DRIVE", "Target Velocity: {} Current Velocity: {} Diff: {}", 
-            df.format(simulatedTargetVelocity), df.format(simulationVelocity), df.format(velocityDiffFromTarget));
+        // LOGGER.debug("SIMULATOR|DRIVE", "Target Velocity: {} Current Velocity: {} Diff: {}", 
+        //     df.format(simulatedTargetVelocity), df.format(simulationVelocity), df.format(velocityDiffFromTarget));
         
         // Make sure it's not in the middle of a change call
         synchronized(this) {
@@ -748,7 +756,9 @@ public class PhysicalMotor implements Runnable, PIDOutput, PIDSource {
             rampRate = openLoopRampRatePerPeriod;
           } else {
             rampRate = closedLoopRampRatePerPeriod;
+            // System.err.println("Ramp Rate: " + rampRate);
           }
+
           if (Math.abs(velocityDiffFromTarget) > rampRate) {
             simulationVelocity += Math.signum(velocityDiffFromTarget) * rampRate;
           } else {
@@ -780,7 +790,8 @@ public class PhysicalMotor implements Runnable, PIDOutput, PIDSource {
   @Override
   public void pidWrite(double output) {
     if (controlMode == ControlMode.Position || controlMode == ControlMode.Velocity) {
-      set4(controlMode, output, 0, DemandType.Neutral);
+      // System.err.println(" Output " + output);
+      voltage(output * maxVoltage);
     }
   }
 
@@ -797,7 +808,8 @@ public class PhysicalMotor implements Runnable, PIDOutput, PIDSource {
   @Override
   public double pidGet() {
     if (controlMode == ControlMode.Position) {
-      return position(closedLoopIndex);
+      // System.err.println("PID Get: " + position(closedLoopIndex));
+      return (position(closedLoopIndex));
     } else if (controlMode == ControlMode.Velocity) {
       return velocity(closedLoopIndex);
     } else {

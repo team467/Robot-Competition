@@ -34,7 +34,7 @@ import com.ctre.phoenix.motorcontrol.can.SlotConfiguration;
 /**
  * Base motor controller features for all CTRE CAN motor controllers.
  */
-public abstract class BaseMotorController implements com.ctre.phoenix.motorcontrol.IMotorController {
+public abstract class BaseMotorController implements IMotorController {
 
   private ControlMode m_controlMode = ControlMode.PercentOutput;
   private ControlMode m_sendMode = ControlMode.PercentOutput;
@@ -151,22 +151,22 @@ public abstract class BaseMotorController implements com.ctre.phoenix.motorcontr
     m_sendMode = mode;
 
     switch (m_controlMode) {
+
     case PercentOutput:
-      // case TimedPercentOutput:
-      PhysicalMotorManager.set4(m_handle, m_sendMode, demand0, demand1, demand1Type);
-      break;
     case Follower:
-      break;
     case Velocity:
     case Position:
     case MotionMagic:
     case MotionProfile:
     case MotionProfileArc:
+      // most cases just send through without modifying
       PhysicalMotorManager.set4(m_handle, m_sendMode, demand0, demand1, demand1Type);
       break;
+    
     case Current:
       PhysicalMotorManager.setDemand(m_handle, m_sendMode, (int) (1000. * demand0), 0); /* milliamps */
       break;
+
     case Disabled:
       /* fall thru... */
     default:
@@ -1447,7 +1447,7 @@ public abstract class BaseMotorController implements com.ctre.phoenix.motorcontr
    */
   public int getClosedLoopError() {
     int pidIdx = 0;
-    return getClosedLoopError( pidIdx);
+    return getClosedLoopError(pidIdx);
   }
 
   /**

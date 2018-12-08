@@ -4,18 +4,19 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.RobotMap;
+import frc.robot.drive.TalonProxy;
 import frc.robot.drive.TalonSpeedControllerGroup;
+import frc.robot.drive.WpiTalonSrxInterface;
 
 
 public class Climber {
 	private static final Logger LOGGER = LogManager.getLogger(Climber.class);
 	private static Climber instance;
-	WPI_TalonSRX climbMotorLeader;
-	WPI_TalonSRX climbMotorFollower1;
+	WpiTalonSrxInterface climbMotorLeader;
+	WpiTalonSrxInterface climbMotorFollower1;
 
 	private TalonSpeedControllerGroup climbController;
 
@@ -25,8 +26,8 @@ public class Climber {
 		}
 		
 		if(RobotMap.HAS_CLIMBER) {
-			climbMotorLeader = new WPI_TalonSRX(RobotMap.CLIMB_MOTOR_CONTROLLER_LEADER);
-			climbMotorFollower1 = new WPI_TalonSRX(RobotMap.CLIMB_MOTOR_CONTROLLER_FOLLOWER1);
+			climbMotorLeader = TalonProxy.create(RobotMap.CLIMB_MOTOR_CONTROLLER_LEADER);
+			climbMotorFollower1 = TalonProxy.create(RobotMap.CLIMB_MOTOR_CONTROLLER_FOLLOWER1);
 			climbController = new TalonSpeedControllerGroup(ControlMode.PercentOutput, false, climbMotorLeader, climbMotorFollower1);
 			LOGGER.info("Created climber Motors");
 		} else {

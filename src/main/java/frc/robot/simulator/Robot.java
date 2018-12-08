@@ -7,6 +7,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import frc.robot.RobotMap;
 import frc.robot.RobotMap.RobotID;
+import frc.robot.drive.Drive;
 import frc.robot.drive.motorcontrol.TestMotorControl;
 import frc.robot.autonomous.ActionGroup;
 import frc.robot.autonomous.MatchConfiguration;
@@ -22,7 +23,7 @@ public class Robot {
 
 	private static final Logger LOGGER = LogManager.getLogger(Robot.class);
 
-	DriveSimulator drive;
+	Drive drive;
 
 	MapController simulatorView;
 
@@ -42,7 +43,7 @@ public class Robot {
 		RobotMap.useSimulator = true;
 		RobotMap.USE_FAKE_GAME_DATA = true;
 
-		drive = DriveSimulator.getInstance();
+		drive = Drive.getInstance();
 		matchConfig = MatchConfiguration.getInstance();
 
 		data = RobotData.getInstance();
@@ -82,8 +83,8 @@ public class Robot {
 	}
 
 	public void autonomousPeriodic() {
-//		autonomous.run();
-		testMotorControl.periodic();
+		autonomous.run();
+//		testMotorControl.periodic();
 	}
 
 }
