@@ -1,16 +1,14 @@
 package frc.robot.drive;
 
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import frc.robot.RobotMap;
+import frc.robot.simulator.drive.WpiTalonSrx;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
-
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
-
-import frc.robot.RobotMap;
-import frc.robot.simulator.drive.WpiTalonSrx;
 
 public class TalonProxy implements InvocationHandler {
 
@@ -30,8 +28,8 @@ public class TalonProxy implements InvocationHandler {
 
   public TalonProxy(int deviceNumber) {
     //TODO: Fix native libaries with WPI Lib
-      // physicalMotor = new WPI_TalonSRX(deviceNumber);
-      // addMethods(physicalMotorMethods, physicalMotor.getClass());
+    // physicalMotor = new WPI_TalonSRX(deviceNumber);
+    // addMethods(physicalMotorMethods, physicalMotor.getClass());
 
     simulatedMotor = new WpiTalonSrx(deviceNumber);
     addMethods(simulatedMotorMethods, simulatedMotor.getClass());
@@ -41,7 +39,7 @@ public class TalonProxy implements InvocationHandler {
     if (classToAdd == null) {
       return;
     }
-    for(Method method: classToAdd.getDeclaredMethods()) {
+    for (Method method: classToAdd.getDeclaredMethods()) {
       methodMap.put(createMethodSignature(method), method);
     }
     addMethods(methodMap, classToAdd.getSuperclass());
@@ -61,25 +59,25 @@ public class TalonProxy implements InvocationHandler {
     methodSignature += ")";
     // System.err.println(methodSignature);
     return methodSignature;
-} 
+  } 
 
   @Override
   public Object invoke(Object proxy, Method method, Object[] args) 
-    throws Throwable {
-      Object result = null;
-      String methodSignature = createMethodSignature(method);
-      if (RobotMap.useSimulator) {
-        // System.err.println("Invoking method " + methodSignature + " on simulator");
-        Method implementingMethod = simulatedMotorMethods.get(methodSignature);
-        result = implementingMethod.invoke(simulatedMotor, args);
-      } else {
-        result = physicalMotorMethods.get(method.getName()).invoke(physicalMotor, args);
-      }
+      throws Throwable {
+    Object result = null;
+    String methodSignature = createMethodSignature(method);
+    if (RobotMap.useSimulator) {
+      // System.err.println("Invoking method " + methodSignature + " on simulator");
+      Method implementingMethod = simulatedMotorMethods.get(methodSignature);
+      result = implementingMethod.invoke(simulatedMotor, args);
+    } else {
+      result = physicalMotorMethods.get(method.getName()).invoke(physicalMotor, args);
+    }
 
-      // LOGGER.info("Executing {} finished in {} ns", method.getName(), 
-      //   elapsed);
+    // LOGGER.info("Executing {} finished in {} ns", method.getName(), 
+    //   elapsed);
 
-      return result;
+    return result;
   }
 
 }

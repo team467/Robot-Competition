@@ -1,18 +1,16 @@
 package frc.robot.drive;
 
-import java.text.DecimalFormat;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import static org.junit.Assert.assertTrue;
 
 import frc.robot.RobotMap;
 import frc.robot.RobotMap.RobotID;
+
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 public class TalonProxyTest {
 
@@ -20,35 +18,21 @@ public class TalonProxyTest {
 
   private static final Logger LOGGER = LogManager.getLogger(TalonProxyTest.class);
   
-  private static final DecimalFormat df = new DecimalFormat("#0.0");
-
   private static WpiTalonSrxInterface motor;
 
-  @BeforeAll
-    static void initAll() {
-      RobotMap.init(RobotID.Competition_1);
-      motor = TalonProxy.create(TEST_DEVICE_NUMBER);
-    }
+  @BeforeClass
+  public static void initAll() {
+    RobotMap.init(RobotID.Competition_1);
+    motor = TalonProxy.create(TEST_DEVICE_NUMBER);
+  }
 
-    @BeforeEach
-    void init() {
-    }
-
-    @AfterEach
-    void tearDown() {
-    }
-
-    @AfterAll
-    static void tearDownAll() {
-    }
-
-    @Test
-    @DisplayName("Use a simulated motor through the proxy")
-    void testProxyToSimulatedMotor() {
-      RobotMap.useSimulator = true;
-      boolean isSimulated = (motor.getName().contains("Simulated")) ? true : false;
-      assert(isSimulated);
-    }
+  @Test
+  public void testProxyToSimulatedMotor() {
+    RobotMap.useSimulator = true;
+    LOGGER.log(Level.TRACE, "TEST|SIMULATOR", "Testing simulator");
+    boolean isSimulated = (motor.getName().contains("Simulated")) ? true : false;
+    assertTrue(isSimulated);
+  }
 
 }
 

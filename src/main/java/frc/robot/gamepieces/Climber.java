@@ -13,55 +13,55 @@ import frc.robot.drive.WpiTalonSrxInterface;
 
 
 public class Climber {
-	private static final Logger LOGGER = LogManager.getLogger(Climber.class);
-	private static Climber instance;
-	WpiTalonSrxInterface climbMotorLeader;
-	WpiTalonSrxInterface climbMotorFollower1;
+  private static final Logger LOGGER = LogManager.getLogger(Climber.class);
+  private static Climber instance;
+  WpiTalonSrxInterface climbMotorLeader;
+  WpiTalonSrxInterface climbMotorFollower1;
 
-	private TalonSpeedControllerGroup climbController;
+  private TalonSpeedControllerGroup climbController;
 
-	public Climber() {
-		if (!RobotMap.HAS_CLIMBER) {
-			return;
-		}
-		
-		if(RobotMap.HAS_CLIMBER) {
-			climbMotorLeader = TalonProxy.create(RobotMap.CLIMB_MOTOR_CONTROLLER_LEADER);
-			climbMotorFollower1 = TalonProxy.create(RobotMap.CLIMB_MOTOR_CONTROLLER_FOLLOWER1);
-			climbController = new TalonSpeedControllerGroup(ControlMode.PercentOutput, false, climbMotorLeader, climbMotorFollower1);
-			LOGGER.info("Created climber Motors");
-		} else {
-			LOGGER.info("Not enough climb motors, no climb capabilities");
-		}
-	}
-	
-	public static Climber getInstance() {
-		if (instance == null) {
-			if (!RobotMap.HAS_CLIMBER) {
-			} else {
-				instance = new Climber();
-				
-			}
-		}
-		return instance;
-	}
+  public Climber() {
+    if (!RobotMap.HAS_CLIMBER) {
+      return;
+    }
+    
+    if (RobotMap.HAS_CLIMBER) {
+      climbMotorLeader = TalonProxy.create(RobotMap.CLIMB_MOTOR_CONTROLLER_LEADER);
+      climbMotorFollower1 = TalonProxy.create(RobotMap.CLIMB_MOTOR_CONTROLLER_FOLLOWER1);
+      climbController = new TalonSpeedControllerGroup(ControlMode.PercentOutput, false, climbMotorLeader, climbMotorFollower1);
+      LOGGER.info("Created climber Motors");
+    } else {
+      LOGGER.info("Not enough climb motors, no climb capabilities");
+    }
+  }
+  
+  public static Climber getInstance() {
+    if (instance == null) {
+      if (!RobotMap.HAS_CLIMBER) {
+      } else {
+        instance = new Climber();
+        
+      }
+    }
+    return instance;
+  }
 
-	public void climbUp() {
-		if (DriverStation.getInstance().getMatchTime() <= 30.0) {
-			climbController.set(ControlMode.PercentOutput, RobotMap.CLIMBER_SPEED);
-			LOGGER.info("Climbing up.");
-		} else {
-			LOGGER.info("Too early to climb up.");
-		}
-	}
+  public void climbUp() {
+    if (DriverStation.getInstance().getMatchTime() <= 30.0) {
+      climbController.set(ControlMode.PercentOutput, RobotMap.CLIMBER_SPEED);
+      LOGGER.info("Climbing up.");
+    } else {
+      LOGGER.info("Too early to climb up.");
+    }
+  }
 
-	public void neutral() {
-		climbController.set(ControlMode.PercentOutput, 0);
-		//LOGGER.info("Climber stopped");
-	}	
+  public void neutral() {
+    climbController.set(ControlMode.PercentOutput, 0);
+    //LOGGER.info("Climber stopped");
+  }
 
-	public void setOpenLoopRamp() {
-		climbController.setOpenLoopRamp(RobotMap.CLIMBER_RAMP_TIME);
-		
-	}
+  public void setOpenLoopRamp() {
+    climbController.setOpenLoopRamp(RobotMap.CLIMBER_RAMP_TIME);
+    
+  }
 }

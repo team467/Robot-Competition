@@ -228,7 +228,7 @@ public class FieldShape {
 			context.setFill(Color.LIGHTGREY);
 			context.fillRect(
 					(12.0 * 12.0 + 11) 							* PIXELS_PER_MAP_INCH,
-					( 1.5 * 12.0 - 2.0)							* PIXELS_PER_MAP_INCH, 
+					(1.5 * 12.0 - 2.0)							* PIXELS_PER_MAP_INCH, 
 					((74.0 * 12.0) - (12.0 * 12.0 + 11) * 2) 	* PIXELS_PER_MAP_INCH, 
 					 2.0 			   							* PIXELS_PER_MAP_INCH);
 			

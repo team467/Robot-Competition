@@ -25,7 +25,7 @@ public class Rumbler {
 	}
 
 	public void periodic() {
-		if(durationMS > 0){
+		if (durationMS > 0) {
 			controller.setRumble(intensity);
 			durationMS -= ITERATION_TIME_MS;
 			LOGGER.debug("periodic duration= {} intensity= {}", durationMS, intensity);  

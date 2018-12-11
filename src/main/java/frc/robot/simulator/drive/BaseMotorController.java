@@ -36,31 +36,33 @@ import com.ctre.phoenix.motorcontrol.can.SlotConfiguration;
  */
 public abstract class BaseMotorController implements IMotorController {
 
-  private ControlMode m_controlMode = ControlMode.PercentOutput;
-  private ControlMode m_sendMode = ControlMode.PercentOutput;
+  private ControlMode controlMode = ControlMode.PercentOutput;
 
-  private int _arbId = 0;
-  private boolean _invert = false;
+  private ControlMode sendMode = ControlMode.PercentOutput;
 
-  protected long m_handle;
+  private int arbId = 0;
+  private boolean invert = false;
 
-  private int [] _motionProfStats = new int[11];
+  protected long handle;
+
+  private int[] motionProfStats = new int[11];
 
   // --------------------- Constructors -----------------------------//
   /**
    * Constructor for motor controllers.
    *
-   * @param arbId
+   * @param arbId the bus arbitration id. not used in simulation.
    */
   public BaseMotorController(int arbId) {
-    m_handle = PhysicalMotorManager.create(arbId);
-    _arbId = arbId;
+    handle = PhysicalMotorManager.create(arbId);
+    this.arbId = arbId;
   }
+
   /**
    * @return CCI handle for child classes.
    */
   public long getHandle() {
-    return m_handle;
+    return handle;
   }
 
   /**
@@ -68,110 +70,118 @@ public abstract class BaseMotorController implements IMotorController {
    *
    * @return Device number.
    */
+  @Override
   public int getDeviceID() {
-    return PhysicalMotorManager.getDeviceNumber(m_handle);
+    return PhysicalMotorManager.getDeviceNumber(handle);
   }
 
   // ------ Set output routines. ----------//
   /**
    * Sets the appropriate output on the talon, depending on the mode.
+   *
+   * <p>Standard Driving Example:
+   *    talonLeft.set(ControlMode.PercentOutput, leftJoy);
+   *    talonRght.set(ControlMode.PercentOutput, rghtJoy);
+   *
    * @param mode The output mode to apply.
-   * In PercentOutput, the output is between -1.0 and 1.0, with 0.0 as stopped.
-   * In Current mode, output value is in amperes.
-   * In Velocity mode, output value is in position change / 100ms.
-   * In Position mode, output value is in encoder ticks or an analog value,
-   *   depending on the sensor.
-   * In Follower mode, the output value is the integer device ID of the talon to
-   * duplicate.
+   *        In PercentOutput, the output is between -1.0 and 1.0, with 0.0 as stopped.
+   *        In Current mode, output value is in amperes.
+   *        In Velocity mode, output value is in position change / 100ms.
+   *        In Position mode, output value is in encoder ticks or an analog value,
+   *        depending on the sensor.
+   *        In Follower mode, the output value is the integer device ID of the talon to
+   *        duplicate.
    *
    * @param outputValue The setpoint value, as described above.
-   *
-   *
-   *	Standard Driving Example:
-   *	_talonLeft.set(ControlMode.PercentOutput, leftJoy);
-   *	_talonRght.set(ControlMode.PercentOutput, rghtJoy);
    */
   public void set(ControlMode mode, double outputValue) {
     set(mode, outputValue, DemandType.Neutral, 0);
   }
+
   /**
    * @param mode Sets the appropriate output on the talon, depending on the mode.
    * @param demand0 The output value to apply.
-   * 	such as advanced feed forward and/or auxiliary close-looping in firmware.
-   * In PercentOutput, the output is between -1.0 and 1.0, with 0.0 as stopped.
-   * In Current mode, output value is in amperes.
-   * In Velocity mode, output value is in position change / 100ms.
-   * In Position mode, output value is in encoder ticks or an analog value,
-   *   depending on the sensor. See
-   * In Follower mode, the output value is the integer device ID of the talon to
-   * duplicate.
+   *        such as advanced feed forward and/or auxiliary close-looping in firmware.
+   *        In PercentOutput, the output is between -1.0 and 1.0, with 0.0 as stopped.
+   *        In Current mode, output value is in amperes.
+   *        In Velocity mode, output value is in position change / 100ms.
+   *        In Position mode, output value is in encoder ticks or an analog value,
+   *           depending on the sensor. See
+   *        In Follower mode, the output value is the integer device ID of the talon to
+   *          duplicate.
    *
-   * @param demand1 Supplemental value.  This will also be control mode specific for future features.
+   * @param demand1 Supplemental value.  
+   *        This will also be control mode specific for future features.
    */
   public void set(ControlMode mode, double demand0, double demand1) {
     set(mode, demand0, DemandType.Neutral, demand1);
   }
+
   /**
+   * Arcade Drive Example:
+   *    talonLeft.set(ControlMode.PercentOutput, 
+   *        joyForward, DemandType.ArbitraryFeedForward, +joyTurn);
+   *    talonRight.set(ControlMode.PercentOutput, 
+   *        joyForward, DemandType.ArbitraryFeedForward, -joyTurn);
+   *
+   * <p>Drive Straight Example:
+   *    Note: Selected Sensor Configuration is necessary for both PID0 and PID1.
+   *    talonLeft.follow(_talonRght, FollwerType.AuxOutput1);
+   *    talonRight.set(ControlMode.PercentOutput, 
+   *        joyForward, DemandType.AuxPID, desiredRobotHeading);
+   *
+   * <p>Drive Straight to a Distance Example:
+   * Note: Other configurations (sensor selection, PID gains, etc.) need to be set.
+   *    talonLeft.follow(_talonRght, FollwerType.AuxOutput1);
+   *    talonRight.set(ControlMode.MotionMagic, targetDistance, 
+   *        DemandType.AuxPID, desiredRobotHeading);
+   *
    * @param mode Sets the appropriate output on the talon, depending on the mode.
    * @param demand0 The output value to apply.
-   * 	such as advanced feed forward and/or auxiliary close-looping in firmware.
-   * In PercentOutput, the output is between -1.0 and 1.0, with 0.0 as stopped.
-   * In Current mode, output value is in amperes.
-   * In Velocity mode, output value is in position change / 100ms.
-   * In Position mode, output value is in encoder ticks or an analog value,
-   *   depending on the sensor. See
-   * In Follower mode, the output value is the integer device ID of the talon to
-   * duplicate.
+   *        such as advanced feed forward and/or auxiliary close-looping in firmware.
+   *        In PercentOutput, the output is between -1.0 and 1.0, with 0.0 as stopped.
+   *        In Current mode, output value is in amperes.
+   *        In Velocity mode, output value is in position change / 100ms.
+   *        In Position mode, output value is in encoder ticks or an analog value,
+   *          depending on the sensor. See
+   *        In Follower mode, the output value is the integer device ID of the talon to
+   *          duplicate.
    *
    * @param demand1Type The demand type for demand1.
-   * Neutral: Ignore demand1 and apply no change to the demand0 output.
-   * AuxPID: Use demand1 to set the target for the auxiliary PID 1.
-   * ArbitraryFeedForward: Use demand1 as an arbitrary additive value to the
-   *	 demand0 output.  In PercentOutput the demand0 output is the motor output,
-   *   and in closed-loop modes the demand0 output is the output of PID0.
+   *        Neutral: Ignore demand1 and apply no change to the demand0 output.
+   *        AuxPID: Use demand1 to set the target for the auxiliary PID 1.
+   *        ArbitraryFeedForward: Use demand1 as an arbitrary additive value to the
+   *          demand0 output.  In PercentOutput the demand0 output is the motor output,
+   *          and in closed-loop modes the demand0 output is the output of PID0.
    * @param demand1 Supplmental output value.  Units match the set mode.
-   *
-   *
-   *  Arcade Drive Example:
-   *		_talonLeft.set(ControlMode.PercentOutput, joyForward, DemandType.ArbitraryFeedForward, +joyTurn);
-   *		_talonRght.set(ControlMode.PercentOutput, joyForward, DemandType.ArbitraryFeedForward, -joyTurn);
-   *
-   *	Drive Straight Example:
-   *	Note: Selected Sensor Configuration is necessary for both PID0 and PID1.
-   *		_talonLeft.follow(_talonRght, FollwerType.AuxOutput1);
-   *		_talonRght.set(ControlMode.PercentOutput, joyForward, DemandType.AuxPID, desiredRobotHeading);
-   *
-   *	Drive Straight to a Distance Example:
-   *	Note: Other configurations (sensor selection, PID gains, etc.) need to be set.
-   *		_talonLeft.follow(_talonRght, FollwerType.AuxOutput1);
-   *		_talonRght.set(ControlMode.MotionMagic, targetDistance, DemandType.AuxPID, desiredRobotHeading);
    */
-  public void set(ControlMode mode, double demand0, DemandType demand1Type, double demand1){
-    m_controlMode = mode;
-    m_sendMode = mode;
+  public void set(ControlMode mode, double demand0, DemandType demand1Type, double demand1) {
+    controlMode = mode;
+    sendMode = mode;
 
-    switch (m_controlMode) {
+    switch (controlMode) {
 
-    case PercentOutput:
-    case Follower:
-    case Velocity:
-    case Position:
-    case MotionMagic:
-    case MotionProfile:
-    case MotionProfileArc:
-      // most cases just send through without modifying
-      PhysicalMotorManager.set4(m_handle, m_sendMode, demand0, demand1, demand1Type);
-      break;
-    
-    case Current:
-      PhysicalMotorManager.setDemand(m_handle, m_sendMode, (int) (1000. * demand0), 0); /* milliamps */
-      break;
+      case PercentOutput:
+      case Follower:
+      case Velocity:
+      case Position:
+      case MotionMagic:
+      case MotionProfile:
+      case MotionProfileArc:
+        // most cases just send through without modifying
+        PhysicalMotorManager.set4(handle, sendMode, demand0, demand1, demand1Type);
+        break;
+      
+      case Current:
+        PhysicalMotorManager.setDemand(handle, sendMode, 
+            (int) (1000. * demand0), 0); /* milliamps */
+        break;
 
-    case Disabled:
-      /* fall thru... */
-    default:
-      PhysicalMotorManager.setDemand(m_handle, m_sendMode, 0, 0);
-      break;
+      case Disabled:
+        /* fall thru... */
+      default:
+        PhysicalMotorManager.setDemand(handle, sendMode, 0, 0);
+        break;
     }
 
   }
@@ -191,24 +201,26 @@ public abstract class BaseMotorController implements IMotorController {
    *            throttle is neutral (ie brake/coast)
    **/
   public void setNeutralMode(NeutralMode neutralMode) {
-    PhysicalMotorManager.setNeutralMode(m_handle, neutralMode.value);
+    PhysicalMotorManager.setNeutralMode(handle, neutralMode.value);
   }
+
   /**
    * Enables a future feature called "Heading Hold".
    * For now this simply updates the CAN signal to the motor controller.
    * Future firmware updates will use this.
    *
-   *	@param enable true/false enable
+   * @param enable true/false enable
    */
   public void enableHeadingHold(boolean enable) {
     /* this routine is moot as the Set() call updates the signal on each call */
     //PhysicalMotor.enableHeadingHold(m_handle, enable ? 1 : 0);
   }
+
   /**
    * For now this simply updates the CAN signal to the motor controller.
    * Future firmware updates will use this to control advanced auxiliary loop behavior.
    *
-   *	@param value
+   * @param value true enables the auxiliary loop.
    */
   public void selectDemandType(boolean value) {
     /* this routine is moot as the Set() call updates the signal on each call */
@@ -222,20 +234,19 @@ public abstract class BaseMotorController implements IMotorController {
    * Pick a value so that positive PercentOutput yields a positive change in sensor.
    * After setting this, user can freely call SetInverted() with any value.
    *
-   * @param PhaseSensor
+   * @param phaseSensor
    *            Indicates whether to invert the phase of the sensor.
    */
-  public void setSensorPhase(boolean PhaseSensor) {
-    PhysicalMotorManager.setSensorPhase(m_handle, PhaseSensor);
+  public void setSensorPhase(boolean phaseSensor) {
+    PhysicalMotorManager.setSensorPhase(handle, phaseSensor);
   }
 
   /**
-   * Inverts the hbridge output of the motor controller.
+   * Inverts the hbridge output of the motor controller. This does not impact sensor phase 
+   * and should not be used to correct sensor polarity. This will invert the hbridge output 
+   * but NOT the LEDs.
    *
-   * This does not impact sensor phase and should not be used to correct sensor polarity.
-   *
-   * This will invert the hbridge output but NOT the LEDs.
-   * This ensures....
+   * <p>This ensures....
    *  - Green LEDs always represents positive request from robot-controller/closed-looping mode.
    *  - Green LEDs correlates to forward limit switch.
    *  - Green LEDs correlates to forward soft limit.
@@ -244,17 +255,18 @@ public abstract class BaseMotorController implements IMotorController {
    *            Invert state to set.
    */
   public void setInverted(boolean invert) {
-    _invert = invert; /* cache for getter */
-    PhysicalMotorManager.setInverted(m_handle, invert);
+    invert = invert; /* cache for getter */
+    PhysicalMotorManager.setInverted(handle, invert);
   }
+
   /**
    * @return invert setting of motor output.
    */
   public boolean getInverted() {
-    return _invert;
+    return invert;
   }
   
-    //----- Factory Default Configuration -----//
+  //----- Factory Default Configuration -----//
   /**
    * Configure all configurations to factory default values
    * 
@@ -263,13 +275,8 @@ public abstract class BaseMotorController implements IMotorController {
    *            not successful within timeout.
    * @return Error Code generated by function. 0 indicates no error.
    */
-  public ErrorCode configFactoryDefault(int timeoutMs){
-    return PhysicalMotorManager.configFactoryDefault(m_handle, timeoutMs);
-  }
-
-  public ErrorCode configFactoryDefault() {
-        int timeoutMs = 50;
-    return PhysicalMotorManager.configFactoryDefault(m_handle, timeoutMs);
+  public ErrorCode configFactoryDefault(int timeoutMs) {
+    return PhysicalMotorManager.configFactoryDefault(handle, timeoutMs);
   }
 
   // ----- general output shaping ------------------//
@@ -286,20 +293,7 @@ public abstract class BaseMotorController implements IMotorController {
    * @return Error Code generated by function. 0 indicates no error.
    */
   public ErrorCode configOpenloopRamp(double secondsFromNeutralToFull, int timeoutMs) {
-    return PhysicalMotorManager.configOpenLoopRamp(m_handle, secondsFromNeutralToFull, timeoutMs);
-  }
-
-  /**
-   * Configures the open-loop ramp rate of throttle output.
-   *
-   * @param secondsFromNeutralToFull
-   *            Minimum desired time to go from neutral to full throttle. A
-   *            value of '0' will disable the ramp.
-   * @return Error Code generated by function.
-   */
-  public ErrorCode configOpenloopRamp(double secondsFromNeutralToFull) {
-    int timeoutMs = 0;
-    return configOpenloopRamp(secondsFromNeutralToFull, timeoutMs);
+    return PhysicalMotorManager.configOpenLoopRamp(handle, secondsFromNeutralToFull, timeoutMs);
   }
 
   /**
@@ -315,11 +309,7 @@ public abstract class BaseMotorController implements IMotorController {
    * @return Error Code generated by function. 0 indicates no error.
    */
   public ErrorCode configClosedloopRamp(double secondsFromNeutralToFull, int timeoutMs) {
-    return PhysicalMotorManager.configClosedLoopRamp(m_handle, secondsFromNeutralToFull, timeoutMs);
-  }
-  public ErrorCode configClosedloopRamp(double secondsFromNeutralToFull) {
-    int timeoutMs = 0;
-    return configClosedloopRamp(secondsFromNeutralToFull, timeoutMs);	
+    return PhysicalMotorManager.configClosedLoopRamp(handle, secondsFromNeutralToFull, timeoutMs);
   }
 
   /**
@@ -334,19 +324,7 @@ public abstract class BaseMotorController implements IMotorController {
    * @return Error Code generated by function. 0 indicates no error.
    */
   public ErrorCode configPeakOutputForward(double percentOut, int timeoutMs) {
-    return PhysicalMotorManager.configPeakOutputForward(m_handle, percentOut, timeoutMs);
-  }
-
-  /**
-   * Configures the forward peak output percentage.
-   *
-   * @param percentOut
-   *            Desired peak output percentage. [0,1]
-   * @return Error Code generated by function. 0 indicates no error.
-   */
-  public ErrorCode configPeakOutputForward(double percentOut) {
-    int timeoutMs = 0;
-    return configPeakOutputForward(percentOut, timeoutMs);	
+    return PhysicalMotorManager.configPeakOutputForward(handle, percentOut, timeoutMs);
   }
 
   /**
@@ -361,13 +339,9 @@ public abstract class BaseMotorController implements IMotorController {
    * @return Error Code generated by function. 0 indicates no error.
    */
   public ErrorCode configPeakOutputReverse(double percentOut, int timeoutMs) {
-    return PhysicalMotorManager.configPeakOutputReverse(m_handle, percentOut, timeoutMs);
+    return PhysicalMotorManager.configPeakOutputReverse(handle, percentOut, timeoutMs);
   }
 
-  public ErrorCode configPeakOutputReverse(double percentOut) {
-    int timeoutMs = 0;
-    return configPeakOutputReverse(percentOut, timeoutMs);	
-  }
   /**
    * Configures the forward nominal output percentage.
    *
@@ -380,12 +354,7 @@ public abstract class BaseMotorController implements IMotorController {
    * @return Error Code generated by function.
    */
   public ErrorCode configNominalOutputForward(double percentOut, int timeoutMs) {
-    return PhysicalMotorManager.configNominalOutputForward(m_handle, percentOut, timeoutMs);
-  }
-
-  public ErrorCode configNominalOutputForward(double percentOut) {
-    int timeoutMs = 0;
-    return configNominalOutputForward(percentOut, timeoutMs);
+    return PhysicalMotorManager.configNominalOutputForward(handle, percentOut, timeoutMs);
   }
 
   /**
@@ -400,11 +369,7 @@ public abstract class BaseMotorController implements IMotorController {
    * @return Error Code generated by function. 0 indicates no error.
    */
   public ErrorCode configNominalOutputReverse(double percentOut, int timeoutMs) {
-    return PhysicalMotorManager.configNominalOutputReverse(m_handle, percentOut, timeoutMs);
-  }
-  public ErrorCode configNominalOutputReverse(double percentOut) {
-    int timeoutMs = 0;
-    return configNominalOutputReverse(percentOut, timeoutMs);
+    return PhysicalMotorManager.configNominalOutputReverse(handle, percentOut, timeoutMs);
   }
 
   /**
@@ -420,7 +385,7 @@ public abstract class BaseMotorController implements IMotorController {
    * @return Error Code generated by function. 0 indicates no error.
    */
   public ErrorCode configNeutralDeadband(double percentDeadband, int timeoutMs) {
-    return PhysicalMotorManager.configNeutralDeadband(m_handle, percentDeadband, timeoutMs);
+    return PhysicalMotorManager.configNeutralDeadband(handle, percentDeadband, timeoutMs);
   }
 
   /**
@@ -433,7 +398,7 @@ public abstract class BaseMotorController implements IMotorController {
    */
   public ErrorCode configNeutralDeadband(double percentDeadband) {
     int timeoutMs = 0;
-    return configNeutralDeadband(percentDeadband, timeoutMs);	
+    return configNeutralDeadband(percentDeadband, timeoutMs);
   }
 
   // ------ Voltage Compensation ----------//
@@ -452,11 +417,7 @@ public abstract class BaseMotorController implements IMotorController {
    * @return Error Code generated by function. 0 indicates no error.
    */
   public ErrorCode configVoltageCompSaturation(double voltage, int timeoutMs) {
-    return PhysicalMotorManager.configVoltageCompSaturation(m_handle, voltage, timeoutMs);
-  }
-  public ErrorCode configVoltageCompSaturation(double voltage) {
-    int timeoutMs = 0;
-    return configVoltageCompSaturation(voltage, timeoutMs);
+    return PhysicalMotorManager.configVoltageCompSaturation(handle, voltage, timeoutMs);
   }
 
   /**
@@ -472,11 +433,8 @@ public abstract class BaseMotorController implements IMotorController {
    * @return Error Code generated by function. 0 indicates no error.
    */
   public ErrorCode configVoltageMeasurementFilter(int filterWindowSamples, int timeoutMs) {
-    return PhysicalMotorManager.configVoltageMeasurementFilter(m_handle, filterWindowSamples, timeoutMs);
-  }
-  public ErrorCode configVoltageMeasurementFilter(int filterWindowSamples) {
-    int timeoutMs = 0;
-    return configVoltageMeasurementFilter(filterWindowSamples, timeoutMs);
+    return PhysicalMotorManager.configVoltageMeasurementFilter(
+        handle, filterWindowSamples, timeoutMs);
   }
 
   /**
@@ -487,7 +445,7 @@ public abstract class BaseMotorController implements IMotorController {
    *            Enable state of voltage compensation.
    **/
   public void enableVoltageCompensation(boolean enable) {
-    PhysicalMotorManager.enableVoltageCompensation(m_handle, enable);
+    PhysicalMotorManager.enableVoltageCompensation(handle, enable);
   }
 
   // ------ General Status ----------//
@@ -497,7 +455,7 @@ public abstract class BaseMotorController implements IMotorController {
    * @return The bus voltage value (in volts).
    */
   public double getBusVoltage() {
-    return PhysicalMotorManager.getBusVoltage(m_handle);
+    return PhysicalMotorManager.getBusVoltage(handle);
   }
 
   /**
@@ -506,7 +464,7 @@ public abstract class BaseMotorController implements IMotorController {
    * @return Output of the motor controller (in percent).
    */
   public double getMotorOutputPercent() {
-    return PhysicalMotorManager.getMotorOutputPercent(m_handle);
+    return PhysicalMotorManager.getMotorOutputPercent(handle);
   }
 
   /**
@@ -522,7 +480,7 @@ public abstract class BaseMotorController implements IMotorController {
    * @return The output current (in amps).
    */
   public double getOutputCurrent() {
-    return PhysicalMotorManager.getOutputCurrent(m_handle);
+    return PhysicalMotorManager.getOutputCurrent(handle);
   }
 
   /**
@@ -531,7 +489,7 @@ public abstract class BaseMotorController implements IMotorController {
    * @return Temperature of the motor controller (in 'C)
    */
   public double getTemperature() {
-    return PhysicalMotorManager.getTemperature(m_handle);
+    return PhysicalMotorManager.getTemperature(handle);
   }
 
   // ------ sensor selection ----------//
@@ -539,7 +497,7 @@ public abstract class BaseMotorController implements IMotorController {
    * Select the remote feedback device for the motor controller.
    * Most CTRE CAN motor controllers will support remote sensors over CAN.
    *
-   * @param feedbackDevice
+   * @param remoteFeedbackDevice
    *            Remote Feedback Device to select.
    * @param pidIdx
    *            0 for Primary closed-loop. 1 for auxiliary closed-loop.
@@ -552,13 +510,7 @@ public abstract class BaseMotorController implements IMotorController {
   public ErrorCode configSelectedFeedbackSensor(
         RemoteFeedbackDevice remoteFeedbackDevice, int pidIdx, int timeoutMs) {
     return PhysicalMotorManager.configSelectedFeedbackSensor(
-        m_handle, remoteFeedbackDevice.getFeedbackDevice(), pidIdx, timeoutMs);
-  }
-
-  public ErrorCode configSelectedFeedbackSensor(RemoteFeedbackDevice feedbackDevice) {
-    int pidIdx = 0;
-    int timeoutMs = 0;	
-    return configSelectedFeedbackSensor(feedbackDevice, pidIdx, timeoutMs);	
+        handle, remoteFeedbackDevice.getFeedbackDevice(), pidIdx, timeoutMs);
   }
 
   /**
@@ -572,16 +524,12 @@ public abstract class BaseMotorController implements IMotorController {
    *            Timeout value in ms. If nonzero, function will wait for
    *            config success and report an error if it times out.
    *            If zero, no blocking or checking is performed.
-   * @return Error Code generated by function. 0 indicates no error.
+   * @return Error Code generated by function.
    */
-  public ErrorCode configSelectedFeedbackSensor(FeedbackDevice feedbackDevice, int pidIdx, int timeoutMs) {
-    return PhysicalMotorManager.configSelectedFeedbackSensor(m_handle, feedbackDevice, pidIdx, timeoutMs);
-  }
-
-  public ErrorCode configSelectedFeedbackSensor(FeedbackDevice feedbackDevice) {
-    int pidIdx = 0;
-    int timeoutMs = 0;
-    return configSelectedFeedbackSensor(feedbackDevice, pidIdx, timeoutMs);	
+  public ErrorCode configSelectedFeedbackSensor(
+        FeedbackDevice feedbackDevice, int pidIdx, int timeoutMs) {
+    return PhysicalMotorManager.configSelectedFeedbackSensor(
+        handle, feedbackDevice, pidIdx, timeoutMs);
   }
 
   /**
@@ -589,12 +537,12 @@ public abstract class BaseMotorController implements IMotorController {
    * feedback sensor.  Useful when you need to scale your sensor values
    * within the closed-loop calculations.  Default value is 1.
    *
-   * Selected Feedback Sensor register in firmware is the decoded sensor value
+   * <p>Selected Feedback Sensor register in firmware is the decoded sensor value
    * multiplied by the Feedback Coefficient.
    *
    * @param coefficient
-   *            Feedback Coefficient value.  Maximum value of 1.
-   *						Resolution is 1/(2^16).  Cannot be 0.
+   *            Feedback Coefficient value. Maximum value of 1.
+   *            Resolution is 1/(2^16). Cannot be 0.
    * @param pidIdx
    *            0 for Primary closed-loop. 1 for auxiliary closed-loop.
    * @param timeoutMs
@@ -603,20 +551,18 @@ public abstract class BaseMotorController implements IMotorController {
    *            If zero, no blocking or checking is performed.
    * @return Error Code generated by function. 0 indicates no error.
    */
-  public ErrorCode configSelectedFeedbackCoefficient(double coefficient, int pidIdx, int timeoutMs) {
-    return PhysicalMotorManager.configSelectedFeedbackCoefficient(m_handle, coefficient, pidIdx, timeoutMs);
+  public ErrorCode configSelectedFeedbackCoefficient(
+        double coefficient, int pidIdx, int timeoutMs) {
+    return PhysicalMotorManager.configSelectedFeedbackCoefficient(
+        handle, coefficient, pidIdx, timeoutMs);
   }
-  public ErrorCode configSelectedFeedbackCoefficient(double coefficient) {
-    int pidIdx = 0;
-        int timeoutMs = 0;
-    return configSelectedFeedbackCoefficient(coefficient, pidIdx, timeoutMs);	
-  }
+
   /**
    * Select what remote device and signal to assign to Remote Sensor 0 or Remote Sensor 1.
    * After binding a remote device and signal to Remote Sensor X, you may select Remote Sensor X
    * as a PID source for closed-loop features.
    *
-   * @param deviceID
+   * @param deviceId
     *            The CAN ID of the remote sensor device.
    * @param remoteSensorSource
    *            The remote sensor device and signal type to bind.
@@ -629,15 +575,19 @@ public abstract class BaseMotorController implements IMotorController {
    *            If zero, no blocking or checking is performed.
    * @return Error Code generated by function. 0 indicates no error.
    */
-  public ErrorCode configRemoteFeedbackFilter(int deviceID, RemoteSensorSource remoteSensorSource, int remoteOrdinal,
+  public ErrorCode configRemoteFeedbackFilter(
+      int deviceId, 
+      RemoteSensorSource remoteSensorSource, 
+      int remoteOrdinal,
       int timeoutMs) {
-    return PhysicalMotorManager.configRemoteFeedbackFilter(m_handle, deviceID, remoteSensorSource.value, remoteOrdinal,
+    return PhysicalMotorManager.configRemoteFeedbackFilter(
+        handle, 
+        deviceId, 
+        remoteSensorSource.value, 
+        remoteOrdinal,
         timeoutMs);
   }
-  public ErrorCode configRemoteFeedbackFilter(int deviceID, RemoteSensorSource remoteSensorSource, int remoteOrdinal) {
-        int timeoutMs = 0;
-    return configRemoteFeedbackFilter(deviceID, remoteSensorSource, remoteOrdinal, timeoutMs);	
-  }
+
   /**
    * Select what sensor term should be bound to switch feedback device.
    * Sensor Sum = Sensor Sum Term 0 - Sensor Sum Term 1
@@ -653,18 +603,14 @@ public abstract class BaseMotorController implements IMotorController {
    *            If zero, no blocking or checking is performed.
    * @return Error Code generated by function. 0 indicates no error.
    */
-  public ErrorCode configSensorTerm(SensorTerm sensorTerm, FeedbackDevice feedbackDevice, int timeoutMs) {
-    return PhysicalMotorManager.configSensorTerm(m_handle, sensorTerm.value, feedbackDevice.value, timeoutMs);
+  public ErrorCode configSensorTerm(
+      SensorTerm sensorTerm, FeedbackDevice feedbackDevice, int timeoutMs) {
+    return PhysicalMotorManager.configSensorTerm(
+        handle, sensorTerm.value, feedbackDevice.value, timeoutMs);
   }
-  public ErrorCode configSensorTerm(SensorTerm sensorTerm, FeedbackDevice feedbackDevice) {
-    int timeoutMs = 0;	
-    return configSensorTerm(sensorTerm, feedbackDevice, timeoutMs);
-  }
-  public ErrorCode configSensorTerm(SensorTerm sensorTerm, RemoteFeedbackDevice feedbackDevice, int timeoutMs) {
-    return configSensorTerm(sensorTerm, feedbackDevice.getFeedbackDevice(), timeoutMs);
-  }
-  public ErrorCode configSensorTerm(SensorTerm sensorTerm, RemoteFeedbackDevice feedbackDevice) {
-    int timeoutMs = 0;	
+
+  public ErrorCode configSensorTerm(
+      SensorTerm sensorTerm, RemoteFeedbackDevice feedbackDevice, int timeoutMs) {
     return configSensorTerm(sensorTerm, feedbackDevice.getFeedbackDevice(), timeoutMs);
   }
 
@@ -679,7 +625,7 @@ public abstract class BaseMotorController implements IMotorController {
    * @return Position of selected sensor (in raw sensor units).
    */
   public int getSelectedSensorPosition(int pidIdx) {
-    return PhysicalMotorManager.getSelectedSensorPosition(m_handle, pidIdx);
+    return PhysicalMotorManager.getSelectedSensorPosition(handle, pidIdx);
   }
   
   public int getSelectedSensorPosition() {
@@ -693,17 +639,17 @@ public abstract class BaseMotorController implements IMotorController {
    * @param pidIdx
    *            0 for Primary closed-loop. 1 for auxiliary closed-loop.
    * @return selected sensor (in raw sensor units) per 100ms.
-   * See Phoenix-Documentation for how to interpret.
+   *        See Phoenix-Documentation for how to interpret.
    */
   public int getSelectedSensorVelocity(int pidIdx) {
-    return PhysicalMotorManager.getSelectedSensorVelocity(m_handle, pidIdx);
+    return PhysicalMotorManager.getSelectedSensorVelocity(handle, pidIdx);
   }
 
   /**
    * Get the primary closed-loop velocity.
    *
    * @return selected sensor (in raw sensor units) per 100ms.
-   * See Phoenix-Documentation for how to interpret.
+   *        See Phoenix-Documentation for how to interpret.
    */
   public int getSelectedSensorVelocity() {
     int pidIdx = 0;
@@ -724,7 +670,7 @@ public abstract class BaseMotorController implements IMotorController {
    * @return Error Code generated by function. 0 indicates no error.
    */
   public ErrorCode setSelectedSensorPosition(int sensorPos, int pidIdx, int timeoutMs) {
-    return PhysicalMotorManager.setSelectedSensorPosition(m_handle, sensorPos, pidIdx, timeoutMs);
+    return PhysicalMotorManager.setSelectedSensorPosition(handle, sensorPos, pidIdx, timeoutMs);
   }
 
   /**
@@ -751,15 +697,13 @@ public abstract class BaseMotorController implements IMotorController {
    * @return Error Code generated by function. 0 indicates no error.
    */
   public ErrorCode setControlFramePeriod(ControlFrame frame, int periodMs) {
-    return PhysicalMotorManager.setControlFramePeriod(m_handle, frame.value, periodMs);
+    return PhysicalMotorManager.setControlFramePeriod(handle, frame.value, periodMs);
   }
 
   /**
-   * Sets the period of the given status frame.
+   * Sets the period of the given status frame. User ensure CAN Bus utilization is not high.
    *
-   * User ensure CAN Bus utilization is not high.
-   *
-   * This setting is not persistent and is lost when device is reset.
+   * <p>This setting is not persistent and is lost when device is reset.
    * If this is a concern, calling application can use HasReset()
    * to determine if the status frame needs to be reconfigured.
    *
@@ -770,15 +714,13 @@ public abstract class BaseMotorController implements IMotorController {
    * @return Error Code generated by function. 0 indicates no error.
    */
   public ErrorCode setControlFramePeriod(int frame, int periodMs) {
-    return PhysicalMotorManager.setControlFramePeriod(m_handle, frame, periodMs);
+    return PhysicalMotorManager.setControlFramePeriod(handle, frame, periodMs);
   }
 
   /**
-   * Sets the period of the given status frame.
+   * Sets the period of the given status frame. User ensure CAN Bus utilization is not high.
    *
-   * User ensure CAN Bus utilization is not high.
-   *
-   * This setting is not persistent and is lost when device is reset. If this
+   * <p>This setting is not persistent and is lost when device is reset. If this
    * is a concern, calling application can use HasReset() to determine if the
    * status frame needs to be reconfigured.
    *
@@ -793,11 +735,12 @@ public abstract class BaseMotorController implements IMotorController {
    * @return Error Code generated by function. 0 indicates no error.
    */
   public ErrorCode setStatusFramePeriod(int frameValue, int periodMs, int timeoutMs) {
-    return PhysicalMotorManager.setStatusFramePeriod(m_handle, frameValue, periodMs, timeoutMs);
+    return PhysicalMotorManager.setStatusFramePeriod(handle, frameValue, periodMs, timeoutMs);
   }
+
   public ErrorCode setStatusFramePeriod(int frameValue, int periodMs) {
     int timeoutMs = 0;
-    return 	setStatusFramePeriod(frameValue, periodMs,timeoutMs);
+    return setStatusFramePeriod(frameValue, periodMs,timeoutMs);
   }
 
   /**
@@ -816,6 +759,7 @@ public abstract class BaseMotorController implements IMotorController {
   public ErrorCode setStatusFramePeriod(StatusFrame frame, int periodMs, int timeoutMs) {
     return setStatusFramePeriod(frame.value, periodMs, timeoutMs);
   }
+
   public ErrorCode setStatusFramePeriod(StatusFrame frame, int periodMs) {
     int timeoutMs = 0;
     return setStatusFramePeriod(frame,periodMs, timeoutMs);
@@ -833,8 +777,9 @@ public abstract class BaseMotorController implements IMotorController {
    * @return Period of the given status frame.
    */
   public int getStatusFramePeriod(int frame, int timeoutMs) {
-    return PhysicalMotorManager.getStatusFramePeriod(m_handle, frame, timeoutMs);
+    return PhysicalMotorManager.getStatusFramePeriod(handle, frame, timeoutMs);
   }
+    
   public int getStatusFramePeriod(int frame) {
     int timeoutMs = 0;
     return getStatusFramePeriod(frame, timeoutMs);
@@ -852,11 +797,7 @@ public abstract class BaseMotorController implements IMotorController {
    * @return Period of the given status frame.
    */
   public int getStatusFramePeriod(StatusFrame frame, int timeoutMs) {
-    return PhysicalMotorManager.getStatusFramePeriod(m_handle, frame.value, timeoutMs);
-  }
-  public int getStatusFramePeriod(StatusFrame frame) {
-    int timeoutMs = 0;
-    return getStatusFramePeriod(frame, timeoutMs);
+    return PhysicalMotorManager.getStatusFramePeriod(handle, frame.value, timeoutMs);
   }
 
   /**
@@ -871,11 +812,7 @@ public abstract class BaseMotorController implements IMotorController {
    * @return Period of the given status frame.
    */
   public int getStatusFramePeriod(StatusFrameEnhanced frame, int timeoutMs) {
-    return PhysicalMotorManager.getStatusFramePeriod(m_handle, frame.value, timeoutMs);
-  }
-  public int getStatusFramePeriod(StatusFrameEnhanced frame) {
-    int timeoutMs = 0;
-    return  getStatusFramePeriod(frame, timeoutMs);
+    return PhysicalMotorManager.getStatusFramePeriod(handle, frame.value, timeoutMs);
   }
 
   // ----- velocity signal conditionaing ------//
@@ -893,20 +830,7 @@ public abstract class BaseMotorController implements IMotorController {
    * @return Error Code generated by function. 0 indicates no error.
    */
   public ErrorCode configVelocityMeasurementPeriod(VelocityMeasPeriod period, int timeoutMs) {
-    return PhysicalMotorManager.configVelocityMeasurementPeriod(m_handle, period, timeoutMs);
-  }
-
-  /**
-   * Sets the period over which velocity measurements are taken.
-   *
-   * @param period
-   *            Desired period for the velocity measurement. @see
-   *            #VelocityMeasPeriod
-   * @return Error Code generated by function. 0 indicates no error.
-   */
-  public ErrorCode configVelocityMeasurementPeriod(VelocityMeasPeriod period) {
-    int timeoutMs = 0;
-    return configVelocityMeasurementPeriod(period, timeoutMs);		
+    return PhysicalMotorManager.configVelocityMeasurementPeriod(handle, period, timeoutMs);
   }
 
   /**
@@ -924,22 +848,7 @@ public abstract class BaseMotorController implements IMotorController {
    * @return Error Code generated by function. 0 indicates no error.
    */
   public ErrorCode configVelocityMeasurementWindow(int windowSize, int timeoutMs) {
-    return PhysicalMotorManager.configVelocityMeasurementWindow(m_handle, windowSize, timeoutMs);
-  }
-
-  /**
-   * Sets the number of velocity samples used in the rolling average velocity
-   * measurement.
-   *
-   * @param windowSize
-   *            Number of samples in the rolling average of velocity
-   *            measurement. Valid values are 1,2,4,8,16,32. If another value
-   *            is specified, it will truncate to nearest support value.
-   * @return Error Code generated by function. 0 indicates no error.
-   */
-  public ErrorCode configVelocityMeasurementWindow(int windowSize) {
-    int timeoutMs = 0;
-    return configVelocityMeasurementWindow(windowSize, timeoutMs);
+    return PhysicalMotorManager.configVelocityMeasurementWindow(handle, windowSize, timeoutMs);
   }
 
   // ------ remote limit switch ----------//
@@ -954,7 +863,7 @@ public abstract class BaseMotorController implements IMotorController {
    * @param normalOpenOrClose
    *            Setting for normally open, normally closed, or disabled. This
    *            setting matches the web-based configuration drop down.
-   * @param deviceID
+   * @param deviceId
    *            Device ID of remote source (Talon SRX or CANifier device ID).
    * @param timeoutMs
    *            Timeout value in ms. If nonzero, function will wait for config
@@ -962,14 +871,11 @@ public abstract class BaseMotorController implements IMotorController {
    *            blocking or checking is performed.
    * @return Error Code generated by function. 0 indicates no error.
    */
-  public ErrorCode configForwardLimitSwitchSource(RemoteLimitSwitchSource type, LimitSwitchNormal normalOpenOrClose,
-      int deviceID, int timeoutMs) {
-    return configForwardLimitSwitchSource(type.value, normalOpenOrClose.value, deviceID, timeoutMs);
-  }
-  public ErrorCode configForwardLimitSwitchSource(RemoteLimitSwitchSource type, LimitSwitchNormal normalOpenOrClose,
-      int deviceID) {
-    int timeoutMs = 0;
-    return configForwardLimitSwitchSource(type, normalOpenOrClose, deviceID, timeoutMs);	
+  public ErrorCode configForwardLimitSwitchSource(
+      RemoteLimitSwitchSource type, LimitSwitchNormal normalOpenOrClose,
+      int deviceId, int timeoutMs) {
+    return configForwardLimitSwitchSource(
+        LimitSwitchSource.valueOf(type.value), normalOpenOrClose, deviceId, timeoutMs);
   }
 
   /**
@@ -983,7 +889,7 @@ public abstract class BaseMotorController implements IMotorController {
    * @param normalOpenOrClose
    *            Setting for normally open, normally closed, or disabled. This
    *            setting matches the web-based configuration drop down.
-   * @param deviceID
+   * @param deviceId
    *            Device ID of remote source (Talon SRX or CANifier device ID).
    * @param timeoutMs
    *            Timeout value in ms. If nonzero, function will wait for config
@@ -991,24 +897,20 @@ public abstract class BaseMotorController implements IMotorController {
    *            blocking or checking is performed.
    * @return Error Code generated by function. 0 indicates no error.
    */
-  public ErrorCode configReverseLimitSwitchSource(RemoteLimitSwitchSource type, LimitSwitchNormal normalOpenOrClose,
-      int deviceID, int timeoutMs) {
-    return PhysicalMotorManager.configReverseLimitSwitchSource(m_handle, type.value, normalOpenOrClose.value,
-        deviceID, timeoutMs);
-  }
-  public ErrorCode configReverseLimitSwitchSource(RemoteLimitSwitchSource type, LimitSwitchNormal normalOpenOrClose,
-      int deviceID) {
-    int timeoutMs = 0;
-    return configReverseLimitSwitchSource(type, normalOpenOrClose, deviceID, timeoutMs);	
+  public ErrorCode configReverseLimitSwitchSource(
+      RemoteLimitSwitchSource type, LimitSwitchNormal normalOpenOrClose,
+      int deviceId, int timeoutMs) {
+    return PhysicalMotorManager.configReverseLimitSwitchSource(
+        handle, LimitSwitchSource.valueOf(type.value), normalOpenOrClose, deviceId, timeoutMs);
   }
 
   /**
    * Configures a limit switch for a local/remote source.
    *
-   * For example, a CAN motor controller may need to monitor the Limit-R pin
+   * <p>For example, a CAN motor controller may need to monitor the Limit-R pin
    * of another Talon, CANifier, or local Gadgeteer feedback connector.
    *
-   * If the sensor is remote, a device ID of zero is assumed. If that's not
+   * <p>If the sensor is remote, a device ID of zero is assumed. If that's not
    * desired, use the four parameter version of this function.
    *
    * @param type
@@ -1018,25 +920,21 @@ public abstract class BaseMotorController implements IMotorController {
    * @param normalOpenOrClose
    *            Setting for normally open, normally closed, or disabled. This
    *            setting matches the web-based configuration drop down.
+   * @param deviceId
+   *            Device ID of remote source (Talon SRX or CANifier device ID).
    * @param timeoutMs
    *            Timeout value in ms. If nonzero, function will wait for config
    *            success and report an error if it times out. If zero, no
    *            blocking or checking is performed.
    * @return Error Code generated by function. 0 indicates no error.
    */
-  public ErrorCode configForwardLimitSwitchSource(LimitSwitchSource type, LimitSwitchNormal normalOpenOrClose,
+  public ErrorCode configForwardLimitSwitchSource(
+      LimitSwitchSource type, 
+      LimitSwitchNormal normalOpenOrClose,
+      int deviceId,
       int timeoutMs) {
-    return configForwardLimitSwitchSource(type.value, normalOpenOrClose.value, 0x00000000, timeoutMs);
-  }
-  public ErrorCode configForwardLimitSwitchSource(LimitSwitchSource type, LimitSwitchNormal normalOpenOrClose) {
-    int timeoutMs = 0;
-    return configForwardLimitSwitchSource(type, normalOpenOrClose, timeoutMs);
-  }
-
-  protected ErrorCode configForwardLimitSwitchSource(int typeValue, int normalOpenOrCloseValue, int deviceID,
-      int timeoutMs) {
-    return PhysicalMotorManager.configForwardLimitSwitchSource(m_handle, typeValue, normalOpenOrCloseValue,
-        deviceID, timeoutMs);
+    return PhysicalMotorManager.configForwardLimitSwitchSource(
+        handle, type, normalOpenOrClose, deviceId, timeoutMs);
   }
 
   /**
@@ -1055,16 +953,21 @@ public abstract class BaseMotorController implements IMotorController {
    * @param normalOpenOrCloseValue
    *            Setting for normally open, normally closed, or disabled. This
    *            setting matches the web-based configuration drop down.
+   * @param deviceId
+   *            Device ID of remote source (Talon SRX or CANifier device ID).
    * @param timeoutMs
    *            Timeout value in ms. If nonzero, function will wait for config
    *            success and report an error if it times out. If zero, no
    *            blocking or checking is performed.
    * @return Error Code generated by function. 0 indicates no error.
    */
-  protected ErrorCode configReverseLimitSwitchSource(int typeValue, int normalOpenOrCloseValue, int deviceID,
+  protected ErrorCode configReverseLimitSwitchSource(
+      LimitSwitchSource typeValue, 
+      LimitSwitchNormal normalOpenOrCloseValue, 
+      int deviceId,
       int timeoutMs) {
-    return PhysicalMotorManager.configReverseLimitSwitchSource(m_handle, typeValue, normalOpenOrCloseValue,
-        deviceID, timeoutMs);
+    return PhysicalMotorManager.configReverseLimitSwitchSource(
+      handle, typeValue, normalOpenOrCloseValue, deviceId, timeoutMs);
   }
 
   /**
@@ -1074,7 +977,7 @@ public abstract class BaseMotorController implements IMotorController {
    *            Enable state for limit switches.
    **/
   public void overrideLimitSwitchesEnable(boolean enable) {
-    PhysicalMotorManager.overrideLimitSwitchesEnable(m_handle, enable);
+    PhysicalMotorManager.overrideLimitSwitchesEnable(handle, enable);
   }
 
   // ------ soft limit ----------//
@@ -1090,7 +993,7 @@ public abstract class BaseMotorController implements IMotorController {
    * @return Error Code generated by function. 0 indicates no error.
    */
   public ErrorCode configForwardSoftLimitThreshold(int forwardSensorLimit, int timeoutMs) {
-    return PhysicalMotorManager.configForwardSoftLimitThreshold(m_handle, forwardSensorLimit, timeoutMs);
+    return PhysicalMotorManager.configForwardSoftLimitThreshold(handle, forwardSensorLimit, timeoutMs);
   }
   public ErrorCode configForwardSoftLimitThreshold(int forwardSensorLimit) {
     int timeoutMs = 0;
@@ -1109,7 +1012,7 @@ public abstract class BaseMotorController implements IMotorController {
    * @return Error Code generated by function. 0 indicates no error.
    */
   public ErrorCode configReverseSoftLimitThreshold(int reverseSensorLimit, int timeoutMs) {
-    return PhysicalMotorManager.configReverseSoftLimitThreshold(m_handle, reverseSensorLimit, timeoutMs);
+    return PhysicalMotorManager.configReverseSoftLimitThreshold(handle, reverseSensorLimit, timeoutMs);
   }
   public ErrorCode configReverseSoftLimitThreshold(int reverseSensorLimit) {
     int timeoutMs = 0;
@@ -1128,7 +1031,7 @@ public abstract class BaseMotorController implements IMotorController {
    * @return Error Code generated by function. 0 indicates no error.
    */
   public ErrorCode configForwardSoftLimitEnable(boolean enable, int timeoutMs) {
-    return PhysicalMotorManager.configForwardSoftLimitEnable(m_handle, enable, timeoutMs);
+    return PhysicalMotorManager.configForwardSoftLimitEnable(handle, enable, timeoutMs);
   }
   public ErrorCode configForwardSoftLimitEnable(boolean enable) {
     int timeoutMs = 0;
@@ -1147,7 +1050,7 @@ public abstract class BaseMotorController implements IMotorController {
    * @return Error Code generated by function. 0 indicates no error.
    */
   public ErrorCode configReverseSoftLimitEnable(boolean enable, int timeoutMs) {
-    return PhysicalMotorManager.configReverseSoftLimitEnable(m_handle, enable, timeoutMs);
+    return PhysicalMotorManager.configReverseSoftLimitEnable(handle, enable, timeoutMs);
   }
   public ErrorCode configReverseSoftLimitEnable(boolean enable) {
     int timeoutMs = 0;
@@ -1163,7 +1066,7 @@ public abstract class BaseMotorController implements IMotorController {
    *            Enable state for soft limit switches.
    */
   public void overrideSoftLimitsEnable(boolean enable) {
-    PhysicalMotorManager.overrideSoftLimitsEnable(m_handle, enable);
+    PhysicalMotorManager.overrideSoftLimitsEnable(handle, enable);
   }
 
   // ------ Current Lim ----------//
@@ -1184,11 +1087,11 @@ public abstract class BaseMotorController implements IMotorController {
    * @return Error Code generated by function. 0 indicates no error.
    */
   public ErrorCode config_kP(int slotIdx, double value, int timeoutMs) {
-    return PhysicalMotorManager.config_kP(m_handle, slotIdx,  value, timeoutMs);
+    return PhysicalMotorManager.config_kP(handle, slotIdx,  value, timeoutMs);
   }
   public ErrorCode config_kP(int slotIdx, double value) {
     int timeoutMs = 0;
-    return config_kP( slotIdx,  value,  timeoutMs);	
+    return config_kP(slotIdx,  value,  timeoutMs);	
   }
 
   /**
@@ -1205,12 +1108,12 @@ public abstract class BaseMotorController implements IMotorController {
    * @return Error Code generated by function. 0 indicates no error.
    */
   public ErrorCode config_kI(int slotIdx, double value, int timeoutMs) {
-    return PhysicalMotorManager.config_kI(m_handle, slotIdx,  value, timeoutMs);
+    return PhysicalMotorManager.config_kI(handle, slotIdx,  value, timeoutMs);
   }
   public ErrorCode config_kI(int slotIdx, double value) {
         int timeoutMs = 0;
 
-    return config_kI( slotIdx,  value,  timeoutMs);
+    return config_kI(slotIdx,  value,  timeoutMs);
   }
 
   /**
@@ -1227,11 +1130,12 @@ public abstract class BaseMotorController implements IMotorController {
    * @return Error Code generated by function. 0 indicates no error.
    */
   public ErrorCode config_kD(int slotIdx, double value, int timeoutMs) {
-    return PhysicalMotorManager.config_kD(m_handle, slotIdx,  value, timeoutMs);
+    return PhysicalMotorManager.config_kD(handle, slotIdx,  value, timeoutMs);
   }
+
   public ErrorCode config_kD(int slotIdx, double value) {
         int timeoutMs = 0;
-    return config_kD( slotIdx,  value,  timeoutMs);
+    return config_kD(slotIdx,  value,  timeoutMs);
   }
 
   /**
@@ -1248,11 +1152,11 @@ public abstract class BaseMotorController implements IMotorController {
    * @return Error Code generated by function. 0 indicates no error.
    */
   public ErrorCode config_kF(int slotIdx, double value, int timeoutMs) {
-    return PhysicalMotorManager.config_kF(m_handle, slotIdx,  value, timeoutMs);
+    return PhysicalMotorManager.config_kF(handle, slotIdx,  value, timeoutMs);
   }
   public ErrorCode config_kF(int slotIdx,  double value) {
         int timeoutMs = 0;
-    return config_kF( slotIdx,  value,  timeoutMs);	
+    return config_kF(slotIdx,  value,  timeoutMs);	
   }
 
   /**
@@ -1273,11 +1177,12 @@ public abstract class BaseMotorController implements IMotorController {
    * @return Error Code generated by function. 0 indicates no error.
    */
   public ErrorCode config_IntegralZone(int slotIdx, int izone, int timeoutMs) {
-    return PhysicalMotorManager.config_IntegralZone(m_handle, slotIdx,  izone, timeoutMs);
+    return PhysicalMotorManager.config_IntegralZone(handle, slotIdx,  izone, timeoutMs);
   }
+
   public ErrorCode config_IntegralZone(int slotIdx, int izone) {
         int timeoutMs = 0;
-    return config_IntegralZone( slotIdx,  izone,  timeoutMs);
+    return config_IntegralZone(slotIdx,  izone,  timeoutMs);
   }
 
   /**
@@ -1294,14 +1199,14 @@ public abstract class BaseMotorController implements IMotorController {
    * @return Error Code generated by function. 0 indicates no error.
    */
   public ErrorCode configAllowableClosedloopError(int slotIdx, int allowableClosedLoopError, int timeoutMs) {
-    return PhysicalMotorManager.configAllowableClosedLoopError(m_handle, slotIdx, allowableClosedLoopError,
+    return PhysicalMotorManager.configAllowableClosedLoopError(handle, slotIdx, allowableClosedLoopError,
         timeoutMs);
   }
 
   public ErrorCode configAllowableClosedloopError(int slotIdx, int allowableClosedLoopError) {
         int timeoutMs = 0;
   
-    return configAllowableClosedloopError( slotIdx,  allowableClosedLoopError,  timeoutMs);
+    return configAllowableClosedloopError(slotIdx,  allowableClosedLoopError,  timeoutMs);
   }
 
   /**
@@ -1319,11 +1224,11 @@ public abstract class BaseMotorController implements IMotorController {
    * @return Error Code generated by function. 0 indicates no error.
    */
   public ErrorCode configMaxIntegralAccumulator(int slotIdx, double iaccum, int timeoutMs) {
-    return PhysicalMotorManager.configMaxIntegralAccumulator(m_handle, slotIdx, iaccum, timeoutMs);
+    return PhysicalMotorManager.configMaxIntegralAccumulator(handle, slotIdx, iaccum, timeoutMs);
   }
   public ErrorCode configMaxIntegralAccumulator(int slotIdx, double iaccum) {
         int timeoutMs = 0;
-    return configMaxIntegralAccumulator( slotIdx,  iaccum,  timeoutMs);	
+    return configMaxIntegralAccumulator(slotIdx,  iaccum,  timeoutMs);	
   }
 
   /**
@@ -1343,12 +1248,12 @@ public abstract class BaseMotorController implements IMotorController {
    * @return Error Code generated by function. 0 indicates no error.
    */
   public ErrorCode configClosedLoopPeakOutput(int slotIdx, double percentOut, int timeoutMs) {
-    return PhysicalMotorManager.configClosedLoopPeakOutput(m_handle, slotIdx, percentOut, timeoutMs);
+    return PhysicalMotorManager.configClosedLoopPeakOutput(handle, slotIdx, percentOut, timeoutMs);
   }
   public ErrorCode configClosedLoopPeakOutput(int slotIdx, double percentOut) {
         int timeoutMs = 0;
 
-    return configClosedLoopPeakOutput( slotIdx,  percentOut,  timeoutMs);
+    return configClosedLoopPeakOutput(slotIdx,  percentOut,  timeoutMs);
   }
 
   /**
@@ -1367,11 +1272,11 @@ public abstract class BaseMotorController implements IMotorController {
    * @return Error Code generated by function. 0 indicates no error.
    */
     public ErrorCode configClosedLoopPeriod(int slotIdx, int loopTimeMs, int timeoutMs) {
-    return PhysicalMotorManager.configClosedLoopPeriod(m_handle, slotIdx, loopTimeMs, timeoutMs);
+    return PhysicalMotorManager.configClosedLoopPeriod(handle, slotIdx, loopTimeMs, timeoutMs);
   }
     public ErrorCode configClosedLoopPeriod(int slotIdx, int loopTimeMs) {
         int timeoutMs = 0;
-    return configClosedLoopPeriod( slotIdx,  loopTimeMs,  timeoutMs);
+    return configClosedLoopPeriod(slotIdx,  loopTimeMs,  timeoutMs);
   }
 
   /**
@@ -1393,10 +1298,10 @@ public abstract class BaseMotorController implements IMotorController {
    *            blocking or checking is performed.
    * @return Error Code
    */
-  public ErrorCode configAuxPIDPolarity(boolean invert, int timeoutMs){
+  public ErrorCode configAuxPIDPolarity(boolean invert, int timeoutMs) {
     return configSetParameter(ParamEnum.ePIDLoopPolarity, invert ? 1:0, 0, 1, timeoutMs);
   }
-  public ErrorCode configAuxPIDPolarity(boolean invert){
+  public ErrorCode configAuxPIDPolarity(boolean invert) {
     int timeoutMs = 0;
     return configAuxPIDPolarity(invert,  timeoutMs);
   }
@@ -1418,12 +1323,12 @@ public abstract class BaseMotorController implements IMotorController {
    * @return Error Code generated by function. 0 indicates no error.
    */
   public ErrorCode setIntegralAccumulator(double iaccum, int pidIdx, int timeoutMs) {
-    return PhysicalMotorManager.setIntegralAccumulator(m_handle,  iaccum, pidIdx, timeoutMs);
+    return PhysicalMotorManager.setIntegralAccumulator(handle,  iaccum, pidIdx, timeoutMs);
   }
   public ErrorCode setIntegralAccumulator(double iaccum) {
     int pidIdx = 0;
     int timeoutMs = 0;
-    return setIntegralAccumulator( iaccum,  pidIdx,  timeoutMs);
+    return setIntegralAccumulator(iaccum,  pidIdx,  timeoutMs);
   }
 
   /**
@@ -1435,7 +1340,7 @@ public abstract class BaseMotorController implements IMotorController {
    * @return Closed-loop error value.
    */
   public int getClosedLoopError(int pidIdx) {
-    return PhysicalMotorManager.getClosedLoopError(m_handle, pidIdx);
+    return PhysicalMotorManager.getClosedLoopError(handle, pidIdx);
   }
 
   /**
@@ -1458,7 +1363,7 @@ public abstract class BaseMotorController implements IMotorController {
    * @return Integral accumulator value (Closed-loop error X 1ms).
    */
   public double getIntegralAccumulator(int pidIdx) {
-    return PhysicalMotorManager.getIntegralAccumulator(m_handle, pidIdx);
+    return PhysicalMotorManager.getIntegralAccumulator(handle, pidIdx);
   }
   public double getIntegralAccumulator() {
     int pidIdx = 0;
@@ -1474,7 +1379,7 @@ public abstract class BaseMotorController implements IMotorController {
    * @return The error derivative value.
    */
   public double getErrorDerivative(int pidIdx) {
-    return PhysicalMotorManager.getErrorDerivative(m_handle, pidIdx);
+    return PhysicalMotorManager.getErrorDerivative(handle, pidIdx);
   }
   public double getErrorDerivative() {
     int pidIdx = 0;
@@ -1491,7 +1396,7 @@ public abstract class BaseMotorController implements IMotorController {
    *            0 for Primary closed-loop. 1 for auxiliary closed-loop.
    **/
   public void selectProfileSlot(int slotIdx, int pidIdx) {
-    PhysicalMotorManager.selectProfileSlot(m_handle, slotIdx, pidIdx);
+    PhysicalMotorManager.selectProfileSlot(handle, slotIdx, pidIdx);
   }
 
   /**
@@ -1502,7 +1407,7 @@ public abstract class BaseMotorController implements IMotorController {
    * @return The closed loop target.
    */
   public int getClosedLoopTarget(int pidIdx) {
-    return PhysicalMotorManager.getClosedLoopTarget(m_handle, pidIdx);
+    return PhysicalMotorManager.getClosedLoopTarget(handle, pidIdx);
   }
 
   /**
@@ -1522,7 +1427,7 @@ public abstract class BaseMotorController implements IMotorController {
    * @return The Active Trajectory Position in sensor units.
    */
   public int getActiveTrajectoryPosition() {
-    return PhysicalMotorManager.getActiveTrajectoryPosition(m_handle);
+    return PhysicalMotorManager.getActiveTrajectoryPosition(handle);
   }
 
   /**
@@ -1532,7 +1437,7 @@ public abstract class BaseMotorController implements IMotorController {
    * @return The Active Trajectory Velocity in sensor units per 100ms.
    */
   public int getActiveTrajectoryVelocity() {
-    return PhysicalMotorManager.getActiveTrajectoryVelocity(m_handle);
+    return PhysicalMotorManager.getActiveTrajectoryVelocity(handle);
   }
 
   /**
@@ -1542,7 +1447,7 @@ public abstract class BaseMotorController implements IMotorController {
    * @return The Active Trajectory Heading in degreees.
    */
   public double getActiveTrajectoryHeading() {
-    return PhysicalMotorManager.getActiveTrajectoryHeading(m_handle);
+    return PhysicalMotorManager.getActiveTrajectoryHeading(handle);
   }
 
   // ------ Motion Profile Settings used in Motion Magic and Motion Profile ----------//
@@ -1560,11 +1465,12 @@ public abstract class BaseMotorController implements IMotorController {
    * @return Error Code generated by function. 0 indicates no error.
    */
   public ErrorCode configMotionCruiseVelocity(int sensorUnitsPer100ms, int timeoutMs) {
-    return PhysicalMotorManager.configMotionCruiseVelocity(m_handle, sensorUnitsPer100ms, timeoutMs);
+    return PhysicalMotorManager.configMotionCruiseVelocity(handle, sensorUnitsPer100ms, timeoutMs);
   }
+
   public ErrorCode configMotionCruiseVelocity(int sensorUnitsPer100ms) {
     int timeoutMs = 0;
-    return configMotionCruiseVelocity( sensorUnitsPer100ms,  timeoutMs);	
+    return configMotionCruiseVelocity(sensorUnitsPer100ms,  timeoutMs);	
   }
 
   /**
@@ -1581,11 +1487,12 @@ public abstract class BaseMotorController implements IMotorController {
    * @return Error Code generated by function. 0 indicates no error.
    */
   public ErrorCode configMotionAcceleration(int sensorUnitsPer100msPerSec, int timeoutMs) {
-    return PhysicalMotorManager.configMotionAcceleration(m_handle, sensorUnitsPer100msPerSec, timeoutMs);
+    return PhysicalMotorManager.configMotionAcceleration(handle, sensorUnitsPer100msPerSec, timeoutMs);
   }
+
   public ErrorCode configMotionAcceleration(int sensorUnitsPer100msPerSec) {
     int timeoutMs = 0;
-    return configMotionAcceleration( sensorUnitsPer100msPerSec,  timeoutMs);
+    return configMotionAcceleration(sensorUnitsPer100msPerSec,  timeoutMs);
   }
 
   //------ Motion Profile Buffer ----------//
@@ -1594,7 +1501,7 @@ public abstract class BaseMotorController implements IMotorController {
    * API (top).
    */
   public ErrorCode clearMotionProfileTrajectories() {
-    return PhysicalMotorManager.clearMotionProfileTrajectories(m_handle);
+    return PhysicalMotorManager.clearMotionProfileTrajectories(handle);
   }
 
   /**
@@ -1606,8 +1513,9 @@ public abstract class BaseMotorController implements IMotorController {
    * @return number of trajectory points in the top buffer.
    */
   public int getMotionProfileTopLevelBufferCount() {
-    return PhysicalMotorManager.getMotionProfileTopLevelBufferCount(m_handle);
+    return PhysicalMotorManager.getMotionProfileTopLevelBufferCount(handle);
   }
+
   /**
    * Push another trajectory point into the top level buffer (which is emptied
    * into the motor controller's bottom buffer as room allows).
@@ -1643,7 +1551,7 @@ public abstract class BaseMotorController implements IMotorController {
    *         full due to kMotionProfileTopBufferCapacity.
    */
   public ErrorCode pushMotionProfileTrajectory(TrajectoryPoint trajPt) {
-    return PhysicalMotorManager.pushMotionProfileTrajectory2(m_handle,
+    return PhysicalMotorManager.pushMotionProfileTrajectory2(handle,
         trajPt.position, trajPt.velocity, trajPt.auxiliaryPos,
         trajPt.profileSlotSelect0, trajPt.profileSlotSelect1,
         trajPt.isLastPoint, trajPt.zeroPos, trajPt.timeDur.value);
@@ -1658,7 +1566,7 @@ public abstract class BaseMotorController implements IMotorController {
    * @return number of trajectory points in the top buffer.
    */
   public boolean isMotionProfileTopLevelBufferFull() {
-    return PhysicalMotorManager.isMotionProfileTopLevelBufferFull(m_handle);
+    return PhysicalMotorManager.isMotionProfileTopLevelBufferFull(handle);
   }
 
   /**
@@ -1671,16 +1579,14 @@ public abstract class BaseMotorController implements IMotorController {
    * utilize threading.
    */
   public void processMotionProfileBuffer() {
-    PhysicalMotorManager.processMotionProfileBuffer(m_handle);
+    PhysicalMotorManager.processMotionProfileBuffer(handle);
   }
+
   /**
-   * Retrieve all status information.
-   * For best performance, Caller can snapshot all status information regarding the
-   * motion profile executer.
+   * Retrieve all status information. For best performance, Caller can snapshot all 
+   * status information regarding the motion profile executer.
    *
-   * @param statusToFill  Caller supplied object to fill.
-   *
-   * The members are filled, as follows...
+   * <p>The members are filled, as follows...
    *
    *	topBufferRem:	The available empty slots in the trajectory buffer.
    * 	 				The robot API holds a "top buffer" of trajectory points, so your applicaion
@@ -1711,24 +1617,26 @@ public abstract class BaseMotorController implements IMotorController {
    *      			  selected slot.  This can differ in the currently selected slot used
    *       				 for Position and Velocity servo modes
    *
-   *	outputEnable:		The current output mode of the motion profile
+   * <p>outputEnable:		The current output mode of the motion profile
    *						executer (disabled, enabled, or hold).  When changing the set()
    *						value in MP mode, it's important to check this signal to
    *						confirm the change takes effect before interacting with the top buffer.
+   * @param statusToFill  Caller supplied object to fill.
+   *
    */
   public ErrorCode getMotionProfileStatus(MotionProfileStatus statusToFill) {
-    ErrorCode errorCode = PhysicalMotorManager.getMotionProfileStatus2(m_handle, _motionProfStats);
-    statusToFill.topBufferRem = _motionProfStats[0];
-    statusToFill.topBufferCnt = _motionProfStats[1];
-    statusToFill.btmBufferCnt = _motionProfStats[2];
-    statusToFill.hasUnderrun = _motionProfStats[3] != 0;
-    statusToFill.isUnderrun = _motionProfStats[4] != 0;
-    statusToFill.activePointValid = _motionProfStats[5] != 0;
-    statusToFill.isLast = _motionProfStats[6] != 0;
-    statusToFill.profileSlotSelect = _motionProfStats[7];
-    statusToFill.outputEnable = SetValueMotionProfile.valueOf(_motionProfStats[8]);
-    statusToFill.timeDurMs = _motionProfStats[9];
-    statusToFill.profileSlotSelect1 = _motionProfStats[10];
+    final ErrorCode errorCode = PhysicalMotorManager.getMotionProfileStatus2(handle, motionProfStats);
+    statusToFill.topBufferRem = motionProfStats[0];
+    statusToFill.topBufferCnt = motionProfStats[1];
+    statusToFill.btmBufferCnt = motionProfStats[2];
+    statusToFill.hasUnderrun = motionProfStats[3] != 0;
+    statusToFill.isUnderrun = motionProfStats[4] != 0;
+    statusToFill.activePointValid = motionProfStats[5] != 0;
+    statusToFill.isLast = motionProfStats[6] != 0;
+    statusToFill.profileSlotSelect = motionProfStats[7];
+    statusToFill.outputEnable = SetValueMotionProfile.valueOf(motionProfStats[8]);
+    statusToFill.timeDurMs = motionProfStats[9];
+    statusToFill.profileSlotSelect1 = motionProfStats[10];
     return errorCode;
   }
 
@@ -1743,7 +1651,7 @@ public abstract class BaseMotorController implements IMotorController {
    * @return Error Code generated by function. 0 indicates no error.
    */
   public ErrorCode clearMotionProfileHasUnderrun(int timeoutMs) {
-    return PhysicalMotorManager.clearMotionProfileHasUnderrun(m_handle, timeoutMs);
+    return PhysicalMotorManager.clearMotionProfileHasUnderrun(handle, timeoutMs);
   }
   public ErrorCode clearMotionProfileHasUnderrun() {
     int timeoutMs = 0;
@@ -1761,7 +1669,7 @@ public abstract class BaseMotorController implements IMotorController {
    * @return Error Code generated by function. 0 indicates no error.
    */
   public ErrorCode changeMotionControlFramePeriod(int periodMs) {
-    return PhysicalMotorManager.changeMotionControlFramePeriod(m_handle, periodMs);
+    return PhysicalMotorManager.changeMotionControlFramePeriod(handle, periodMs);
   }
 
   /**
@@ -1780,11 +1688,11 @@ public abstract class BaseMotorController implements IMotorController {
    * @return Error Code generated by function. 0 indicates no error.
    */
   public ErrorCode configMotionProfileTrajectoryPeriod(int baseTrajDurationMs, int timeoutMs) {
-    return PhysicalMotorManager.configMotionProfileTrajectoryPeriod(m_handle, baseTrajDurationMs, timeoutMs);
+    return PhysicalMotorManager.configMotionProfileTrajectoryPeriod(handle, baseTrajDurationMs, timeoutMs);
   }
   public ErrorCode configMotionProfileTrajectoryPeriod(int baseTrajDurationMs) {
     int timeoutMs = 0;
-    return configMotionProfileTrajectoryPeriod( baseTrajDurationMs,  timeoutMs);
+    return configMotionProfileTrajectoryPeriod(baseTrajDurationMs,  timeoutMs);
   }
 
     //------Feedback Device Interaction Settings---------//
@@ -1803,7 +1711,7 @@ public abstract class BaseMotorController implements IMotorController {
      * @return Error Code generated by function. 0 indicates no error.
      */
     public ErrorCode configFeedbackNotContinuous(boolean feedbackNotContinuous, int timeoutMs) {
-        return PhysicalMotorManager.configFeedbackNotContinuous(m_handle, feedbackNotContinuous, timeoutMs);
+        return PhysicalMotorManager.configFeedbackNotContinuous(handle, feedbackNotContinuous, timeoutMs);
     }
     
     /**
@@ -1820,7 +1728,7 @@ public abstract class BaseMotorController implements IMotorController {
     public ErrorCode configRemoteSensorClosedLoopDisableNeutralOnLOS(
         boolean remoteSensorClosedLoopDisableNeutralOnLOS, int timeoutMs) {
       return PhysicalMotorManager.configRemoteSensorClosedLoopDisableNeutralOnLOS(
-          m_handle, remoteSensorClosedLoopDisableNeutralOnLOS, timeoutMs);
+          handle, remoteSensorClosedLoopDisableNeutralOnLOS, timeoutMs);
     }
     /**
      * Enables clearing the position of the feedback sensor when the forward 
@@ -1834,7 +1742,7 @@ public abstract class BaseMotorController implements IMotorController {
      * @return Error Code generated by function. 0 indicates no error.
      */
     public ErrorCode configClearPositionOnLimitF(boolean clearPositionOnLimitF, int timeoutMs) {
-        return PhysicalMotorManager.configClearPositionOnLimitF(m_handle, clearPositionOnLimitF, timeoutMs);
+        return PhysicalMotorManager.configClearPositionOnLimitF(handle, clearPositionOnLimitF, timeoutMs);
     }
     
     /**
@@ -1849,7 +1757,7 @@ public abstract class BaseMotorController implements IMotorController {
      * @return Error Code generated by function. 0 indicates no error.
      */
     public ErrorCode configClearPositionOnLimitR(boolean clearPositionOnLimitR, int timeoutMs) {
-        return PhysicalMotorManager.configClearPositionOnLimitR(m_handle, clearPositionOnLimitR, timeoutMs);
+        return PhysicalMotorManager.configClearPositionOnLimitR(handle, clearPositionOnLimitR, timeoutMs);
     }
     
     /**
@@ -1864,7 +1772,7 @@ public abstract class BaseMotorController implements IMotorController {
      * @return Error Code generated by function. 0 indicates no error.
      */
     public ErrorCode configClearPositionOnQuadIdx(boolean clearPositionOnQuadIdx, int timeoutMs) {
-        return PhysicalMotorManager.configClearPositionOnQuadIdx(m_handle, clearPositionOnQuadIdx, timeoutMs);
+        return PhysicalMotorManager.configClearPositionOnQuadIdx(handle, clearPositionOnQuadIdx, timeoutMs);
     }
     
     /**
@@ -1880,7 +1788,7 @@ public abstract class BaseMotorController implements IMotorController {
      */
     public ErrorCode configLimitSwitchDisableNeutralOnLOS(boolean limitSwitchDisableNeutralOnLOS, int timeoutMs) {
         return PhysicalMotorManager.configLimitSwitchDisableNeutralOnLOS(
-            m_handle, limitSwitchDisableNeutralOnLOS, timeoutMs);
+            handle, limitSwitchDisableNeutralOnLOS, timeoutMs);
     }
     
     /**
@@ -1896,7 +1804,7 @@ public abstract class BaseMotorController implements IMotorController {
      */
     public ErrorCode configSoftLimitDisableNeutralOnLOS(boolean softLimitDisableNeutralOnLOS, int timeoutMs) {
         return PhysicalMotorManager.configSoftLimitDisableNeutralOnLOS(
-            m_handle, softLimitDisableNeutralOnLOS, timeoutMs);
+            handle, softLimitDisableNeutralOnLOS, timeoutMs);
     }
     
     /**
@@ -1912,7 +1820,7 @@ public abstract class BaseMotorController implements IMotorController {
      * @return Error Code generated by function. 0 indicates no error.
      */
     public ErrorCode configPulseWidthPeriod_EdgesPerRot(int pulseWidthPeriod_EdgesPerRot, int timeoutMs) {
-        return PhysicalMotorManager.configPulseWidthPeriod_EdgesPerRot(m_handle, pulseWidthPeriod_EdgesPerRot, timeoutMs);
+        return PhysicalMotorManager.configPulseWidthPeriod_EdgesPerRot(handle, pulseWidthPeriod_EdgesPerRot, timeoutMs);
     }
     
     /**
@@ -1928,7 +1836,7 @@ public abstract class BaseMotorController implements IMotorController {
      * @return Error Code generated by function. 0 indicates no error.
      */
     public ErrorCode configPulseWidthPeriod_FilterWindowSz(int pulseWidthPeriod_FilterWindowSz, int timeoutMs) {
-        return PhysicalMotorManager.configPulseWidthPeriod_FilterWindowSz(m_handle, pulseWidthPeriod_FilterWindowSz, timeoutMs);
+        return PhysicalMotorManager.configPulseWidthPeriod_FilterWindowSz(handle, pulseWidthPeriod_FilterWindowSz, timeoutMs);
     }
   // ------ error ----------//
   /**
@@ -1939,7 +1847,7 @@ public abstract class BaseMotorController implements IMotorController {
    * @return Last Error Code generated by a function.
    */
   public ErrorCode getLastError() {
-    return PhysicalMotorManager.getLastError(m_handle);
+    return PhysicalMotorManager.getLastError(handle);
   }
 
   // ------ Faults ----------//
@@ -1951,7 +1859,7 @@ public abstract class BaseMotorController implements IMotorController {
    * @return Last Error Code generated by a function.
    */
   public ErrorCode getFaults(Faults toFill) {
-    int bits = PhysicalMotorManager.getFaults(m_handle);
+    int bits = PhysicalMotorManager.getFaults(handle);
     toFill.update(bits);
     return getLastError();
   }
@@ -1964,7 +1872,7 @@ public abstract class BaseMotorController implements IMotorController {
    * @return Last Error Code generated by a function.
    */
   public ErrorCode getStickyFaults(StickyFaults toFill) {
-    int bits = PhysicalMotorManager.getStickyFaults(m_handle);
+    int bits = PhysicalMotorManager.getStickyFaults(handle);
     toFill.update(bits);
     return getLastError();
   }
@@ -1979,7 +1887,7 @@ public abstract class BaseMotorController implements IMotorController {
    * @return Last Error Code generated by a function.
    */
   public ErrorCode clearStickyFaults(int timeoutMs) {
-    return PhysicalMotorManager.clearStickyFaults(m_handle, timeoutMs);
+    return PhysicalMotorManager.clearStickyFaults(handle, timeoutMs);
   }
   public ErrorCode clearStickyFaults() {
     int timeoutMs = 0;
@@ -1994,7 +1902,7 @@ public abstract class BaseMotorController implements IMotorController {
    *         0x0102.
    */
   public int getFirmwareVersion() {
-    return PhysicalMotorManager.getFirmwareVersion(m_handle);
+    return PhysicalMotorManager.getFirmwareVersion(handle);
   }
 
   /**
@@ -2003,7 +1911,7 @@ public abstract class BaseMotorController implements IMotorController {
    * @return Has a Device Reset Occurred?
    */
   public boolean hasResetOccurred() {
-    return PhysicalMotorManager.hasResetOccurred(m_handle);
+    return PhysicalMotorManager.hasResetOccurred(handle);
   }
 
   //------ Custom Persistent Params ----------//
@@ -2025,11 +1933,11 @@ public abstract class BaseMotorController implements IMotorController {
    * @return Error Code generated by function. 0 indicates no error.
    */
   public ErrorCode configSetCustomParam(int newValue, int paramIndex, int timeoutMs) {
-    return PhysicalMotorManager.configSetCustomParam(m_handle, newValue, paramIndex, timeoutMs);
+    return PhysicalMotorManager.configSetCustomParam(handle, newValue, paramIndex, timeoutMs);
   }
   public ErrorCode configSetCustomParam(int newValue, int paramIndex) {
     int timeoutMs = 0;
-    return configSetCustomParam( newValue,  paramIndex,  timeoutMs);
+    return configSetCustomParam(newValue,  paramIndex,  timeoutMs);
   }
 
   /**
@@ -2044,11 +1952,11 @@ public abstract class BaseMotorController implements IMotorController {
    * @return Value of the custom param.
    */
   public int configGetCustomParam(int paramIndex, int timeoutMs) {
-    return PhysicalMotorManager.configGetCustomParam(m_handle, paramIndex, timeoutMs);
+    return PhysicalMotorManager.configGetCustomParam(handle, paramIndex, timeoutMs);
   }
   public int configGetCustomParam(int paramIndex) {
     int timeoutMs = 0;
-    return configGetCustomParam( paramIndex,  timeoutMs);
+    return configGetCustomParam(paramIndex,  timeoutMs);
   }
 
   // ------ Generic Param API ----------//
@@ -2097,12 +2005,12 @@ public abstract class BaseMotorController implements IMotorController {
    * @return Error Code generated by function. 0 indicates no error.
    */
   public ErrorCode configSetParameter(int param, double value, int subValue, int ordinal, int timeoutMs) {
-    return PhysicalMotorManager.configSetParameter(m_handle, param,  value, subValue, ordinal,
+    return PhysicalMotorManager.configSetParameter(handle, param,  value, subValue, ordinal,
         timeoutMs);
   }
   public ErrorCode configSetParameter(int param, double value, int subValue, int ordinal) {
     int timeoutMs = 0;
-    return configSetParameter( param,  value,  subValue,  ordinal,  timeoutMs);
+    return configSetParameter(param,  value,  subValue,  ordinal,  timeoutMs);
   }
   /**
    * Gets a parameter.
@@ -2138,23 +2046,23 @@ public abstract class BaseMotorController implements IMotorController {
    * @return Value of parameter.
    */
   public double configGetParameter(int param, int ordinal, int timeoutMs) {
-    return PhysicalMotorManager.configGetParameter(m_handle, param, ordinal, timeoutMs);
+    return PhysicalMotorManager.configGetParameter(handle, param, ordinal, timeoutMs);
   }
   public double configGetParameter(int param, int ordinal) {
     int timeoutMs = 0;
-    return configGetParameter( param,  ordinal,  timeoutMs);	
+    return configGetParameter(param,  ordinal,  timeoutMs);	
   }
 
   // ------ Misc. ----------//
   public int getBaseID() {
-    return _arbId;
+    return arbId;
   }
 
   /**
    * @return control mode motor controller is in
    */
   public ControlMode getControlMode() {
-    return m_controlMode;
+    return controlMode;
   }
 
   // ----- Follower ------//
@@ -2171,14 +2079,14 @@ public abstract class BaseMotorController implements IMotorController {
    *						Use PercentOutput for standard follower mode.
    */
   public void follow(IMotorController masterToFollow, FollowerType followerType) {
-    switch (followerType){
+    switch (followerType) {
       case PercentOutput:
         set(ControlMode.PercentOutput, masterToFollow.getMotorOutputPercent());
         break;
       case AuxOutput1:
         /* follow the motor controller, but set the aux flag
          * to ensure we follow the processed output */
-//        set(ControlMode.Follower, (double)id24, DemandType.AuxPID, 0);
+        // set(ControlMode.Follower, (double)id24, DemandType.AuxPID, 0);
         // TODO Follow AUX
         break;
       default:
@@ -2350,7 +2258,7 @@ public abstract class BaseMotorController implements IMotorController {
      *
      * @return Error Code generated by function. 0 indicates no error. 
      */
-    public ErrorCode configureSlot( SlotConfiguration slot) {
+    public ErrorCode configureSlot(SlotConfiguration slot) {
         int slotIdx = 0;
         int timeoutMs = 50;
         return configureSlot(slot, slotIdx, timeoutMs);
@@ -2382,7 +2290,7 @@ public abstract class BaseMotorController implements IMotorController {
      *
    * @param slot        Object with all of the slot persistant settings
      */
-    public void getSlotConfigs( SlotConfiguration slot) {
+    public void getSlotConfigs(SlotConfiguration slot) {
         int slotIdx = 0;
         int timeoutMs = 50;
         getSlotConfigs(slot, slotIdx, timeoutMs);
@@ -2401,7 +2309,7 @@ public abstract class BaseMotorController implements IMotorController {
      *
      * @return Error Code generated by function. 0 indicates no error. 
      */
-    public ErrorCode configureFilter( FilterConfiguration filter, int ordinal, int timeoutMs) {
+    public ErrorCode configureFilter(FilterConfiguration filter, int ordinal, int timeoutMs) {
     
         return configRemoteFeedbackFilter(filter.remoteSensorDeviceID, filter.remoteSensorSource, ordinal, timeoutMs);
     
@@ -2414,7 +2322,7 @@ public abstract class BaseMotorController implements IMotorController {
      *
      * @return Error Code generated by function. 0 indicates no error. 
      */
-    public ErrorCode configureFilter( FilterConfiguration filter) {
+    public ErrorCode configureFilter(FilterConfiguration filter) {
         int ordinal = 0;
         int timeoutMs = 50;
         return configureFilter(filter, ordinal, timeoutMs);

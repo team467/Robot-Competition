@@ -194,7 +194,7 @@ public class RobotShape {
 	}
 	
 	private void loadData() {
-		if(RUN_LOCAL) {
+		if (RUN_LOCAL) {
 			robot.autonomousPeriodic();
 		} else {
 			data.receive();			

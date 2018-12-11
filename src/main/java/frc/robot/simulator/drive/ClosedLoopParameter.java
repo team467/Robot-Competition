@@ -2,13 +2,13 @@ package frc.robot.simulator.drive;
 
 class ClosedLoopParameter {
 
-  double p = 1.0;
+  double propGain = 1.0;
 
-  double i = 0.0;
+  double integral = 0.0;
 
-  double d = 0.0;
+  double derivative = 0.0;
 
-  double f = 0.0;
+  double feedForward = 0.0;
 
   int allowableClosedLoopError = 0;
 
@@ -18,6 +18,6 @@ class ClosedLoopParameter {
 
   double integralAccumulator = 0.0;
 
-  int iZone = 0;
-
+  int integralZone = 0;
+ 
 }

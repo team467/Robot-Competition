@@ -108,7 +108,7 @@ public class Robot extends TimedRobot {
 	public void testInit() {
 		LOGGER.info("Init Test");
 		testMotorControl = new TestMotorControl();
-		drive.setPIDSFromRobotMap();
+		drive.setPidsFromRobotMap();
 		driverstation.readInputs();
 		// tuningValue = Double.parseDouble(SmartDashboard.getString("DB/String 0", "0.0"));
 		// LOGGER.info("Tuning Value: " + tuningValue);
@@ -163,7 +163,7 @@ public class Robot extends TimedRobot {
 		elevator.move(driverstation.getElevatorSpeed());
 
 		//grabber open and close
-		if(driverstation.getGrabberOpen()) {
+		if (driverstation.getGrabberOpen()) {
 			LOGGER.info("Grabber Open");
 			grabber.open();
 		} else {

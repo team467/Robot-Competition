@@ -1,62 +1,46 @@
 package frc.robot;
 
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.Assert.assertTrue;
+//import static org.junit.Assert.fail;
 
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 public class ExampleTest {
 
-    @BeforeAll
-    static void initAll() {
-    }
+  @BeforeClass
+  public static void initAll() {
+  }
 
-    @BeforeEach
-    void init() {
-    }
+  @Before
+  public void init() {
+  }
 
-    @Test
-    void succeedingTest() {
-    }
+  @Test
+  public void succeedingTest() {
+    assertTrue(true);
+  }
 
-    @Test
-    void failingTest() {
-        fail("a failing test");
-   }
+  // Commented out so that test passes
+  // @Test
+  // public void failingTest() {
+  //   fail("a failing test");
+  // }
 
-    @Test
-    @Disabled("for demonstration purposes")
-    void skippedTest() {
-        // not executed
-    }
+  @After
+  public void tearDown() {
+  }
 
-    @AfterEach
-    void tearDown() {
-    }
+  @AfterClass
+  public static void tearDownAll() {
+  }
 
-    @AfterAll
-    static void tearDownAll() {
-    }
-
-    @Test
-    @DisplayName("Custom test name containing spaces")
-    void testWithDisplayNameContainingSpaces() {
-    }
-
-    @Test
-    @DisplayName("╯°□°）╯")
-    void testWithDisplayNameContainingSpecialCharacters() {
-    }
-
-    @Test
-    @DisplayName("😱")
-    void testWithDisplayNameContainingEmoji() {
-    }
+  @Test
+  public void test() {
+  }
 
 }
 

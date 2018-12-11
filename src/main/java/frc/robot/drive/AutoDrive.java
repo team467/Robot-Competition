@@ -1,39 +1,40 @@
 package frc.robot.drive;
 
 /**
- * A collection of methods that a drive class must implement to run our autonomous modes
+ * A collection of methods that a drive class must implement to run our autonomous modes.
  */
 public interface AutoDrive {
 
-	void moveLinearFeet(double distance);
-	void rotateByAngle(double rotationInDegrees);
+  void moveLinearFeet(double distance);
 
-	/**
-	 * This is used for testing the new controllers. It cannot use both the straight
-	 * PIDs and the turn PIDs, so the straight PIDs are used.
-	 * 
-	 * @param distanceInFeet the distance to move forward
-	 * @param degrees the turn distance in degrees, with counter clockwise hand turns as positive
-	 */
-	public void moveWithTurn(double distanceInFeet, double degrees);
+  void rotateByAngle(double rotationInDegrees);
 
-	/**
-	 * Move each side independently. Distances must be equal or opposite.
-	 */
-	public void moveFeet(double leftDistance, double rightDistance);
+  /**
+   * This is used for testing the new controllers. It cannot use both the straight
+   * PIDs and the turn PIDs, so the straight PIDs are used.
+   * 
+   * @param distanceInFeet the distance to move forward
+   * @param degrees the turn distance in degrees, with counter clockwise hand turns as positive
+   */
+  public void moveWithTurn(double distanceInFeet, double degrees);
 
-	boolean isStopped();
+  /**
+   * Move each side independently. Distances must be equal or opposite.
+   */
+  public void moveFeet(double leftDistance, double rightDistance);
 
-	/**
-	 * Gets the distance moved for checking drive modes.
-	 *
-	 * @return the absolute distance moved in feet
-	 */
-	public double absoluteDistanceMoved();
+  boolean isStopped();
 
-	/**
-	 * Resets the current sensor position to zero.
-	 */
-	public void zero();
+  /**
+   * Gets the distance moved for checking drive modes.
+   *
+   * @return the absolute distance moved in feet
+   */
+  public double absoluteDistanceMoved();
+
+  /**
+   * Resets the current sensor position to zero.
+   */
+  public void zero();
 
 }

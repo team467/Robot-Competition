@@ -114,7 +114,7 @@ public class VisionProcessing {
 	/**
 	 * This method is a generated getter for the output of a Find_Contours.
 	 * 
-	 * @return ArrayList<MatOfPoint> output from Find_Contours.
+	 * @return ArrayList output from Find_Contours
 	 */
 	public void findContoursOutput() {
 		LOGGER.debug("COUNT: {}", pipeline.filterContoursOutput().size());
@@ -134,7 +134,7 @@ public class VisionProcessing {
 		double angleChkrNum;
 		angleChkrNum = cameraAngle();
 		
-		if(Double.isNaN(angleChkrNum)) {
+		if (Double.isNaN(angleChkrNum)) {
 			return true;
 		} else {
 			return false;

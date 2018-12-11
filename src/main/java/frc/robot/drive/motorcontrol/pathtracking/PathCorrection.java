@@ -9,7 +9,6 @@ import frc.robot.utilities.Utils;
 
 import java.lang.Double;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
 // import java.util.Collections;
 
 /**
@@ -104,25 +103,25 @@ public class PathCorrection {
     // Search nearest point index
     double[] diffActualXtoPlanXs = new double[planX.length - lastAchievedIndex];
     for (int i = 0; i < (planX.length - lastAchievedIndex); i++) {
-      diffActualXtoPlanXs[i] = fieldState.x() - planX[i + lastAchievedIndex];
-      System.out.println("X -- Current: " + fieldState.x() + " Plan: " + planX[i]
+      diffActualXtoPlanXs[i] = fieldState.fieldX() - planX[i + lastAchievedIndex];
+      System.out.println("X -- Current: " + fieldState.fieldX() + " Plan: " + planX[i]
             + " Diff: " + diffActualXtoPlanXs[i]);
     }
 
     double[] diffActualYtoPlanYs = new double[planY.length - lastAchievedIndex];
-    double tempY = fieldState.y();
+    double tempY = fieldState.fieldY();
     for (int i = 0; i < (planX.length - lastAchievedIndex); i++) {
       diffActualYtoPlanYs[i] = tempY - planY[i + lastAchievedIndex];
-      System.out.println("Y -- Current: " + fieldState.y() + " Plan: " + planY[i]
+      System.out.println("Y -- Current: " + fieldState.fieldY() + " Plan: " + planY[i]
             + " Diff: " + diffActualYtoPlanYs[i]);
     }
 
     positionError = Double.MAX_VALUE;
-//    ArrayList<Double> lengthActualPositionToPlanPositions = new ArrayList<Double>();
+    // ArrayList<Double> lengthActualPositionToPlanPositions = new ArrayList<Double>();
     for (int i = 0; i < diffActualXtoPlanXs.length; i++) {
       double distanceToWaypoint = Math
           .sqrt(Math.pow(diffActualXtoPlanXs[i], 2) + Math.pow(diffActualYtoPlanYs[i], 2));
- //     lengthActualPositionToPlanPositions.add(distanceToWaypoint);
+      // lengthActualPositionToPlanPositions.add(distanceToWaypoint);
       if (positionError > distanceToWaypoint) {
         if (distanceToWaypoint != 0.0) {
           positionError = distanceToWaypoint;
@@ -176,7 +175,9 @@ public class PathCorrection {
     // thetaE corrects the heading error
     double thetaE = Utils.normalizeAngle(planHeading[targetIndex] - fieldState.heading());
     // thetaD corrects the cross track error
-    double thetaD = 0.0;//Math.atan2(fieldState.accelleration() * positionError, fieldState.velocity());
+    double thetaD = 0.0;
+    //double thetaD = Math.atan2(fieldState.accelleration() * positionError, fieldState.velocity());
+    
     // Change in steering control
     delta = thetaE + thetaD;
 
