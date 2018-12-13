@@ -12,13 +12,12 @@ import com.ctre.phoenix.motorcontrol.VelocityMeasPeriod;
 import com.ctre.phoenix.motorcontrol.can.TalonSRXConfiguration;
 import com.ctre.phoenix.motorcontrol.can.TalonSRXPIDSetConfiguration;
 
-import edu.wpi.first.wpilibj.MotorSafety;
 import edu.wpi.first.wpilibj.Sendable;
 import edu.wpi.first.wpilibj.SpeedController;
 
 public interface WpiTalonSrxInterface 
     extends IMotorController, IMotorControllerEnhanced,
-    SpeedController, Sendable, MotorSafety {
+    SpeedController, Sendable { // , MotorSafety
 
 	// ---------Intercept CTRE calls for motor safety ---------//
 	public void set(ControlMode mode, double value);

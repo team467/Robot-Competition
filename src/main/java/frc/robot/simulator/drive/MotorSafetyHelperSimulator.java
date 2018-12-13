@@ -33,7 +33,7 @@ public final class MotorSafetyHelperSimulator {
   public MotorSafetyHelperSimulator(MotorSafety safeObject) {
     this.safeObject = safeObject;
     enabled = false;
-    expiration = MotorSafety.DEFAULT_SAFETY_EXPIRATION;
+//    expiration = MotorSafety.DEFAULT_SAFETY_EXPIRATION;
     stopTime = time();
 
     synchronized (listMutex) {

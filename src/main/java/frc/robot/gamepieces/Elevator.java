@@ -1,6 +1,5 @@
 package frc.robot.gamepieces;
 
-import edu.wpi.first.wpilibj.MotorSafetyHelper;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.RobotMap;
@@ -20,7 +19,6 @@ public class Elevator {
 	private static final Logger LOGGER = LogManager.getLogger(Elevator.class);
 
 	private WPI_TalonSRX heightController;
-	private MotorSafetyHelper m_safetyHelper;
 
 	private Stops targetHeight;
 	private int previousHeight;
@@ -77,7 +75,6 @@ public class Elevator {
 		configMotorParameters();
 
 		targetHeight = null;
-		m_safetyHelper = new MotorSafetyHelper(this.heightController);
 	}
 
 	public void configMotorParameters() {
@@ -115,10 +112,6 @@ public class Elevator {
 	private void automaticMove() {
 		if (!RobotMap.HAS_ELEVATOR) {
 			return;
-		}
-
-		if (m_safetyHelper != null) {
-			m_safetyHelper.feed();
 		}
 
 		// If we're in position, stop.

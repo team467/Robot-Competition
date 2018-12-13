@@ -1,13 +1,19 @@
+/*----------------------------------------------------------------------------*/
+/* Copyright (c) 2017-2018 FIRST. All Rights Reserved.                        */
+/* Open Source Software - may be modified and shared by FRC teams. The code   */
+/* must be accompanied by the FIRST BSD license file in the root directory of */
+/* the project.                                                               */
+/*----------------------------------------------------------------------------*/
+
 package frc.robot;
 
+import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.cscore.UsbCamera;
-
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import frc.robot.autonomous.ActionGroup;
@@ -24,12 +30,14 @@ import frc.robot.usercontrol.DriverStation467;
 import frc.robot.utilities.Logging;
 
 /**
- * The VM is configured to automatically run this class, and to call the functions corresponding to each mode, as described in the
- * IterativeRobot documentation. If you change the name of this class or the package after creating this project, you must also
- * update the manifest file in the resource directory.
+ * The VM is configured to automatically run this class, and to call the
+ * functions corresponding to each mode, as described in the TimedRobot
+ * documentation. If you change the name of this class or the package after
+ * creating this project, you must also update the build.gradle file in the
+ * project.
  */
-
 public class Robot extends TimedRobot {
+
 	private static final Logger LOGGER = LogManager.getLogger(Robot.class);
 
 	// Robot objects
@@ -40,7 +48,6 @@ public class Robot extends TimedRobot {
 	private VisionProcessing vision;
 	private Elevator elevator;
 	private Grabber grabber;
-	//private Ramps ramps;
 	private Climber climber;
 
 	private NetworkTableInstance table;
@@ -49,12 +56,17 @@ public class Robot extends TimedRobot {
 	/**
 	 * Time in milliseconds
 	 */
-	double time;
+	private double time;
 
-	/**
-	 * This function is run when the robot is first started up and should be used for any initialization code.
-	 */
-	public void robotInit() {
+  private double tuningValue = 0.0;
+	private TestMotorControl testMotorControl;
+
+  /**
+   * This function is run when the robot is first started up and should be
+   * used for any initialization code.
+   */
+  @Override
+  public void robotInit() {
 		// Initialize logging framework
 		Logging.init();
 
@@ -87,76 +99,54 @@ public class Robot extends TimedRobot {
 			cam.setResolution(320, 240);
 			cam.setFPS(15);
 		}
-	}
+  }
 
-	public void disabledInit() {
-		LOGGER.info("Init Disabled");
-//		drive.logClosedLoopErrors();
-	}
+  /**
+   * This function is called every robot packet, no matter the mode. Use
+   * this for items like diagnostics that you want ran during disabled,
+   * autonomous, teleoperated and test.
+   *
+   * <p>This runs after the mode specific periodic functions, but before
+   * LiveWindow and SmartDashboard integrated updating.
+   */
+  @Override
+  public void robotPeriodic() {
+  }
 
-	public void disabledPeriodic() {
-		LOGGER.trace("Disabled Periodic");
-		String[] autoList = {"None", "Just_Go_Forward", "Left_Switch_Only", "Left_Basic", "Left_Advanced", "Left_Our_Side_Only",
-				"Center", "Center_Advanced", "Right_Switch_Only", "Right_Basic", "Right_Advanced", "Right_Our_Side_Only"};
-		dashboard.getEntry("Auto List").setStringArray(autoList);
-//		LOGGER.info("Selected Auto Mode: " + SmartDashboard.getString("Auto Selector", "None"));
-	}
-
-	double tuningValue = 0.0;
-
-	TestMotorControl testMotorControl;
-	public void testInit() {
-		LOGGER.info("Init Test");
-		testMotorControl = new TestMotorControl();
-		drive.setPidsFromRobotMap();
-		driverstation.readInputs();
-		// tuningValue = Double.parseDouble(SmartDashboard.getString("DB/String 0", "0.0"));
-		// LOGGER.info("Tuning Value: " + tuningValue);
-		// if (tuningValue <= 30.0 && tuningValue >= -30.0) {
-		// 	drive.readPIDSFromSmartDashboard(RobotMap.PID_SLOT_DRIVE);
-		// } else {
-		// 	drive.readPIDSFromSmartDashboard(RobotMap.PID_SLOT_TURN);
-		// }
-		drive.zero();
-	}
-
-	public void testPeriodic() {
-		// if (tuningValue <= 30.0 && tuningValue >= -30.0) {
-		// 	drive.tuneForward(tuningValue, RobotMap.PID_SLOT_DRIVE);
-		// } else {
-		// 	drive.tuneTurn(tuningValue, RobotMap.PID_SLOT_TURN);
-		// }
-		testMotorControl.periodic();
-		drive.logClosedLoopErrors();
-	}
-
-	public void autonomousInit() {
+  @Override
+  public void autonomousInit() {
 		driverstation.readInputs();
 		matchConfig.load();
 		autonomous = matchConfig.autonomousDecisionTree();
 		LOGGER.info("Init Autonomous: {}", autonomous.getName());
 		//ramps.reset();
-		autonomous.enable();
-	}
+		autonomous.enable();  }
 
-	public void autonomousPeriodic() {
+  /**
+   * This function is called periodically during autonomous.
+   */
+  @Override
+  public void autonomousPeriodic() {
 		grabber.periodic();
 		elevator.move(0); // Will move to height if set.
 		autonomous.run();
-	}
+  }
 
-	public void teleopInit() {
+  @Override
+  public void teleopInit() {
 		LOGGER.info("Init Teleop");
 		autonomous = Actions.doNothing();
 //		drive.configPeakOutput(1.0);
 		driverstation.readInputs();
 		grabber.reset();
 	}
-	/**
-	 * This function is called periodically during operator control
-	 */
-	public void teleopPeriodic() {
-		LOGGER.debug("Match time {}", DriverStation.getInstance().getMatchTime());
+
+  /**
+   * This function is called periodically during operator control.
+   */
+  @Override
+  public void teleopPeriodic() {
+    LOGGER.debug("Match time {}", DriverStation.getInstance().getMatchTime());
 		driverstation.readInputs();
 
 		grabber.grab(driverstation.getGrabThrottle());
@@ -194,22 +184,6 @@ public class Robot extends TimedRobot {
 			LOGGER.debug("Not climbing");
 		}
 
-//		
-//		if (ramps.isDeployed()) {
-//			if (driverstation.getLeftRampLiftButton()) {
-//				ramps.liftLeft();
-//			}
-//			if (driverstation.getLeftRampDropButton()) {
-//				ramps.dropLeft();
-//			}
-//			if (driverstation.getRightRampLiftButton()) {
-//				ramps.liftRight();
-//			}
-//			if (driverstation.getRightRampDropButton()) {
-//				ramps.dropRight();
-//			}
-//		}
-
 		double speed = driverstation.getArcadeSpeed();
 		double turn = driverstation.getArcadeTurn();
 
@@ -235,5 +209,51 @@ public class Robot extends TimedRobot {
 			break;
 		default:
 		}
+  }
+
+  @Override
+	public void testInit() {
+		LOGGER.info("Init Test");
+		testMotorControl = new TestMotorControl();
+		drive.setPidsFromRobotMap();
+		driverstation.readInputs();
+		// tuningValue = Double.parseDouble(SmartDashboard.getString("DB/String 0", "0.0"));
+		// LOGGER.info("Tuning Value: " + tuningValue);
+		// if (tuningValue <= 30.0 && tuningValue >= -30.0) {
+		// 	drive.readPIDSFromSmartDashboard(RobotMap.PID_SLOT_DRIVE);
+		// } else {
+		// 	drive.readPIDSFromSmartDashboard(RobotMap.PID_SLOT_TURN);
+		// }
+		drive.zero();
 	}
+
+  /**
+   * This function is called periodically during test mode.
+   */
+  @Override
+  public void testPeriodic() {
+		// if (tuningValue <= 30.0 && tuningValue >= -30.0) {
+		// 	drive.tuneForward(tuningValue, RobotMap.PID_SLOT_DRIVE);
+		// } else {
+		// 	drive.tuneTurn(tuningValue, RobotMap.PID_SLOT_TURN);
+		// }
+		testMotorControl.periodic();
+		drive.logClosedLoopErrors();
+  }
+
+  @Override
+	public void disabledInit() {
+		LOGGER.info("Init Disabled");
+//		drive.logClosedLoopErrors();
+	}
+
+  @Override
+	public void disabledPeriodic() {
+		LOGGER.trace("Disabled Periodic");
+		String[] autoList = {"None", "Just_Go_Forward", "Left_Switch_Only", "Left_Basic", "Left_Advanced", "Left_Our_Side_Only",
+				"Center", "Center_Advanced", "Right_Switch_Only", "Right_Basic", "Right_Advanced", "Right_Our_Side_Only"};
+		dashboard.getEntry("Auto List").setStringArray(autoList);
+//		LOGGER.info("Selected Auto Mode: " + SmartDashboard.getString("Auto Selector", "None"));
+	}
+
 }

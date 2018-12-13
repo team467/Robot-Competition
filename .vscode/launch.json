@@ -4,94 +4,18 @@
   // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
   "version": "0.2.0",
   "configurations": [
-    {
-      "type": "java",
-      "name": "CodeLens (Launch) - TestRunner",
-      "request": "launch",
-      "cwd": "${workspaceFolder}",
-      "console": "internalConsole",
-      "stopOnEntry": false,
-      "mainClass": "frc.robot.TestRunner",
-      "args": "",
-      "projectName": "Robot2019-Competition"
-    },
-    {
-      "type": "java",
-      "name": "CodeLens (Launch) - TestRunner",
-      "request": "launch",
-      "cwd": "${workspaceFolder}",
-      "console": "internalConsole",
-      "stopOnEntry": false,
-      "mainClass": "TestRunner",
-      "args": "",
-      "projectName": "Robot2019-Competition"
-    },
-    {
-      "type": "java",
-      "name": "CodeLens (Launch) - FieldPosition",
-      "request": "launch",
-      "cwd": "${workspaceFolder}",
-      "console": "internalConsole",
-      "stopOnEntry": false,
-      "mainClass": "frc.robot.drive.motorcontrol.pathtracking.FieldPosition",
-      "args": "",
-      "projectName": "Robot2019-Competition"
-    },
-    {
-      "type": "java",
-      "name": "CodeLens (Launch) - StanleyControler",
-      "request": "launch",
-      "cwd": "${workspaceFolder}",
-      "console": "internalConsole",
-      "stopOnEntry": false,
-      "mainClass": "frc.robot.drive.motorcontrol.pathtracking.StanleyControler",
-      "args": "",
-      "projectName": "Robot2019-Competition"
-    },
-    {
-      "type": "java",
-      "name": "CodeLens (Launch) - Spline2D",
-      "request": "launch",
-      "cwd": "${workspaceFolder}",
-      "console": "internalConsole",
-      "stopOnEntry": false,
-      "mainClass": "frc.robot.drive.motorcontrol.pathplanning.Spline2D",
-      "args": "",
-      "projectName": "Robot2019-Competition"
-    },
-    {
-      "type": "java",
-      "name": "CodeLens (Launch) - Map",
-      "request": "launch",
-      "cwd": "${workspaceFolder}",
-      "console": "internalConsole",
-      "stopOnEntry": false,
-      "mainClass": "frc.robot.simulator.gui.Map",
-      "args": "",
-      "projectName": "Robot2019-Competition"
-    },
-    {
-      "type": "java",
-      "name": "CodeLens (Launch) - Main",
-      "request": "launch",
-      "cwd": "${workspaceFolder}",
-      "console": "internalConsole",
-      "stopOnEntry": false,
-      "mainClass": "frc.robot.simulator.gui.Main",
-      "args": "--add-modules', 'javafx.controls",
-      "projectName": "Robot2019-Competition"
-    },
+
     {
       "type": "wpilib",
       "name": "WPILib Desktop Debug",
       "request": "launch",
-      "desktop": true
+      "desktop": true,
     },
     {
       "type": "wpilib",
       "name": "WPILib roboRIO Debug",
       "request": "launch",
-      "desktop": false
+      "desktop": false,
     }
   ]
 }

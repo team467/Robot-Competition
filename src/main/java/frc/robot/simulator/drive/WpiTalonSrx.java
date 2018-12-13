@@ -3,7 +3,6 @@ package frc.robot.simulator.drive;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 
 import edu.wpi.first.wpilibj.MotorSafety;
-import edu.wpi.first.wpilibj.MotorSafetyHelper;
 import edu.wpi.first.wpilibj.Sendable;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
@@ -19,11 +18,11 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
  * - Motor Safety (auto-turn off of motor if Set stops getting called)
  * - Single Parameter set that assumes a simple motor controller.
  */
-public class WpiTalonSrx extends TalonSrx implements SpeedController, Sendable, MotorSafety {
+public class WpiTalonSrx extends TalonSrx implements SpeedController, Sendable { // , MotorSafety
 
 	private String _description;
 	private double _speed;
-	private MotorSafetyHelper _safetyHelper;
+	// private MotorSafetyHelper _safetyHelper;
 
 	/** Constructor */
 	public WpiTalonSrx(int deviceNumber) {
@@ -31,9 +30,9 @@ public class WpiTalonSrx extends TalonSrx implements SpeedController, Sendable, 
 		// HAL.report(66, deviceNumber + 1); -- What is the WPI Lib HAL report?
 		_description = "Talon SRX " + deviceNumber;
 		/* prep motor safety */
-		_safetyHelper = new MotorSafetyHelper(this);
-		_safetyHelper.setExpiration(0.0);
-		_safetyHelper.setSafetyEnabled(false);
+		// _safetyHelper = new MotorSafetyHelper(this);
+		// _safetyHelper.setExpiration(0.0);
+		// _safetyHelper.setSafetyEnabled(false);
 
 		LiveWindow.add(this);
 		setName("Simulated Talon SRX ", deviceNumber);
@@ -44,7 +43,7 @@ public class WpiTalonSrx extends TalonSrx implements SpeedController, Sendable, 
 	public void set(double speed) {
 		this._speed = speed;
 		set(ControlMode.PercentOutput, _speed);
-		_safetyHelper.feed();
+//		_safetyHelper.feed();
 	}
 
 	@Override
@@ -66,13 +65,13 @@ public class WpiTalonSrx extends TalonSrx implements SpeedController, Sendable, 
 	public void set(ControlMode mode, double value) {
 		/* intercept the advanced Set and feed motor-safety */
 		super.set(mode, value);
-		_safetyHelper.feed();
+		// _safetyHelper.feed();
 	}
 
 	public void set(ControlMode mode, double demand0, double demand1) {
 		/* intercept the advanced Set and feed motor-safety */
 		super.set(mode, demand0, demand1);
-		_safetyHelper.feed();
+		// _safetyHelper.feed();
 	}
 
 	// ----------------------- Invert routines -------------------//
@@ -99,54 +98,55 @@ public class WpiTalonSrx extends TalonSrx implements SpeedController, Sendable, 
 	public void stopMotor() {
 		neutralOutput();
 	}
-	// -------- Motor Safety--------//
 
-	/**
-	 * Set the safety expiration time.
-	 *
-	 * @param timeout
-	 *            The timeout (in seconds) for this motor object
-	 */
-	@Override
-	public void setExpiration(double timeout) {
-		_safetyHelper.setExpiration(timeout);
-	}
+	// // -------- Motor Safety--------//
 
-	/**
-	 * Return the safety expiration time.
-	 *
-	 * @return The expiration time value.
-	 */
-	@Override
-	public double getExpiration() {
-		return _safetyHelper.getExpiration();
-	}
+	// /**
+	//  * Set the safety expiration time.
+	//  *
+	//  * @param timeout
+	//  *            The timeout (in seconds) for this motor object
+	//  */
+	// @Override
+	// public void setExpiration(double timeout) {
+	// 	_safetyHelper.setExpiration(timeout);
+	// }
 
-	/**
-	 * Check if the motor is currently alive or stopped due to a timeout.
-	 *
-	 * @return a bool value that is true if the motor has NOT timed out and
-	 *         should still be running.
-	 */
-	@Override
-	public boolean isAlive() {
-		return _safetyHelper.isAlive();
-	}
+	// /**
+	//  * Return the safety expiration time.
+	//  *
+	//  * @return The expiration time value.
+	//  */
+	// @Override
+	// public double getExpiration() {
+	// 	return _safetyHelper.getExpiration();
+	// }
 
-	/**
-	 * Check if motor safety is enabled.
-	 *
-	 * @return True if motor safety is enforced for this object
-	 */
-	@Override
-	public boolean isSafetyEnabled() {
-		return _safetyHelper.isSafetyEnabled();
-	}
+	// /**
+	//  * Check if the motor is currently alive or stopped due to a timeout.
+	//  *
+	//  * @return a bool value that is true if the motor has NOT timed out and
+	//  *         should still be running.
+	//  */
+	// @Override
+	// public boolean isAlive() {
+	// 	return _safetyHelper.isAlive();
+	// }
 
-	@Override
-	public void setSafetyEnabled(boolean enabled) {
-		_safetyHelper.setSafetyEnabled(enabled);
-	}
+	// /**
+	//  * Check if motor safety is enabled.
+	//  *
+	//  * @return True if motor safety is enforced for this object
+	//  */
+	// @Override
+	// public boolean isSafetyEnabled() {
+	// 	return _safetyHelper.isSafetyEnabled();
+	// }
+
+	// @Override
+	// public void setSafetyEnabled(boolean enabled) {
+	// 	_safetyHelper.setSafetyEnabled(enabled);
+	// }
 
 	// ---- essentially a copy of SendableBase -------//
 	private String m_name = "";
@@ -224,8 +224,8 @@ public class WpiTalonSrx extends TalonSrx implements SpeedController, Sendable, 
 		builder.addDoubleProperty("Value", this::get, this::set);
 	}
 
-	@Override
-	public String getDescription() {
-		return _description;
-	}
+	// @Override
+	// public String getDescription() {
+	// 	return _description;
+	// }
 }

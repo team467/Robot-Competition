@@ -31,13 +31,13 @@ public class WpiTalonSrxTest {
 
   @Before
   public void init() {
-    motor.setSelectedSensorPosition(0);
+   motor.setSelectedSensorPosition(0);
   } 
 
   @Test
   public void testBasicForwardFullSpeed() {
     LOGGER.trace("SIMULATOR|DRIVE|TEST", "Testing forward full speed");
-    int numberOfIterations = 250;
+    int numberOfIterations = 20;
     int robotIterationTime = 20; // TODO: Set in Robot Map
     int initialSensorPosition = motor.getSelectedSensorPosition();
     // System.err.println("Initial Sensor Position: " + initialSensorPosition);
