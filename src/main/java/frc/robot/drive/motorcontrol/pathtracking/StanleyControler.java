@@ -86,6 +86,7 @@ public class StanleyControler {
   }
 
   /**
+   * Creates a new instance of the stanley controller, including the robot starting coordinates.
    *
    * @param initialFieldPositionX
    * @param initialFieldPostitionY
@@ -219,9 +220,9 @@ public class StanleyControler {
     DecimalFormat df = new DecimalFormat("#0.0");
     System.out.println("x\ty\theading\tk\tstep");
     for (SplineCourseData datum : course) {
-      System.out.println(df.format(datum.x) + "\t" + df.format(datum.y) 
+      System.out.println(df.format(datum.coordinateX) + "\t" + df.format(datum.coordinateY) 
           + "\t" + df.format(Math.toDegrees(datum.heading)) + "\t" 
-          + df.format(datum.k) + "\t" + df.format(datum.step));
+          + df.format(datum.curvature) + "\t" + df.format(datum.step));
     }
     // cx, cy, cyaw, ck, s = cubic_spline_planner.calc_spline_course(ax, ay, ds=0.1)
 

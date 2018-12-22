@@ -8,7 +8,7 @@ public class VisionIntegration {
   private Drive drive = Drive.getInstance();
   private VisionProcessing vision = VisionProcessing.getInstance();
   private Grabber grabber = Grabber.getInstance();
-  //private static final Logger LOGGER = LogManager.getLogger(VisionIntegration.class);
+  //private static final Logger LOGGER = RobotLogManager.getMainLogger(VisionIntegration.class);
 
   public static VisionIntegration getInstance() {
     if (instance == null) {

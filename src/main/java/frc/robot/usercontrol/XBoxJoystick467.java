@@ -8,18 +8,22 @@ package frc.robot.usercontrol;
 
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.XboxController;
+
 import frc.robot.RobotMap;
+import frc.robot.logging.RobotLogManager;
 import frc.robot.utilities.LookUpTable;
 import frc.robot.utilities.MathUtils;
+
 import java.lang.Math;
 import java.util.EnumMap;
-import org.apache.logging.log4j.LogManager;
+
 import org.apache.logging.log4j.Logger;
 
 
 public class XBoxJoystick467 {
 
-  private static final Logger LOGGER = LogManager.getLogger(XBoxJoystick467.class);
+  private static final Logger LOGGER 
+      = RobotLogManager.getMainLogger(XBoxJoystick467.class.getName());
   private XboxController xbox;
   private String name;
   private int pov = 0;

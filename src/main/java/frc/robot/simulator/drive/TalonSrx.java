@@ -277,7 +277,7 @@ public class TalonSrx extends BaseMotorController
 
     //------ sensor selection ----------//      
 
-    errorCollection.NewError(baseConfigurePID(pid, pidIdx, timeoutMs));
+    errorCollection.NewError(baseConfigurePid(pid, pidIdx, timeoutMs));
     errorCollection.NewError(
         configSelectedFeedbackSensor(pid.selectedFeedbackSensor, pidIdx, timeoutMs));
     
@@ -296,7 +296,7 @@ public class TalonSrx extends BaseMotorController
    *              If zero, no blocking or checking is performed.
    */
   public void getPidConfigs(TalonSRXPIDSetConfiguration pid, int pidIdx, int timeoutMs) {
-    baseGetPIDConfigs(pid, pidIdx, timeoutMs);
+    baseGetPidConfigs(pid, pidIdx, timeoutMs);
     pid.selectedFeedbackSensor = FeedbackDevice.valueOf(
         configGetParameter(ParamEnum.eFeedbackSensorType, pidIdx, timeoutMs));
   }

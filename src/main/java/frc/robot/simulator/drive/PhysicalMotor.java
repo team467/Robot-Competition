@@ -4,22 +4,24 @@ import com.ctre.phoenix.ErrorCode;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.VelocityMeasPeriod;
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;
 import frc.robot.RobotMap;
+import frc.robot.logging.RobotLogManager;
 import frc.robot.utilities.MovingAverage;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import org.apache.logging.log4j.LogManager;
+
 import org.apache.logging.log4j.Logger;
 
 
 public class PhysicalMotor implements Runnable, PIDOutput, PIDSource {
 
-  private static final Logger LOGGER = LogManager.getLogger(PhysicalMotor.class);
+  private static final Logger LOGGER = RobotLogManager.getMainLogger(PhysicalMotor.class.getName());
   
   private static final DecimalFormat df = new DecimalFormat("#0.0000");
 
@@ -29,13 +31,10 @@ public class PhysicalMotor implements Runnable, PIDOutput, PIDSource {
   // Simulation Information
   public static final double MAX_RPM = 821;
 
-  public static final int MOTOR_TIME_SLICE_IN_MS = 2;
-
-  // Iteration period is 20 ms
-  public static final double ROBOT_TIME_SLICE_IN_MS = 20.0;
+  public static final int MOTOR_TIME_SLICE_IN_MS = 10;
 
   private static final double MAX_SPEED_PER_PERIOD = MAX_RPM
-  / (60.0 * 1000.0 / MOTOR_TIME_SLICE_IN_MS);
+      / (60.0 * 1000.0 / MOTOR_TIME_SLICE_IN_MS);
 
   static final double ROBOT_FASTEST_RAMP_RATE_IN_SECONDS_TO_FULL = 1;
 
@@ -58,6 +57,7 @@ public class PhysicalMotor implements Runnable, PIDOutput, PIDSource {
   private double voltage;
   private double maxVoltage = 12.0;
   private double neutralDeadband = 0.04;
+  private double current = 0.0; // TODO: Figure out current simulation
 
   private double simulatedTargetVelocity;
 
@@ -72,12 +72,14 @@ public class PhysicalMotor implements Runnable, PIDOutput, PIDSource {
   private int[] sensors = new int[NUMBER_CLOSED_LOOPS];
   private int closedLoopIndex = 0;
 
-  private int smoothedVelocity[] = new int[NUMBER_CLOSED_LOOPS];
+  private int[] smoothedVelocity = new int[NUMBER_CLOSED_LOOPS];
   private int iterationCount = 0; // Used for velocity smoothing
   private VelocityMeasPeriod velocityMeasurementPeriod = VelocityMeasPeriod.Period_100Ms;
   private int velocityMeasurementWindowSize = 64;
   private MovingAverage[] smoothedVelocityMeasurement = new MovingAverage[NUMBER_CLOSED_LOOPS];
   private int[][] previousSensorReadings;
+
+  private long lastCallTime;
 
   // These are the parameters for the simulated internal PID controller.
 
@@ -89,22 +91,126 @@ public class PhysicalMotor implements Runnable, PIDOutput, PIDSource {
   private PIDSourceType pidSourceType = PIDSourceType.kDisplacement;
   private static final int NUMBER_SAVE_SLOTS = 4;
   private ClosedLoopParameter[] closedLoopParameters = new ClosedLoopParameter[NUMBER_SAVE_SLOTS];
-  private int pidParamSlotIndex[] = new int[NUMBER_CLOSED_LOOPS];
+  private int[] pidParamSlotIndex = new int[NUMBER_CLOSED_LOOPS];
 
   // General motor information
   private int id = 0;
+
+  // Mode Settings
   private ControlMode controlMode = ControlMode.PercentOutput;
+  private NeutralMode neutralMode = NeutralMode.Brake;
+
+  // Current power
+  private double outputPower = 0.0;
+  private double auxillaryPower = 0.0;
+
+  // Current state information
+  private int currentSensorReading;
+  private double speed;
+  private long currentTime;
+  private double currentVoltage;
+
+  // previous state information
+  private int previousSensorReading;
+  private double previousVelocity;
+  private long previousTime;
+  private MovingAverage averageVoltageReadings;
+
+  // Targeted state
+  private int targetSensorValue;
+  private double targetVelocity;
+
+  // Other state
+  private boolean brakeEnabled = true;
+  private boolean phaseSensor = false;
+  private boolean headingHold = false;
+  private boolean invert = false;
+  private int timeoutMs = 0;
+  private double openLoopSecondsFromNeutralToFull = 0.0;
+  private double closedLoopSecondsFromNeutralToFull = 0.0;
+  private double forwardPeakOutput = 1.0;
+  private double reversePeakOutput = 1.0;
+  private double nominalForwardOutput = 0.0;
+  private double nominalReverseOutput = 0.0;
+  private double percentDeadband = 0.04;
+  private int voltageReadingWindow = 8;
+  private boolean voltageCompensationEnabled = false;
+  private double temperatureC = 50.0;
+
+  private int[] motionProfStats = new int[11];
+
+  private boolean overrideLimitSwitches = false;
+  private int forwardSensorLimitThresholdValue = 0;
+  private int reverseSensorLimitThresholdValue = 0;
+  private boolean enableForwardSoftLimit = false;
+  private boolean enableReverseSoftLimit = false;
+  private boolean overrideSoftLimits = false;
+
+  private boolean remoteSensorClosedLoopDisableNeutralOnLossOfSignal = false;
+  private boolean feedbackNotContinuous = false;
+  private boolean clearPositionFeedbackSensorOnForwardLimitSwitchTrigger = false;
+  private boolean clearPositionFeedbackSensorOnReverseLimitSwitchTrigger = false;
+  private boolean clearPositionOnQuadratureIndexSignal = false;
+  private boolean limitSwitchDisableNeutralOnLossOfSignal = false;
+  private boolean softLimitDisableNeutralOnLossOfSignal = false;
+  private int pulseWidthSensorSmoothingWindowSize = 0;
+  private int pulseWidthSensorEdgesPerRotation = 4;
+  private int peakCurrentLimitAmps = 0;
+  private int currentLimitMillisecondsPastPeak = 0;
+  private int continuousCurrentLimitAmps = 0;
+  private boolean currentLimit = false;
+  private boolean resetOccurred = true;
+  private int firmwareVersion = 100;
+  private ErrorCode lastError = ErrorCode.OK;
+  private int faults = 0;
+  private int stickyFaults = 0;
 
   static PhysicalMotor createMotor(int id) {
-    // System.err.println("Creating motor ID: " + id);
+    LOGGER.info("Creating motor ID: {}", id);
     PhysicalMotor motor = new PhysicalMotor(id);
     motors.add(motor);
-
+    LOGGER.info("Scheduled timer.");
     Thread motorThread = new Thread(motor);
+    motorThread.setName("motor-" + id + "-thread");
+    // Setting priority to improve simulation stability of real-time system
+    // Default priority is 5, max is 10
+    // On Linux, the command line argument -XX:+UseThreadPriorities is also required.
+    motorThread.setPriority(8);
     motorThread.start();
     threads.add(motorThread);
 
     return motor;
+  }
+
+  static void enableMotors() {
+    for (Thread thread : threads) {
+      thread.start();
+    }
+    for (PhysicalMotor motor : motors) {
+      motor.enabled = true;
+      motor.lastCallTime = System.nanoTime();
+    }
+  }
+
+  static void shutdown() {
+    for (PhysicalMotor motor : motors) {
+      // Need to disable the motors for their threads to exit.
+      motor.enabled = false;
+    }
+
+    for (Thread motorThread : threads) {
+      try {
+        // Joins are the best way to shutdown threads 
+        // as they wait for locks to be freed on their own.
+        motorThread.join();
+      } catch (InterruptedException e) {
+        LOGGER.error("SIMULATOR|DRIVE", e);
+        e.printStackTrace();
+      }
+    }
+
+    motors.clear();
+    threads.clear();
   }
 
   PhysicalMotor(int id) {
@@ -115,8 +221,7 @@ public class PhysicalMotor implements Runnable, PIDOutput, PIDSource {
     isOpenLoop = true;
 
     // Period is half the motor thread time to allow for the PID control to update based inputs
-//    double pidPeriod = ((double)MOTOR_TIME_SLICE_IN_MS/1000.0/2);
-    double pidPeriod = 0.10;
+    double pidPeriod = ((double) MOTOR_TIME_SLICE_IN_MS / 1000.0 / 4.0);
     pidSourceType = PIDSourceType.kDisplacement;
     for (int i = 0; i < closedLoopParameters.length; i++) {
       closedLoopParameters[i] = new ClosedLoopParameter();
@@ -128,8 +233,10 @@ public class PhysicalMotor implements Runnable, PIDOutput, PIDSource {
       smoothedVelocity[i] = 0;
       pidParamSlotIndex[i] = i;
       pidController[i] = new PIDController(
-        closedLoopParameters[pidParamSlotIndex[i]].propGain, closedLoopParameters[pidParamSlotIndex[i]].integral, 
-        closedLoopParameters[pidParamSlotIndex[i]].derivative, closedLoopParameters[pidParamSlotIndex[i]].feedForward, 
+        closedLoopParameters[pidParamSlotIndex[i]].proportionalGain, 
+        closedLoopParameters[pidParamSlotIndex[i]].integral, 
+        closedLoopParameters[pidParamSlotIndex[i]].derivative, 
+        closedLoopParameters[pidParamSlotIndex[i]].feedForward, 
         this /* PID Source */, this /* PID Output */, pidPeriod);
       pidController[i].setOutputRange(-1.0, 1.0);
       pidController[i].setName("Simulated Motor " + id, "PID Controller: " + i);
@@ -153,50 +260,29 @@ public class PhysicalMotor implements Runnable, PIDOutput, PIDSource {
     enabled = true;
   }
 
-  static void enableMotors() {
-    for (PhysicalMotor motor : motors) {
-      motor.enabled = true;
-    }
-    for (Thread thread : threads) {
-      thread.start();
-    }
-  }
-
-  static void shutdown() {
-    for (PhysicalMotor motor : motors) {
-      // Need to disable the motors for their threads to exit.
-      motor.enabled = false;
-    }
-
-    for (Thread motorThread : threads) {
-      try {
-        // Joins are the best way to shutdown threads as they wait for locks to be freed on their own.
-        motorThread.join();
-      } catch (InterruptedException e) {
-        LOGGER.error("SIMULATOR|DRIVE", e);
-        e.printStackTrace();
-      }
-    }
-
-    motors.clear();
-    threads.clear();
+  int id() {
+    return id;
   }
 
   ErrorCode configSelectedFeedbackSensor(FeedbackDevice feedbackDevice, int index) {
     if (index < 0 || index >= NUMBER_CLOSED_LOOPS) {
-      return ErrorCode.SensorNotPresent;
+      lastError = ErrorCode.SensorNotPresent;
+      return lastError;
     }
     closedLoopIndex = index;
     feedbackDeviceType[index] = feedbackDevice;
-    return ErrorCode.OK;
+    lastError = ErrorCode.OK;
+    return lastError;
   }
 
   ErrorCode configAllowableClosedLoopError(int slotIndex, int allowableClosedLoopError) {
     if (slotIndex < 0 || slotIndex > NUMBER_SAVE_SLOTS) {
-      return ErrorCode.InvalidParamValue;
+      lastError = ErrorCode.InvalidParamValue;
+      return lastError;
     }
     this.closedLoopParameters[slotIndex].allowableClosedLoopError = allowableClosedLoopError;
-    return ErrorCode.OK;
+    lastError = ErrorCode.OK;
+    return lastError;
   }
 
   /**
@@ -211,7 +297,8 @@ public class PhysicalMotor implements Runnable, PIDOutput, PIDSource {
    */
   ErrorCode configMaxIntegralAccumulator(int slotIndex, double iaccum) {
     // TODO
-    return ErrorCode.OK;
+    lastError = ErrorCode.OK;
+    return lastError;
   }
 
   /**
@@ -226,10 +313,11 @@ public class PhysicalMotor implements Runnable, PIDOutput, PIDSource {
    *            the magnitude will apply in both forward and reverse directions.
    * @return Error Code generated by function. 0 indicates no error.
    */
- static ErrorCode configClosedLoopPeakOutput(int slotIdx, double percentOut) {
-   // TODO
-   return ErrorCode.OK;
-}
+  ErrorCode configClosedLoopPeakOutput(int slotIdx, double percentOut) {
+    // TODO
+    lastError = ErrorCode.OK;
+    return lastError;
+  }
 
   /**
    * Sets the loop time (in milliseconds) of the PID closed-loop calculations.
@@ -244,7 +332,8 @@ public class PhysicalMotor implements Runnable, PIDOutput, PIDSource {
    */
   ErrorCode configClosedLoopPeriod(int slotIdx, int loopTimeMs) {
     // TODO
-    return ErrorCode.OK;
+    lastError = ErrorCode.OK;
+    return lastError;
   }
 
   /**
@@ -260,8 +349,9 @@ public class PhysicalMotor implements Runnable, PIDOutput, PIDSource {
    * @return Error Code generated by function. 0 indicates no error.
    */
   ErrorCode integralAccumulator(double iaccum, int closedLoopIndex) {
-        // TODO
-    return ErrorCode.OK;
+    // TODO
+    lastError = ErrorCode.OK;
+    return lastError;
   }
 
   /**
@@ -287,7 +377,7 @@ public class PhysicalMotor implements Runnable, PIDOutput, PIDSource {
   double errorDerivative(int closedLoopIndex) {
     return 0.0;
     // TODO: FIgure out which is derivative term
-//    return pidController[closedLoopIndex].getD;
+    //return pidController[closedLoopIndex].getD;
   }
 
   /**
@@ -306,30 +396,34 @@ public class PhysicalMotor implements Runnable, PIDOutput, PIDSource {
    * Rarely used feature that sets a minimum output for a motor.
    * 
    * @param percentOutput Sets the minimum reverse output 
-   *    as a percent of bettery voltage
+   *      as a percent of bettery voltage
    * @return Error Code generated by function. 0 indicates no error.
    */
   ErrorCode configNominalOutputReverse(double percentOutput) {
     if (percentOutput < -1.0 || percentOutput > 0.0) {
-      return ErrorCode.InvalidParamValue;
+      lastError = ErrorCode.InvalidParamValue;
+      return lastError;
     }
     nominalPercentOutputReverse = percentOutput;
-    return ErrorCode.OK;
+    lastError = ErrorCode.OK;
+    return lastError;
   }
   
   /**
    * Rarely used feature that sets a minimum output for a motor.
    * 
    * @param percentOutput Sets the minimum forward output 
-   *    as a percent of bettery voltage
+   *      as a percent of bettery voltage
    * @return Error Code generated by function. 0 indicates no error.
    */
   ErrorCode configNominalOutputForward(double percentOutput) {
     if (percentOutput < 0.0 || percentOutput > 1.0) {
-      return ErrorCode.InvalidParamValue;
+      lastError = ErrorCode.InvalidParamValue;
+      return lastError;
     }
     nominalPercentOutputForward = percentOutput;
-    return ErrorCode.OK;
+    lastError = ErrorCode.OK;
+    return lastError;
   }
 
   private double nominalPercentOutputForward = 0.0;
@@ -339,36 +433,44 @@ public class PhysicalMotor implements Runnable, PIDOutput, PIDSource {
 
   ErrorCode configPeakOutputForward(double percentOutput) {
     if (percentOutput < 0.0 || percentOutput > 1.0) {
-      return ErrorCode.InvalidParamValue;
+      lastError = ErrorCode.InvalidParamValue;
+      return lastError;
     }
-    peakPercentOutputForward= percentOutput; 
-    return ErrorCode.OK;
+    peakPercentOutputForward = percentOutput; 
+    lastError = ErrorCode.OK;
+    return lastError;
   }
   
   ErrorCode configPeakOutputReverse(double percentOutput) {
     if (percentOutput < -1.0 || percentOutput > 0.0) {
-      return ErrorCode.InvalidParamValue;
+      lastError = ErrorCode.InvalidParamValue;
+      return lastError;
     }
     peakPercentOutputReverse = percentOutput;
-    return ErrorCode.OK;
+    lastError = ErrorCode.OK;
+    return lastError;
   }
 
   ErrorCode configOpenLoopRamp(double secondsFromNeutralToFull) {
     if (secondsFromNeutralToFull < 0) {
-      return ErrorCode.InvalidParamValue;
+      lastError = ErrorCode.InvalidParamValue;
+      return lastError;
     }
     openLoopRampRateSecondsToFull = secondsFromNeutralToFull;
     openLoopRampRatePerPeriod = convertRampRateToPerPeriod(openLoopRampRateSecondsToFull); 
-    return ErrorCode.OK;
+    lastError = ErrorCode.OK;
+    return lastError;
   }
   
   ErrorCode configClosedLoopRamp(double secondsFromNeutralToFull) {
     if (secondsFromNeutralToFull < 0) {
-      return ErrorCode.InvalidParamValue;
+      lastError = ErrorCode.InvalidParamValue;
+      return lastError;
     }
     closedLoopRampRateSecondsToFull = secondsFromNeutralToFull;
     closedLoopRampRatePerPeriod = convertRampRateToPerPeriod(closedLoopRampRateSecondsToFull); 
-    return ErrorCode.OK;
+    lastError = ErrorCode.OK;
+    return lastError;
   }
 
   /**
@@ -385,11 +487,11 @@ public class PhysicalMotor implements Runnable, PIDOutput, PIDSource {
     } 
     // Divide the fastest velocity by the number of time slices to get to full velocity
     return MAX_SPEED_PER_PERIOD 
-        / (secondsFromNeutralToFull * 1000.0 / MOTOR_TIME_SLICE_IN_MS);
+        / (secondsFromNeutralToFull * 1000.0 / ((double)MOTOR_TIME_SLICE_IN_MS));
   }
 
   ErrorCode configVelocityMeasurementPeriod(VelocityMeasPeriod velocityMeasurementPeriod) {
-    synchronized(this) {
+    synchronized (this) {
       this.velocityMeasurementPeriod = velocityMeasurementPeriod;
       previousSensorReadings = new int[NUMBER_CLOSED_LOOPS][velocityMeasurementPeriod.value];
       for (int i = 0; i < NUMBER_CLOSED_LOOPS; i++) {
@@ -398,13 +500,15 @@ public class PhysicalMotor implements Runnable, PIDOutput, PIDSource {
         }
       }
     }
-    return ErrorCode.OK;
+    lastError = ErrorCode.OK;
+    return lastError;
   }
   
   ErrorCode configVelocityMeasurementWindow(int windowSize) {
     // Valid options are 1, 2, 4, 8, 16, 32
     if (windowSize < 1) {
-      return ErrorCode.InvalidParamValue;
+      lastError = ErrorCode.InvalidParamValue;
+      return lastError;
     } else {
       velocityMeasurementWindowSize = 32;
       for (int possibleSize = 2; possibleSize <= 32; possibleSize *= 2) {
@@ -414,12 +518,13 @@ public class PhysicalMotor implements Runnable, PIDOutput, PIDSource {
         }
       }
     }
-    synchronized(this) {
+    synchronized (this) {
       for (int i = 0; i < NUMBER_CLOSED_LOOPS; i++) {
         smoothedVelocityMeasurement[i] = new MovingAverage(velocityMeasurementWindowSize);
       }
     }
-    return ErrorCode.OK;
+    lastError = ErrorCode.OK;
+    return lastError;
   }
 
   /**
@@ -433,15 +538,17 @@ public class PhysicalMotor implements Runnable, PIDOutput, PIDSource {
    */
   ErrorCode configProportionalGain(int slotIndex, double proportionalGain) {
     if (slotIndex < 0 || slotIndex > NUMBER_SAVE_SLOTS) {
-      return ErrorCode.InvalidParamValue;
+      lastError = ErrorCode.InvalidParamValue;
+      return lastError;
     }
-    closedLoopParameters[slotIndex].propGain = proportionalGain;
+    closedLoopParameters[slotIndex].proportionalGain = proportionalGain;
     for (int i = 0; i < NUMBER_CLOSED_LOOPS; i++) {
       if (pidParamSlotIndex[i] == slotIndex) {
         pidController[i].setP(proportionalGain);
       }
     }
-    return ErrorCode.OK;
+    lastError = ErrorCode.OK;
+    return lastError;
   }
   
   /**
@@ -449,21 +556,23 @@ public class PhysicalMotor implements Runnable, PIDOutput, PIDSource {
    *
    * @param slotIndex
    *            Parameter slot for the constant.
-   * @param iCoefficient
+   * @param integralCoefficient
    *            Value of the integral coefficient.
    * @return Error Code generated by function. 0 indicates no error.
    */
-  ErrorCode configICoefficient(int slotIndex, double iCoefficient) {
+  ErrorCode configIntegralCoefficient(int slotIndex, double integralCoefficient) {
     if (slotIndex < 0 || slotIndex > NUMBER_SAVE_SLOTS) {
-      return ErrorCode.InvalidParamValue;
+      lastError = ErrorCode.InvalidParamValue;
+      return lastError;
     }
-    closedLoopParameters[slotIndex].integral = iCoefficient;
+    closedLoopParameters[slotIndex].integral = integralCoefficient;
     for (int i = 0; i < NUMBER_CLOSED_LOOPS; i++) {
       if (pidParamSlotIndex[i] == slotIndex) {
-        pidController[i].setI(iCoefficient);
+        pidController[i].setI(integralCoefficient);
       }
     }
-    return ErrorCode.OK;
+    lastError = ErrorCode.OK;
+    return lastError;
   }
 
   /**
@@ -471,21 +580,23 @@ public class PhysicalMotor implements Runnable, PIDOutput, PIDSource {
    *
    * @param slotIndex
    *            Parameter slot for the constant.
-   * @param dCoefficient
+   * @param derivativeCoefficient
    *            Value of the differential coefficient.
    * @return Error Code generated by function. 0 indicates no error.
    */
-  ErrorCode configDCoefficient(int slotIndex, double dCoefficient) {
+  ErrorCode configDerivativeCoefficient(int slotIndex, double derivativeCoefficient) {
     if (slotIndex < 0 || slotIndex > NUMBER_SAVE_SLOTS) {
-      return ErrorCode.InvalidParamValue;
+      lastError = ErrorCode.InvalidParamValue;
+      return lastError;
     }
-    this.closedLoopParameters[slotIndex].derivative = dCoefficient;
+    this.closedLoopParameters[slotIndex].derivative = derivativeCoefficient;
     for (int i = 0; i < NUMBER_CLOSED_LOOPS; i++) {
       if (pidParamSlotIndex[i] == slotIndex) {
-        pidController[i].setD(dCoefficient);
+        pidController[i].setD(derivativeCoefficient);
       }
     }
-    return ErrorCode.OK;
+    lastError = ErrorCode.OK;
+    return lastError;
   }
   
   /**
@@ -493,21 +604,23 @@ public class PhysicalMotor implements Runnable, PIDOutput, PIDSource {
    *
    * @param slotIndex
    *            Parameter slot for the constant.
-   * @param fCoefficient
+   * @param feedForwardCoefficient
    *            Value of the feed forward constant.
    * @return Error Code generated by function. 0 indicates no error.
    */
-  ErrorCode configFCoefficient(int slotIndex, double fCoefficient) {
+  ErrorCode configFeedForwardCoefficient(int slotIndex, double feedForwardCoefficient) {
     if (slotIndex < 0 || slotIndex > NUMBER_SAVE_SLOTS) {
-      return ErrorCode.InvalidParamValue;
+      lastError = ErrorCode.InvalidParamValue;
+      return lastError;
     }
-    this.closedLoopParameters[slotIndex].feedForward = fCoefficient;
+    this.closedLoopParameters[slotIndex].feedForward = feedForwardCoefficient;
     for (int i = 0; i < NUMBER_CLOSED_LOOPS; i++) {
       if (pidParamSlotIndex[i] == slotIndex) {
-        pidController[i].setF(fCoefficient);
+        pidController[i].setF(feedForwardCoefficient);
       }
     }
-    return ErrorCode.OK;
+    lastError = ErrorCode.OK;
+    return lastError;
   }
 
   /**
@@ -520,10 +633,28 @@ public class PhysicalMotor implements Runnable, PIDOutput, PIDSource {
    */
   ErrorCode configNeutralDeadband(double percentDeadband) {
     if (percentDeadband < 0.001 || percentDeadband > 0.25) {
-      return ErrorCode.InvalidParamValue;
+      lastError = ErrorCode.InvalidParamValue;
+      return lastError;
     }
     neutralDeadband = percentDeadband;
-    return ErrorCode.OK;
+    lastError = ErrorCode.OK;
+    return lastError;
+  }
+
+  void neutralMode(NeutralMode neutralMode) {
+    this.neutralMode = neutralMode;
+  }
+
+  void headingHold(boolean headingHold) {
+    this.headingHold = headingHold;
+  }
+
+  void phaseSensor(boolean phaseSensor) {
+    this.phaseSensor = phaseSensor;
+  }
+  
+  void invert(boolean invert) {
+    this.invert = invert;
   }
   
   /**
@@ -538,9 +669,40 @@ public class PhysicalMotor implements Runnable, PIDOutput, PIDSource {
     this.pidParamSlotIndex[closedLoopIndex] = slotIndex;
   }
 
+  void setOutputByDemandType(double demand0,
+      DemandType demand1Type, double demand1) {
+
+    switch (demand1Type) {
+
+      case AuxPID:
+        outputPower = demand0;
+        auxillaryPower = demand1;
+        break;
+
+      case ArbitraryFeedForward:
+        outputPower = demand0 + demand1;
+        auxillaryPower = 0.0;
+        break;
+
+      case Neutral:
+      default:
+        outputPower = demand0;
+        auxillaryPower = 0.0;
+    }
+    //System.err.println("Output power: " + outputPower + " Aux Power: " + auxillaryPower);
+  }
+
+  void setDemand(ControlMode controlMode, int demand, DemandType demandType) {
+    set4(controlMode, 0, demand, demandType);
+  }
+
+
+
+
   void set4(ControlMode controlMode, double demand0, double demand1, DemandType demand1Type) {
 
-    double totalDemand = demand0 + demand1;
+    setOutputByDemandType(demand0, demand1Type, demand1);
+    double totalDemand = outputPower + auxillaryPower;
     this.controlMode = controlMode;
 
     switch (controlMode) {
@@ -628,7 +790,7 @@ public class PhysicalMotor implements Runnable, PIDOutput, PIDSource {
 
     // This makes sure we don't change some of the parameters while the run thread is moving
     
-    synchronized(this) {
+    synchronized (this) {
 
       if (Math.abs(voltage) < batteryVoltage) {
         this.voltage = voltage;
@@ -658,13 +820,16 @@ public class PhysicalMotor implements Runnable, PIDOutput, PIDSource {
   }
 
   /**
-   * Returns the velocity of the motor and attached simulated wheels or equipment.
-   * Normally this should be attached to a sensor simulator for feedback.
+   * Gets the velocity for the primary or secondary closed-loop.
    * 
-   * @return the velocity of the motor. Assumes ungeared.
+   * @param closedLoopIndex 0 for Primary closed-loop. 1 for auxiliary closed-loop.
+   * @return the velocity in sensor ticks per 100ms
    */
-  double velocity() {
-    return simulationVelocity;
+  int velocity(int closedLoopIndex) {
+    if (closedLoopIndex < 0 || closedLoopIndex >= NUMBER_CLOSED_LOOPS) {
+      return 0;
+    }
+    return smoothedVelocity[closedLoopIndex];
   }
 
   /**
@@ -677,7 +842,11 @@ public class PhysicalMotor implements Runnable, PIDOutput, PIDSource {
     if (closedLoopIndex < 0 || closedLoopIndex >= NUMBER_CLOSED_LOOPS) {
       return 0;
     }
-    return sensors[closedLoopIndex];
+    if (invert) {
+      return -sensors[closedLoopIndex];
+    } else {
+      return sensors[closedLoopIndex];
+    }
   }
 
   /**
@@ -690,26 +859,20 @@ public class PhysicalMotor implements Runnable, PIDOutput, PIDSource {
    *            0 for Primary closed-loop. 1 for auxiliary closed-loop.
    * @return Error Code generated by function. 0 indicates no error.
    */
-  ErrorCode setPosition(int closedLoopIndex, int sensorPosition) {
+  ErrorCode position(int closedLoopIndex, int sensorPosition) {
     if (closedLoopIndex < 0 || closedLoopIndex >= NUMBER_CLOSED_LOOPS) {
-      return ErrorCode.InvalidParamValue;
+      lastError = ErrorCode.InvalidParamValue;
+      return lastError;
     }
     sensors[closedLoopIndex] = sensorPosition;
-    revolutions = sensorPosition / RobotMap.WHEEL_ENCODER_CODES_PER_REVOLUTION;
-    return ErrorCode.OK;
-  }
-
-  /**
-   * Gets the velocity for the primary or secondary closed-loop.
-   * 
-   * @param closedLoopIndex 0 for Primary closed-loop. 1 for auxiliary closed-loop.
-   * @return the velocity in sensor ticks per 100ms
-   */
-  int velocity(int closedLoopIndex) {
-    if (closedLoopIndex < 0 || closedLoopIndex >= NUMBER_CLOSED_LOOPS) {
-      return 0;
+    if (invert) {
+      sensors[closedLoopIndex] *= -1.0;
     }
-    return smoothedVelocity[closedLoopIndex];
+    revolutions = sensorPosition / RobotMap.WHEEL_ENCODER_CODES_PER_REVOLUTION;
+    pidController[closedLoopIndex].reset();
+    pidController[closedLoopIndex].enable();
+    lastError = ErrorCode.OK;
+    return lastError;
   }
 
   /**
@@ -726,7 +889,7 @@ public class PhysicalMotor implements Runnable, PIDOutput, PIDSource {
     }
     if (this.controlMode == ControlMode.Position) {
       return (int) pidController[closedLoopIndex].getError();
-//      return (targetPosition - position(closedLoopIndex));
+      // return (targetPosition - position(closedLoopIndex));
     } else if (controlMode == ControlMode.Velocity)  {
       int targetSensorVelocity = 
           (int) (simulatedTargetVelocity * RobotMap.WHEEL_ENCODER_CODES_PER_REVOLUTION);
@@ -742,24 +905,31 @@ public class PhysicalMotor implements Runnable, PIDOutput, PIDSource {
   @Override
   public void run() {
 
-    while(enabled) {
-      
+    while (enabled) {
+      long currentTime = System.nanoTime();
+      long duration = (currentTime - lastCallTime) / 1000000; // Nanoseconds to Milliseconds
+      double numberOfPeriods = ((double) duration) / ((double) MOTOR_TIME_SLICE_IN_MS);
+      lastCallTime = currentTime;
       try {
         double velocityDiffFromTarget = simulatedTargetVelocity - simulationVelocity;
 
-        // LOGGER.debug("SIMULATOR|DRIVE", "Target Velocity: {} Current Velocity: {} Diff: {}", 
-        //     df.format(simulatedTargetVelocity), df.format(simulationVelocity), df.format(velocityDiffFromTarget));
+        LOGGER.trace("Target Velocity: {} Current Velocity: {} Diff: {}", 
+            df.format(simulatedTargetVelocity), 
+            df.format(simulationVelocity), 
+            df.format(velocityDiffFromTarget));
         
         // Make sure it's not in the middle of a change call
-        synchronized(this) {
+        synchronized (this) {
           iterationCount++;
           double rampRate;
           if (isOpenLoop) {
             rampRate = openLoopRampRatePerPeriod;
           } else {
             rampRate = closedLoopRampRatePerPeriod;
-            // System.err.println("Ramp Rate: " + rampRate);
           }
+
+          rampRate *= numberOfPeriods;
+          LOGGER.trace("Time since last call: {} - periods: {}", duration, numberOfPeriods);
 
           if (Math.abs(velocityDiffFromTarget) > rampRate) {
             simulationVelocity += Math.signum(velocityDiffFromTarget) * rampRate;
@@ -770,20 +940,23 @@ public class PhysicalMotor implements Runnable, PIDOutput, PIDSource {
 
         // Speed is in rotations/time slice, sensor ticks multiple by ticks per revolution
         revolutions += simulationVelocity;
-        sensors[closedLoopIndex] = (int) (revolutions * RobotMap.WHEEL_ENCODER_CODES_PER_REVOLUTION); 
-            // truncation is OK
+        sensors[closedLoopIndex] 
+            = (int) (revolutions * RobotMap.WHEEL_ENCODER_CODES_PER_REVOLUTION); 
+        if (invert) {
+          sensors[closedLoopIndex] *= -1.0;
+        }
+        // truncation is OK
         smoothedVelocity[closedLoopIndex] = 
             (int) (smoothedVelocityMeasurement[closedLoopIndex].average(
             sensors[closedLoopIndex] - previousSensorReadings[closedLoopIndex]
               [iterationCount % velocityMeasurementPeriod.value])
             / velocityMeasurementPeriod.value * 100); // convert to 100 ms
-        previousSensorReadings[closedLoopIndex][iterationCount % velocityMeasurementPeriod.value] = sensors[closedLoopIndex];
-        // System.err.println("Analog revs: " + revolutions + " digital ticks: " + sensors[selectedSensor]
-        //     + " smoothed velocity: " + smoothedVelocity);
+        previousSensorReadings[closedLoopIndex][iterationCount % velocityMeasurementPeriod.value] 
+            = sensors[closedLoopIndex];
 
         Thread.sleep(MOTOR_TIME_SLICE_IN_MS);
       } catch (InterruptedException e) {
-        LOGGER.error("SIMULATOR|DRIVE", e);
+        LOGGER.error(e);
         e.printStackTrace();
       }
     }
@@ -792,7 +965,7 @@ public class PhysicalMotor implements Runnable, PIDOutput, PIDSource {
   @Override
   public void pidWrite(double output) {
     if (controlMode == ControlMode.Position || controlMode == ControlMode.Velocity) {
-      // System.err.println(" Output " + output);
+      // System.err.println(id + ": " + output);
       voltage(output * maxVoltage);
     }
   }
@@ -819,7 +992,7 @@ public class PhysicalMotor implements Runnable, PIDOutput, PIDSource {
     }
   }
 
-    // ------ General Status ----------//
+  // ------ General Status ----------//
   /**
    * Gets the bus voltage seen by the device.
    *
@@ -834,10 +1007,445 @@ public class PhysicalMotor implements Runnable, PIDOutput, PIDSource {
    *
    * @return Output of the motor controller (in percent).
    */
-  double motorOutputPercent() {
+  double outputPercent() {
     return (voltage / maxVoltage);
   }
 
+    /**
+   * Gets the output current of the motor controller.
+   *
+   * @return The output current (in amps).
+   */
+  double current() {
+    // TODO: Simulate output current
+    return current;
+  }
 
+  /**
+   * Gets the temperature of the motor controller.
+   *
+   * @return Temperature of the motor controller (in 'C)
+   */
+  double temperature() {
+    // TODO: Simulate temperature
+    return temperatureC;
+  }
+
+  void overrideLimitSwitches(boolean enable) {
+    this.overrideLimitSwitches = enable;
+  }
+
+  /**
+   * Configures the forward soft limit threhold.
+   *
+   * @param forwardSensorLimit
+   *            Forward Sensor Position Limit (in raw sensor units).
+   * @return Error Code generated by function. 0 indicates no error.
+   */
+  ErrorCode forwardSensorLimitThresholdValue(int forwardSensorLimit) {
+    forwardSensorLimitThresholdValue = forwardSensorLimit;
+    lastError = ErrorCode.OK;
+    return lastError;
+  }
+
+  /**
+   * Configures the reverse soft limit threshold.
+   *
+   * @param reverseSensorLimit
+   *            Reverse Sensor Position Limit (in raw sensor units).
+   * @return Error Code generated by function. 0 indicates no error.
+   */
+  ErrorCode reverseSensorLimitThresholdValue(int reverseSensorLimit) {
+    reverseSensorLimitThresholdValue = reverseSensorLimit;
+    lastError = ErrorCode.OK;
+    return lastError;
+  }
+
+  /**
+   * Configures the forward soft limit enable.
+   *
+   * @param enable
+   *            Forward Sensor Position Limit Enable.
+   * @return Error Code generated by function. 0 indicates no error.
+   */
+  ErrorCode configForwardSoftLimit(boolean enable) {
+    enableForwardSoftLimit = enable;
+    lastError = ErrorCode.OK;
+    return lastError;
+  }
+
+  /**
+   * Configures the reverse soft limit enable.
+   *
+   * @param enable
+   *            Reverse Sensor Position Limit Enable.
+   * @return Error Code generated by function. 0 indicates no error.
+   */
+  ErrorCode configReverseSoftLimit(boolean enable) {
+    // TODO
+    enableReverseSoftLimit = enable;
+    lastError = ErrorCode.OK;
+    return lastError;
+  }
+
+  /**
+   * Can be used to override-disable the soft limits.
+   * This function can be used to quickly disable soft limits without
+   * having to modify the persistent configuration.
+   *
+   * @param enable enable state for soft limit switches.
+   */
+  void overrideSoftLimits(boolean enable) {
+    // TODO
+    overrideSoftLimits = enable;
+  }
+
+//------Feedback Device Interaction Settings---------//
+
+  /**
+   * Disables wrapping the position. If the signal goes from 1023 to 0 a motor
+   * controller will by default go to 1024. If wrapping the position is disabled,
+   * it will go to 0;
+   *
+   * @param enable disable wrapping the position.
+   * @return Error Code generated by function. 0 indicates no error.
+   */
+  ErrorCode feedbackNotContinuous(boolean enable) {
+    // TODO
+    feedbackNotContinuous = enable;
+    lastError = ErrorCode.OK;
+    return lastError;
+  }
+  
+  /**
+   * Disables going to neutral (brake/coast) when a remote sensor is no longer detected.
+   *
+   * @param enable disable going to neutral
+   * @return Error Code generated by function. 0 indicates no error.
+   */
+  ErrorCode remoteSensorClosedLoopDisableNeutralOnLossOfSignal(boolean enable) {
+    // TODO
+    remoteSensorClosedLoopDisableNeutralOnLossOfSignal = enable;
+    lastError = ErrorCode.OK;
+    return lastError;
+  }
+
+  /**
+   * Enables clearing the position of the feedback sensor when the forward
+   * limit switch is triggered
+   *
+   * @param enable whether clearing is enabled, defaults false
+   * @return Error Code generated by function. 0 indicates no error.
+   */
+  ErrorCode clearPositionFeedbackSensorOnForwardLimitSwitchTrigger(boolean enable) {
+    // TODO
+    clearPositionFeedbackSensorOnForwardLimitSwitchTrigger = enable;
+    lastError = ErrorCode.OK;
+    return lastError;
+  }
+
+  /**
+   * Enables clearing the position of the feedback sensor when the reverse
+   * limit switch is triggered
+   *
+   * @param enable whether clearing is enabled, defaults false
+   * @return Error Code generated by function. 0 indicates no error.
+   */
+  ErrorCode clearPositionFeedbackSensorOnReverseLimitSwitchTrigger(boolean enable) {
+    // TODO
+    clearPositionFeedbackSensorOnReverseLimitSwitchTrigger = enable;
+    lastError = ErrorCode.OK;
+    return lastError;
+  }
+
+  /**
+   * Enables clearing the position of the feedback sensor when the quadrature index signal
+   * is detected
+   *
+   * @param enable whether clearing is enabled, defaults false
+   * @return Error Code generated by function. 0 indicates no error.
+   */
+  ErrorCode clearPositionOnQuadratureIndexSignal(boolean enable) {
+    // TODO
+    clearPositionOnQuadratureIndexSignal = enable;
+    lastError = ErrorCode.OK;
+    return lastError;
+  }
+
+  /**
+   * Disables limit switches triggering (if enabled) when the sensor is no longer detected.
+   *
+   * @param enable disable triggering
+   * @return Error Code generated by function. 0 indicates no error.
+   */
+  ErrorCode limitSwitchDisableNeutralOnLossOfSignal(boolean enable) {
+    // TODO
+    limitSwitchDisableNeutralOnLossOfSignal = enable;
+    lastError = ErrorCode.OK;
+    return lastError;
+  }
+
+  /**
+   * Disables soft limits triggering (if enabled) when the sensor is no longer detected.
+   *
+   * @param enable disable triggering
+   * @return Error Code generated by function. 0 indicates no error.
+   */
+  ErrorCode softLimitDisableNeutralOnLossOfSignal(boolean enable) {
+    // TODO
+    softLimitDisableNeutralOnLossOfSignal = enable;
+    lastError = ErrorCode.OK;
+    return lastError;
+  }
+
+  /**
+   * Sets the edges per rotation of a pulse width sensor. (This should be set for
+   * tachometer use).
+   *
+   * @param edgesPerRotation edges per rotation
+   * @return Error Code generated by function. 0 indicates no error.
+   */
+  ErrorCode pulseWidthSensorEdgesPerRotation(int edgesPerRotation) {
+    // TODO
+    pulseWidthSensorEdgesPerRotation = edgesPerRotation;
+    lastError = ErrorCode.OK;
+    return lastError;
+  }
+
+  /**
+   * Sets the number of samples to use in smoothing a pulse width sensor with a rolling
+   * average. Default is 1 (no smoothing).
+   *
+   * @param windowSize samples for rolling avg
+   * @return Error Code generated by function. 0 indicates no error.
+   */
+  ErrorCode pulseWidthSensorSmoothingWindowSize(int windowSize) {
+    // TODO
+    pulseWidthSensorSmoothingWindowSize = windowSize;
+    lastError = ErrorCode.OK;
+    return lastError;
+  }
+
+  // ------ error ----------//
+  /**
+   * Gets the last error generated by this object. Not all functions return an
+   * error code but can potentially report errors. This function can be used
+   * to retrieve those error codes.
+   *
+   * @return Last Error Code generated by a function.
+   */
+  ErrorCode lastError() {
+    return lastError;
+  }
+
+  // ------ Faults ----------//
+  /**
+   * Polls the various fault flags.
+   *
+   * @return Last Error Code generated by a function.
+   */
+  int faults() {
+    // TODO: Convert faults to flags and return
+    return faults;
+  }
+
+  /**
+   * Polls the various sticky fault flags.
+   *
+   * @return Last Error Code generated by a function.
+   */
+  int stickyFaults() {
+    // TODO: Convert stick faults to bit flags are return
+    return stickyFaults;
+  }
+
+  /**
+   * Clears all sticky faults.
+   *
+   * @return Last Error Code generated by a function.
+   */
+  ErrorCode clearStickyFaults() {
+    // TODO: Create list of faults, then method for clearing
+    stickyFaults = 0;
+    lastError = ErrorCode.OK;
+    return lastError;
+  }
+
+  // ------ Firmware ----------//
+  /**
+   * Gets the firmware version of the device.
+   *
+   * @return Firmware version of device. For example: version 1-dot-2 is
+   *         0x0102.
+   */
+  int firmwareVersion() {
+    return firmwareVersion;
+  }
+
+  /**
+   * Returns true if the device has reset since last call.
+   *
+   * @return Has a Device Reset Occurred?
+   */
+  boolean resetOccurred() {
+    // TODO: mark reset off on other calls
+    return resetOccurred;
+  }
+
+  //------ Custom Persistent Params ----------//
+  /**
+   * Sets the value of a custom parameter. This is for arbitrary use.
+   *
+   * <p>Sometimes it is necessary to save calibration/limit/target information in
+   * the device. Particularly if the device is part of a subsystem that can be
+   * replaced.
+   *
+   * @param newValue
+   *            Value for custom parameter.
+   * @param paramIndex
+   *            Index of custom parameter [0,1]
+   * @param timeoutMs
+   *            Timeout value in ms. If nonzero, function will wait for config
+   *            success and report an error if it times out. If zero, no
+   *            blocking or checking is performed.
+   * @return Error Code generated by function. 0 indicates no error.
+   */
+  ErrorCode configSetCustomParam(int newValue, int paramIndex) {
+    // TODO : Figure out custom parameters
+    lastError = ErrorCode.OK;
+    return lastError;
+  }
+
+  /**
+   * Gets the value of a custom parameter.
+   *
+   * @param paramIndex
+   *            Index of custom parameter [0,1].
+   * @return Value of the custom param.
+   */
+  int configGetCustomParam(int paramIndex) {
+    // TODO : Figure out custom parameters
+    return 0;
+  }
+
+  /**
+   * Sets a parameter. Generally this is not used. This can be utilized in -
+   * Using new features without updating API installation. - Errata
+   * workarounds to circumvent API implementation. - Allows for rapid testing
+   * / unit testing of firmware.
+   *
+   * @param param
+   *            Parameter enumeration.
+   * @param value
+   *            Value of parameter.
+   * @param subValue
+   *            Subvalue for parameter. Maximum value of 255.
+   * @param ordinal
+   *            Ordinal of parameter.
+   * @return Error Code generated by function. 0 indicates no error.
+   */
+  ErrorCode configSetParameter(int param, double value,
+      int subValue, int ordinal) {
+    // int retval = MotControllerJNI.ConfigSetParameter(m_handle, param,  
+    // value, subValue, ordinal,
+    //     timeoutMs);
+    // TODO: Figure out set parameter with subValue
+    lastError = ErrorCode.OK;
+    return lastError;
+  }
+
+  /**
+   * Gets a parameter.
+   *
+   * @param param
+   *            Parameter enumeration.
+   * @param ordinal
+   *            Ordinal of parameter.
+   * @return Value of parameter.
+   */
+  double configGetParameter(int param, int ordinal) {
+    return 0.0;
+    // TODO: Figure out how parameters are referenced by int
+  }
+
+  /**
+   * Configure the peak allowable current (when current limit is enabled).
+   *
+   * <p>Current limit is activated when current exceeds the peak limit for longer
+   * than the peak duration. Then software will limit to the continuous limit.
+   * This ensures current limiting while allowing for momentary excess current
+   * events.
+   *
+   * <p>For simpler current-limiting (single threshold) use
+   * ConfigContinuousCurrentLimit() and set the peak to zero:
+   * ConfigPeakCurrentLimit(0).
+   *
+   * @param amps
+   *            Amperes to limit.
+   */
+  ErrorCode peakCurrentLimitAmps(int amps) {
+    //TODO: Current limiting
+    peakCurrentLimitAmps = amps;
+    lastError = ErrorCode.OK;
+    return lastError;
+  }
+
+  /**
+   * Configure the peak allowable duration (when current limit is enabled).
+   *
+   * <p>Current limit is activated when current exceeds the peak limit for longer
+   * than the peak duration. Then software will limit to the continuous limit.
+   * This ensures current limiting while allowing for momentary excess current
+   * events.
+   *
+   * <p>For simpler current-limiting (single threshold) use
+   * ConfigContinuousCurrentLimit() and set the peak to zero:
+   * ConfigPeakCurrentLimit(0).
+   *
+   * @param milliseconds
+   *            How long to allow current-draw past peak limit.
+   */
+  ErrorCode currentLimitMillisecondsPastPeak(int milliseconds) {
+    //TODO: Current limiting
+    currentLimitMillisecondsPastPeak = milliseconds;
+    lastError = ErrorCode.OK;
+    return lastError;
+  }
+
+  /**
+   * Configure the continuous allowable current-draw (when current limit is
+   * enabled).
+   *
+   * <p>Current limit is activated when current exceeds the peak limit for longer
+   * than the peak duration. Then software will limit to the continuous limit.
+   * This ensures current limiting while allowing for momentary excess current
+   * events.
+   *
+   * <p>For simpler current-limiting (single threshold) use
+   * ConfigContinuousCurrentLimit() and set the peak to zero:
+   * ConfigPeakCurrentLimit(0).
+   *
+   * @param amps
+   *            Amperes to limit.
+   */
+  ErrorCode continuousCurrentLimitAmps(int amps) {
+    //TODO: Current limiting
+    continuousCurrentLimitAmps = amps;
+    lastError = ErrorCode.OK;
+    return lastError;
+  }
+
+  /**
+   * Enable or disable Current Limit.
+   *
+   * @param enable
+   *    Enable state of current limit.
+   * @see configPeakCurrentLimit, configPeakCurrentDuration,
+   *      configContinuousCurrentLimit
+   */
+  void currentLimit(boolean enable) {
+    //TODO: Current limiting
+    currentLimit = enable;
+  }
 
 }

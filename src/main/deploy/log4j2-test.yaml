@@ -1,0 +1,117 @@
+Configuration:
+  name: Default
+ 
+  Properties:
+    Property:
+      name: log-path
+      value: "logs"
+ 
+  Appenders:
+ 
+    Console:
+      name: Console_Appender
+      target: SYSTEM_OUT
+      PatternLayout:
+        pattern: "[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n"
+ 
+    File:
+      name: File_Appender
+      fileName: ${log-path}/logfile.log
+      PatternLayout:
+        pattern: "[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n"
+ 
+  Loggers:
+ 
+      Root:
+        level: info
+        AppenderRef:
+          - ref: Console_Appender
+ 
+      # Create override loggers per class
+      Logger:
+        
+        - name: frc.robot.Main
+          level: info
+          AppenderRef:
+            - ref: File_Appender
+              level: info
+
+        - name: frc.robot.Robot
+          level: info
+          AppenderRef:
+            - ref: File_Appender
+              level: info
+
+        - name: frc.robot.RobotMap
+          level: info
+          AppenderRef:
+            - ref: File_Appender
+              level: info
+
+        - name: frc.robot.autonomous.ActionGroup
+          level: info
+          AppenderRef:
+            - ref: File_Appender
+              level: info
+
+        - name: frc.robot.autonomous.Actions
+          level: info
+          AppenderRef:
+            - ref: File_Appender
+              level: info
+
+        - name: frc.robot.drive.Drive
+          level: info
+          AppenderRef:
+            - ref: File_Appender
+              level: info
+
+        - name: frc.robot.drive.TalonSpeedControllerGroup
+          level: info
+          AppenderRef:
+            - ref: File_Appender
+              level: info
+
+        - name: frc.robot.simulator.drive.PhysicalMotor
+          level: info
+          AppenderRef:
+            - ref: File_Appender
+              level: info
+
+        - name: frc.robot.simulator.drive.PhysicalMotorManager
+          level: info
+          AppenderRef:
+            - ref: File_Appender
+              level: info
+
+        # Test Loggers
+        - name: frc.robot.autonomous.ActionsTest
+          level: info
+          AppenderRef:
+            - ref: File_Appender
+              level: info
+
+# Enable extra logging for classes you want to debug
+# config.addLogger(Climber.class.getName(), new LoggerConfig(Climber.class.getName(), Level.INFO, true));
+# config.addLogger(Action.class.getName(), new LoggerConfig(Action.class.getName(), Level.INFO, true));
+# config.addLogger(Drive.class.getName(), new LoggerConfig(Drive.class.getName(), Level.INFO, true));
+# config.addLogger(ActionGroup.class.getName(), new LoggerConfig(ActionGroup.class.getName(), Level.WARN, true));
+# config.addLogger(DriveSimulator.class.getName(), new LoggerConfig(DriveSimulator.class.getName(), Level.WARN, true));
+# config.addLogger(Elevator.class.getName(), new LoggerConfig(Elevator.class.getName(), Level.INFO, true));
+# config.addLogger(Grabber.class.getName(), new LoggerConfig(Grabber.class.getName(), Level.INFO, true));
+# config.addLogger(MatchConfiguration.class.getName(), new LoggerConfig(MatchConfiguration.class.getName(), Level.INFO, true));
+# config.addLogger(PhysicalMotor.class.getName(), new LoggerConfig(PhysicalMotor.class.getName(), Level.DEBUG, true));
+# config.addLogger(OpticalSensor.class.getName(), new LoggerConfig(OpticalSensor.class.getName(), Level.WARN, true));
+# config.addLogger(Ramp.class.getName(), new LoggerConfig(Ramp.class.getName(), Level.INFO, true));
+# config.addLogger(Ramps.class.getName(), new LoggerConfig(Ramps.class.getName(), Level.INFO, true));
+# config.addLogger(frc.robot.simulator.Robot.class.getName(), 
+#   new LoggerConfig(frc.robot.simulator.Robot.class.getName(), Level.INFO, true));
+# config.addLogger(RobotShape.class.getName(), new LoggerConfig(RobotShape.class.getName(), Level.WARN, true));
+# config.addLogger(Rumbler.class.getName(), new LoggerConfig(Rumbler.class.getName(), Level.WARN, true));
+# config.addLogger(TalonSpeedControllerGroup.class.getName(), new LoggerConfig(TalonSpeedControllerGroup.class.getName(), Level.INFO, true));
+# config.addLogger(VisionIntegration.class.getName(), new LoggerConfig(VisionIntegration.class.getName(), Level.WARN, true));
+# config.addLogger(XBoxJoystick467.class.getName(), new LoggerConfig(XBoxJoystick467.class.getName(), Level.WARN, true));
+# config.addLogger(TiltMonitor.class.getName(), new LoggerConfig(TiltMonitor.class.getName(), Level.INFO, true));
+# config.addLogger(GrabberSolenoid.class.getName(), new LoggerConfig(GrabberSolenoid.class.getName(), Level.INFO, true));
+
+              

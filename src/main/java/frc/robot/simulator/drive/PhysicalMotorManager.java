@@ -11,103 +11,18 @@ import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.VelocityMeasPeriod;
 
-import frc.robot.utilities.MovingAverage;
-
 import java.util.concurrent.ConcurrentHashMap;
 
 class PhysicalMotorManager {
 
-  // Mode Settings
-  private ControlMode controlMode = ControlMode.PercentOutput;
-  private NeutralMode neutralMode = NeutralMode.Brake;
-
-  // Current power
-  private double outputPower = 0.0;
-  private double auxillaryPower = 0.0;
-
-  // Current state information
-  private int currentSensorReading;
-  private double speed;
-  private long currentTime;
-  private double currentVoltage;
-
-  // previous state information
-  private int previousSensorReading;
-  private double previousVelocity;
-  private long previousTime;
-  private MovingAverage averageVoltageReadings;
-
-  // Targeted state
-  private int targetSensorValue;
-  private double targetVelocity;
-
-  // Other state
-  private boolean brakeEnabled = true;
-  private boolean invertSensor = false;
-  private int timeoutMs = 0;
-  private double openLoopSecondsFromNeutralToFull = 0.0;
-  private double closedLoopSecondsFromNeutralToFull = 0.0;
-  private double forwardPeakOutput = 1.0;
-  private double reversePeakOutput = 1.0;
-  private double nominalForwardOutput = 0.0;
-  private double nominalReverseOutput = 0.0;
-  private double percentDeadband = 0.04;
-  private int voltageReadingWindow = 8;
-  private boolean voltageCompensationEnabled = false;
-  private double temperatureC = 50.0;
-
-  private int arbId = 0;
-  private long handle = 0;
-
-  private int[] motionProfStats = new int[11];
-
-  private static ConcurrentHashMap<Long, PhysicalMotorManager> motors = new ConcurrentHashMap<Long, PhysicalMotorManager>();
-
-  private boolean overrideLimitSwitches = false;
-  private int forwardSensorLimitThresholdValue = 0;
-  private int reverseSensorLimitThresholdValue = 0;
-  private boolean enableForwardSoftLimit = false;
-  private boolean enableReverseSoftLimit = false;
-  private boolean overrideSoftLimits = false;
-
-  private boolean remoteSensorClosedLoopDisableNeutralOnLOS = false;
-  private boolean feedbackNotContinuous = false;
-  private boolean clearPositionFeedbackSensorOnForwardLimitSwitchTrigger = false;
-  private boolean clearPositionFeedbackSensorOnReverseLimitSwitchTrigger = false;
-  private boolean clearPositionOnQuadratureIndexSignal = false;
-  private boolean limitSwitchDisableNeutralOnLOS = false;
-  private boolean softLimitDisableNeutralOnLOS = false;
-  private int pulseWidthSensorSmoothingWindowSize = 0;
-  private int pulseWidthSensorEdgesPerRotation = 4;
-  private int peakCurrentLimitAmps = 0;
-  private int currentLimitMillisecondsPastPeak = 0;
-  private int continuousCurrentLimitAmps = 0;
-  private boolean currentLimit = false;
-  private boolean resetOccurred = true;
-  private int firmwareVersion = 100;
-  private ErrorCode lastError = ErrorCode.OK;
-  private int faults = 0;
-  private int stickyFaults = 0;
-
-  private PhysicalMotor physicalMotor = null;
-  // --------------------- Constructors -----------------------------//
-
-  /**
-   * Constructor for motor controllers.
-   *
-   * @param arbId the bus id of arbId
-   */
-  private PhysicalMotorManager(int arbId) {
-    this.arbId = arbId;
-    physicalMotor = PhysicalMotor.createMotor(arbId);
-  }
+  private static ConcurrentHashMap<Long, PhysicalMotor> motors 
+      = new ConcurrentHashMap<Long, PhysicalMotor>();
 
   // Static Manager calls // 
 
   static long create(int arbId) {
-    PhysicalMotorManager motor = new PhysicalMotorManager(arbId);
     long handle = (long) arbId;
-    motors.put(handle, motor);
+    motors.put(handle, PhysicalMotor.createMotor(arbId));
     return handle;
   }
 
@@ -118,71 +33,37 @@ class PhysicalMotorManager {
    * @return Device number.
    */
   static int getDeviceNumber(long handle) {
-    return (int) handle;
+    return (int) motors.get(handle).id();
   }
 
   static void set4(long handle, ControlMode controlMode, double demand0,
        double demand1, DemandType demand1Type) {
-
-    PhysicalMotorManager motor = motors.get(handle);
-    // System.err.println("Set 4 demand0= " + demand0 + " handle= " 
-    //     + handle + " control mode = " + controlMode);
-    motor.setOutputByDemandType(demand0, demand1Type, demand1);
-    motor.physicalMotor.set4(controlMode, motor.outputPower, motor.auxillaryPower, demand1Type);
+    motors.get(handle).set4(controlMode, demand0, demand1, demand1Type);
   }
 
   static void setDemand(long handle, ControlMode controlMode, int demand,
-    int demandTypeValue) {
+      DemandType demandType) {
 
-    PhysicalMotorManager motor = motors.get(handle);
-    motor.outputPower = demand;
-    //motor.setOutputByDemandType(demand0, demand1Type, demand1);
-
-  }
-
-  private void setOutputByDemandType(double demand0,
-      DemandType demand1Type, double demand1) {
-
-    switch (demand1Type) {
-
-      case AuxPID:
-        outputPower = demand0;
-        auxillaryPower = demand1;
-        break;
-
-      case ArbitraryFeedForward:
-        outputPower = demand0 + demand1;
-        auxillaryPower = 0.0;
-        break;
-
-      case Neutral:
-      default:
-        outputPower = demand0;
-        auxillaryPower = 0.0;
-    }
-//    System.err.println("Output power: " + outputPower + " Aux Power: " + auxillaryPower);
+    motors.get(handle).setDemand(controlMode, demand, demandType);
   }
 
   /**
    *  MotControllerJNI.SetNeutralMode(m_handle, neutralMode.value);
    */
-  static void setNeutralMode(long handle, int neutralModeSetting) {
-    PhysicalMotorManager motor = motors.get(handle);
-
-    if (neutralModeSetting == NeutralMode.Brake.value
-        || neutralModeSetting == NeutralMode.EEPROMSetting.value) {
-      motor.neutralMode = NeutralMode.Brake;
-    } else if (neutralModeSetting == NeutralMode.Coast.value) {
-      motor.neutralMode = NeutralMode.Coast;
-    }
+  static void setNeutralMode(long handle, NeutralMode neutralMode) {
+    motors.get(handle).neutralMode(neutralMode);
+    // if (neutralModeSetting == NeutralMode.Brake.value
+    //     || neutralModeSetting == NeutralMode.EEPROMSetting.value) {
+    //   motor.neutralMode(NeutralMode.Brake);
+    // } else if (neutralModeSetting == NeutralMode.Coast.value) {
+    //   motor.neutralMode(NeutralMode.Coast);
+    // }
   }
 
-  private boolean headingHold = false;
-
-    /* this routine is moot as the Set() call updates the signal on each call */
-    //MotControllerJNI.EnableHeadingHold(m_handle, enable ? 1 : 0);
-    static void enableHeadingHold(long handle, boolean enable) {
-    motors.get(handle).headingHold = enable;
+  /* this routine is moot as the Set() call updates the signal on each call */
+  //MotControllerJNI.EnableHeadingHold(m_handle, enable ? 1 : 0);
+  static void enableHeadingHold(long handle, boolean enable) {
+    motors.get(handle).headingHold(enable);
   }
 
   /**
@@ -190,26 +71,22 @@ class PhysicalMotorManager {
    * Future firmware updates will use this to control advanced auxiliary loop behavior.
    *
    */
- static void selectDemandType(long handle, DemandType demandType) {
+  static void selectDemandType(long handle, DemandType demandType) {
     /* this routine is moot as the Set() call updates the signal on each call */
     //MotControllerJNI.SelectDemandType(m_handle, value ? 1 : 0);
   }
 
   // ------ Invert behavior ----------//
 
-  private boolean phaseSensor = false;
-
   static void setSensorPhase(long handle, boolean phaseSensor) {
-    motors.get(handle).phaseSensor = phaseSensor;
+    motors.get(handle).phaseSensor(phaseSensor);
   }
-
-  private boolean invert = false;
 
   static void setInverted(long handle, boolean invert) {
-    motors.get(handle).invert = invert;
+    motors.get(handle).invert(invert);
   }
 
-    //----- Factory Default Configuration -----//
+  //----- Factory Default Configuration -----//
 
   /**
    * Configure all configurations to factory default values
@@ -219,10 +96,10 @@ class PhysicalMotorManager {
    *            not successful within timeout.
    * @return Error Code generated by function. 0 indicates no error.
    */
-  static ErrorCode configFactoryDefault(double handle, int timeoutMs) {
-    PhysicalMotorManager motor = motors.get(handle);
+  static ErrorCode configFactoryDefault(long handle, int timeoutMs) {
+    PhysicalMotor motor = motors.get(handle);
     // TODO: Look up and set all factory defaults
-    return motor.lastError;
+    return motor.lastError();
   }
 
   // ----- general output shaping ------------------//
@@ -238,12 +115,11 @@ class PhysicalMotorManager {
    *            If zero, no blocking or checking is performed.
    * @return Error Code generated by function. 0 indicates no error.
    */
- static ErrorCode configOpenLoopRamp(
+  static ErrorCode configOpenLoopRamp(
       long handle, double secondsFromNeutralToFull, int timeoutMs) {
     // TODO: Figure out open loop ramp rate (separate but related to from simulation ramp rate)
-    PhysicalMotorManager motor = motors.get(handle);
-    motor.lastError = motor.physicalMotor.configOpenLoopRamp(secondsFromNeutralToFull);
-    return motor.lastError;
+    PhysicalMotor motor = motors.get(handle);
+    return motor.configOpenLoopRamp(secondsFromNeutralToFull);
   }
 
   /**
@@ -258,11 +134,11 @@ class PhysicalMotorManager {
    *            If zero, no blocking or checking is performed.
    * @return Error Code generated by function. 0 indicates no error.
    */
- static ErrorCode configClosedLoopRamp(long handle, double secondsFromNeutralToFull, int timeoutMs) {
+  static ErrorCode configClosedLoopRamp(
+      long handle, double secondsFromNeutralToFull, int timeoutMs) {
     // TODO: Closed loop ramp rate
-    PhysicalMotorManager motor = motors.get(handle);
-    motor.lastError = motor.physicalMotor.configClosedLoopRamp(secondsFromNeutralToFull);
-    return motor.lastError;
+    PhysicalMotor motor = motors.get(handle);
+    return motor.configClosedLoopRamp(secondsFromNeutralToFull);
   }
 
   /**
@@ -276,10 +152,9 @@ class PhysicalMotorManager {
    *            If zero, no blocking or checking is performed.
    * @return Error Code generated by function. 0 indicates no error.
    */
- static ErrorCode configPeakOutputForward(long handle, double percentOut, int timeoutMs) {
-    PhysicalMotorManager motor = motors.get(handle);
-    motor.lastError = motor.physicalMotor.configPeakOutputForward(percentOut);
-    return motor.lastError;
+  static ErrorCode configPeakOutputForward(long handle, double percentOut, int timeoutMs) {
+    PhysicalMotor motor = motors.get(handle);
+    return motor.configPeakOutputForward(percentOut);
   }
 
   /**
@@ -293,10 +168,9 @@ class PhysicalMotorManager {
    *            If zero, no blocking or checking is performed.
    * @return Error Code generated by function. 0 indicates no error.
    */
- static ErrorCode configPeakOutputReverse(long handle, double percentOut, int timeoutMs) {
-    PhysicalMotorManager motor = motors.get(handle);
-    motor.lastError = motor.physicalMotor.configPeakOutputReverse(percentOut);
-    return motor.lastError;
+  static ErrorCode configPeakOutputReverse(long handle, double percentOut, int timeoutMs) {
+    PhysicalMotor motor = motors.get(handle);
+    return motor.configPeakOutputReverse(percentOut);
   }
 
   /**
@@ -310,11 +184,11 @@ class PhysicalMotorManager {
    *            If zero, no blocking or checking is performed.
    * @return Error Code generated by function. 0 indicates no error.
    */
- static ErrorCode configNominalOutputForward(long handle, double percentOut, int timeoutMs) {
+  static ErrorCode configNominalOutputForward(
+      long handle, double percentOut, int timeoutMs) {
     // TODO: config nominal output forward
-    PhysicalMotorManager motor = motors.get(handle);
-    motor.lastError = motor.physicalMotor.configNominalOutputForward(percentOut);
-    return motor.lastError;
+    PhysicalMotor motor = motors.get(handle);
+    return motor.configNominalOutputForward(percentOut);
   }
 
   /**
@@ -328,10 +202,9 @@ class PhysicalMotorManager {
    *            If zero, no blocking or checking is performed.
    * @return Error Code generated by function. 0 indicates no error.
    */
- static ErrorCode configNominalOutputReverse(long handle, double percentOut, int timeoutMs) {
-    PhysicalMotorManager motor = motors.get(handle);
-    motor.lastError = motor.physicalMotor.configNominalOutputReverse(percentOut);
-    return motor.lastError;
+  static ErrorCode configNominalOutputReverse(long handle, double percentOut, int timeoutMs) {
+    PhysicalMotor motor = motors.get(handle);
+    return motor.configNominalOutputReverse(percentOut);
   }
 
   /**
@@ -346,10 +219,9 @@ class PhysicalMotorManager {
    *            If zero, no blocking or checking is performed.
    * @return Error Code generated by function. 0 indicates no error.
    */
- static ErrorCode configNeutralDeadband(long handle, double percentDeadband, int timeoutMs) {
-    PhysicalMotorManager motor = motors.get(handle);
-    motor.lastError = motor.physicalMotor.configNeutralDeadband(percentDeadband);
-    return motor.lastError;
+  static ErrorCode configNeutralDeadband(long handle, double percentDeadband, int timeoutMs) {
+    PhysicalMotor motor = motors.get(handle);
+    return motor.configNeutralDeadband(percentDeadband);
   }
 
   // ------ Voltage Compensation ----------//
@@ -369,8 +241,8 @@ class PhysicalMotorManager {
    */
   static ErrorCode configVoltageCompSaturation(long handle, double voltage, int timeoutMs) {
     // TODO: config voltage compensation saturation
-    PhysicalMotorManager motor = motors.get(handle);
-    return motor.lastError;
+    PhysicalMotor motor = motors.get(handle);
+    return motor.lastError();
   }
 
   /**
@@ -385,11 +257,11 @@ class PhysicalMotorManager {
    *            If zero, no blocking or checking is performed.
    * @return Error Code generated by function. 0 indicates no error.
    */
- static ErrorCode configVoltageMeasurementFilter(
+  static ErrorCode configVoltageMeasurementFilter(
       long handle, int filterWindowSamples, int timeoutMs) {
     // TODO: set the voltage measurement filter
-    PhysicalMotorManager motor = motors.get(handle);
-    return motor.lastError;
+    PhysicalMotor motor = motors.get(handle);
+    return motor.lastError();
   }
 
   /**
@@ -399,7 +271,7 @@ class PhysicalMotorManager {
    * @param enable
    *            Enable state of voltage compensation.
    **/
- static void enableVoltageCompensation(long handle, boolean enable) {
+  static void enableVoltageCompensation(long handle, boolean enable) {
     // TODO: Set voltage compensation
   }
 
@@ -410,8 +282,8 @@ class PhysicalMotorManager {
    * @return The bus voltage value (in volts).
    */
   static double getBusVoltage(long handle) {
-    PhysicalMotorManager motor = motors.get(handle);
-    return motor.physicalMotor.busVoltage();
+    PhysicalMotor motor = motors.get(handle);
+    return motor.busVoltage();
   }
 
   /**
@@ -420,8 +292,8 @@ class PhysicalMotorManager {
    * @return Output of the motor controller (in percent).
    */
   static double getMotorOutputPercent(long handle) {
-    PhysicalMotorManager motor = motors.get(handle);
-    return motor.physicalMotor.motorOutputPercent();
+    PhysicalMotor motor = motors.get(handle);
+    return motor.outputPercent();
   }
 
   /**
@@ -430,8 +302,8 @@ class PhysicalMotorManager {
    * @return The output current (in amps).
    */
   static double getOutputCurrent(long handle) {
-    // TODO: Simulate output current
-    return 0.0;
+    PhysicalMotor motor = motors.get(handle);
+    return motor.current();
   }
 
   /**
@@ -440,8 +312,8 @@ class PhysicalMotorManager {
    * @return Temperature of the motor controller (in 'C)
    */
   static double getTemperature(long handle) {
-    // TODO: Simulate temperature
-    return 0.0;
+    PhysicalMotor motor = motors.get(handle);
+    return motor.temperature();
   }
 
   // ------ sensor selection ----------//
@@ -458,11 +330,10 @@ class PhysicalMotorManager {
    *            If zero, no blocking or checking is performed.
    * @return Error Code generated by function. 0 indicates no error.
    */
- static ErrorCode configSelectedFeedbackSensor(
+  static ErrorCode configSelectedFeedbackSensor(
       long handle, FeedbackDevice feedbackDevice, int pidIdx, int timeoutMs) {
-    PhysicalMotorManager motor = motors.get(handle);
-    motor.lastError = motor.physicalMotor.configSelectedFeedbackSensor(feedbackDevice, pidIdx);
-    return motor.lastError;
+    PhysicalMotor motor = motors.get(handle);
+    return motor.configSelectedFeedbackSensor(feedbackDevice, pidIdx);
   }
 
   /**
@@ -470,12 +341,12 @@ class PhysicalMotorManager {
    * feedback sensor.  Useful when you need to scale your sensor values
    * within the closed-loop calculations.  Default value is 1.
    *
-   * Selected Feedback Sensor register in firmware is the decoded sensor value
+   * <p>Selected Feedback Sensor register in firmware is the decoded sensor value
    * multiplied by the Feedback Coefficient.
    *
    * @param coefficient
    *            Feedback Coefficient value.  Maximum value of 1.
-   *						Resolution is 1/(2^16).  Cannot be 0.
+   *            Resolution is 1/(2^16). Cannot be 0.
    * @param pidIdx
    *            0 for Primary closed-loop. 1 for auxiliary closed-loop.
    * @param timeoutMs
@@ -484,11 +355,11 @@ class PhysicalMotorManager {
    *            If zero, no blocking or checking is performed.
    * @return Error Code generated by function. 0 indicates no error.
    */
- static ErrorCode configSelectedFeedbackCoefficient(
+  static ErrorCode configSelectedFeedbackCoefficient(
       long handle, double coefficient, int pidIdx, int timeoutMs) {
-    PhysicalMotorManager motor = motors.get(handle);
+    PhysicalMotor motor = motors.get(handle);
     // TODO: config selected feedback coefficient
-    return motor.lastError;
+    return motor.lastError();
   }
 
   /**
@@ -509,12 +380,13 @@ class PhysicalMotorManager {
    *            If zero, no blocking or checking is performed.
    * @return Error Code generated by function. 0 indicates no error.
    */
- static ErrorCode configRemoteFeedbackFilter(
+  static ErrorCode configRemoteFeedbackFilter(
       long handle, int deviceId, int remoteSensorSourceValue, int remoteOrdinal, int timeoutMs) {
-    PhysicalMotorManager motor = motors.get(handle);
+    PhysicalMotor motor = motors.get(handle);
     // TODO: config remote feedback filter
-    return motor.lastError;
+    return motor.lastError();
   }
+
   /**
    * Select what sensor term should be bound to switch feedback device.
    * Sensor Sum = Sensor Sum Term 0 - Sensor Sum Term 1
@@ -530,11 +402,11 @@ class PhysicalMotorManager {
    *            If zero, no blocking or checking is performed.
    * @return Error Code generated by function. 0 indicates no error.
    */
- static ErrorCode configSensorTerm(
-  long handle, int sensorTermValue, int feedbackDeviceValue, int timeoutMs) {
-    PhysicalMotorManager motor = motors.get(handle);
+  static ErrorCode configSensorTerm(
+      long handle, int sensorTermValue, int feedbackDeviceValue, int timeoutMs) {
+    PhysicalMotor motor = motors.get(handle);
     // TODO: config sensor term
-    return motor.lastError;
+    return motor.lastError();
   }
 
   // ------- sensor status --------- //
@@ -548,8 +420,8 @@ class PhysicalMotorManager {
    * @return Position of selected sensor (in raw sensor units).
    */
   static int getSelectedSensorPosition(long handle, int pidIdx) {
-    PhysicalMotorManager motor = motors.get(handle);
-    int sensorPosition = motor.physicalMotor.position(pidIdx);
+    PhysicalMotor motor = motors.get(handle);
+    int sensorPosition = motor.position(pidIdx);
     return sensorPosition;
   }
 
@@ -559,11 +431,11 @@ class PhysicalMotorManager {
    * @param pidIdx
    *            0 for Primary closed-loop. 1 for auxiliary closed-loop.
    * @return selected sensor (in raw sensor units) per 100ms.
-   * See Phoenix-Documentation for how to interpret.
+   *            See Phoenix-Documentation for how to interpret.
    */
   static int getSelectedSensorVelocity(long handle, int pidIdx) {
-    PhysicalMotorManager motor = motors.get(handle);
-    int sensorVelocity = motor.physicalMotor.velocity(pidIdx);
+    PhysicalMotor motor = motors.get(handle);
+    int sensorVelocity = motor.velocity(pidIdx);
     return sensorVelocity;
   }
 
@@ -580,18 +452,16 @@ class PhysicalMotorManager {
    *            If zero, no blocking or checking is performed.
    * @return Error Code generated by function. 0 indicates no error.
    */
-  static ErrorCode setSelectedSensorPosition(long handle, int sensorPos, int pidIdx, int timeoutMs) {
-    PhysicalMotorManager motor = motors.get(handle);
-    motor.lastError = motor.physicalMotor.setPosition(pidIdx, sensorPos);
-    return motor.lastError;
+  static ErrorCode setSelectedSensorPosition(
+      long handle, int sensorPos, int pidIdx, int timeoutMs) {
+    PhysicalMotor motor = motors.get(handle);
+    return motor.position(pidIdx, sensorPos);
   }
 
   /**
-   * Sets the period of the given status frame.
+   * Sets the period of the given status frame. User ensure CAN Bus utilization is not high.
    *
-   * User ensure CAN Bus utilization is not high.
-   *
-   * This setting is not persistent and is lost when device is reset.
+   * <p>This setting is not persistent and is lost when device is reset.
    * If this is a concern, calling application can use HasReset()
    * to determine if the status frame needs to be reconfigured.
    *
@@ -601,19 +471,17 @@ class PhysicalMotorManager {
    *            Period in ms for the given frame.
    * @return Error Code generated by function. 0 indicates no error.
    */
- static ErrorCode setControlFramePeriod(long handle, int frame, int periodMs) {
+  static ErrorCode setControlFramePeriod(long handle, int frame, int periodMs) {
     // int retval = MotControllerJNI.SetControlFramePeriod(m_handle, frame, periodMs);
     // TODO Figure out status frames
-    PhysicalMotorManager motor = motors.get(handle);
-    return motor.lastError;
+    PhysicalMotor motor = motors.get(handle);
+    return motor.lastError();
   }
 
   /**
-   * Sets the period of the given status frame.
+   * Sets the period of the given status frame. User ensure CAN Bus utilization is not high.
    *
-   * User ensure CAN Bus utilization is not high.
-   *
-   * This setting is not persistent and is lost when device is reset. If this
+   * <p>This setting is not persistent and is lost when device is reset. If this
    * is a concern, calling application can use HasReset() to determine if the
    * status frame needs to be reconfigured.
    *
@@ -627,12 +495,12 @@ class PhysicalMotorManager {
    *            blocking or checking is performed.
    * @return Error Code generated by function. 0 indicates no error.
    */
- static ErrorCode setStatusFramePeriod(long handle, int frameValue, int periodMs, int timeoutMs) {
+  static ErrorCode setStatusFramePeriod(long handle, int frameValue, int periodMs, int timeoutMs) {
     // int retval = MotControllerJNI.SetStatusFramePeriod(
-      // m_handle, frameValue, periodMs, timeoutMs);
+    //  m_handle, frameValue, periodMs, timeoutMs);
     // TODO Figure out status frames
-    PhysicalMotorManager motor = motors.get(handle);
-    return motor.lastError;
+    PhysicalMotor motor = motors.get(handle);
+    return motor.lastError();
   }
 
   /**
@@ -666,11 +534,10 @@ class PhysicalMotorManager {
    *            If zero, no blocking or checking is performed.
    * @return Error Code generated by function. 0 indicates no error.
    */
- static ErrorCode configVelocityMeasurementPeriod(
+  static ErrorCode configVelocityMeasurementPeriod(
       long handle, VelocityMeasPeriod velocityMeasurementPeriod, int timeoutMs) {
-    PhysicalMotorManager motor = motors.get(handle);
-    motor.lastError = motor.physicalMotor.configVelocityMeasurementPeriod(velocityMeasurementPeriod);
-    return motor.lastError;
+    PhysicalMotor motor = motors.get(handle);
+    return motor.configVelocityMeasurementPeriod(velocityMeasurementPeriod);
   }
 
   /**
@@ -688,9 +555,8 @@ class PhysicalMotorManager {
    * @return Error Code generated by function. 0 indicates no error.
    */
   static ErrorCode configVelocityMeasurementWindow(long handle, int windowSize, int timeoutMs) {
-    PhysicalMotorManager motor = motors.get(handle);
-    motor.lastError = motor.physicalMotor.configVelocityMeasurementWindow(windowSize);
-    return motor.lastError;
+    PhysicalMotor motor = motors.get(handle);
+    return motor.configVelocityMeasurementWindow(windowSize);
   }
 
   // ------ remote limit switch ----------//
@@ -721,8 +587,8 @@ class PhysicalMotorManager {
       int deviceId, 
       int timeoutMs) {
     // TODO: Figure out limit switches
-    PhysicalMotorManager motor = motors.get(handle);
-    return motor.lastError;
+    PhysicalMotor motor = motors.get(handle);
+    return motor.lastError();
   }
 
   /**
@@ -751,8 +617,8 @@ class PhysicalMotorManager {
       int deviceId, 
       int timeoutMs) {
     // TODO: Figure out limit switches
-    PhysicalMotorManager motor = motors.get(handle);
-    return motor.lastError;
+    PhysicalMotor motor = motors.get(handle);
+    return motor.lastError();
   }
 
   /**
@@ -761,8 +627,8 @@ class PhysicalMotorManager {
    * @param enable
    *            Enable state for limit switches.
    **/
- static void overrideLimitSwitchesEnable(long handle, boolean enable) {
-    motors.get(handle).overrideLimitSwitches = enable;
+  static void overrideLimitSwitchesEnable(long handle, boolean enable) {
+    motors.get(handle).overrideLimitSwitches(enable);
   }
 
   // ------ soft limit ----------//
@@ -777,10 +643,10 @@ class PhysicalMotorManager {
    *            If zero, no blocking or checking is performed.
    * @return Error Code generated by function. 0 indicates no error.
    */
- static ErrorCode configForwardSoftLimitThreshold(long handle, int forwardSensorLimit, int timeoutMs) {
-    motors.get(handle).forwardSensorLimitThresholdValue = forwardSensorLimit;
-    PhysicalMotorManager motor = motors.get(handle);
-    return motor.lastError;
+  static ErrorCode configForwardSoftLimitThreshold(
+      long handle, int forwardSensorLimit, int timeoutMs) {
+    PhysicalMotor motor = motors.get(handle);
+    return motor.forwardSensorLimitThresholdValue(forwardSensorLimit);
   }
 
   /**
@@ -794,10 +660,10 @@ class PhysicalMotorManager {
    *            If zero, no blocking or checking is performed.
    * @return Error Code generated by function. 0 indicates no error.
    */
- static ErrorCode configReverseSoftLimitThreshold(long handle, int reverseSensorLimit, int timeoutMs) {
-    motors.get(handle).reverseSensorLimitThresholdValue = reverseSensorLimit;
-    PhysicalMotorManager motor = motors.get(handle);
-    return motor.lastError;
+  static ErrorCode configReverseSoftLimitThreshold(
+      long handle, int reverseSensorLimit, int timeoutMs) {
+    PhysicalMotor motor = motors.get(handle);
+    return motor.reverseSensorLimitThresholdValue(reverseSensorLimit);
   }
 
   /**
@@ -811,10 +677,9 @@ class PhysicalMotorManager {
    *            If zero, no blocking or checking is performed.
    * @return Error Code generated by function. 0 indicates no error.
    */
- static ErrorCode configForwardSoftLimitEnable(long handle, boolean enable, int timeoutMs) {
-    motors.get(handle).enableForwardSoftLimit = enable;
-    PhysicalMotorManager motor = motors.get(handle);
-    return motor.lastError;
+  static ErrorCode configForwardSoftLimitEnable(long handle, boolean enable, int timeoutMs) {
+    PhysicalMotor motor = motors.get(handle);
+    return motor.configForwardSoftLimit(enable);
   }
 
   /**
@@ -828,11 +693,9 @@ class PhysicalMotorManager {
    *            blocking or checking is performed.
    * @return Error Code generated by function. 0 indicates no error.
    */
- static ErrorCode configReverseSoftLimitEnable(long handle, boolean enable, int timeoutMs) {
-    motors.get(handle).enableReverseSoftLimit = enable;
-    // TODO: Figure out PID Loops
-    PhysicalMotorManager motor = motors.get(handle);
-    return motor.lastError;
+  static ErrorCode configReverseSoftLimitEnable(long handle, boolean enable, int timeoutMs) {
+    PhysicalMotor motor = motors.get(handle);
+    return motor.configReverseSoftLimit(enable);
   }
 
   /**
@@ -843,8 +706,9 @@ class PhysicalMotorManager {
    * @param enable
    *            Enable state for soft limit switches.
    */
- static void overrideSoftLimitsEnable(long handle, boolean enable) {
-    motors.get(handle).overrideSoftLimits = enable;
+  static void overrideSoftLimitsEnable(long handle, boolean enable) {
+    PhysicalMotor motor = motors.get(handle);
+    motor.overrideSoftLimits(enable);
   }
 
   // ------ Current Lim ----------//
@@ -865,9 +729,8 @@ class PhysicalMotorManager {
    * @return Error Code generated by function. 0 indicates no error.
    */
   static ErrorCode config_kP(long handle, int slotIdx, double value, int timeoutMs) {
-    PhysicalMotorManager motor = motors.get(handle);
-    motor.lastError = motor.physicalMotor.configProportionalGain(slotIdx, value);
-    return motor.lastError;
+    PhysicalMotor motor = motors.get(handle);
+    return motor.configProportionalGain(slotIdx, value);
   }
 
   /**
@@ -884,9 +747,8 @@ class PhysicalMotorManager {
    * @return Error Code generated by function. 0 indicates no error.
    */
   static ErrorCode config_kI(long handle, int slotIdx, double value, int timeoutMs) {
-    PhysicalMotorManager motor = motors.get(handle);
-    motor.lastError = motor.physicalMotor.configICoefficient(slotIdx, value);
-    return motor.lastError;
+    PhysicalMotor motor = motors.get(handle);
+    return motor.configIntegralCoefficient(slotIdx, value);
   }
 
   /**
@@ -902,10 +764,9 @@ class PhysicalMotorManager {
    *            If zero, no blocking or checking is performed.
    * @return Error Code generated by function. 0 indicates no error.
    */
- static ErrorCode config_kD(long handle, int slotIdx, double value, int timeoutMs) {
-    PhysicalMotorManager motor = motors.get(handle);
-    motor.lastError = motor.physicalMotor.configDCoefficient(slotIdx, value);
-    return motor.lastError;
+  static ErrorCode config_kD(long handle, int slotIdx, double value, int timeoutMs) {
+    PhysicalMotor motor = motors.get(handle);
+    return motor.configDerivativeCoefficient(slotIdx, value);
   }
 
   /**
@@ -921,11 +782,10 @@ class PhysicalMotorManager {
    *            If zero, no blocking or checking is performed.
    * @return Error Code generated by function. 0 indicates no error.
    */
- static ErrorCode config_kF(long handle, int slotIdx, double value, int timeoutMs) {
-  PhysicalMotorManager motor = motors.get(handle);
-  motor.lastError = motor.physicalMotor.configFCoefficient(slotIdx, value);
-  return motor.lastError;
-}
+  static ErrorCode config_kF(long handle, int slotIdx, double value, int timeoutMs) {
+    PhysicalMotor motor = motors.get(handle);
+    return motor.configFeedForwardCoefficient(slotIdx, value);
+  }
 
   /**
    * Sets the Integral Zone constant in the given parameter slot. If the
@@ -944,12 +804,12 @@ class PhysicalMotorManager {
    *            blocking or checking is performed.
    * @return Error Code generated by function. 0 indicates no error.
    */
- static ErrorCode config_IntegralZone(long handle, int slotIdx, int izone, int timeoutMs) {
-  PhysicalMotorManager motor = motors.get(handle);
-  //TODO
-//  motor.lastError = motor.physicalMotor.configIntegralZone(slotIdx, izone);
-  return motor.lastError;
-}
+  static ErrorCode config_IntegralZone(long handle, int slotIdx, int izone, int timeoutMs) {
+    PhysicalMotor motor = motors.get(handle);
+    //TODO
+    //return motor.configIntegralZone(slotIdx, izone);
+    return motor.lastError();
+  }
 
   /**
    * Sets the allowable closed-loop error in the given parameter slot.
@@ -964,11 +824,10 @@ class PhysicalMotorManager {
    *            If zero, no blocking or checking is performed.
    * @return Error Code generated by function. 0 indicates no error.
    */
- static ErrorCode configAllowableClosedLoopError(
+  static ErrorCode configAllowableClosedLoopError(
       long handle, int slotIndex, int allowableClosedLoopError, int timeoutMs) {
-    PhysicalMotorManager motor = motors.get(handle);
-    motor.lastError = motor.physicalMotor.configAllowableClosedLoopError(slotIndex, allowableClosedLoopError);
-    return motor.lastError;
+    PhysicalMotor motor = motors.get(handle);
+    return motor.configAllowableClosedLoopError(slotIndex, allowableClosedLoopError);
   }
 
   /**
@@ -986,11 +845,10 @@ class PhysicalMotorManager {
    * @return Error Code generated by function. 0 indicates no error.
    */
   static ErrorCode configMaxIntegralAccumulator(
-    long handle, int slotIdx, double iaccum, int timeoutMs) {
-      PhysicalMotorManager motor = motors.get(handle);
-      motor.lastError = motor.physicalMotor.configMaxIntegralAccumulator(slotIdx, iaccum);
-      return motor.lastError;
-      }
+      long handle, int slotIdx, double iaccum, int timeoutMs) {
+    PhysicalMotor motor = motors.get(handle);
+    return motor.configMaxIntegralAccumulator(slotIdx, iaccum);
+  }
 
   /**
    * Sets the peak closed-loop output.  This peak output is slot-specific and
@@ -1001,18 +859,19 @@ class PhysicalMotorManager {
    *            Parameter slot for the constant.
    * @param percentOut
    *            Peak Percent Output from 0 to 1.  This value is absolute and
-   *						the magnitude will apply in both forward and reverse directions.
+   *            the magnitude will apply in both forward and reverse 
+   *            directions.
    * @param timeoutMs
    *            Timeout value in ms. If nonzero, function will wait for
    *            config success and report an error if it times out.
    *            If zero, no blocking or checking is performed.
    * @return Error Code generated by function. 0 indicates no error.
    */
- static ErrorCode configClosedLoopPeakOutput(long handle, int slotIdx, double percentOut, int timeoutMs) {
-  PhysicalMotorManager motor = motors.get(handle);
-  motor.lastError = motor.physicalMotor.configClosedLoopPeakOutput(slotIdx, percentOut);
-  return motor.lastError;
-}
+  static ErrorCode configClosedLoopPeakOutput(
+      long handle, int slotIdx, double percentOut, int timeoutMs) {
+    PhysicalMotor motor = motors.get(handle);
+    return motor.configClosedLoopPeakOutput(slotIdx, percentOut);
+  }
 
   /**
    * Sets the loop time (in milliseconds) of the PID closed-loop calculations.
@@ -1021,8 +880,8 @@ class PhysicalMotorManager {
    * @param slotIdx
    *            Parameter slot for the constant.
    * @param loopTimeMs
-   *            Loop timing of the closed-loop calculations.  Minimum value of
-   *						1 ms, maximum of 64 ms.
+   *            Loop timing of the closed-loop calculations.  Minimum value of 1 ms, 
+   *            maximum of 64 ms.
    * @param timeoutMs
    *            Timeout value in ms. If nonzero, function will wait for
    *            config success and report an error if it times out.
@@ -1030,9 +889,8 @@ class PhysicalMotorManager {
    * @return Error Code generated by function. 0 indicates no error.
    */
   static ErrorCode configClosedLoopPeriod(long handle, int slotIdx, int loopTimeMs, int timeoutMs) {
-    PhysicalMotorManager motor = motors.get(handle);
-    motor.lastError = motor.physicalMotor.configClosedLoopPeriod(slotIdx, loopTimeMs);
-    return motor.lastError;
+    PhysicalMotor motor = motors.get(handle);
+    return motor.configClosedLoopPeriod(slotIdx, loopTimeMs);
   }
 
   /**
@@ -1053,9 +911,8 @@ class PhysicalMotorManager {
    */
   static ErrorCode setIntegralAccumulator(
       long handle, double iaccum, int pidIdx, int timeoutMs) {
-    PhysicalMotorManager motor = motors.get(handle);
-    motor.lastError = motor.physicalMotor.integralAccumulator(iaccum, pidIdx);
-    return motor.lastError;
+    PhysicalMotor motor = motors.get(handle);
+    return motor.integralAccumulator(iaccum, pidIdx);
   }
 
   /**
@@ -1067,8 +924,8 @@ class PhysicalMotorManager {
    * @return Closed-loop error value.
    */
   static int getClosedLoopError(long handle, int pidIdx) {
-    PhysicalMotorManager motor = motors.get(handle);
-    return motor.physicalMotor.closedLoopError(pidIdx);
+    PhysicalMotor motor = motors.get(handle);
+    return motor.closedLoopError(pidIdx);
   }
 
   /**
@@ -1079,8 +936,8 @@ class PhysicalMotorManager {
    * @return Integral accumulator value (Closed-loop error X 1ms).
    */
   static double getIntegralAccumulator(long handle, int pidIdx) {
-    PhysicalMotorManager motor = motors.get(handle);
-    return motor.physicalMotor.integralAccumulator(pidIdx);
+    PhysicalMotor motor = motors.get(handle);
+    return motor.integralAccumulator(pidIdx);
   }
 
 
@@ -1092,8 +949,8 @@ class PhysicalMotorManager {
    * @return The error derivative value.
    */
   static double getErrorDerivative(long handle, int pidIdx) {
-    PhysicalMotorManager motor = motors.get(handle);
-    return motor.physicalMotor.errorDerivative(pidIdx);
+    PhysicalMotor motor = motors.get(handle);
+    return motor.errorDerivative(pidIdx);
   }
 
   /**
@@ -1104,9 +961,9 @@ class PhysicalMotorManager {
    * @param pidIdx
    *            0 for Primary closed-loop. 1 for auxiliary closed-loop.
    **/
- static void selectProfileSlot(long handle, int slotIdx, int pidIdx) {
-    PhysicalMotorManager motor = motors.get(handle);
-    motor.physicalMotor.selectProfileSlot(slotIdx, pidIdx);
+  static void selectProfileSlot(long handle, int slotIdx, int pidIdx) {
+    PhysicalMotor motor = motors.get(handle);
+    motor.selectProfileSlot(slotIdx, pidIdx);
   }
 
   /**
@@ -1117,8 +974,8 @@ class PhysicalMotorManager {
    * @return The closed loop target.
    */
   static int getClosedLoopTarget(long handle, int pidIdx) {
-    PhysicalMotorManager motor = motors.get(handle);
-    return motor.physicalMotor.closedLoopTarget(pidIdx);
+    PhysicalMotor motor = motors.get(handle);
+    return motor.closedLoopTarget(pidIdx);
   }
 
   /**
@@ -1171,12 +1028,12 @@ class PhysicalMotorManager {
    *            blocking or checking is performed.
    * @return Error Code generated by function. 0 indicates no error.
    */
- static ErrorCode configMotionCruiseVelocity(long handle, int sensorUnitsPer100ms, int timeoutMs) {
+  static ErrorCode configMotionCruiseVelocity(long handle, int sensorUnitsPer100ms, int timeoutMs) {
     // int retval = MotControllerJNI.ConfigMotionCruiseVelocity(
     //   m_handle, sensorUnitsPer100ms, timeoutMs);
     // TODO: Figure out motion magic
-    PhysicalMotorManager motor = motors.get(handle);
-    return motor.lastError;
+    PhysicalMotor motor = motors.get(handle);
+    return motor.lastError();
   }
 
   /**
@@ -1192,10 +1049,11 @@ class PhysicalMotorManager {
    *            blocking or checking is performed.
    * @return Error Code generated by function. 0 indicates no error.
    */
- static ErrorCode configMotionAcceleration(long handle, int sensorUnitsPer100msPerSec, int timeoutMs) {
+  static ErrorCode configMotionAcceleration(
+      long handle, int sensorUnitsPer100msPerSec, int timeoutMs) {
     // TODO: Figure out Motion Magic Stuff
-    PhysicalMotorManager motor = motors.get(handle);
-    return motor.lastError;
+    PhysicalMotor motor = motors.get(handle);
+    return motor.lastError();
   }
 
   //------ Motion Profile Buffer ----------//
@@ -1203,10 +1061,10 @@ class PhysicalMotorManager {
    * Clear the buffered motion profile in both controller's RAM (bottom), and in the
    * API (top).
    */
- static ErrorCode clearMotionProfileTrajectories(long handle) {
+  static ErrorCode clearMotionProfileTrajectories(long handle) {
     // TODO: Figure out Motion Magic Stuff
-    PhysicalMotorManager motor = motors.get(handle);
-    return motor.lastError;
+    PhysicalMotor motor = motors.get(handle);
+    return motor.lastError();
   }
 
   /**
@@ -1221,37 +1079,37 @@ class PhysicalMotorManager {
     // TODO: Figure out Motion Magic Stuff
     return 0;
   }
+
   /**
    * Push another trajectory point into the top level buffer (which is emptied
    * into the motor controller's bottom buffer as room allows).
    * @param trajPt to push into buffer.
-   * The members should be filled in with these values...
-   *
-   * 		targPos:  servo position in sensor units.
-   *		targVel:  velocity to feed-forward in sensor units
-   *                 per 100ms.
-   * 		profileSlotSelect0  Which slot to get PIDF gains. PID is used for position servo. F is used
-   *						   as the Kv constant for velocity feed-forward. Typically this is hardcoded
-   *						   to the a particular slot, but you are free gain schedule if need be.
-   *						   Choose from [0,3]
-   *		profileSlotSelect1 Which slot to get PIDF gains for auxiliary PId.
-   *						   This only has impact during MotionProfileArc Control mode.
-   *						   Choose from [0,1].
-   * 	   isLastPoint  set to nonzero to signal motor controller to keep processing this
+   *        The members should be filled in with these values...
+   *        targPos:  servo position in sensor units.
+   *        targVel:  velocity to feed-forward in sensor units per 100ms.
+   *        profileSlotSelect0  Which slot to get PIDF gains. PID is used for position 
+   *            servo. F is used as the Kv constant for velocity feed-forward. Typically 
+   *            this is hardcoded to the a particular slot, but you are free gain schedule 
+   *            if need be.
+   *            Choose from [0,3]
+   *        profileSlotSelect1 Which slot to get PIDF gains for auxiliary PId.
+   *            This only has impact during MotionProfileArc Control mode.
+   *            Choose from [0,1].
+   *        isLastPoint  set to nonzero to signal motor controller to keep processing this
    *                     trajectory point, instead of jumping to the next one
    *                     when timeDurMs expires.  Otherwise MP executer will
    *                     eventually see an empty buffer after the last point
    *                     expires, causing it to assert the IsUnderRun flag.
    *                     However this may be desired if calling application
    *                     never wants to terminate the MP.
-   *		zeroPos  set to nonzero to signal motor controller to "zero" the selected
+   *        zeroPos set to nonzero to signal motor controller to "zero" the selected
    *                 position sensor before executing this trajectory point.
    *                 Typically the first point should have this set only thus
    *                 allowing the remainder of the MP positions to be relative to
    *                 zero.
-   *		timeDur Duration to apply this trajectory pt.
-   * 				This time unit is ADDED to the exising base time set by
-   * 				configMotionProfileTrajectoryPeriod().
+   *        timeDur Duration to apply this trajectory pt.
+   *                This time unit is ADDED to the exising base time set by
+   *                configMotionProfileTrajectoryPeriod().
    * @return CTR_OKAY if trajectory point push ok. ErrorCode if buffer is
    *         full due to kMotionProfileTopBufferCapacity.
    */
@@ -1266,8 +1124,8 @@ class PhysicalMotorManager {
       boolean zeroPosition,
       int timeDuration) {
     // TODO: Figure out Motion Magic Stuff
-    PhysicalMotorManager motor = motors.get(handle);
-    return motor.lastError;
+    PhysicalMotor motor = motors.get(handle);
+    return motor.lastError();
   }
 
   /**
@@ -1305,46 +1163,46 @@ class PhysicalMotorManager {
    *
    * @param statusToFill  Caller supplied object to fill.
    *
-   * The members are filled, as follows...
+   *        The members are filled, as follows...
    *
-   *	topBufferRem:	The available empty slots in the trajectory buffer.
-   * 	 				The robot API holds a "top buffer" of trajectory points, so your applicaion
-   * 	 				can dump several points at once.  The API will then stream them into the
-   * 	 		 		low-level buffer, allowing the motor controller to act on them.
+   *        topBufferRem: The available empty slots in the trajectory buffer.
+   *            The robot API holds a "top buffer" of trajectory points, so your applicaion
+   *            can dump several points at once.  The API will then stream them into the
+   *            low-level buffer, allowing the motor controller to act on them.
    *
-   *	topBufferRem: The number of points in the top trajectory buffer.
+   *        topBufferRem: The number of points in the top trajectory buffer.
    *
-   *	btmBufferCnt: The number of points in the low level controller buffer.
+   *        btmBufferCnt: The number of points in the low level controller buffer.
    *
-   *	hasUnderrun: 	Set if isUnderrun ever gets set.
-   * 	 	 	 	 	Only is cleared by clearMotionProfileHasUnderrun() to ensure
+   *        hasUnderrun: Set if isUnderrun ever gets set.
+   *            Only is cleared by clearMotionProfileHasUnderrun() to ensure
    *
-   *	isUnderrun:		This is set if controller needs to shift a point from its buffer into
-   *					the active trajectory point however
-   *					the buffer is empty.
-   *					This gets cleared automatically when is resolved.
+   *        isUnderrun: This is set if controller needs to shift a point from its buffer into
+   *            the active trajectory point however the buffer is empty.
+   *            This gets cleared automatically when is resolved.
    *
-   *	activePointValid:	True if the active trajectory point has not empty, false otherwise. The members in activePoint are only valid if this signal is set.
+   *        activePointValid: True if the active trajectory point has not empty, false otherwise.
+   *            The members in activePoint are only valid if this signal is set.
    *
-   *	isLast:	is set/cleared based on the MP executer's current
+   *        isLast: is set/cleared based on the MP executer's current
    *                trajectory point's IsLast value.  This assumes
    *                IsLast was set when PushMotionProfileTrajectory
    *                was used to insert the currently processed trajectory
    *                point.
    *
-   *	profileSlotSelect: The currently processed trajectory point's
-   *      			  selected slot.  This can differ in the currently selected slot used
-   *       				 for Position and Velocity servo modes
+   *        profileSlotSelect: The currently processed trajectory point's
+   *                selected slot.  This can differ in the currently selected slot used
+   *                for Position and Velocity servo modes
    *
-   *	outputEnable:		The current output mode of the motion profile
-   *						executer (disabled, enabled, or hold).  When changing the set()
-   *						value in MP mode, it's important to check this signal to
-   *						confirm the change takes effect before interacting with the top buffer.
+   *        outputEnable: The current output mode of the motion profile
+   *                  executer (disabled, enabled, or hold).  When changing the set()
+   *                  value in MP mode, it's important to check this signal to
+   *                  confirm the change takes effect before interacting with the top buffer.
    */
   static ErrorCode getMotionProfileStatus2(long handle, int[] motionProfileStatistics) {
     // TODO: Figure out Motion Magic Stuff
-    PhysicalMotorManager motor = motors.get(handle);
-    return motor.lastError;
+    PhysicalMotor motor = motors.get(handle);
+    return motor.lastError();
     //int retval = MotControllerJNI.GetMotionProfileStatus2(m_handle, _motionProfStats);
     // TODO: Look up type for _motionProfStats
   }
@@ -1359,10 +1217,10 @@ class PhysicalMotorManager {
    *            blocking or checking is performed.
    * @return Error Code generated by function. 0 indicates no error.
    */
- static ErrorCode clearMotionProfileHasUnderrun(long handle, int timeoutMs) {
+  static ErrorCode clearMotionProfileHasUnderrun(long handle, int timeoutMs) {
     // TODO: Figure out Motion Magic Stuff
-    PhysicalMotorManager motor = motors.get(handle);
-    return motor.lastError;
+    PhysicalMotor motor = motors.get(handle);
+    return motor.lastError();
   }
 
   /**
@@ -1375,10 +1233,10 @@ class PhysicalMotorManager {
    *            The transmit period in ms.
    * @return Error Code generated by function. 0 indicates no error.
    */
- static ErrorCode changeMotionControlFramePeriod(long handle, int periodMs) {
+  static ErrorCode changeMotionControlFramePeriod(long handle, int periodMs) {
     // TODO: Figure out Motion Magic Stuff
-    PhysicalMotorManager motor = motors.get(handle);
-    return motor.lastError;
+    PhysicalMotor motor = motors.get(handle);
+    return motor.lastError();
   }
 
   /**
@@ -1386,21 +1244,21 @@ class PhysicalMotorManager {
    * how long to apply the active trajectory point by summing baseTrajDurationMs with the
    * timeDur of the trajectory point (see TrajectoryPoint).
    *
-   * This allows general selection of the execution rate of the points with 1ms resolution,
+   * <p>This allows general selection of the execution rate of the points with 1ms resolution,
    * while allowing some degree of change from point to point.
    * @param baseTrajDurationMs The base duration time of every trajectory point.
-   * 							This is summed with the trajectory points unique timeDur.
+   *            This is summed with the trajectory points unique timeDur.
    * @param timeoutMs
    *            Timeout value in ms. If nonzero, function will wait for
    *            config success and report an error if it times out.
    *            If zero, no blocking or checking is performed.
    * @return Error Code generated by function. 0 indicates no error.
    */
- static ErrorCode configMotionProfileTrajectoryPeriod(
+  static ErrorCode configMotionProfileTrajectoryPeriod(
       long handle, int baseTrajDurationMs, int timeoutMs) {
     // TODO: Figure out Motion Magic Stuff
-    PhysicalMotorManager motor = motors.get(handle);
-    return motor.lastError;
+    PhysicalMotor motor = motors.get(handle);
+    return motor.lastError();
   }
 
   //------Feedback Device Interaction Settings---------//
@@ -1410,7 +1268,7 @@ class PhysicalMotorManager {
    * controller will by default go to 1024. If wrapping the position is disabled,
    * it will go to 0;
    *
-   * @param feedbackNotContinuous     disable wrapping the position.
+   * @param enable  disable wrapping the position.
    *
    * @param timeoutMs
    *            Timeout value in ms. If nonzero, function will wait for
@@ -1418,17 +1276,16 @@ class PhysicalMotorManager {
    *            If zero, no blocking or checking is performed.
    * @return Error Code generated by function. 0 indicates no error.
    */
- static ErrorCode configFeedbackNotContinuous(
-      long handle, boolean feedbackNotContinuous, int timeoutMs) {
-    motors.get(handle).feedbackNotContinuous = feedbackNotContinuous;
-    PhysicalMotorManager motor = motors.get(handle);
-    return motor.lastError;
+  static ErrorCode configFeedbackNotContinuous(
+      long handle, boolean enable, int timeoutMs) {
+    PhysicalMotor motor = motors.get(handle);
+    return motor.feedbackNotContinuous(enable);
   }
 
   /**
    * Disables going to neutral (brake/coast) when a remote sensor is no longer detected.
    *
-   * @param remoteSensorClosedLoopDisableNeutralOnLOS     disable going to neutral
+   * @param enable     disable going to neutral
    *
    * @param timeoutMs
    *            Timeout value in ms. If nonzero, function will wait for
@@ -1436,19 +1293,17 @@ class PhysicalMotorManager {
    *            If zero, no blocking or checking is performed.
    * @return Error Code generated by function. 0 indicates no error.
    */
- static ErrorCode configRemoteSensorClosedLoopDisableNeutralOnLOS(
-        long handle, boolean remoteSensorClosedLoopDisableNeutralOnLOS, int timeoutMs) {
-    motors.get(handle).remoteSensorClosedLoopDisableNeutralOnLOS
-        = remoteSensorClosedLoopDisableNeutralOnLOS;
-        PhysicalMotorManager motor = motors.get(handle);
-        return motor.lastError;
-      }
+  static ErrorCode configRemoteSensorClosedLoopDisableNeutralOnLossOfSignal(
+      long handle, boolean enable, int timeoutMs) {
+    PhysicalMotor motor = motors.get(handle);
+    return motor.remoteSensorClosedLoopDisableNeutralOnLossOfSignal(enable);
+  }
 
   /**
    * Enables clearing the position of the feedback sensor when the forward
    * limit switch is triggered
    *
-   * @param clearPositionOnLimitF     Whether clearing is enabled, defaults false
+   * @param enable     Whether clearing is enabled, defaults false
    * @param timeoutMs
    *            Timeout value in ms. If nonzero, function will wait for
    *            config success and report an error if it times out.
@@ -1456,18 +1311,16 @@ class PhysicalMotorManager {
    * @return Error Code generated by function. 0 indicates no error.
    */
   static ErrorCode configClearPositionOnLimitF(
-      long handle, boolean clearPositionOnLimitF, int timeoutMs) {
-    motors.get(handle).clearPositionFeedbackSensorOnForwardLimitSwitchTrigger
-        = clearPositionOnLimitF;
-    PhysicalMotorManager motor = motors.get(handle);
-    return motor.lastError;
+      long handle, boolean enable, int timeoutMs) {
+    PhysicalMotor motor = motors.get(handle);
+    return motor.clearPositionFeedbackSensorOnForwardLimitSwitchTrigger(enable);
   }
 
   /**
    * Enables clearing the position of the feedback sensor when the reverse
    * limit switch is triggered
    *
-   * @param clearPositionOnLimitR     Whether clearing is enabled, defaults false
+   * @param enable Whether clearing is enabled, defaults false
    * @param timeoutMs
    *            Timeout value in ms. If nonzero, function will wait for
    *            config success and report an error if it times out.
@@ -1475,35 +1328,32 @@ class PhysicalMotorManager {
    * @return Error Code generated by function. 0 indicates no error.
    */
   static ErrorCode configClearPositionOnLimitR(
-        long handle, boolean clearPositionOnLimitR, int timeoutMs) {
-    motors.get(handle).clearPositionFeedbackSensorOnReverseLimitSwitchTrigger
-        = clearPositionOnLimitR;
-    PhysicalMotorManager motor = motors.get(handle);
-    return motor.lastError;
+        long handle, boolean enable, int timeoutMs) {
+    PhysicalMotor motor = motors.get(handle);
+    return motor.clearPositionFeedbackSensorOnReverseLimitSwitchTrigger(enable);
   }
 
   /**
    * Enables clearing the position of the feedback sensor when the quadrature index signal
    * is detected
    *
-   * @param clearPositionOnQuadIdx    Whether clearing is enabled, defaults false
+   * @param enable Whether clearing is enabled, defaults false
    * @param timeoutMs
    *            Timeout value in ms. If nonzero, function will wait for
    *            config success and report an error if it times out.
    *            If zero, no blocking or checking is performed.
    * @return Error Code generated by function. 0 indicates no error.
    */
- static ErrorCode configClearPositionOnQuadIdx(
-      long handle, boolean clearPositionOnQuadIdx, int timeoutMs) {
-    motors.get(handle).clearPositionOnQuadratureIndexSignal = clearPositionOnQuadIdx;
-    PhysicalMotorManager motor = motors.get(handle);
-    return motor.lastError;
+  static ErrorCode configClearPositionOnQuadIdx(
+      long handle, boolean enable, int timeoutMs) {
+    PhysicalMotor motor = motors.get(handle);
+    return motor.clearPositionOnQuadratureIndexSignal(enable);
   }
 
   /**
    * Disables limit switches triggering (if enabled) when the sensor is no longer detected.
    *
-   * @param limitSwitchDisableNeutralOnLOS    disable triggering
+   * @param enable disable triggering
    *
    * @param timeoutMs
    *            Timeout value in ms. If nonzero, function will wait for
@@ -1511,18 +1361,16 @@ class PhysicalMotorManager {
    *            If zero, no blocking or checking is performed.
    * @return Error Code generated by function. 0 indicates no error.
    */
-  static ErrorCode configLimitSwitchDisableNeutralOnLOS(
-      long handle, boolean limitSwitchDisableNeutralOnLOS, int timeoutMs) {
-    motors.get(handle).limitSwitchDisableNeutralOnLOS
-        = limitSwitchDisableNeutralOnLOS;
-    PhysicalMotorManager motor = motors.get(handle);
-    return motor.lastError;
+  static ErrorCode configLimitSwitchDisableNeutralOnLossOfSignal(
+      long handle, boolean enable, int timeoutMs) {
+    PhysicalMotor motor = motors.get(handle);
+    return motor.limitSwitchDisableNeutralOnLossOfSignal(enable);
   }
 
   /**
    * Disables soft limits triggering (if enabled) when the sensor is no longer detected.
    *
-   * @param softLimitDisableNeutralOnLOS    disable triggering
+   * @param enable    disable triggering
    *
    * @param timeoutMs
    *            Timeout value in ms. If nonzero, function will wait for
@@ -1530,50 +1378,44 @@ class PhysicalMotorManager {
    *            If zero, no blocking or checking is performed.
    * @return Error Code generated by function. 0 indicates no error.
    */
-  static ErrorCode configSoftLimitDisableNeutralOnLOS(
-      long handle, boolean softLimitDisableNeutralOnLOS, int timeoutMs) {
-    motors.get(handle).softLimitDisableNeutralOnLOS
-        = softLimitDisableNeutralOnLOS;
-    PhysicalMotorManager motor = motors.get(handle);
-    return motor.lastError;
+  static ErrorCode configSoftLimitDisableNeutralOnLossOfSignal(
+      long handle, boolean enable, int timeoutMs) {
+    PhysicalMotor motor = motors.get(handle);
+    return motor.softLimitDisableNeutralOnLossOfSignal(enable);
   }
 
   /**
    * Sets the edges per rotation of a pulse width sensor. (This should be set for
    * tachometer use).
    *
-   * @param pulseWidthPeriod_EdgesPerRot    edges per rotation
-   *
+   * @param edgesPerRotation    edges per rotation
    * @param timeoutMs
    *            Timeout value in ms. If nonzero, function will wait for
    *            config success and report an error if it times out.
    *            If zero, no blocking or checking is performed.
    * @return Error Code generated by function. 0 indicates no error.
    */
- static ErrorCode configPulseWidthPeriod_EdgesPerRot(long handle,
-      int pulseWidthSensorEdgesPerRotation, int timeoutMs) {
-    motors.get(handle).pulseWidthSensorEdgesPerRotation = pulseWidthSensorEdgesPerRotation;
-    PhysicalMotorManager motor = motors.get(handle);
-    return motor.lastError;
+  static ErrorCode configPulseWidthPeriod_EdgesPerRot(long handle,
+      int edgesPerRotation, int timeoutMs) {
+    PhysicalMotor motor = motors.get(handle);
+    return motor.pulseWidthSensorEdgesPerRotation(edgesPerRotation);
   }
 
   /**
    * Sets the number of samples to use in smoothing a pulse width sensor with a rolling
    * average. Default is 1 (no smoothing).
    *
-   * @param pulseWidthPeriod_FilterWindowSz   samples for rolling avg
-   *
+   * @param windowSize samples for rolling avg
    * @param timeoutMs
    *            Timeout value in ms. If nonzero, function will wait for
    *            config success and report an error if it times out.
    *            If zero, no blocking or checking is performed.
    * @return Error Code generated by function. 0 indicates no error.
    */
- static ErrorCode configPulseWidthPeriod_FilterWindowSz(long handle,
-      int pulseWidthSensorSmoothingWindowSize, int timeoutMs) {
-    motors.get(handle).pulseWidthSensorSmoothingWindowSize = pulseWidthSensorSmoothingWindowSize;
-    PhysicalMotorManager motor = motors.get(handle);
-    return motor.lastError;
+  static ErrorCode configPulseWidthPeriod_FilterWindowSz(long handle,
+      int windowSize, int timeoutMs) {
+    PhysicalMotor motor = motors.get(handle);
+    return motor.pulseWidthSensorSmoothingWindowSize(windowSize);
   }
 
   // ------ error ----------//
@@ -1584,10 +1426,9 @@ class PhysicalMotorManager {
    *
    * @return Last Error Code generated by a function.
    */
- static ErrorCode getLastError(long handle) {
-  PhysicalMotorManager motor = motors.get(handle);
-  return motor.lastError;
-}
+  static ErrorCode getLastError(long handle) {
+    return motors.get(handle).lastError();
+  }
 
   // ------ Faults ----------//
   /**
@@ -1596,8 +1437,7 @@ class PhysicalMotorManager {
    * @return Last Error Code generated by a function.
    */
   static int getFaults(long handle) {
-    // Todo: Convert faults to flags and return
-    return motors.get(handle).faults;
+    return motors.get(handle).faults();
   }
 
   /**
@@ -1606,8 +1446,7 @@ class PhysicalMotorManager {
    * @return Last Error Code generated by a function.
    */
   static int getStickyFaults(long handle) {
-    // TODO: Convert stick faults to bit flags are return
-    return motors.get(handle).stickyFaults;
+    return motors.get(handle).stickyFaults();
   }
 
   /**
@@ -1619,10 +1458,8 @@ class PhysicalMotorManager {
    *            blocking or checking is performed.
    * @return Last Error Code generated by a function.
    */
- static ErrorCode clearStickyFaults(long handle, int timeoutMs) {
-    // TODO: Create list of faults, then method for clearing
-    PhysicalMotorManager motor = motors.get(handle);
-    return motor.lastError;
+  static ErrorCode clearStickyFaults(long handle, int timeoutMs) {
+    return motors.get(handle).clearStickyFaults();
   }
 
   // ------ Firmware ----------//
@@ -1633,7 +1470,7 @@ class PhysicalMotorManager {
    *         0x0102.
    */
   static int getFirmwareVersion(long handle) {
-    return motors.get(handle).firmwareVersion;
+    return motors.get(handle).firmwareVersion();
   }
 
   /**
@@ -1642,14 +1479,14 @@ class PhysicalMotorManager {
    * @return Has a Device Reset Occurred?
    */
   static boolean hasResetOccurred(long handle) {
-    return motors.get(handle).resetOccurred;
+    return motors.get(handle).resetOccurred();
   }
 
   //------ Custom Persistent Params ----------//
   /**
    * Sets the value of a custom parameter. This is for arbitrary use.
    *
-   * Sometimes it is necessary to save calibration/limit/target information in
+   * <p>Sometimes it is necessary to save calibration/limit/target information in
    * the device. Particularly if the device is part of a subsystem that can be
    * replaced.
    *
@@ -1663,10 +1500,9 @@ class PhysicalMotorManager {
    *            blocking or checking is performed.
    * @return Error Code generated by function. 0 indicates no error.
    */
- static ErrorCode configSetCustomParam(long handle, int newValue, int paramIndex, int timeoutMs) {
-    // TODO : Figure out custom parameters
-    PhysicalMotorManager motor = motors.get(handle);
-    return motor.lastError;
+  static ErrorCode configSetCustomParam(long handle, int newValue, int paramIndex, int timeoutMs) {
+    PhysicalMotor motor = motors.get(handle);
+    return motor.configSetCustomParam(newValue, paramIndex);
   }
 
   /**
@@ -1681,8 +1517,8 @@ class PhysicalMotorManager {
    * @return Value of the custom param.
    */
   static int configGetCustomParam(long handle, int paramIndex, int timeoutMs) {
-    // TODO : Figure out custom parameters
-    return 0;
+    PhysicalMotor motor = motors.get(handle);
+    return motor.configGetCustomParam(paramIndex);
   }
 
   /**
@@ -1705,13 +1541,10 @@ class PhysicalMotorManager {
    *            If zero, no blocking or checking is performed.
    * @return Error Code generated by function. 0 indicates no error.
    */
- static ErrorCode configSetParameter(long handle, int param, double value,
+  static ErrorCode configSetParameter(long handle, int param, double value,
       int subValue, int ordinal, int timeoutMs) {
-    // int retval = MotControllerJNI.ConfigSetParameter(m_handle, param,  value, subValue, ordinal,
-    //     timeoutMs);
-    // TODO: Figure out set parameter with subValue
-    PhysicalMotorManager motor = motors.get(handle);
-    return motor.lastError;
+    PhysicalMotor motor = motors.get(handle);
+    return motor.configSetParameter(param, value, subValue, ordinal);
   }
 
   /**
@@ -1728,8 +1561,8 @@ class PhysicalMotorManager {
    * @return Value of parameter.
    */
   static double configGetParameter(long handle, int param, int ordinal, int timeoutMs) {
-    return 0.0;
-    // TODO: Figure out how parameters are referenced by int
+    PhysicalMotor motor = motors.get(handle);
+    return motor.configGetParameter(param, ordinal);
   }
 
   // ------ Misc. ----------//
@@ -1746,7 +1579,7 @@ class PhysicalMotorManager {
    *        device's auxiliary output 1.
    *        Use PercentOutput for standard follower mode.
    */
- static void follow(IMotorController masterToFollow, FollowerType followerType) {
+  static void follow(IMotorController masterToFollow, FollowerType followerType) {
     // int id32 = masterToFollow.getBaseID();
     // int id24 = id32;
     // id24 >>= 16;
@@ -1756,15 +1589,15 @@ class PhysicalMotorManager {
     // set(ControlMode.Follower, id24);
   }
 
-/**
+  /**
    * Configure the peak allowable current (when current limit is enabled).
    *
-   * Current limit is activated when current exceeds the peak limit for longer
+   * <p>Current limit is activated when current exceeds the peak limit for longer
    * than the peak duration. Then software will limit to the continuous limit.
    * This ensures current limiting while allowing for momentary excess current
    * events.
    *
-   * For simpler current-limiting (single threshold) use
+   * <p>For simpler current-limiting (single threshold) use
    * ConfigContinuousCurrentLimit() and set the peak to zero:
    * ConfigPeakCurrentLimit(0).
    *
@@ -1776,20 +1609,19 @@ class PhysicalMotorManager {
    *            blocking or checking is performed.
    */
   static ErrorCode configPeakCurrentLimit(long handle, int amps, int timeoutMs) {
-    PhysicalMotorManager motor = motors.get(handle);
-    motor.peakCurrentLimitAmps = amps;
-    return motor.lastError;
+    PhysicalMotor motor = motors.get(handle);
+    return motor.peakCurrentLimitAmps(amps);
   }
 
   /**
    * Configure the peak allowable duration (when current limit is enabled).
    *
-   * Current limit is activated when current exceeds the peak limit for longer
+   * <p>Current limit is activated when current exceeds the peak limit for longer
    * than the peak duration. Then software will limit to the continuous limit.
    * This ensures current limiting while allowing for momentary excess current
    * events.
    *
-   * For simpler current-limiting (single threshold) use
+   * <p>For simpler current-limiting (single threshold) use
    * ConfigContinuousCurrentLimit() and set the peak to zero:
    * ConfigPeakCurrentLimit(0).
    *
@@ -1801,21 +1633,20 @@ class PhysicalMotorManager {
    *            blocking or checking is performed.
    */
   static ErrorCode configPeakCurrentDuration(long handle, int milliseconds, int timeoutMs) {
-    PhysicalMotorManager motor = motors.get(handle);
-    motor.currentLimitMillisecondsPastPeak = milliseconds;
-    return motor.lastError;
+    PhysicalMotor motor = motors.get(handle);
+    return motor.currentLimitMillisecondsPastPeak(milliseconds);
   }
 
   /**
    * Configure the continuous allowable current-draw (when current limit is
    * enabled).
    *
-   * Current limit is activated when current exceeds the peak limit for longer
+   * <p>Current limit is activated when current exceeds the peak limit for longer
    * than the peak duration. Then software will limit to the continuous limit.
    * This ensures current limiting while allowing for momentary excess current
    * events.
    *
-   * For simpler current-limiting (single threshold) use
+   * <p>For simpler current-limiting (single threshold) use
    * ConfigContinuousCurrentLimit() and set the peak to zero:
    * ConfigPeakCurrentLimit(0).
    *
@@ -1827,9 +1658,8 @@ class PhysicalMotorManager {
    *            blocking or checking is performed.
    */
   static ErrorCode configContinuousCurrentLimit(long handle, int amps, int timeoutMs) {
-    PhysicalMotorManager motor = motors.get(handle);
-    motor.continuousCurrentLimitAmps = amps;
-    return motor.lastError;
+    PhysicalMotor motor = motors.get(handle);
+    return motor.continuousCurrentLimitAmps(amps);
   }
 
   /**
@@ -1838,11 +1668,11 @@ class PhysicalMotorManager {
    * @param enable
    *    Enable state of current limit.
    * @see configPeakCurrentLimit, configPeakCurrentDuration,
-   *    configContinuousCurrentLimit
+   *      configContinuousCurrentLimit
    */
   static void enableCurrentLimit(long handle, boolean enable) {
-    PhysicalMotorManager motor = motors.get(handle);
-    motor.currentLimit = enable;
+    PhysicalMotor motor = motors.get(handle);
+    motor.currentLimit(enable);
   }
 
 }

@@ -3,15 +3,15 @@ package frc.robot.sensors;
 import edu.wpi.first.wpilibj.GyroBase;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
 import frc.robot.RobotMap;
-import frc.robot.imu.ADIS16448_IMU;
-import frc.robot.imu.IMU;
+import frc.robot.sensors.imu.Adis16448Imu;
+import frc.robot.sensors.imu.Imu;
 
 /*
  *  Simple wrapper class around a gyro. This is implemented as a singleton
  */
 public class Gyrometer extends GyroBase implements Gyro {
 
-  private IMU imu = null;
+  private Imu imu = null;
 
   private static Gyrometer instance;
 
@@ -19,7 +19,7 @@ public class Gyrometer extends GyroBase implements Gyro {
    * private constructor (singleton pattern)
    */
   private Gyrometer() {
-    imu = new ADIS16448_IMU();
+    imu = new Adis16448Imu();
   }
 
   /**
@@ -56,7 +56,7 @@ public class Gyrometer extends GyroBase implements Gyro {
    * @return the gyro angle
    */
   public double getYawRadians() {
-    if (RobotMap.robotID == RobotMap.RobotID.Competition_1) {
+    if (RobotMap.robotId == RobotMap.RobotId.Competition_1) {
       return Math.toRadians(-imu.getAngleX());
     } else {
       return 0;
@@ -79,7 +79,7 @@ public class Gyrometer extends GyroBase implements Gyro {
    * @return the gyro angle
    */
   public double getRollRadians() {
-    if (RobotMap.robotID == RobotMap.RobotID.Competition_1) {
+    if (RobotMap.robotId == RobotMap.RobotId.Competition_1) {
       return Math.toRadians(-imu.getAngleY());
     } else {
       return 0;
@@ -101,7 +101,7 @@ public class Gyrometer extends GyroBase implements Gyro {
    * @return the gyro angle
    */
   public double getPitchRadians() {
-    if (RobotMap.robotID == RobotMap.RobotID.Competition_1) {
+    if (RobotMap.robotId == RobotMap.RobotId.Competition_1) {
       return Math.toRadians(-imu.getAngleZ());
     } else {
       return 0;

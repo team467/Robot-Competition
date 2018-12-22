@@ -4,9 +4,9 @@ import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.SpeedController;
 import frc.robot.RobotMap;
 import frc.robot.drive.NullSpeedController;
+import frc.robot.logging.RobotLogManager;
 import frc.robot.sensors.OpticalSensor;
 import frc.robot.usercontrol.DriverStation467;
-import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 public class Grabber {
@@ -22,7 +22,7 @@ public class Grabber {
   public static final int RELEASE_TIME_MS = 1000;
   private GrabberState state = GrabberState.NEUTRAL;
 
-  private static final Logger LOGGER = LogManager.getLogger(Grabber.class);
+  private static final Logger LOGGER = RobotLogManager.getMainLogger(Grabber.class.getName());
 
   private static Grabber instance;
   private SpeedController left;
@@ -68,31 +68,27 @@ public class Grabber {
     double speed = 0.0;
     switch (state) {
 
-    case START_GRAB:
-      if (hasCube()) {
-        state = GrabberState.NEUTRAL;
-      }
-      else {
+      case START_GRAB:
+        if (hasCube()) {
+          state = GrabberState.NEUTRAL;
+        } else {
+          speed = RobotMap.MAX_GRAB_SPEED;
+        }
+        break;
+
+      case GRAB:
         speed = RobotMap.MAX_GRAB_SPEED;
-      }
-      break;
+        break;
 
-    case GRAB:
-    //	if (hasCube()) { 
-    //		state = GrabberState.NEUTRAL;
-    //	} else {
-        speed = RobotMap.MAX_GRAB_SPEED;
-    //	}
-      break;
+      case NEUTRAL:
+        speed = 0.0;
+        break; 
 
-    case NEUTRAL:
-      speed = 0.0;
-      break; 
+      case RELEASE:
+        speed = -RobotMap.MAX_GRAB_SPEED;
+        break;
 
-    case RELEASE:
-      speed = -RobotMap.MAX_GRAB_SPEED;
-      break;
-    default:
+      default:
 
     }
 
@@ -135,11 +131,6 @@ public class Grabber {
       }
     }
 
-    // Slower for intake
-    //		if (throttle > 0.0) {
-    //			throttle *= 0.7;
-    //		}
-
     LOGGER.debug("Grabber Throttle= {}", throttle);
     left.set(throttle * RobotMap.MAX_GRAB_SPEED);
     right.set(-throttle * RobotMap.MAX_GRAB_SPEED);
@@ -179,43 +170,51 @@ public class Grabber {
   }
 
   public void rightClose() {
-    if (rightGrab.exists()) {
-      rightGrab.close();
-    } else {
-      LOGGER.info("Right Solenoid does not exist");
+    if (!RobotMap.useSimulator) {
+      if (rightGrab.exists()) {
+        rightGrab.close();
+      } else {
+        LOGGER.info("Right Solenoid does not exist");
+      }
     }
   }
 
   public void rightOpen() {
-    if (rightGrab.exists()) {
-      rightGrab.open();
-    } else {
-      LOGGER.info("Right Solenoid does not exist");
+    if (!RobotMap.useSimulator) {
+      if (rightGrab.exists()) {
+        rightGrab.open();
+      } else {
+        LOGGER.info("Right Solenoid does not exist");
+      }
     }
   }
 
   public void leftClose() {
-    if (leftGrab.exists()) {
-      leftGrab.close();
-    } else {
-      LOGGER.info("Left solenoid does not exist");
+    if (!RobotMap.useSimulator) {
+      if (leftGrab.exists()) {
+        leftGrab.close();
+      } else {
+        LOGGER.info("Left solenoid does not exist");
+      }
     }
   }
 
   public void leftOpen() {
-    if (leftGrab.exists()) {
-      leftGrab.open();
-    } else {
-      LOGGER.info("Left solenoid does not exist");
+    if (!RobotMap.useSimulator) {
+      if (leftGrab.exists()) {
+        leftGrab.open();
+      } else {
+        LOGGER.info("Left solenoid does not exist");
+      }
     }
   }
 
   public boolean justGotCube() {
     if (!RobotMap.useSimulator) {
       return (!hadCube && hasCube());
+    } else {
+      return false;
     }
-
-    else return false;
   }
 
   public boolean hasCube() {

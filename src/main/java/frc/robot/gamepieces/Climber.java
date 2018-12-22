@@ -1,19 +1,19 @@
 package frc.robot.gamepieces;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import com.ctre.phoenix.motorcontrol.ControlMode;
 
 import edu.wpi.first.wpilibj.DriverStation;
+
 import frc.robot.RobotMap;
 import frc.robot.drive.TalonProxy;
 import frc.robot.drive.TalonSpeedControllerGroup;
 import frc.robot.drive.WpiTalonSrxInterface;
+import frc.robot.logging.RobotLogManager;
 
+import org.apache.logging.log4j.Logger;
 
 public class Climber {
-  private static final Logger LOGGER = LogManager.getLogger(Climber.class);
+  private static final Logger LOGGER = RobotLogManager.getMainLogger(Climber.class.getName());
   private static Climber instance;
   WpiTalonSrxInterface climbMotorLeader;
   WpiTalonSrxInterface climbMotorFollower1;
@@ -28,7 +28,9 @@ public class Climber {
     if (RobotMap.HAS_CLIMBER) {
       climbMotorLeader = TalonProxy.create(RobotMap.CLIMB_MOTOR_CONTROLLER_LEADER);
       climbMotorFollower1 = TalonProxy.create(RobotMap.CLIMB_MOTOR_CONTROLLER_FOLLOWER1);
-      climbController = new TalonSpeedControllerGroup(ControlMode.PercentOutput, false, climbMotorLeader, climbMotorFollower1);
+      climbController 
+          = new TalonSpeedControllerGroup(ControlMode.PercentOutput, false, false,
+            climbMotorLeader, climbMotorFollower1);
       LOGGER.info("Created climber Motors");
     } else {
       LOGGER.info("Not enough climb motors, no climb capabilities");
@@ -37,10 +39,8 @@ public class Climber {
   
   public static Climber getInstance() {
     if (instance == null) {
-      if (!RobotMap.HAS_CLIMBER) {
-      } else {
+      if (RobotMap.HAS_CLIMBER) {
         instance = new Climber();
-        
       }
     }
     return instance;

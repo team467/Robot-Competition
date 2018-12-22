@@ -1,9 +1,10 @@
 package frc.robot.drive.motorcontrol.pathtracking;
 
 import frc.robot.RobotMap;
+import frc.robot.logging.RobotLogManager;
 import frc.robot.utilities.Utils;
 import java.text.DecimalFormat;
-import org.apache.logging.log4j.LogManager;
+
 import org.apache.logging.log4j.Logger;
 
 public class FieldPosition {
@@ -22,7 +23,8 @@ public class FieldPosition {
 
   private static DecimalFormat df = new DecimalFormat("#0.0");
 
-  private static final Logger LOGGER = LogManager.getLogger(FieldPosition.class);
+  private static final Logger LOGGER 
+      = RobotLogManager.getMainLogger(FieldPosition.class.getName());
 
   // State variables
   private double fieldX = 0.0;

@@ -2,7 +2,7 @@ package frc.robot.simulator.drive;
 
 class ClosedLoopParameter {
 
-  double propGain = 1.0;
+  double proportionalGain = 1.0;
 
   double integral = 0.0;
 

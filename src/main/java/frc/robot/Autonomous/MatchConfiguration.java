@@ -5,9 +5,9 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import frc.robot.RobotMap;
+import frc.robot.logging.RobotLogManager;
 import frc.robot.simulator.gui.SimulatedData;
 
-import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /** 
@@ -18,7 +18,8 @@ public class MatchConfiguration {
 
   private static MatchConfiguration instance;
 
-  private static final Logger LOGGER = LogManager.getLogger(MatchConfiguration.class);
+  private static final Logger LOGGER 
+      = RobotLogManager.getMainLogger(MatchConfiguration.class.getName());
 
   public enum TeamColor {
     UNKNOWN,
@@ -102,7 +103,11 @@ public class MatchConfiguration {
   public void setAutoModeAndStartPosition() {
 
     if (RobotMap.useSimulator) {
-      autoMode = SimulatedData.autoMode;
+      if (SimulatedData.autoMode != null) {
+        autoMode = SimulatedData.autoMode;
+      } else {
+        autoMode = "None";
+      }
     } else {
       autoMode = SmartDashboard.getString("Auto Selector", "None");
     }
@@ -191,14 +196,13 @@ public class MatchConfiguration {
     LOGGER.debug("Entering decision tree");
     autonomous = Actions.doNothing();
     
-    if (autoMode.startsWith("Left")) {
+    if (autoMode.startsWith("Left") || autoMode.startsWith("Just_Go_Forward")) {
       Actions.startOnLeft();
     } else if (autoMode.startsWith("Right")) {
       Actions.startOnRight();
     } else {
       Actions.startInCenter();
     }
-
 
     switch (autoMode) {
 

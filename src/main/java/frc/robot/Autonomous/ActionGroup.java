@@ -4,14 +4,14 @@ import frc.robot.RobotMap;
 import frc.robot.autonomous.Action.Activity;
 import frc.robot.drive.AutoDrive;
 import frc.robot.drive.Drive;
-import frc.robot.simulator.DriveSimulator;
+import frc.robot.logging.RobotLogManager;
 
+import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
@@ -19,9 +19,11 @@ import org.apache.logging.log4j.Logger;
  * Can be used in Autonomous and also Teleop routines.
  */
 public class ActionGroup {
-  private static final Logger LOGGER = LogManager.getLogger(ActionGroup.class);
-  private static AutoDrive drive 
-      = (RobotMap.useSimulator) ? DriveSimulator.getInstance() : Drive.getInstance();
+
+  private static final Logger LOGGER = RobotLogManager.getMainLogger(ActionGroup.class.getName());
+  private static final DecimalFormat df = new DecimalFormat("####0.00");
+
+  private static AutoDrive drive = Drive.getInstance();
   private String name;
   private LinkedList<Action> agenda;
   private final LinkedList<Action> master;
@@ -55,7 +57,7 @@ public class ActionGroup {
       }
     }
 
-    LOGGER.info("run {}", action);
+    LOGGER.trace("run {}", action);
     action.doIt();
   }
 
@@ -153,19 +155,12 @@ public class ActionGroup {
       lastPosition = currentPosition;
       currentPosition = drive.absoluteDistanceMoved();
 
-      LOGGER.debug("Distances - Target: {} Moved: {}", Math.abs(distance), currentPosition);
-      if (RobotMap.useSimulator) {
-        if (currentPosition > 0.0 && lastPosition == currentPosition) {
-          increment++;
-        } else {
-          increment = 0;
-        }
+      LOGGER.debug("Distances - Target: {} Moved: {}", df
+          .format(Math.abs(distance)), df.format(currentPosition));
+      if (currentPosition > 0.3 && Math.abs(lastPosition - currentPosition) < 0.01) {
+        increment++;
       } else {
-        if (currentPosition > 0.3 && Math.abs(lastPosition - currentPosition) < 0.01) {
-          increment++;
-        } else {
-          increment = 0;
-        }
+        increment = 0;
       }
 
       // Each iteration is 20 ms.

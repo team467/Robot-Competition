@@ -1,23 +1,19 @@
 package frc.robot.drive.motorcontrol.pathtracking;
 
-import frc.robot.RobotMap;
 import frc.robot.drive.AutoDrive;
 import frc.robot.drive.Drive;
 import frc.robot.drive.motorcontrol.pathplanning.SplineCourseData;
-import frc.robot.simulator.DriveSimulator;
 import frc.robot.utilities.Utils;
 
 import java.lang.Double;
 import java.text.DecimalFormat;
-// import java.util.Collections;
 
 /**
  * TODO.
  */
 public class PathCorrection {
 
-  private static AutoDrive drive = 
-      (RobotMap.useSimulator) ? DriveSimulator.getInstance() : Drive.getInstance();
+  private static AutoDrive drive = Drive.getInstance();
 
   private FieldPosition fieldState = FieldPosition.getInstance();
 

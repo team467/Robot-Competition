@@ -133,7 +133,7 @@ public class DetectPowerCubePipeline {
 
   /**
    * This method is a generated getter for the output of a Filter_Contours.
-   * @return ArrayList<MatOfPoint> output from Filter_Contours.
+   * @return ArrayList output from Filter_Contours.
    */
   public ArrayList<MatOfPoint> filterContoursOutput() {
     return filterContoursOutput;
@@ -153,7 +153,7 @@ public class DetectPowerCubePipeline {
       Mat out) {
     Imgproc.cvtColor(input, out, Imgproc.COLOR_BGR2HSV);
     Core.inRange(out, new Scalar(hue[0], sat[0], val[0]),
-      new Scalar(hue[1], sat[1], val[1]), out);
+        new Scalar(hue[1], sat[1], val[1]), out);
   }
 
   /**
@@ -167,7 +167,7 @@ public class DetectPowerCubePipeline {
    * @param dst Output Image.
    */
   private void cvErode(Mat src, Mat kernel, Point anchor, double iterations,
-    int borderType, Scalar borderValue, Mat dst) {
+      int borderType, Scalar borderValue, Mat dst) {
     if (kernel == null) {
       kernel = new Mat();
     }
@@ -188,14 +188,13 @@ public class DetectPowerCubePipeline {
    * @param output The image in which to store the output.
    */
   private void findContours(Mat input, boolean externalOnly,
-    List<MatOfPoint> contours) {
+      List<MatOfPoint> contours) {
     Mat hierarchy = new Mat();
     contours.clear();
     int mode;
     if (externalOnly) {
       mode = Imgproc.RETR_EXTERNAL;
-    }
-    else {
+    } else {
       mode = Imgproc.RETR_LIST;
     }
     int method = Imgproc.CHAIN_APPROX_SIMPLE;
@@ -208,7 +207,7 @@ public class DetectPowerCubePipeline {
    * @param outputContours The contours where the output will be stored.
    */
   private void convexHulls(List<MatOfPoint> inputContours,
-    ArrayList<MatOfPoint> outputContours) {
+      ArrayList<MatOfPoint> outputContours) {
     final MatOfInt hull = new MatOfInt();
     outputContours.clear();
     for (int i = 0; i < inputContours.size(); i++) {
@@ -243,20 +242,28 @@ public class DetectPowerCubePipeline {
    * @param maxRatio maximum ratio of width to height
    */
   private void filterContours(List<MatOfPoint> inputContours, double minArea,
-    double minPerimeter, double minWidth, double maxWidth, double minHeight, double
-    maxHeight, double[] solidity, double maxVertexCount, double minVertexCount, double
-    minRatio, double maxRatio, List<MatOfPoint> output) {
+      double minPerimeter, double minWidth, double maxWidth, double minHeight,
+      double maxHeight, double[] solidity, double maxVertexCount, double minVertexCount, 
+      double minRatio, double maxRatio, List<MatOfPoint> output) {
     final MatOfInt hull = new MatOfInt();
     output.clear();
     //operation
     for (int i = 0; i < inputContours.size(); i++) {
       final MatOfPoint contour = inputContours.get(i);
       final Rect bb = Imgproc.boundingRect(contour);
-      if (bb.width < minWidth || bb.width > maxWidth) continue;
-      if (bb.height < minHeight || bb.height > maxHeight) continue;
+      if (bb.width < minWidth || bb.width > maxWidth) {
+        continue;
+      }
+      if (bb.height < minHeight || bb.height > maxHeight) {
+        continue;
+      }
       final double area = Imgproc.contourArea(contour);
-      if (area < minArea) continue;
-      if (Imgproc.arcLength(new MatOfPoint2f(contour.toArray()), true) < minPerimeter) continue;
+      if (area < minArea) {
+        continue;
+      }
+      if (Imgproc.arcLength(new MatOfPoint2f(contour.toArray()), true) < minPerimeter) { 
+        continue;
+      }
       Imgproc.convexHull(contour, hull);
       MatOfPoint mopHull = new MatOfPoint();
       mopHull.create((int) hull.size().height, 1, CvType.CV_32SC2);
@@ -266,10 +273,16 @@ public class DetectPowerCubePipeline {
         mopHull.put(j, 0, point);
       }
       final double solid = 100 * area / Imgproc.contourArea(mopHull);
-      if (solid < solidity[0] || solid > solidity[1]) continue;
-      if (contour.rows() < minVertexCount || contour.rows() > maxVertexCount)	continue;
+      if (solid < solidity[0] || solid > solidity[1]) { 
+        continue;
+      }
+      if (contour.rows() < minVertexCount || contour.rows() > maxVertexCount) { 
+        continue;
+      }
       final double ratio = bb.width / (double)bb.height;
-      if (ratio < minRatio || ratio > maxRatio) continue;
+      if (ratio < minRatio || ratio > maxRatio) { 
+        continue;
+      }
       output.add(contour);
     }
   }

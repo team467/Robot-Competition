@@ -43,4 +43,5 @@ public class MovingAverage {
     sum += current - currentReadings.remove();
     return (sum / (double) numberOfReadings);
   }
+  
 }

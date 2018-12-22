@@ -8,29 +8,38 @@ import frc.robot.drive.Drive;
 import frc.robot.gamepieces.Elevator;
 import frc.robot.gamepieces.Elevator.Stops;
 import frc.robot.gamepieces.Grabber;
-import frc.robot.simulator.DriveSimulator;
-import org.apache.logging.log4j.LogManager;
+import frc.robot.logging.RobotLogManager;
+import frc.robot.simulator.communications.RobotData;
+
+import java.text.DecimalFormat;
+
 import org.apache.logging.log4j.Logger;
 
 public class Actions {
 
-  private static final Logger LOGGER = LogManager.getLogger(Actions.class);
+  private static final Logger LOGGER = RobotLogManager.getMainLogger(Actions.class.getName());
 
-  private static AutoDrive drive 
-      = (RobotMap.useSimulator) ? DriveSimulator.getInstance() : Drive.getInstance();
-  
+  private static final DecimalFormat df = new DecimalFormat("####0.00");
+
+  private static Drive drive = Drive.getInstance();
+
+  private static RobotData data = RobotData.getInstance();
+
   private static double mirrorTurns = 1.0;
   
   public static void startOnLeft() {
     mirrorTurns = -1.0;
+    data.startingLocation(2.5, 0);
   }
   
   public static void startOnRight() {
     mirrorTurns = 1.0;
+    data.startingLocation(21.58, 0);
   }
   
   public static void startInCenter() {
     mirrorTurns = 1.0;
+    data.startingLocation(12.5, 0);
   }
   
   public static final Action nothing() {
@@ -205,12 +214,13 @@ public class Actions {
   public static boolean moveDistanceComplete(double distance) {
     double distanceMoved = drive.absoluteDistanceMoved();
 
-    LOGGER.debug("Distances - Target: {} Moved: {}", Math.abs(distance), distanceMoved);
+    LOGGER.debug("Distances - Target: {} Moved: {}", 
+        df.format(Math.abs(distance)), df.format(distanceMoved));
     if (distanceMoved >= (Math.abs(distance) - RobotMap.POSITION_ALLOWED_ERROR)) {
-      LOGGER.info("Finished moving {} feet", distanceMoved);
+      LOGGER.info("Finished moving {} feet", df.format(distanceMoved));
       return true;
     } else {
-      LOGGER.info("Still moving {} feet", distanceMoved);
+      LOGGER.info("Still moving {} feet", df.format(distanceMoved));
       return false;
     }
   }

@@ -1,8 +1,11 @@
 package frc.robot.drive;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+
 import frc.robot.RobotMap;
+import frc.robot.logging.RobotLogManager;
 import frc.robot.simulator.drive.WpiTalonSrx;
+
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
@@ -10,7 +13,11 @@ import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.logging.log4j.Logger;
+
 public class TalonProxy implements InvocationHandler {
+
+  private static final Logger LOGGER = RobotLogManager.getMainLogger(TalonProxy.class.getName());
 
   private WPI_TalonSRX physicalMotor;
   private WpiTalonSrx simulatedMotor;
@@ -18,6 +25,10 @@ public class TalonProxy implements InvocationHandler {
   private final Map<String, Method> physicalMotorMethods = new HashMap<>();
   private final Map<String, Method> simulatedMotorMethods = new HashMap<>();
 
+  /**
+   * Loads the talon functions into the proxy and returns either a real or simulated 
+   * Talon SRX motor controller.
+   */
   public static WpiTalonSrxInterface create(int deviceNumber) {
     WpiTalonSrxInterface talon = (WpiTalonSrxInterface) 
         Proxy.newProxyInstance(WpiTalonSrxInterface.class.getClassLoader(),
@@ -26,7 +37,7 @@ public class TalonProxy implements InvocationHandler {
     return talon;
   }
 
-  public TalonProxy(int deviceNumber) {
+  private TalonProxy(int deviceNumber) {
     //TODO: Fix native libaries with WPI Lib
     // physicalMotor = new WPI_TalonSRX(deviceNumber);
     // addMethods(physicalMotorMethods, physicalMotor.getClass());
@@ -34,7 +45,10 @@ public class TalonProxy implements InvocationHandler {
     simulatedMotor = new WpiTalonSrx(deviceNumber);
     addMethods(simulatedMotorMethods, simulatedMotor.getClass());
   }
-
+  
+  /**
+   * Cannot paramerterize class as it's a recursive method to add.
+   */
   private void addMethods(Map<String, Method> methodMap, Class classToAdd) {
     if (classToAdd == null) {
       return;
@@ -57,7 +71,7 @@ public class TalonProxy implements InvocationHandler {
       methodSignature += type.getTypeName();
     }
     methodSignature += ")";
-    // System.err.println(methodSignature);
+    LOGGER.debug("Adding method {} to proxy.", methodSignature);
     return methodSignature;
   } 
 
@@ -67,16 +81,12 @@ public class TalonProxy implements InvocationHandler {
     Object result = null;
     String methodSignature = createMethodSignature(method);
     if (RobotMap.useSimulator) {
-      // System.err.println("Invoking method " + methodSignature + " on simulator");
+      LOGGER.debug("Invoking method {} on simulator", methodSignature);
       Method implementingMethod = simulatedMotorMethods.get(methodSignature);
       result = implementingMethod.invoke(simulatedMotor, args);
     } else {
       result = physicalMotorMethods.get(method.getName()).invoke(physicalMotor, args);
     }
-
-    // LOGGER.info("Executing {} finished in {} ns", method.getName(), 
-    //   elapsed);
-
     return result;
   }
 

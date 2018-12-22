@@ -2,10 +2,10 @@ package frc.robot.utilities;
 
 import edu.wpi.first.wpilibj.Preferences;
 
-public class DataStorage {
+public class PreferencesStorage {
 
   // Singleton instance
-  private static DataStorage instance = null;
+  private static PreferencesStorage instance = null;
 
   // Data storage object
   private Preferences data;
@@ -15,15 +15,15 @@ public class DataStorage {
    *
    * @return
    */
-  public static DataStorage getInstance() {
+  public static PreferencesStorage getInstance() {
     if (instance == null) {
-      instance = new DataStorage();
+      instance = new PreferencesStorage();
     }
     return instance;
   }
 
   // Private constructor for singleton
-  private DataStorage() {
+  private PreferencesStorage() {
     data = Preferences.getInstance();
   }
 

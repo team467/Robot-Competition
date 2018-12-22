@@ -1,13 +1,16 @@
 package frc.robot.gamepieces;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
+
 import frc.robot.RobotMap;
-import org.apache.logging.log4j.LogManager;
+import frc.robot.logging.RobotLogManager;
+
 import org.apache.logging.log4j.Logger;
 
 public class GrabberSolenoid {
   
-  private static final Logger LOGGER = LogManager.getLogger(GrabberSolenoid.class);
+  private static final Logger LOGGER 
+      = RobotLogManager.getMainLogger(GrabberSolenoid.class.getName());
   //private boolean toggle = false;
   
   DoubleSolenoid solenoid;

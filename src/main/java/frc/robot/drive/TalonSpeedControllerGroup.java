@@ -3,14 +3,18 @@ package frc.robot.drive;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.VelocityMeasPeriod;
+
 import edu.wpi.first.wpilibj.SpeedController;
+
 import frc.robot.RobotMap;
-import org.apache.logging.log4j.LogManager;
+import frc.robot.logging.RobotLogManager;
+
 import org.apache.logging.log4j.Logger;
 
 //TalonSpeedControllerGroup
 public class TalonSpeedControllerGroup implements SpeedController {
-  private static final Logger LOGGER = LogManager.getLogger(TalonSpeedControllerGroup.class);
+  private static final Logger LOGGER 
+      = RobotLogManager.getMainLogger(TalonSpeedControllerGroup.class.getName());
   private WpiTalonSrxInterface leader;
   private WpiTalonSrxInterface follower1;
   private WpiTalonSrxInterface follower2;
@@ -25,7 +29,8 @@ public class TalonSpeedControllerGroup implements SpeedController {
     follower2 = null;
   }
 
-  public TalonSpeedControllerGroup(ControlMode controlMode, boolean sensorIsInverted,
+  public TalonSpeedControllerGroup(ControlMode controlMode, 
+      boolean sensorIsInverted, boolean motorIsInverted,
       WpiTalonSrxInterface leader, WpiTalonSrxInterface follower1, WpiTalonSrxInterface follower2) {
     if (!RobotMap.HAS_WHEELS) {
       leader = null;
@@ -50,18 +55,21 @@ public class TalonSpeedControllerGroup implements SpeedController {
     //only have sensor on leader
     leader.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, RobotMap.TALON_TIMEOUT);
     leader.setSensorPhase(sensorIsInverted);
+    leader.setInverted(motorIsInverted);
 
     zero();
   }
 
-  public TalonSpeedControllerGroup(ControlMode controlMode, boolean sensorIsInverted,
+  public TalonSpeedControllerGroup(ControlMode controlMode, 
+      boolean sensorIsInverted, boolean motorIsInverted,
       WpiTalonSrxInterface leader, WpiTalonSrxInterface follower1) {
-    this(controlMode, sensorIsInverted, leader, follower1, null);
+    this(controlMode, sensorIsInverted, motorIsInverted, leader, follower1, null);
   }
 
-  public TalonSpeedControllerGroup(ControlMode controlMode, boolean sensorIsInverted,
+  public TalonSpeedControllerGroup(ControlMode controlMode, 
+      boolean sensorIsInverted, boolean motorIsInverted,
       WpiTalonSrxInterface leader) {
-    this(controlMode, sensorIsInverted, leader, null, null);
+    this(controlMode, sensorIsInverted, motorIsInverted, leader, null, null);
   }
 
   private void initMotor(WpiTalonSrxInterface talon) {
@@ -114,7 +122,6 @@ public class TalonSpeedControllerGroup implements SpeedController {
 
   public void selectPidSlot(int slot) {
     leader.selectProfileSlot(slot, 0);
-
   }
 
   public void zero() {

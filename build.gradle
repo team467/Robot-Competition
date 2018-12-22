@@ -49,7 +49,7 @@ deploy {
 }
 
 // Set this to true to enable desktop support.
-def includeDesktopSupport = false
+def includeDesktopSupport = true
 
 // Maven central needed for JUnit
 repositories {
@@ -58,8 +58,8 @@ repositories {
   google()
   gradlePluginPortal()
   maven { url "https://jitpack.io" } // Allows the addition of Github projects as dependencies
-  // maven { url "http://first.wpi.edu/FRC/roborio/maven/release/" }
-  // maven { url "http://first.wpi.edu/FRC/roborio/maven/development" }
+  maven { url "http://first.wpi.edu/FRC/roborio/maven/release/" }
+  maven { url "http://first.wpi.edu/FRC/roborio/maven/development" }
   maven { url "http://devsite.ctr-electronics.com/maven/release/" }
 }
 
@@ -77,8 +77,13 @@ dependencies {
   compile group: 'com.ctre.phoenix', name: 'core', version: '5.10.0'
   compile group: 'com.ctre.phoenix', name: 'api-java', version: '5.10.0'
 
-  compile group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.3'
-  compile group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.3'
+  compile group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.11.1'
+  compile group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.11.1'
+  // https://mvnrepository.com/artifact/com.fasterxml.jackson.core
+  compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.9.7'
+  compile group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.9.7'
+  compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.7'
+  compile group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-yaml', version: '2.9.7'
 
   // https://mvnrepository.com/artifact/org.apache.commons/commons-math3
   compile group: 'org.apache.commons', name: 'commons-math3', version: '3.6.1'
@@ -99,10 +104,11 @@ jar {
   manifest edu.wpi.first.gradlerio.GradleRIOPlugin.javaManifest(ROBOT_MAIN_CLASS)
 }
 
-tasks.withType(Test) { 
+tasks.withType(Test) {
   testLogging {
     exceptionFormat "full"
     events "started", "skipped", "passed", "failed"
     showStandardStreams true
   }
+
 }
