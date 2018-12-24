@@ -16,14 +16,19 @@ import java.util.concurrent.TimeUnit;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
+import javafx.scene.shape.Rectangle;
 
 /**
  * The controller associated with the only view of our application. The
@@ -128,6 +133,7 @@ public class MapController {
   private Group robotGroup = null; // for adding and remove robot on map
   private FieldShape fieldShape = new FieldShape();
   private ArrayList<PowerCubeShape> cubes = new ArrayList<PowerCubeShape>();
+  private ArrayList<Group> cubeGroups = new ArrayList<Group>();
 
   /**
    * Initialize method, automatically called by @{link FXMLLoader}.
@@ -155,7 +161,9 @@ public class MapController {
     }
 
     for (PowerCubeShape cube : cubes) {
-      robotArea.getChildren().add(cube.createPowerCube());
+      Group cubeGroup = cube.createPowerCube();
+      cubeGroups.add(cubeGroup);
+      robotArea.getChildren().add(cubeGroup);
     }
 
     // Default the choice boxes to the first values
@@ -241,6 +249,33 @@ public class MapController {
     dbString9.setText(SmartDashboard.getString("DB/String 9", ""));    
   }
 
+  /**
+   * Test if two shapes or any other object that is a node intersects with another node.
+   * 
+   * @param node1 the first node to test
+   * @param node2 the second node
+   */
+  public boolean collision(Node node1, Node node2) {
+    boolean collided = false;
+    // collided = node1.getBoundsInParent().intersects(node2.getBoundsInParent());
+    collided = node1.getBoundsInParent().intersects(node2.getBoundsInParent());
+    return collided;
+  }
+
+  private void checkRobotCollision() {
+    for (Group cube : cubeGroups) {
+      Paint color = Color.YELLOW;
+      if (collision(robotGroup, cube)) {
+        //TODO Log hit
+        color = Color.BLUE;
+      }
+      ObservableList<Node> nodeList = cube.getChildren();
+      for (Node node : nodeList) {
+        Rectangle rect = (Rectangle) node;
+        rect.setFill(color);
+      }
+    }
+  }
 
   /**
    * The action triggered by pushing the button on the GUI. It creates a thread that monitors
@@ -348,6 +383,7 @@ public class MapController {
 
   private void drawFieldComponents() {
     fieldShape.draw();
+    checkRobotCollision();
     for (PowerCubeShape cube : cubes) {
       cube.draw();
     }

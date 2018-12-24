@@ -7,9 +7,7 @@ import frc.robot.logging.RobotLogManager;
 import frc.robot.simulator.communications.RobotData;
 import frc.robot.simulator.gui.Coordinate;
 import frc.robot.simulator.gui.SimulatedData;
-
 import java.text.DecimalFormat;
-
 import javafx.scene.Group;
 import javafx.scene.effect.BlendMode;
 import javafx.scene.paint.Color;
