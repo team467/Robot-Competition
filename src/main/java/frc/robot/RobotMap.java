@@ -1,5 +1,7 @@
 package frc.robot;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 public class RobotMap {
 
   // 0 is non-blocking (i.e. it doesn't wait for a response before going to the next statement)
@@ -280,6 +282,68 @@ public class RobotMap {
     POSITION_ALLOWED_ERROR = ALLOWED_ERROR_INCHES / RobotMap.WHEEL_CIRCUMFERENCE;
     POSITION_ALLOWABLE_CLOSED_LOOP_ERROR 
         = (int) (POSITION_ALLOWED_ERROR * 1024 * 0.95);// This is in encoder ticks
+  }
+
+  /**
+   * Overrides normal values with values required for simulator.
+   */
+  static void setSimulator() {
+
+    RobotMap.useSimulator = true;
+    RobotMap.USE_FAKE_GAME_DATA = true;  
+
+    //Linear PIDS
+    LEFT_DRIVE_PID_P = 0.00033;
+    LEFT_DRIVE_PID_I = 0.0;
+    LEFT_DRIVE_PID_D = 0.0;
+    LEFT_DRIVE_PID_F = 0.0;
+
+    RIGHT_DRIVE_PID_P = 0.00033;
+    RIGHT_DRIVE_PID_I = 0.0;
+    RIGHT_DRIVE_PID_D = 0.0;
+    RIGHT_DRIVE_PID_F = 0.0;
+
+    // Turn PIDs
+    LEFT_TURN_PID_P = 0.00051;
+    LEFT_TURN_PID_I = 0.0;
+    LEFT_TURN_PID_D = 0.0;
+    LEFT_TURN_PID_F = 0.0;
+
+    RIGHT_TURN_PID_P = 0.00051;
+    RIGHT_TURN_PID_I = 0.0;
+    RIGHT_TURN_PID_D = 0.0;
+    RIGHT_TURN_PID_F = 0.0;  
+  }
+
+  /**
+   * Used to load Robot Map PID values onto the Smart Dashboard for tuning.
+   * 
+   * @param pidSlot 0 for drive, 1 for turn PIDs
+   */
+  public static void loadPidsOntoSmartDashboard(int pidSlot) {
+    if (pidSlot == 0) {
+      SmartDashboard.putString("DB/String 0", "10.0"); // Tune Distance
+      SmartDashboard.putString("DB/String 1", String.valueOf(LEFT_DRIVE_PID_P)); // P Left
+      SmartDashboard.putString("DB/String 2", String.valueOf(LEFT_DRIVE_PID_I)); // I Left
+      SmartDashboard.putString("DB/String 3", String.valueOf(LEFT_DRIVE_PID_D)); // D Left
+      SmartDashboard.putString("DB/String 4", String.valueOf(LEFT_DRIVE_PID_F)); // F Left
+      SmartDashboard.putString("DB/String 5", "0"); // PID Slot
+      SmartDashboard.putString("DB/String 6", String.valueOf(RIGHT_DRIVE_PID_P)); // P Right
+      SmartDashboard.putString("DB/String 7", String.valueOf(RIGHT_DRIVE_PID_I)); // I Right
+      SmartDashboard.putString("DB/String 8", String.valueOf(RIGHT_DRIVE_PID_D)); // D Right
+      SmartDashboard.putString("DB/String 9", String.valueOf(RIGHT_DRIVE_PID_F)); // F Right
+    } else {
+      SmartDashboard.putString("DB/String 0", "90.0"); // Tune Distance
+      SmartDashboard.putString("DB/String 1", String.valueOf(LEFT_TURN_PID_P)); // P Left
+      SmartDashboard.putString("DB/String 2", String.valueOf(LEFT_TURN_PID_I)); // I Left
+      SmartDashboard.putString("DB/String 3", String.valueOf(LEFT_TURN_PID_D)); // D Left
+      SmartDashboard.putString("DB/String 4", String.valueOf(LEFT_TURN_PID_F)); // F Left
+      SmartDashboard.putString("DB/String 5", "1"); // PID Slot
+      SmartDashboard.putString("DB/String 6", String.valueOf(RIGHT_TURN_PID_P)); // P Right
+      SmartDashboard.putString("DB/String 7", String.valueOf(RIGHT_TURN_PID_I)); // I Right
+      SmartDashboard.putString("DB/String 8", String.valueOf(RIGHT_TURN_PID_D)); // D Right
+      SmartDashboard.putString("DB/String 9", String.valueOf(RIGHT_TURN_PID_F)); // F Right
+    }
   }
 
   // Global robot constants

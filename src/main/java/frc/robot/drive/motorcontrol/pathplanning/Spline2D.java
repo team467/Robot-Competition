@@ -3,7 +3,7 @@ package frc.robot.drive.motorcontrol.pathplanning;
 import com.github.sh0nk.matplotlib4j.Plot;
 import com.github.sh0nk.matplotlib4j.PythonExecutionException;
 
-import frc.robot.utilities.Utils;
+import frc.robot.utilities.RobotUtilities;
 
 import java.io.IOException;
 
@@ -40,9 +40,9 @@ public class Spline2D {
    * @param yvalues the y values of the points to connect
    * @return a vector of distances to the spline end
    */
-  public double[] calculateSumsOfDistanceToPoints(double [] xvalues, double[] yvalues) {
-    double[] diffX = Utils.differenceBetweenArrayValues(xvalues);
-    double[] diffY = Utils.differenceBetweenArrayValues(yvalues);
+  public static double[] calculateSumsOfDistanceToPoints(double [] xvalues, double[] yvalues) {
+    double[] diffX = RobotUtilities.differenceBetweenArrayValues(xvalues);
+    double[] diffY = RobotUtilities.differenceBetweenArrayValues(yvalues);
     double[] distanceBetweenPoints = new double[xvalues.length - 1];
 
     for (int i = 0; i < xvalues.length - 1; i++) {
@@ -65,7 +65,7 @@ public class Spline2D {
    *
    * @param point the current point
    */
-  private double[] calculatePosition(double point) throws OutOfRangeException {
+  double[] calculatePosition(double point) throws OutOfRangeException {
     double[] position = new double[2];
     double x = splineX.calculatePosition(point);
     double y = splineY.calculatePosition(point);
@@ -74,7 +74,7 @@ public class Spline2D {
     return position;
   }
 
-  private double calculateCurvature(double point) throws OutOfRangeException {
+  double calculateCurvature(double point) throws OutOfRangeException {
     double firstDerivativeX = splineX.calculateFirstDerivative(point);
     double secondDerivativeX = splineX.calculateSecondDerivative(point);
     double firstDerivativeY = splineY.calculateFirstDerivative(point);
@@ -84,73 +84,36 @@ public class Spline2D {
     return curvature;
   }
 
-  private double calculateHeading(double point) throws OutOfRangeException {
+  double calculateHeading(double point) throws OutOfRangeException {
     double firstDerivativeX = splineX.calculateFirstDerivative(point);
     double firstDerivativeY = splineY.calculateFirstDerivative(point);
     double yaw = Math.atan2(firstDerivativeY, firstDerivativeX);
     return yaw;
   }
 
-  public SplineCourseData[] calculateSplineCourse(double[] x, double[] y) {
-    return calculateSplineCourse(x, y, 0.1);
-  }
-
-  /**
-   * Creates a spline course plan given a set of x and y coordinates and the desired step size 
-   * between the given points.
-   * 
-   * @param x the x coordinates to interpolate
-   * @param y the y coordinates to interpolate
-   * @param step the distance between given points for adding interpolated points
-   */
-  public static SplineCourseData[] calculateSplineCourse(double[] x, double[] y, double step) {
-    Spline2D spline = new Spline2D(x, y);
-    double[] s = Utils.arrangeInterval(0, 
-        spline.distancesToSplineEnd[spline.distancesToSplineEnd.length - 1], step);
-    SplineCourseData[] courseData = new SplineCourseData[s.length];
-    for (int i = 0; i < s.length; i++) {
-      double[] xy = spline.calculatePosition(s[i]);
-      courseData[i] = new SplineCourseData();
-      courseData[i].coordinateX = xy[0];
-      courseData[i].coordinateY = xy[1];
-      courseData[i].heading = spline.calculateHeading(s[i]);
-      courseData[i].curvature = spline.calculateCurvature(s[i]);
-      courseData[i].step = s[i];
-    }
-    return courseData;
-  }
-
   static void test2dSpline() {
 
     System.out.println("Spline 2D Test");
-    double[] x = {-2.5,  0.0, 2.5, 5.0, 7.5, 3.0, -1.0};
-    double[] y = { 0.7, -6.0, 5.0, 6.5, 0.0, 5.0, -2.0};
+    double[][] xy = {
+        {-2.5,  0.0, 2.5, 5.0, 7.5, 3.0, -1.0},
+        { 0.7, -6.0, 5.0, 6.5, 0.0, 5.0, -2.0}
+    };
     double step = 0.1; // [m] distance of each intepolated points
+    AutonomousPlan course = new AutonomousPlan(xy, 0.0, 1.0, 1.0, false);
 
-    SplineCourseData[] course = calculateSplineCourse(x, y, step);
-
-    double[] rx = new double[course.length];
-    double[] ry = new double[course.length];
-    double[] rk = new double[course.length];
-    double[] ryaw = new double[course.length];
-    double[] s = new double[course.length];
-
-    for (int i = 0; i < course.length; i++) {
-      rx[i] = course[i].coordinateX;
-      ry[i] = course[i].coordinateY;
-      ryaw[i] = Math.toDegrees(course[i].heading);
-      rk[i] = course[i].curvature;
-      s[i] = course[i].step;
+    double[] yaw = new double[course.size];
+    for (int i = 0; i < course.size; i++) {
+      yaw[i] = Math.toDegrees(course.heading[i]);
     }
 
     Plot plt1 = Plot.create();
     plt1.plot()
-        .add(Utils.arrayToList(x), Utils.arrayToList(y))
+        .add(RobotUtilities.arrayToList(xy[0]), RobotUtilities.arrayToList(xy[1]))
         .label("input")
         .linestyle("-.")
     ;
     plt1.plot()
-          .add(Utils.arrayToList(rx), Utils.arrayToList(ry))
+          .add(RobotUtilities.arrayToList(course.x1), RobotUtilities.arrayToList(course.y1))
           .label("spline")
           .linestyle("-")
       ;
@@ -160,7 +123,7 @@ public class Spline2D {
 
     Plot plt2 = Plot.create();
     plt2.plot()
-        .add(Utils.arrayToList(s), Utils.arrayToList(ryaw))
+        .add(RobotUtilities.arrayToList(course.step), RobotUtilities.arrayToList(yaw))
         .label("yaw")
         .linestyle("-")
     ;
@@ -170,7 +133,7 @@ public class Spline2D {
 
     Plot plt3 = Plot.create();
     plt3.plot()
-        .add(Utils.arrayToList(s), Utils.arrayToList(rk))
+        .add(RobotUtilities.arrayToList(course.step), RobotUtilities.arrayToList(course.curvature))
         .label("curvature")
         .linestyle("-")
     ;

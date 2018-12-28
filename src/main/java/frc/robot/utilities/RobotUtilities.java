@@ -11,7 +11,7 @@ import org.apache.commons.math3.linear.LUDecomposition;
 import org.apache.commons.math3.linear.RealMatrix;
 import org.apache.commons.math3.linear.RealVector;
 
-public class Utils {
+public class RobotUtilities {
 
   public static double[] differenceBetweenArrayValues(double[] base) {
     double[] diffOfBaseValues = new double[base.length - 1];
@@ -86,7 +86,7 @@ public class Utils {
   }
 
   public static double[] arrangeInterval(double start, double stop) {
-    return Utils.arrangeInterval(start, stop, 0.1);
+    return RobotUtilities.arrangeInterval(start, stop, 0.1);
   }
 
   public static double[] arrangeInterval(double start, double stop, double step) {

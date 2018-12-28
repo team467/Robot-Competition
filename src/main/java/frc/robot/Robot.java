@@ -62,6 +62,7 @@ public class Robot extends TimedRobot {
    */
   private double time;
 
+  private int tuneSlot = 0;
   private double tuningValue = 0.0;
 
   public static void enableSimulator() {
@@ -86,8 +87,7 @@ public class Robot extends TimedRobot {
     // Used after init, should be set only by the Simulator GUI
     // this ensures that the simulator is off otherwise.
     if (enableSimulator) {
-      RobotMap.useSimulator = true;
-      RobotMap.USE_FAKE_GAME_DATA = true;  
+      RobotMap.setSimulator();
     }
 
     // Make robot objects
@@ -112,6 +112,7 @@ public class Robot extends TimedRobot {
       cam.setFPS(15);
     }
 
+    drive.setPidsFromRobotMap();
     data.send();
   }
 
@@ -232,15 +233,21 @@ public class Robot extends TimedRobot {
   @Override
   public void testInit() {
     LOGGER.info("Init Test");
-    drive.setPidsFromRobotMap();
-    driverstation.readInputs();
-    // testMotorControl = new TestMotorControl();
-    tuningValue = Double.parseDouble(SmartDashboard.getString("DB/String 0", "0.0"));
-    LOGGER.info("Tuning Value: " + tuningValue);
-    if (tuningValue <= 30.0 && tuningValue >= -30.0) {
-      drive.readPidsFromSmartDashboard(RobotMap.PID_SLOT_DRIVE);
-    } else {
-      drive.readPidsFromSmartDashboard(RobotMap.PID_SLOT_TURN);
+    tuneSlot = Integer.parseInt(SmartDashboard.getString("DB/String 5", "0"));
+    switch (tuneSlot) {
+      case 0:
+      case 1:
+        LOGGER.info("Tuning PID Slot {}", tuneSlot);
+        drive.readPidsFromSmartDashboard(tuneSlot);
+        tuningValue = Double.parseDouble(SmartDashboard.getString("DB/String 0", "0.0"));
+        LOGGER.info("Tuning Value: " + tuningValue);
+        break;
+      case 2:
+        LOGGER.info("Testing motor control.");
+        testMotorControl = new TestMotorControl();
+        break;
+      default:
+        LOGGER.info("Invalid Tune Mode: {}", tuneSlot);
     }
     drive.zero();
   }
@@ -250,14 +257,20 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void testPeriodic() {
-    if (tuningValue <= 30.0 && tuningValue >= -30.0) {
-      drive.tuneForward(tuningValue, RobotMap.PID_SLOT_DRIVE);
-    } else {
-      drive.rotateByAngle(tuningValue);
-      // drive.tuneTurn(tuningValue, RobotMap.PID_SLOT_TURN);
+    switch (tuneSlot) {
+      case 0: // Drive PID SLot
+        drive.tuneForward(tuningValue, RobotMap.PID_SLOT_DRIVE);
+        LOGGER.info(drive.getLeftDistance());
+        break;
+      case 1: // Turn PID Slot
+        drive.tuneTurn(tuningValue, RobotMap.PID_SLOT_TURN);
+        LOGGER.info(Math.toDegrees(drive.getLeftDistance()));
+        break;
+      case 2: // New motor control
+        testMotorControl.periodic();
+        break;
+      default:
     }
-    // testMotorControl.periodic();
-    drive.logClosedLoopErrors();
   }
 
   @Override

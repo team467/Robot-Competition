@@ -2,7 +2,7 @@ package frc.robot.simulator.communications;
 
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
-
+import frc.robot.drive.motorcontrol.pathplanning.AutonomousPlan;
 import frc.robot.gamepieces.Elevator;
 import frc.robot.gamepieces.Elevator.Stops;
 import frc.robot.logging.RobotLogManager;
@@ -22,6 +22,9 @@ public class RobotData {
   // Network Tables for getting info from robot
   private NetworkTableInstance tableInstance;
   private NetworkTable table;
+
+  // Temp, should move to separate transmit function
+  AutonomousPlan course = null;
   
   private static final Logger LOGGER = RobotLogManager.getMainLogger(RobotData.class.getName()); 
   
@@ -68,16 +71,25 @@ public class RobotData {
   /**
    * Update the position readings for determining the map position and heading.
    * 
-   * @param rightDistance the robot right position reading in feet
    * @param leftDistance the robot left position reading in feet
+   * @param rightDistance the robot right position reading in feet
    */
   public void updateDrivePosition(
-      double rightDistance,
-      double leftDistance) {
+      double leftDistance,
+      double rightDistance) {
     dataRow.rightPosition = rightDistance;
     dataRow.leftPosition = leftDistance;
   }
-  
+ 
+  public RobotData course(AutonomousPlan course) {
+    this.course = course;
+    return this; // For chaining
+  }
+
+  public AutonomousPlan course() {
+    return course;
+  }
+
   public double leftDistance() {
     return dataRow.leftPosition;
   }

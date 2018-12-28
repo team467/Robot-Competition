@@ -1,7 +1,7 @@
 package frc.robot.sensors;
 
 import frc.robot.drive.motorcontrol.pathplanning.Spline2D;
-import frc.robot.drive.motorcontrol.pathplanning.SplineCourseData;
+import frc.robot.drive.motorcontrol.pathplanning.AutonomousPlan;
 
 import java.util.ArrayList;
 
@@ -20,16 +20,16 @@ public class PointTracker {
 
   private class Point {
     final double time;
-    final double xcoordinate;
-    final double ycoordinate;
+    final double x1;
+    final double y1;
 
     Point(
         final double time, 
         final double x, 
         final double y) {
       this.time = time;
-      this.xcoordinate = x;
-      this.ycoordinate = y;
+      this.x1 = x;
+      this.y1 = y;
     }
 
   }
@@ -69,16 +69,16 @@ public class PointTracker {
    * 
    * @return the data for the created spline
    */
-  public SplineCourseData[] spline() {
+  public AutonomousPlan spline() {
+    // TODO Figure out how to just create a line and draw it
     double duration = points.get(points.size() - 1).time - points.get(0).time;
-    double[] xvalues = new double[points.size()];
-    double[] yvalues = new double[points.size()];
+    double[][] xy = new double[points.size()][points.size()];
     for (int i = 0; i < points.size(); i++) {
       Point point = points.get(i);
-      xvalues[i] = point.xcoordinate;
-      yvalues[i] = point.ycoordinate;
+      xy[0][i] = point.x1;
+      xy[1][i] = point.y1;
     }
-    return Spline2D.calculateSplineCourse(xvalues, yvalues, (duration / points.size()));
+    return new AutonomousPlan(xy, 0.0, 1.0, 1.0, false);
   }
 
 }

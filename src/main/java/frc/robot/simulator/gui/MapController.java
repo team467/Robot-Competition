@@ -3,15 +3,21 @@ package frc.robot.simulator.gui;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.RobotMap;
+import frc.robot.drive.motorcontrol.pathplanning.AutonomousPlan;
+import frc.robot.logging.RobotLogManager;
 import frc.robot.simulator.communications.RobotData;
 import frc.robot.simulator.draw.FieldShape;
 import frc.robot.simulator.draw.PowerCubeShape;
 import frc.robot.simulator.draw.RobotShape;
+import frc.robot.simulator.drive.PhysicalMotor;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+
+import org.apache.logging.log4j.Logger;
 
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
@@ -21,6 +27,7 @@ import javafx.fxml.FXML;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
@@ -135,6 +142,11 @@ public class MapController {
   private ArrayList<PowerCubeShape> cubes = new ArrayList<PowerCubeShape>();
   private ArrayList<Group> cubeGroups = new ArrayList<Group>();
 
+  private static final Logger LOGGER = RobotLogManager.getMainLogger(MapController.class.getName());
+  private DecimalFormat df = new DecimalFormat("####0.00");
+
+  private RobotData data = RobotData.getInstance();
+
   /**
    * Initialize method, automatically called by @{link FXMLLoader}.
    */
@@ -173,30 +185,18 @@ public class MapController {
     teamColor.getSelectionModel().selectFirst();
 
     // Set Defaults for Smart Dashboard Buttons
+    RobotMap.loadPidsOntoSmartDashboard(0);
     loadDataFromSmartDashboardIntoSimulator();
     enforceFloatingPoint(dbString0);
     enforceFloatingPoint(dbString1);
     enforceFloatingPoint(dbString2);
     enforceFloatingPoint(dbString3);
     enforceFloatingPoint(dbString4);
-    enforceFloatingPoint(dbString5);
+    enforceInteger(dbString5);
     enforceFloatingPoint(dbString6);
     enforceFloatingPoint(dbString7);
     enforceFloatingPoint(dbString8);
     enforceFloatingPoint(dbString9);
-
-    // Temp, set values -- should use some sort of load from RobotMap or elsewhere saved
-    dbString0.setText("5.0");
-    dbString1.setText("0.0004");
-    dbString2.setText("0.0");
-    dbString3.setText("0.012");
-    dbString4.setText("0.0");
-    dbString5.setText("0.0");
-    dbString6.setText("0.0004");
-    dbString7.setText("0.0");
-    dbString8.setText("0.012");
-    dbString9.setText("0.0");
-    loadSimulatedDataOntoSmartDashboard();
 
     // Draw static components
     Platform.runLater(() -> {
@@ -210,7 +210,22 @@ public class MapController {
       @Override
       public void changed(ObservableValue<? extends String> observable, 
           String oldValue, String newValue) {
-          if (!newValue.matches("^[+-]?\\d{0,7}([\\.]\\d{0,4})?")) {
+          if (!newValue.matches("^[+-]?\\d{0,7}([\\.]\\d{0,6})?")) {
+            textField.setText(oldValue);
+          } else {
+            SmartDashboard.putString(textField.getId(), textField.getText());
+          }
+      }
+    });
+  }  
+
+  private void enforceInteger(TextField textField) {
+    // Add control to make sure value is floating point
+    textField.textProperty().addListener(new ChangeListener<String>() {
+      @Override
+      public void changed(ObservableValue<? extends String> observable, 
+          String oldValue, String newValue) {
+          if (!newValue.matches("^[+-]?\\d{0,7}?")) {
             textField.setText(oldValue);
           } else {
             SmartDashboard.putString(textField.getId(), textField.getText());
@@ -226,27 +241,27 @@ public class MapController {
   public void loadSimulatedDataOntoSmartDashboard() {
     SmartDashboard.putString("DB/String 0", dbString0.getText()); // Tune Distance
     SmartDashboard.putString("DB/String 1", dbString1.getText()); // P Left
-    SmartDashboard.putString("DB/String 2", dbString2.getText()); // Tune Distance
+    SmartDashboard.putString("DB/String 2", dbString2.getText()); // I Left
     SmartDashboard.putString("DB/String 3", dbString3.getText()); // D Left
     SmartDashboard.putString("DB/String 4", dbString4.getText()); // F Left
-    SmartDashboard.putString("DB/String 5", dbString5.getText()); // F Left
+    SmartDashboard.putString("DB/String 5", dbString5.getText()); // PID Slot
     SmartDashboard.putString("DB/String 6", dbString6.getText()); // P Right
-    SmartDashboard.putString("DB/String 7", dbString7.getText()); // F Left
+    SmartDashboard.putString("DB/String 7", dbString7.getText()); // i Right
     SmartDashboard.putString("DB/String 8", dbString8.getText()); // D Right
     SmartDashboard.putString("DB/String 9", dbString9.getText()); // F Right
   }
 
   private void loadDataFromSmartDashboardIntoSimulator() {
-    dbString0.setText(SmartDashboard.getString("DB/String 0", ""));    
-    dbString1.setText(SmartDashboard.getString("DB/String 1", ""));    
-    dbString2.setText(SmartDashboard.getString("DB/String 2", ""));    
-    dbString3.setText(SmartDashboard.getString("DB/String 3", ""));    
-    dbString4.setText(SmartDashboard.getString("DB/String 4", ""));    
-    dbString5.setText(SmartDashboard.getString("DB/String 5", ""));    
-    dbString6.setText(SmartDashboard.getString("DB/String 6", ""));    
-    dbString7.setText(SmartDashboard.getString("DB/String 7", ""));    
-    dbString8.setText(SmartDashboard.getString("DB/String 8", ""));    
-    dbString9.setText(SmartDashboard.getString("DB/String 9", ""));    
+    dbString0.setText(SmartDashboard.getString("DB/String 0", "5.0"));    
+    dbString1.setText(SmartDashboard.getString("DB/String 1", "0.0004"));    
+    dbString2.setText(SmartDashboard.getString("DB/String 2", "0.0"));    
+    dbString3.setText(SmartDashboard.getString("DB/String 3", "0.012"));    
+    dbString4.setText(SmartDashboard.getString("DB/String 4", "0.0"));    
+    dbString5.setText(SmartDashboard.getString("DB/String 5", "0"));    
+    dbString6.setText(SmartDashboard.getString("DB/String 6", "0.0004"));    
+    dbString7.setText(SmartDashboard.getString("DB/String 7", "0.0"));    
+    dbString8.setText(SmartDashboard.getString("DB/String 8", "0.012"));    
+    dbString9.setText(SmartDashboard.getString("DB/String 9", "0.0"));    
   }
 
   /**
@@ -257,7 +272,9 @@ public class MapController {
    */
   public boolean collision(Node node1, Node node2) {
     boolean collided = false;
-    // collided = node1.getBoundsInParent().intersects(node2.getBoundsInParent());
+    if (node1 == null || node2 == null) {
+      return collided;
+    }
     collided = node1.getBoundsInParent().intersects(node2.getBoundsInParent());
     return collided;
   }
@@ -321,8 +338,11 @@ public class MapController {
       robotGroup = robotShape.createRobotShape();
       robotArea.getChildren().add(robotGroup);
 
+      PhysicalMotor.enableMotors();
       robotActive = true;
       robotShape.init();
+      drawCourse(robotShape.leftX(), robotShape.leftY(), data.course());
+
       update();
 
       // The robot runs it's cycle every 20 ms
@@ -359,6 +379,7 @@ public class MapController {
    * Stop the robot thread.
    */
   private void stopRobot() {
+    PhysicalMotor.reset();
     if (timer != null && !timer.isShutdown()) {
       try {
         // stop the timer
@@ -377,6 +398,7 @@ public class MapController {
   public void update() {
     Platform.runLater(() -> {
       drawFieldComponents();
+      drawCourse(robotShape.leftX(), robotShape.leftY(), data.course());
       robotShape.draw();
     });
   }
@@ -394,6 +416,19 @@ public class MapController {
    */
   protected void setClosed() {
     stopRobot();
+  }
+
+  private void drawCourse(double startX, double startY, AutonomousPlan course) {
+    if (course != null && course.size > 0) {
+      GraphicsContext context = field.getGraphicsContext2D();
+      context.beginPath();
+      context.moveTo(startX, startY);
+      context.strokePolyline(course.y1, course.x1, course.size);
+      context.setStroke(Color.BLACK);
+      context.setLineWidth(10.0);
+      context.fill();
+      context.closePath();
+    }
   }
 
 }

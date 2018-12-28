@@ -22,8 +22,8 @@ public class FieldPositionTest {
     fieldPosition.update(fakeSensorReadingLeft, fakeSensorReadingRight);
 
     double tolerance = 0.01;
-    assertEquals(0.0, fieldPosition.fieldX(), tolerance);
-    assertEquals(3.0, fieldPosition.fieldY(), tolerance);
+    assertEquals(0.0, fieldPosition.x1(), tolerance);
+    assertEquals(3.0, fieldPosition.y1(), tolerance);
   }
 
     

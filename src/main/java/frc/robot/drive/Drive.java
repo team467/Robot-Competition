@@ -107,8 +107,10 @@ public class Drive extends DifferentialDrive implements AutoDrive {
     double coefficientPRight 
         = Double.parseDouble(SmartDashboard.getString("DB/String 6", "1.4")); // 1.4
 
-    double coefficientIRight = 0.0;
-    double coefficientILeft = 0.0;
+    double coefficientIRight
+        = Double.parseDouble(SmartDashboard.getString("DB/String 2", "0.0")); // 0.0
+    double coefficientILeft
+        = Double.parseDouble(SmartDashboard.getString("DB/String 7", "0.0")); // 0.0
 
     double coefficientDLeft 
         = Double.parseDouble(SmartDashboard.getString("DB/String 3", "198")); //198
@@ -200,7 +202,7 @@ public class Drive extends DifferentialDrive implements AutoDrive {
   }
 
   public void sendData() {
-    RobotData.getInstance().updateDrivePosition(getRightDistance(), getLeftDistance());
+    RobotData.getInstance().updateDrivePosition(getLeftDistance(), getRightDistance());
   }
 
   /**
@@ -242,8 +244,8 @@ public class Drive extends DifferentialDrive implements AutoDrive {
         df.format(getLeftDistance()), df.format(getRightDistance()));
     left.set(ControlMode.Position, feetToTicks(leftDistance));
     // The right motor is reversed
-    right.set(ControlMode.Position, feetToTicks(rightDistance));
-    data.updateDrivePosition(getRightDistance(), getLeftDistance());
+    right.set(ControlMode.Position, -feetToTicks(rightDistance));
+    data.updateDrivePosition(getLeftDistance(), getRightDistance());
     fieldState.update(getLeftDistance(), getRightDistance());
   }
 
@@ -269,7 +271,10 @@ public class Drive extends DifferentialDrive implements AutoDrive {
         df.format(distanceInFeet), df.format(degrees));
     
     double turnDistanceInFeet = degreesToFeet(degrees);
-    moveFeet((distanceInFeet - turnDistanceInFeet), (distanceInFeet + turnDistanceInFeet));
+    // Temp change to tune move to test motor control.
+    // moveFeet((distanceInFeet - turnDistanceInFeet), (distanceInFeet + turnDistanceInFeet));
+    tuneMove((distanceInFeet - turnDistanceInFeet), (distanceInFeet + turnDistanceInFeet), 
+        RobotMap.PID_SLOT_DRIVE);
   }
   
   /**
@@ -339,9 +344,9 @@ public class Drive extends DifferentialDrive implements AutoDrive {
 
     left.set(ControlMode.Position, leftDistTicks);
     // The right motor is reversed
-    right.set(ControlMode.Position, rightDistTicks);
+    right.set(ControlMode.Position, -rightDistTicks);
 
-    data.updateDrivePosition(getRightDistance(), getLeftDistance());
+    data.updateDrivePosition(getLeftDistance(), getRightDistance());
     fieldState.update(getLeftDistance(), getRightDistance());
   }
   
@@ -392,7 +397,7 @@ public class Drive extends DifferentialDrive implements AutoDrive {
 
   public void arcadeDrive(double speed, double rotation, boolean squaredInputs) {
     super.arcadeDrive(speed, rotation, squaredInputs);
-    data.updateDrivePosition(getRightDistance(), getLeftDistance());
+    data.updateDrivePosition(getLeftDistance(), getRightDistance());
     fieldState.update(getLeftDistance(), getRightDistance());
   }
 
@@ -402,13 +407,13 @@ public class Drive extends DifferentialDrive implements AutoDrive {
 
   public void tankDrive(double leftSpeed, double rightSpeed, boolean squaredInputs) {
     super.tankDrive(leftSpeed, rightSpeed, squaredInputs);
-    data.updateDrivePosition(getRightDistance(), getLeftDistance());
+    data.updateDrivePosition(getLeftDistance(), getRightDistance());
     fieldState.update(getLeftDistance(), getRightDistance());
   }
 
   public void curvatureDrive(double speed, double rotation, boolean isQuickTurn) {
     super.curvatureDrive(speed, rotation, isQuickTurn);
-    data.updateDrivePosition(getRightDistance(), getLeftDistance());
+    data.updateDrivePosition(getLeftDistance(), getRightDistance());
     fieldState.update(getLeftDistance(), getRightDistance());
   }
 

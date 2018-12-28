@@ -13,8 +13,11 @@ import edu.wpi.first.wpilibj.PIDSourceType;
 import frc.robot.RobotMap;
 import frc.robot.logging.RobotLogManager;
 import frc.robot.utilities.MovingAverage;
+import frc.robot.utilities.PreferencesStorage;
+
+import java.lang.Thread.State;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.apache.logging.log4j.Logger;
 
@@ -25,8 +28,8 @@ public class PhysicalMotor implements Runnable, PIDOutput, PIDSource {
   
   private static final DecimalFormat df = new DecimalFormat("#0.0000");
 
-  static ArrayList<PhysicalMotor> motors = new ArrayList<PhysicalMotor>();
-  static ArrayList<Thread> threads = new ArrayList<Thread>();
+  static HashMap<Integer, PhysicalMotor> motors = new HashMap<Integer, PhysicalMotor>();
+  private Thread thread = null;
 
   // Simulation Information
   public static final double MAX_RPM = 821;
@@ -95,6 +98,7 @@ public class PhysicalMotor implements Runnable, PIDOutput, PIDSource {
 
   // General motor information
   private int id = 0;
+  private String name;
 
   // Mode Settings
   private ControlMode controlMode = ControlMode.PercentOutput;
@@ -124,7 +128,7 @@ public class PhysicalMotor implements Runnable, PIDOutput, PIDSource {
   private boolean brakeEnabled = true;
   private boolean phaseSensor = false;
   private boolean headingHold = false;
-  private boolean invert = false;
+  private boolean inverted = false;
   private int timeoutMs = 0;
   private double openLoopSecondsFromNeutralToFull = 0.0;
   private double closedLoopSecondsFromNeutralToFull = 0.0;
@@ -166,55 +170,63 @@ public class PhysicalMotor implements Runnable, PIDOutput, PIDSource {
   private int stickyFaults = 0;
 
   static PhysicalMotor createMotor(int id) {
+    if (motors.containsKey(id)) {
+      return motors.get(id);
+    }
     LOGGER.info("Creating motor ID: {}", id);
     PhysicalMotor motor = new PhysicalMotor(id);
-    motors.add(motor);
-    LOGGER.info("Scheduled timer.");
-    Thread motorThread = new Thread(motor);
-    motorThread.setName("motor-" + id + "-thread");
-    // Setting priority to improve simulation stability of real-time system
-    // Default priority is 5, max is 10
-    // On Linux, the command line argument -XX:+UseThreadPriorities is also required.
-    motorThread.setPriority(8);
-    motorThread.start();
-    threads.add(motorThread);
-
+    motor.enable();
+    motors.put(id, motor);
     return motor;
   }
 
-  static void enableMotors() {
-    for (Thread thread : threads) {
-      thread.start();
-    }
-    for (PhysicalMotor motor : motors) {
-      motor.enabled = true;
-      motor.lastCallTime = System.nanoTime();
+  private void enable() {
+    if (!enabled) {
+      LOGGER.debug("Enable motor {}", id);
+      enabled = true;
+      if (thread == null) {
+        thread = new Thread(this);
+        thread.setName(name + thread);
+        // Setting priority to improve simulation stability of real-time system
+        // Default priority is 5, max is 10
+        // On Linux, the command line argument -XX:+UseThreadPriorities is also required.
+        thread.setPriority(8);
+        thread.start();
+      }
+      lastCallTime = System.nanoTime();
     }
   }
 
-  static void shutdown() {
-    for (PhysicalMotor motor : motors) {
-      // Need to disable the motors for their threads to exit.
-      motor.enabled = false;
+  /**
+   * Enables the motors, useful for simulator reset. Motors are automatically enabled on creation.
+   */
+  public static void enableMotors() {
+    for (PhysicalMotor motor : motors.values()) {
+      motor.enable();
     }
+  }
 
-    for (Thread motorThread : threads) {
-      try {
-        // Joins are the best way to shutdown threads 
-        // as they wait for locks to be freed on their own.
-        motorThread.join();
-      } catch (InterruptedException e) {
-        LOGGER.error("SIMULATOR|DRIVE", e);
-        e.printStackTrace();
+  private void resetControllers() {
+    if (enabled) {
+      LOGGER.debug("Reset motor {}", id);
+      for (PIDController controller : pidController) {
+        controller.reset();
       }
     }
+  }
 
-    motors.clear();
-    threads.clear();
+  /**
+   * Shutsdown the motors. Mostly useful for simulation.
+   */
+  public static void reset() {
+    for (PhysicalMotor motor : motors.values()) {
+      motor.resetControllers();
+    }
   }
 
   PhysicalMotor(int id) {
     this.id = id;
+    name = "Motor-" + id + "-";
     voltage = 0.0;
     simulationVelocity = 0.0;
     simulatedTargetVelocity = 0.0;
@@ -224,8 +236,7 @@ public class PhysicalMotor implements Runnable, PIDOutput, PIDSource {
     double pidPeriod = ((double) MOTOR_TIME_SLICE_IN_MS / 1000.0 / 4.0);
     pidSourceType = PIDSourceType.kDisplacement;
     for (int i = 0; i < closedLoopParameters.length; i++) {
-      closedLoopParameters[i] = new ClosedLoopParameter();
-      // TODO: Load from file to emulate saving
+      closedLoopParameters[i] = new ClosedLoopParameter(name + "-" + i);
     }
 
     for (int i = 0; i < NUMBER_CLOSED_LOOPS; i++) {
@@ -233,10 +244,10 @@ public class PhysicalMotor implements Runnable, PIDOutput, PIDSource {
       smoothedVelocity[i] = 0;
       pidParamSlotIndex[i] = i;
       pidController[i] = new PIDController(
-        closedLoopParameters[pidParamSlotIndex[i]].proportionalGain, 
-        closedLoopParameters[pidParamSlotIndex[i]].integral, 
-        closedLoopParameters[pidParamSlotIndex[i]].derivative, 
-        closedLoopParameters[pidParamSlotIndex[i]].feedForward, 
+        closedLoopParameters[pidParamSlotIndex[i]].proportionalGain(), 
+        closedLoopParameters[pidParamSlotIndex[i]].integral(), 
+        closedLoopParameters[pidParamSlotIndex[i]].derivative(), 
+        closedLoopParameters[pidParamSlotIndex[i]].feedForward(), 
         this /* PID Source */, this /* PID Output */, pidPeriod);
       pidController[i].setOutputRange(-1.0, 1.0);
       pidController[i].setName("Simulated Motor " + id, "PID Controller: " + i);
@@ -255,10 +266,9 @@ public class PhysicalMotor implements Runnable, PIDOutput, PIDSource {
     openLoopRampRatePerPeriod 
         = convertRampRateToPerPeriod(ROBOT_FASTEST_RAMP_RATE_IN_SECONDS_TO_FULL); 
     closedLoopRampRatePerPeriod 
-        = convertRampRateToPerPeriod(ROBOT_FASTEST_RAMP_RATE_IN_SECONDS_TO_FULL); 
-    
-    enabled = true;
-  }
+        = convertRampRateToPerPeriod(ROBOT_FASTEST_RAMP_RATE_IN_SECONDS_TO_FULL);     
+
+      }
 
   int id() {
     return id;
@@ -280,7 +290,7 @@ public class PhysicalMotor implements Runnable, PIDOutput, PIDSource {
       lastError = ErrorCode.InvalidParamValue;
       return lastError;
     }
-    this.closedLoopParameters[slotIndex].allowableClosedLoopError = allowableClosedLoopError;
+    this.closedLoopParameters[slotIndex].allowableClosedLoopError(allowableClosedLoopError);
     lastError = ErrorCode.OK;
     return lastError;
   }
@@ -541,7 +551,7 @@ public class PhysicalMotor implements Runnable, PIDOutput, PIDSource {
       lastError = ErrorCode.InvalidParamValue;
       return lastError;
     }
-    closedLoopParameters[slotIndex].proportionalGain = proportionalGain;
+    closedLoopParameters[slotIndex].proportionalGain(proportionalGain);
     for (int i = 0; i < NUMBER_CLOSED_LOOPS; i++) {
       if (pidParamSlotIndex[i] == slotIndex) {
         pidController[i].setP(proportionalGain);
@@ -565,7 +575,7 @@ public class PhysicalMotor implements Runnable, PIDOutput, PIDSource {
       lastError = ErrorCode.InvalidParamValue;
       return lastError;
     }
-    closedLoopParameters[slotIndex].integral = integralCoefficient;
+    closedLoopParameters[slotIndex].integral(integralCoefficient);
     for (int i = 0; i < NUMBER_CLOSED_LOOPS; i++) {
       if (pidParamSlotIndex[i] == slotIndex) {
         pidController[i].setI(integralCoefficient);
@@ -589,7 +599,7 @@ public class PhysicalMotor implements Runnable, PIDOutput, PIDSource {
       lastError = ErrorCode.InvalidParamValue;
       return lastError;
     }
-    this.closedLoopParameters[slotIndex].derivative = derivativeCoefficient;
+    this.closedLoopParameters[slotIndex].derivative(derivativeCoefficient);
     for (int i = 0; i < NUMBER_CLOSED_LOOPS; i++) {
       if (pidParamSlotIndex[i] == slotIndex) {
         pidController[i].setD(derivativeCoefficient);
@@ -613,7 +623,7 @@ public class PhysicalMotor implements Runnable, PIDOutput, PIDSource {
       lastError = ErrorCode.InvalidParamValue;
       return lastError;
     }
-    this.closedLoopParameters[slotIndex].feedForward = feedForwardCoefficient;
+    this.closedLoopParameters[slotIndex].feedForward(feedForwardCoefficient);
     for (int i = 0; i < NUMBER_CLOSED_LOOPS; i++) {
       if (pidParamSlotIndex[i] == slotIndex) {
         pidController[i].setF(feedForwardCoefficient);
@@ -654,7 +664,7 @@ public class PhysicalMotor implements Runnable, PIDOutput, PIDSource {
   }
   
   void invert(boolean invert) {
-    this.invert = invert;
+    this.inverted = invert;
   }
   
   /**
@@ -703,6 +713,7 @@ public class PhysicalMotor implements Runnable, PIDOutput, PIDSource {
 
     setOutputByDemandType(demand0, demand1Type, demand1);
     double totalDemand = outputPower + auxillaryPower;
+    totalDemand *= inverted ? -1.0 : 1.0;
     this.controlMode = controlMode;
 
     switch (controlMode) {
@@ -842,7 +853,7 @@ public class PhysicalMotor implements Runnable, PIDOutput, PIDSource {
     if (closedLoopIndex < 0 || closedLoopIndex >= NUMBER_CLOSED_LOOPS) {
       return 0;
     }
-    if (invert) {
+    if (inverted) {
       return -sensors[closedLoopIndex];
     } else {
       return sensors[closedLoopIndex];
@@ -865,7 +876,7 @@ public class PhysicalMotor implements Runnable, PIDOutput, PIDSource {
       return lastError;
     }
     sensors[closedLoopIndex] = sensorPosition;
-    if (invert) {
+    if (inverted) {
       sensors[closedLoopIndex] *= -1.0;
     }
     revolutions = sensorPosition / RobotMap.WHEEL_ENCODER_CODES_PER_REVOLUTION;
@@ -942,7 +953,7 @@ public class PhysicalMotor implements Runnable, PIDOutput, PIDSource {
         revolutions += simulationVelocity;
         sensors[closedLoopIndex] 
             = (int) (revolutions * RobotMap.WHEEL_ENCODER_CODES_PER_REVOLUTION); 
-        if (invert) {
+        if (inverted) {
           sensors[closedLoopIndex] *= -1.0;
         }
         // truncation is OK

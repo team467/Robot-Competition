@@ -2,7 +2,7 @@ package frc.robot.drive.motorcontrol.pathtracking;
 
 import frc.robot.RobotMap;
 import frc.robot.logging.RobotLogManager;
-import frc.robot.utilities.Utils;
+import frc.robot.utilities.RobotUtilities;
 import java.text.DecimalFormat;
 
 import org.apache.logging.log4j.Logger;
@@ -12,6 +12,11 @@ public class FieldPosition {
   // Single instance of this class
   private static FieldPosition instance = null;
 
+  /**
+   * Singleton of the Field Position monitor.
+   * 
+   * @return the field position instance
+   */
   public static FieldPosition getInstance() {
     if (instance == null) {
       instance = new FieldPosition();
@@ -29,13 +34,13 @@ public class FieldPosition {
   // State variables
   private double fieldX = 0.0;
 
-  public double fieldX() {
+  public double x1() {
     return fieldX;
   }
   
   private double fieldY = 0.0;
   
-  public double fieldY() {
+  public double y1() {
     return fieldY;
   }
   
@@ -140,7 +145,7 @@ public class FieldPosition {
     //     + df.format(leftSensorReading) + ", " + df.format(rightSensorReading));
 
     // Normalize to + or - 180 degrees
-    changeInHeading = Utils.normalizeAngle((rightMove - leftMove) / (2 * RADIUS));
+    changeInHeading = RobotUtilities.normalizeAngle((rightMove - leftMove) / (2 * RADIUS));
     // Round to a single tick
     changeInHeading = (double) Math.round(changeInHeading 
         * RobotMap.WHEEL_ENCODER_CODES_PER_REVOLUTION) 

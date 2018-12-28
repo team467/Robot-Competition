@@ -2,7 +2,7 @@ package frc.robot.drive.motorcontrol.pathtracking;
 
 import com.github.sh0nk.matplotlib4j.Plot;
 import com.github.sh0nk.matplotlib4j.PythonExecutionException;
-import frc.robot.utilities.Utils;
+import frc.robot.utilities.RobotUtilities;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -56,7 +56,7 @@ public class LqrVelocitySteeringControl {
   }
 
   public void update(double accelleration, double delta) {
-    Utils.clip(delta, -maxSteer, maxSteer);
+    RobotUtilities.clip(delta, -maxSteer, maxSteer);
     currentX += currentVelocity * Math.cos(currentYaw) * timeIncrement;
     currentY += currentVelocity * Math.sin(currentYaw) * timeIncrement;
     currentYaw += currentVelocity / wheelBase * Math.tan(delta) * timeIncrement;
@@ -285,7 +285,7 @@ public class LqrVelocitySteeringControl {
       if (targetIndex % 1 == 0 && showAnimation) {
         Plot plt = Plot.create();
         plt.plot()
-            .add(Utils.arrayToList(planX), Utils.arrayToList(planY))
+            .add(RobotUtilities.arrayToList(planX), RobotUtilities.arrayToList(planY))
             .label("course")
             .linestyle("-.")
         ;

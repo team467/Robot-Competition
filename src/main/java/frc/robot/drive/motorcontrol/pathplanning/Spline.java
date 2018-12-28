@@ -1,6 +1,6 @@
 package frc.robot.drive.motorcontrol.pathplanning;
 
-import frc.robot.utilities.Utils;
+import frc.robot.utilities.RobotUtilities;
 
 import java.util.Arrays;
 
@@ -39,7 +39,7 @@ public class Spline {
       coefficients[i] = new Coefficients();
     }
 
-    double[] h = Utils.differenceBetweenArrayValues(coordinatesX);
+    double[] h = RobotUtilities.differenceBetweenArrayValues(coordinatesX);
 
     // Calculate coefficient a
     for (int i = 0; i < coordinatesY.length; i++) {
@@ -49,7 +49,7 @@ public class Spline {
     double[][] matrixA = calculateMatrixA(h);
     double[] matrixB = calculateB(h);
 
-    double[] tempC = Utils.solveLinearEquation(matrixA, matrixB);
+    double[] tempC = RobotUtilities.solveLinearEquation(matrixA, matrixB);
     for (int i = 0; i < tempC.length; i++) {
       coefficients[i].coefficientC = tempC[i];
     }

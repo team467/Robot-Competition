@@ -3,9 +3,9 @@ package frc.robot.drive.motorcontrol.pathtracking;
 import com.github.sh0nk.matplotlib4j.Plot;
 import com.github.sh0nk.matplotlib4j.PythonExecutionException;
 import frc.robot.RobotMap;
+import frc.robot.drive.motorcontrol.pathplanning.AutonomousPlan;
 import frc.robot.drive.motorcontrol.pathplanning.Spline2D;
-import frc.robot.drive.motorcontrol.pathplanning.SplineCourseData;
-import frc.robot.utilities.Utils;
+import frc.robot.utilities.RobotUtilities;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -112,12 +112,12 @@ public class StanleyControler {
    * @param delta the change in the steering angle
    */
   public void update(double acceleration, double delta) {
-    delta = Utils.clip(delta, -maxSteer, maxSteer);
+    delta = RobotUtilities.clip(delta, -maxSteer, maxSteer);
     fieldX += velocity * Math.cos(heading) * timeIncrement;
     fieldY += velocity * Math.sin(heading)  * timeIncrement;
     velocity += acceleration * timeIncrement;
     heading += velocity / RobotMap.WHEEL_BASE_WIDTH * Math.tan(delta) * timeIncrement;
-    heading = Utils.normalizeAngle(heading);
+    heading = RobotUtilities.normalizeAngle(heading);
   }
 
   /**
@@ -149,7 +149,7 @@ public class StanleyControler {
     }
 
     // thetaE corrects the heading error
-    double thetaE = Utils.normalizeAngle(planHeading[currentTargetIndex] - heading);
+    double thetaE = RobotUtilities.normalizeAngle(planHeading[currentTargetIndex] - heading);
     // thetaD corrects the cross track error
     double thetaD = Math.atan2(controlGain * frontAxleError, velocity);
     // Change in steering control
@@ -191,7 +191,7 @@ public class StanleyControler {
 
     currentTargetIndex = lengthActualPositionToPlanPositions.indexOf(frontAxleError);
 
-    double targetHeading = Utils.normalizeAngle(
+    double targetHeading = RobotUtilities.normalizeAngle(
         Math.atan2(actualYPos - planY[currentTargetIndex], 
         actualXPos - planX[currentTargetIndex]) - heading);
     if (targetHeading > 0.0) {
@@ -208,21 +208,19 @@ public class StanleyControler {
   public static void main(String[] args) {
 
     // Target course
-    double[] ax = {0.0, 100.0, 100.0, 50.0, 60.0};
-    double[] ay = {0.0, 0.0, -30.0, -20.0, 0.0};
+    double[][] xy = {
+      {0.0, 100.0, 100.0, 50.0, 60.0},
+      {0.0, 0.0, -30.0, -20.0, 0.0}
+    };
 
     //splineFunction
-    SplineCourseData[] course = Spline2D.calculateSplineCourse(ax, ay, 0.1);
-    double[] courseX = SplineCourseData.vectorize(course, "x");
-    double[] courseY = SplineCourseData.vectorize(course, "y");
-    double[] courseHeading = SplineCourseData.vectorize(course, "heading");
-
+    AutonomousPlan course = new AutonomousPlan(xy, 0.0, 1.0, 1.0, false);
     DecimalFormat df = new DecimalFormat("#0.0");
     System.out.println("x\ty\theading\tk\tstep");
-    for (SplineCourseData datum : course) {
-      System.out.println(df.format(datum.coordinateX) + "\t" + df.format(datum.coordinateY) 
-          + "\t" + df.format(Math.toDegrees(datum.heading)) + "\t" 
-          + df.format(datum.curvature) + "\t" + df.format(datum.step));
+    for (int i = 0; i < course.size; i++) {
+      System.out.println(df.format(course.x1[i]) + "\t" + df.format(course.y1[i]) 
+          + "\t" + df.format(Math.toDegrees(course.heading[i])) + "\t" 
+          + df.format(course.curvature[i]) + "\t" + df.format(course.step[i]));
     }
     // cx, cy, cyaw, ck, s = cubic_spline_planner.calc_spline_course(ax, ay, ds=0.1)
 
@@ -241,15 +239,15 @@ public class StanleyControler {
     velocity.add(state.velocity);
     ArrayList<Double> t = new ArrayList<Double>();
     t.add(0.0);
-    state.calculateTargetIndexAndFrontAxleError(ax, ay);
+    state.calculateTargetIndexAndFrontAxleError(xy[0], xy[1]);
     int targetIndex = state.currentTargetIndex();
 
     double maxSimulationTime = 100.0;
-    int lastIndex = course.length - 1;
+    int lastIndex = course.size - 1;
     double time = 0.0;
     while (maxSimulationTime >= time && lastIndex > targetIndex) {
       double acceleration = state.pidControl(targetSpeed, state.velocity());
-      double delta = state.stanleyControl(courseX, courseY, courseHeading, targetIndex);
+      double delta = state.stanleyControl(course.x1, course.y1, course.heading, targetIndex);
       targetIndex = state.currentTargetIndex();
       state.update(acceleration, delta);
       time += state.timeIncrement();
@@ -262,7 +260,7 @@ public class StanleyControler {
 
     Plot plt = Plot.create();
     plt.plot()
-        .add(Utils.arrayToList(courseX), Utils.arrayToList(courseY))
+        .add(RobotUtilities.arrayToList(course.x1), RobotUtilities.arrayToList(course.y1))
         .label("course")
         .linestyle("-.")
     ;

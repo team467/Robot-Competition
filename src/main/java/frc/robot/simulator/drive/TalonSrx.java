@@ -26,7 +26,10 @@ public class TalonSrx extends BaseMotorController
    * Creates a talon referenced by a specific CAN device number.
    */
   public TalonSrx(int deviceNumber) {
-    super(deviceNumber | 0x02040000);
+    super(deviceNumber);
+    // The original Talon SRX used super(deviceNumber | 0x02040000);
+    // Changed to make channel map connection easier to debug.
+
     //TODO: Simulate sensor collection
     //sensorColl = new SensorCollection(this);
   }
