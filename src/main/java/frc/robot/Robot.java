@@ -260,11 +260,11 @@ public class Robot extends TimedRobot {
     switch (tuneSlot) {
       case 0: // Drive PID SLot
         drive.tuneForward(tuningValue, RobotMap.PID_SLOT_DRIVE);
-        LOGGER.info(drive.getLeftDistance());
+        LOGGER.debug("Distance {} feet", drive.getLeftDistance());
         break;
       case 1: // Turn PID Slot
         drive.tuneTurn(tuningValue, RobotMap.PID_SLOT_TURN);
-        LOGGER.info(Math.toDegrees(drive.getLeftDistance()));
+        LOGGER.debug("Turn {} degrees",Math.toDegrees(drive.getLeftDistance()));
         break;
       case 2: // New motor control
         testMotorControl.periodic();

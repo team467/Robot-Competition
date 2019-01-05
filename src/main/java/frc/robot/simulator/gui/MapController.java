@@ -10,21 +10,17 @@ import frc.robot.simulator.draw.FieldShape;
 import frc.robot.simulator.draw.PowerCubeShape;
 import frc.robot.simulator.draw.RobotShape;
 import frc.robot.simulator.drive.PhysicalMotor;
-
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-
-import org.apache.logging.log4j.Logger;
-
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.Group;
+import javafx.geometry.Bounds;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -35,7 +31,9 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
-import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.Shape;
+
+import org.apache.logging.log4j.Logger;
 
 /**
  * The controller associated with the only view of our application. The
@@ -136,11 +134,11 @@ public class MapController {
   /**
    * The shapes for drawing for robot and field and other objects.
    */
-  private RobotShape robotShape = new RobotShape();
-  private Group robotGroup = null; // for adding and remove robot on map
+  private RobotShape robot = new RobotShape();
   private FieldShape fieldShape = new FieldShape();
   private ArrayList<PowerCubeShape> cubes = new ArrayList<PowerCubeShape>();
-  private ArrayList<Group> cubeGroups = new ArrayList<Group>();
+  private ArrayList<Shape> collisions = new ArrayList<Shape>();
+  ObservableList<Node> stuffOnField = null;
 
   private static final Logger LOGGER = RobotLogManager.getMainLogger(MapController.class.getName());
   private DecimalFormat df = new DecimalFormat("####0.00");
@@ -153,29 +151,29 @@ public class MapController {
   public void initialize() {
 
     robotActive = false;
+    stuffOnField = robotArea.getChildren();
     fieldShape.context(field.getGraphicsContext2D());
 
     double redSwitchCubeOffsetX = 85.25; //next to red alliance station
     double redSwitchCubeOffsetY = 196;
 
     for (int i = 0; i < 6; i++) {
-      cubes.add(new PowerCubeShape(redSwitchCubeOffsetX + i * 2.34 * 12.0, redSwitchCubeOffsetY)); 
       // 1.25' in between each cube ; y-coordinate is same for 6 cubes
+      PowerCubeShape cube 
+          = new PowerCubeShape(redSwitchCubeOffsetX + i * 2.34 * 12.0, redSwitchCubeOffsetY); 
+      cubes.add(cube);
+      stuffOnField.add(cube.shape());
     }
 
     double blueSwitchCubeOffsetX = 85.25; //next to blue alliance station
     double blueSwitchCubeOffsetY = 439.2;
 
     for (int i = 0; i < 6; i++) {
-      cubes.add(
-          new PowerCubeShape(blueSwitchCubeOffsetX + i * 2.34 * 12.0, blueSwitchCubeOffsetY)); 
       // 1.25' in between each cube ; y-coordinate is same for 6 cubes
-    }
-
-    for (PowerCubeShape cube : cubes) {
-      Group cubeGroup = cube.createPowerCube();
-      cubeGroups.add(cubeGroup);
-      robotArea.getChildren().add(cubeGroup);
+      PowerCubeShape cube 
+          = new PowerCubeShape(blueSwitchCubeOffsetX + i * 2.34 * 12.0, blueSwitchCubeOffsetY);
+      cubes.add(cube);
+      stuffOnField.add(cube.shape());
     }
 
     // Default the choice boxes to the first values
@@ -200,7 +198,8 @@ public class MapController {
 
     // Draw static components
     Platform.runLater(() -> {
-      drawFieldComponents();
+      fieldShape.drawBaseField();
+      fieldShape.buildFieldPieces(stuffOnField);
     });
   }
 
@@ -267,30 +266,62 @@ public class MapController {
   /**
    * Test if two shapes or any other object that is a node intersects with another node.
    * 
-   * @param node1 the first node to test
-   * @param node2 the second node
+   * @param shape1 the first node to test
+   * @param shape2 the second node
    */
-  public boolean collision(Node node1, Node node2) {
+  public boolean collision(Shape shape1, Shape shape2) {
     boolean collided = false;
-    if (node1 == null || node2 == null) {
+    if (shape1 == null || shape2 == null) {
       return collided;
     }
-    collided = node1.getBoundsInParent().intersects(node2.getBoundsInParent());
+
+    Bounds bound1 = shape1.getBoundsInParent();
+    Bounds bound2 = shape2.getBoundsInParent();
+    collided = bound1.intersects(bound2);
+
+    if (collided) {
+      LOGGER.debug("Shape 1 - Layout ({},{}) : Bound Min ({},{}) : Max ({},{})",
+          df.format(shape1.getLayoutX()), df.format(shape1.getLayoutY()),
+          df.format(bound1.getMinX()), df.format(bound1.getMinY()),
+          df.format(bound1.getMaxX()), df.format(bound1.getMaxY()));
+      LOGGER.debug("Shape 2 - Layout ({},{}) : Bound Min ({},{}) : Max ({},{})",
+          df.format(shape2.getLayoutX()), df.format(shape2.getLayoutY()),
+          df.format(bound2.getMinX()), df.format(bound2.getMinY()),
+          df.format(bound2.getMaxX()), df.format(bound2.getMaxY()));
+      Shape overlap = Shape.intersect(shape1, shape2);
+      overlap.setFill(Color.ROSYBROWN);
+      robotArea.getChildren().add(overlap);
+      overlap.setVisible(true);
+      Bounds overlapBounds = overlap.getBoundsInParent();
+      // There is an issue with shifting the Y value down
+      // LOGGER.error("{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}",
+      //     df.format(shape1.getLayoutX()), df.format(shape1.getLayoutY()),
+      //     df.format(bound1.getMinX()), df.format(bound1.getMinY()),
+      //     df.format(bound1.getMaxX()), df.format(bound1.getMaxY()),
+      //     df.format(bound1.getWidth()), df.format(bound1.getHeight()),
+      //     df.format(shape2.getLayoutX()), df.format(shape2.getLayoutY()),
+      //     df.format(bound2.getMinX()), df.format(bound2.getMinY()),
+      //     df.format(bound2.getMaxX()), df.format(bound2.getMaxY()),
+      //     df.format(bound2.getWidth()), df.format(bound2.getHeight()),
+      //     df.format(overlapBounds.getMinX()), df.format(overlapBounds.getMinY()),
+      //     df.format(overlapBounds.getMaxX()), df.format(overlapBounds.getMaxY()),
+      //     df.format(overlapBounds.getWidth()), df.format(overlapBounds.getHeight()));
+      LOGGER.debug("Overlap - Layout ({},{}) : Bound Min ({},{}) : Max ({},{})",
+          df.format(overlapBounds.getMinX()), df.format(overlapBounds.getMinY()),
+          df.format(overlapBounds.getMaxX()), df.format(overlapBounds.getMaxY()));
+      collisions.add(overlap); 
+    }
     return collided;
   }
 
   private void checkRobotCollision() {
-    for (Group cube : cubeGroups) {
+    for (PowerCubeShape cube : cubes) {
       Paint color = Color.YELLOW;
-      if (collision(robotGroup, cube)) {
+      if (collision(robot.shape(), cube.shape())) {
         //TODO Log hit
         color = Color.BLUE;
       }
-      ObservableList<Node> nodeList = cube.getChildren();
-      for (Node node : nodeList) {
-        Rectangle rect = (Rectangle) node;
-        rect.setFill(color);
-      }
+      cube.shape().setFill(color);
     }
   }
 
@@ -331,17 +362,21 @@ public class MapController {
 
     if (!robotActive) {
 
-      if (robotGroup != null) {
-        robotArea.getChildren().remove(robotGroup);
-        robotShape = new RobotShape();
+      ObservableList<Node> stuffOnField = robotArea.getChildren();
+      if (robot != null) {
+        stuffOnField.remove(robot.group());
+        robot = new RobotShape();
+        for (Shape shape : collisions) {
+          stuffOnField.remove(shape);
+        }
       }
-      robotGroup = robotShape.createRobotShape();
-      robotArea.getChildren().add(robotGroup);
+      robot.createRobotShape(stuffOnField);
+      stuffOnField.add(robot.group());
 
       PhysicalMotor.enableMotors();
       robotActive = true;
-      robotShape.init();
-      drawCourse(robotShape.leftX(), robotShape.leftY(), data.course());
+      robot.init();
+      drawCourse(robot.leftX(), robot.leftY(), data.course());
 
       update();
 
@@ -365,7 +400,7 @@ public class MapController {
       // the robot is not active at this point
       robotActive = false;
       RobotData.getInstance().zero();
-      robotShape.zero();
+      robot.zero();
 
       // update the button content
       startButton.setText("Start");
@@ -397,18 +432,11 @@ public class MapController {
    */
   public void update() {
     Platform.runLater(() -> {
-      drawFieldComponents();
-      drawCourse(robotShape.leftX(), robotShape.leftY(), data.course());
-      robotShape.draw();
+      fieldShape.drawBaseField();
+      drawCourse(robot.leftX(), robot.leftY(), data.course());
+      robot.draw();
+      checkRobotCollision();
     });
-  }
-
-  private void drawFieldComponents() {
-    fieldShape.draw();
-    checkRobotCollision();
-    for (PowerCubeShape cube : cubes) {
-      cube.draw();
-    }
   }
 
   /**
@@ -419,11 +447,13 @@ public class MapController {
   }
 
   private void drawCourse(double startX, double startY, AutonomousPlan course) {
+    // TODO Figure out why not visible
     if (course != null && course.size > 0) {
       GraphicsContext context = field.getGraphicsContext2D();
       context.beginPath();
-      context.moveTo(startX, startY);
-      context.strokePolyline(course.y1, course.x1, course.size);
+      context.moveTo(startY + FieldShape.FIELD_OFFSET_Y, startX + FieldShape.FIELD_OFFSET_X);
+      context.strokePolyline(course.y1, 
+          course.x1, course.size);
       context.setStroke(Color.BLACK);
       context.setLineWidth(10.0);
       context.fill();

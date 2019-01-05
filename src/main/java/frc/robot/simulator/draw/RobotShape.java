@@ -8,10 +8,14 @@ import frc.robot.simulator.communications.RobotData;
 import frc.robot.simulator.gui.Coordinate;
 import frc.robot.simulator.gui.SimulatedData;
 import java.text.DecimalFormat;
+
+import javafx.collections.ObservableList;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.effect.BlendMode;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.Shape;
 
 import org.apache.logging.log4j.Logger;
 
@@ -24,10 +28,10 @@ public class RobotShape {
   private DecimalFormat df = new DecimalFormat("####0.00");
 
   // Robot Shapes
-  private Group robotShape = new Group();
+  private Shape robotShape = null;
   private Rectangle chassisShape = null;
   private Rectangle elevatorShape = null;
-
+  private Group robotGroup = new Group();
 
   private Stops elevatorStop = Stops.floor;
   private static final Color ELEVATOR_FLOOR_COLOR = Color.LAWNGREEN;
@@ -65,6 +69,24 @@ public class RobotShape {
     }
   }
 
+  /**
+   * Gets the chassis shape for drawing and other interactions.
+   * 
+   * @return the robot chassis shape for boundries
+   */
+  public Shape shape() {
+    return robotShape; // The chassis is used for interactions
+  }
+
+  /**
+   * Returns the group of robot shapes for drawwing.
+   * 
+   * @return the group of robot shapes
+   */
+  public Group group() {
+    return robotGroup;
+  }
+
   public void init() {
     if (RUN_LOCAL) {
       switch (SimulatedData.driveMode) {
@@ -90,9 +112,14 @@ public class RobotShape {
     }
   }
 
-  public Group createRobotShape() {
+  /**
+   * Creates the robot and layers on the elevator.
+   * 
+   * @param observableList the list of stuff viewable on the drawn field
+   */
+  public Shape createRobotShape(ObservableList<Node> observableList) {
 
-    chassisShape = new Rectangle(RobotMap.BUMPER_LENGTH * 12 / 2, 
+    chassisShape = new Rectangle(RobotMap.BUMPER_LENGTH * 12, 
         RobotMap.BUMPER_WIDTH * 12 , Color.DARKSLATEGREY);
     chassisShape.relocate(FieldShape.FIELD_OFFSET_Y, FieldShape.FIELD_OFFSET_X);
 
@@ -101,9 +128,12 @@ public class RobotShape {
     elevatorShape.relocate(FieldShape.FIELD_OFFSET_Y + (RobotMap.BUMPER_LENGTH / 2) * 12, 
         (FieldShape.FIELD_OFFSET_X + 2));
 
-    robotShape.setBlendMode(BlendMode.SRC_OVER);
-    robotShape.getChildren().add(chassisShape);
-    robotShape.getChildren().add(elevatorShape);
+    robotShape = Shape.intersect(chassisShape, elevatorShape);
+
+    robotGroup.setBlendMode(BlendMode.SRC_OVER);
+    robotGroup.getChildren().add(chassisShape);
+    robotGroup.getChildren().add(elevatorShape);
+    robotGroup.setVisible(true);
 
     return robotShape;
   }
@@ -253,6 +283,9 @@ public class RobotShape {
         (rightDistance - previousRightDistance));
   }
 
+  /**
+   * Loads the data and draws the robot.
+   */
   public void draw() {
     loadData();
     colorElevator();
@@ -263,6 +296,10 @@ public class RobotShape {
 
     robotShape.setRotate(Math.toDegrees(mapHeadingAngle));
     robotShape.relocate((FieldShape.FIELD_OFFSET_Y + (leftY() + y) * 12),
+        (FieldShape.FIELD_OFFSET_X + (leftX() + x) * 12));
+
+    robotGroup.setRotate(Math.toDegrees(mapHeadingAngle));
+    robotGroup.relocate((FieldShape.FIELD_OFFSET_Y + (leftY() + y) * 12),
         (FieldShape.FIELD_OFFSET_X + (leftX() + x) * 12));
   }
 
