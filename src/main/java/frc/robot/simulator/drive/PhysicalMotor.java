@@ -397,8 +397,8 @@ public class PhysicalMotor implements Runnable, PIDOutput, PIDSource {
    *            0 for Primary closed-loop. 1 for auxiliary closed-loop.
    * @return The closed loop target.
    */
-  int closedLoopTarget(int closedLoopIndex) {
-    return (int) (pidController[closedLoopIndex].getSetpoint() 
+  double closedLoopTarget(int closedLoopIndex) {
+    return (pidController[closedLoopIndex].getSetpoint() 
         * RobotMap.WHEEL_ENCODER_CODES_PER_REVOLUTION);
   }
 

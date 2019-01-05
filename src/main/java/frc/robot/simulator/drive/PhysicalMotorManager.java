@@ -973,7 +973,7 @@ class PhysicalMotorManager {
    *            0 for Primary closed-loop. 1 for auxiliary closed-loop.
    * @return The closed loop target.
    */
-  static int getClosedLoopTarget(long handle, int pidIdx) {
+  static double getClosedLoopTarget(long handle, int pidIdx) {
     PhysicalMotor motor = motors.get(handle);
     return motor.closedLoopTarget(pidIdx);
   }

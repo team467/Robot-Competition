@@ -1294,7 +1294,7 @@ public abstract class BaseMotorController implements IMotorController {
    *            0 for Primary closed-loop. 1 for auxiliary closed-loop.
    * @return The closed loop target.
    */
-  public int getClosedLoopTarget(int pidIdx) {
+  public double getClosedLoopTarget(int pidIdx) {
     return PhysicalMotorManager.getClosedLoopTarget(handle, pidIdx);
   }
 
@@ -1303,7 +1303,7 @@ public abstract class BaseMotorController implements IMotorController {
    *
    * @return The closed loop target.
    */
-  public int getClosedLoopTarget() {
+  public double getClosedLoopTarget() {
     int pidIdx = 0;
     return getClosedLoopTarget(pidIdx);
   }
@@ -1430,10 +1430,7 @@ public abstract class BaseMotorController implements IMotorController {
    *         full due to kMotionProfileTopBufferCapacity.
    */
   public ErrorCode pushMotionProfileTrajectory(TrajectoryPoint trajPt) {
-    return PhysicalMotorManager.pushMotionProfileTrajectory2(handle,
-        trajPt.position, trajPt.velocity, trajPt.auxiliaryPos,
-        trajPt.profileSlotSelect0, trajPt.profileSlotSelect1,
-        trajPt.isLastPoint, trajPt.zeroPos, trajPt.timeDur.value);
+    return ErrorCode.OK; // TODO fix later
   }
 
   /**
