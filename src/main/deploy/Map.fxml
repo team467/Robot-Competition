@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.collections.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.canvas.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.collections.FXCollections ?>
+
+<!-- This defines the window components and connects them to the map controller. -->
+
+<BorderPane fx:id="mapUI" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" 
+prefHeight="450.0" prefWidth="1100.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" 
+fx:controller="frc.robot.simulator.gui.MapController">
+	<right>
+		<GridPane fx:id="driverStationInputs" maxWidth="200.0" minWidth="200.0" prefWidth="200.0" BorderPane.alignment="center">
+			<padding><Insets bottom="5.0" left="5.0" right="5.0" top="5.0" /></padding>
+			<Label text="Driver Station Inputs"  GridPane.rowIndex="0" GridPane.columnIndex="0" GridPane.columnSpan="2"/>
+			<Label text="DB/String 0:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+			<TextField id="DB/String 0" fx:id="dbString0" prefWidth="100.0" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+			<Label text="DB/String 1:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+			<TextField id="DB/String 1" fx:id="dbString1" prefWidth="100.0" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+			<Label text="DB/String 2:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+			<TextField id="DB/String 2" fx:id="dbString2" prefWidth="100.0" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+			<Label text="DB/String 3:" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
+			<TextField id="DB/String 3" fx:id="dbString3" prefWidth="100.0" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+			<Label text="DB/String 4:" GridPane.rowIndex="5" GridPane.columnIndex="0"/>
+			<TextField id="DB/String 4" fx:id="dbString4" prefWidth="100.0" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
+			<Label text="DB/String 5:" GridPane.rowIndex="6" GridPane.columnIndex="0"/>
+			<TextField id="DB/String 5" fx:id="dbString5" prefWidth="100.0" GridPane.rowIndex="6" GridPane.columnIndex="1"/>
+			<Label text="DB/String 6:" GridPane.rowIndex="7" GridPane.columnIndex="0"/>
+			<TextField id="DB/String 6" fx:id="dbString6" prefWidth="100.0" GridPane.rowIndex="7" GridPane.columnIndex="1"/>
+			<Label text="DB/String 7:" GridPane.rowIndex="8" GridPane.columnIndex="0"/>
+			<TextField id="DB/String 7" fx:id="dbString7" prefWidth="100.0" GridPane.rowIndex="8" GridPane.columnIndex="1"/>
+			<Label text="DB/String 8:" GridPane.rowIndex="9" GridPane.columnIndex="0"/>
+			<TextField id="DB/String 8" fx:id="dbString8" prefWidth="100.0" GridPane.rowIndex="9" GridPane.columnIndex="1"/>
+			<Label text="DB/String 9:" GridPane.rowIndex="10" GridPane.columnIndex="0"/>
+			<TextField id="DB/String 9" fx:id="dbString9" prefWidth="100.0" GridPane.rowIndex="10" GridPane.columnIndex="1"/>
+		</GridPane>
+	</right>
+	<left>
+		<!-- Scale: 1 pixel equals 1 inch -->
+		<BorderPane fx:id="fieldMap" maxHeight="360.0" maxWidth="888.0" minHeight="360.0" minWidth="888.0" prefHeight="360.0" prefWidth="888.0" BorderPane.alignment="CENTER">
+			<children>
+				<Canvas fx:id="field" height="360.0" width="888.0" BorderPane.alignment="CENTER" />
+				<Pane fx:id="robotArea" maxHeight="324.0" maxWidth="768.0" minHeight="324.0" minWidth="768.0" prefHeight="324.0" prefWidth="768.0" BorderPane.alignment="CENTER" />
+			</children>
+		</BorderPane>
+	</left>
+	<bottom>
+		<FlowPane alignment="CENTER" columnHalignment="CENTER" BorderPane.alignment="CENTER">
+			<children>
+				<ChoiceBox id="driveMode" fx:id="driveMode" prefWidth="150.0">
+					<items>
+						<FXCollections fx:factory="observableArrayList">
+							<String fx:value="Disabled" />
+							<String fx:value="Teleop" />
+							<String fx:value="Autonomous" />
+							<String fx:value="Test" />
+						</FXCollections>
+					</items>
+					<FlowPane.margin>
+						<Insets left="10.0" right="10.0" />
+					</FlowPane.margin>
+				</ChoiceBox>
+				<ChoiceBox id="teamColor" fx:id="teamColor" prefWidth="150.0">
+					<items>
+						<FXCollections fx:factory="observableArrayList">
+							<String fx:value="Red" />
+							<String fx:value="Blue" />
+						</FXCollections>
+					</items>
+					<FlowPane.margin>
+						<Insets left="10.0" right="10.0" />
+					</FlowPane.margin>
+				</ChoiceBox>
+				<ChoiceBox id="gameSpecificMessage" fx:id="gameSpecificMessage" prefWidth="150.0">
+					<items>
+						<FXCollections fx:factory="observableArrayList">
+							<String fx:value="LLL" />
+							<String fx:value="LRL" />
+							<String fx:value="RLR" />
+							<String fx:value="RRR" />
+						</FXCollections>
+					</items>
+					<FlowPane.margin>
+						<Insets left="10.0" right="10.0" />
+					</FlowPane.margin>
+				</ChoiceBox>
+				<ChoiceBox id="autonomousMode" fx:id="autonomousMode" prefWidth="150.0">
+					<items>
+						<FXCollections fx:factory="observableArrayList">
+							<String fx:value="None" />
+							<String fx:value="Just_Go_Forward" />
+							<String fx:value="Left_Switch_Only" />
+							<String fx:value="Left_Basic" />
+							<String fx:value="Left_Advanced" />
+							<String fx:value="Left_Our_Side_Only" />
+							<String fx:value="Center" />
+							<String fx:value="Center_Advanced" />
+							<String fx:value="Right_Switch_Only" />
+							<String fx:value="Right_Basic" />
+							<String fx:value="Right_Advanced" />
+							<String fx:value="Right_Our_Side_Only" />
+						</FXCollections>
+					</items>
+					<FlowPane.margin>
+						<Insets left="10.0" right="10.0" />
+					</FlowPane.margin>
+				</ChoiceBox>
+				<Button fx:id="startButton" mnemonicParsing="false" onAction="#startRobot" prefWidth="150.0" text="Start">
+					<FlowPane.margin>
+						<Insets left="10.0" right="10.0" />
+					</FlowPane.margin>
+				</Button>
+			</children>
+			<padding>
+				<Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+			</padding>
+		</FlowPane>
+	</bottom>
+</BorderPane>

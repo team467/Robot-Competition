@@ -4,38 +4,36 @@ import frc.robot.drive.Drive;
 import frc.robot.gamepieces.Grabber;
 
 public class VisionIntegration {
-	private static VisionIntegration instance;
-	private Drive drive = Drive.getInstance();
-	private VisionProcessing vision = VisionProcessing.getInstance();
-	private Grabber grabber = Grabber.getInstance();
-//	private static final Logger LOGGER = LogManager.getLogger(VisionIntegration.class);
+  private static VisionIntegration instance;
+  private Drive drive = Drive.getInstance();
+  private VisionProcessing vision = VisionProcessing.getInstance();
+  private Grabber grabber = Grabber.getInstance();
+  //private static final Logger LOGGER = RobotLogManager.getMainLogger(VisionIntegration.class);
 
-	public static VisionIntegration getInstance() {
-		if (instance == null) {
-			instance = new VisionIntegration();
-		}
-		return instance;
-	}
-	
-	public void periodic() {
-//		driverstation.
+  public static VisionIntegration getInstance() {
+    if (instance == null) {
+      instance = new VisionIntegration();
+    }
+    return instance;
+  }
+  
+  public void periodic() {
+  // driverstation.
+  }
 
-	}
-
-	public void target() {
-		if (!grabber.hasCube()) {
-			if (vision.canSeeCube()) {
-				if (vision.onTarget()) {
-					// Start Grabber & drive forward
-					return;
-				} else {
-				}
-			}
-		} else {
-			drive.stop();
-			grabber.grab(0);
-		}
-	}
+  public void target() {
+    if (!grabber.hasCube()) {
+      if (vision.canSeeCube()) {
+        if (vision.onTarget()) {
+          // Start Grabber & drive forward
+          return;
+        }
+      }
+    } else {
+      drive.stop();
+      grabber.grab(0);
+    }
+  }
 }
 
 /*
