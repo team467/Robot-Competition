@@ -140,6 +140,10 @@ public class Robot extends TimedRobot {
   /**
    * This function is called periodically during autonomous.
    */
+
+   /**
+    * Need to implement cancelling for autonomous
+    */
   @Override
   public void autonomousPeriodic() {
     grabber.periodic();
