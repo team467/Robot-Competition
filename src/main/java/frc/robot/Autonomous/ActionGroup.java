@@ -28,6 +28,7 @@ public class ActionGroup {
   private LinkedList<Action> agenda;
   private final LinkedList<Action> master;
   private Action action = null;
+  private boolean cancel = true;
 
   public ActionGroup(String name) {
     this.name = name;
@@ -39,6 +40,15 @@ public class ActionGroup {
    * Run periodically to perform the Actions.
    */
   public void run() {
+    if (cancel) {
+      action = null;
+      while (!agenda.isEmpty()) {
+        Action act = agenda.pop();
+        act.isDone();
+      }
+      /* cancels run function */
+      return;
+    }
     if (action == null || action.isDone()) {
       try {
         if (!agenda.isEmpty()) {
@@ -145,18 +155,17 @@ public class ActionGroup {
     private double lastPosition = 0.0;
     private int increment = 0;
     protected double timeout = RobotMap.AUTONOMOUS_DRIVE_TIMEOUT_MS;
-    
+
     public ReachDistance(double distance) {
       this.distance = distance;
     }
-  
+
     @Override
     public boolean isDone() {
       lastPosition = currentPosition;
       currentPosition = drive.absoluteDistanceMoved();
 
-      LOGGER.debug("Distances - Target: {} Moved: {}", df
-          .format(Math.abs(distance)), df.format(currentPosition));
+      LOGGER.debug("Distances - Target: {} Moved: {}", df.format(Math.abs(distance)), df.format(currentPosition));
       if (currentPosition > 0.3 && Math.abs(lastPosition - currentPosition) < 0.01) {
         increment++;
       } else {
@@ -164,8 +173,8 @@ public class ActionGroup {
       }
 
       // Each iteration is 20 ms.
-      // the increment check checks to see how long the robot is stopping for, 
-      // if it is stopped for longer than (RobotMap.AUTONOMOUS_DRIVE_TIMEOUT_MS / 20) 
+      // the increment check checks to see how long the robot is stopping for,
+      // if it is stopped for longer than (RobotMap.AUTONOMOUS_DRIVE_TIMEOUT_MS / 20)
       // then the robot is done.
       if (increment >= (timeout / 20)) {
         return true;
@@ -175,7 +184,7 @@ public class ActionGroup {
       } else {
         LOGGER.debug("Still moving");
         return false;
-        
+
       }
     }
   }
@@ -227,4 +236,3 @@ public class ActionGroup {
     }
   }
 }
-
