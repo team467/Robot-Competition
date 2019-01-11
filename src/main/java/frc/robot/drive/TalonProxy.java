@@ -39,8 +39,8 @@ public class TalonProxy implements InvocationHandler {
 
   private TalonProxy(int deviceNumber) {
     //TODO: Fix native libaries with WPI Lib
-    // physicalMotor = new WPI_TalonSRX(deviceNumber);
-    // addMethods(physicalMotorMethods, physicalMotor.getClass());
+    physicalMotor = new WPI_TalonSRX(deviceNumber);
+    addMethods(physicalMotorMethods, physicalMotor.getClass());
 
     simulatedMotor = new WpiTalonSrx(deviceNumber);
     addMethods(simulatedMotorMethods, simulatedMotor.getClass());
