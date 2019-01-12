@@ -91,8 +91,8 @@ public class ActionGroupTest{
     public void cancelRun(){
         Actions.startOnLeft();
         ActionGroup autonomous = Actions.crossAutoLine();
-        boolean actionCompleted = periodic(autonomous);
+        boolean actionCanceled = periodic(autonomous);
         LOGGER.info("Test for cancel completed");
-        assertEquals(true, actionCompleted);
+        assertEquals(true, actionCanceled);
     }
 }

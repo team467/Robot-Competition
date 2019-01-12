@@ -28,7 +28,7 @@ public class ActionGroup {
   private LinkedList<Action> agenda;
   private final LinkedList<Action> master;
   private Action action = null;
-  private boolean cancel = true;
+  private boolean cancel = false;
 
   public ActionGroup(String name) {
     this.name = name;
@@ -42,6 +42,7 @@ public class ActionGroup {
   public void run() {
     if (cancel) {
       action = null;
+      LOGGER.info("Autonomous has been cancelled");
       while (!agenda.isEmpty()) {
         Action act = agenda.pop();
         act.isDone();
@@ -49,6 +50,7 @@ public class ActionGroup {
       /* cancels run function */
       return;
     }
+    LOGGER.info("Autonomous continuing");
     if (action == null || action.isDone()) {
       try {
         if (!agenda.isEmpty()) {
