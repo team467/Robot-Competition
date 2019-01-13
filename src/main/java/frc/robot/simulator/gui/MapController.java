@@ -7,7 +7,7 @@ import frc.robot.drive.motorcontrol.pathplanning.AutonomousPlan;
 import frc.robot.logging.RobotLogManager;
 import frc.robot.simulator.communications.RobotData;
 import frc.robot.simulator.draw.FieldShape;
-import frc.robot.simulator.draw.PowerCubeShape;
+import frc.robot.simulator.draw.CargoShape;
 import frc.robot.simulator.draw.RobotShape;
 import frc.robot.simulator.drive.PhysicalMotor;
 import java.text.DecimalFormat;
@@ -132,11 +132,11 @@ public class MapController {
   private boolean robotActive;
 
   /**
-   * The shapes for drawing for robot and field and other objects.
+   * The shapes for drawing for robot and field and other objectss.
    */
   private RobotShape robot = new RobotShape();
   private FieldShape fieldShape = new FieldShape();
-  private ArrayList<PowerCubeShape> cubes = new ArrayList<PowerCubeShape>();
+  private ArrayList<CargoShape> cargo = new ArrayList<CargoShape>();
   private ArrayList<Shape> collisions = new ArrayList<Shape>();
   ObservableList<Node> stuffOnField = null;
 
@@ -159,10 +159,10 @@ public class MapController {
 
     for (int i = 0; i < 6; i++) {
       // 1.25' in between each cube ; y-coordinate is same for 6 cubes
-      PowerCubeShape cube 
-          = new PowerCubeShape(redSwitchCubeOffsetX + i * 2.34 * 12.0, redSwitchCubeOffsetY); 
-      cubes.add(cube);
-      stuffOnField.add(cube.shape());
+      CargoShape ball 
+          = new CargoShape(redSwitchCubeOffsetX + i * 2.34 * 12.0, redSwitchCubeOffsetY); 
+      cargo.add(ball);
+      stuffOnField.add(ball.shape());
     }
 
     double blueSwitchCubeOffsetX = 85.25; //next to blue alliance station
@@ -170,10 +170,10 @@ public class MapController {
 
     for (int i = 0; i < 6; i++) {
       // 1.25' in between each cube ; y-coordinate is same for 6 cubes
-      PowerCubeShape cube 
-          = new PowerCubeShape(blueSwitchCubeOffsetX + i * 2.34 * 12.0, blueSwitchCubeOffsetY);
-      cubes.add(cube);
-      stuffOnField.add(cube.shape());
+      CargoShape ball 
+          = new CargoShape(blueSwitchCubeOffsetX + i * 2.34 * 12.0, blueSwitchCubeOffsetY);
+      cargo.add(ball);
+      stuffOnField.add(ball.shape());
     }
 
     // Default the choice boxes to the first values
@@ -315,14 +315,15 @@ public class MapController {
   }
 
   private void checkRobotCollision() {
-    for (PowerCubeShape cube : cubes) {
-      Paint color = Color.YELLOW;
-      if (collision(robot.shape(), cube.shape())) {
+    for (CargoShape ball : cargo) {
+      Paint color = Color.ORANGE;
+      if (collision(robot.shape(), ball.shape())) {
         //TODO Log hit
         color = Color.BLUE;
       }
-      cube.shape().setFill(color);
+      ball.shape().setFill(color);
     }
+    
   }
 
   /**

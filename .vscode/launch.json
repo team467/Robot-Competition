@@ -6,6 +6,13 @@
   "configurations": [
     {
       "type": "java",
+      "name": "CodeLens (Launch) - CSVFile",
+      "request": "launch",
+      "mainClass": "frc.robot.simulator.communications.CSVFile",
+      "projectName": "Robot2019-Competition"
+    },
+    {
+      "type": "java",
       "name": "CodeLens (Launch) - AutonomousPlan",
       "request": "launch",
       "mainClass": "frc.robot.drive.motorcontrol.pathplanning.AutonomousPlan",

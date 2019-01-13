@@ -5,6 +5,7 @@ import frc.robot.RobotMap;
 import frc.robot.gamepieces.Elevator.Stops;
 import frc.robot.logging.RobotLogManager;
 import frc.robot.simulator.communications.RobotData;
+import frc.robot.simulator.communications.CSVFile;
 import frc.robot.simulator.gui.Coordinate;
 import frc.robot.simulator.gui.SimulatedData;
 import java.text.DecimalFormat;
@@ -21,7 +22,8 @@ import org.apache.logging.log4j.Logger;
 
 public class RobotShape {
 
-  public static final boolean RUN_LOCAL = true;
+  public static final boolean RUN_LOCAL = false;
+  public static final boolean REPLAY = true;
   private Robot robot; // For local processing
 
   private static final Logger LOGGER = RobotLogManager.getMainLogger(RobotShape.class.getName());
@@ -58,7 +60,7 @@ public class RobotShape {
   private Coordinate left = new Coordinate(-1 * (RobotMap.WHEEL_BASE_WIDTH / 2), 0);
   private Coordinate right = new Coordinate((RobotMap.WHEEL_BASE_WIDTH / 2), 0);
   private double mapHeadingAngle = 0.0;
-
+  CSVFile file;
   public RobotShape() {
 
     // Use run local for pure simulation. Remote is for observation of actual robot
@@ -91,22 +93,23 @@ public class RobotShape {
     if (RUN_LOCAL) {
       switch (SimulatedData.driveMode) {
 
-        case "Teleop":
-          robot.teleopInit();
-          break;
+      case "Teleop":
+        robot.teleopInit();
+        break;
 
-        case "Autonomous":
-          robot.autonomousInit();
-          break;
+      case "Autonomous":
+        robot.autonomousInit();
+        break;
 
-        case "Test":
-          robot.testInit();
-          break;
+      case "Test":
+        robot.testInit();
+        break;
 
-        default:
-        case "Disabled":
-          robot.disabledInit();
+      default:
+      case "Disabled":
+        robot.disabledInit();
       }
+    } else if (REPLAY) {
     } else {
       data.startClient();
     }
@@ -119,13 +122,11 @@ public class RobotShape {
    */
   public Shape createRobotShape(ObservableList<Node> observableList) {
 
-    chassisShape = new Rectangle(RobotMap.BUMPER_LENGTH * 12, 
-        RobotMap.BUMPER_WIDTH * 12 , Color.DARKSLATEGREY);
+    chassisShape = new Rectangle(RobotMap.BUMPER_LENGTH * 12, RobotMap.BUMPER_WIDTH * 12, Color.DARKSLATEGREY);
     chassisShape.relocate(FieldShape.FIELD_OFFSET_Y, FieldShape.FIELD_OFFSET_X);
 
-    elevatorShape = new Rectangle(RobotMap.BUMPER_LENGTH * 12 / 2,
-        (RobotMap.BUMPER_WIDTH * 12 - 4), Color.WHITESMOKE);
-    elevatorShape.relocate(FieldShape.FIELD_OFFSET_Y + (RobotMap.BUMPER_LENGTH / 2) * 12, 
+    elevatorShape = new Rectangle(RobotMap.BUMPER_LENGTH * 12 / 2, (RobotMap.BUMPER_WIDTH * 12 - 4), Color.WHITESMOKE);
+    elevatorShape.relocate(FieldShape.FIELD_OFFSET_Y + (RobotMap.BUMPER_LENGTH / 2) * 12,
         (FieldShape.FIELD_OFFSET_X + 2));
 
     robotShape = Shape.intersect(chassisShape, elevatorShape);
@@ -153,10 +154,10 @@ public class RobotShape {
   }
 
   /**
-   * Updates the heading and (x, y) position of the robot given the moves of
-   * the left and right sides of the robot.
+   * Updates the heading and (x, y) position of the robot given the moves of the
+   * left and right sides of the robot.
    *
-   * @param leftDistance the distance the left middle wheel moved
+   * @param leftDistance  the distance the left middle wheel moved
    * @param rightDistance the distance the right middle wheel moved
    */
   private void updateMapPosition(double leftDistance, double rightDistance) {
@@ -165,8 +166,8 @@ public class RobotShape {
     double averageMove = (leftDistance + rightDistance) / 2;
     double leftArcLength = (leftDistance - averageMove);
     double rightArcLength = (rightDistance - averageMove);
-    LOGGER.debug("Moves: Left = {} Right = {} Average = {}", 
-        df.format(leftArcLength), df.format(rightArcLength), averageMove);
+    LOGGER.debug("Moves: Left = {} Right = {} Average = {}", df.format(leftArcLength), df.format(rightArcLength),
+        averageMove);
 
     double leftTheta = leftArcLength / radius;
     double rightTheta = rightArcLength / radius;
@@ -178,12 +179,10 @@ public class RobotShape {
     double changeInHeading = -1 * Math.atan2(tempLeftY, tempLeftX);
     String logMessage = ("Heading: " + df.format(Math.toDegrees(heading)));
     heading += changeInHeading;
-    logMessage += " + " + df.format(Math.toDegrees(changeInHeading)) 
-        + " = " + df.format(Math.toDegrees(heading));
+    logMessage += " + " + df.format(Math.toDegrees(changeInHeading)) + " = " + df.format(Math.toDegrees(heading));
     LOGGER.debug(logMessage);
 
-    logMessage = "Position: (" + df.format(currentCoordinate.x) + "," 
-        + df.format(currentCoordinate.y) + ") + (";
+    logMessage = "Position: (" + df.format(currentCoordinate.x) + "," + df.format(currentCoordinate.y) + ") + (";
     mapHeadingAngle = heading + absoluteHeading;
     double addedX = averageMove * Math.sin(mapHeadingAngle);
     double addedY = averageMove * Math.cos(mapHeadingAngle);
@@ -197,8 +196,7 @@ public class RobotShape {
     left.y = currentCoordinate.y + absoluteCoordinate.y + radius * Math.sin(mapHeadingAngle);
     right.x = currentCoordinate.x + absoluteCoordinate.x + radius * Math.cos(mapHeadingAngle);
     right.y = currentCoordinate.y + absoluteCoordinate.y + -1 * radius * Math.sin(mapHeadingAngle);
-    LOGGER.debug("Screen Postion: [ {}, {}, {}]", 
-        df.format(Math.toDegrees(mapHeadingAngle)), left, right);
+    LOGGER.debug("Screen Postion: [ {}, {}, {}]", df.format(Math.toDegrees(mapHeadingAngle)), left, right);
 
   }
 
@@ -221,24 +219,24 @@ public class RobotShape {
   private void colorElevator() {
     switch (elevatorStop) {
 
-      case floor:
-        elevatorShape.setFill(ELEVATOR_FLOOR_COLOR);
-        break;
+    case floor:
+      elevatorShape.setFill(ELEVATOR_FLOOR_COLOR);
+      break;
 
-      case fieldSwitch:
-        elevatorShape.setFill(ELEVATOR_SWITCH_COLOR);
-        break;
+    case fieldSwitch:
+      elevatorShape.setFill(ELEVATOR_SWITCH_COLOR);
+      break;
 
-      case lowScale:
-        elevatorShape.setFill(ELEVATOR_SCALE_LOW_COLOR);
-        break;
+    case lowScale:
+      elevatorShape.setFill(ELEVATOR_SCALE_LOW_COLOR);
+      break;
 
-      case highScale:
-        elevatorShape.setFill(ELEVATOR_SCALE_HIGH_COLOR);
-        break;
+    case highScale:
+      elevatorShape.setFill(ELEVATOR_SCALE_HIGH_COLOR);
+      break;
 
-      default:
-        elevatorShape.setFill(Color.WHITESMOKE);
+    default:
+      elevatorShape.setFill(Color.WHITESMOKE);
     }
 
   }
@@ -247,22 +245,24 @@ public class RobotShape {
     if (RUN_LOCAL) {
       switch (SimulatedData.driveMode) {
 
-        case "Teleop":
-          robot.teleopPeriodic();
-          break;
+      case "Teleop":
+        robot.teleopPeriodic();
+        break;
 
-        case "Autonomous":
-          robot.autonomousPeriodic();
-          break;
+      case "Autonomous":
+        robot.autonomousPeriodic();
+        break;
 
-        case "Test":
-          robot.testPeriodic();
-          break;
+      case "Test":
+        robot.testPeriodic();
+        break;
 
-        default:
-        case "Disabled":
-          robot.disabledPeriodic();
+      default:
+      case "Disabled":
+        robot.disabledPeriodic();
       }
+    } else if (REPLAY) {
+      data.recieveFile(file);
     } else {
       data.receive();
     }
@@ -279,8 +279,7 @@ public class RobotShape {
 
     elevatorStop = data.elevatorStop();
 
-    updateMapPosition((leftDistance - previousLeftDistance), 
-        (rightDistance - previousRightDistance));
+    updateMapPosition((leftDistance - previousLeftDistance), (rightDistance - previousRightDistance));
   }
 
   /**
@@ -302,7 +301,5 @@ public class RobotShape {
     robotGroup.relocate((FieldShape.FIELD_OFFSET_Y + (leftY() + y) * 12),
         (FieldShape.FIELD_OFFSET_X + (leftX() + x) * 12));
   }
-
-  
 
 }

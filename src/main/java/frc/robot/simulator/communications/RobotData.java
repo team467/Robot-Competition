@@ -203,5 +203,11 @@ public class RobotData {
       isZeroed = true; // Only can turn flag true. Flag must be cleared only on receiving side.
     }
   }
+  public void recieveFile(CSVFile file) {
+    dataRow.recieveFile(file);
+    if (dataRow.isZeroed) {
+      isZeroed = true; // Only can turn flag true. Flag must be cleared only on receiving side.
+    }
+  }
   
 }
