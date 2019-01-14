@@ -1,11 +1,16 @@
 package frc.robot.simulator.drive;
 
+import com.ctre.phoenix.ErrorCode;
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
+import com.ctre.phoenix.motorcontrol.VelocityMeasPeriod;
+import com.ctre.phoenix.motorcontrol.can.TalonSRXPIDSetConfiguration;
 
 import edu.wpi.first.wpilibj.Sendable;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
+import frc.robot.drive.WpiTalonSrxInterface;
 
 /**
  * WPI Compliant motor controller class.
@@ -17,7 +22,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
  * - Motor Safety (auto-turn off of motor if Set stops getting called)
  * - Single Parameter set that assumes a simple motor controller.
  */
-public class WpiTalonSrx extends TalonSrx implements SpeedController, Sendable { // , MotorSafety
+public class WpiTalonSrx extends TalonSrx 
+    implements WpiTalonSrxInterface, SpeedController, Sendable { // , MotorSafety
 
   private String description;
   private double speed;
@@ -234,6 +240,33 @@ public class WpiTalonSrx extends TalonSrx implements SpeedController, Sendable {
    */
   public String description() {
     return description;
+  }
+
+  //TODO: Impletement simulations for these functions
+
+  @Override
+  public ErrorCode setStatusFramePeriod(StatusFrameEnhanced frame, int periodMs) {
+    return null;
+  }
+
+  @Override
+  public int getStatusFramePeriod(StatusFrameEnhanced frame) {
+    return 0;
+  }
+
+  @Override
+  public ErrorCode configVelocityMeasurementPeriod(VelocityMeasPeriod period) {
+    return null;
+  }
+
+  @Override
+  public ErrorCode configVelocityMeasurementWindow(int windowSize) {
+    return null;
+  }
+
+  @Override
+  public void getPIDConfigs(TalonSRXPIDSetConfiguration pid, int pidIdx, int timeoutMs) {
+    
   }
 
 }

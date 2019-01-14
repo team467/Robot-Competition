@@ -90,6 +90,7 @@ public class Drive extends DifferentialDrive implements AutoDrive {
     return instance;
   }
 
+ 
   private Drive(TalonSpeedControllerGroup left, TalonSpeedControllerGroup right) {
     super(left, right);
     this.left = left;
