@@ -1,14 +1,22 @@
 package frc.robot.simulator.communications;
 
 import java.util.*;
+
+import org.apache.logging.log4j.Logger;
+
+import frc.robot.logging.RobotLogManager;
+
 import java.io.*;
 
 public class CSVFile {
+    
+  private static final Logger LOGGER = RobotLogManager.getMainLogger(CSVFile.class.getName());
     public int currentRow;
     public static void main(String[] args) {
-        CSVFile hi = new CSVFile();
-        hi.loadFromFile("matchdata.txt");
-        System.out.print(hi);
+        CSVFile file = new CSVFile();
+        file.loadFromFile("src/main/deploy/test.txt");
+        boolean success = file.toString().equals("abcd, !@#$%^&*()_+-=\n?:\";\', 1234567890");
+        System.out.println(success);
     }
 
     public List<List<Object>> data = new ArrayList<>();
@@ -46,6 +54,7 @@ public class CSVFile {
             col = 0;
             out += "\n";
         }
+        out = out.stripTrailing();
         return out;
     }
 
@@ -67,11 +76,12 @@ public class CSVFile {
         rows.close();
     }
 
-    public void loadFromFile(String url) {
+    public boolean loadFromFile(String url) {
 
-        File resourceLocation = new File("src/main/deploy/" + url);
+        File resourceLocation = new File(url);
+        LOGGER.error("helloworld");
         try {
-            InputStream in = new FileInputStream(resourceLocation);
+            FileInputStream in = new FileInputStream(resourceLocation);
             Scanner scanner = new Scanner(in);
             String s = "";
             for (String row; scanner.hasNextLine();) {
@@ -82,14 +92,16 @@ public class CSVFile {
             }
             scanner.close();
             loadFromString(s);
+            return true;
         } catch (Exception e) {
             System.out.print("something went wrong with loading csv");
+            return false;
         }
     }
     public Object get(int row, int col){
         return data.get(row).get(col);
     }
     public Object get(int col){
-        return data.get(currentRow).get(col);
+        return data.get(Math.min(currentRow, data.size()-1)).get(col);
     }
 }
