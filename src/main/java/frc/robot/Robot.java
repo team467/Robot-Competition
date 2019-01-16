@@ -20,7 +20,6 @@ import frc.robot.autonomous.Actions;
 import frc.robot.autonomous.MatchConfiguration;
 import frc.robot.drive.Drive;
 import frc.robot.drive.motorcontrol.TestMotorControl;
-import frc.robot.gamepieces.Climber;
 import frc.robot.gamepieces.Elevator;
 import frc.robot.gamepieces.Grabber;
 import frc.robot.logging.RobotLogManager;
@@ -44,7 +43,6 @@ public class Robot extends TimedRobot {
 
   // Robot objects
   private ActionGroup autonomous;
-  private Climber climber;
   private DriverStation467 driverstation;
   private Drive drive;
   private Elevator elevator;
@@ -94,7 +92,6 @@ public class Robot extends TimedRobot {
     driverstation = DriverStation467.getInstance();
     LOGGER.info("Initialized Driverstation");
 
-    climber = Climber.getInstance();
     data = RobotData.getInstance();
     drive = Drive.getInstance();
     elevator = Elevator.getInstance();
@@ -172,7 +169,7 @@ public class Robot extends TimedRobot {
       LOGGER.info("Grabber Open");
       grabber.open();
     } else {
-      LOGGER.info("Grabber Close");
+      LOGGER.debug("Grabber Close");
       grabber.close();
     }
 
@@ -188,15 +185,6 @@ public class Robot extends TimedRobot {
     } else if (driverstation.getHighScaleHeightButtonPressed()) {
       LOGGER.info("Lifting to high scale height");
       elevator.moveToHeight(Elevator.Stops.highScale);
-    }
-    
-    // Ramps state machines protect against conflicts
-    if (driverstation.getClimbUp()) {
-      LOGGER.debug("Climb Up");
-      climber.climbUp();
-    } else {
-      climber.neutral();
-      LOGGER.debug("Not climbing");
     }
 
     double speed = driverstation.getArcadeSpeed();
