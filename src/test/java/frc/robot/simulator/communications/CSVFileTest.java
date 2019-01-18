@@ -13,7 +13,7 @@ public class CSVFileTest {
     @Test
     public void testcorrectReading() {
         CSVFile file = new CSVFile();
-        file.loadFromFile("src/test/resources/example.txt");
+        String out = file.loadFromFile("test.txt");
         boolean success = file.toString().equals("abcd, !@#$%^&*()_+-=\n?:\";\', 1234567890");
         assertTrue("|" + file.toString() + "|", success);
     }

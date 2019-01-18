@@ -1,4 +1,5 @@
 package frc.robot.simulator.communications;
+import frc.robot.*;
 
 import java.util.*;
 
@@ -7,6 +8,7 @@ import org.apache.logging.log4j.Logger;
 import frc.robot.logging.RobotLogManager;
 
 import java.io.*;
+import java.net.*;
 
 public class CSVFile {
     
@@ -76,10 +78,11 @@ public class CSVFile {
         rows.close();
     }
 
-    public boolean loadFromFile(String url) {
-
-        File resourceLocation = new File(url);
-        LOGGER.error("helloworld");
+    public String loadFromFile(String url) {
+        File root = new File(getClass().getResource("./").getPath());
+        String path = root.getAbsolutePath();
+        path = path.substring(0, path.length()-44);
+        File resourceLocation = new File(path+"/"+url);
         try {
             FileInputStream in = new FileInputStream(resourceLocation);
             Scanner scanner = new Scanner(in);
@@ -92,11 +95,23 @@ public class CSVFile {
             }
             scanner.close();
             loadFromString(s);
-            return true;
         } catch (Exception e) {
             System.out.print("something went wrong with loading csv");
-            return false;
         }
+        return resourceLocation.getAbsolutePath();
+    }
+    public String writeToFile(String url) {
+        File root = new File(getClass().getResource("./").getPath());
+        String path = root.getAbsolutePath();
+        path = path.substring(0, path.length()-44);
+        File resourceLocation = new File(path+"/"+url);
+        try {
+            FileOutputStream out = new FileOutputStream(resourceLocation);
+            out.write(toString().getBytes());
+        } catch (Exception e) {
+            System.out.print("something went wrong with loading csv");
+        }
+        return resourceLocation.getAbsolutePath();
     }
     public Object get(int row, int col){
         return data.get(row).get(col);
