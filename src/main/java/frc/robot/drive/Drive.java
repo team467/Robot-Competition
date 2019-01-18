@@ -245,7 +245,7 @@ public class Drive extends DifferentialDrive implements AutoDrive {
         df.format(getLeftDistance()), df.format(getRightDistance()));
     left.set(ControlMode.Position, feetToTicks(leftDistance));
     // The right motor is reversed
-    right.set(ControlMode.Position, -feetToTicks(rightDistance));
+    right.set(ControlMode.Position, feetToTicks(rightDistance));
     data.updateDrivePosition(getLeftDistance(), getRightDistance());
     fieldState.update(getLeftDistance(), getRightDistance());
   }
@@ -345,7 +345,7 @@ public class Drive extends DifferentialDrive implements AutoDrive {
 
     left.set(ControlMode.Position, leftDistTicks);
     // The right motor is reversed
-    right.set(ControlMode.Position, -rightDistTicks);
+    right.set(ControlMode.Position, rightDistTicks);
 
     data.updateDrivePosition(getLeftDistance(), getRightDistance());
     fieldState.update(getLeftDistance(), getRightDistance());
