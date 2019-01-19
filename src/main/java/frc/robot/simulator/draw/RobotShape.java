@@ -22,8 +22,8 @@ import org.apache.logging.log4j.Logger;
 
 public class RobotShape {
 
-  public static final boolean RUN_LOCAL = false;
-  public static final boolean REPLAY = true;
+  public static final boolean RUN_LOCAL = true;
+  public static final boolean REPLAY = false;
   private Robot robot; // For local processing
 
   private static final Logger LOGGER = RobotLogManager.getMainLogger(RobotShape.class.getName());
@@ -60,7 +60,7 @@ public class RobotShape {
   private Coordinate left = new Coordinate(-1 * (RobotMap.WHEEL_BASE_WIDTH / 2), 0);
   private Coordinate right = new Coordinate((RobotMap.WHEEL_BASE_WIDTH / 2), 0);
   private double mapHeadingAngle = 0.0;
-  CSVFile file;
+  CSVFile csvfile;
   public RobotShape() {
 
     // Use run local for pure simulation. Remote is for observation of actual robot
@@ -110,7 +110,7 @@ public class RobotShape {
         robot.disabledInit();
       }
     } else if (REPLAY) {
-      
+
     } else {
       data.startClient();
     }
@@ -162,7 +162,6 @@ public class RobotShape {
    * @param rightDistance the distance the right middle wheel moved
    */
   private void updateMapPosition(double leftDistance, double rightDistance) {
-
     double radius = (RobotMap.WHEEL_BASE_WIDTH / 2);
     double averageMove = (leftDistance + rightDistance) / 2;
     double leftArcLength = (leftDistance - averageMove);
@@ -198,7 +197,21 @@ public class RobotShape {
     right.x = currentCoordinate.x + absoluteCoordinate.x + radius * Math.cos(mapHeadingAngle);
     right.y = currentCoordinate.y + absoluteCoordinate.y + -1 * radius * Math.sin(mapHeadingAngle);
     LOGGER.debug("Screen Postion: [ {}, {}, {}]", df.format(Math.toDegrees(mapHeadingAngle)), left, right);
-
+    
+    csvfile.addRow();
+    csvfile.pushVar(startingLocation.x, csvfile.currentRow);
+    csvfile.pushVar(startingLocation.y, csvfile.currentRow);
+    csvfile.pushVar(rightDistance, csvfile.currentRow);
+    csvfile.pushVar(leftDistance, csvfile.currentRow);
+    csvfile.pushVar(false, csvfile.currentRow);
+    csvfile.pushVar(heading, csvfile.currentRow);
+    csvfile.pushVar(0, csvfile.currentRow);
+    csvfile.pushVar(false, csvfile.currentRow);
+    csvfile.pushVar(false, csvfile.currentRow);
+    csvfile.pushVar(1.0, csvfile.currentRow);
+    csvfile.pushVar(1.0, csvfile.currentRow);
+    csvfile.pushVar(0.0, csvfile.currentRow);
+    csvfile.writeToFile("data.txt");
   }
 
   public double rightX() {
@@ -263,7 +276,7 @@ public class RobotShape {
         robot.disabledPeriodic();
       }
     } else if (REPLAY) {
-      data.recieveFile(file);
+      data.recieveFile(csvfile);
     } else {
       data.receive();
     }
@@ -277,7 +290,6 @@ public class RobotShape {
     leftDistance = data.leftDistance();
     rightDistance = data.rightDistance();
     startingLocation = data.startingLocation();
-
     elevatorStop = data.elevatorStop();
 
     updateMapPosition((leftDistance - previousLeftDistance), (rightDistance - previousRightDistance));

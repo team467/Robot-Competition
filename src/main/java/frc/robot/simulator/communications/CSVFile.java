@@ -14,11 +14,12 @@ public class CSVFile {
     
   private static final Logger LOGGER = RobotLogManager.getMainLogger(CSVFile.class.getName());
     public int currentRow;
+    public int lastRowThatWasCreated;
     public static void main(String[] args) {
         CSVFile file = new CSVFile();
-        file.loadFromFile("src/main/deploy/test.txt");
-        boolean success = file.toString().equals("abcd, !@#$%^&*()_+-=\n?:\";\', 1234567890");
-        System.out.println(success);
+        file.addRow();
+        file.pushVar("hi");
+        file.writeToFile("data.txt");
     }
 
     public List<List<Object>> data = new ArrayList<>();
@@ -29,6 +30,7 @@ public class CSVFile {
 
     public void addRow(int afterRow) {
         data.add(afterRow, new ArrayList<Object>());
+        lastRowThatWasCreated=data.size()-1;
     }
 
     public void addRow() {
@@ -42,7 +44,9 @@ public class CSVFile {
     public void pushVar(Object o, int row) {
         data.get(row).add(o);
     }
-
+    public void pushVar(Object o) {
+        data.get(lastRowThatWasCreated).add(o);
+    }
     public String toString() {
         String out = "";
         int col = 0;

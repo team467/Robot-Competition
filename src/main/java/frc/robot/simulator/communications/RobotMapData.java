@@ -98,7 +98,7 @@ public class RobotMapData implements Serializable, Cloneable {
   public void recieveFile(CSVFile file){
     startingLocation.x = Double.parseDouble((String)file.get(0));
     startingLocation.y = Double.parseDouble((String)file.get(1));
-    rightPosition = Double.parseDouble((String)file.get(2));
+    rightPosition = Double.parseDouble((String)file.get(2)); 
     leftPosition = Double.parseDouble((String)file.get(3));
     isZeroed = Boolean.parseBoolean((String)file.get(4));
     headingAngle = Double.parseDouble((String)file.get(5));
