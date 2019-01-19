@@ -21,7 +21,7 @@ import javafx.scene.shape.Shape;
 import org.apache.logging.log4j.Logger;
 
 public class RobotShape {
-  public static final boolean RUN_LOCAL = true;
+  public static final boolean RUN_LOCAL = false;
   private Robot robot; // For local processing
 
   private static final Logger LOGGER = RobotLogManager.getMainLogger(RobotShape.class.getName());
