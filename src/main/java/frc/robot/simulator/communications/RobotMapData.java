@@ -94,20 +94,4 @@ public class RobotMapData implements Serializable, Cloneable {
     cubeMaxDistance = table.getEntry("/cubeMaxDistance").getDouble(cubeMaxDistance);
     angleToCube = table.getEntry("/angleToCube").getDouble(angleToCube);
   }
-
-  public void recieveFile(CSVFile file){
-    startingLocation.x = Double.parseDouble((String)file.get(0));
-    startingLocation.y = Double.parseDouble((String)file.get(1));
-    rightPosition = Double.parseDouble((String)file.get(2)); 
-    leftPosition = Double.parseDouble((String)file.get(3));
-    isZeroed = Boolean.parseBoolean((String)file.get(4));
-    headingAngle = Double.parseDouble((String)file.get(5));
-    elevatorHeight = Double.parseDouble((String)file.get(6));
-    grabberHasCube = Boolean.parseBoolean((String)file.get(7));
-    visionSeesCube = Boolean.parseBoolean((String)file.get(8));
-    cubeMinDistance = Double.parseDouble((String)file.get(9));
-    cubeMaxDistance = Double.parseDouble((String)file.get(10));
-    angleToCube = Double.parseDouble((String)file.get(11));
-    file.currentRow++;
-  }
 }

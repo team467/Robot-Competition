@@ -15,14 +15,14 @@ public class CSVFile {
   private static final Logger LOGGER = RobotLogManager.getMainLogger(CSVFile.class.getName());
     public int currentRow;
     public int lastRowThatWasCreated;
+    public List<List<Object>> data = new ArrayList<>();
     public static void main(String[] args) {
         CSVFile file = new CSVFile();
-        file.addRow();
-        file.pushVar("hi");
-        file.writeToFile("data.txt");
+        file.loadFromFile("run.txt");
+        for(;file.currentRow<1000;file.currentRow++){
+        System.out.println(file.currentRow+", "+Double.parseDouble((String)file.get(2)));}
     }
 
-    public List<List<Object>> data = new ArrayList<>();
 
     public CSVFile() {
 
@@ -35,6 +35,7 @@ public class CSVFile {
 
     public void addRow() {
         data.add(new ArrayList<Object>());
+        lastRowThatWasCreated=data.size()-1;
     }
 
     public void pushVar(Object o, int row, int col) {

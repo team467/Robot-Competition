@@ -21,9 +21,7 @@ import javafx.scene.shape.Shape;
 import org.apache.logging.log4j.Logger;
 
 public class RobotShape {
-
   public static final boolean RUN_LOCAL = true;
-  public static final boolean REPLAY = false;
   private Robot robot; // For local processing
 
   private static final Logger LOGGER = RobotLogManager.getMainLogger(RobotShape.class.getName());
@@ -41,6 +39,8 @@ public class RobotShape {
   private static final Color ELEVATOR_SCALE_LOW_COLOR = Color.LIGHTCYAN;
   private static final Color ELEVATOR_SCALE_HIGH_COLOR = Color.LIGHTSEAGREEN;
 
+  public static CSVFile csvFile = new CSVFile();
+  private static int time = 0;
   // Network Tables
   RobotData data = RobotData.getInstance();
 
@@ -60,9 +60,7 @@ public class RobotShape {
   private Coordinate left = new Coordinate(-1 * (RobotMap.WHEEL_BASE_WIDTH / 2), 0);
   private Coordinate right = new Coordinate((RobotMap.WHEEL_BASE_WIDTH / 2), 0);
   private double mapHeadingAngle = 0.0;
-  CSVFile csvfile;
   public RobotShape() {
-
     // Use run local for pure simulation. Remote is for observation of actual robot
     if (RUN_LOCAL) {
       Robot.enableSimulator();
@@ -109,8 +107,6 @@ public class RobotShape {
       case "Disabled":
         robot.disabledInit();
       }
-    } else if (REPLAY) {
-
     } else {
       data.startClient();
     }
@@ -123,7 +119,7 @@ public class RobotShape {
    */
   public Shape createRobotShape(ObservableList<Node> observableList) {
 
-    chassisShape = new Rectangle(RobotMap.BUMPER_LENGTH * 12, RobotMap.BUMPER_WIDTH * 12, Color.DARKSLATEGREY);
+    chassisShape = new Rectangle(RobotMap.BUMPER_LENGTH * 12, RobotMap.BUMPER_WIDTH * 12,Color.DARKSLATEGREY);
     chassisShape.relocate(FieldShape.FIELD_OFFSET_Y, FieldShape.FIELD_OFFSET_X);
 
     elevatorShape = new Rectangle(RobotMap.BUMPER_LENGTH * 12 / 2, (RobotMap.BUMPER_WIDTH * 12 - 4), Color.WHITESMOKE);
@@ -197,21 +193,6 @@ public class RobotShape {
     right.x = currentCoordinate.x + absoluteCoordinate.x + radius * Math.cos(mapHeadingAngle);
     right.y = currentCoordinate.y + absoluteCoordinate.y + -1 * radius * Math.sin(mapHeadingAngle);
     LOGGER.debug("Screen Postion: [ {}, {}, {}]", df.format(Math.toDegrees(mapHeadingAngle)), left, right);
-    
-    csvfile.addRow();
-    csvfile.pushVar(startingLocation.x, csvfile.currentRow);
-    csvfile.pushVar(startingLocation.y, csvfile.currentRow);
-    csvfile.pushVar(rightDistance, csvfile.currentRow);
-    csvfile.pushVar(leftDistance, csvfile.currentRow);
-    csvfile.pushVar(false, csvfile.currentRow);
-    csvfile.pushVar(heading, csvfile.currentRow);
-    csvfile.pushVar(0, csvfile.currentRow);
-    csvfile.pushVar(false, csvfile.currentRow);
-    csvfile.pushVar(false, csvfile.currentRow);
-    csvfile.pushVar(1.0, csvfile.currentRow);
-    csvfile.pushVar(1.0, csvfile.currentRow);
-    csvfile.pushVar(0.0, csvfile.currentRow);
-    csvfile.writeToFile("data.txt");
   }
 
   public double rightX() {
@@ -275,8 +256,6 @@ public class RobotShape {
       case "Disabled":
         robot.disabledPeriodic();
       }
-    } else if (REPLAY) {
-      data.recieveFile(csvfile);
     } else {
       data.receive();
     }
@@ -301,18 +280,11 @@ public class RobotShape {
   public void draw() {
     loadData();
     colorElevator();
-
-    double radius = RobotMap.WHEEL_BASE_WIDTH / 2;
-    double x = radius * Math.cos(mapHeadingAngle);
-    double y = -radius * Math.sin(mapHeadingAngle);
-
-    robotShape.setRotate(Math.toDegrees(mapHeadingAngle));
-    robotShape.relocate((FieldShape.FIELD_OFFSET_Y + (leftY() + y) * 12),
-        (FieldShape.FIELD_OFFSET_X + (leftX() + x) * 12));
-
-    robotGroup.setRotate(Math.toDegrees(mapHeadingAngle));
-    robotGroup.relocate((FieldShape.FIELD_OFFSET_Y + (leftY() + y) * 12),
-        (FieldShape.FIELD_OFFSET_X + (leftX() + x) * 12));
+   
+   
+     csvFile.currentRow++;
+    time++;
+    
   }
 
 }

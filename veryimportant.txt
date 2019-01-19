@@ -1,0 +1,1 @@
+don't simulate full inputs, just log in what the x and y positions are and the heading and anything relevant to the graphical. more specific and undisplayed details can be implemented later.
