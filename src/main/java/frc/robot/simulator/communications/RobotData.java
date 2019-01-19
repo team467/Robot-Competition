@@ -203,5 +203,19 @@ public class RobotData {
       isZeroed = true; // Only can turn flag true. Flag must be cleared only on receiving side.
     }
   }
+  public void receiveCSV(CSVFile data) {
+    dataRow.startingLocation.x = table.getEntry("/startingLocation/x").getDouble(startingLocation.x);
+    dataRow.startingLocation.y = table.getEntry("/startingLocation/y").getDouble(startingLocation.y);
+    dataRow.rightPosition = table.getEntry("/rightDistance").getDouble(rightPosition);
+    dataRow.leftPosition = table.getEntry("/leftDistance").getDouble(leftPosition);
+    dataRow.isZeroed = table.getEntry("/isZeroed").getBoolean(isZeroed);
+    dataRow.headingAngle = table.getEntry("/headingAngle").getDouble(headingAngle);
+    dataRow.elevatorHeight = table.getEntry("/elevatorHeight").getDouble(elevatorHeight);
+    dataRow.grabberHasCube = table.getEntry("/grabberHasCube").getBoolean(grabberHasCube);
+    dataRow.visionSeesCube = table.getEntry("/visionSeesCube").getBoolean(visionSeesCube);
+    dataRow.cubeMinDistance = table.getEntry("/cubeMinDistance").getDouble(cubeMinDistance);
+    dataRow.cubeMaxDistance = table.getEntry("/cubeMaxDistance").getDouble(cubeMaxDistance);
+    dataRow.angleToCube = data
+  }
   
 }
