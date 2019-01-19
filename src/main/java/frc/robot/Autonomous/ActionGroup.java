@@ -42,7 +42,7 @@ public class ActionGroup {
   public void run() {
     if (cancel) {
       action = null;
-      LOGGER.info("Autonomous has been cancelled");
+      LOGGER.info("ActionGroup has been cancelled");
       while (!agenda.isEmpty()) {
         Action act = agenda.pop();
         act.isDone();
@@ -50,7 +50,7 @@ public class ActionGroup {
       /* cancels run function */
       return;
     }
-    LOGGER.info("Autonomous continuing");
+    LOGGER.debug("ActionGroup continuing");
     if (action == null || action.isDone()) {
       try {
         if (!agenda.isEmpty()) {
