@@ -119,7 +119,7 @@ public class DriverStation467 {
   }
 
   public double getArcadeSpeed() {
-    return getDriveJoystick().getAdjustedSpeed(-driverJoy.getLeftStickY());
+    return getDriveJoystick().getAdjustedSpeed(driverJoy.getLeftStickY());
   }
   
   public double getArcadeTurn() {
