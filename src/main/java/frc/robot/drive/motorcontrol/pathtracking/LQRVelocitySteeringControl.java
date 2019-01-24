@@ -13,7 +13,7 @@ import org.apache.commons.math3.linear.RealMatrix;
 /**
  * Path tracking simulation with LQR speed and steering control.
  */
-public class LqrVelocitySteeringControl {
+public class LQRVelocitySteeringControl {
 
   private static boolean showAnimation = true;
 
@@ -44,7 +44,7 @@ public class LqrVelocitySteeringControl {
   private double currentYaw = 0.0;
   private double currentVelocity = 0.0;
 
-  public LqrVelocitySteeringControl(
+  public LQRVelocitySteeringControl(
       double x,
       double y,
       double yaw,

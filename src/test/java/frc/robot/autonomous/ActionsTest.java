@@ -8,6 +8,8 @@ import java.text.DecimalFormat;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.RobotMap;
+import frc.robot.Autonomous.ActionGroup;
+import frc.robot.Autonomous.Actions;
 import frc.robot.RobotMap.RobotId;
 import frc.robot.drive.Drive;
 import frc.robot.logging.RobotLogManager;

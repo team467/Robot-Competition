@@ -15,11 +15,12 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.RobotMap.RobotId;
-import frc.robot.autonomous.ActionGroup;
-import frc.robot.autonomous.Actions;
-import frc.robot.autonomous.MatchConfiguration;
+import frc.robot.Autonomous.ActionGroup;
+import frc.robot.Autonomous.Actions;
+import frc.robot.Autonomous.MatchConfiguration;
 import frc.robot.drive.Drive;
 import frc.robot.drive.motorcontrol.TestMotorControl;
+import frc.robot.gamepieces.Climber;
 import frc.robot.gamepieces.Elevator;
 import frc.robot.gamepieces.Grabber;
 import frc.robot.logging.RobotLogManager;
@@ -43,6 +44,7 @@ public class Robot extends TimedRobot {
 
   // Robot objects
   private ActionGroup autonomous;
+  private Climber climber;
   private DriverStation467 driverstation;
   private Drive drive;
   private Elevator elevator;
@@ -92,6 +94,7 @@ public class Robot extends TimedRobot {
     driverstation = DriverStation467.getInstance();
     LOGGER.info("Initialized Driverstation");
 
+    climber = Climber.getInstance();
     data = RobotData.getInstance();
     drive = Drive.getInstance();
     elevator = Elevator.getInstance();
@@ -137,10 +140,6 @@ public class Robot extends TimedRobot {
   /**
    * This function is called periodically during autonomous.
    */
-
-   /**
-    * Need to implement cancelling for autonomous
-    */
   @Override
   public void autonomousPeriodic() {
     grabber.periodic();
@@ -173,7 +172,7 @@ public class Robot extends TimedRobot {
       LOGGER.info("Grabber Open");
       grabber.open();
     } else {
-      LOGGER.debug("Grabber Close");
+      LOGGER.info("Grabber Close");
       grabber.close();
     }
 
@@ -189,6 +188,15 @@ public class Robot extends TimedRobot {
     } else if (driverstation.getHighScaleHeightButtonPressed()) {
       LOGGER.info("Lifting to high scale height");
       elevator.moveToHeight(Elevator.Stops.highScale);
+    }
+    
+    // Ramps state machines protect against conflicts
+    if (driverstation.getClimbUp()) {
+      LOGGER.debug("Climb Up");
+      climber.climbUp();
+    } else {
+      climber.neutral();
+      LOGGER.debug("Not climbing");
     }
 
     double speed = driverstation.getArcadeSpeed();

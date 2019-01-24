@@ -1,4 +1,4 @@
-package frc.robot.autonomous;
+package frc.robot.Autonomous;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;

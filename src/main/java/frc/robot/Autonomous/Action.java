@@ -1,4 +1,4 @@
-package frc.robot.autonomous;
+package frc.robot.Autonomous;
 
 public class Action {
   public String description;
