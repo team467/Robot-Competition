@@ -7,6 +7,12 @@
 
 package frc.robot.sensors.imu;
 
+import org.apache.commons.math3.ml.neuralnet.Network;
+
+import edu.wpi.first.networktables.EntryListenerFlags;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.InterruptableSensorBase;
 import edu.wpi.first.wpilibj.Timer;
 
@@ -31,6 +37,13 @@ public class Lsm9ds1Imu extends ImuBase implements Imu {
     synchronized (this) {
       lastSampleTime = Timer.getFPGATimestamp();
     }
+
+    NetworkTableInstance inst = NetworkTableInstance.getDefault();
+    NetworkTable table = inst.getTable("SmartDashboard");
+    NetworkTableEntry gyro = table.getEntry("gyro");
+    NetworkTableEntry accel = table.getEntry("accel");
+    NetworkTableEntry mag = table.getEntry("mag");
+
     while (!freed.get()) {
       if (interrupt.waitForInterrupt(timeout) == InterruptableSensorBase.WaitResult.kTimeout) {
         continue;
@@ -43,16 +56,15 @@ public class Lsm9ds1Imu extends ImuBase implements Imu {
         lastSampleTime = sampleTime;
       }
 
-      double gyroX = angleXTableEntry.getValue().getDouble();
-      double gyroY = angleYTableEntry.getValue().getDouble();
-      double gyroZ = angleZTableEntry.getValue().getDouble();
-      double accelX = accelXTableEntry.getValue().getDouble();
-      double accelY = accelYTableEntry.getValue().getDouble();
-      double accelZ = accelZTableEntry.getValue().getDouble();
-      double magX = magXTableEntry.getValue().getDouble();
-      double magY = magYTableEntry.getValue().getDouble();
-      double magZ = magZTableEntry.getValue().getDouble();
-      double temp = tempTableEntry.getValue().getDouble();
+      double gyroX =  gyro.getDoubleArray(new double[] {0.0, 0.0, 0.0})[0];
+      double gyroY = gyro.getDoubleArray(new double[] {0.0, 0.0, 0.0})[1];
+      double gyroZ = gyro.getDoubleArray(new double[] {0.0, 0.0, 0.0})[2];
+      double accelX = accel.getDoubleArray(new double[] {0.0, 0.0, 0.0})[0];
+      double accelY = accel.getDoubleArray(new double[] {0.0, 0.0, 0.0})[1];
+      double accelZ = accel.getDoubleArray(new double[] {0.0, 0.0, 0.0})[2];
+      double magX = mag.getDoubleArray(new double[] {0.0, 0.0, 0.0})[0];
+      double magY = mag.getDoubleArray(new double[] {0.0, 0.0, 0.0})[1];
+      double magZ = mag.getDoubleArray(new double[] {0.0, 0.0, 0.0})[2];
 
       samplesMutex.lock();
       try {
@@ -91,7 +103,6 @@ public class Lsm9ds1Imu extends ImuBase implements Imu {
         this.magX = magX;
         this.magY = magY;
         this.magZ = magZ;
-        this.temp = temp;
 
         accumulatedCount += 1;
         accumulatedGyroX += gyroX;
