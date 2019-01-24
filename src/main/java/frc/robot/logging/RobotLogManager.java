@@ -15,6 +15,18 @@ import org.apache.logging.log4j.core.config.yaml.YamlConfigurationFactory;
 public class RobotLogManager {
 
   private static boolean initialized = false;
+  private static String[] filepaths = {
+    "C:\\Users\\Team467\\Documents\\GitHub\\Robot2019-Competition\\src\\main\\deploy\\log4j2.yaml",
+    "C:\\Users\\Team467\\Documents\\GitHub\\Robot2019-Competition\\src\\main\\deploy\\log4j2-test.yaml"
+  };
+
+  private static boolean doesFileExist(String filepath) {
+    if(new File(filepath).exists()) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 
   private static void init(String pathToConfig) {
     try {
@@ -34,6 +46,12 @@ public class RobotLogManager {
   private static void init() {
     // String path = "./src/main/deploy/log4j2-test.yaml";
     String path = "/home/lvuser/deploy/log4j2-test.yaml";
+    for(String fpath : filepaths) {
+      if(doesFileExist(fpath)) {
+        path = fpath;
+        break;
+      }
+    }
     init(path);
   }
 
