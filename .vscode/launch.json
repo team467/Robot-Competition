@@ -6,6 +6,20 @@
   "configurations": [
     {
       "type": "java",
+      "name": "CodeLens (Launch) - RobotShape",
+      "request": "launch",
+      "mainClass": "frc.robot.simulator.draw.RobotShape",
+      "projectName": "Robot2019-Competition"
+    },
+    {
+      "type": "java",
+      "name": "CodeLens (Launch) - CSVReplayer",
+      "request": "launch",
+      "mainClass": "frc.robot.simulator.communications.CSVReplayer",
+      "projectName": "Robot2019-Competition"
+    },
+    {
+      "type": "java",
       "name": "CodeLens (Launch) - CSVFile",
       "request": "launch",
       "mainClass": "frc.robot.simulator.communications.CSVFile",

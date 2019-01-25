@@ -200,11 +200,13 @@ public class RobotData {
    * Gets the information from the network table.
    */
   public void receive() {
-    // dataRow.receive(table);
-    // if (dataRow.isZeroed) {
-    //   isZeroed = true; // Only can turn flag true. Flag must be cleared only on receiving side.
-    // }
+    dataRow.receive(table);
     
+    if (dataRow.isZeroed) {
+      isZeroed = true; // Only can turn flag true. Flag must be cleared only on receiving side.
+    }
+  }
+  public void receiveCSV(CSVFile data) {
     dataRow.startingLocation.x = Double.parseDouble(csvFile.get(0).toString());
     dataRow.startingLocation.y = Double.parseDouble(csvFile.get(1).toString());
     dataRow.rightPosition = Double.parseDouble(csvFile.get(2).toString());
@@ -218,20 +220,6 @@ public class RobotData {
     dataRow.cubeMaxDistance = Double.parseDouble(csvFile.get(10).toString());
     dataRow.angleToCube = Double.parseDouble(csvFile.get(11).toString());
     csvFile.currentRow++;
-  }
-  public void receiveCSV(CSVFile data) {
-    dataRow.startingLocation.x = Double.parseDouble(csvFile.get(0).toString());
-    dataRow.startingLocation.y = Double.parseDouble(csvFile.get(0).toString());
-    dataRow.rightPosition = Double.parseDouble(csvFile.get(0).toString());
-    dataRow.leftPosition = Double.parseDouble(csvFile.get(0).toString());
-    dataRow.isZeroed = Boolean.parseBoolean(csvFile.get(0).toString());
-    dataRow.headingAngle = Double.parseDouble(csvFile.get(0).toString());
-    dataRow.elevatorHeight = Double.parseDouble(csvFile.get(0).toString());
-    dataRow.grabberHasCube = Boolean.parseBoolean(csvFile.get(0).toString());
-    dataRow.visionSeesCube = Boolean.parseBoolean(csvFile.get(0).toString());
-    dataRow.cubeMinDistance = Double.parseDouble(csvFile.get(0).toString());
-    dataRow.cubeMaxDistance = Double.parseDouble(csvFile.get(0).toString());
-    dataRow.angleToCube = Double.parseDouble(csvFile.get(0).toString());
   }
   
 }

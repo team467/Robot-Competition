@@ -18,9 +18,13 @@ public class CSVFile {
     public List<List<Object>> data = new ArrayList<>();
     public static void main(String[] args) {
         CSVFile file = new CSVFile();
-        file.loadFromFile("run.txt");
-        for(;file.currentRow<1000;file.currentRow++){
-        System.out.println(file.currentRow+", "+Double.parseDouble((String)file.get(2)));}
+        for(int i = 0;i<2000;i++){
+        file.addRow();
+        file.pushVar(i);
+        file.pushVar(i);
+        file.pushVar("basement");
+    }
+    file.writeToFile("run.txt");
     }
 
 
@@ -85,8 +89,10 @@ public class CSVFile {
 
     public String loadFromFile(String url) {
         File root = new File(getClass().getResource("./").getPath());
+        while(!root.getAbsolutePath().endsWith("Robot2019-Competition")){
+        root = root.getParentFile();
+    }
         String path = root.getAbsolutePath();
-        path = path.substring(0, path.length()-44);
         File resourceLocation = new File(path+"/"+url);
         try {
             FileInputStream in = new FileInputStream(resourceLocation);
@@ -107,8 +113,10 @@ public class CSVFile {
     }
     public String writeToFile(String url) {
         File root = new File(getClass().getResource("./").getPath());
+        while(!root.getAbsolutePath().endsWith("Robot2019-Competition")){
+        root = root.getParentFile();
+    }
         String path = root.getAbsolutePath();
-        path = path.substring(0, path.length()-44);
         File resourceLocation = new File(path+"/"+url);
         try {
             FileOutputStream out = new FileOutputStream(resourceLocation);

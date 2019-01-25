@@ -54,6 +54,18 @@ Configuration:
             - ref: File_Appender
               level: info
               
+        - name: frc.robot.simulator.gui.Map
+          level: info
+          AppenderRef:
+            - ref: File_Appender
+              level: info
+              
+        - name: frc.robot.simulator.draw.RobotShape
+          level: info
+          AppenderRef:
+            - ref: File_Appender
+              level: info
+              
         - name: frc.robot.simulator.communications.CSVFile
           level: info
           AppenderRef:

@@ -407,6 +407,7 @@ public class MapController {
       startButton.setText("Start");
 
       // stop the timer
+      robot.save();
       stopRobot();
     }
   }

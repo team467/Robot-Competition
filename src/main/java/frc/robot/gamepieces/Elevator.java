@@ -40,7 +40,6 @@ public class Elevator {
      * Height in sensor units.
      */
     public int height;
-
     Stops(double heightProportion) {
       height = heightTicksFromProportion(heightProportion);
     }
