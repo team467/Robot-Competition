@@ -23,7 +23,7 @@ public class RobotShape {
   public static final boolean RUN_LOCAL = false;
   public static final boolean RUN_REPLAY = true;
   public static final boolean LOG_REPLAY = false;
-  int not = 100;
+  int not = 101;
   private Robot robot; // For local processing
 
   private static final Logger LOGGER = RobotLogManager.getMainLogger(RobotShape.class.getName());
@@ -57,7 +57,7 @@ public class RobotShape {
   private double absoluteHeading = 0.0;
   private Coordinate currentCoordinate = new Coordinate(0.0, 0.0);
   private Coordinate absoluteCoordinate = new Coordinate(0.0, 0.0);
-
+  private boolean isZeroed = false;
   // Derived coordinates
   private Coordinate left = new Coordinate(-1 * (RobotMap.WHEEL_BASE_WIDTH / 2), 0);
   private Coordinate right = new Coordinate((RobotMap.WHEEL_BASE_WIDTH / 2), 0);
@@ -277,7 +277,11 @@ for(int i = 0;i<100;i++){
     }else {
       data.receive();
     }
-    if (data.isZeroed()) {
+    isZeroed = data.isZeroed();
+    if(RUN_REPLAY){
+      isZeroed = replayer.isZeroed;
+    }
+    if (isZeroed) {
       zero();
     }
 
@@ -305,6 +309,7 @@ for(int i = 0;i<100;i++){
       replayLog.pushVar(startingLocation.x);
       replayLog.pushVar(startingLocation.y);
       replayLog.pushVar("basement");
+      replayLog.pushVar(isZeroed);
     }
     LOGGER.info("Data read: "+ replayer.leftDistance+", "+ replayer.rightDistance);
     LOGGER.info("frame: "+replayer.steps);

@@ -9,6 +9,7 @@ public class CSVReplayer{
     public double startX;
     public double startY;
     public Stops elevatorStop=Stops.fieldSwitch;
+    public boolean isZeroed;
     public int steps=0;
     public String lastpath = "";
     public CSVReplayer(){
@@ -34,6 +35,7 @@ public class CSVReplayer{
             elevatorStop = Stops.highScale;
             break;
         }
+        isZeroed = Boolean.parseBoolean((String)csvFile.get(5));
     }
     public void next(){
         csvFile.currentRow++;
@@ -58,6 +60,7 @@ public class CSVReplayer{
             elevatorStop = Stops.highScale;
             break;
         }
+        isZeroed = Boolean.parseBoolean((String)csvFile.get(5));
         steps++;
     }
 }
