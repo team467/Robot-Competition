@@ -3,6 +3,7 @@ package frc.robot.logging;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -15,13 +16,33 @@ import org.apache.logging.log4j.core.config.yaml.YamlConfigurationFactory;
 public class RobotLogManager {
 
   private static boolean initialized = false;
+  private static String directory = "";
+
   private static String[] filepaths = {
     "C:\\Users\\Team467\\Documents\\GitHub\\Robot2019-Competition\\src\\main\\deploy\\log4j2.yaml",
     "C:\\Users\\Team467\\Documents\\GitHub\\Robot2019-Competition\\src\\main\\deploy\\log4j2-test.yaml"
   };
+  
+  private static ArrayList<Integer> getOccurences(String s, char c) {
+    ArrayList<Integer> inidicies = new ArrayList<Integer>();
+    for(int i=0; i<s.length(); i++) {
+      if(s.charAt(i) == c) {
+        inidicies.add(i);
+      }
+    }
+    return inidicies;
+  }
+
+  public static String getDirectory(String s) {
+    ArrayList<Integer> indicies = getOccurences(s, '\\');
+    String directory = s.substring(0,indicies.get(indicies.size()-1));
+    return directory;
+  }
 
   private static boolean doesFileExist(String filepath) {
     if(new File(filepath).exists()) {
+      ArrayList<Integer> indicies = getOccurences(filepath, '\\');
+      directory = getDirectory(filepath);
       return true;
     } else {
       return false;
@@ -44,15 +65,13 @@ public class RobotLogManager {
   }
 
   private static void init() {
-    // String path = "./src/main/deploy/log4j2-test.yaml";
-    String path = "/home/lvuser/deploy/log4j2-test.yaml";
-    for(String fpath : filepaths) {
-      if(doesFileExist(fpath)) {
-        path = fpath;
+    // String path = "./src/main/deploy/log4j2-test.yaml"; default path in case the other filepaths dont load
+    for(String path : filepaths) {
+      if(doesFileExist(path)) {
+        init(path);
         break;
       }
     }
-    init(path);
   }
 
   /**

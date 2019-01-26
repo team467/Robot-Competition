@@ -44,7 +44,7 @@ public class LQRVelocitySteeringControl {
   private double currentYaw = 0.0;
   private double currentVelocity = 0.0;
 
-  public LQRVelocitySteeringControl(
+  public void LqrVelocitySteeringControl(
       double x,
       double y,
       double yaw,

@@ -96,6 +96,11 @@ Configuration:
           AppenderRef:
             - ref: File_Appender
               level: info
+        - name: frc.robot.logging.RobotLogManagerTest
+          level: info
+          AppenderRef:
+            - ref: File_Appender
+              level: info
        
 
 # Enable extra logging for classes you want to debug

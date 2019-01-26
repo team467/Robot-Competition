@@ -1,7 +1,7 @@
-package frc.robot.Autonomous;
+package frc.robot.autonomous;
 
 import frc.robot.RobotMap;
-import frc.robot.Autonomous.Action.Activity;
+import frc.robot.autonomous.Action.Activity;
 import frc.robot.drive.AutoDrive;
 import frc.robot.drive.Drive;
 import frc.robot.logging.RobotLogManager;
