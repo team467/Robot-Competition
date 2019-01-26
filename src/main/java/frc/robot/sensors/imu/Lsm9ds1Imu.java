@@ -33,13 +33,17 @@ public class Lsm9ds1Imu extends ImuBase implements Imu {
     this(yawAxis, AhrsAlgorithm.Complementary);
   }
 
+  public void recalibrate() {
+    table.getEntry("recal").setNumber(1);
+  }
+
   protected void acquire() {
     synchronized (this) {
       lastSampleTime = Timer.getFPGATimestamp();
     }
 
     NetworkTableInstance inst = NetworkTableInstance.getDefault();
-    NetworkTable table = inst.getTable("SmartDashboard");
+    NetworkTable table = inst.getTable("imu");
     NetworkTableEntry gyro = table.getEntry("gyro");
     NetworkTableEntry accel = table.getEntry("accel");
     NetworkTableEntry mag = table.getEntry("mag");
