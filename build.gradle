@@ -83,10 +83,6 @@ dependencies {
 compile group: 'org.apache.commons', name: 'commons-csv', version: '1.6'
 
   // https://mvnrepository.com/artifact/org.openjfx/javafx
-  // compile group: 'org.openjfx', name: 'javafx-base', version: '11'
-  // compile group: 'org.openjfx', name: 'javafx-graphics', version: '11'
-  // compile group: 'org.openjfx', name: 'javafx-controls', version: '11'
-  // compile group: 'org.openjfx', name: 'javafx-fxml', version: '11'
   compile "org.openjfx:javafx-base:11:$platform"
   compile "org.openjfx:javafx-graphics:11:$platform"
   compile "org.openjfx:javafx-controls:11:$platform"

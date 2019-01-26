@@ -205,7 +205,7 @@ public class XBoxJoystick467 {
     return getAdjustedSpeed(getRightStickX()) * MathUtils.weightedAverage(
       RobotMap.NORMAL_TURN_MAX_SPEED, 
       RobotMap.SLOW_TURN_MAX_SPEED, 
-      Math.abs(getAdjustedSpeed(-getLeftStickY())));
+      Math.abs(getAdjustedSpeed(getLeftStickY())));
   }
 
   public double pov() {

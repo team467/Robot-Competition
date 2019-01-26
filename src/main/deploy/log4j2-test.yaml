@@ -109,6 +109,13 @@ Configuration:
             - ref: File_Appender
               level: info
 
+        - name: frc.robot.autonomous.ActionGroupTest
+          level: info
+          AppenderRef:
+            - ref: File_Appender
+              level: info
+       
+
 # Enable extra logging for classes you want to debug
 # config.addLogger(Climber.class.getName(), new LoggerConfig(Climber.class.getName(), Level.INFO, true));
 # config.addLogger(Action.class.getName(), new LoggerConfig(Action.class.getName(), Level.INFO, true));

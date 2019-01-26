@@ -183,7 +183,7 @@ public class RobotMap {
         RIGHT_FOLLOWER_1_CHANNEL = 5;
         RIGHT_FOLLOWER_2_CHANNEL = 6;
         RIGHT_DRIVE_SENSOR_IS_INVERTED = true;
-        RIGHT_DRIVE_MOTOR_IS_INVERTED = true;
+        RIGHT_DRIVE_MOTOR_IS_INVERTED = false;
         
         HAS_CLIMBER = false;
         CLIMB_MOTOR_CONTROLLER_LEADER = 11;
