@@ -27,7 +27,7 @@ public class RobotShape {
   public static boolean LOG_REPLAY = false;
   public static File replaySource = new File("");
   public static File loggingPath = new File("");
-  int not = 103;
+  int not = 102;
   private Robot robot; // For local processing
 
   private static final Logger LOGGER = RobotLogManager.getMainLogger(RobotShape.class.getName());

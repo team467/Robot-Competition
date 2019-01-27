@@ -87,6 +87,12 @@ public class MapController {
   private Button startButton;
 
   /**
+   * The start button for beginning the match.
+   */
+  @FXML
+  private Button chooseReplay;
+
+  /**
    * The select box for choosing the drive mode (i.e. autonomous vs. teleop).
    */
   @FXML
@@ -458,6 +464,19 @@ public class MapController {
       robot.save();
       stopRobot();
     }
+  }
+
+  @FXML
+  protected void askFile(){
+    
+    Stage secondStage = new Stage();
+    secondStage.setScene(new Scene(new HBox(4, new Label("Second window"))));
+    File file = new FileChooser().showOpenDialog(secondStage);
+    if(file != null){
+    RobotShape.RUN_REPLAY = true;
+    RobotShape.RUN_LOCAL = false;
+    RobotShape.replaySource = file;
+  }
   }
 
   /**
