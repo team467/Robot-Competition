@@ -22,6 +22,12 @@ public class Lsm9ds1Imu extends ImuBase implements Imu {
   /**
    * Constructor.
    */
+  NetworkTableInstance inst = NetworkTableInstance.getDefault();
+  NetworkTable table = inst.getTable("imu");
+  NetworkTableEntry gyro = table.getEntry("gyro");
+  NetworkTableEntry accel = table.getEntry("accel");
+  NetworkTableEntry mag = table.getEntry("mag");
+
   public Lsm9ds1Imu(Axis yawAxis, AhrsAlgorithm algorithm) {
     super(yawAxis, algorithm);
   }
@@ -33,6 +39,7 @@ public class Lsm9ds1Imu extends ImuBase implements Imu {
     this(yawAxis, AhrsAlgorithm.Complementary);
   }
 
+
   public void recalibrate() {
     table.getEntry("recal").setNumber(1);
   }
@@ -42,11 +49,7 @@ public class Lsm9ds1Imu extends ImuBase implements Imu {
       lastSampleTime = Timer.getFPGATimestamp();
     }
 
-    NetworkTableInstance inst = NetworkTableInstance.getDefault();
-    NetworkTable table = inst.getTable("imu");
-    NetworkTableEntry gyro = table.getEntry("gyro");
-    NetworkTableEntry accel = table.getEntry("accel");
-    NetworkTableEntry mag = table.getEntry("mag");
+    
 
     while (!freed.get()) {
       if (interrupt.waitForInterrupt(timeout) == InterruptableSensorBase.WaitResult.kTimeout) {
