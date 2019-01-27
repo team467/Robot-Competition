@@ -1,3 +1,0 @@
-!this should not appear
-abcd, !@#$%^&*()_+-=
-?:";', 1234567890
