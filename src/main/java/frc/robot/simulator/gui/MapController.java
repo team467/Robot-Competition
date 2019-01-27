@@ -199,7 +199,7 @@ public class MapController {
 
         RobotShape.LOG_REPLAY = true;
         }else{
-          RobotShape.RUN_REPLAY = false;
+          RobotShape.LOG_REPLAY = false;
         }
       } else {
         RobotShape.LOG_REPLAY = false;

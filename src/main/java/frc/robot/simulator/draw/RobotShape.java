@@ -27,7 +27,7 @@ public class RobotShape {
   public static boolean LOG_REPLAY = false;
   public static File replaySource = new File("");
   public static File loggingPath = new File("");
-  int not = 102;
+  int not = 103;
   private Robot robot; // For local processing
 
   private static final Logger LOGGER = RobotLogManager.getMainLogger(RobotShape.class.getName());
@@ -298,11 +298,13 @@ public class RobotShape {
       startingLocation.x = replayer.startX;
       startingLocation.y = replayer.startY;
       replayer.next();
+      LOGGER.info("Data read: " + replayer.leftDistance + ", " + replayer.rightDistance);
+      LOGGER.info("frame: " + replayer.steps);
     } else {
       previousLeftDistance = leftDistance;
       previousRightDistance = rightDistance;
       leftDistance = data.leftDistance();
-      rightDistance = data.rightDistance();
+      rightDistance = -data.rightDistance();
       startingLocation = data.startingLocation();
       elevatorStop = data.elevatorStop();
     }
@@ -315,9 +317,7 @@ public class RobotShape {
       replayLog.pushVar("basement");
       replayLog.pushVar(isZeroed);
     }
-    LOGGER.info("Data read: " + replayer.leftDistance + ", " + replayer.rightDistance);
-    LOGGER.info("frame: " + replayer.steps);
-    LOGGER.info("left: " + (leftDistance) + ", right: " + (rightDistance - previousRightDistance));
+    LOGGER.info("left: " + (leftDistance) + ", right: " + (rightDistance));
     updateMapPosition(leftDistance - previousLeftDistance, rightDistance - previousRightDistance);
   }
 
