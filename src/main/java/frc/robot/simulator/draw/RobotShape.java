@@ -7,6 +7,8 @@ import frc.robot.logging.RobotLogManager;
 import frc.robot.simulator.communications.*;
 import frc.robot.simulator.gui.Coordinate;
 import frc.robot.simulator.gui.SimulatedData;
+
+import java.io.File;
 import java.text.DecimalFormat;
 
 import javafx.collections.ObservableList;
@@ -20,10 +22,12 @@ import javafx.scene.shape.Shape;
 import org.apache.logging.log4j.Logger;
 
 public class RobotShape {
-  public static final boolean RUN_LOCAL = false;
-  public static final boolean RUN_REPLAY = true;
-  public static final boolean LOG_REPLAY = false;
-  int not = 101;
+  public static boolean RUN_LOCAL = true;
+  public static boolean RUN_REPLAY = false;
+  public static boolean LOG_REPLAY = false;
+  public static File replaySource = new File("");
+  public static File loggingPath = new File("");
+  int not = 102;
   private Robot robot; // For local processing
 
   private static final Logger LOGGER = RobotLogManager.getMainLogger(RobotShape.class.getName());
@@ -43,7 +47,7 @@ public class RobotShape {
   private static int time = 0;
   // Network Tables
   RobotData data = RobotData.getInstance();
-  CSVReplayer replayer = new CSVReplayer();
+  CSVReplayer replayer;
   CSVFile replayLog = new CSVFile();
 
   private Coordinate startingLocation = new Coordinate(0.0, 0.0);
@@ -62,9 +66,10 @@ public class RobotShape {
   private Coordinate left = new Coordinate(-1 * (RobotMap.WHEEL_BASE_WIDTH / 2), 0);
   private Coordinate right = new Coordinate((RobotMap.WHEEL_BASE_WIDTH / 2), 0);
   private double mapHeadingAngle = 0.0;
+
   public RobotShape() {
     // Use run local for pure simulation. Remote is for observation of actual robot
-    if (RUN_LOCAL|RUN_REPLAY) {
+    if (RUN_LOCAL | RUN_REPLAY) {
       Robot.enableSimulator();
       robot = new Robot();
       robot.robotInit();
@@ -90,12 +95,9 @@ public class RobotShape {
   }
 
   public void init() {
-    
-    CSVReplayer player = new CSVReplayer();
-for(int i = 0;i<100;i++){
-    LOGGER.info(player.leftDistance);
-    player.next();
-}
+    if (RUN_REPLAY) {
+      replayer = new CSVReplayer(replaySource);
+    }
     LOGGER.info("logging working");
     if (RUN_LOCAL) {
       switch (SimulatedData.driveMode) {
@@ -116,7 +118,7 @@ for(int i = 0;i<100;i++){
       case "Disabled":
         robot.disabledInit();
       }
-    }else if(RUN_REPLAY){
+    } else if (RUN_REPLAY) {
       robot.disabledInit();
       LOGGER.info(replayer.csvFile);
     } else {
@@ -131,7 +133,7 @@ for(int i = 0;i<100;i++){
    */
   public Shape createRobotShape(ObservableList<Node> observableList) {
 
-    chassisShape = new Rectangle(RobotMap.BUMPER_LENGTH * 12, RobotMap.BUMPER_WIDTH * 12,Color.DARKSLATEGREY);
+    chassisShape = new Rectangle(RobotMap.BUMPER_LENGTH * 12, RobotMap.BUMPER_WIDTH * 12, Color.DARKSLATEGREY);
     chassisShape.relocate(FieldShape.FIELD_OFFSET_Y, FieldShape.FIELD_OFFSET_X);
 
     elevatorShape = new Rectangle(RobotMap.BUMPER_LENGTH * 12 / 2, (RobotMap.BUMPER_WIDTH * 12 - 4), Color.WHITESMOKE);
@@ -247,62 +249,64 @@ for(int i = 0;i<100;i++){
     }
 
   }
-  public void save(){
-    replayLog.writeToFile("log.txt");
+
+  public void save() {
+    replayLog.writeToFile(loggingPath);
   }
+
   private void loadData() {
     if (RUN_LOCAL) {
-      
+
       switch (SimulatedData.driveMode) {
 
       case "Teleop":
-         robot.teleopPeriodic();
-         
+        robot.teleopPeriodic();
+
         break;
 
       case "Autonomous":
-         robot.autonomousPeriodic();
+        robot.autonomousPeriodic();
         break;
 
       case "Test":
-         robot.testPeriodic();
+        robot.testPeriodic();
         break;
 
       default:
       case "Disabled":
-         robot.disabledPeriodic();
+        robot.disabledPeriodic();
       }
-    } else if(RUN_REPLAY){
+    } else if (RUN_REPLAY) {
       robot.disabledPeriodic();
-    }else {
+    } else {
       data.receive();
     }
     isZeroed = data.isZeroed();
-    if(RUN_REPLAY){
+    if (RUN_REPLAY) {
       isZeroed = replayer.isZeroed;
     }
     if (isZeroed) {
       zero();
     }
 
-    if(RUN_REPLAY){
-    previousLeftDistance = leftDistance;
-    previousRightDistance = rightDistance;
-    leftDistance = replayer.leftDistance;
-    rightDistance = replayer.rightDistance;
-    elevatorStop = replayer.elevatorStop;
-    startingLocation.x=replayer.startX;
-    startingLocation.y=replayer.startY;
-    replayer.next();
-    }else{
-    previousLeftDistance = leftDistance;
-    previousRightDistance = rightDistance;
-    leftDistance = data.leftDistance();
-    rightDistance = data.rightDistance();
-    startingLocation = data.startingLocation();
-    elevatorStop = data.elevatorStop();
+    if (RUN_REPLAY) {
+      previousLeftDistance = leftDistance;
+      previousRightDistance = rightDistance;
+      leftDistance = replayer.leftDistance;
+      rightDistance = replayer.rightDistance;
+      elevatorStop = replayer.elevatorStop;
+      startingLocation.x = replayer.startX;
+      startingLocation.y = replayer.startY;
+      replayer.next();
+    } else {
+      previousLeftDistance = leftDistance;
+      previousRightDistance = rightDistance;
+      leftDistance = data.leftDistance();
+      rightDistance = data.rightDistance();
+      startingLocation = data.startingLocation();
+      elevatorStop = data.elevatorStop();
     }
-    if(LOG_REPLAY){
+    if (LOG_REPLAY) {
       replayLog.addRow();
       replayLog.pushVar(leftDistance);
       replayLog.pushVar(rightDistance);
@@ -311,10 +315,10 @@ for(int i = 0;i<100;i++){
       replayLog.pushVar("basement");
       replayLog.pushVar(isZeroed);
     }
-    LOGGER.info("Data read: "+ replayer.leftDistance+", "+ replayer.rightDistance);
-    LOGGER.info("frame: "+replayer.steps);
-    LOGGER.info("left: "+(leftDistance)+", right: "+(rightDistance-previousRightDistance));
-    updateMapPosition(leftDistance-previousLeftDistance, rightDistance-previousRightDistance);
+    LOGGER.info("Data read: " + replayer.leftDistance + ", " + replayer.rightDistance);
+    LOGGER.info("frame: " + replayer.steps);
+    LOGGER.info("left: " + (leftDistance) + ", right: " + (rightDistance - previousRightDistance));
+    updateMapPosition(leftDistance - previousLeftDistance, rightDistance - previousRightDistance);
   }
 
   /**
@@ -334,7 +338,7 @@ for(int i = 0;i<100;i++){
     robotGroup.setRotate(Math.toDegrees(mapHeadingAngle));
     robotGroup.relocate((FieldShape.FIELD_OFFSET_Y + (leftY() + y) * 12),
         (FieldShape.FIELD_OFFSET_X + (leftX() + x) * 12));
-    
+
   }
 
 }
