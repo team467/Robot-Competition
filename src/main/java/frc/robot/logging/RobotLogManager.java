@@ -18,12 +18,12 @@ public class RobotLogManager {
   private static boolean initialized = false;
   private static String directory = "";
 
-  private static String[] filepaths = {
+  private static String[] filepaths = { //Filepaths go in this array
     "C:\\Users\\Team467\\Documents\\GitHub\\Robot2019-Competition\\src\\main\\deploy\\log4j2.yaml",
     "C:\\Users\\Team467\\Documents\\GitHub\\Robot2019-Competition\\src\\main\\deploy\\log4j2-test.yaml"
   };
   
-  private static ArrayList<Integer> getOccurences(String s, char c) {
+  private static ArrayList<Integer> getOccurenceIndicies(String s, char c) {
     ArrayList<Integer> inidicies = new ArrayList<Integer>();
     for(int i=0; i<s.length(); i++) {
       if(s.charAt(i) == c) {
@@ -34,14 +34,13 @@ public class RobotLogManager {
   }
 
   public static String getDirectory(String s) {
-    ArrayList<Integer> indicies = getOccurences(s, '\\');
+    ArrayList<Integer> indicies = getOccurenceIndicies(s, '\\');
     String directory = s.substring(0,indicies.get(indicies.size()-1));
     return directory;
   }
 
   private static boolean doesFileExist(String filepath) {
     if(new File(filepath).exists()) {
-      ArrayList<Integer> indicies = getOccurences(filepath, '\\');
       directory = getDirectory(filepath);
       return true;
     } else {
@@ -65,7 +64,7 @@ public class RobotLogManager {
   }
 
   private static void init() {
-    // String path = "./src/main/deploy/log4j2-test.yaml"; default path in case the other filepaths dont load
+    // String path = "./src/main/deploy/log4j2-test.yaml"; default path (already in array) in case the other filepaths dont load
     for(String path : filepaths) {
       if(doesFileExist(path)) {
         init(path);
