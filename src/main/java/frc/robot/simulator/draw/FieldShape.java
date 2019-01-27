@@ -24,7 +24,6 @@ public class FieldShape {
 public FieldShape(){
     super();
     //loads images and applies them
-    System.out.print("hihi");
     File resourceLocation = new File("src/main/deploy/Field.png");
     try{
     fieldImage = new Image(resourceLocation.toURI().toURL().toString());

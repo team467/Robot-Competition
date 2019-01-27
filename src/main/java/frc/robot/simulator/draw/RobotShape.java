@@ -15,7 +15,9 @@ import javafx.collections.ObservableList;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.effect.BlendMode;
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 
@@ -36,15 +38,12 @@ public class RobotShape {
   // Robot Shapes
   private Shape robotShape = null;
   private Rectangle chassisShape = null;
-  private Rectangle elevatorShape = null;
+  private Rectangle hatchGrabber = null;
+  private Rectangle ballGrabber = null;
+  private Rectangle rollerShape = null;
   private Group robotGroup = new Group();
+  private Group turretGroup = new Group();
 
-  private Stops elevatorStop = Stops.floor;
-  private static final Color ELEVATOR_FLOOR_COLOR = Color.LAWNGREEN;
-  private static final Color ELEVATOR_SWITCH_COLOR = Color.LEMONCHIFFON;
-  private static final Color ELEVATOR_SCALE_LOW_COLOR = Color.LIGHTCYAN;
-  private static final Color ELEVATOR_SCALE_HIGH_COLOR = Color.LIGHTSEAGREEN;
-  private static int time = 0;
   // Network Tables
   RobotData data = RobotData.getInstance();
   CSVReplayer replayer;
@@ -66,6 +65,11 @@ public class RobotShape {
   private Coordinate left = new Coordinate(-1 * (RobotMap.WHEEL_BASE_WIDTH / 2), 0);
   private Coordinate right = new Coordinate((RobotMap.WHEEL_BASE_WIDTH / 2), 0);
   private double mapHeadingAngle = 0.0;
+
+  private double turretAngle = 0.0;
+  private boolean rollerUp = false;
+  private boolean hasHatch = false;
+  private boolean hasBall = false;
 
   public RobotShape() {
     // Use run local for pure simulation. Remote is for observation of actual robot
@@ -131,23 +135,26 @@ public class RobotShape {
    * 
    * @param observableList the list of stuff viewable on the drawn field
    */
-  public Shape createRobotShape(ObservableList<Node> observableList) {
+  public void createRobotShape(ObservableList<Node> observableList) {
 
-    chassisShape = new Rectangle(RobotMap.BUMPER_LENGTH * 12, RobotMap.BUMPER_WIDTH * 12, Color.DARKSLATEGREY);
+    chassisShape = new Rectangle(RobotMap.BUMPER_LENGTH * 12, RobotMap.BUMPER_WIDTH * 12, Color.LIGHTGRAY);
     chassisShape.relocate(FieldShape.FIELD_OFFSET_Y, FieldShape.FIELD_OFFSET_X);
-
-    elevatorShape = new Rectangle(RobotMap.BUMPER_LENGTH * 12 / 2, (RobotMap.BUMPER_WIDTH * 12 - 4), Color.WHITESMOKE);
-    elevatorShape.relocate(FieldShape.FIELD_OFFSET_Y + (RobotMap.BUMPER_LENGTH / 2) * 12,
-        (FieldShape.FIELD_OFFSET_X + 2));
-
-    robotShape = Shape.intersect(chassisShape, elevatorShape);
+    rollerShape = new Rectangle(1 * 12, 1 * 12, Color.CORAL);
+    rollerShape.relocate(FieldShape.FIELD_OFFSET_Y+RobotMap.BUMPER_LENGTH * 12-12, FieldShape.FIELD_OFFSET_X + RobotMap.BUMPER_WIDTH * 6 - 6);
+    hatchGrabber = new Rectangle(12,12,Color.LIGHTYELLOW);
+    hatchGrabber.relocate(0, 0);
+    ballGrabber = new Rectangle(12,12,Color.CORAL);
+    ballGrabber.relocate(0, 12);
+    turretGroup.relocate(FieldShape.FIELD_OFFSET_Y, FieldShape.FIELD_OFFSET_X-12+RobotMap.BUMPER_WIDTH * 6);
+    
 
     robotGroup.setBlendMode(BlendMode.SRC_OVER);
     robotGroup.getChildren().add(chassisShape);
-    robotGroup.getChildren().add(elevatorShape);
+    robotGroup.getChildren().add(rollerShape);
+    turretGroup.getChildren().add(hatchGrabber);
+    turretGroup.getChildren().add(ballGrabber);
+    robotGroup.getChildren().add(turretGroup);
     robotGroup.setVisible(true);
-
-    return robotShape;
   }
 
   public void zero() {
@@ -225,31 +232,6 @@ public class RobotShape {
     return startingLocation.y + left.y;
   }
 
-  private void colorElevator() {
-    switch (elevatorStop) {
-
-    case floor:
-      elevatorShape.setFill(ELEVATOR_FLOOR_COLOR);
-      break;
-
-    case fieldSwitch:
-      elevatorShape.setFill(ELEVATOR_SWITCH_COLOR);
-      break;
-
-    case lowScale:
-      elevatorShape.setFill(ELEVATOR_SCALE_LOW_COLOR);
-      break;
-
-    case highScale:
-      elevatorShape.setFill(ELEVATOR_SCALE_HIGH_COLOR);
-      break;
-
-    default:
-      elevatorShape.setFill(Color.WHITESMOKE);
-    }
-
-  }
-
   public void save() {
     replayLog.writeToFile(loggingPath);
   }
@@ -294,7 +276,6 @@ public class RobotShape {
       previousRightDistance = rightDistance;
       leftDistance = replayer.leftDistance;
       rightDistance = replayer.rightDistance;
-      elevatorStop = replayer.elevatorStop;
       startingLocation.x = replayer.startX;
       startingLocation.y = replayer.startY;
       replayer.next();
@@ -306,7 +287,6 @@ public class RobotShape {
       leftDistance = data.leftDistance();
       rightDistance = -data.rightDistance();
       startingLocation = data.startingLocation();
-      elevatorStop = data.elevatorStop();
     }
     if (LOG_REPLAY) {
       replayLog.addRow();
@@ -321,19 +301,24 @@ public class RobotShape {
     updateMapPosition(leftDistance - previousLeftDistance, rightDistance - previousRightDistance);
   }
 
+  private void updateShape(){
+    turretGroup.setRotate(Math.toDegrees(turretAngle));
+    //                            if true             if false
+    ballGrabber.setFill(hasBall?Color.ORANGE:Color.CORAL);
+    hatchGrabber.setFill(hasHatch?Color.YELLOW:Color.LIGHTYELLOW);
+    rollerShape.setFill(rollerUp?Color.ORANGE:Color.CORAL);
+  }
   /**
    * Loads the data and draws the robot.
    */
   public void draw() {
 
     loadData();
-    colorElevator();
+    updateShape();
+
     double radius = RobotMap.WHEEL_BASE_WIDTH / 2;
     double x = radius * Math.cos(mapHeadingAngle);
     double y = -radius * Math.sin(mapHeadingAngle);
-    robotShape.setRotate(Math.toDegrees(mapHeadingAngle));
-    robotShape.relocate((FieldShape.FIELD_OFFSET_Y + (leftY() + y) * 12),
-        (FieldShape.FIELD_OFFSET_X + (leftX() + x) * 12));
 
     robotGroup.setRotate(Math.toDegrees(mapHeadingAngle));
     robotGroup.relocate((FieldShape.FIELD_OFFSET_Y + (leftY() + y) * 12),
