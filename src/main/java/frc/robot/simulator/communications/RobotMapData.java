@@ -94,4 +94,10 @@ public class RobotMapData implements Serializable, Cloneable {
     cubeMaxDistance = table.getEntry("/cubeMaxDistance").getDouble(cubeMaxDistance);
     angleToCube = table.getEntry("/angleToCube").getDouble(angleToCube);
   }
+  public void flush(String url){
+    
+  }
+  public void load(String url){
+
+  }
 }
