@@ -14,6 +14,8 @@ import org.junit.Test;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.RobotMap;
+import frc.robot.autonomous.ActionGroup;
+import frc.robot.autonomous.Actions;
 import frc.robot.RobotMap.RobotId;
 import frc.robot.logging.RobotLogManager;
 import frc.robot.drive.Drive;
