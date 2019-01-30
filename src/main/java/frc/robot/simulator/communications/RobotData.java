@@ -29,10 +29,8 @@ public class RobotData {
   private static final Logger LOGGER = RobotLogManager.getMainLogger(RobotData.class.getName()); 
   
   private static RobotData instance = null;
-  private CSVFile csvFile = new CSVFile();
   
   private RobotData() {
-    csvFile.loadFromFile("run.txt");
     // TODO: Fix when we figure out how to load native WPI lib modules
     // tableInstance = NetworkTableInstance.getDefault();
     // table = tableInstance.getTable("datatable").getSubTable("/robotmapdata");
@@ -188,7 +186,7 @@ public class RobotData {
     tableInstance.startClient("127.0.0.1");
     tableInstance.setUpdateRate(0.01);
   }
-  
+
   /**
    * Puts the data onto the network table.
    */
@@ -204,22 +202,13 @@ public class RobotData {
     
     if (dataRow.isZeroed) {
       isZeroed = true; // Only can turn flag true. Flag must be cleared only on receiving side.
-    }
+    } 
   }
-  public void receiveCSV(CSVFile data) {
-    dataRow.startingLocation.x = Double.parseDouble(csvFile.get(0).toString());
-    dataRow.startingLocation.y = Double.parseDouble(csvFile.get(1).toString());
-    dataRow.rightPosition = Double.parseDouble(csvFile.get(2).toString());
-    dataRow.leftPosition = Double.parseDouble(csvFile.get(3).toString());
-    dataRow.isZeroed = Boolean.parseBoolean(csvFile.get(4).toString());
-    dataRow.headingAngle = Double.parseDouble(csvFile.get(5).toString());
-    dataRow.elevatorHeight = Double.parseDouble(csvFile.get(6).toString());
-    dataRow.grabberHasCube = Boolean.parseBoolean(csvFile.get(7).toString());
-    dataRow.visionSeesCube = Boolean.parseBoolean(csvFile.get(8).toString());
-    dataRow.cubeMinDistance = Double.parseDouble(csvFile.get(9).toString());
-    dataRow.cubeMaxDistance = Double.parseDouble(csvFile.get(10).toString());
-    dataRow.angleToCube = Double.parseDouble(csvFile.get(11).toString());
-    csvFile.currentRow++;
+  public void flush(CSVFile file){
+    dataRow.flush(file);
+  }
+  public void load(CSVFile file){
+    dataRow.load(file);
   }
   
 }

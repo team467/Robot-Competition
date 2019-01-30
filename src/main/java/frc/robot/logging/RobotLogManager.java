@@ -20,7 +20,8 @@ public class RobotLogManager {
 
   private static String[] filepaths = { //Filepaths go in this array
     "C:\\Users\\Team467\\Documents\\GitHub\\Robot2019-Competition\\src\\main\\deploy\\log4j2.yaml",
-    "C:\\Users\\Team467\\Documents\\GitHub\\Robot2019-Competition\\src\\main\\deploy\\log4j2-test.yaml"
+    "C:\\Users\\Team467\\Documents\\GitHub\\Robot2019-Competition\\src\\main\\deploy\\log4j2-test.yaml",
+    "./src/main/deploy/log4j2-test.yaml"
   };
   
   private static ArrayList<Integer> getOccurenceIndicies(String s, char c) {

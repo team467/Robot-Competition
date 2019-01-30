@@ -4,20 +4,23 @@ import edu.wpi.first.networktables.NetworkTable;
 
 import frc.robot.simulator.gui.Coordinate;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.Serializable;
 
 /**
- * Holds data from the robot, used for organizing the network table data. 
+ * Holds data from the robot, used for organizing the network table data.
  * Essentially a struct, so all public variables.
  */
 public class RobotMapData implements Serializable, Cloneable {
 
   private static final long serialVersionUID = 1L;
   /**
-   *  The start positions on the 2D map of each middle wheel center.
+   * The start positions on the 2D map of each middle wheel center.
    */
   Coordinate startingLocation = new Coordinate(0.0, 0.0);
-  
+
   /**
    * The robot position of the left and right middle wheels.
    */
@@ -25,20 +28,20 @@ public class RobotMapData implements Serializable, Cloneable {
   public double leftPosition = 0.0;
 
   public boolean isZeroed = false;
-  
+
   public double elevatorHeight = 0.0;
   public boolean grabberHasCube = false;
-  
+
   public boolean visionSeesCube = false;
   public double cubeMinDistance = 0.0;
   public double cubeMaxDistance = 0.0;
   public double angleToCube = 0.0;
-  
+
   /**
    * The current robot heading.
    */
   public double headingAngle = 0.0;
-  
+
   /**
    * Creates a deep copy of the current data.
    */
@@ -76,7 +79,7 @@ public class RobotMapData implements Serializable, Cloneable {
       table.getEntry("/angleToCube").setDouble(angleToCube);
     }
   }
-  
+
   /**
    * Gets the information from the network table.
    */
@@ -94,10 +97,22 @@ public class RobotMapData implements Serializable, Cloneable {
     cubeMaxDistance = table.getEntry("/cubeMaxDistance").getDouble(cubeMaxDistance);
     angleToCube = table.getEntry("/angleToCube").getDouble(angleToCube);
   }
-  public void flush(String url){
-    
-  }
-  public void load(String url){
 
+  public void flush(CSVFile csvFile) {
+    csvFile.addRow();
+    csvFile.pushVar(leftPosition);
+    csvFile.pushVar(rightPosition);
+    csvFile.pushVar(startingLocation.x);
+    csvFile.pushVar(startingLocation.y);
+    csvFile.pushVar(isZeroed);
+  }
+
+  public void load(CSVFile csvFile) {
+    leftPosition = Double.parseDouble((String)csvFile.get(0));
+    rightPosition = Double.parseDouble((String)csvFile.get(1));
+    startingLocation.x = Double.parseDouble((String)csvFile.get(2));
+    startingLocation.y = Double.parseDouble((String)csvFile.get(3));
+    isZeroed = Boolean.parseBoolean((String)csvFile.get(4));
+    csvFile.currentRow++;
   }
 }

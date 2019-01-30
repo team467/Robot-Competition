@@ -89,7 +89,6 @@ public class Grabber {
         break;
 
       default:
-
     }
 
     if (!RobotMap.useSimulator) {

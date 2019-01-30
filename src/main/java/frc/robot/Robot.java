@@ -142,8 +142,8 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousPeriodic() {
-    grabber.periodic();
-    elevator.move(0); // Will move to height if set.
+    //grabber.periodic();
+    //elevator.move(0); // Will move to height if set.
     autonomous.run();
   }
 

@@ -46,7 +46,7 @@ public class RobotShape {
 
   // Network Tables
   RobotData data = RobotData.getInstance();
-  CSVReplayer replayer;
+  CSVFile replaySrc = new CSVFile();
   CSVFile replayLog = new CSVFile();
 
   private Coordinate startingLocation = new Coordinate(0.0, 0.0);
@@ -99,10 +99,10 @@ public class RobotShape {
   }
 
   public void init() {
-    if (RUN_REPLAY) {
-      replayer = new CSVReplayer(replaySource);
-    }
     LOGGER.info("logging working");
+    if (RUN_REPLAY) {
+      replaySrc.loadFromFile(replaySource);
+    }
     if (RUN_LOCAL) {
       switch (SimulatedData.driveMode) {
 
@@ -124,7 +124,6 @@ public class RobotShape {
       }
     } else if (RUN_REPLAY) {
       robot.disabledInit();
-      LOGGER.info(replayer.csvFile);
     } else {
       data.startClient();
     }
@@ -140,13 +139,13 @@ public class RobotShape {
     chassisShape = new Rectangle(RobotMap.BUMPER_LENGTH * 12, RobotMap.BUMPER_WIDTH * 12, Color.LIGHTGRAY);
     chassisShape.relocate(FieldShape.FIELD_OFFSET_Y, FieldShape.FIELD_OFFSET_X);
     rollerShape = new Rectangle(1 * 12, 1 * 12, Color.CORAL);
-    rollerShape.relocate(FieldShape.FIELD_OFFSET_Y+RobotMap.BUMPER_LENGTH * 12-12, FieldShape.FIELD_OFFSET_X + RobotMap.BUMPER_WIDTH * 6 - 6);
-    hatchGrabber = new Rectangle(12,12,Color.LIGHTYELLOW);
+    rollerShape.relocate(FieldShape.FIELD_OFFSET_Y + RobotMap.BUMPER_LENGTH * 12 - 12,
+        FieldShape.FIELD_OFFSET_X + RobotMap.BUMPER_WIDTH * 6 - 6);
+    hatchGrabber = new Rectangle(12, 12, Color.LIGHTYELLOW);
     hatchGrabber.relocate(0, 0);
-    ballGrabber = new Rectangle(12,12,Color.CORAL);
+    ballGrabber = new Rectangle(12, 12, Color.CORAL);
     ballGrabber.relocate(0, 12);
-    turretGroup.relocate(FieldShape.FIELD_OFFSET_Y, FieldShape.FIELD_OFFSET_X-12+RobotMap.BUMPER_WIDTH * 6);
-    
+    turretGroup.relocate(FieldShape.FIELD_OFFSET_Y, FieldShape.FIELD_OFFSET_X - 12 + RobotMap.BUMPER_WIDTH * 6);
 
     robotGroup.setBlendMode(BlendMode.SRC_OVER);
     robotGroup.getChildren().add(chassisShape);
@@ -260,54 +259,35 @@ public class RobotShape {
       }
     } else if (RUN_REPLAY) {
       robot.disabledPeriodic();
+      data.load(replaySrc);
     } else {
       data.receive();
     }
-    isZeroed = data.isZeroed();
-    if (RUN_REPLAY) {
-      isZeroed = replayer.isZeroed;
+    if (LOG_REPLAY) {
+      data.flush(replayLog);
     }
+    isZeroed = data.isZeroed();
     if (isZeroed) {
       zero();
     }
+    previousLeftDistance = leftDistance;
+    previousRightDistance = rightDistance;
+    leftDistance = data.leftDistance();
+    rightDistance = data.rightDistance();
+    startingLocation = data.startingLocation();
 
-    if (RUN_REPLAY) {
-      previousLeftDistance = leftDistance;
-      previousRightDistance = rightDistance;
-      leftDistance = replayer.leftDistance;
-      rightDistance = replayer.rightDistance;
-      startingLocation.x = replayer.startX;
-      startingLocation.y = replayer.startY;
-      replayer.next();
-      LOGGER.info("Data read: " + replayer.leftDistance + ", " + replayer.rightDistance);
-      LOGGER.info("frame: " + replayer.steps);
-    } else {
-      previousLeftDistance = leftDistance;
-      previousRightDistance = rightDistance;
-      leftDistance = data.leftDistance();
-      rightDistance = -data.rightDistance();
-      startingLocation = data.startingLocation();
-    }
-    if (LOG_REPLAY) {
-      replayLog.addRow();
-      replayLog.pushVar(leftDistance);
-      replayLog.pushVar(rightDistance);
-      replayLog.pushVar(startingLocation.x);
-      replayLog.pushVar(startingLocation.y);
-      replayLog.pushVar("basement");
-      replayLog.pushVar(isZeroed);
-    }
-    LOGGER.info("left: " + (leftDistance) + ", right: " + (rightDistance));
+    LOGGER.info("left: " + (leftDistance) + ", right: " + (rightDistance)+ ", zeroed" + isZeroed);
     updateMapPosition(leftDistance - previousLeftDistance, rightDistance - previousRightDistance);
   }
 
-  private void updateShape(){
+  private void updateShape() {
     turretGroup.setRotate(Math.toDegrees(turretAngle));
-    //                            if true             if false
-    ballGrabber.setFill(hasBall?Color.ORANGE:Color.CORAL);
-    hatchGrabber.setFill(hasHatch?Color.YELLOW:Color.LIGHTYELLOW);
-    rollerShape.setFill(rollerUp?Color.ORANGE:Color.CORAL);
+    // if true if false
+    ballGrabber.setFill(hasBall ? Color.ORANGE : Color.CORAL);
+    hatchGrabber.setFill(hasHatch ? Color.YELLOW : Color.LIGHTYELLOW);
+    rollerShape.setFill(rollerUp ? Color.ORANGE : Color.CORAL);
   }
+
   /**
    * Loads the data and draws the robot.
    */
