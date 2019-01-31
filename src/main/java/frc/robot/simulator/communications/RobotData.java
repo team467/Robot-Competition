@@ -9,8 +9,11 @@ import frc.robot.logging.RobotLogManager;
 import frc.robot.simulator.gui.Coordinate;
 
 import java.util.ArrayList;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.logging.log4j.Logger;
+
+// import org.apache.commons.csv.CSVRecord;
 
 public class RobotData {
 
@@ -203,5 +206,20 @@ public class RobotData {
       isZeroed = true; // Only can turn flag true. Flag must be cleared only on receiving side.
     }
   }
-  
+
+  private ConcurrentHashMap<String, Object> telemetry = new ConcurrentHashMap<String, Object>();
+  //private CSVRecord record;
+
+  public RobotData update(String name, Object value) {
+    telemetry.put(name, value);
+    return this;
+  }
+
+  public RobotData write() {
+//    record = new CSVRecord();
+    for (String name : telemetry.keySet()) {
+    }
+    return this;
+  }
+
 }

@@ -22,12 +22,12 @@ public class TalonProxyTest {
   @BeforeClass
   public static void initAll() {
     RobotMap.init(RobotId.Competition_1);
-    motor = TalonProxy.create(TEST_DEVICE_NUMBER);
   }
 
   @Test
   public void testProxyToSimulatedMotor() {
     RobotMap.useSimulator = true;
+    motor = TalonProxy.create(TEST_DEVICE_NUMBER);
     LOGGER.trace("TEST|SIMULATOR", "Testing simulator");
     boolean isSimulated = (motor.getName().contains("Simulated")) ? true : false;
     assertTrue(isSimulated);
