@@ -8,6 +8,10 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.Serializable;
+import java.text.DecimalFormat;
+import java.text.FieldPosition;
+import java.text.NumberFormat;
+import java.text.ParsePosition;
 
 /**
  * Holds data from the robot, used for organizing the network table data.
@@ -99,9 +103,10 @@ public class RobotMapData implements Serializable, Cloneable {
   }
 
   public void flush(CSVFile csvFile) {
+    DecimalFormat df = new DecimalFormat("###.####");
     csvFile.addRow();
-    csvFile.pushVar(leftPosition);
-    csvFile.pushVar(rightPosition);
+    csvFile.pushVar(df.format(leftPosition));
+    csvFile.pushVar(df.format(rightPosition));
     csvFile.pushVar(startingLocation.x);
     csvFile.pushVar(startingLocation.y);
     csvFile.pushVar(isZeroed);
