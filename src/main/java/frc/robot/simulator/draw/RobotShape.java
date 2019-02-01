@@ -18,6 +18,7 @@ import javafx.scene.effect.BlendMode;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
+import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 
@@ -41,9 +42,11 @@ public class RobotShape {
   private Rectangle hatchGrabber = null;
   private Rectangle ballGrabber = null;
   private Rectangle rollerShape = null;
+  private Line aligner = null;
   private Group robotGroup = new Group();
   private Group turretGroup = new Group();
 
+  private final double buffer = 100;
   // Network Tables
   RobotData data = RobotData.getInstance();
   CSVFile replaySrc = new CSVFile();
@@ -70,7 +73,7 @@ public class RobotShape {
   private boolean rollerUp = false;
   private boolean hasHatch = false;
   private boolean hasBall = false;
-
+  
   public RobotShape() {
     // Use run local for pure simulation. Remote is for observation of actual robot
     if (RUN_LOCAL | RUN_REPLAY) {
@@ -138,21 +141,29 @@ public class RobotShape {
 
     chassisShape = new Rectangle(RobotMap.BUMPER_LENGTH * 12, RobotMap.BUMPER_WIDTH * 12, Color.LIGHTGRAY);
     chassisShape.relocate(FieldShape.FIELD_OFFSET_Y, FieldShape.FIELD_OFFSET_X);
+
     rollerShape = new Rectangle(1 * 12, 1 * 12, Color.CORAL);
     rollerShape.relocate(FieldShape.FIELD_OFFSET_Y + RobotMap.BUMPER_LENGTH * 12 - 12,
         FieldShape.FIELD_OFFSET_X + RobotMap.BUMPER_WIDTH * 6 - 6);
+
     hatchGrabber = new Rectangle(12, 12, Color.LIGHTYELLOW);
     hatchGrabber.relocate(0, 0);
+
     ballGrabber = new Rectangle(12, 12, Color.CORAL);
     ballGrabber.relocate(0, 12);
+
     turretGroup.relocate(FieldShape.FIELD_OFFSET_Y, FieldShape.FIELD_OFFSET_X - 12 + RobotMap.BUMPER_WIDTH * 6);
 
+    aligner = new Line(-buffer, -buffer, RobotMap.BUMPER_LENGTH * 12+buffer, RobotMap.BUMPER_WIDTH * 12+buffer);
+    aligner.relocate(FieldShape.FIELD_OFFSET_Y-buffer, FieldShape.FIELD_OFFSET_X-buffer);
+    
     robotGroup.setBlendMode(BlendMode.SRC_OVER);
     robotGroup.getChildren().add(chassisShape);
     robotGroup.getChildren().add(rollerShape);
-    turretGroup.getChildren().add(hatchGrabber);
-    turretGroup.getChildren().add(ballGrabber);
+      turretGroup.getChildren().add(hatchGrabber);
+      turretGroup.getChildren().add(ballGrabber);
     robotGroup.getChildren().add(turretGroup);
+    robotGroup.getChildren().add(aligner);
     robotGroup.setVisible(true);
   }
 
@@ -299,10 +310,10 @@ public class RobotShape {
     double radius = RobotMap.WHEEL_BASE_WIDTH / 2;
     double x = radius * Math.cos(mapHeadingAngle);
     double y = -radius * Math.sin(mapHeadingAngle);
-
+    turretAngle+=0.1;
     robotGroup.setRotate(Math.toDegrees(mapHeadingAngle));
-    robotGroup.relocate((FieldShape.FIELD_OFFSET_Y + (leftY() + y) * 12),
-        (FieldShape.FIELD_OFFSET_X + (leftX() + x) * 12));
+    robotGroup.relocate((FieldShape.FIELD_OFFSET_Y + (leftY() + y) * 12-buffer),
+        (FieldShape.FIELD_OFFSET_X + (leftX() + x) * 12-buffer));
 
   }
 
