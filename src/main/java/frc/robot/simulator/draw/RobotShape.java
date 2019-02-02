@@ -43,6 +43,7 @@ public class RobotShape {
   private Rectangle ballGrabber = null;
   private Rectangle rollerShape = null;
   private Line aligner = null;
+  private Line turretAligner = null;
   private Group robotGroup = new Group();
   private Group turretGroup = new Group();
 
@@ -156,12 +157,16 @@ public class RobotShape {
 
     aligner = new Line(-buffer, -buffer, RobotMap.BUMPER_LENGTH * 12+buffer, RobotMap.BUMPER_WIDTH * 12+buffer);
     aligner.relocate(FieldShape.FIELD_OFFSET_Y-buffer, FieldShape.FIELD_OFFSET_X-buffer);
+
+    turretAligner = new Line(-buffer/2, -buffer/2, 12+buffer/2, 24+buffer/2);
+    turretAligner.relocate(-buffer/2, -buffer/2);
     
     robotGroup.setBlendMode(BlendMode.SRC_OVER);
     robotGroup.getChildren().add(chassisShape);
     robotGroup.getChildren().add(rollerShape);
       turretGroup.getChildren().add(hatchGrabber);
       turretGroup.getChildren().add(ballGrabber);
+      turretGroup.getChildren().add(turretAligner);
     robotGroup.getChildren().add(turretGroup);
     robotGroup.getChildren().add(aligner);
     robotGroup.setVisible(true);
