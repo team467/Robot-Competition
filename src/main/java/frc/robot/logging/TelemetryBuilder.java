@@ -1,7 +1,10 @@
 package frc.robot.logging;
 
 import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.networktables.NetworkTableType;
+import edu.wpi.first.networktables.NetworkTableValue;
 import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.SendableBuilderImpl;
 
@@ -10,12 +13,12 @@ import java.io.IOException;
 
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
+import org.apache.commons.math3.ml.neuralnet.Network;
 import org.apache.logging.log4j.Logger;
 
 public class TelemetryBuilder extends SendableBuilderImpl implements SendableBuilder {
 
-  private static final Logger LOGGER 
-      = RobotLogManager.getMainLogger(TelemetryBuilder.class.getName());
+  private static final Logger LOGGER = RobotLogManager.getMainLogger(TelemetryBuilder.class.getName());
 
   private static TelemetryBuilder instance = null;
 
@@ -35,21 +38,28 @@ public class TelemetryBuilder extends SendableBuilderImpl implements SendableBui
   }
 
   /**
-   * Creates the telemtry builder instance with the correct location for the CSV output files.
+   * Creates the telemtry builder instance with the correct location for the CSV
+   * output files.
    */
   public TelemetryBuilder() {
     super();
     super.setTable(NetworkTableInstance.getDefault().getTable("Telemetry"));
     try {
-      csvPrinter = new CSVPrinter(new FileWriter("csv.txt"), 
-          CSVFormat.DEFAULT
-          .withAllowMissingColumnNames(false)
-          .withTrim()
-          .withTrailingDelimiter());
+      csvPrinter = new CSVPrinter(new FileWriter("csv.txt"),
+          CSVFormat.DEFAULT.withAllowMissingColumnNames(false).withTrim().withTrailingDelimiter());
+      LOGGER.info("linked");
     } catch (IOException e) {
       LOGGER.error(e.getStackTrace());
       e.printStackTrace();
     }
+    Runtime.getRuntime().addShutdownHook(new Thread() {
+
+      @Override
+      public void run() {
+         close();
+      }
+
+    });
   }
 
   /**
@@ -65,14 +75,43 @@ public class TelemetryBuilder extends SendableBuilderImpl implements SendableBui
         printedHeaders = true;
       }
       for (String key : table.getKeys()) {
-        csvPrinter.print(table.getEntry(key));
+        NetworkTableEntry entry = table.getEntry(key);
+        NetworkTableType type = entry.getType();
+        String text = "n/a";
+        switch (type) {
+        case kDouble: {
+          text = String.valueOf(entry.getDouble(Double.NaN));
+          break;
+        }
+        case kString: {
+          text = entry.getString("n/a");
+          break;
+        }
+        case kBoolean: {
+          text = String.valueOf(entry.getBoolean(false));
+          break;
+        }
+        default:
+          text = "n/a";
+          break;
+        }
+        csvPrinter.print(text);
+        LOGGER.info(text);
       }
       csvPrinter.println();
     } catch (IOException e) {
       LOGGER.error(e.getStackTrace());
       e.printStackTrace();
+      int hi = 1;
     }
   }
 
+  public void close() {
+    try {
+      csvPrinter.close();
+    } catch (IOException e) {
+      LOGGER.info(e.getMessage());
+    }
+  }
 
 }
