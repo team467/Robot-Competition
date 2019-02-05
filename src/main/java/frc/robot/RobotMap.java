@@ -190,8 +190,8 @@ public class RobotMap {
         CLIMB_MOTOR_CONTROLLER_FOLLOWER1 = 12;
         CLIMBER_RAMP_TIME = 0.5;
         
-        RIGHT_GRABBER_SOLENOID_EXISTS = true;
-        LEFT_GRABBER_SOLENOID_EXISTS = true;
+        RIGHT_GRABBER_SOLENOID_EXISTS = false;
+        LEFT_GRABBER_SOLENOID_EXISTS = false;
 
         // Linear PIDS
         LEFT_DRIVE_PID_P = 1.0;
@@ -229,7 +229,7 @@ public class RobotMap {
         GRABBER_INVERT = true;
         GRABBER_L_CHANNEL = 0; 
         GRABBER_R_CHANNEL = 1;
-        OPTICAL_CHANNEL = 5;
+        OPTICAL_CHANNEL = 8;
 
         HAS_CAMERA = false;
 
@@ -251,6 +251,12 @@ public class RobotMap {
         AUTONOMOUS_TURN_TIMEOUT_MS = 300;
 
         HAS_HATCH = true;
+        HATCH_S1_FORWARD_CHANNEL = 2;
+        HATCH_S1_REVERSE_CHANNEL = 3;
+        HATCH_S2_FORWARD_CHANNEL = 4;
+        HATCH_S2_REVERSE_CHANNEL = 5;
+        HATCH_S3_FORWARD_CHANNEL = 6;
+        HATCH_S3_REVERSE_CHANNEL = 7;
         break;
 
       case Board:

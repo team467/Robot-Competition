@@ -98,7 +98,7 @@ public class Robot extends TimedRobot {
     data = RobotData.getInstance();
     drive = Drive.getInstance();
     elevator = Elevator.getInstance();
-    grabber = Grabber.getInstance();
+    //grabber = Grabber.getInstance();
     hatch = Hatch.getInstance();
     matchConfig = MatchConfiguration.getInstance();
 
@@ -147,7 +147,7 @@ public class Robot extends TimedRobot {
     */
   @Override
   public void autonomousPeriodic() {
-    grabber.periodic();
+    //grabber.periodic();
     autonomous.run();
   }
 
@@ -157,7 +157,7 @@ public class Robot extends TimedRobot {
     autonomous = Actions.doNothing();
     //drive.configPeakOutput(1.0);
     driverstation.readInputs();
-    grabber.reset();
+    //grabber.reset();
   }
 
   /**
@@ -168,15 +168,15 @@ public class Robot extends TimedRobot {
     LOGGER.debug("Match time {}", DriverStation.getInstance().getMatchTime());
     driverstation.readInputs();
 
-    grabber.grab(driverstation.getGrabThrottle());
+    //grabber.grab(driverstation.getGrabThrottle());
 
     //grabber open and close
     if (driverstation.getGrabberOpen()) {
       LOGGER.info("Grabber Open");
-      grabber.open();
+      //grabber.open();
     } else {
       LOGGER.debug("Grabber Close");
-      grabber.close();
+      //grabber.close();
     }
 
     double speed = driverstation.getArcadeSpeed();
