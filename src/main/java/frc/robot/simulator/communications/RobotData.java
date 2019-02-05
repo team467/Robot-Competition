@@ -3,8 +3,6 @@ package frc.robot.simulator.communications;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import frc.robot.drive.motorcontrol.pathplanning.AutonomousPlan;
-import frc.robot.gamepieces.Elevator;
-import frc.robot.gamepieces.Elevator.Stops;
 import frc.robot.logging.RobotLogManager;
 import frc.robot.simulator.gui.Coordinate;
 
@@ -114,67 +112,8 @@ public class RobotData {
     dataRow.isZeroed = false;
     isZeroed = false;
   }
-
-  public void elevatorHeight(Stops stop) {
-    dataRow.elevatorHeight = stop.height;
-  }
   
-  public double elevatorHeight() {
-    return dataRow.elevatorHeight;
-  }
   
-  public void elevatorheight(double height) {
-    dataRow.elevatorHeight = height;
-  }
-  
-  public Elevator.Stops elevatorStop() {
-    Stops stop = Stops.floor;
-    if (dataRow.elevatorHeight < Stops.fieldSwitch.height) {
-      stop = Elevator.Stops.floor;
-    } else if (dataRow.elevatorHeight < Stops.lowScale.height) {
-      stop = Elevator.Stops.lowScale;
-    } else {
-      stop = Stops.highScale;
-    }
-    return stop;
-  }
-  
-  public void grabberHasCube(boolean grabberHasCube) {
-    dataRow.grabberHasCube = grabberHasCube;
-  }
-  
-  public boolean grabberHasCube() {
-    return dataRow.grabberHasCube;
-  }
-  
-  public boolean visionSeesCube = false;
-  public double cubeMinDistance = 0.0;
-  public double cubeMaxDistance = 0.0;
-  public double angleToCube = 0.0;
-
-  public void cubeSpotted(double minDistance, double maxDistance, double angle) {
-    dataRow.visionSeesCube = true;
-    dataRow.cubeMinDistance = minDistance;
-    dataRow.cubeMaxDistance = maxDistance;
-    dataRow.angleToCube = angle;
-  }
-  
-  public void lostCube() {
-    dataRow.visionSeesCube = false;
-  }
-  
-  public boolean canSeeCube() {
-    return dataRow.visionSeesCube;
-  }
-  
-  public double cubeAngle() {
-    return dataRow.angleToCube;
-  }
-  
-  public double cubeCenter() {
-    return (dataRow.cubeMinDistance + dataRow.cubeMaxDistance) / 2;
-  }
-
   // Start section for handling Network Tables
   
   public void startServer() {

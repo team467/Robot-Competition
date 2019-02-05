@@ -33,14 +33,6 @@ public class RobotMapData implements Serializable, Cloneable {
 
   public boolean isZeroed = false;
 
-  public double elevatorHeight = 0.0;
-  public boolean grabberHasCube = false;
-
-  public boolean visionSeesCube = false;
-  public double cubeMinDistance = 0.0;
-  public double cubeMaxDistance = 0.0;
-  public double angleToCube = 0.0;
-
   /**
    * The current robot heading.
    */
@@ -55,12 +47,6 @@ public class RobotMapData implements Serializable, Cloneable {
     clone.rightPosition = this.rightPosition;
     clone.leftPosition = this.leftPosition;
     clone.isZeroed = this.isZeroed;
-    clone.elevatorHeight = this.elevatorHeight;
-    clone.grabberHasCube = this.grabberHasCube;
-    clone.visionSeesCube = this.visionSeesCube;
-    clone.cubeMinDistance = this.cubeMinDistance;
-    clone.cubeMaxDistance = this.cubeMaxDistance;
-    clone.angleToCube = this.angleToCube;
     return clone;
   }
 
@@ -75,12 +61,6 @@ public class RobotMapData implements Serializable, Cloneable {
       table.getEntry("/leftDistance").setDouble(leftPosition);
       table.getEntry("/isZeroed").setBoolean(isZeroed);
       table.getEntry("/headingAngle").setDouble(headingAngle);
-      table.getEntry("/elevatorHeight").setDouble(elevatorHeight);
-      table.getEntry("/grabberHasCube").setBoolean(grabberHasCube);
-      table.getEntry("/visionSeesCube").setBoolean(visionSeesCube);
-      table.getEntry("/cubeMinDistance").setDouble(cubeMinDistance);
-      table.getEntry("/cubeMaxDistance").setDouble(cubeMaxDistance);
-      table.getEntry("/angleToCube").setDouble(angleToCube);
     }
   }
 
@@ -94,12 +74,6 @@ public class RobotMapData implements Serializable, Cloneable {
     leftPosition = table.getEntry("/leftDistance").getDouble(leftPosition);
     isZeroed = table.getEntry("/isZeroed").getBoolean(isZeroed);
     headingAngle = table.getEntry("/headingAngle").getDouble(headingAngle);
-    elevatorHeight = table.getEntry("/elevatorHeight").getDouble(elevatorHeight);
-    grabberHasCube = table.getEntry("/grabberHasCube").getBoolean(grabberHasCube);
-    visionSeesCube = table.getEntry("/visionSeesCube").getBoolean(visionSeesCube);
-    cubeMinDistance = table.getEntry("/cubeMinDistance").getDouble(cubeMinDistance);
-    cubeMaxDistance = table.getEntry("/cubeMaxDistance").getDouble(cubeMaxDistance);
-    angleToCube = table.getEntry("/angleToCube").getDouble(angleToCube);
   }
 
   public void flush(CSVFile csvFile) {

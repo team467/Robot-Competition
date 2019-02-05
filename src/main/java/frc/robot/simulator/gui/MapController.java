@@ -169,11 +169,19 @@ public class MapController {
    */
   public void initialize() {
     {
+      Alert confirmLocal = new Alert(AlertType.CONFIRMATION);
+      confirmLocal.setTitle("documentation");
+      confirmLocal.setHeaderText("Confirmation Dialog");
+      confirmLocal.setContentText("would you like to run this live?");
+      Optional<ButtonType> result = confirmLocal.showAndWait();
+      if (result.get() == ButtonType.OK) {
+        RobotShape.RUN_LOCAL=false;
+      } else {
       Alert confirmLogging = new Alert(AlertType.CONFIRMATION);
       confirmLogging.setTitle("documentation");
       confirmLogging.setHeaderText("Confirmation Dialog");
       confirmLogging.setContentText("would you like to run this from a file?");
-      Optional<ButtonType> result = confirmLogging.showAndWait();
+       result = confirmLogging.showAndWait();
       if (result.get() == ButtonType.OK) {
         
 
@@ -190,6 +198,7 @@ public class MapController {
       } else {
         RobotShape.RUN_REPLAY = false;
       }
+    }
       Alert confirmReplay = new Alert(AlertType.CONFIRMATION);
       confirmReplay.setTitle("documentation");
       confirmReplay.setHeaderText("Confirmation Dialog");
