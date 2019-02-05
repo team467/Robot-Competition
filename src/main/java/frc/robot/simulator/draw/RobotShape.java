@@ -19,6 +19,7 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Line;
+import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 
@@ -33,6 +34,8 @@ public class RobotShape {
   int not = 102;
   private Robot robot; // For local processing
 
+
+
   private static final Logger LOGGER = RobotLogManager.getMainLogger(RobotShape.class.getName());
   private DecimalFormat df = new DecimalFormat("####0.00");
 
@@ -42,12 +45,18 @@ public class RobotShape {
   private Rectangle hatchGrabber = null;
   private Rectangle ballGrabber = null;
   private Rectangle rollerShape = null;
+  private Polygon view = new Polygon();
   private Line aligner = null;
   private Line turretAligner = null;
+  private Line camAligner = null;
   private Group robotGroup = new Group();
   private Group turretGroup = new Group();
+  private Group cameraGroup = new Group();
 
-  private final double buffer = 100;
+
+  private static final double CAM_ANGLE = 70;
+  private static final double CAM_RANGE = 50;
+  private final double BUFFER = CAM_RANGE*4;
   // Network Tables
   RobotData data = RobotData.getInstance();
   CSVFile replaySrc = new CSVFile();
@@ -71,6 +80,7 @@ public class RobotShape {
   private double mapHeadingAngle = 0.0;
 
   private double turretAngle = 0.0;
+  private double cameraAngle = 0.0;
   private boolean rollerUp = false;
   private boolean hasHatch = false;
   private boolean hasBall = false;
@@ -153,13 +163,27 @@ public class RobotShape {
     ballGrabber = new Rectangle(12, 12, Color.CORAL);
     ballGrabber.relocate(0, 12);
 
+    view.getPoints().addAll(
+    0.0,0.0,
+    -Math.tan(Math.toRadians(CAM_ANGLE/2))*CAM_RANGE, CAM_RANGE,
+    Math.tan(Math.toRadians(CAM_ANGLE/2))*CAM_RANGE, CAM_RANGE);
+    view.setFill(Color.LIME);
+    view.setOpacity(0.5);
+
     turretGroup.relocate(FieldShape.FIELD_OFFSET_Y, FieldShape.FIELD_OFFSET_X - 12 + RobotMap.BUMPER_WIDTH * 6);
+    
+    cameraGroup.relocate(FieldShape.FIELD_OFFSET_Y, FieldShape.FIELD_OFFSET_X + RobotMap.BUMPER_WIDTH * 6);
 
-    aligner = new Line(-buffer, -buffer, RobotMap.BUMPER_LENGTH * 12+buffer, RobotMap.BUMPER_WIDTH * 12+buffer);
-    aligner.relocate(FieldShape.FIELD_OFFSET_Y-buffer, FieldShape.FIELD_OFFSET_X-buffer);
+    aligner = new Line(-BUFFER, -BUFFER, RobotMap.BUMPER_LENGTH * 12+BUFFER, RobotMap.BUMPER_WIDTH * 12+BUFFER);
+    aligner.relocate(FieldShape.FIELD_OFFSET_Y-BUFFER, FieldShape.FIELD_OFFSET_X-BUFFER);
+    aligner.setOpacity(0);
 
-    turretAligner = new Line(-buffer/2, -buffer/2, 12+buffer/2, 24+buffer/2);
-    turretAligner.relocate(-buffer/2, -buffer/2);
+    turretAligner = new Line(-BUFFER/2, -BUFFER/2, 12+BUFFER/2, 24+BUFFER/2);
+    turretAligner.relocate(-BUFFER/2, -BUFFER/2);
+    turretAligner.setOpacity(0);
+    camAligner = new Line(-BUFFER/2, -BUFFER/2, BUFFER/2, BUFFER/2);
+    camAligner.relocate(-BUFFER/2, -BUFFER/2);
+    camAligner.setOpacity(0);
     
     robotGroup.setBlendMode(BlendMode.SRC_OVER);
     robotGroup.getChildren().add(chassisShape);
@@ -168,6 +192,9 @@ public class RobotShape {
       turretGroup.getChildren().add(ballGrabber);
       turretGroup.getChildren().add(turretAligner);
     robotGroup.getChildren().add(turretGroup);
+      cameraGroup.getChildren().add(view);
+      cameraGroup.getChildren().add(camAligner);
+    robotGroup.getChildren().add(cameraGroup);
     robotGroup.getChildren().add(aligner);
     robotGroup.setVisible(true);
   }
@@ -298,6 +325,7 @@ public class RobotShape {
 
   private void updateShape() {
     turretGroup.setRotate(Math.toDegrees(turretAngle));
+    cameraGroup.setRotate(Math.toDegrees(cameraAngle)+90);
     // if true if false
     ballGrabber.setFill(hasBall ? Color.ORANGE : Color.CORAL);
     hatchGrabber.setFill(hasHatch ? Color.YELLOW : Color.LIGHTYELLOW);
@@ -311,14 +339,13 @@ public class RobotShape {
 
     loadData();
     updateShape();
-
+    cameraAngle+=0.1;
     double radius = RobotMap.WHEEL_BASE_WIDTH / 2;
     double x = radius * Math.cos(mapHeadingAngle);
     double y = -radius * Math.sin(mapHeadingAngle);
-    turretAngle+=0.1;
     robotGroup.setRotate(Math.toDegrees(mapHeadingAngle));
-    robotGroup.relocate((FieldShape.FIELD_OFFSET_Y + (leftY() + y) * 12-buffer),
-        (FieldShape.FIELD_OFFSET_X + (leftX() + x) * 12-buffer));
+    robotGroup.relocate((FieldShape.FIELD_OFFSET_Y + (leftY() + y) * 12-BUFFER),
+        (FieldShape.FIELD_OFFSET_X + (leftX() + x) * 12-BUFFER));
 
   }
 
