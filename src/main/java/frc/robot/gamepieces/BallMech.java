@@ -101,6 +101,11 @@ public class BallMech extends GamePieceBase implements GamePieceInterface {
           return state;
     }
 }
+    /**
+     * Forward means the roller is spinning inwards, essentially pulling balls in
+     * Reverse means the roller is spinning outwards not letting the ball in
+     * 
+     */
 
     public enum Claw {
         FORWARD,
@@ -165,7 +170,7 @@ public class BallMech extends GamePieceBase implements GamePieceInterface {
         ClawArmState.initialize();
 
         belt = Claw.STOP;
-        arm = ClawArm.UP;
+        arm = ClawArm.DOWN;
         armState = ClawArmState.read();
 
         LOGGER.trace("Created Ball Mech game piece.");
@@ -244,5 +249,4 @@ public class BallMech extends GamePieceBase implements GamePieceInterface {
     builder.addStringProperty("ClawArm", arm::name, (command) -> arm(command));
     builder.addStringProperty("ClawArmState", armState::name, null);
   }
-
 }
