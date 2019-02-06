@@ -329,7 +329,7 @@ public class RobotShape {
     // if true if false
     ballGrabber.setFill(hasBall ? Color.ORANGE : Color.CORAL);
     hatchGrabber.setFill(hasHatch ? Color.YELLOW : Color.LIGHTYELLOW);
-    rollerShape.setFill(rollerUp ? Color.ORANGE : Color.CORAL);
+    rollerShape.setFill(rollerUp ? Color.LIME : Color.MAROON);
   }
 
   /**
