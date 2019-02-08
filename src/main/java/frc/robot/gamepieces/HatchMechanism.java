@@ -2,6 +2,7 @@ package frc.robot.gamepieces;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
 
 import frc.robot.logging.RobotLogManager;
 
@@ -221,5 +222,58 @@ public class HatchMechanism extends GamePieceBase implements GamePieceInterface{
         hatchArmState = HatchArmState.read();
         latchState = LatchState.read();
     }
+    
+  /**
+   * Moves the roller arm up or down.
+   * 
+   * @param command which way to move the arm.
+   */
+    public void hatchArm(HatchArm command){
+        hatchArm = command;
+    }
 
+    /**
+   * Moves the arm in or out. The String version sets the 
+   * command from the Smart Dashboard.
+   * 
+   * @param command which way to move the arm.
+   */
+    public void hatchArm(String command){
+        hatchArm = HatchArm.valueOf(command);
+    }
+
+    public HatchArmState hatchArm(){
+        return hatchArmState;
+    }
+
+    public void latch(Latch command){
+        latch = command;
+    }
+
+    public void latch(String command){
+        latch = Latch.valueOf(command);
+    }
+
+    public LatchState latch(){
+        return latchState;
+    }
+
+    public void periodic() {
+        // Take Actions
+        if (enabled) {
+          hatchArm.actuate();
+          latch.actuate();
+        }
+        // Update state
+        hatchArmState = HatchArmState.read();
+        latchState = LatchState.read();
+      }
+
+      @Override
+      public void initSendable(SendableBuilder builder) {
+        builder.addStringProperty("HatchArm", hatchArm::name, (command) -> hatchArm(command));
+        builder.addStringProperty("Latch", latch::name, (command) -> latch(command));
+        builder.addStringProperty("HatchArmState", hatchArmState::name, null);
+        builder.addStringProperty("LatchState", latchState::name, null);
+      }
 }
