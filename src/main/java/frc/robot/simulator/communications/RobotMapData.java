@@ -1,17 +1,13 @@
 package frc.robot.simulator.communications;
 
 import edu.wpi.first.networktables.NetworkTable;
-
+import frc.robot.logging.RobotLogManager;
 import frc.robot.simulator.gui.Coordinate;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.Serializable;
 import java.text.DecimalFormat;
-import java.text.FieldPosition;
-import java.text.NumberFormat;
-import java.text.ParsePosition;
+
+import org.apache.logging.log4j.Logger;
 
 /**
  * Holds data from the robot, used for organizing the network table data.
@@ -25,6 +21,7 @@ public class RobotMapData implements Serializable, Cloneable {
    */
   Coordinate startingLocation = new Coordinate(0.0, 0.0);
 
+  private static final Logger LOGGER = RobotLogManager.getMainLogger(RobotMapData.class.getName());
   /**
    * The robot position of the left and right middle wheels.
    */
@@ -64,6 +61,15 @@ public class RobotMapData implements Serializable, Cloneable {
     }
   }
 
+  public void log(NetworkTable table){
+    LOGGER.info(table.getEntry("/startingLocation/x").getDouble(startingLocation.x));
+    LOGGER.info(table.getEntry("/startingLocation/y").getDouble(startingLocation.y));
+    LOGGER.info(table.getEntry("/rightDistance").getDouble(rightPosition));
+    LOGGER.info(table.getEntry("/leftDistance").getDouble(leftPosition));
+    LOGGER.info(table.getEntry("/isZeroed").getBoolean(isZeroed));
+    LOGGER.info(table.getEntry("/headingAngle").getDouble(headingAngle));
+  }
+
   /**
    * Gets the information from the network table.
    */
@@ -72,6 +78,7 @@ public class RobotMapData implements Serializable, Cloneable {
     startingLocation.y = table.getEntry("/startingLocation/y").getDouble(startingLocation.y);
     rightPosition = table.getEntry("/rightDistance").getDouble(rightPosition);
     leftPosition = table.getEntry("/leftDistance").getDouble(leftPosition);
+    LOGGER.info("right: "+table.getEntry("/rightDistance").getDouble(rightPosition) + ", left: " + table.getEntry("/leftDistance").getDouble(leftPosition));
     isZeroed = table.getEntry("/isZeroed").getBoolean(isZeroed);
     headingAngle = table.getEntry("/headingAngle").getDouble(headingAngle);
   }

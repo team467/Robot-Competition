@@ -2,7 +2,6 @@ package frc.robot.simulator.draw;
 
 import frc.robot.Robot;
 import frc.robot.RobotMap;
-import frc.robot.gamepieces.Elevator.Stops;
 import frc.robot.logging.RobotLogManager;
 import frc.robot.simulator.communications.*;
 import frc.robot.simulator.gui.Coordinate;
@@ -15,9 +14,7 @@ import javafx.collections.ObservableList;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.effect.BlendMode;
-import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
@@ -140,6 +137,9 @@ public class RobotShape {
       robot.disabledInit();
     } else {
       data.startClient();
+      LOGGER.info("+--------------client started---------------+");
+      data.log();
+      LOGGER.info("x--------------client started---------------x");
     }
   }
 
@@ -305,11 +305,14 @@ public class RobotShape {
       data.load(replaySrc);
     } else {
       data.receive();
+      LOGGER.info("+--------------liveperiodic---------------+");
+      data.log();
+      LOGGER.info("x--------------liveperiodic---------------x");
     }
     if (LOG_REPLAY) {
       data.flush(replayLog);
     }
-    isZeroed = data.isZeroed();
+    isZeroed = (RUN_LOCAL|RUN_REPLAY)&data.isZeroed();
     if (isZeroed) {
       zero();
     }
@@ -327,8 +330,8 @@ public class RobotShape {
     turretGroup.setRotate(Math.toDegrees(turretAngle));
     cameraGroup.setRotate(Math.toDegrees(cameraAngle)+90);
     // if true if false
-    ballGrabber.setFill(hasBall ? Color.ORANGE : Color.CORAL);
-    hatchGrabber.setFill(hasHatch ? Color.YELLOW : Color.LIGHTYELLOW);
+    ballGrabber.setFill(hasBall ?  Color.color(0.8, 0.4, 0):Color.color(0.4, 0.2, 0));
+    hatchGrabber.setFill(hasHatch ? Color.color(0.8, 0.8, 0):Color.color(0.4, 0.4, 0));
     rollerShape.setFill(rollerUp ? Color.LIME : Color.MAROON);
   }
 

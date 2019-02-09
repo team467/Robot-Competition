@@ -35,14 +35,24 @@ public class RobotData {
     
     dataRow = new RobotMapData();
     isZeroed = false;
+    tableInstance = NetworkTableInstance.getDefault();
+    table  = tableInstance.getTable("Telemetry");
+    send();
+    LOGGER.info("A---------------A");
+    log();
 
     addToHistory();
+    LOGGER.info("C---------------C");
+    log();
   }
   
   public static RobotData getInstance() {
     if (instance == null) {
+      LOGGER.info("D-------D-------D");
       instance = new RobotData();
     }
+    LOGGER.info("B---------------B");
+    instance.log();
     return instance;
   }
   
@@ -122,7 +132,7 @@ public class RobotData {
   }
   
   public void startClient() {
-    tableInstance.startClient("127.0.0.1");
+    tableInstance.startClient("10.4.67.23");
     tableInstance.setUpdateRate(0.01);
   }
 
@@ -131,6 +141,9 @@ public class RobotData {
    */
   public void send() {
     dataRow.send(table);
+  }
+  public void log(){
+    dataRow.log(table);
   }
   
   /**

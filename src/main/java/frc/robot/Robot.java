@@ -101,7 +101,7 @@ public class Robot extends TimedRobot {
     grabber = Grabber.getInstance();
     matchConfig = MatchConfiguration.getInstance();
 
-
+    
     if (RobotMap.HAS_CAMERA) {
       vision = VisionProcessing.getInstance();
       vision.startVision();
@@ -113,7 +113,9 @@ public class Robot extends TimedRobot {
     }
 
     drive.setPidsFromRobotMap();
+    data.log();
     data.send();
+    data.receive();
   }
 
   /**
@@ -228,6 +230,9 @@ public class Robot extends TimedRobot {
 
       default:
     }
+    data.log();
+    data.receive();
+    data.send();
   }
 
   @Override
@@ -271,6 +276,9 @@ public class Robot extends TimedRobot {
         break;
       default:
     }
+    data.log();
+    data.receive();
+    data.send();
   }
 
   @Override
@@ -281,6 +289,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void disabledPeriodic() {
+    data.log();
     LOGGER.trace("Disabled Periodic");
     String[] autoList = {
       "None", 
@@ -298,6 +307,10 @@ public class Robot extends TimedRobot {
     };
     dashboard.getEntry("Auto List").setStringArray(autoList);
     //LOGGER.info("Selected Auto Mode: " + SmartDashboard.getString("Auto Selector", "None"));
+    data.log();
+    data.receive();
+    data.send();
   }
+
 
 }

@@ -71,6 +71,12 @@ Configuration:
           AppenderRef:
             - ref: File_Appender
               level: info
+              
+        - name: frc.robot.simulator.communications.RobotMapData
+          level: info
+          AppenderRef:
+            - ref: File_Appender
+              level: info
 
         - name: frc.robot.autonomous.Actions
           level: info
