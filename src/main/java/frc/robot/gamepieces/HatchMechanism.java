@@ -16,18 +16,13 @@ public class HatchMechanism extends GamePieceBase implements GamePieceInterface{
 
     //Actuators
     private HatchArm hatchArm;
-    //private Latch latch;
-    private Firing firing;
+    private Firer firer;
 
     //TODO: Place these values in RobotMap
     public static int HATCH_ARM_FORWARD_CHANNEL;
     public static int HATCH_ARM_REVERSE_CHANNEL;
     public static int HATCH_ARM_IN_SENSOR_CHANNEL;
     public static int HATCH_ARM_OUT_SENSOR_CHANNEL;
-
-    public static int LATCH_DEVICE_CHANNEL;
-    public static int LATCH_ENGAGE_SENSOR_CHANNEL;
-    public static int LATCH_DISENGAGE_SENSOR_CHANNEL;
 
     public static int FIRING_1_FORWARD_CHANNEL;
     public static int FIRING_1_REVERSE_CHANNEL;
@@ -39,7 +34,6 @@ public class HatchMechanism extends GamePieceBase implements GamePieceInterface{
 
     //States
     private HatchArmState hatchArmState;
-    //private LatchState latchState;
 
     //HatchArm
     public enum HatchArm{
@@ -52,6 +46,22 @@ public class HatchMechanism extends GamePieceBase implements GamePieceInterface{
 
         private static void initialize() {
             arm = new DoubleSolenoid(HATCH_ARM_FORWARD_CHANNEL, HATCH_ARM_REVERSE_CHANNEL);
+        }
+
+        private static boolean getSolenoid(){
+            boolean solenoidForward;
+            switch(arm.get()){
+                case kForward:
+                    solenoidForward = true;
+                    break;
+                case kReverse:
+                    solenoidForward = false;
+                    break;
+                default:
+                    solenoidForward = false;
+                    LOGGER.debug("Solenoid state undetermined");
+            }
+            return solenoidForward;
         }
 
         private void actuate(){
@@ -70,120 +80,19 @@ public class HatchMechanism extends GamePieceBase implements GamePieceInterface{
 
     }
 
-    //HatchArmState
-    public enum HatchArmState {
-        IN, 
-        MOVING_IN,
-        OUT,
-        MOVING_OUT,
-        UNKNOWN;
-
-        //TODO: Find out what sensors if any the arm uses
-
-        private static DigitalInput armIn;
-        private static DigitalInput armOut;
-        private static HatchArmState previousState;
-
-        private static void initialize(){
-            armIn = new DigitalInput(LATCH_ENGAGE_SENSOR_CHANNEL);
-            armIn.setName("Telemetry", "armIn");
-            armOut = new DigitalInput(LATCH_DISENGAGE_SENSOR_CHANNEL);
-            armOut.setName("Telemetry", "armOut");
-        }
-
-        private static HatchArmState read(){
-            HatchArmState state;
-            if (armOut.get()) {
-                state = OUT;
-            } else if (armIn.get()) {
-                state = IN;
-            } else if (previousState == OUT || previousState == MOVING_IN) {
-                state = MOVING_IN;
-            } else if (previousState == IN || previousState == MOVING_IN) {
-                state = MOVING_OUT;
-            } else {
-                state = UNKNOWN;
-            }
-            previousState = state;
-            return state;
-        }
-
-    }
-
-    // //Latch
-    // public enum Latch{
-    //     OFF,
-    //     ENGAGE,
-    //     DISENGAGE;
-
-    //     //TODO: Find device that is used to move latch and declare here
-
-    //     private static void initialize(){
-    //         //Initialize latch movement device
-    //     }
-
-    //     private void actuate(){
-    //         switch(this){
-    //             case ENGAGE:
-    //                 //engage latch
-    //                 break;
-    //             case DISENGAGE:
-    //                 //disengage latch
-    //                 break;
-    //             default:
-    //                 //turn device off
-    //         }
-    //     }
-    // }
-
-    // public enum LatchState{
-    //     ENGAGE,
-    //     ENGAGING,
-    //     DISENGAGE,
-    //     DISENGAGING,
-    //     UNKNOWN;
-
-    //     private static DigitalInput latchEngaged;
-    //     private static DigitalInput latchDisengaged;
-    //     private static LatchState previousState;
-
-    //     private static void initialize(){
-    //         latchEngaged = new DigitalInput(LATCH_ENGAGE_SENSOR_CHANNEL);
-    //         latchEngaged.setName("Telemetry", "latchEngaged");
-    //         latchDisengaged = new DigitalInput(LATCH_DISENGAGE_SENSOR_CHANNEL);
-    //         latchDisengaged.setName("Telemetry", "latchDisengaged");
-    //     }
-
-    //     private static LatchState read(){
-    //         LatchState state;
-    //         if (latchEngaged.get()) {
-    //           state = ENGAGE;
-    //         } else if (latchDisengaged.get()) {
-    //           state = DISENGAGE;
-    //         } else if (previousState == ENGAGE || previousState == DISENGAGING) {
-    //           state = DISENGAGING;
-    //         } else if (previousState == DISENGAGE || previousState == ENGAGING) {
-    //           state = ENGAGING;
-    //         } else {
-    //           state = UNKNOWN;
-    //         }
-    //         previousState = state;
-    //         return state;
-    //     }
-    // }
-
-    public enum Firing{
+    public enum Firer{
+        READY,
         FIRING,
         UNKNOWN;
 
-        private static DoubleSolenoid fire1;
-        private static DoubleSolenoid fire2;
-        private static DoubleSolenoid fire3;
+        private static DoubleSolenoid firer1;
+        private static DoubleSolenoid firer2;
+        private static DoubleSolenoid firer3;
 
         private static void initialize(){
-            fire1 = new DoubleSolenoid(FIRING_1_FORWARD_CHANNEL, FIRING_1_REVERSE_CHANNEL);
-            fire2 = new DoubleSolenoid(FIRING_2_FORWARD_CHANNEL, FIRING_2_REVERSE_CHANNEL);
-            fire3 = new DoubleSolenoid(FIRING_3_FORWARD_CHANNEL, FIRING_3_REVERSE_CHANNEL);
+            firer1 = new DoubleSolenoid(FIRING_1_FORWARD_CHANNEL, FIRING_1_REVERSE_CHANNEL);
+            firer2 = new DoubleSolenoid(FIRING_2_FORWARD_CHANNEL, FIRING_2_REVERSE_CHANNEL);
+            firer3 = new DoubleSolenoid(FIRING_3_FORWARD_CHANNEL, FIRING_3_REVERSE_CHANNEL);
         }
 
         private void fire(){
@@ -214,13 +123,10 @@ public class HatchMechanism extends GamePieceBase implements GamePieceInterface{
 
         //Initialize sensors and actuators
         HatchArm.initialize();
-        // Latch.initialize();
-        Firing.initialize();
+        Firer.initialize();
 
         hatchArm = HatchArm.IN;
-        // latch = Latch.DISENGAGE;
         hatchArmState = HatchArmState.read();
-        // latchState = LatchState.read();
     }
     
   /**
@@ -245,18 +151,6 @@ public class HatchMechanism extends GamePieceBase implements GamePieceInterface{
     public HatchArmState hatchArm(){
         return hatchArmState;
     }
-
-    // public void latch(Latch command){
-    //     latch = command;
-    // }
-
-    // public void latch(String command){
-    //     latch = Latch.valueOf(command);
-    // }
-
-    // public LatchState latch(){
-    //     return latchState;
-    // }
 
     public void periodic() {
         // Take Actions
