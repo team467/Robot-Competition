@@ -219,11 +219,11 @@ public class Robot extends TimedRobot {
       CameraSwitcher.update(3);
     }
 
-    if (driverstation.fireHatch()) {
-      hatch.open();
-    } else {
-      hatch.close();
-    }
+    //if (driverstation.fireHatch()) {
+    //  hatch.open();
+    //} else {
+    //  hatch.close();
+    //}
 
   }
 
@@ -274,10 +274,14 @@ public class Robot extends TimedRobot {
   public void disabledInit() {
     LOGGER.info("Init Disabled");
     //drive.logClosedLoopErrors();
+
+    driverstation.readInputs();
+
   }
 
   @Override
   public void disabledPeriodic() {
+    driverstation.readInputs();
     LOGGER.trace("Disabled Periodic");
     String[] autoList = {
       "None", 
@@ -295,6 +299,18 @@ public class Robot extends TimedRobot {
     };
     dashboard.getEntry("Auto List").setStringArray(autoList);
     //LOGGER.info("Selected Auto Mode: " + SmartDashboard.getString("Auto Selector", "None"));
+
+
+    if (driverstation.getNavJoystick().getJoystick().getPOV() == 0) {
+      CameraSwitcher.update(0);
+    } else if (driverstation.getNavJoystick().getJoystick().getPOV() == 90) {
+      CameraSwitcher.update(1);
+    } else if (driverstation.getNavJoystick().getJoystick().getPOV() == 180) {
+      CameraSwitcher.update(2);
+    } else if (driverstation.getNavJoystick().getJoystick().getPOV() == 270) {
+      CameraSwitcher.update(3);
+    }
+
   }
 
 }
