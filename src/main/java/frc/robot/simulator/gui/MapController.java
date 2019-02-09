@@ -7,11 +7,15 @@ import frc.robot.drive.motorcontrol.pathplanning.AutonomousPlan;
 import frc.robot.logging.RobotLogManager;
 import frc.robot.simulator.communications.RobotData;
 import frc.robot.simulator.draw.FieldShape;
-import frc.robot.simulator.draw.PowerCubeShape;
+import frc.robot.simulator.draw.CargoShape;
 import frc.robot.simulator.draw.RobotShape;
 import frc.robot.simulator.drive.PhysicalMotor;
+
+import java.awt.Window;
+import java.io.File;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Optional;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -22,23 +26,32 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.Bounds;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextInputDialog;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Shape;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 
 import org.apache.logging.log4j.Logger;
 
 /**
  * The controller associated with the only view of our application. The
- * application logic is implemented here. It handles the buttons and drawing
- * the field and robot.
+ * application logic is implemented here. It handles the buttons and drawing the
+ * field and robot.
  *
  */
 public class MapController {
@@ -72,6 +85,12 @@ public class MapController {
    */
   @FXML
   private Button startButton;
+
+  /**
+   * The start button for beginning the match.
+   */
+  @FXML
+  private Button chooseReplay;
 
   /**
    * The select box for choosing the drive mode (i.e. autonomous vs. teleop).
@@ -132,11 +151,11 @@ public class MapController {
   private boolean robotActive;
 
   /**
-   * The shapes for drawing for robot and field and other objects.
+   * The shapes for drawing for robot and field and other objectss.
    */
   private RobotShape robot = new RobotShape();
   private FieldShape fieldShape = new FieldShape();
-  private ArrayList<PowerCubeShape> cubes = new ArrayList<PowerCubeShape>();
+  private ArrayList<CargoShape> cargo = new ArrayList<CargoShape>();
   private ArrayList<Shape> collisions = new ArrayList<Shape>();
   ObservableList<Node> stuffOnField = null;
 
@@ -149,31 +168,71 @@ public class MapController {
    * Initialize method, automatically called by @{link FXMLLoader}.
    */
   public void initialize() {
+    {
+      Alert confirmLogging = new Alert(AlertType.CONFIRMATION);
+      confirmLogging.setTitle("documentation");
+      confirmLogging.setHeaderText("Confirmation Dialog");
+      confirmLogging.setContentText("would you like to run this from a file?");
+      Optional<ButtonType> result = confirmLogging.showAndWait();
+      if (result.get() == ButtonType.OK) {
+        
 
+        Stage secondStage = new Stage();
+        secondStage.setScene(new Scene(new HBox(4, new Label("Second window"))));
+        File file = new FileChooser().showOpenDialog(secondStage);
+        if(file != null){
+        RobotShape.RUN_REPLAY = true;
+        RobotShape.RUN_LOCAL = false;
+        RobotShape.replaySource = file;
+        }else{
+          RobotShape.RUN_REPLAY = false;
+        }
+      } else {
+        RobotShape.RUN_REPLAY = false;
+      }
+      Alert confirmReplay = new Alert(AlertType.CONFIRMATION);
+      confirmReplay.setTitle("documentation");
+      confirmReplay.setHeaderText("Confirmation Dialog");
+      confirmReplay.setContentText("would you like this to be logged?");
+
+      result = confirmReplay.showAndWait();
+      if (result.get() == ButtonType.OK) {
+        Stage secondStage = new Stage();
+        secondStage.setScene(new Scene(new HBox(4, new Label("Second window"))));
+        File file = new FileChooser().showOpenDialog(secondStage);
+        if(file != null){
+        RobotShape.loggingPath = file;
+
+        RobotShape.LOG_REPLAY = true;
+        }else{
+          RobotShape.LOG_REPLAY = false;
+        }
+      } else {
+        RobotShape.LOG_REPLAY = false;
+      }
+    }
     robotActive = false;
     stuffOnField = robotArea.getChildren();
     fieldShape.context(field.getGraphicsContext2D());
 
-    double redSwitchCubeOffsetX = 85.25; //next to red alliance station
+    double redSwitchCubeOffsetX = 85.25; // next to red alliance station
     double redSwitchCubeOffsetY = 196;
 
     for (int i = 0; i < 6; i++) {
       // 1.25' in between each cube ; y-coordinate is same for 6 cubes
-      PowerCubeShape cube 
-          = new PowerCubeShape(redSwitchCubeOffsetX + i * 2.34 * 12.0, redSwitchCubeOffsetY); 
-      cubes.add(cube);
-      stuffOnField.add(cube.shape());
+      CargoShape ball = new CargoShape(redSwitchCubeOffsetX + i * 2.34 * 12.0, redSwitchCubeOffsetY);
+      cargo.add(ball);
+      stuffOnField.add(ball.shape());
     }
 
-    double blueSwitchCubeOffsetX = 85.25; //next to blue alliance station
+    double blueSwitchCubeOffsetX = 85.25; // next to blue alliance station
     double blueSwitchCubeOffsetY = 439.2;
 
     for (int i = 0; i < 6; i++) {
       // 1.25' in between each cube ; y-coordinate is same for 6 cubes
-      PowerCubeShape cube 
-          = new PowerCubeShape(blueSwitchCubeOffsetX + i * 2.34 * 12.0, blueSwitchCubeOffsetY);
-      cubes.add(cube);
-      stuffOnField.add(cube.shape());
+      CargoShape ball = new CargoShape(blueSwitchCubeOffsetX + i * 2.34 * 12.0, blueSwitchCubeOffsetY);
+      cargo.add(ball);
+      stuffOnField.add(ball.shape());
     }
 
     // Default the choice boxes to the first values
@@ -207,35 +266,33 @@ public class MapController {
     // Add control to make sure value is floating point
     textField.textProperty().addListener(new ChangeListener<String>() {
       @Override
-      public void changed(ObservableValue<? extends String> observable, 
-          String oldValue, String newValue) {
-          if (!newValue.matches("^[+-]?\\d{0,7}([\\.]\\d{0,6})?")) {
-            textField.setText(oldValue);
-          } else {
-            SmartDashboard.putString(textField.getId(), textField.getText());
-          }
+      public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+        if (!newValue.matches("^[+-]?\\d{0,7}([\\.]\\d{0,6})?")) {
+          textField.setText(oldValue);
+        } else {
+          SmartDashboard.putString(textField.getId(), textField.getText());
+        }
       }
     });
-  }  
+  }
 
   private void enforceInteger(TextField textField) {
     // Add control to make sure value is floating point
     textField.textProperty().addListener(new ChangeListener<String>() {
       @Override
-      public void changed(ObservableValue<? extends String> observable, 
-          String oldValue, String newValue) {
-          if (!newValue.matches("^[+-]?\\d{0,7}?")) {
-            textField.setText(oldValue);
-          } else {
-            SmartDashboard.putString(textField.getId(), textField.getText());
-          }
+      public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+        if (!newValue.matches("^[+-]?\\d{0,7}?")) {
+          textField.setText(oldValue);
+        } else {
+          SmartDashboard.putString(textField.getId(), textField.getText());
+        }
       }
     });
-  }  
+  }
 
   /**
-   * Temporary, should probably move to RobotMap. This is used for the 
-   * simulator PID controllers, including in tests.
+   * Temporary, should probably move to RobotMap. This is used for the simulator
+   * PID controllers, including in tests.
    */
   public void loadSimulatedDataOntoSmartDashboard() {
     SmartDashboard.putString("DB/String 0", dbString0.getText()); // Tune Distance
@@ -251,20 +308,21 @@ public class MapController {
   }
 
   private void loadDataFromSmartDashboardIntoSimulator() {
-    dbString0.setText(SmartDashboard.getString("DB/String 0", "5.0"));    
-    dbString1.setText(SmartDashboard.getString("DB/String 1", "0.0004"));    
-    dbString2.setText(SmartDashboard.getString("DB/String 2", "0.0"));    
-    dbString3.setText(SmartDashboard.getString("DB/String 3", "0.012"));    
-    dbString4.setText(SmartDashboard.getString("DB/String 4", "0.0"));    
-    dbString5.setText(SmartDashboard.getString("DB/String 5", "0"));    
-    dbString6.setText(SmartDashboard.getString("DB/String 6", "0.0004"));    
-    dbString7.setText(SmartDashboard.getString("DB/String 7", "0.0"));    
-    dbString8.setText(SmartDashboard.getString("DB/String 8", "0.012"));    
-    dbString9.setText(SmartDashboard.getString("DB/String 9", "0.0"));    
+    dbString0.setText(SmartDashboard.getString("DB/String 0", "5.0"));
+    dbString1.setText(SmartDashboard.getString("DB/String 1", "0.0004"));
+    dbString2.setText(SmartDashboard.getString("DB/String 2", "0.0"));
+    dbString3.setText(SmartDashboard.getString("DB/String 3", "0.012"));
+    dbString4.setText(SmartDashboard.getString("DB/String 4", "0.0"));
+    dbString5.setText(SmartDashboard.getString("DB/String 5", "0"));
+    dbString6.setText(SmartDashboard.getString("DB/String 6", "0.0004"));
+    dbString7.setText(SmartDashboard.getString("DB/String 7", "0.0"));
+    dbString8.setText(SmartDashboard.getString("DB/String 8", "0.012"));
+    dbString9.setText(SmartDashboard.getString("DB/String 9", "0.0"));
   }
 
   /**
-   * Test if two shapes or any other object that is a node intersects with another node.
+   * Test if two shapes or any other object that is a node intersects with another
+   * node.
    * 
    * @param shape1 the first node to test
    * @param shape2 the second node
@@ -280,13 +338,11 @@ public class MapController {
     collided = bound1.intersects(bound2);
 
     if (collided) {
-      LOGGER.debug("Shape 1 - Layout ({},{}) : Bound Min ({},{}) : Max ({},{})",
-          df.format(shape1.getLayoutX()), df.format(shape1.getLayoutY()),
-          df.format(bound1.getMinX()), df.format(bound1.getMinY()),
+      LOGGER.debug("Shape 1 - Layout ({},{}) : Bound Min ({},{}) : Max ({},{})", df.format(shape1.getLayoutX()),
+          df.format(shape1.getLayoutY()), df.format(bound1.getMinX()), df.format(bound1.getMinY()),
           df.format(bound1.getMaxX()), df.format(bound1.getMaxY()));
-      LOGGER.debug("Shape 2 - Layout ({},{}) : Bound Min ({},{}) : Max ({},{})",
-          df.format(shape2.getLayoutX()), df.format(shape2.getLayoutY()),
-          df.format(bound2.getMinX()), df.format(bound2.getMinY()),
+      LOGGER.debug("Shape 2 - Layout ({},{}) : Bound Min ({},{}) : Max ({},{})", df.format(shape2.getLayoutX()),
+          df.format(shape2.getLayoutY()), df.format(bound2.getMinX()), df.format(bound2.getMinY()),
           df.format(bound2.getMaxX()), df.format(bound2.getMaxY()));
       Shape overlap = Shape.intersect(shape1, shape2);
       overlap.setFill(Color.ROSYBROWN);
@@ -295,39 +351,39 @@ public class MapController {
       Bounds overlapBounds = overlap.getBoundsInParent();
       // There is an issue with shifting the Y value down
       // LOGGER.error("{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}",
-      //     df.format(shape1.getLayoutX()), df.format(shape1.getLayoutY()),
-      //     df.format(bound1.getMinX()), df.format(bound1.getMinY()),
-      //     df.format(bound1.getMaxX()), df.format(bound1.getMaxY()),
-      //     df.format(bound1.getWidth()), df.format(bound1.getHeight()),
-      //     df.format(shape2.getLayoutX()), df.format(shape2.getLayoutY()),
-      //     df.format(bound2.getMinX()), df.format(bound2.getMinY()),
-      //     df.format(bound2.getMaxX()), df.format(bound2.getMaxY()),
-      //     df.format(bound2.getWidth()), df.format(bound2.getHeight()),
-      //     df.format(overlapBounds.getMinX()), df.format(overlapBounds.getMinY()),
-      //     df.format(overlapBounds.getMaxX()), df.format(overlapBounds.getMaxY()),
-      //     df.format(overlapBounds.getWidth()), df.format(overlapBounds.getHeight()));
-      LOGGER.debug("Overlap - Layout ({},{}) : Bound Min ({},{}) : Max ({},{})",
-          df.format(overlapBounds.getMinX()), df.format(overlapBounds.getMinY()),
-          df.format(overlapBounds.getMaxX()), df.format(overlapBounds.getMaxY()));
-      collisions.add(overlap); 
+      // df.format(shape1.getLayoutX()), df.format(shape1.getLayoutY()),
+      // df.format(bound1.getMinX()), df.format(bound1.getMinY()),
+      // df.format(bound1.getMaxX()), df.format(bound1.getMaxY()),
+      // df.format(bound1.getWidth()), df.format(bound1.getHeight()),
+      // df.format(shape2.getLayoutX()), df.format(shape2.getLayoutY()),
+      // df.format(bound2.getMinX()), df.format(bound2.getMinY()),
+      // df.format(bound2.getMaxX()), df.format(bound2.getMaxY()),
+      // df.format(bound2.getWidth()), df.format(bound2.getHeight()),
+      // df.format(overlapBounds.getMinX()), df.format(overlapBounds.getMinY()),
+      // df.format(overlapBounds.getMaxX()), df.format(overlapBounds.getMaxY()),
+      // df.format(overlapBounds.getWidth()), df.format(overlapBounds.getHeight()));
+      LOGGER.debug("Overlap - Layout ({},{}) : Bound Min ({},{}) : Max ({},{})", df.format(overlapBounds.getMinX()),
+          df.format(overlapBounds.getMinY()), df.format(overlapBounds.getMaxX()), df.format(overlapBounds.getMaxY()));
+      collisions.add(overlap);
     }
     return collided;
   }
 
   private void checkRobotCollision() {
-    for (PowerCubeShape cube : cubes) {
-      Paint color = Color.YELLOW;
-      if (collision(robot.shape(), cube.shape())) {
-        //TODO Log hit
+    for (CargoShape ball : cargo) {
+      Paint color = Color.ORANGE;
+      if (collision(robot.shape(), ball.shape())) {
+        // TODO Log hit
         color = Color.BLUE;
       }
-      cube.shape().setFill(color);
+      ball.shape().setFill(color);
     }
+
   }
 
   /**
-   * The action triggered by pushing the button on the GUI. It creates a thread that monitors
-   * robot movements
+   * The action triggered by pushing the button on the GUI. It creates a thread
+   * that monitors robot movements
    */
   @FXML
   protected void startRobot() {
@@ -390,8 +446,7 @@ public class MapController {
       };
 
       timer = Executors.newSingleThreadScheduledExecutor();
-      timer.scheduleAtFixedRate(simulatedPeriodic, 0, 
-          RobotMap.ITERATION_TIME_MS, TimeUnit.MILLISECONDS);
+      timer.scheduleAtFixedRate(simulatedPeriodic, 0, RobotMap.ITERATION_TIME_MS, TimeUnit.MILLISECONDS);
 
       // update the button content
       startButton.setText("Stop");
@@ -406,8 +461,22 @@ public class MapController {
       startButton.setText("Start");
 
       // stop the timer
+      robot.save();
       stopRobot();
     }
+  }
+
+  @FXML
+  protected void askFile(){
+    
+    Stage secondStage = new Stage();
+    secondStage.setScene(new Scene(new HBox(4, new Label("Second window"))));
+    File file = new FileChooser().showOpenDialog(secondStage);
+    if(file != null){
+    RobotShape.RUN_REPLAY = true;
+    RobotShape.RUN_LOCAL = false;
+    RobotShape.replaySource = file;
+  }
   }
 
   /**
@@ -452,8 +521,7 @@ public class MapController {
       GraphicsContext context = field.getGraphicsContext2D();
       context.beginPath();
       context.moveTo(startY + FieldShape.FIELD_OFFSET_Y, startX + FieldShape.FIELD_OFFSET_X);
-      context.strokePolyline(course.y1, 
-          course.x1, course.size);
+      context.strokePolyline(course.y1, course.x1, course.size);
       context.setStroke(Color.BLACK);
       context.setLineWidth(10.0);
       context.fill();
