@@ -78,7 +78,7 @@ public class Robot extends TimedRobot {
 
     // Delete all Network Table keys; relevant ones will be added when they are set
     table = NetworkTableInstance.getDefault();
-    dashboard  = table.getTable("SmartDashboard");
+    dashboard  = table.getTable("Telemetry");
     //table.deleteAllEntries(); // Uncomment to clear table once.
     
     // Initialize RobotMap
@@ -115,7 +115,6 @@ public class Robot extends TimedRobot {
     drive.setPidsFromRobotMap();
     data.log();
     data.send();
-    data.receive();
   }
 
   /**
@@ -128,6 +127,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
+    data.send();
   }
 
   @Override
@@ -231,7 +231,6 @@ public class Robot extends TimedRobot {
       default:
     }
     data.log();
-    data.receive();
     data.send();
   }
 
@@ -277,7 +276,6 @@ public class Robot extends TimedRobot {
       default:
     }
     data.log();
-    data.receive();
     data.send();
   }
 
@@ -308,7 +306,6 @@ public class Robot extends TimedRobot {
     dashboard.getEntry("Auto List").setStringArray(autoList);
     //LOGGER.info("Selected Auto Mode: " + SmartDashboard.getString("Auto Selector", "None"));
     data.log();
-    data.receive();
     data.send();
   }
 

@@ -37,13 +37,8 @@ public class RobotData {
     isZeroed = false;
     tableInstance = NetworkTableInstance.getDefault();
     table  = tableInstance.getTable("Telemetry");
-    send();
-    LOGGER.info("A---------------A");
-    log();
 
     addToHistory();
-    LOGGER.info("C---------------C");
-    log();
   }
   
   public static RobotData getInstance() {

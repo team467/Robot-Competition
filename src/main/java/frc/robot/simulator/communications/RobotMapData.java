@@ -51,14 +51,14 @@ public class RobotMapData implements Serializable, Cloneable {
    * Puts the data onto the network table.
    */
   public void send(NetworkTable table) {
-    if (table != null) {
+    //if (table != null) {
       table.getEntry("/startingLocation/x").setDouble(startingLocation.x);
       table.getEntry("/startingLocation/y").setDouble(startingLocation.y);
       table.getEntry("/rightDistance").setDouble(rightPosition);
       table.getEntry("/leftDistance").setDouble(leftPosition);
       table.getEntry("/isZeroed").setBoolean(isZeroed);
       table.getEntry("/headingAngle").setDouble(headingAngle);
-    }
+    //}
   }
 
   public void log(NetworkTable table){
@@ -79,7 +79,7 @@ public class RobotMapData implements Serializable, Cloneable {
     rightPosition = table.getEntry("/rightDistance").getDouble(rightPosition);
     leftPosition = table.getEntry("/leftDistance").getDouble(leftPosition);
     LOGGER.info("right: "+table.getEntry("/rightDistance").getDouble(rightPosition) + ", left: " + table.getEntry("/leftDistance").getDouble(leftPosition));
-    isZeroed = table.getEntry("/isZeroed").getBoolean(isZeroed);
+    isZeroed = table.getEntry("/isZeroed").getBoolean(false);
     headingAngle = table.getEntry("/headingAngle").getDouble(headingAngle);
   }
 

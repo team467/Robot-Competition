@@ -6,6 +6,8 @@ import java.util.*;
 
 import org.apache.logging.log4j.Logger;
 
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import frc.robot.logging.RobotLogManager;
 
 import java.io.*;

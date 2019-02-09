@@ -253,7 +253,7 @@ public class RobotMap {
 
       case Board:
       default:
-        HAS_WHEELS = false;
+        HAS_WHEELS = true;
         DRIVEMOTOR_NUM = 0;
         WHEEL_ENCODER_CODES_PER_REVOLUTION = 1024;
 
