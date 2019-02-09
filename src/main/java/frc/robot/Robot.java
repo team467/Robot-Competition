@@ -24,6 +24,7 @@ import frc.robot.gamepieces.Elevator;
 import frc.robot.gamepieces.Grabber;
 import frc.robot.gamepieces.Hatch;
 import frc.robot.logging.RobotLogManager;
+import frc.robot.logging.TelemetryBuilder;
 import frc.robot.simulator.communications.RobotData;
 import frc.robot.usercontrol.DriverStation467;
 import frc.robot.vision.CameraSwitcher;
@@ -54,6 +55,7 @@ public class Robot extends TimedRobot {
   private RobotData data;
   private TestMotorControl testMotorControl;
   private VisionProcessing vision;
+  private TelemetryBuilder telemetry;
 
   private NetworkTableInstance table;
   private NetworkTable dashboard;
@@ -101,6 +103,7 @@ public class Robot extends TimedRobot {
     //grabber = Grabber.getInstance();
     hatch = Hatch.getInstance();
     matchConfig = MatchConfiguration.getInstance();
+    telemetry = TelemetryBuilder.getInstance();
 
 
     if (RobotMap.HAS_CAMERA) {
@@ -149,6 +152,7 @@ public class Robot extends TimedRobot {
   public void autonomousPeriodic() {
     //grabber.periodic();
     autonomous.run();
+    telemetry.updateTable();
   }
 
   @Override
@@ -268,6 +272,7 @@ public class Robot extends TimedRobot {
         break;
       default:
     }
+    telemetry.updateTable();
   }
 
   @Override

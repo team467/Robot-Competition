@@ -29,7 +29,8 @@ public class Climber {
       climbMotorLeader = TalonProxy.create(RobotMap.CLIMB_MOTOR_CONTROLLER_LEADER);
       climbMotorFollower1 = TalonProxy.create(RobotMap.CLIMB_MOTOR_CONTROLLER_FOLLOWER1);
       climbController 
-          = new TalonSpeedControllerGroup(ControlMode.PercentOutput, false, false,
+          = new TalonSpeedControllerGroup("Climber Motor", 
+            ControlMode.PercentOutput, false, false,
             climbMotorLeader, climbMotorFollower1);
       LOGGER.info("Created climber Motors");
     } else {

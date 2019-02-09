@@ -95,7 +95,7 @@ public class WpiTalonSrxTest {
     }
     // Number of ticks it allows for error tollerance on either side of target
     int tolerance = 50; 
-    LOGGER.debug("TEST|DRIVE", "Final position error: {}", motor.getClosedLoopError());
+    LOGGER.info("TEST|DRIVE", "Final position error: {}", motor.getClosedLoopError());
     boolean inTargetRange = (Math.abs(motor.getClosedLoopError()) < tolerance) ? true : false;
     assertTrue(inTargetRange);
   }

@@ -9,8 +9,11 @@ import frc.robot.logging.RobotLogManager;
 import frc.robot.simulator.gui.Coordinate;
 
 import java.util.ArrayList;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.logging.log4j.Logger;
+
+// import org.apache.commons.csv.CSVRecord;
 
 public class RobotData {
 
@@ -206,6 +209,7 @@ public class RobotData {
       isZeroed = true; // Only can turn flag true. Flag must be cleared only on receiving side.
     }
   }
+
   public void receiveCSV(CSVFile data) {
     dataRow.startingLocation.x = Double.parseDouble(csvFile.get(0).toString());
     dataRow.startingLocation.y = Double.parseDouble(csvFile.get(1).toString());

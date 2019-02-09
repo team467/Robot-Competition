@@ -73,10 +73,10 @@ public class Drive extends DifferentialDrive implements AutoDrive {
           rightFollower2 = TalonProxy.create(RobotMap.RIGHT_FOLLOWER_2_CHANNEL);
         }
 
-        left = new TalonSpeedControllerGroup(ControlMode.PercentOutput,
+        left = new TalonSpeedControllerGroup("Left Drive", ControlMode.PercentOutput,
             RobotMap.LEFT_DRIVE_SENSOR_IS_INVERTED, RobotMap.LEFT_DRIVE_MOTOR_IS_INVERTED, 
             leftLead, leftFollower1, leftFollower2);
-        right = new TalonSpeedControllerGroup(ControlMode.PercentOutput,
+        right = new TalonSpeedControllerGroup("Right Drive", ControlMode.PercentOutput,
             RobotMap.RIGHT_DRIVE_SENSOR_IS_INVERTED, RobotMap.RIGHT_DRIVE_MOTOR_IS_INVERTED, 
             rightLead, rightFollower1, rightFollower2);
       } else {
@@ -173,20 +173,8 @@ public class Drive extends DifferentialDrive implements AutoDrive {
   }
 
   public void logClosedLoopErrors() {
-    left.logClosedLoopErrors("Left");
-    right.logClosedLoopErrors("Right");
-  }
-
-  public void logTelemetry(double speed, double turn) {
-    // Log the speed and turn inputs, as well as the speed and position of each side.
-    // For the speed we need to convert from ticks to feet and from per 100ms to per seconds.
-    // For position we need to convert from ticks to feet.
-    TELEMETRY.info(String.format("%f,%f,%f,%f,%f,%f",
-            speed, turn,
-            ticksToFeet(
-                10 * left.getSensorVelocity()), ticksToFeet(left.getSensorPosition()),
-            ticksToFeet(
-                10 * right.getSensorVelocity()), ticksToFeet(right.getSensorPosition())));
+    left.logClosedLoopErrors();
+    right.logClosedLoopErrors();
   }
 
   public ControlMode getControlMode() {
@@ -243,9 +231,9 @@ public class Drive extends DifferentialDrive implements AutoDrive {
     LOGGER.debug("Target: L: {} R: {} Current L: {} R: {}", 
         df.format(leftDistance), df.format(rightDistance), 
         df.format(getLeftDistance()), df.format(getRightDistance()));
-    left.set(ControlMode.Position, feetToTicks(leftDistance));
+    left.set(ControlMode.Position, leftDistance);
     // The right motor is reversed
-    right.set(ControlMode.Position, feetToTicks(rightDistance));
+    right.set(ControlMode.Position, rightDistance);
     data.updateDrivePosition(getLeftDistance(), getRightDistance());
     fieldState.update(getLeftDistance(), getRightDistance());
   }
@@ -338,26 +326,21 @@ public class Drive extends DifferentialDrive implements AutoDrive {
     LOGGER.debug("Target distance in Feet - Right: {} feet, Left: {} feet", 
         df.format(moveRightDistance), df.format(moveLeftDistance));
 
-
-    // Converts turn angle in ticks to degrees, then to radians.
-    double leftDistTicks = feetToTicks(moveLeftDistance);
-    double rightDistTicks = feetToTicks(moveRightDistance);
-
-    left.set(ControlMode.Position, leftDistTicks);
+    left.set(ControlMode.Position, moveLeftDistance);
     // The right motor is reversed
-    right.set(ControlMode.Position, rightDistTicks);
+    right.set(ControlMode.Position, moveRightDistance);
 
     data.updateDrivePosition(getLeftDistance(), getRightDistance());
     fieldState.update(getLeftDistance(), getRightDistance());
   }
   
   public double getLeftDistance() {
-    double leftLeadSensorPos = ticksToFeet(left.sensorPosition());
+    double leftLeadSensorPos = left.position();
     return leftLeadSensorPos;
   }
 
   public double getRightDistance() {
-    double rightLeadSensorPos = ticksToFeet(right.sensorPosition());
+    double rightLeadSensorPos = right.position();
     return rightLeadSensorPos;
   }
 
@@ -372,21 +355,6 @@ public class Drive extends DifferentialDrive implements AutoDrive {
     double lowestAbsDist = Math.min(leftLeadSensorPos, rightLeadSensorPos);
     LOGGER.debug("The absolute distance moved: {}", df.format(lowestAbsDist));
     return lowestAbsDist;
-  }
-
-  private double feetToTicks(double feet) {
-    double ticks = (feet / (RobotMap.WHEEL_CIRCUMFERENCE / 12.0)) 
-        * RobotMap.WHEEL_ENCODER_CODES_PER_REVOLUTION;
-    LOGGER.trace("Feet = {} ticks = {}", df.format(feet), df.format(ticks));
-    //what do i do here
-    return ticks;
-  }
-
-  private double ticksToFeet(double ticks) {
-    double feet = (ticks / RobotMap.WHEEL_ENCODER_CODES_PER_REVOLUTION) 
-        * (RobotMap.WHEEL_CIRCUMFERENCE / 12);
-    LOGGER.trace("Ticks = {} feet = {}", df.format(ticks), df.format(feet));
-    return feet;
   }
 
   // This section overrides the standard Differential Drive 
@@ -427,7 +395,7 @@ public class Drive extends DifferentialDrive implements AutoDrive {
    */
   public void setRamp(int elevatorHeight) {
     double ramp;
-    if (Math.abs(left.sensorSpeed() - right.sensorSpeed()) 
+    if (Math.abs(left.velocity() - right.velocity()) 
         > (RobotMap.TURN_IN_PLACE_DETECT_TOLERANCE) 
         || Math.abs(DriverStation467.getInstance().getArcadeSpeed()) 
         >= RobotMap.MIN_DRIVE_SPEED) { // If driving straight or told to drive straight
