@@ -16,7 +16,7 @@ public class Hatch {
 
   private HatchState state = HatchState.NEUTRAL;
 
-  private static final Logger LOGGER = RobotLogManager.getMainLogger(Grabber.class.getName());
+  private static final Logger LOGGER = RobotLogManager.getMainLogger(Hatch.class.getName());
 
   private static Hatch instance;
   private DoubleSolenoid doubleSolenoid1;    

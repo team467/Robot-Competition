@@ -386,35 +386,4 @@ public class Drive extends DifferentialDrive implements AutoDrive {
     fieldState.update(getLeftDistance(), getRightDistance());
   }
 
-  /**
-   * Sets the ramp time based on the elevator height in sensor ticks if driving 
-   * straight or about to drive straight, or sets the ramp time to the minimum 
-   * if turning in place or stopped.
-   * 
-   * @param elevatorHeight
-   */
-  public void setRamp(int elevatorHeight) {
-    double ramp;
-    if (Math.abs(left.velocity() - right.velocity()) 
-        > (RobotMap.TURN_IN_PLACE_DETECT_TOLERANCE) 
-        || Math.abs(DriverStation467.getInstance().getArcadeSpeed()) 
-        >= RobotMap.MIN_DRIVE_SPEED) { // If driving straight or told to drive straight
-      double heightPercent = (double) (RobotMap.ELEVATOR_BOTTOM_TICKS - elevatorHeight) 
-          / (RobotMap.ELEVATOR_BOTTOM_TICKS - RobotMap.ELEVATOR_TOP_TICKS);
-      ramp = MathUtils.weightedAverage(RobotMap.ELEVATOR_LOW_DRIVE_RAMP_TIME, 
-          RobotMap.ELEVATOR_HIGH_DRIVE_RAMP_TIME, heightPercent);
-    } else { // Stopped or turning in place
-      ramp = RobotMap.ELEVATOR_LOW_DRIVE_RAMP_TIME;
-    }
-
-    ramp = 0.0;
-    left.setOpenLoopRamp(ramp);
-    right.setOpenLoopRamp(ramp);
-    LOGGER.trace("Ramp time: {}", df.format(ramp));
-  }
-  
-  public void setClimberSpeed(double speed) {
-    left.set(speed);
-    right.set(speed);
-  }
 }

@@ -2,9 +2,10 @@ package frc.robot.simulator.draw;
 
 import frc.robot.Robot;
 import frc.robot.RobotMap;
-import frc.robot.gamepieces.Elevator.Stops;
 import frc.robot.logging.RobotLogManager;
-import frc.robot.simulator.communications.*;
+import frc.robot.simulator.communications.CSVFile;
+import frc.robot.simulator.communications.CSVReplayer;
+import frc.robot.simulator.communications.RobotData;
 import frc.robot.simulator.gui.Coordinate;
 import frc.robot.simulator.gui.SimulatedData;
 
@@ -39,11 +40,6 @@ public class RobotShape {
   private Rectangle elevatorShape = null;
   private Group robotGroup = new Group();
 
-  private Stops elevatorStop = Stops.floor;
-  private static final Color ELEVATOR_FLOOR_COLOR = Color.LAWNGREEN;
-  private static final Color ELEVATOR_SWITCH_COLOR = Color.LEMONCHIFFON;
-  private static final Color ELEVATOR_SCALE_LOW_COLOR = Color.LIGHTCYAN;
-  private static final Color ELEVATOR_SCALE_HIGH_COLOR = Color.LIGHTSEAGREEN;
   private static int time = 0;
   // Network Tables
   RobotData data = RobotData.getInstance();
@@ -225,31 +221,6 @@ public class RobotShape {
     return startingLocation.y + left.y;
   }
 
-  private void colorElevator() {
-    switch (elevatorStop) {
-
-    case floor:
-      elevatorShape.setFill(ELEVATOR_FLOOR_COLOR);
-      break;
-
-    case fieldSwitch:
-      elevatorShape.setFill(ELEVATOR_SWITCH_COLOR);
-      break;
-
-    case lowScale:
-      elevatorShape.setFill(ELEVATOR_SCALE_LOW_COLOR);
-      break;
-
-    case highScale:
-      elevatorShape.setFill(ELEVATOR_SCALE_HIGH_COLOR);
-      break;
-
-    default:
-      elevatorShape.setFill(Color.WHITESMOKE);
-    }
-
-  }
-
   public void save() {
     replayLog.writeToFile(loggingPath);
   }
@@ -294,7 +265,6 @@ public class RobotShape {
       previousRightDistance = rightDistance;
       leftDistance = replayer.leftDistance;
       rightDistance = replayer.rightDistance;
-      elevatorStop = replayer.elevatorStop;
       startingLocation.x = replayer.startX;
       startingLocation.y = replayer.startY;
       replayer.next();
@@ -306,7 +276,6 @@ public class RobotShape {
       leftDistance = data.leftDistance();
       rightDistance = -data.rightDistance();
       startingLocation = data.startingLocation();
-      elevatorStop = data.elevatorStop();
     }
     if (LOG_REPLAY) {
       replayLog.addRow();
@@ -327,7 +296,6 @@ public class RobotShape {
   public void draw() {
 
     loadData();
-    colorElevator();
     double radius = RobotMap.WHEEL_BASE_WIDTH / 2;
     double x = radius * Math.cos(mapHeadingAngle);
     double y = -radius * Math.sin(mapHeadingAngle);

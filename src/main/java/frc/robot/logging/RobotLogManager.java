@@ -32,8 +32,8 @@ public class RobotLogManager {
   }
 
   private static void init() {
-    String path = "./src/main/deploy/log4j2-test.yaml";
-    // String path = "/home/lvuser/deploy/log4j2-test.yaml";
+    // String path = "./src/main/deploy/log4j2-test.yaml";
+    String path = "/home/lvuser/deploy/log4j2-test.yaml";
     init(path);
   }
 

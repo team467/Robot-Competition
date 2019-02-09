@@ -68,47 +68,50 @@ public class TelemetryBuilder extends SendableBuilderImpl implements SendableBui
    */
   public void updateTable() {
     super.updateTable();
-    try {
-      NetworkTable table = super.getTable();
-      if (!printedHeaders) {
-        csvPrinter.printRecord(table.getKeys());
-        printedHeaders = true;
+    if (csvPrinter != null) {
+      try {
+        NetworkTable table = super.getTable();
+        if (!printedHeaders) {
+          csvPrinter.printRecord(table.getKeys());
+          printedHeaders = true;
+        }
+        for (String key : table.getKeys()) {
+          NetworkTableEntry entry = table.getEntry(key);
+          NetworkTableType type = entry.getType();
+          String text = "n/a";
+          switch (type) {
+            case kDouble: {
+              text = String.valueOf(entry.getDouble(Double.NaN));
+              break;
+            }
+            case kString: {
+              text = entry.getString("n/a");
+              break;
+            }
+            case kBoolean: {
+              text = String.valueOf(entry.getBoolean(false));
+              break;
+            }
+            default:
+              text = "n/a";
+              break;
+          }
+          csvPrinter.print(text);
+          LOGGER.info(text);
+        }
+        csvPrinter.println();
+      } catch (IOException e) {
+        LOGGER.error(e.getStackTrace());
+        e.printStackTrace();
       }
-      for (String key : table.getKeys()) {
-        NetworkTableEntry entry = table.getEntry(key);
-        NetworkTableType type = entry.getType();
-        String text = "n/a";
-        switch (type) {
-        case kDouble: {
-          text = String.valueOf(entry.getDouble(Double.NaN));
-          break;
-        }
-        case kString: {
-          text = entry.getString("n/a");
-          break;
-        }
-        case kBoolean: {
-          text = String.valueOf(entry.getBoolean(false));
-          break;
-        }
-        default:
-          text = "n/a";
-          break;
-        }
-        csvPrinter.print(text);
-        LOGGER.info(text);
-      }
-      csvPrinter.println();
-    } catch (IOException e) {
-      LOGGER.error(e.getStackTrace());
-      e.printStackTrace();
-      int hi = 1;
     }
   }
 
   public void close() {
     try {
-      csvPrinter.close();
+      if (csvPrinter != null) {
+        csvPrinter.close(true);
+      }
     } catch (IOException e) {
       LOGGER.info(e.getMessage());
     }

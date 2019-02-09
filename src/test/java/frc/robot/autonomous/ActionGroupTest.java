@@ -35,7 +35,6 @@ public class ActionGroupTest {
   public static void initAll() {
     RobotMap.init(RobotId.Competition_1);
     RobotMap.useSimulator = true;
-    RobotMap.USE_FAKE_GAME_DATA = true;
     LOGGER.trace("Using simulation for testing actions");
   }
 

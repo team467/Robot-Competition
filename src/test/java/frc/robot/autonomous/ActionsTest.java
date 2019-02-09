@@ -84,18 +84,6 @@ public class ActionsTest {
     assertTrue(actionCompleted);
   }
 
-  @Ignore("Long running test")
-  @Test
-  public void basicSwitchOurSideLeftTest() {
-    Actions.startOnLeft();
-    SimulatedData.gameSpecificMessage = "LLL";
-    ActionGroup autonomous = Actions.basicSwitchOurSide();
-    boolean actionCompleted = periodic(autonomous);
-    // TODO: Figure out how to use field position to test move.
-    double distanceMoved = drive.absoluteDistanceMoved();
-    assertTrue(actionCompleted);
-  }
-
   /**
    * Simulate autonomous periodic.
    * 
