@@ -19,7 +19,11 @@ import frc.robot.autonomous.ActionGroup;
 import frc.robot.autonomous.Actions;
 import frc.robot.autonomous.MatchConfiguration;
 import frc.robot.drive.Drive;
+import frc.robot.drive.motorcontrol.TalonMotionProfile;
 import frc.robot.drive.motorcontrol.TestMotorControl;
+import frc.robot.drive.motorcontrol.motionprofiles.MotionProfileLeft;
+import frc.robot.drive.motorcontrol.motionprofiles.MotionProfileRight;
+import frc.robot.drive.motorcontrol.motionprofiles.MotionProfile_Test;
 import frc.robot.gamepieces.Elevator;
 import frc.robot.gamepieces.Grabber;
 import frc.robot.gamepieces.Hatch;
@@ -230,7 +234,8 @@ public class Robot extends TimedRobot {
   @Override
   public void testInit() {
     LOGGER.info("Init Test");
-    tuneSlot = Integer.parseInt(SmartDashboard.getString("DB/String 5", "0"));
+    //tuneSlot = Integer.parseInt(SmartDashboard.getString("DB/String 5", "0"));
+    tuneSlot = 4;
     switch (tuneSlot) {
       case 0:
       case 1:
@@ -247,6 +252,9 @@ public class Robot extends TimedRobot {
         LOGGER.info("Invalid Tune Mode: {}", tuneSlot);
     }
     drive.zero();
+    TalonMotionProfile.startFilling(MotionProfile_Test.LPoints, MotionProfile_Test.RPoints, MotionProfile_Test.kNumPoints, drive.getLeft(), drive.getRight());
+    drive.getRight().processMotionProfileBuffer();
+    drive.getLeft().processMotionProfileBuffer();
   }
 
   /**
@@ -268,6 +276,8 @@ public class Robot extends TimedRobot {
         break;
       default:
     }
+
+    LOGGER.info("Test");
   }
 
   @Override

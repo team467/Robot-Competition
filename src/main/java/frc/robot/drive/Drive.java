@@ -449,4 +449,12 @@ public class Drive extends DifferentialDrive implements AutoDrive {
     left.set(speed);
     right.set(speed);
   }
+
+  public WpiTalonSrxInterface getLeft() {
+    return left.getLeader();
+  }
+
+  public WpiTalonSrxInterface getRight() {
+    return right.getLeader();
+  }
 }

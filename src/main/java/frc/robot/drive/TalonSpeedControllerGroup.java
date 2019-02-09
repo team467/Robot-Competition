@@ -307,4 +307,8 @@ public class TalonSpeedControllerGroup implements SpeedController {
     LOGGER.info("target=" + targetDistance + " sensor=" + distanceMoved + " toGo=" + distanceToGo);
     set(ControlMode.Position, distanceToGo);
   }
+
+  public WpiTalonSrxInterface getLeader() {
+    return this.leader;
+  }
 }
