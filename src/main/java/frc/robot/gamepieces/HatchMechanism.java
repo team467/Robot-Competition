@@ -16,7 +16,7 @@ public class HatchMechanism extends GamePieceBase implements GamePieceInterface{
 
     //Actuators
     private HatchArm hatchArm;
-    private Latch latch;
+    //private Latch latch;
     private Firing firing;
 
     //TODO: Place these values in RobotMap
@@ -39,7 +39,7 @@ public class HatchMechanism extends GamePieceBase implements GamePieceInterface{
 
     //States
     private HatchArmState hatchArmState;
-    private LatchState latchState;
+    //private LatchState latchState;
 
     //HatchArm
     public enum HatchArm{
@@ -110,67 +110,67 @@ public class HatchMechanism extends GamePieceBase implements GamePieceInterface{
 
     }
 
-    //Latch
-    public enum Latch{
-        OFF,
-        ENGAGE,
-        DISENGAGE;
+    // //Latch
+    // public enum Latch{
+    //     OFF,
+    //     ENGAGE,
+    //     DISENGAGE;
 
-        //TODO: Find device that is used to move latch and declare here
+    //     //TODO: Find device that is used to move latch and declare here
 
-        private static void initialize(){
-            //Initialize latch movement device
-        }
+    //     private static void initialize(){
+    //         //Initialize latch movement device
+    //     }
 
-        private void actuate(){
-            switch(this){
-                case ENGAGE:
-                    //engage latch
-                    break;
-                case DISENGAGE:
-                    //disengage latch
-                    break;
-                default:
-                    //turn device off
-            }
-        }
-    }
+    //     private void actuate(){
+    //         switch(this){
+    //             case ENGAGE:
+    //                 //engage latch
+    //                 break;
+    //             case DISENGAGE:
+    //                 //disengage latch
+    //                 break;
+    //             default:
+    //                 //turn device off
+    //         }
+    //     }
+    // }
 
-    public enum LatchState{
-        ENGAGE,
-        ENGAGING,
-        DISENGAGE,
-        DISENGAGING,
-        UNKNOWN;
+    // public enum LatchState{
+    //     ENGAGE,
+    //     ENGAGING,
+    //     DISENGAGE,
+    //     DISENGAGING,
+    //     UNKNOWN;
 
-        private static DigitalInput latchEngaged;
-        private static DigitalInput latchDisengaged;
-        private static LatchState previousState;
+    //     private static DigitalInput latchEngaged;
+    //     private static DigitalInput latchDisengaged;
+    //     private static LatchState previousState;
 
-        private static void initialize(){
-            latchEngaged = new DigitalInput(LATCH_ENGAGE_SENSOR_CHANNEL);
-            latchEngaged.setName("Telemetry", "latchEngaged");
-            latchDisengaged = new DigitalInput(LATCH_DISENGAGE_SENSOR_CHANNEL);
-            latchDisengaged.setName("Telemetry", "latchDisengaged");
-        }
+    //     private static void initialize(){
+    //         latchEngaged = new DigitalInput(LATCH_ENGAGE_SENSOR_CHANNEL);
+    //         latchEngaged.setName("Telemetry", "latchEngaged");
+    //         latchDisengaged = new DigitalInput(LATCH_DISENGAGE_SENSOR_CHANNEL);
+    //         latchDisengaged.setName("Telemetry", "latchDisengaged");
+    //     }
 
-        private static LatchState read(){
-            LatchState state;
-            if (latchEngaged.get()) {
-              state = ENGAGE;
-            } else if (latchDisengaged.get()) {
-              state = DISENGAGE;
-            } else if (previousState == ENGAGE || previousState == DISENGAGING) {
-              state = DISENGAGING;
-            } else if (previousState == DISENGAGE || previousState == ENGAGING) {
-              state = ENGAGING;
-            } else {
-              state = UNKNOWN;
-            }
-            previousState = state;
-            return state;
-        }
-    }
+    //     private static LatchState read(){
+    //         LatchState state;
+    //         if (latchEngaged.get()) {
+    //           state = ENGAGE;
+    //         } else if (latchDisengaged.get()) {
+    //           state = DISENGAGE;
+    //         } else if (previousState == ENGAGE || previousState == DISENGAGING) {
+    //           state = DISENGAGING;
+    //         } else if (previousState == DISENGAGE || previousState == ENGAGING) {
+    //           state = ENGAGING;
+    //         } else {
+    //           state = UNKNOWN;
+    //         }
+    //         previousState = state;
+    //         return state;
+    //     }
+    // }
 
     public enum Firing{
         FIRING,
@@ -214,13 +214,13 @@ public class HatchMechanism extends GamePieceBase implements GamePieceInterface{
 
         //Initialize sensors and actuators
         HatchArm.initialize();
-        Latch.initialize();
+        // Latch.initialize();
         Firing.initialize();
 
         hatchArm = HatchArm.IN;
-        latch = Latch.DISENGAGE;
+        // latch = Latch.DISENGAGE;
         hatchArmState = HatchArmState.read();
-        latchState = LatchState.read();
+        // latchState = LatchState.read();
     }
     
   /**
@@ -246,34 +246,32 @@ public class HatchMechanism extends GamePieceBase implements GamePieceInterface{
         return hatchArmState;
     }
 
-    public void latch(Latch command){
-        latch = command;
-    }
+    // public void latch(Latch command){
+    //     latch = command;
+    // }
 
-    public void latch(String command){
-        latch = Latch.valueOf(command);
-    }
+    // public void latch(String command){
+    //     latch = Latch.valueOf(command);
+    // }
 
-    public LatchState latch(){
-        return latchState;
-    }
+    // public LatchState latch(){
+    //     return latchState;
+    // }
 
     public void periodic() {
         // Take Actions
         if (enabled) {
           hatchArm.actuate();
-          latch.actuate();
+        //   latch.actuate();
         }
         // Update state
         hatchArmState = HatchArmState.read();
-        latchState = LatchState.read();
+        // latchState = LatchState.read();
       }
 
       @Override
       public void initSendable(SendableBuilder builder) {
         builder.addStringProperty("HatchArm", hatchArm::name, (command) -> hatchArm(command));
-        builder.addStringProperty("Latch", latch::name, (command) -> latch(command));
         builder.addStringProperty("HatchArmState", hatchArmState::name, null);
-        builder.addStringProperty("LatchState", latchState::name, null);
       }
 }
