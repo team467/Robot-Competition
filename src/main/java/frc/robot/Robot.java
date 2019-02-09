@@ -22,9 +22,11 @@ import frc.robot.drive.Drive;
 import frc.robot.drive.motorcontrol.TestMotorControl;
 import frc.robot.gamepieces.Elevator;
 import frc.robot.gamepieces.Grabber;
+import frc.robot.gamepieces.Hatch;
 import frc.robot.logging.RobotLogManager;
 import frc.robot.simulator.communications.RobotData;
 import frc.robot.usercontrol.DriverStation467;
+import frc.robot.vision.CameraSwitcher;
 import frc.robot.vision.VisionProcessing;
 import org.apache.logging.log4j.Logger;
 
@@ -47,6 +49,7 @@ public class Robot extends TimedRobot {
   private Drive drive;
   private Elevator elevator;
   private Grabber grabber;
+  private Hatch hatch;
   private MatchConfiguration matchConfig;
   private RobotData data;
   private TestMotorControl testMotorControl;
@@ -95,7 +98,8 @@ public class Robot extends TimedRobot {
     data = RobotData.getInstance();
     drive = Drive.getInstance();
     elevator = Elevator.getInstance();
-    grabber = Grabber.getInstance();
+    //grabber = Grabber.getInstance();
+    hatch = Hatch.getInstance();
     matchConfig = MatchConfiguration.getInstance();
 
 
@@ -143,8 +147,7 @@ public class Robot extends TimedRobot {
     */
   @Override
   public void autonomousPeriodic() {
-    grabber.periodic();
-    elevator.move(0); // Will move to height if set.
+    //grabber.periodic();
     autonomous.run();
   }
 
@@ -154,7 +157,7 @@ public class Robot extends TimedRobot {
     autonomous = Actions.doNothing();
     //drive.configPeakOutput(1.0);
     driverstation.readInputs();
-    grabber.reset();
+    //grabber.reset();
   }
 
   /**
@@ -165,30 +168,15 @@ public class Robot extends TimedRobot {
     LOGGER.debug("Match time {}", DriverStation.getInstance().getMatchTime());
     driverstation.readInputs();
 
-    grabber.grab(driverstation.getGrabThrottle());
-    elevator.move(driverstation.getElevatorSpeed());
+    //grabber.grab(driverstation.getGrabThrottle());
 
     //grabber open and close
     if (driverstation.getGrabberOpen()) {
       LOGGER.info("Grabber Open");
-      grabber.open();
+      //grabber.open();
     } else {
       LOGGER.debug("Grabber Close");
-      grabber.close();
-    }
-
-    if (driverstation.getFloorHeightButtonPressed()) {
-      LOGGER.info("Dropping to bottom height");
-      elevator.moveToHeight(Elevator.Stops.floor);
-    } else if (driverstation.getSwitchHeightButtonPressed()) {
-      LOGGER.info("Lifting to switch height");
-      elevator.moveToHeight(Elevator.Stops.fieldSwitch);
-    } else if (driverstation.getLowScaleHeightButtonPressed()) {
-      LOGGER.info("Lifting to low scale height");
-      elevator.moveToHeight(Elevator.Stops.lowScale);
-    } else if (driverstation.getHighScaleHeightButtonPressed()) {
-      LOGGER.info("Lifting to high scale height");
-      elevator.moveToHeight(Elevator.Stops.highScale);
+      //grabber.close();
     }
 
     double speed = driverstation.getArcadeSpeed();
@@ -220,6 +208,23 @@ public class Robot extends TimedRobot {
 
       default:
     }
+
+    if (driverstation.getNavJoystick().getJoystick().getPOV() == 0) {
+      CameraSwitcher.update(0);
+    } else if (driverstation.getNavJoystick().getJoystick().getPOV() == 90) {
+      CameraSwitcher.update(1);
+    } else if (driverstation.getNavJoystick().getJoystick().getPOV() == 180) {
+      CameraSwitcher.update(2);
+    } else if (driverstation.getNavJoystick().getJoystick().getPOV() == 270) {
+      CameraSwitcher.update(3);
+    }
+
+    //if (driverstation.fireHatch()) {
+    //  hatch.open();
+    //} else {
+    //  hatch.close();
+    //}
+
   }
 
   @Override
@@ -269,10 +274,14 @@ public class Robot extends TimedRobot {
   public void disabledInit() {
     LOGGER.info("Init Disabled");
     //drive.logClosedLoopErrors();
+
+    driverstation.readInputs();
+
   }
 
   @Override
   public void disabledPeriodic() {
+    driverstation.readInputs();
     LOGGER.trace("Disabled Periodic");
     String[] autoList = {
       "None", 
@@ -290,6 +299,18 @@ public class Robot extends TimedRobot {
     };
     dashboard.getEntry("Auto List").setStringArray(autoList);
     //LOGGER.info("Selected Auto Mode: " + SmartDashboard.getString("Auto Selector", "None"));
+
+
+    if (driverstation.getNavJoystick().getJoystick().getPOV() == 0) {
+      CameraSwitcher.update(0);
+    } else if (driverstation.getNavJoystick().getJoystick().getPOV() == 90) {
+      CameraSwitcher.update(1);
+    } else if (driverstation.getNavJoystick().getJoystick().getPOV() == 180) {
+      CameraSwitcher.update(2);
+    } else if (driverstation.getNavJoystick().getJoystick().getPOV() == 270) {
+      CameraSwitcher.update(3);
+    }
+
   }
 
 }
