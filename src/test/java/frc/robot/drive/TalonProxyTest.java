@@ -2,6 +2,7 @@ package frc.robot.drive;
 
 import static org.junit.Assert.assertTrue;
 
+import frc.robot.Robot;
 import frc.robot.RobotMap;
 import frc.robot.RobotMap.RobotId;
 import frc.robot.logging.RobotLogManager;
@@ -22,6 +23,9 @@ public class TalonProxyTest {
   @BeforeClass
   public static void initAll() {
     RobotMap.init(RobotId.Competition_1);
+    Robot.enableSimulator();
+    Robot robot = new Robot();
+    robot.robotInit();
     motor = TalonProxy.create(TEST_DEVICE_NUMBER);
   }
 
