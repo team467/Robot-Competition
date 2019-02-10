@@ -9,8 +9,6 @@ import frc.robot.RobotMap;
 import frc.robot.drive.motorcontrol.pathtracking.FieldPosition;
 import frc.robot.logging.RobotLogManager;
 import frc.robot.simulator.communications.RobotData;
-import frc.robot.usercontrol.DriverStation467;
-import frc.robot.utilities.MathUtils;
 
 import java.text.DecimalFormat;
 
@@ -73,10 +71,10 @@ public class Drive extends DifferentialDrive implements AutoDrive {
           rightFollower2 = TalonProxy.create(RobotMap.RIGHT_FOLLOWER_2_CHANNEL);
         }
 
-        left = new TalonSpeedControllerGroup("Left Drive", ControlMode.PercentOutput,
+        left = new TalonSpeedControllerGroup("Left_Drive", ControlMode.PercentOutput,
             RobotMap.LEFT_DRIVE_SENSOR_IS_INVERTED, RobotMap.LEFT_DRIVE_MOTOR_IS_INVERTED, 
             leftLead, leftFollower1, leftFollower2);
-        right = new TalonSpeedControllerGroup("Right Drive", ControlMode.PercentOutput,
+        right = new TalonSpeedControllerGroup("Right_Drive", ControlMode.PercentOutput,
             RobotMap.RIGHT_DRIVE_SENSOR_IS_INVERTED, RobotMap.RIGHT_DRIVE_MOTOR_IS_INVERTED, 
             rightLead, rightFollower1, rightFollower2);
       } else {

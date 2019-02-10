@@ -33,7 +33,7 @@ public class ActionGroupTest {
    */
   @BeforeClass
   public static void initAll() {
-    RobotMap.init(RobotId.Competition_1);
+    RobotMap.init(RobotId.Robot2018);
     RobotMap.useSimulator = true;
     LOGGER.trace("Using simulation for testing actions");
   }
