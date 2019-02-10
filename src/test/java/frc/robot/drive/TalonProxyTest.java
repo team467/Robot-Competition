@@ -22,7 +22,7 @@ public class TalonProxyTest {
 
   @BeforeClass
   public static void initAll() {
-    RobotMap.init(RobotId.Competition_1);
+    RobotMap.init(RobotId.Robot2018);
     Robot.enableSimulator();
     Robot robot = new Robot();
     robot.robotInit();
