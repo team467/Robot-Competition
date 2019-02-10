@@ -11,15 +11,6 @@ import java.util.Scanner;
 
 import org.apache.logging.log4j.Logger;
 
-<<<<<<< HEAD
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableInstance;
-import frc.robot.logging.RobotLogManager;
-
-import java.io.*;
-import java.net.*;
-=======
->>>>>>> master
 
 public class CSVFile {
 

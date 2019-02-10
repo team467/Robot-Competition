@@ -14,10 +14,7 @@ public class TalonProxy {
     if (RobotMap.useSimulator) {
       return new frc.robot.simulator.drive.WpiTalonSrx(deviceNumber);
     } else {
-<<<<<<< HEAD
-=======
       // return null; 
->>>>>>> master
       return new frc.robot.drive.WpiTalonSrx(deviceNumber);
     }
   }

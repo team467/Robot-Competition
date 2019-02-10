@@ -114,25 +114,6 @@ public class RobotMap {
         AUTONOMOUS_TURN_TIMEOUT_MS = 300;
         break;
 
-<<<<<<< HEAD
-      case Board:
-      default:
-        HAS_WHEELS = true;
-        DRIVEMOTOR_NUM = 0;
-        WHEEL_ENCODER_CODES_PER_REVOLUTION = 1024;
-
-        FORWARD_PANIC_ANGLE = 45;
-        BACKWARD_PANIC_ANGLE = -45;
-
-        HAS_GRABBER = false;
-        GRABBER_L_CHANNEL = 0;
-        GRABBER_R_CHANNEL = 1;
-        OPTICAL_CHANNEL = 5;
-
-        HAS_CLIMBER = true;
-        CLIMB_MOTOR_CONTROLLER_LEADER = 1;
-=======
->>>>>>> master
 
     }
     //These calculations can be made after the robot-specific constants are set. 

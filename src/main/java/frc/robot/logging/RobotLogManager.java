@@ -65,7 +65,6 @@ public class RobotLogManager {
   }
 
   private static void init() {
-<<<<<<< HEAD
     // String path = "./src/main/deploy/log4j2-test.yaml"; default path (already in array) in case the other filepaths dont load
     for(String path : filepaths) {
       if(doesFileExist(path)) {
@@ -73,11 +72,6 @@ public class RobotLogManager {
         break;
       }
     }
-=======
-    // String path = "./src/main/deploy/log4j2-test.yaml";
-    String path = "/home/lvuser/deploy/log4j2-test.yaml";
-    init(path);
->>>>>>> master
   }
 
   /**

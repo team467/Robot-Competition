@@ -19,21 +19,8 @@ import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 
-<<<<<<< HEAD
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.RobotMap;
-import frc.robot.autonomous.ActionGroup;
-import frc.robot.autonomous.Actions;
-import frc.robot.RobotMap.RobotId;
-import frc.robot.logging.RobotLogManager;
-import frc.robot.drive.Drive;
-
-public class ActionGroupTest{
-    private static Logger LOGGER = RobotLogManager.getTestLogger(ActionGroupTest.class.getName());
-=======
 public class ActionGroupTest {
   private static Logger LOGGER = RobotLogManager.getTestLogger(ActionGroupTest.class.getName());
->>>>>>> master
 
   private static final DecimalFormat df = new DecimalFormat("####0.00");
 
