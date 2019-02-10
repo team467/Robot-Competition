@@ -5,169 +5,166 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
-
 import frc.robot.logging.RobotLogManager;
-
 import org.apache.logging.log4j.Logger;
 
 public class CargoMech extends GamePieceBase implements GamePieceInterface {
 
-    private static final Logger LOGGER 
-    = RobotLogManager.getMainLogger(CargoMech.class.getName());
+  private static CargoMech instance; // set to null
 
-    private static CargoMech instance = null;
+  private static final Logger LOGGER 
+  = RobotLogManager.getMainLogger(CargoMech.class.getName());
 
-    // Actuators
-    private Claw belt;
-    private ClawArmStops armTargetHeight;
+  // Actuators
+  private Claw belt;
+  private ClawArmStops arm; // stores desired height
 
-    // State
-    private ClawArmState armState;
+  private int previousHeight; // stores previous height
 
-    private int previousHeight;
+  // State
+  private ClawArmState armState;
 
-    //TODO: Move to Robot Map
-    public static int CLAW_ARM_UP_SENSOR_CHANNEL = 0;
-    public static int CLAW_ARM_UP_SOLINOID_CHANNEL = 0;
-    public static int CLAW_ARM_DOWN_SENSOR_CHANNEL = 0;
-    public static int CLAW_ARM_DOWN_SOLINOID_CHANNEL = 0;
-    public static int CLAW_MOTOR_CHANNEL = 0;
-    public static int CLAW_HEIGHT_CHANNEL = 0;
-    public static boolean CLAW_MOTOR_INVERTED = false;
+  private static final int ALLOWABLE_ERROR_TICKS = 3;
+  private static final int LIMIT_BUFFER = 10;
 
-    public static double CARGO_MECH_BOTTOM = 0;
-    public static double CARGO_MECH_CARGOSHIP = 0;
-    public static double CARGO_MECH_ROCKETSHIP_LOW = 0;
-    public static double CARGO_MECH_ROCKETSHIP_MIDDLE = 0;
-    public static double CARGO_MECH_OFF = 0;
+  //TODO: Move to Robot Map
+  public static int CLAW_ARM_UP_SENSOR_CHANNEL = 0;
+  public static int CLAW_ARM_UP_SOLENOID_CHANNEL = 0;
+  public static int CLAW_ARM_DOWN_SENSOR_CHANNEL = 0;
+  public static int CLAW_ARM_DOWN_SOLENOID_CHANNEL = 0;
+  public static int CLAW_MOTOR_CHANNEL = 0;
+  public static int CLAW_HEIGHT_CHANNEL = 0;
+  public static boolean CLAW_MOTOR_INVERTED = false;
 
-    // Booleans
-    private boolean hasBall = false; // sees if BaM mechanism has ball in grasp
-    private boolean isUp = false; // sees if BaM is up after picking ball or not
-  
-    public enum ClawArmStops {
-        BOTTOM,
-        ROCKETSHIP_LOW,
-        ROCKETSHIP_MIDDLE,
-        CARGOSHIP,
-        OFF;
+  public static double CARGO_MECH_BOTTOM = 0;
+  public static double CARGO_MECH_CARGOSHIP = 0;
+  public static double CARGO_MECH_ROCKETSHIP_LOW = 0;
+  public static double CARGO_MECH_OFF = 0;
 
-        /**
-         * Height is defined by the number of ticks.
-         * 
-         * Height of the defined cargo position above the ground = BOTTOM, ROCKETSHIP_LOW, ROCKET_SHIP_MIDDLE, CARGOSHIP.
-         * 1. If Claw Arm is higher than defined cargo pos,
-         *    a. Calculate the dist. to move down: - (current height above the ground - height of the defined cargo position above the ground)
-         *    b. Move to the desired height
-         * 2. If Claw Arm is lower than defined cargo pos,
-         *    a. Calculate the dist. to move up: current height above the ground - height of the defined cargo position above the ground
-         *    b. Move to the desired height
-         */
+  public static int ARM_TOP_TICKS;
+  public static int ARM_BOTTOM_TICKS;
 
-        public static void moveToHeight() {
+  public enum ClawArmStops {
+    // null if no stop is desired
+    // height values measured empirically
+    bottom(CARGO_MECH_BOTTOM),
+    rocket(CARGO_MECH_ROCKETSHIP_LOW),
+    ship(CARGO_MECH_CARGOSHIP);
 
-        }
+    // Height in sensor units
+    public int height;
 
-        private static DoubleSolenoid arm;
-
-        private static void initialize() {
-          arm = new DoubleSolenoid(CLAW_ARM_UP_SOLINOID_CHANNEL, CLAW_ARM_DOWN_SOLINOID_CHANNEL);
+    ClawArmStops(double heightProportion) {
+    height = heightTicksFromProportion(heightProportion);
     }
+
+    private static DoubleSolenoid arm;
+
+    private static void initialize() {
+      arm = new DoubleSolenoid(CLAW_ARM_UP_SOLENOID_CHANNEL, CLAW_ARM_DOWN_SOLENOID_CHANNEL);
+  }
 
     /**
      * Moves the arm based on the requested command.
      */
     private void actuate() {
-        switch (this) {
-          case BOTTOM:
-            arm.set(DoubleSolenoid.Value.kForward);
-            break;
-          case ROCKETSHIP_LOW:
-            arm.set(DoubleSolenoid.Value.kReverse);
-            break;
-          default:
-            arm.set(DoubleSolenoid.Value.kOff);
-        }
+      switch (this) {
+        case bottom:
+          arm.set(DoubleSolenoid.Value.kForward);
+          break;
+        case rocket:
+          arm.set(DoubleSolenoid.Value.kReverse);
+          break;
+        default:
+          arm.set(DoubleSolenoid.Value.kOff);
       }
     }
+  }
 
-    public enum ClawArmState {
-        UP,
-        MOVING_DOWN,
-        DOWN,
-        MOVING_UP,
-        UNKNOWN;
+// 0.0 is the bottom, 1.0 is the top (proportion)
+// takes proportion and converts it to ticks
+  private static int heightTicksFromProportion(double proportion) {
+    return (int)( (proportion) * ARM_TOP_TICKS 
+        + (1.0 - proportion) * ARM_BOTTOM_TICKS );
+  }
 
-    private static DigitalInput armUp;
-    private static DigitalInput armDown;
-    private static ClawArmState previousState;
+  public enum ClawArmState {
+      UP,
+      MOVING_DOWN,
+      DOWN,
+      MOVING_UP,
+      UNKNOWN;
 
-    private static void initialize() {
-        // Config arm sensors
-      armUp = new DigitalInput(CLAW_ARM_UP_SENSOR_CHANNEL);
-      armUp.setName("Telemetry", "ClawArmUp");
-      armDown = new DigitalInput(CLAW_ARM_DOWN_SENSOR_CHANNEL);
-      armDown.setName("Telemetry", "ClawArmDown");
-    }
+  private static DigitalInput armUp;
+  private static DigitalInput armDown;
+  private static ClawArmState previousState;
 
-    private static ClawArmState read() {
-        ClawArmState state;
-        if (armUp.get()) {
-            state = UP;
-          } else if (armDown.get()) {
-            state = DOWN;
-          } else if (previousState == UP || previousState == MOVING_DOWN) {
-            state = MOVING_DOWN;
-          } else if (previousState == DOWN || previousState == MOVING_UP) {
-            state = MOVING_UP;
-          } else {
-            state = UNKNOWN;
-          }
-          previousState = state;
-          return state;
-    }
+  private static void initialize() {
+      // Config arm sensors
+    armUp = new DigitalInput(CLAW_ARM_UP_SENSOR_CHANNEL);
+    armUp.setName("Telemetry", "ClawArmUp");
+    armDown = new DigitalInput(CLAW_ARM_DOWN_SENSOR_CHANNEL);
+    armDown.setName("Telemetry", "ClawArmDown");
+  }
+
+  private static ClawArmState read() {
+      ClawArmState state;
+      if (armUp.get()) {
+          state = UP;
+        } else if (armDown.get()) {
+          state = DOWN;
+        } else if (previousState == UP || previousState == MOVING_DOWN) {
+          state = MOVING_DOWN;
+        } else if (previousState == DOWN || previousState == MOVING_UP) {
+          state = MOVING_UP;
+        } else {
+          state = UNKNOWN;
+        }
+        previousState = state;
+        return state;
+  }
 }
-    /**
-     * Forward means the roller is spinning inwards, essentially pulling balls in
-     * Reverse means the roller is spinning outwards not letting the ball in
-     * 
-     */
+  /**
+   * Forward means the roller is spinning inwards, essentially pulling balls in
+   * Reverse means the roller is spinning outwards not letting the ball in
+   * 
+   */
 
-    public enum Claw {
-        FORWARD,
-        REVERSE,
-        STOP;
+  public enum Claw {
+      FORWARD,
+      REVERSE,
+      STOP;
 
-        private static SpeedController claw;
+      private static SpeedController claw;
 
-        private static void initialize() {
-            // Create the roller object. No sensors
-            claw = new Spark(CLAW_MOTOR_CHANNEL);
-            claw.setInverted(CLAW_MOTOR_INVERTED);
-          }
-
-    /**
-     * Moves the belts of the claw forward or backward based on the requested command.
-     */
-    private void actuate() {
-        switch (this) {
-  
-          case FORWARD:
-            claw.set(1.0);
-            break;
-          
-          case REVERSE:
-            claw.set(-1.0);
-            break;
-  
-          case STOP:
-          default:
-            claw.set(0.0);
+      private static void initialize() {
+          // Create the roller object. No sensors
+          claw = new Spark(CLAW_MOTOR_CHANNEL);
+          claw.setInverted(CLAW_MOTOR_INVERTED);
         }
+
+  /**
+   * Moves the belts of the claw forward or backward based on the requested command.
+   */
+  private void actuate() {
+      switch (this) {
+
+        case FORWARD:
+          claw.set(1.0);
+          break;
         
+        case REVERSE:
+          claw.set(-1.0);
+          break;
+
+        case STOP:
+        default:
+          claw.set(0.0);
       }
-        
+      
     }
+      
+  }
 
     /**
   * Returns a singleton instance of the telemery builder.
@@ -190,7 +187,7 @@ public class CargoMech extends GamePieceBase implements GamePieceInterface {
         ClawArmState.initialize();
 
         belt = Claw.STOP;
-        armTargetHeight = ClawArmStops.BOTTOM;
+        arm = ClawArmStops.bottom;
         armState = ClawArmState.read();
 
         LOGGER.trace("Created Ball Mech game piece.");
@@ -202,7 +199,7 @@ public class CargoMech extends GamePieceBase implements GamePieceInterface {
      * @param command which way to move the arm.
      */
     public void arm(ClawArmStops command) {
-        armTargetHeight = command;
+        arm = command;
     }
 
     /**
@@ -212,7 +209,7 @@ public class CargoMech extends GamePieceBase implements GamePieceInterface {
      * @param command which way to move the arm.
      */
     public void arm(String command) {
-        armTargetHeight = ClawArmStops.valueOf(command);
+        arm = ClawArmStops.valueOf(command);
     }
 
     /**
@@ -257,16 +254,17 @@ public class CargoMech extends GamePieceBase implements GamePieceInterface {
     // Take Actions
     if (enabled) {
       belt.actuate();
-      // arm.actuate(); Probaly won't be needed here
-    }
+      arm.actuate();
+
     // Update state
     armState = ClawArmState.read();
+  }
   }
 
   @Override
   public void initSendable(SendableBuilder builder) {
     builder.addStringProperty("Claw", belt::name, (command) -> belt(command));
-    builder.addStringProperty("ClawArmStops", armTargetHeight::name, (command) -> arm(command));
+    builder.addStringProperty("ClawArmStops", arm::name, (command) -> arm(command));
     builder.addStringProperty("ClawArmState", armState::name, null);
   }
 }

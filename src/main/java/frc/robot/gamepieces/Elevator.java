@@ -46,12 +46,13 @@ public class Elevator {
     }
   }
 
-  /**
-   * 0.0 is the bottom, 1.0 is the top
-   */
   private static int heightTicksFromProportion(double proportion) {
     return (int)((1.0 - proportion) * RobotMap.ELEVATOR_BOTTOM_TICKS 
         + proportion * RobotMap.ELEVATOR_TOP_TICKS);
+    /**
+     * takes proportion and converts it to ticks.
+     * Our sensor was inverted, which means 1.0 = bottom and 0.0 = top
+     *  */
   }
 
   /**
