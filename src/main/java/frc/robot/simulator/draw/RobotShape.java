@@ -3,7 +3,9 @@ package frc.robot.simulator.draw;
 import frc.robot.Robot;
 import frc.robot.RobotMap;
 import frc.robot.logging.RobotLogManager;
-import frc.robot.simulator.communications.*;
+import frc.robot.simulator.communications.CSVFile;
+import frc.robot.simulator.communications.CSVReplayer;
+import frc.robot.simulator.communications.RobotData;
 import frc.robot.simulator.gui.Coordinate;
 import frc.robot.simulator.gui.SimulatedData;
 
@@ -50,10 +52,14 @@ public class RobotShape {
   private Group turretGroup = new Group();
   private Group cameraGroup = new Group();
 
+<<<<<<< HEAD
 
   private static final double CAM_ANGLE = 70;
   private static final double CAM_RANGE = 50;
   private final double BUFFER = CAM_RANGE*4;
+=======
+  private static int time = 0;
+>>>>>>> master
   // Network Tables
   RobotData data = RobotData.getInstance();
   CSVFile replaySrc = new CSVFile();
@@ -322,7 +328,37 @@ public class RobotShape {
     rightDistance = data.rightDistance();
     startingLocation = data.startingLocation();
 
+<<<<<<< HEAD
     LOGGER.info("left: " + (leftDistance) + ", right: " + (rightDistance)+ ", zeroed" + isZeroed);
+=======
+    if (RUN_REPLAY) {
+      previousLeftDistance = leftDistance;
+      previousRightDistance = rightDistance;
+      leftDistance = replayer.leftDistance;
+      rightDistance = replayer.rightDistance;
+      startingLocation.x = replayer.startX;
+      startingLocation.y = replayer.startY;
+      replayer.next();
+      LOGGER.info("Data read: " + replayer.leftDistance + ", " + replayer.rightDistance);
+      LOGGER.info("frame: " + replayer.steps);
+    } else {
+      previousLeftDistance = leftDistance;
+      previousRightDistance = rightDistance;
+      leftDistance = data.leftDistance();
+      rightDistance = -data.rightDistance();
+      startingLocation = data.startingLocation();
+    }
+    if (LOG_REPLAY) {
+      replayLog.addRow();
+      replayLog.pushVar(leftDistance);
+      replayLog.pushVar(rightDistance);
+      replayLog.pushVar(startingLocation.x);
+      replayLog.pushVar(startingLocation.y);
+      replayLog.pushVar("basement");
+      replayLog.pushVar(isZeroed);
+    }
+    LOGGER.info("left: " + (leftDistance) + ", right: " + (rightDistance));
+>>>>>>> master
     updateMapPosition(leftDistance - previousLeftDistance, rightDistance - previousRightDistance);
   }
 
@@ -341,8 +377,11 @@ public class RobotShape {
   public void draw() {
 
     loadData();
+<<<<<<< HEAD
     updateShape();
     cameraAngle+=0.1;
+=======
+>>>>>>> master
     double radius = RobotMap.WHEEL_BASE_WIDTH / 2;
     double x = radius * Math.cos(mapHeadingAngle);
     double y = -radius * Math.sin(mapHeadingAngle);

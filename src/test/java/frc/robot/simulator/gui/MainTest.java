@@ -25,7 +25,7 @@ public class MainTest {
   public static void tearDownAll() {
   }
 
-  //@Ignore("Test Runs GUI, Interactive Only.")
+  @Ignore("Test Runs GUI, Interactive Only.")
   @Test
   public void runGui() {
     Map.main(null);

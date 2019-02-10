@@ -190,4 +190,8 @@ public class DriverStation467 {
     driverJoy.rightRumble(value);
   }
 
+  public boolean fireHatch() {
+    return driverJoy.down(Button.a);
+  }
+
 }

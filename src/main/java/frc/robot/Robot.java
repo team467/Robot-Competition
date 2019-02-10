@@ -7,26 +7,26 @@
 
 package frc.robot;
 
-import edu.wpi.cscore.UsbCamera;
-import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.RobotMap.RobotId;
-import frc.robot.autonomous.ActionGroup;
-import frc.robot.autonomous.Actions;
 import frc.robot.autonomous.MatchConfiguration;
 import frc.robot.drive.Drive;
+<<<<<<< HEAD
 import frc.robot.drive.motorcontrol.TestMotorControl;
 import frc.robot.gamepieces.Climber;
 import frc.robot.gamepieces.Elevator;
 import frc.robot.gamepieces.Grabber;
+=======
+>>>>>>> master
 import frc.robot.logging.RobotLogManager;
+import frc.robot.logging.TelemetryBuilder;
 import frc.robot.simulator.communications.RobotData;
 import frc.robot.usercontrol.DriverStation467;
-import frc.robot.vision.VisionProcessing;
+import frc.robot.vision.CameraSwitcher;
 import org.apache.logging.log4j.Logger;
 
 /**
@@ -43,16 +43,16 @@ public class Robot extends TimedRobot {
   private static boolean enableSimulator = false;
 
   // Robot objects
+<<<<<<< HEAD
   private ActionGroup autonomous;
   private Climber climber;
+=======
+>>>>>>> master
   private DriverStation467 driverstation;
   private Drive drive;
-  private Elevator elevator;
-  private Grabber grabber;
   private MatchConfiguration matchConfig;
   private RobotData data;
-  private TestMotorControl testMotorControl;
-  private VisionProcessing vision;
+  private TelemetryBuilder telemetry;
 
   private NetworkTableInstance table;
   private NetworkTable dashboard;
@@ -82,7 +82,7 @@ public class Robot extends TimedRobot {
     //table.deleteAllEntries(); // Uncomment to clear table once.
     
     // Initialize RobotMap
-    RobotMap.init(RobotId.Competition_2);
+    RobotMap.init(RobotId.Robot2018);
 
     // Used after init, should be set only by the Simulator GUI
     // this ensures that the simulator is off otherwise.
@@ -97,9 +97,8 @@ public class Robot extends TimedRobot {
     climber = Climber.getInstance();
     data = RobotData.getInstance();
     drive = Drive.getInstance();
-    elevator = Elevator.getInstance();
-    grabber = Grabber.getInstance();
     matchConfig = MatchConfiguration.getInstance();
+<<<<<<< HEAD
 
     
     if (RobotMap.HAS_CAMERA) {
@@ -111,6 +110,9 @@ public class Robot extends TimedRobot {
       cam.setResolution(320, 240);
       cam.setFPS(15);
     }
+=======
+    telemetry = TelemetryBuilder.getInstance();
+>>>>>>> master
 
     drive.setPidsFromRobotMap();
     data.log();
@@ -127,6 +129,10 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
+<<<<<<< HEAD
+=======
+    telemetry.updateTable();
+>>>>>>> master
     data.send();
   }
 
@@ -134,9 +140,7 @@ public class Robot extends TimedRobot {
   public void autonomousInit() {
     driverstation.readInputs();
     matchConfig.load();
-    autonomous = matchConfig.autonomousDecisionTree();
-    LOGGER.info("Init Autonomous: {}", autonomous.getName());
-    autonomous.enable();
+    LOGGER.info("No Autonomous");
   }
 
   /**
@@ -145,17 +149,18 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousPeriodic() {
     //grabber.periodic();
+<<<<<<< HEAD
     //elevator.move(0); // Will move to height if set.
     autonomous.run();
+=======
+    telemetry.updateTable();
+>>>>>>> master
   }
 
   @Override
   public void teleopInit() {
     LOGGER.info("Init Teleop");
-    autonomous = Actions.doNothing();
-    //drive.configPeakOutput(1.0);
     driverstation.readInputs();
-    grabber.reset();
   }
 
   /**
@@ -166,6 +171,7 @@ public class Robot extends TimedRobot {
     LOGGER.debug("Match time {}", DriverStation.getInstance().getMatchTime());
     driverstation.readInputs();
 
+<<<<<<< HEAD
     grabber.grab(driverstation.getGrabThrottle());
     elevator.move(driverstation.getElevatorSpeed());
 
@@ -201,6 +207,8 @@ public class Robot extends TimedRobot {
       LOGGER.debug("Not climbing");
     }
 
+=======
+>>>>>>> master
     double speed = driverstation.getArcadeSpeed();
     double turn = driverstation.getArcadeTurn();
 
@@ -215,7 +223,6 @@ public class Robot extends TimedRobot {
     
       case ArcadeDrive:
         drive.arcadeDrive(speed, turn, true);
-        //drive.logTelemetry(speed, turn);
         break;
 
       case CurvatureDrive:
@@ -230,8 +237,22 @@ public class Robot extends TimedRobot {
 
       default:
     }
+<<<<<<< HEAD
     data.log();
     data.send();
+=======
+
+    if (driverstation.getNavJoystick().getJoystick().getPOV() == 0) {
+      CameraSwitcher.update(0);
+    } else if (driverstation.getNavJoystick().getJoystick().getPOV() == 90) {
+      CameraSwitcher.update(1);
+    } else if (driverstation.getNavJoystick().getJoystick().getPOV() == 180) {
+      CameraSwitcher.update(2);
+    } else if (driverstation.getNavJoystick().getJoystick().getPOV() == 270) {
+      CameraSwitcher.update(3);
+    }
+
+>>>>>>> master
   }
 
   @Override
@@ -245,10 +266,6 @@ public class Robot extends TimedRobot {
         drive.readPidsFromSmartDashboard(tuneSlot);
         tuningValue = Double.parseDouble(SmartDashboard.getString("DB/String 0", "0.0"));
         LOGGER.info("Tuning Value: " + tuningValue);
-        break;
-      case 2:
-        LOGGER.info("Testing motor control.");
-        testMotorControl = new TestMotorControl();
         break;
       default:
         LOGGER.info("Invalid Tune Mode: {}", tuneSlot);
@@ -270,9 +287,6 @@ public class Robot extends TimedRobot {
         drive.tuneTurn(tuningValue, RobotMap.PID_SLOT_TURN);
         LOGGER.debug("Turn {} degrees",Math.toDegrees(drive.getLeftDistance()));
         break;
-      case 2: // New motor control
-        testMotorControl.periodic();
-        break;
       default:
     }
     data.log();
@@ -283,10 +297,14 @@ public class Robot extends TimedRobot {
   public void disabledInit() {
     LOGGER.info("Init Disabled");
     //drive.logClosedLoopErrors();
+
+    driverstation.readInputs();
+
   }
 
   @Override
   public void disabledPeriodic() {
+<<<<<<< HEAD
     data.log();
     LOGGER.trace("Disabled Periodic");
     String[] autoList = {
@@ -307,6 +325,21 @@ public class Robot extends TimedRobot {
     //LOGGER.info("Selected Auto Mode: " + SmartDashboard.getString("Auto Selector", "None"));
     data.log();
     data.send();
+=======
+    driverstation.readInputs();
+    LOGGER.trace("Disabled Periodic");
+
+    if (driverstation.getNavJoystick().getJoystick().getPOV() == 0) {
+      CameraSwitcher.update(0);
+    } else if (driverstation.getNavJoystick().getJoystick().getPOV() == 90) {
+      CameraSwitcher.update(1);
+    } else if (driverstation.getNavJoystick().getJoystick().getPOV() == 180) {
+      CameraSwitcher.update(2);
+    } else if (driverstation.getNavJoystick().getJoystick().getPOV() == 270) {
+      CameraSwitcher.update(3);
+    }
+
+>>>>>>> master
   }
 
 

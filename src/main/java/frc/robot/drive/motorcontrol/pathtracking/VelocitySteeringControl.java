@@ -13,7 +13,7 @@ import org.apache.commons.math3.linear.RealMatrix;
 /**
  * Path tracking simulation with LQR speed and steering control.
  */
-public class LQRVelocitySteeringControl {
+public class VelocitySteeringControl {
 
   private static boolean showAnimation = true;
 
@@ -44,7 +44,11 @@ public class LQRVelocitySteeringControl {
   private double currentYaw = 0.0;
   private double currentVelocity = 0.0;
 
+<<<<<<< HEAD:src/main/java/frc/robot/drive/motorcontrol/pathtracking/LQRVelocitySteeringControl.java
   public void LqrVelocitySteeringControl(
+=======
+  public VelocitySteeringControl(
+>>>>>>> master:src/main/java/frc/robot/drive/motorcontrol/pathtracking/VelocitySteeringControl.java
       double x,
       double y,
       double yaw,
