@@ -13,14 +13,14 @@ public class Configs {
   public static String[] configLocations = { "./csv.txt", "./csv.txt" };
   private static final Logger LOGGER = RobotLogManager.getMainLogger(Configs.class.getName());
 
-  static {
+  public static void init(){
     StringBuilder contentBuilder = new StringBuilder();
     for (String path : configLocations) {
       File file = new File(path);
       if (!file.exists()) {
         continue;
       }
-      
+
       try (BufferedReader br = new BufferedReader(new FileReader(file))) {
         String currentLine;
         while ((currentLine = br.readLine()) != null) {
