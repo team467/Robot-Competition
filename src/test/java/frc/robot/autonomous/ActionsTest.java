@@ -37,7 +37,7 @@ public class ActionsTest {
    */
   @BeforeClass
   public static void initAll() {
-    RobotMap.init(RobotId.Robot2018);
+    RobotMap.init(RobotId.ROBOT_2018);
     LOGGER.trace("Using simulation for testing actions");
   }
 
