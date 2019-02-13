@@ -24,9 +24,8 @@ abstract class GamePieceBase implements GamePiece {
   }
 
   @Override
-  public GamePiece enabled(boolean enabled) {
+  public void enabled(boolean enabled) {
     this.enabled = enabled;
-    return this;
   }
 
   @Override

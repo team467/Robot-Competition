@@ -7,10 +7,8 @@ public interface GamePiece extends Sendable {
   /**
    * Enables or disables the game piece. The game peice must be enabled to move. 
    * Passive sensors may stil work when disabled.
-   * 
-   * @param enabled set true to enable this game piece, false to disable
    */
-  public GamePiece enabled(boolean enabled);
+  public void enabled(boolean enabled);
 
   /**
    * Gets the active status of this game piece.

@@ -204,6 +204,22 @@ public class RobotMap {
         HAS_CARGO_INTAKE = true;
         HAS_HATCH_MECHANISM = true;
         HAS_CARGO_INTAKE = true;
+
+        // Turret
+        TURRET_MOTOR_CHANNEL = 0;
+        TURRET_MOTOR_INVERTED = false; // TODO
+        TURRET_SENSOR_CHANNEL = 0; // TODO
+        TURRET_SENSOR_INVERTED = false; // TODO
+        TURRET_RIGHT_LIMIT_TICKS = 0; // TODO
+        TURRET_LEFT_LIMIT_TICKS = 0; // TODO
+        TURRET_RIGHT_LIMIT_DEGREES = 0.0; // TODO
+        TURRET_LEFT_LIMIT_DEGREES = 0.0; // TODO
+        TURRET_ALLOWABLE_ERROR_TICKS = 10; // TODO
+        TURRET_P = 1.0; // TODO
+        TURRET_I = 0.0; // TODO
+        TURRET_D = 0.0; // TODO
+        TURRET_F = 0.0; // TODO
+      
       
         // Hatch Mechanism
         HATCH_LAUNCHER_S1_FORWARD_CHANNEL = 0; // TODO
@@ -358,6 +374,19 @@ public class RobotMap {
 
   // Turret
   public static boolean HAS_TURRET = false;
+  public static int TURRET_MOTOR_CHANNEL;
+  public static boolean TURRET_MOTOR_INVERTED;
+  public static int TURRET_SENSOR_CHANNEL;
+  public static boolean TURRET_SENSOR_INVERTED;
+  public static double TURRET_RIGHT_LIMIT_TICKS;
+  public static double TURRET_LEFT_LIMIT_TICKS;
+  public static double TURRET_RIGHT_LIMIT_DEGREES;
+  public static double TURRET_LEFT_LIMIT_DEGREES;
+  public static int TURRET_ALLOWABLE_ERROR_TICKS = 10;
+  public static double TURRET_P;
+  public static double TURRET_I;
+  public static double TURRET_D;
+  public static double TURRET_F;
 
   // Hatch Mechanism
   public static boolean HAS_HATCH_MECHANISM;
@@ -382,7 +411,7 @@ public class RobotMap {
   public static int CARGO_MECH_ARM_SENSOR_CHANNEL;
   public static int CARGO_MECH_ARM_MOTOR_CHANNEL;
   public static boolean CARGO_MECH_ARM_MOTOR_INVERTED;
-  public static boolean CARGO_MECH_ARM_SENSOR_INVERTED; 
+  public static boolean CARGO_MECH_ARM_SENSOR_INVERTED;
   public static double CARGO_MECH_ARM_P;
   public static double CARGO_MECH_ARM_I;
   public static double CARGO_MECH_ARM_D;
