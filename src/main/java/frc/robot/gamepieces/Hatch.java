@@ -1,11 +1,11 @@
 package frc.robot.gamepieces;
 
-import org.apache.logging.log4j.Logger;
-
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import frc.robot.RobotMap;
 import frc.robot.logging.RobotLogManager;
+
+import org.apache.logging.log4j.Logger;
 
 public class Hatch {
   public enum HatchState {
@@ -24,13 +24,24 @@ public class Hatch {
   private DoubleSolenoid doubleSolenoid3;
 
   private Hatch() {
-    if (RobotMap.HAS_HATCH) {
-      this.doubleSolenoid1 = new DoubleSolenoid(RobotMap.HATCH_S1_FORWARD_CHANNEL, RobotMap.HATCH_S1_REVERSE_CHANNEL);
-      this.doubleSolenoid2 = new DoubleSolenoid(RobotMap.HATCH_S2_FORWARD_CHANNEL, RobotMap.HATCH_S2_REVERSE_CHANNEL);
-      this.doubleSolenoid3 = new DoubleSolenoid(RobotMap.HATCH_S3_FORWARD_CHANNEL, RobotMap.HATCH_S3_REVERSE_CHANNEL);
+    if (RobotMap.HAS_HATCH_MECHANISM) {
+      doubleSolenoid1 = new DoubleSolenoid(
+          RobotMap.HATCH_S1_FORWARD_CHANNEL, 
+          RobotMap.HATCH_S1_REVERSE_CHANNEL);
+      doubleSolenoid2 = new DoubleSolenoid(
+          RobotMap.HATCH_S2_FORWARD_CHANNEL, 
+          RobotMap.HATCH_S2_REVERSE_CHANNEL);
+      doubleSolenoid3 = new DoubleSolenoid(
+        RobotMap.HATCH_S3_FORWARD_CHANNEL, 
+        RobotMap.HATCH_S3_REVERSE_CHANNEL);
     }
   }
-    
+
+  /**
+  * Returns a singleton instance of the telemery builder.
+  * 
+  * @return TelemetryBuilder the telemetry builder instance
+  */
   public static Hatch getInstance() {
     if (instance == null) {
       instance = new Hatch();

@@ -20,9 +20,6 @@ public class Drive extends DifferentialDrive implements AutoDrive {
   private ControlMode controlMode;
 
   private static final Logger LOGGER = RobotLogManager.getMainLogger(Drive.class.getName());
-
-  private static final Logger TELEMETRY = RobotLogManager.telemetryLogger();
-
   private static final DecimalFormat df = new DecimalFormat("####0.00");
 
   // Single instance of this class
@@ -32,10 +29,7 @@ public class Drive extends DifferentialDrive implements AutoDrive {
   private final TalonSpeedControllerGroup right;
 
   private RobotData data = RobotData.getInstance();
-  private FieldPosition fieldState = FieldPosition.getInstance();
   
-  double carrotLength;
-
   // Private constructor
 
   /**
@@ -94,7 +88,6 @@ public class Drive extends DifferentialDrive implements AutoDrive {
     this.left = left;
     this.right = right;
     
-    carrotLength = RobotMap.MAX_CARROT_LENGTH;
     
     setPidsFromRobotMap();
   }
@@ -185,7 +178,6 @@ public class Drive extends DifferentialDrive implements AutoDrive {
     left.zero();
     right.zero();
     data.zero();
-    fieldState.zeroSensors();
   }
 
   public void sendData() {
@@ -233,7 +225,6 @@ public class Drive extends DifferentialDrive implements AutoDrive {
     // The right motor is reversed
     right.set(ControlMode.Position, rightDistance);
     data.updateDrivePosition(getLeftDistance(), getRightDistance());
-    fieldState.update(getLeftDistance(), getRightDistance());
   }
 
   @Override
@@ -299,37 +290,11 @@ public class Drive extends DifferentialDrive implements AutoDrive {
     LOGGER.debug("Automated move of right: {} left: {} feet ", 
         df.format(targetRightDistance), df.format(targetLeftDistance));
 
-    // Convert the turn to a distance based on the circumference of the robot wheel base.
-    // Store the sign so that all math works the same forward and backward using absolute values,
-    // with direction corrected at the end.
-    double leftSign = Math.signum(targetLeftDistance);
-    double rightSign = Math.signum(targetRightDistance);
-
-    // Get the current positions to determine if the request is above the max individual request
-    double currentLeftPosition = getLeftDistance();
-    double currentRightPosition = getRightDistance();
-    LOGGER.debug("Current Position - Right: {} feet, Left: {} feet", 
-        df.format(currentRightPosition), df.format(currentLeftPosition));
-
-    // Get the average to correct for drift and move it back to straight
-    // Use absolute values so that direction is ignored.
-    double average = 0.5 * (Math.abs(currentRightPosition) + Math.abs(currentLeftPosition));
-
-    // Use the minimum to go either the max allowed distance or to the target
-    
-    double moveLeftDistance
-        = leftSign * Math.min(Math.abs(targetLeftDistance), (carrotLength + average));
-    double moveRightDistance
-        = rightSign * Math.min(Math.abs(targetRightDistance), (carrotLength + average));
-    LOGGER.debug("Target distance in Feet - Right: {} feet, Left: {} feet", 
-        df.format(moveRightDistance), df.format(moveLeftDistance));
-
-    left.set(ControlMode.Position, moveLeftDistance);
+    left.set(ControlMode.Position, targetLeftDistance);
     // The right motor is reversed
-    right.set(ControlMode.Position, moveRightDistance);
+    right.set(ControlMode.Position, targetRightDistance);
 
     data.updateDrivePosition(getLeftDistance(), getRightDistance());
-    fieldState.update(getLeftDistance(), getRightDistance());
   }
   
   public double getLeftDistance() {
@@ -365,7 +330,6 @@ public class Drive extends DifferentialDrive implements AutoDrive {
   public void arcadeDrive(double speed, double rotation, boolean squaredInputs) {
     super.arcadeDrive(speed, rotation, squaredInputs);
     data.updateDrivePosition(getLeftDistance(), getRightDistance());
-    fieldState.update(getLeftDistance(), getRightDistance());
   }
 
   public void tankDrive(double leftSpeed, double rightSpeed) {
@@ -375,13 +339,11 @@ public class Drive extends DifferentialDrive implements AutoDrive {
   public void tankDrive(double leftSpeed, double rightSpeed, boolean squaredInputs) {
     super.tankDrive(leftSpeed, rightSpeed, squaredInputs);
     data.updateDrivePosition(getLeftDistance(), getRightDistance());
-    fieldState.update(getLeftDistance(), getRightDistance());
   }
 
   public void curvatureDrive(double speed, double rotation, boolean isQuickTurn) {
     super.curvatureDrive(speed, rotation, isQuickTurn);
     data.updateDrivePosition(getLeftDistance(), getRightDistance());
-    fieldState.update(getLeftDistance(), getRightDistance());
   }
 
 }

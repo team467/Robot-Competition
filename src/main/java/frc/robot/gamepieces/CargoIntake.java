@@ -1,13 +1,11 @@
 package frc.robot.gamepieces;
 
-import edu.wpi.first.wpilibj.DigitalGlitchFilter;
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Spark;
-import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
-
+import frc.robot.RobotMap;
 import frc.robot.logging.RobotLogManager;
+import frc.robot.logging.TelemetryBuilder;
 
 import org.apache.logging.log4j.Logger;
 
@@ -19,105 +17,57 @@ public class CargoIntake extends GamePieceBase implements GamePieceInterface {
   private static CargoIntake instance = null;
 
   // Actuators
-  private Roller roller;
-  private RollerArm arm;
+  private CargoIntakeRoller roller;
+  private CargoIntakeArm arm;
 
-  // State
-  private RollerArmState armState;
-
-  //TODO: Move to Robot Map
-  public static int ROLLER_ARM_UP_SENSOR_CHANNEL = 0;
-  public static int ROLLER_ARM_UP_SOLINOID_CHANNEL = 0;
-  public static int ROLLER_ARM_DOWN_SENSOR_CHANNEL = 0;
-  public static int ROLLER_ARM_DOWN_SOLINOID_CHANNEL = 0;
-  public static int ROLLER_MOTOR_CHANNEL = 0;
-  public static boolean ROLLER_MOTOR_INVERTED = false;
-
-  public enum RollerArm {
+  public enum CargoIntakeArm {
     OFF,
     UP,
     DOWN;
 
-    private static DoubleSolenoid arm;
+    private static DoubleSolenoid solenoid;
 
     private static void initialize() {
-      arm = new DoubleSolenoid(ROLLER_ARM_UP_SOLINOID_CHANNEL, ROLLER_ARM_DOWN_SOLINOID_CHANNEL);
+      solenoid = new DoubleSolenoid(
+          RobotMap.ROLLER_ARM_UP_SOLINOID_CHANNEL, 
+          RobotMap.ROLLER_ARM_DOWN_SOLINOID_CHANNEL);
+      solenoid.setName("Telemetry", "CargoIntakeArmSolenoid");
     }
 
     /**
      * Moves the arm based on the requested command.
      */
     private void actuate() {
+      LOGGER.debug("Actuate cargo intake arm: {}", name());
+      if (RobotMap.useSimulator) {
+        return;
+      }
       switch (this) {
         case DOWN:
-          arm.set(DoubleSolenoid.Value.kReverse);
+          solenoid.set(DoubleSolenoid.Value.kReverse);
           break;
         case UP:
-          arm.set(DoubleSolenoid.Value.kForward);
+          solenoid.set(DoubleSolenoid.Value.kForward);
           break;
         default:
-          arm.set(DoubleSolenoid.Value.kOff);
+          solenoid.set(DoubleSolenoid.Value.kOff);
       }
     }
 
   }
 
-  public enum RollerArmState {
-    UP,
-    MOVING_DOWN,
-    DOWN,
-    MOVING_UP,
-    UNKNOWN;
-    
-    private static DigitalInput armUp;
-    private static DigitalInput armDown;
-    private static DigitalGlitchFilter glitchFilter;
-    private static RollerArmState previousState;
-  
-    private static void initialize() {
-      // Config arm sensors
-      armUp = new DigitalInput(ROLLER_ARM_UP_SENSOR_CHANNEL);
-      armUp.setName("Telemetry", "RollerArmUp");
-      armDown = new DigitalInput(ROLLER_ARM_DOWN_SENSOR_CHANNEL);
-      armDown.setName("Telemetry", "RollerArmDown");
-
-      // Set the time the input must remain steady for a valid state change
-      glitchFilter = new DigitalGlitchFilter();
-      glitchFilter.setPeriodNanoSeconds(10);
-      glitchFilter.add(armUp);
-      glitchFilter.add(armDown);
-    }
-
-    private static RollerArmState read() {
-      RollerArmState state;
-      if (armUp.get()) {
-        state = UP;
-      } else if (armDown.get()) {
-        state = DOWN;
-      } else if (previousState == UP || previousState == MOVING_DOWN) {
-        state = MOVING_DOWN;
-      } else if (previousState == DOWN || previousState == MOVING_UP) {
-        state = MOVING_UP;
-      } else {
-        state = UNKNOWN;
-      }
-      previousState = state;
-      return state;
-    }
-
-  }
-
-  public enum Roller {
+  public enum CargoIntakeRoller {
     FORWARD,
     STOP,
     REVERSE;
 
-    private static SpeedController roller;
+    private static Spark motor;
 
     private static void initialize() {
       // Create the roller object. No sensors
-      roller = new Spark(ROLLER_MOTOR_CHANNEL);
-      roller.setInverted(ROLLER_MOTOR_INVERTED);
+      motor = new Spark(RobotMap.ROLLER_MOTOR_CHANNEL);
+      motor.setInverted(RobotMap.ROLLER_MOTOR_INVERTED);
+      motor.setName("Telemetry", "CargoIntakeRollerMotor");
     }
 
     /**
@@ -127,16 +77,16 @@ public class CargoIntake extends GamePieceBase implements GamePieceInterface {
       switch (this) {
 
         case FORWARD:
-          roller.set(1.0);
+          motor.set(1.0);
           break;
         
         case REVERSE:
-          roller.set(-1.0);
+          motor.set(-1.0);
           break;
 
         case STOP:
         default:
-          roller.set(0.0);
+          motor.set(0.0);
       }
       
     }
@@ -159,14 +109,13 @@ public class CargoIntake extends GamePieceBase implements GamePieceInterface {
     super("Telemetry", "CargoIntake");
 
     // Initialize the sensors and actuators
-    Roller.initialize();
-    RollerArm.initialize();
-    RollerArmState.initialize();
+    CargoIntakeRoller.initialize();
+    CargoIntakeArm.initialize();
 
-    roller = Roller.STOP;
-    arm = RollerArm.UP;
-    armState = RollerArmState.read();
-    
+    roller = CargoIntakeRoller.STOP;
+    arm = CargoIntakeArm.UP;
+
+    initSendable(TelemetryBuilder.getInstance());
     LOGGER.trace("Created roller arm game piece.");
   }
 
@@ -175,7 +124,7 @@ public class CargoIntake extends GamePieceBase implements GamePieceInterface {
    * 
    * @param command which way to move the arm.
    */
-  public void arm(RollerArm command) {
+  public void arm(CargoIntakeArm command) {
     arm = command;
   }
 
@@ -186,16 +135,16 @@ public class CargoIntake extends GamePieceBase implements GamePieceInterface {
    * @param command which way to move the arm.
    */
   public void arm(String command) {
-    arm = RollerArm.valueOf(command);
+    arm = CargoIntakeArm.valueOf(command);
   }
 
   /**
-   * Reads the arm state from the sensors.
+   * Gets the last command given to the cargo intake arm.
    * 
-   * @return the state of the arm, including if unknown or moving.
+   * @return the cargo intake command
    */
-  public RollerArmState arm() {
-    return armState;
+  public CargoIntakeArm arm() {
+    return arm;
   }
 
   /**
@@ -203,7 +152,7 @@ public class CargoIntake extends GamePieceBase implements GamePieceInterface {
    * 
    * @param command the roller command
    */
-  public void roller(Roller command) {
+  public void roller(CargoIntakeRoller command) {
     roller = command;
   }
 
@@ -214,13 +163,13 @@ public class CargoIntake extends GamePieceBase implements GamePieceInterface {
    * @param command the roller command
    */
   public void roller(String command) {
-    roller = Roller.valueOf(command);
+    roller = CargoIntakeRoller.valueOf(command);
   }
 
   /**
    * Returns the current rollar command. There is no external sensor on this motor.
    */
-  public Roller roller() {
+  public CargoIntakeRoller roller() {
     return roller;
   }
 
@@ -233,15 +182,15 @@ public class CargoIntake extends GamePieceBase implements GamePieceInterface {
       roller.actuate();
       arm.actuate();
     }
-    // Update state
-    armState = RollerArmState.read();
   }
 
   @Override
   public void initSendable(SendableBuilder builder) {
-    builder.addStringProperty("Roller", roller::name, (command) -> roller(command));
-    builder.addStringProperty("RollerArm", arm::name, (command) -> arm(command));
-    builder.addStringProperty("RollerArmState", armState::name, null);
+    super.initSendable(builder);
+    builder.addStringProperty("CargoIntakeRoller", roller::name, (command) -> roller(command));
+    builder.addStringProperty("CargoIntakeArm", arm::name, (command) -> arm(command));
+    CargoIntakeRoller.motor.initSendable(builder);
+    CargoIntakeArm.solenoid.initSendable(builder);
   }
 
 }
