@@ -18,8 +18,8 @@ public class RobotMap {
   // Steering motor ids
   public static boolean HAS_WHEELS;
   public static int DRIVEMOTOR_NUM;
-  public static int AUTONOMOUS_DRIVE_TIMEOUT_MS;
-  public static int AUTONOMOUS_TURN_TIMEOUT_MS;
+  public static int AUTONOMOUS_DRIVE_TIMEOUT_MS = 200;
+  public static int AUTONOMOUS_TURN_TIMEOUT_MS = 300;
 
 
   public static int LEFT_LEAD_CHANNEL;
@@ -105,10 +105,14 @@ public class RobotMap {
   public static final boolean useRemoteImu = false;
 
   public enum RobotId {
-    MiniBot, Robot2018, Robot2019
+    MINIBOT, ROBOT_2018, ROBOT_2019
   }
 
-  // Initialize robot map. 
+  /**
+   *  Initialize robot map.
+   * 
+   * @param id  the robot identifier.
+   */ 
   public static void init(RobotId id) {
 
     robotId = id;
@@ -116,11 +120,50 @@ public class RobotMap {
 
     switch (id) {
       
-      case Robot2018:
+      case ROBOT_2018:
         HAS_WHEELS = true;
         DRIVEMOTOR_NUM = 4;
         WHEEL_CIRCUMFERENCE = 18.50;
-        // useSpeedControllers = true;
+
+        LEFT_LEAD_CHANNEL = 1;
+        LEFT_FOLLOWER_1_CHANNEL = 2;
+        LEFT_DRIVE_SENSOR_IS_INVERTED = true;
+        LEFT_DRIVE_MOTOR_IS_INVERTED = false;
+
+        RIGHT_LEAD_CHANNEL = 4;
+        RIGHT_FOLLOWER_1_CHANNEL = 5;
+        RIGHT_DRIVE_SENSOR_IS_INVERTED = true;
+        RIGHT_DRIVE_MOTOR_IS_INVERTED = false;
+        
+        //Linear PIDS
+        LEFT_DRIVE_PID_P = 1.0;
+        LEFT_DRIVE_PID_I = 0.0;
+        LEFT_DRIVE_PID_D = 450.0;
+        LEFT_DRIVE_PID_F = 0.0;
+
+        RIGHT_DRIVE_PID_P = 1.0;
+        RIGHT_DRIVE_PID_I = 0.0;
+        RIGHT_DRIVE_PID_D = 450.0;
+        RIGHT_DRIVE_PID_F = 0.0;
+
+        // Turn PIDs
+        LEFT_TURN_PID_P = 1.0;
+        LEFT_TURN_PID_I = 0.0;
+        LEFT_TURN_PID_D = 450.0;
+        LEFT_TURN_PID_F = 0.0;
+
+        RIGHT_TURN_PID_P = 1.0;
+        RIGHT_TURN_PID_I = 0.0;
+        RIGHT_TURN_PID_D = 450.0;
+        RIGHT_TURN_PID_F = 0.0;
+  
+        break;
+
+      case ROBOT_2019:
+      default:
+        HAS_WHEELS = true;
+        DRIVEMOTOR_NUM = 4;
+        WHEEL_CIRCUMFERENCE = 18.50;
 
         LEFT_LEAD_CHANNEL = 1;
         LEFT_FOLLOWER_1_CHANNEL = 2;
@@ -155,11 +198,89 @@ public class RobotMap {
         RIGHT_TURN_PID_I = 0.0;
         RIGHT_TURN_PID_D = 450.0;
         RIGHT_TURN_PID_F = 0.0;
-  
-        AUTONOMOUS_DRIVE_TIMEOUT_MS = 200;
-        AUTONOMOUS_TURN_TIMEOUT_MS = 300;
+
+        // Game Pieces
+        HAS_TURRET = true;
+        HAS_CARGO_INTAKE = true;
+        HAS_HATCH_MECHANISM = true;
+        HAS_CARGO_INTAKE = true;
+      
+        // Hatch Mechanism
+        HATCH_LAUNCHER_S1_FORWARD_CHANNEL = 0; // TODO
+        HATCH_LAUNCHER_S1_REVERSE_CHANNEL = 0; // TODO
+        HATCH_LAUNCHER_S2_FORWARD_CHANNEL = 0; // TODO
+        HATCH_LAUNCHER_S2_REVERSE_CHANNEL = 0; // TODO
+        HATCH_LAUNCHER_S3_FORWARD_CHANNEL = 0; // TODO
+        HATCH_LAUNCHER_S3_REVERSE_CHANNEL = 0; // TODO
+        HATCH_MECH_ARM_FORWARD_CHANNEL = 0; // TODO
+        HATCH_MECH_ARM_REVERSE_CHANNEL = 0; // TODO
+
+        // Cargo Intake
+        ROLLER_ARM_UP_SOLINOID_CHANNEL = 0; // TODO
+        ROLLER_ARM_DOWN_SOLINOID_CHANNEL = 0; // TODO
+        ROLLER_MOTOR_CHANNEL = 0; // TODO
+        ROLLER_MOTOR_INVERTED = false; // TODO
+
+        // Cargo Mechanism
+        CARGO_MECH_ARM_SENSOR_CHANNEL = 0; // TODO
+        CARGO_MECH_ARM_MOTOR_CHANNEL = 0; // TODO
+        CARGO_MECH_ARM_MOTOR_INVERTED = false; // TODO
+        CARGO_MECH_ARM_SENSOR_INVERTED = false;  // TODO
+        CARGO_MECH_ARM_P = 1.0; // TODO
+        CARGO_MECH_ARM_I = 0.0; // TODO
+        CARGO_MECH_ARM_D = 0.0; // TODO
+        CARGO_MECH_ARM_F = 0.0; // TODO
+
+        CARGO_MECH_ARM_TOP_TICKS = 0; // TODO
+        CARGO_MECH_ARM_BOTTOM_TICKS = 0; // TODO
+        CARGO_MECH_ARM_ALLOWABLE_ERROR_TICKS = 10; // TODO
+
+        // Relative
+        CARGO_CARGO_BIN = 0; // TODO
+        CARGO_MECH_ROCKET_LOW = 0.3; // TODO
+        CARGO_MECH_CARGO_SHIP = 0.7; // TODO
+
+        CARGO_MECH_CLAW_MOTOR_CHANNEL = 0; // TODO
+        CARGO_MECH_MOTOR_INVERTED = false; // TODO
+
         break;
 
+      case MINIBOT:
+        HAS_WHEELS = true;
+        DRIVEMOTOR_NUM = 2;
+        WHEEL_CIRCUMFERENCE = 18.50;
+
+        LEFT_LEAD_CHANNEL = 1;
+        LEFT_DRIVE_SENSOR_IS_INVERTED = false;
+        LEFT_DRIVE_MOTOR_IS_INVERTED = false;
+
+        RIGHT_LEAD_CHANNEL = 4;
+        RIGHT_DRIVE_SENSOR_IS_INVERTED = false;
+        RIGHT_DRIVE_MOTOR_IS_INVERTED = false;
+        
+        //Linear PIDS
+        LEFT_DRIVE_PID_P = 1.0;
+        LEFT_DRIVE_PID_I = 0.0;
+        LEFT_DRIVE_PID_D = 450.0;
+        LEFT_DRIVE_PID_F = 0.0;
+
+        RIGHT_DRIVE_PID_P = 1.0;
+        RIGHT_DRIVE_PID_I = 0.0;
+        RIGHT_DRIVE_PID_D = 450.0;
+        RIGHT_DRIVE_PID_F = 0.0;
+
+        // Turn PIDs
+        LEFT_TURN_PID_P = 1.0;
+        LEFT_TURN_PID_I = 0.0;
+        LEFT_TURN_PID_D = 450.0;
+        LEFT_TURN_PID_F = 0.0;
+
+        RIGHT_TURN_PID_P = 1.0;
+        RIGHT_TURN_PID_I = 0.0;
+        RIGHT_TURN_PID_D = 450.0;
+        RIGHT_TURN_PID_F = 0.0;
+  
+        break;
 
     }
 
@@ -234,45 +355,50 @@ public class RobotMap {
 
 
   // Game Pieces
+
+  // Turret
+  public static boolean HAS_TURRET = false;
+
+  // Hatch Mechanism
   public static boolean HAS_HATCH_MECHANISM;
-  public static int HATCH_S1_FORWARD_CHANNEL;
-  public static int HATCH_S1_REVERSE_CHANNEL;
-  public static int HATCH_S2_FORWARD_CHANNEL;
-  public static int HATCH_S2_REVERSE_CHANNEL;
-  public static int HATCH_S3_FORWARD_CHANNEL;
-  public static int HATCH_S3_REVERSE_CHANNEL;
+  public static int HATCH_LAUNCHER_S1_FORWARD_CHANNEL;
+  public static int HATCH_LAUNCHER_S1_REVERSE_CHANNEL;
+  public static int HATCH_LAUNCHER_S2_FORWARD_CHANNEL;
+  public static int HATCH_LAUNCHER_S2_REVERSE_CHANNEL;
+  public static int HATCH_LAUNCHER_S3_FORWARD_CHANNEL;
+  public static int HATCH_LAUNCHER_S3_REVERSE_CHANNEL;
+  public static int HATCH_MECH_ARM_FORWARD_CHANNEL;
+  public static int HATCH_MECH_ARM_REVERSE_CHANNEL;
 
   // Cargo Intake
-  public static boolean HAS_CARGO_INTAKE;
+  public static boolean HAS_CARGO_INTAKE = false;
   public static int ROLLER_ARM_UP_SOLINOID_CHANNEL = 0;
   public static int ROLLER_ARM_DOWN_SOLINOID_CHANNEL = 0;
   public static int ROLLER_MOTOR_CHANNEL = 0;
   public static boolean ROLLER_MOTOR_INVERTED = false;
 
-  // Cargo Arm
-  private static boolean HAS_CARGO_MECHANISM;
+  // Cargo Mechanism
+  public static boolean HAS_CARGO_MECHANISM = false;
+  public static int CARGO_MECH_ARM_SENSOR_CHANNEL;
+  public static int CARGO_MECH_ARM_MOTOR_CHANNEL;
+  public static boolean CARGO_MECH_ARM_MOTOR_INVERTED;
+  public static boolean CARGO_MECH_ARM_SENSOR_INVERTED; 
+  public static double CARGO_MECH_ARM_P;
+  public static double CARGO_MECH_ARM_I;
+  public static double CARGO_MECH_ARM_D;
+  public static double CARGO_MECH_ARM_F;
 
-  public static int CARGO_MECH_ARM_SENSOR_CHANNEL = 0;
-  public static int CARGO_MECH_ARM_MOTOR_CHANNEL = 0;
-  public static boolean CARGO_MECH_ARM_MOTOR_INVERTED = false;
-  public static boolean CARGO_MECH_ARM_SENSOR_INVERTED = false; 
-  public static double CARGO_MECH_ARM_P = 1.0;
-  public static double CARGO_MECH_ARM_I = 0.0;
-  public static double CARGO_MECH_ARM_D = 0.0;
-  public static double CARGO_MECH_ARM_F = 0.0;
-
-  public static int CARGO_MECH_ARM_TOP_TICKS; // TODO
-  public static int CARGO_MECH_ARM_BOTTOM_TICKS; // TODO
+  public static int CARGO_MECH_ARM_TOP_TICKS;
+  public static int CARGO_MECH_ARM_BOTTOM_TICKS;
   public static int CARGO_MECH_ARM_ALLOWABLE_ERROR_TICKS = 10;
 
-  // Relative
-  public static double CARGO_CARGO_BIN = 0; // TODO
-  public static double CARGO_MECH_ROCKET_LOW = 0.3; // TODO
-  public static double CARGO_MECH_CARGO_SHIP = 0.7; // TODO
+  // Relative heights
+  public static double CARGO_CARGO_BIN;
+  public static double CARGO_MECH_ROCKET_LOW;
+  public static double CARGO_MECH_CARGO_SHIP;
 
-
-  public static int CARGO_MECH_CLAW_MOTOR_CHANNEL = 0;
-  public static boolean CARGO_MECH_MOTOR_INVERTED = false;
+  public static int CARGO_MECH_CLAW_MOTOR_CHANNEL;
+  public static boolean CARGO_MECH_MOTOR_INVERTED;
 
   
 

@@ -9,7 +9,7 @@ import frc.robot.logging.TelemetryBuilder;
 
 import org.apache.logging.log4j.Logger;
 
-public class CargoIntake extends GamePieceBase implements GamePieceInterface {
+public class CargoIntake extends GamePieceBase implements GamePiece {
   
   private static final Logger LOGGER 
       = RobotLogManager.getMainLogger(CargoIntake.class.getName());
@@ -39,7 +39,7 @@ public class CargoIntake extends GamePieceBase implements GamePieceInterface {
      */
     private void actuate() {
       LOGGER.debug("Actuate cargo intake arm: {}", name());
-      if (RobotMap.useSimulator) {
+      if (RobotMap.useSimulator || !RobotMap.HAS_CARGO_INTAKE) {
         return;
       }
       switch (this) {
@@ -74,6 +74,10 @@ public class CargoIntake extends GamePieceBase implements GamePieceInterface {
      * Moves the roller forward or backward based on the requested command.
      */
     private void actuate() {
+      LOGGER.debug("Actuate cargo intake roller: {}", name());
+      if (RobotMap.useSimulator || !RobotMap.HAS_CARGO_INTAKE) {
+        return;
+      }
       switch (this) {
 
         case FORWARD:
@@ -108,7 +112,7 @@ public class CargoIntake extends GamePieceBase implements GamePieceInterface {
   private CargoIntake() {
     super("Telemetry", "CargoIntake");
 
-    // Initialize the sensors and actuators
+    // Initialize the actuators
     CargoIntakeRoller.initialize();
     CargoIntakeArm.initialize();
 
@@ -186,7 +190,6 @@ public class CargoIntake extends GamePieceBase implements GamePieceInterface {
 
   @Override
   public void initSendable(SendableBuilder builder) {
-    super.initSendable(builder);
     builder.addStringProperty("CargoIntakeRoller", roller::name, (command) -> roller(command));
     builder.addStringProperty("CargoIntakeArm", arm::name, (command) -> arm(command));
     CargoIntakeRoller.motor.initSendable(builder);

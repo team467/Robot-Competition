@@ -2,7 +2,7 @@ package frc.robot.gamepieces;
 
 import edu.wpi.first.wpilibj.Sendable;
 
-public interface GamePieceInterface extends Sendable {
+public interface GamePiece extends Sendable {
 
   /**
    * Enables or disables the game piece. The game peice must be enabled to move. 
@@ -10,7 +10,7 @@ public interface GamePieceInterface extends Sendable {
    * 
    * @param enabled set true to enable this game piece, false to disable
    */
-  public GamePieceInterface enabled(boolean enabled);
+  public GamePiece enabled(boolean enabled);
 
   /**
    * Gets the active status of this game piece.

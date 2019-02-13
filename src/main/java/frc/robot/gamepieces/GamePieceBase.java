@@ -7,7 +7,7 @@ import frc.robot.logging.TelemetryBuilder;
 
 import org.apache.logging.log4j.Logger;
 
-class GamePieceBase implements GamePieceInterface {
+abstract class GamePieceBase implements GamePiece {
 
   private static final Logger LOGGER 
       = RobotLogManager.getMainLogger(GamePieceBase.class.getName());
@@ -24,7 +24,7 @@ class GamePieceBase implements GamePieceInterface {
   }
 
   @Override
-  public GamePieceInterface enabled(boolean enabled) {
+  public GamePiece enabled(boolean enabled) {
     this.enabled = enabled;
     return this;
   }
@@ -35,8 +35,7 @@ class GamePieceBase implements GamePieceInterface {
   }
 
   @Override
-  public void periodic() {
-  }
+  public abstract void periodic();
 
   // Sendable interface methods for updated the SmartDashboard
   @Override

@@ -10,7 +10,7 @@ import frc.robot.logging.TelemetryBuilder;
 
 import org.apache.logging.log4j.Logger;
 
-public class CargoMech extends GamePieceBase implements GamePieceInterface {
+public class CargoMech extends GamePieceBase implements GamePiece {
 
   private static CargoMech instance; // set to null
 
@@ -75,9 +75,10 @@ public class CargoMech extends GamePieceBase implements GamePieceInterface {
      */
     private void actuate() {
       LOGGER.debug("Actuating cargo mechanism arm: {}", name());
-      if (!RobotMap.useSimulator) {
-        arm.setSetpoint(height);
+      if (RobotMap.useSimulator || !RobotMap.HAS_CARGO_MECHANISM) {
+        return;
       }
+      arm.setSetpoint(height);
     }
   }
 
@@ -294,10 +295,10 @@ public class CargoMech extends GamePieceBase implements GamePieceInterface {
     if (enabled) {
       claw.actuate();
       arm.actuate();
-
-      // Update state
-      armState = CargoMechArmState.read();
     }
+
+    // Update state
+    armState = CargoMechArmState.read();
   }
 
   static void simulatedSensorData(double reading) {
@@ -306,10 +307,9 @@ public class CargoMech extends GamePieceBase implements GamePieceInterface {
 
   @Override
   public void initSendable(SendableBuilder builder) {
-    super.initSendable(builder);
-    builder.addStringProperty("Claw", claw::name, (command) -> claw(command));
-    builder.addStringProperty("ClawArm", arm::name, (command) -> arm(command));
-    builder.addStringProperty("ClawArmState", armState::name, null);
+    builder.addStringProperty("CargoMechClaw", claw::name, (command) -> claw(command));
+    builder.addStringProperty("CargoMechArm", arm::name, (command) -> arm(command));
+    builder.addStringProperty("CargoMechArmState", armState::name, null);
     CargoMechClaw.motor.initSendable(builder);
     CargoMechArm.motor.initSendable(builder);
     CargoMechArmState.sensor.initSendable(builder);
