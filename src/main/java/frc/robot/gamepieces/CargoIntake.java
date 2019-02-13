@@ -29,8 +29,8 @@ public class CargoIntake extends GamePieceBase implements GamePiece {
 
     private static void initialize() {
       solenoid = new DoubleSolenoid(
-          RobotMap.ROLLER_ARM_UP_SOLINOID_CHANNEL, 
-          RobotMap.ROLLER_ARM_DOWN_SOLINOID_CHANNEL);
+          RobotMap.CARGO_INTAKE_ARM_UP_SOLINOID_CHANNEL, 
+          RobotMap.CARGO_INTAKE_ARM_DOWN_SOLINOID_CHANNEL);
       solenoid.setName("Telemetry", "CargoIntakeArmSolenoid");
     }
 
@@ -65,8 +65,8 @@ public class CargoIntake extends GamePieceBase implements GamePiece {
 
     private static void initialize() {
       // Create the roller object. No sensors
-      motor = new Spark(RobotMap.ROLLER_MOTOR_CHANNEL);
-      motor.setInverted(RobotMap.ROLLER_MOTOR_INVERTED);
+      motor = new Spark(RobotMap.CARGO_INTAKE_ROLLER_MOTOR_CHANNEL);
+      motor.setInverted(RobotMap.CARGO_INTAKE_ROLLER_MOTOR_INVERTED);
       motor.setName("Telemetry", "CargoIntakeRollerMotor");
     }
 

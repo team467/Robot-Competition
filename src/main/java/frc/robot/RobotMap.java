@@ -216,10 +216,10 @@ public class RobotMap {
         HATCH_MECH_ARM_REVERSE_CHANNEL = 0; // TODO
 
         // Cargo Intake
-        ROLLER_ARM_UP_SOLINOID_CHANNEL = 0; // TODO
-        ROLLER_ARM_DOWN_SOLINOID_CHANNEL = 0; // TODO
-        ROLLER_MOTOR_CHANNEL = 0; // TODO
-        ROLLER_MOTOR_INVERTED = false; // TODO
+        CARGO_INTAKE_ARM_UP_SOLINOID_CHANNEL = 0; // TODO
+        CARGO_INTAKE_ARM_DOWN_SOLINOID_CHANNEL = 0; // TODO
+        CARGO_INTAKE_ROLLER_MOTOR_CHANNEL = 0; // TODO
+        CARGO_INTAKE_ROLLER_MOTOR_INVERTED = false; // TODO
 
         // Cargo Mechanism
         CARGO_MECH_ARM_SENSOR_CHANNEL = 0; // TODO
@@ -236,8 +236,8 @@ public class RobotMap {
         CARGO_MECH_ARM_ALLOWABLE_ERROR_TICKS = 10; // TODO
 
         // Relative
-        CARGO_CARGO_BIN = 0; // TODO
-        CARGO_MECH_ROCKET_LOW = 0.3; // TODO
+        CARGO_MECH_CARGO_BIN = 0; // TODO
+        CARGO_MECH_LOW_ROCKET = 0.3; // TODO
         CARGO_MECH_CARGO_SHIP = 0.7; // TODO
 
         CARGO_MECH_CLAW_MOTOR_CHANNEL = 0; // TODO
@@ -372,10 +372,10 @@ public class RobotMap {
 
   // Cargo Intake
   public static boolean HAS_CARGO_INTAKE = false;
-  public static int ROLLER_ARM_UP_SOLINOID_CHANNEL = 0;
-  public static int ROLLER_ARM_DOWN_SOLINOID_CHANNEL = 0;
-  public static int ROLLER_MOTOR_CHANNEL = 0;
-  public static boolean ROLLER_MOTOR_INVERTED = false;
+  public static int CARGO_INTAKE_ARM_UP_SOLINOID_CHANNEL = 0;
+  public static int CARGO_INTAKE_ARM_DOWN_SOLINOID_CHANNEL = 0;
+  public static int CARGO_INTAKE_ROLLER_MOTOR_CHANNEL = 0;
+  public static boolean CARGO_INTAKE_ROLLER_MOTOR_INVERTED = false;
 
   // Cargo Mechanism
   public static boolean HAS_CARGO_MECHANISM = false;
@@ -393,8 +393,8 @@ public class RobotMap {
   public static int CARGO_MECH_ARM_ALLOWABLE_ERROR_TICKS = 10;
 
   // Relative heights
-  public static double CARGO_CARGO_BIN;
-  public static double CARGO_MECH_ROCKET_LOW;
+  public static double CARGO_MECH_CARGO_BIN;
+  public static double CARGO_MECH_LOW_ROCKET;
   public static double CARGO_MECH_CARGO_SHIP;
 
   public static int CARGO_MECH_CLAW_MOTOR_CHANNEL;

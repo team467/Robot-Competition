@@ -26,8 +26,8 @@ public class CargoMech extends GamePieceBase implements GamePiece {
   public enum CargoMechArm {
 
     // height values measured empirically
-    CARGO_BIN(RobotMap.CARGO_CARGO_BIN), 
-    LOW_ROCKET(RobotMap.CARGO_MECH_ROCKET_LOW),
+    CARGO_BIN(RobotMap.CARGO_MECH_CARGO_BIN), 
+    LOW_ROCKET(RobotMap.CARGO_MECH_LOW_ROCKET),
     CARGO_SHIP(RobotMap.CARGO_MECH_CARGO_SHIP);
 
     // Height in sensor units
