@@ -6,7 +6,6 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import frc.robot.RobotMap;
-import frc.robot.drive.motorcontrol.pathtracking.FieldPosition;
 import frc.robot.logging.RobotLogManager;
 import frc.robot.simulator.communications.RobotData;
 import frc.robot.usercontrol.DriverStation467;
@@ -34,7 +33,6 @@ public class Drive extends DifferentialDrive implements AutoDrive {
   private final TalonSpeedControllerGroup right;
 
   private RobotData data = RobotData.getInstance();
-  private FieldPosition fieldState = FieldPosition.getInstance();
   
   double carrotLength;
 
@@ -187,7 +185,6 @@ public class Drive extends DifferentialDrive implements AutoDrive {
     left.zero();
     right.zero();
     data.zero();
-    fieldState.zeroSensors();
   }
 
   public void sendData() {
@@ -235,7 +232,6 @@ public class Drive extends DifferentialDrive implements AutoDrive {
     // The right motor is reversed
     right.set(ControlMode.Position, rightDistance);
     data.updateDrivePosition(getLeftDistance(), getRightDistance());
-    fieldState.update(getLeftDistance(), getRightDistance());
   }
 
   @Override
@@ -331,7 +327,6 @@ public class Drive extends DifferentialDrive implements AutoDrive {
     right.set(ControlMode.Position, moveRightDistance);
 
     data.updateDrivePosition(getLeftDistance(), getRightDistance());
-    fieldState.update(getLeftDistance(), getRightDistance());
   }
   
   public double getLeftDistance() {
@@ -367,7 +362,6 @@ public class Drive extends DifferentialDrive implements AutoDrive {
   public void arcadeDrive(double speed, double rotation, boolean squaredInputs) {
     super.arcadeDrive(speed, rotation, squaredInputs);
     data.updateDrivePosition(getLeftDistance(), getRightDistance());
-    fieldState.update(getLeftDistance(), getRightDistance());
   }
 
   public void tankDrive(double leftSpeed, double rightSpeed) {
@@ -377,13 +371,11 @@ public class Drive extends DifferentialDrive implements AutoDrive {
   public void tankDrive(double leftSpeed, double rightSpeed, boolean squaredInputs) {
     super.tankDrive(leftSpeed, rightSpeed, squaredInputs);
     data.updateDrivePosition(getLeftDistance(), getRightDistance());
-    fieldState.update(getLeftDistance(), getRightDistance());
   }
 
   public void curvatureDrive(double speed, double rotation, boolean isQuickTurn) {
     super.curvatureDrive(speed, rotation, isQuickTurn);
     data.updateDrivePosition(getLeftDistance(), getRightDistance());
-    fieldState.update(getLeftDistance(), getRightDistance());
   }
 
 }
