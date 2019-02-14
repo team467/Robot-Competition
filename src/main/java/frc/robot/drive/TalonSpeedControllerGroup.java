@@ -4,17 +4,27 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.VelocityMeasPeriod;
 
+import edu.wpi.first.wpilibj.Sendable;
 import edu.wpi.first.wpilibj.SpeedController;
+import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
 
 import frc.robot.RobotMap;
 import frc.robot.logging.RobotLogManager;
+import frc.robot.logging.TelemetryBuilder;
+
+import java.text.DecimalFormat;
 
 import org.apache.logging.log4j.Logger;
 
 //TalonSpeedControllerGroup
-public class TalonSpeedControllerGroup implements SpeedController {
-  private static final Logger LOGGER 
-      = RobotLogManager.getMainLogger(TalonSpeedControllerGroup.class.getName());
+public class TalonSpeedControllerGroup implements SpeedController, Sendable {
+
+  private static final Logger LOGGER = RobotLogManager.getMainLogger(TalonSpeedControllerGroup.class.getName());
+  private static final DecimalFormat df = new DecimalFormat("####0.00");
+
+  private String subsystem = "Telemetry";
+  private String name = "Generic Talon Group";
+
   private WpiTalonSrxInterface leader;
   private WpiTalonSrxInterface follower1;
   private WpiTalonSrxInterface follower2;
@@ -29,9 +39,10 @@ public class TalonSpeedControllerGroup implements SpeedController {
     follower2 = null;
   }
 
-  public TalonSpeedControllerGroup(ControlMode controlMode, 
-      boolean sensorIsInverted, boolean motorIsInverted,
-      WpiTalonSrxInterface leader, WpiTalonSrxInterface follower1, WpiTalonSrxInterface follower2) {
+  public TalonSpeedControllerGroup(String name, ControlMode controlMode, boolean sensorIsInverted,
+      boolean motorIsInverted, WpiTalonSrxInterface leader, WpiTalonSrxInterface follower1,
+      WpiTalonSrxInterface follower2) {
+    this.name = name;
     if (!RobotMap.HAS_WHEELS) {
       leader = null;
       follower1 = null;
@@ -52,24 +63,26 @@ public class TalonSpeedControllerGroup implements SpeedController {
       initMotor(this.follower2);
     }
 
-    //only have sensor on leader
+    // only have sensor on leader
     leader.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, RobotMap.TALON_TIMEOUT);
     leader.setSensorPhase(sensorIsInverted);
     leader.setInverted(motorIsInverted);
 
+    initSendable(TelemetryBuilder.getInstance());
+
     zero();
   }
 
-  public TalonSpeedControllerGroup(ControlMode controlMode, 
+  public TalonSpeedControllerGroup(String name, ControlMode controlMode, 
       boolean sensorIsInverted, boolean motorIsInverted,
       WpiTalonSrxInterface leader, WpiTalonSrxInterface follower1) {
-    this(controlMode, sensorIsInverted, motorIsInverted, leader, follower1, null);
+    this(name, controlMode, sensorIsInverted, motorIsInverted, leader, follower1, null);
   }
 
-  public TalonSpeedControllerGroup(ControlMode controlMode, 
+  public TalonSpeedControllerGroup(String name, ControlMode controlMode, 
       boolean sensorIsInverted, boolean motorIsInverted,
       WpiTalonSrxInterface leader) {
-    this(controlMode, sensorIsInverted, motorIsInverted, leader, null, null);
+    this(name, controlMode, sensorIsInverted, motorIsInverted, leader, null, null);
   }
 
   private void initMotor(WpiTalonSrxInterface talon) {
@@ -77,34 +90,26 @@ public class TalonSpeedControllerGroup implements SpeedController {
     talon.selectProfileSlot(0, 0);
     talon.configAllowableClosedloopError(0, RobotMap.POSITION_ALLOWABLE_CLOSED_LOOP_ERROR, 0);
 
-    //Note: -1 and 1 are the max outputs
+    // Note: -1 and 1 are the max outputs
     talon.configNominalOutputReverse(0.0, 0);
     talon.configNominalOutputForward(0.0, 0);
     talon.configPeakOutputForward(1.0, 0);
     talon.configPeakOutputReverse(-1.0, 0);
 
     talon.configOpenloopRamp(0.2, RobotMap.TALON_TIMEOUT);
-    //talon.configClosedloopRamp(1.0, RobotMap.TALON_TIMEOUT);
-    
+    // talon.configClosedloopRamp(1.0, RobotMap.TALON_TIMEOUT);
+
     talon.configVelocityMeasurementPeriod(VelocityMeasPeriod.Period_10Ms, 0);
     talon.configVelocityMeasurementWindow(2, 0);
   }
 
-  public void logClosedLoopErrors(String side) {
+  public void logClosedLoopErrors() {
     if (!RobotMap.HAS_WHEELS) {
       LOGGER.debug("No CLosed Loop errors");
       return;
     }
-    LOGGER.debug("side: {} Vel = {} Pos = {} Err = {}", side, leader.getSelectedSensorVelocity(0),
+    LOGGER.debug("side: {} Vel = {} Pos = {} Err = {}", name, leader.getSelectedSensorVelocity(0),
         leader.getSelectedSensorPosition(0), leader.getClosedLoopError(0));
-  }
-
-  public double getSensorVelocity() {
-    return leader.getSelectedSensorVelocity(0);
-  }
-
-  public double getSensorPosition() {
-    return leader.getSelectedSensorPosition(0);
   }
 
   public void pidf(int slotId, double p, double i, double d, double f) {
@@ -179,7 +184,7 @@ public class TalonSpeedControllerGroup implements SpeedController {
 
   public void set(ControlMode controlMode, double outputValue) {
     if (leader == null) {
-      LOGGER.trace("No drive system");
+      LOGGER.error("No drive system");
       return;
     }
 
@@ -253,7 +258,7 @@ public class TalonSpeedControllerGroup implements SpeedController {
     boolean isStopped = false;
 
     if (leader.getControlMode() == ControlMode.Disabled) {
-      isStopped =  true;
+      isStopped = true;
     } else if (leaderSensorPosition == previousSensorPosition) {
       isStopped = true;
     }
@@ -262,16 +267,16 @@ public class TalonSpeedControllerGroup implements SpeedController {
     return isStopped;
   }
 
-  public int sensorPosition() {
+  public double position() {
     if (leader == null) {
       LOGGER.trace("No drive system");
       return 0;
     }
 
-    return leader.getSelectedSensorPosition(0);
+    return ticksToFeet(leader.getSelectedSensorPosition(0));
   }
 
-  public int sensorSpeed() {
+  public double velocity() {
     if (leader == null) {
       LOGGER.trace("No drive system");
       return 0;
@@ -294,17 +299,51 @@ public class TalonSpeedControllerGroup implements SpeedController {
       LOGGER.trace("No Drive System");
       return;
     }
-
-    double distanceMoved = leader.getSelectedSensorPosition(0);
-    double distanceToGo;
-
-    if (targetDistance > 0) {
-      distanceToGo = Math.min(targetDistance, distanceMoved + 1024);
-    } else {
-      distanceToGo = Math.max(targetDistance, distanceMoved - 1024);
-    }
-
-    LOGGER.info("target=" + targetDistance + " sensor=" + distanceMoved + " toGo=" + distanceToGo);
-    set(ControlMode.Position, distanceToGo);
+    set(ControlMode.Position, feetToTicks(targetDistance));
   }
+
+  @Override
+  public String getName() {
+    return name;
+  }
+
+  @Override
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  @Override
+  public String getSubsystem() {
+    return subsystem;
+  }
+
+  @Override
+  public void setSubsystem(String subsystem) {
+    this.subsystem = subsystem;
+  }
+
+  private double feetToTicks(double feet) {
+    double ticks = (feet / (RobotMap.WHEEL_CIRCUMFERENCE / 12.0)) 
+        * RobotMap.WHEEL_ENCODER_CODES_PER_REVOLUTION;
+    LOGGER.trace("Feet = {} ticks = {}", df.format(feet), df.format(ticks));
+    return ticks;
+  }
+
+  private double ticksToFeet(double ticks) {
+    double feet = (ticks / RobotMap.WHEEL_ENCODER_CODES_PER_REVOLUTION) 
+        * (RobotMap.WHEEL_CIRCUMFERENCE / 12);
+    LOGGER.trace("Ticks = {} feet = {}", df.format(ticks), df.format(feet));
+    return feet;
+  }
+  
+  @Override
+  public void initSendable(SendableBuilder builder) {
+    builder.addDoubleProperty(name + "_Position", this::position, null);
+    builder.addDoubleProperty(name + "_Velocity", this::velocity, null);
+    // builder.addDoubleProperty(
+    //     name + "Position", this::position, (distance) -> movePosition(distance));
+    // builder.addDoubleProperty(
+    //     name + "Velocity", this::velocity, null);
+  }
+
 }

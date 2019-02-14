@@ -7,25 +7,19 @@
 
 package frc.robot;
 
-import edu.wpi.cscore.UsbCamera;
-import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.RobotMap.RobotId;
-import frc.robot.autonomous.ActionGroup;
-import frc.robot.autonomous.Actions;
 import frc.robot.autonomous.MatchConfiguration;
 import frc.robot.drive.Drive;
-import frc.robot.drive.motorcontrol.TestMotorControl;
-import frc.robot.gamepieces.Elevator;
-import frc.robot.gamepieces.Grabber;
 import frc.robot.logging.RobotLogManager;
+import frc.robot.logging.TelemetryBuilder;
 import frc.robot.simulator.communications.RobotData;
 import frc.robot.usercontrol.DriverStation467;
-import frc.robot.vision.VisionProcessing;
+import frc.robot.vision.CameraSwitcher;
 import org.apache.logging.log4j.Logger;
 
 /**
@@ -42,15 +36,11 @@ public class Robot extends TimedRobot {
   private static boolean enableSimulator = false;
 
   // Robot objects
-  private ActionGroup autonomous;
   private DriverStation467 driverstation;
   private Drive drive;
-  private Elevator elevator;
-  private Grabber grabber;
   private MatchConfiguration matchConfig;
   private RobotData data;
-  private TestMotorControl testMotorControl;
-  private VisionProcessing vision;
+  private TelemetryBuilder telemetry;
 
   private NetworkTableInstance table;
   private NetworkTable dashboard;
@@ -80,7 +70,7 @@ public class Robot extends TimedRobot {
     //table.deleteAllEntries(); // Uncomment to clear table once.
     
     // Initialize RobotMap
-    RobotMap.init(RobotId.Competition_2);
+    RobotMap.init(RobotId.ROBOT_2018);
 
     // Used after init, should be set only by the Simulator GUI
     // this ensures that the simulator is off otherwise.
@@ -94,20 +84,8 @@ public class Robot extends TimedRobot {
 
     data = RobotData.getInstance();
     drive = Drive.getInstance();
-    elevator = Elevator.getInstance();
-    grabber = Grabber.getInstance();
     matchConfig = MatchConfiguration.getInstance();
-
-
-    if (RobotMap.HAS_CAMERA) {
-      vision = VisionProcessing.getInstance();
-      vision.startVision();
-      //made usb camera and captures video
-      UsbCamera cam = CameraServer.getInstance().startAutomaticCapture();
-      //set resolution and frames per second to match driverstation
-      cam.setResolution(320, 240);
-      cam.setFPS(15);
-    }
+    telemetry = TelemetryBuilder.getInstance();
 
     drive.setPidsFromRobotMap();
     data.send();
@@ -123,15 +101,15 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
+    telemetry.updateTable();
+    data.send();
   }
 
   @Override
   public void autonomousInit() {
     driverstation.readInputs();
     matchConfig.load();
-    autonomous = matchConfig.autonomousDecisionTree();
-    LOGGER.info("Init Autonomous: {}", autonomous.getName());
-    autonomous.enable();
+    LOGGER.info("No Autonomous");
   }
 
   /**
@@ -143,18 +121,14 @@ public class Robot extends TimedRobot {
     */
   @Override
   public void autonomousPeriodic() {
-    grabber.periodic();
-    elevator.move(0); // Will move to height if set.
-    autonomous.run();
+    //grabber.periodic();
+    telemetry.updateTable();
   }
 
   @Override
   public void teleopInit() {
     LOGGER.info("Init Teleop");
-    autonomous = Actions.doNothing();
-    //drive.configPeakOutput(1.0);
     driverstation.readInputs();
-    grabber.reset();
   }
 
   /**
@@ -164,32 +138,6 @@ public class Robot extends TimedRobot {
   public void teleopPeriodic() {
     LOGGER.debug("Match time {}", DriverStation.getInstance().getMatchTime());
     driverstation.readInputs();
-
-    grabber.grab(driverstation.getGrabThrottle());
-    elevator.move(driverstation.getElevatorSpeed());
-
-    //grabber open and close
-    if (driverstation.getGrabberOpen()) {
-      LOGGER.info("Grabber Open");
-      grabber.open();
-    } else {
-      LOGGER.debug("Grabber Close");
-      grabber.close();
-    }
-
-    if (driverstation.getFloorHeightButtonPressed()) {
-      LOGGER.info("Dropping to bottom height");
-      elevator.moveToHeight(Elevator.Stops.floor);
-    } else if (driverstation.getSwitchHeightButtonPressed()) {
-      LOGGER.info("Lifting to switch height");
-      elevator.moveToHeight(Elevator.Stops.fieldSwitch);
-    } else if (driverstation.getLowScaleHeightButtonPressed()) {
-      LOGGER.info("Lifting to low scale height");
-      elevator.moveToHeight(Elevator.Stops.lowScale);
-    } else if (driverstation.getHighScaleHeightButtonPressed()) {
-      LOGGER.info("Lifting to high scale height");
-      elevator.moveToHeight(Elevator.Stops.highScale);
-    }
 
     double speed = driverstation.getArcadeSpeed();
     double turn = driverstation.getArcadeTurn();
@@ -205,7 +153,6 @@ public class Robot extends TimedRobot {
     
       case ArcadeDrive:
         drive.arcadeDrive(speed, turn, true);
-        //drive.logTelemetry(speed, turn);
         break;
 
       case CurvatureDrive:
@@ -220,6 +167,17 @@ public class Robot extends TimedRobot {
 
       default:
     }
+
+    if (driverstation.getNavJoystick().getJoystick().getPOV() == 0) {
+      CameraSwitcher.update(0);
+    } else if (driverstation.getNavJoystick().getJoystick().getPOV() == 90) {
+      CameraSwitcher.update(1);
+    } else if (driverstation.getNavJoystick().getJoystick().getPOV() == 180) {
+      CameraSwitcher.update(2);
+    } else if (driverstation.getNavJoystick().getJoystick().getPOV() == 270) {
+      CameraSwitcher.update(3);
+    }
+
   }
 
   @Override
@@ -233,10 +191,6 @@ public class Robot extends TimedRobot {
         drive.readPidsFromSmartDashboard(tuneSlot);
         tuningValue = Double.parseDouble(SmartDashboard.getString("DB/String 0", "0.0"));
         LOGGER.info("Tuning Value: " + tuningValue);
-        break;
-      case 2:
-        LOGGER.info("Testing motor control.");
-        testMotorControl = new TestMotorControl();
         break;
       default:
         LOGGER.info("Invalid Tune Mode: {}", tuneSlot);
@@ -258,9 +212,6 @@ public class Robot extends TimedRobot {
         drive.tuneTurn(tuningValue, RobotMap.PID_SLOT_TURN);
         LOGGER.debug("Turn {} degrees",Math.toDegrees(drive.getLeftDistance()));
         break;
-      case 2: // New motor control
-        testMotorControl.periodic();
-        break;
       default:
     }
   }
@@ -269,27 +220,26 @@ public class Robot extends TimedRobot {
   public void disabledInit() {
     LOGGER.info("Init Disabled");
     //drive.logClosedLoopErrors();
+
+    driverstation.readInputs();
+
   }
 
   @Override
   public void disabledPeriodic() {
+    driverstation.readInputs();
     LOGGER.trace("Disabled Periodic");
-    String[] autoList = {
-      "None", 
-      "Just_Go_Forward", 
-      "Left_Switch_Only", 
-      "Left_Basic", 
-      "Left_Advanced", 
-      "Left_Our_Side_Only",
-      "Center", 
-      "Center_Advanced", 
-      "Right_Switch_Only", 
-      "Right_Basic", 
-      "Right_Advanced", 
-      "Right_Our_Side_Only"
-    };
-    dashboard.getEntry("Auto List").setStringArray(autoList);
-    //LOGGER.info("Selected Auto Mode: " + SmartDashboard.getString("Auto Selector", "None"));
+
+    if (driverstation.getNavJoystick().getJoystick().getPOV() == 0) {
+      CameraSwitcher.update(0);
+    } else if (driverstation.getNavJoystick().getJoystick().getPOV() == 90) {
+      CameraSwitcher.update(1);
+    } else if (driverstation.getNavJoystick().getJoystick().getPOV() == 180) {
+      CameraSwitcher.update(2);
+    } else if (driverstation.getNavJoystick().getJoystick().getPOV() == 270) {
+      CameraSwitcher.update(3);
+    }
+
   }
 
 }

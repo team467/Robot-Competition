@@ -4,16 +4,18 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import java.text.DecimalFormat;
-
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.Robot;
 import frc.robot.RobotMap;
 import frc.robot.RobotMap.RobotId;
 import frc.robot.drive.Drive;
 import frc.robot.logging.RobotLogManager;
 import frc.robot.simulator.gui.SimulatedData;
 
+import java.text.DecimalFormat;
+
 import org.apache.logging.log4j.Logger;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
@@ -25,6 +27,7 @@ public class ActionsTest {
 
   private static final DecimalFormat df = new DecimalFormat("####0.00");
 
+  private Robot robot;
   private Drive drive;
 
   public static final int AUTONOMOUS_TIME = 15;
@@ -34,9 +37,7 @@ public class ActionsTest {
    */
   @BeforeClass
   public static void initAll() {
-    RobotMap.init(RobotId.Competition_1);
-    RobotMap.useSimulator = true;
-    RobotMap.USE_FAKE_GAME_DATA = true;
+    RobotMap.init(RobotId.ROBOT_2018);
     LOGGER.trace("Using simulation for testing actions");
   }
 
@@ -45,10 +46,13 @@ public class ActionsTest {
    */
   @Before
   public void init() {
-    SmartDashboard.putString("DB/String 1", "0.0004"); // P Left
-    SmartDashboard.putString("DB/String 6", "0.0004"); // P Right
-    SmartDashboard.putString("DB/String 3", "0.012"); // P Left
-    SmartDashboard.putString("DB/String 8", "0.012"); // D Right
+    robot = new Robot();
+    Robot.enableSimulator();
+    robot.robotInit();
+    SmartDashboard.putString("DB/String 1", "1000.0"); // P Left
+    SmartDashboard.putString("DB/String 6", "1000.0"); // P Right
+    SmartDashboard.putString("DB/String 3", "0.0"); // P Left
+    SmartDashboard.putString("DB/String 8", "0.0"); // D Right
     SmartDashboard.putString("DB/String 4", "0.0"); // F Left
     SmartDashboard.putString("DB/String 9", "0.0"); // F Right
     drive = Drive.getInstance();
@@ -56,6 +60,12 @@ public class ActionsTest {
     drive.readPidsFromSmartDashboard(RobotMap.PID_SLOT_TURN);
     drive.zero();
   }
+
+  @After
+  public void tearDown() {
+    robot.close();
+  }
+
 
   /**
    * Tests a basic cross the autonomous line. This is a standard requirement most years.
@@ -71,18 +81,6 @@ public class ActionsTest {
     double distanceMoved = drive.absoluteDistanceMoved();
     LOGGER.info("Target 10 ft, distance moved: {} ft", df.format(distanceMoved));
     assertEquals(10.0, distanceMoved, tolerance);
-    assertTrue(actionCompleted);
-  }
-
-  @Ignore("Long running test")
-  @Test
-  public void basicSwitchOurSideLeftTest() {
-    Actions.startOnLeft();
-    SimulatedData.gameSpecificMessage = "LLL";
-    ActionGroup autonomous = Actions.basicSwitchOurSide();
-    boolean actionCompleted = periodic(autonomous);
-    // TODO: Figure out how to use field position to test move.
-    double distanceMoved = drive.absoluteDistanceMoved();
     assertTrue(actionCompleted);
   }
 
@@ -107,7 +105,7 @@ public class ActionsTest {
       }
       isComplete = autonomous.isComplete();
       if (isComplete) {
-        LOGGER.trace("Done at iteration {}", i);
+        LOGGER.info("Done at iteration {}", i);
         break; // No need to wait full 15 seconds if done.
       }
     }

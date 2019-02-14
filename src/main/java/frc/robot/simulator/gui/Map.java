@@ -22,6 +22,7 @@ public class Map extends Application {
   private static final Logger LOGGER = RobotLogManager.getMainLogger(Map.class.getName());
 
   public static void main(String[] args) {
+    LOGGER.info("Hello World");
     launch(args);
   }
 

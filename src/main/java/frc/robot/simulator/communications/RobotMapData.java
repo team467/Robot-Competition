@@ -13,7 +13,6 @@ import java.io.Serializable;
 public class RobotMapData implements Serializable, Cloneable {
 
   private static final long serialVersionUID = 1L;
-
   /**
    *  The start positions on the 2D map of each middle wheel center.
    */
@@ -95,5 +94,4 @@ public class RobotMapData implements Serializable, Cloneable {
     cubeMaxDistance = table.getEntry("/cubeMaxDistance").getDouble(cubeMaxDistance);
     angleToCube = table.getEntry("/angleToCube").getDouble(angleToCube);
   }
-
 }

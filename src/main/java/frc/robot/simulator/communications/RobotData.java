@@ -3,14 +3,15 @@ package frc.robot.simulator.communications;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import frc.robot.drive.motorcontrol.pathplanning.AutonomousPlan;
-import frc.robot.gamepieces.Elevator;
-import frc.robot.gamepieces.Elevator.Stops;
 import frc.robot.logging.RobotLogManager;
 import frc.robot.simulator.gui.Coordinate;
 
 import java.util.ArrayList;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.logging.log4j.Logger;
+
+// import org.apache.commons.csv.CSVRecord;
 
 public class RobotData {
 
@@ -29,11 +30,12 @@ public class RobotData {
   private static final Logger LOGGER = RobotLogManager.getMainLogger(RobotData.class.getName()); 
   
   private static RobotData instance = null;
+  private CSVFile csvFile = new CSVFile();
   
   private RobotData() {
     // TODO: Fix when we figure out how to load native WPI lib modules
-    // tableInstance = NetworkTableInstance.getDefault();
-    // table = tableInstance.getTable("datatable").getSubTable("/robotmapdata");
+    tableInstance = NetworkTableInstance.getDefault();
+    table = tableInstance.getTable("datatable").getSubTable("/robotmapdata");
     
     dataRow = new RobotMapData();
     isZeroed = false;
@@ -115,66 +117,6 @@ public class RobotData {
     isZeroed = false;
   }
 
-  public void elevatorHeight(Stops stop) {
-    dataRow.elevatorHeight = stop.height;
-  }
-  
-  public double elevatorHeight() {
-    return dataRow.elevatorHeight;
-  }
-  
-  public void elevatorheight(double height) {
-    dataRow.elevatorHeight = height;
-  }
-  
-  public Elevator.Stops elevatorStop() {
-    Stops stop = Stops.floor;
-    if (dataRow.elevatorHeight < Stops.fieldSwitch.height) {
-      stop = Elevator.Stops.floor;
-    } else if (dataRow.elevatorHeight < Stops.lowScale.height) {
-      stop = Elevator.Stops.lowScale;
-    } else {
-      stop = Stops.highScale;
-    }
-    return stop;
-  }
-  
-  public void grabberHasCube(boolean grabberHasCube) {
-    dataRow.grabberHasCube = grabberHasCube;
-  }
-  
-  public boolean grabberHasCube() {
-    return dataRow.grabberHasCube;
-  }
-  
-  public boolean visionSeesCube = false;
-  public double cubeMinDistance = 0.0;
-  public double cubeMaxDistance = 0.0;
-  public double angleToCube = 0.0;
-
-  public void cubeSpotted(double minDistance, double maxDistance, double angle) {
-    dataRow.visionSeesCube = true;
-    dataRow.cubeMinDistance = minDistance;
-    dataRow.cubeMaxDistance = maxDistance;
-    dataRow.angleToCube = angle;
-  }
-  
-  public void lostCube() {
-    dataRow.visionSeesCube = false;
-  }
-  
-  public boolean canSeeCube() {
-    return dataRow.visionSeesCube;
-  }
-  
-  public double cubeAngle() {
-    return dataRow.angleToCube;
-  }
-  
-  public double cubeCenter() {
-    return (dataRow.cubeMinDistance + dataRow.cubeMaxDistance) / 2;
-  }
-
   // Start section for handling Network Tables
   
   public void startServer() {
@@ -199,9 +141,26 @@ public class RobotData {
    */
   public void receive() {
     dataRow.receive(table);
+    
     if (dataRow.isZeroed) {
       isZeroed = true; // Only can turn flag true. Flag must be cleared only on receiving side.
     }
+  }
+
+  public void receiveCSV(CSVFile data) {
+    dataRow.startingLocation.x = Double.parseDouble(csvFile.get(0).toString());
+    dataRow.startingLocation.y = Double.parseDouble(csvFile.get(1).toString());
+    dataRow.rightPosition = Double.parseDouble(csvFile.get(2).toString());
+    dataRow.leftPosition = Double.parseDouble(csvFile.get(3).toString());
+    dataRow.isZeroed = Boolean.parseBoolean(csvFile.get(4).toString());
+    dataRow.headingAngle = Double.parseDouble(csvFile.get(5).toString());
+    dataRow.elevatorHeight = Double.parseDouble(csvFile.get(6).toString());
+    dataRow.grabberHasCube = Boolean.parseBoolean(csvFile.get(7).toString());
+    dataRow.visionSeesCube = Boolean.parseBoolean(csvFile.get(8).toString());
+    dataRow.cubeMinDistance = Double.parseDouble(csvFile.get(9).toString());
+    dataRow.cubeMaxDistance = Double.parseDouble(csvFile.get(10).toString());
+    dataRow.angleToCube = Double.parseDouble(csvFile.get(11).toString());
+    csvFile.currentRow++;
   }
   
 }
