@@ -8,7 +8,7 @@ import frc.robot.logging.RobotLogManager;
 
 import org.apache.logging.log4j.Logger;
 
-public class HatchMechanism extends GamePieceBase implements GamePieceInterface{
+public class HatchMechanism extends GamePieceBase implements GamePiece{
 
     private static final Logger LOGGER = RobotLogManager.getMainLogger(HatchMechanism.class.getName());
 
@@ -144,11 +144,11 @@ public class HatchMechanism extends GamePieceBase implements GamePieceInterface{
     }
     
   /**
-   * Moves the roller arm up or down.
+   * Moves the arm in or out.
    * 
-   * @param command which way to move the arm.
+   * @param command to move the arm in or out.
    */
-    public void hatchArm(HatchArm command){
+    public void arm(HatchArm command){
         hatchArm = command;
     }
 
@@ -158,12 +158,16 @@ public class HatchMechanism extends GamePieceBase implements GamePieceInterface{
    * 
    * @param command which way to move the arm.
    */
-    public void hatchArm(String command){
+    public void arm(String command){
         hatchArm = HatchArm.valueOf(command);
+    }
+
+    public HatchArm arm(){
+        return hatchArm;
     }
 
       @Override
       public void initSendable(SendableBuilder builder) {
-        builder.addStringProperty("HatchArm", hatchArm::name, (command) -> hatchArm(command));
+        builder.addStringProperty("HatchArm", hatchArm::name, (command) -> arm(command));
       }
 }
