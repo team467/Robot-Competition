@@ -42,7 +42,9 @@ public class RobotLogManager {
   }
 
   private static boolean doesFileExist(String filepath) {
-    if(new File(filepath).exists()) {
+    File file = new File(filepath);
+    if(file.exists()) {
+      directory = file.getPath();
       directory = getDirectory(filepath);
       return true;
     } else {
