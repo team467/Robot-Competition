@@ -215,6 +215,8 @@ public class RobotMap {
         TURRET_RIGHT_LIMIT_DEGREES = 0.0; // TODO
         TURRET_LEFT_LIMIT_DEGREES = 0.0; // TODO
         TURRET_ALLOWABLE_ERROR_TICKS = 10; // TODO
+        TURRET_HOME = 0.0;
+        //TODO: Set TURRET_OFFSET
         TURRET_P = 1.0; // TODO
         TURRET_I = 0.0; // TODO
         TURRET_D = 0.0; // TODO
@@ -258,6 +260,7 @@ public class RobotMap {
 
         CARGO_MECH_CLAW_MOTOR_CHANNEL = 0; // TODO
         CARGO_MECH_MOTOR_INVERTED = false; // TODO
+
 
         break;
 
@@ -387,6 +390,8 @@ public class RobotMap {
   public static double TURRET_I;
   public static double TURRET_D;
   public static double TURRET_F;
+  public static double TURRET_HOME;
+  public static int TURRET_OFFSET;
 
   // Hatch Mechanism
   public static boolean HAS_HATCH_MECHANISM;

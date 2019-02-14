@@ -12,7 +12,7 @@ import org.apache.logging.log4j.Logger;
 
 public class CargoMech extends GamePieceBase implements GamePiece {
 
-  private static CargoMech instance; // set to null
+  private static CargoMech instance  = null; // set to null
 
   private static final Logger LOGGER = RobotLogManager.getMainLogger(CargoMech.class.getName());
 

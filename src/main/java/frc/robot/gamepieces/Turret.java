@@ -161,4 +161,19 @@ public class Turret extends GamePieceBase implements GamePiece {
     rotationSensor.initSendable(builder);
   }
 
+  /**
+   * Checks if turret is in the Home (default) position.
+   */
+  public boolean isHome() {
+    //TODO: Find out the diff between position and target
+    if (instance.position() == RobotMap.TURRET_HOME) {
+      return true;
+    }
+    return false;
+  }
+
+  public void moveTurretToHome() {
+    instance.target(RobotMap.TURRET_HOME);
+  }
+
 }
