@@ -338,7 +338,7 @@ public class TalonSpeedControllerGroup implements SpeedController, Sendable {
   
   @Override
   public void initSendable(SendableBuilder builder) {
-    String temp = name + "HI";
+    String temp = name;
     builder.addDoubleProperty(temp, this::position, null);
     // builder.addDoubleProperty(
     //     name + "Position", this::position, (distance) -> movePosition(distance));

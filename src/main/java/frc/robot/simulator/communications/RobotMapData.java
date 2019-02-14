@@ -4,6 +4,7 @@ import edu.wpi.first.networktables.NetworkTable;
 import frc.robot.logging.RobotLogManager;
 import frc.robot.simulator.gui.Coordinate;
 
+import java.io.File;
 import java.io.Serializable;
 import java.text.DecimalFormat;
 
@@ -58,6 +59,7 @@ public class RobotMapData implements Serializable, Cloneable {
       table.getEntry("/leftDistance").setDouble(leftPosition);
       table.getEntry("/isZeroed").setBoolean(isZeroed);
       table.getEntry("/headingAngle").setDouble(headingAngle);
+      table.getEntry("/FileExists").setBoolean(new File("/media/sda1/logging/log4j2.yaml").exists());
     //}
   }
 
