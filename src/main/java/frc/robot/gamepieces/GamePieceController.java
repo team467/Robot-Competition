@@ -2,6 +2,7 @@ package frc.robot.gamepieces;
 
 import frc.robot.gamepieces.CargoIntake.CargoIntakeArm;
 import frc.robot.gamepieces.CargoIntake.CargoIntakeRoller;
+import frc.robot.gamepieces.HatchMech.HatchLauncher;
 import frc.robot.gamepieces.HatchMech.HatchMechArm;
 import frc.robot.logging.RobotLogManager;
 import frc.robot.usercontrol.DriverStation467;
@@ -65,14 +66,21 @@ public class GamePieceController {
    */
   public void periodic() {
 
-    if (true) { // TODO: driverStation.acquireCargo()
-      gamePieceMode = GamePieceMode.CARGO;
-    }
-    if (gamePieceMode == GamePieceMode.CARGO) {
-      if (cargoIntake.arm() == CargoIntakeArm.DOWN) {
-        cargoIntake.roller(CargoIntakeRoller.REVERSE);
-      }
-    }
+    /*
+     *  //TODO: Switch Camera:
+     *  Switch to front or back camera. Does not change mode away from 
+     *  Hatch or Cargo, but does take camera. 
+     */
+
+    /*
+     *  Enter Defense Mode:
+     *  Defence mode must first move the turret to home, 
+     *  then lower the arm, and finally lift the roller.
+     *  The LEDs should blink red while transitioning, 
+     *  and be solid red when in defence mode.
+     *  Must check that it is safe to move turret.
+     *  Cancels Target Lock
+     */
 
     if (true) { // TODO: driverStation.defenseMode()
       gamePieceMode = GamePieceMode.DEFENSE;
@@ -89,49 +97,159 @@ public class GamePieceController {
       }
     }
 
+    /*
+     *  //TODO: Change to Cargo mode
+     *  Switches to cargo mode. LEDs should change to blue. Camera changes to
+     *  the cargo camera. Should change to cargo camera even if already in cargo mode.
+     *  Cargo intake arm should go down.
+     */
+
+    /*
+     *  //TODO: Change to Hatch mode
+     *  Switches to hatch  mode. LEDs should change to gold. Camera changes to
+     *  the hatch camera. Should change to cargo camera even if already in hatch mode.
+     *  Cargo intake arm should go down so that turret can move.
+     */
+
+    /*
+     *  //TODO: Fire Hatch
+     *  Must be in hatch mode. Pushes cargo arm forward for some count of cycles,
+     *  then activates hatch solinoids. After trigger is released, moves both 
+     *  hatch and arm solidoids to the retracted position. May need to be combined with
+     *  acquire hatch to insure that the arm can move forward during acquisition. 
+     *  Could just be before acquire hatch as moves happen at end.
+     */
+
+    /*
+     *  Acquire Hatch:
+     *  When acquireing a hatch, the arm should move forward,
+     *  but the hatch launcher should not fire.
+     */
+
     if (true) { // TODO: driverStation.acquireHatch()
       gamePieceMode = GamePieceMode.HATCH;
     }
     if (gamePieceMode == GamePieceMode.HATCH) {
       if (hatchMech.arm() == HatchMechArm.RETRACT) {
-        hatchMech.launcher(HatchLauncher.EXTEND);
+        hatchMech.launcher(HatchLauncher.FIRE); //?
       }
     }
 
+    /*
+     *  //TODO: Acquire Cargo:
+     *  Must be in Cargo Mode and roller are must be down.
+     *  Turn on roller, move turret to home, lower down, and turn on claw.
+     *  Must check that it is safe to move turret.
+     *  Cancels Target Lock
+     */
+
+    if (true) { // TODO: driverStation.acquireCargo()
+      gamePieceMode = GamePieceMode.CARGO;
+    }
+    if (gamePieceMode == GamePieceMode.CARGO) {
+      if (cargoIntake.arm() == CargoIntakeArm.DOWN) {
+        cargoIntake.roller(CargoIntakeRoller.REVERSE);
+      }
+    }
+
+
+    /*
+     *  //TODO: Load Cargo onto arm:
+     *  Must be in Cargo Mode and roller are must be down.
+     *  move turret to home, turn on claw, lower arm.
+     *  Must check that it is safe to move turret.
+     *  Cancels Target Lock
+     */
+
+    /*
+     *  //TODO: Reject Cargo
+     *  Works in cargo or hatch mode. Cargo intake reverses motor to spit cargo.
+     */
+
+    /*
+     *  //TODO: Fire Cargo
+     *  Must be in cargo mode. Reverses claw motor to throw cargo.
+     */
+
+    /*
+     *  //TODO: Set Cargo Ship
+     *  Must be in cargo mode. Stop claw. Move cargo arm to cargo ship height.
+     */
+
+    /*
+     *  //TODO: Set Low Rocket
+     *  Must be in cargo mode. Stop claw. Move cargo arm to low rocket height.
+     */
+
+    /*
+     *  //TODO: Move Turret Home
+     *  Must be in hatch or cargo mode. Moves the turret to zero.
+     *  If arm is in low cargo acquire postion and move is required, 
+     *  move to cargo arm to low rocket
+     *  Must check that it is safe to move turret.
+     *  Cancels Target Lock
+     */
+
+    /*
+     *  //TODO: Move Turret Right
+     *  Must be in hatch or cargo mode. Moves the turret to +90.
+     *  If arm is in low cargo acquire postion and move is required, 
+     *  move to cargo arm to low rocket
+     *  Must check that it is safe to move turret.
+     *  Cancels Target Lock
+     */
+
+    /*
+     *  //TODO: Move Turret Left
+     *  Must be in hatch or cargo mode. Moves the turret to -90.
+     *  If arm is in low cargo acquire postion and move is required, 
+     *  move to cargo arm to low rocket
+     *  Must check that it is safe to move turret.
+     *  Cancels Target Lock
+     */
+
+    /*
+     *  //TODO: Fine Adjust Turret
+     *  Manually move the turret based on stick. 
+     *  Should check for unsafe turret situations.
+     *  Cancels target lock
+     */
+
+    /*
+     *  //TODO: On Target Cargo
+     *  Must be in cargo mode. If vision reports on target, 
+     *  blink blue LEDs and rumble nav controller
+     */
+
+    /*
+     *  //TODO: On Target Hatch
+     *  Must be in hatch mode. If vision reports on target, 
+     *  blink gold LEDs and rumble nav controller
+     */
+
+    /*
+     *  //TODO: Target Lock Turret
+     *  Must be in hatch or cargo mode. Set target to track mode.
+     *  Should allow override if other turret move.
+     */
+
+    // Update all systems
     cargoIntake.periodic();
     cargoMech.periodic();
     hatchMech.periodic();
     turret.periodic();
     
-    /*
-      Action	System	Controller	Button/Stick	Behavior Notes	LED
-      Camera back	Camera	Driver Xbox	D-Pad Back		
-      Camera front	Camera	Driver Xbox	D-Pad Up		
-      Acquire ball	Cargo Intake	Driver Xbox	Right trigger	Roller must be down	
-      Leave defense mode	Cargo Intake	Driver Xbox	Left & Right Bumper	Cargo/Hatch last mode, default hatch	
-      Reject ball	Cargo Intake	Driver Xbox	Left trigger	Roller must be down	
-      Set defense mode	Cargo Intake / CaM	Driver Xbox	Left & Right Bumper	Roller must be up, CaM must be secured	Red blinking when securing, solid red when secure
-      Drive forward/back	Drive	Driver Xbox	Left Stick	Only up/down	
-      Turn right/left	Drive	Driver Xbox	Right Stick	Only left/right	
-      Fire cargo	CaM	Nav Xbox	Left Trigger	Needs to be in hatch mode and pressing camera bumper. Rumbles when on target. Must pull more than 50%	
-      Get Cargo into CaM	CaM	Nav Xbox	Y	Move Cargo Arm to Bottom and activate gripper reverse, Roller arm must be down, must be in cargo mode	
-      Set cargo mode	CaM	Nav Xbox	Right Bumper		Blue
-      Set cargo ship	CaM	Nav Xbox	D-Pad Up		
-      Set low rocket	CaM	Nav Xbox	D-Pad Down	Must be in cargo mode, adds or subtracts position	
-      Set mid rocket	CaM	Nav Xbox	Not implemented		
-      Cargo camera	Camera	Nav Xbox	Right Bumper	Must be in cargo mode	
-      Hatch camera	Camera	Nav Xbox	Left Bumper	Must be in hatch mode	
-      Acquire hatch	HaM	Nav Xbox	Right Trigger	Must be in hatch mode, Must pull more than 50%, reverses when not pressed	
-      Fire hatch	HaM	Nav Xbox	Left Trigger	Needs to be in hatch mode and pressing camera bumper. Rumbles when on target. Must pull more than 50%	Sequence blink
-      Set hatch mode	HaM	Nav Xbox	Left Bumper		Gold
-      Fine adjust turret	Turret	Nav Xbox	Right stick	Manual	
-      Target lock	Turret	Nav Xbox	A	If implemented, must be on target	
-      Turret front	Turret	Nav Xbox	Y	In cargo mode, active acquire sequence	
-      Turret left	Turret	Nav Xbox	X	Relative to mode, in cargo mode, if arm is low, first needs to go to low rocket	
-      Turret right	Turret	Nav Xbox	B	Relative to mode, in cargo mode, if arm is low, first needs to go to low rocket	
-    */
-
   }
 
+  /**
+   * Checks to see if the turret would hit something if moved.
+   * 
+   * @return boolean true if safe to move, false otherwise.
+   */
+  private boolean isSafeToMoveTurret() {
+    boolean isSafe = false;
+    // TODO: Implement checks
+    return isSafe;
+  }
 
 }
