@@ -32,8 +32,6 @@ public class HatchMechanism extends GamePieceBase implements GamePieceInterface{
     public static int FIRING_3_REVERSE_CHANNEL;
     
 
-    //States
-    private HatchArmState hatchArmState;
 
     //HatchArm
     public enum HatchArm{
@@ -48,7 +46,11 @@ public class HatchMechanism extends GamePieceBase implements GamePieceInterface{
             arm = new DoubleSolenoid(HATCH_ARM_FORWARD_CHANNEL, HATCH_ARM_REVERSE_CHANNEL);
         }
 
-        private static boolean getSolenoid(){
+        /**
+         * 
+         * @return true if the solenoid is in the forward position, false if it is in the backwards position
+         */
+        private static boolean getSolenoidState(){
             boolean solenoidForward;
             switch(arm.get()){
                 case kForward:
@@ -68,9 +70,11 @@ public class HatchMechanism extends GamePieceBase implements GamePieceInterface{
             switch(this){
                 case IN:
                     arm.set(DoubleSolenoid.Value.kReverse);
+                    LOGGER.info("Hatch arm is IN.");
                     break;
                 case OUT:
                     arm.set(DoubleSolenoid.Value.kForward);
+                    LOGGER.info("Hatch arm is OUT.");
                     break;
                 default:
                     arm.set(DoubleSolenoid.Value.kOff);
@@ -81,8 +85,7 @@ public class HatchMechanism extends GamePieceBase implements GamePieceInterface{
     }
 
     public enum Firer{
-        READY,
-        FIRING,
+        FIRE,
         UNKNOWN;
 
         private static DoubleSolenoid firer1;
@@ -95,16 +98,28 @@ public class HatchMechanism extends GamePieceBase implements GamePieceInterface{
             firer3 = new DoubleSolenoid(FIRING_3_FORWARD_CHANNEL, FIRING_3_REVERSE_CHANNEL);
         }
 
+        /**
+         * Fires tthe three firing solenoids forwards and then retracts them
+         */
         private void fire(){
-            //Use multithreading for firing all 3 solenoids at once?
+            //Fire solenoids forward
+            firer1.set(DoubleSolenoid.Value.kForward);
+            firer2.set(DoubleSolenoid.Value.kForward);
+            firer3.set(DoubleSolenoid.Value.kForward);
+
+            //Retract solenoids after firing
+            firer1.set(DoubleSolenoid.Value.kReverse);
+            firer2.set(DoubleSolenoid.Value.kReverse);
+            firer3.set(DoubleSolenoid.Value.kReverse);
         }
 
         private void actuate(){
             switch(this){
-                case FIRING:
+                case FIRE:
                     fire();
                     break;
                 default:
+                    LOGGER.info("No movement was done with the Hatch Mechanism");
                     break;
             }
         }
@@ -126,7 +141,6 @@ public class HatchMechanism extends GamePieceBase implements GamePieceInterface{
         Firer.initialize();
 
         hatchArm = HatchArm.IN;
-        hatchArmState = HatchArmState.read();
     }
     
   /**
@@ -148,24 +162,8 @@ public class HatchMechanism extends GamePieceBase implements GamePieceInterface{
         hatchArm = HatchArm.valueOf(command);
     }
 
-    public HatchArmState hatchArm(){
-        return hatchArmState;
-    }
-
-    public void periodic() {
-        // Take Actions
-        if (enabled) {
-          hatchArm.actuate();
-        //   latch.actuate();
-        }
-        // Update state
-        hatchArmState = HatchArmState.read();
-        // latchState = LatchState.read();
-      }
-
       @Override
       public void initSendable(SendableBuilder builder) {
         builder.addStringProperty("HatchArm", hatchArm::name, (command) -> hatchArm(command));
-        builder.addStringProperty("HatchArmState", hatchArmState::name, null);
       }
 }
