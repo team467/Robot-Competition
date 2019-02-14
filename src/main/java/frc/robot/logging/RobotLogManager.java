@@ -19,15 +19,16 @@ public class RobotLogManager {
   private static String directory = "";
 
   private static String[] filepaths = { //Filepaths go in this array
+    "/media/sda1/logging/log4j2.yaml",
     "C:\\Users\\Team467\\Documents\\GitHub\\Robot2019-Competition\\src\\main\\deploy\\log4j2.yaml",
     "C:\\Users\\Team467\\Documents\\GitHub\\Robot2019-Competition\\src\\main\\deploy\\log4j2-test.yaml",
     ".\\src\\main\\deploy\\log4j2-test.yaml"
   };
   
-  private static ArrayList<Integer> getOccurenceIndicies(String s, char c) {
+  private static ArrayList<Integer> getOccurenceIndicies(String s) {
     ArrayList<Integer> inidicies = new ArrayList<Integer>();
     for(int i=0; i<s.length(); i++) {
-      if(s.charAt(i) == c) {
+      if(s.charAt(i) == '\\'|s.charAt(i) == '/') {
         inidicies.add(i);
       }
     }
@@ -35,7 +36,7 @@ public class RobotLogManager {
   }
 
   public static String getDirectory(String s) {
-    ArrayList<Integer> indicies = getOccurenceIndicies(s, '\\');
+    ArrayList<Integer> indicies = getOccurenceIndicies(s);
     String directory = s.substring(0,indicies.get(indicies.size()-1));
     return directory;
   }
