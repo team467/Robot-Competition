@@ -67,7 +67,7 @@ public class Robot extends TimedRobot {
 
     // Delete all Network Table keys; relevant ones will be added when they are set
     table = NetworkTableInstance.getDefault();
-    dashboard  = table.getTable("SmartDashboard");
+    dashboard  = table.getTable("Telemetry");
     //table.deleteAllEntries(); // Uncomment to clear table once.
     
     // Initialize RobotMap
@@ -82,7 +82,6 @@ public class Robot extends TimedRobot {
     // Make robot objects
     driverstation = DriverStation467.getInstance();
     LOGGER.info("Initialized Driverstation");
-
     data = RobotData.getInstance();
     drive = Drive.getInstance();
     matchConfig = MatchConfiguration.getInstance();
@@ -90,6 +89,7 @@ public class Robot extends TimedRobot {
     camera = CameraSwitcher.getInstance();
 
     drive.setPidsFromRobotMap();
+    data.log();
     data.send();
   }
 
@@ -117,10 +117,6 @@ public class Robot extends TimedRobot {
   /**
    * This function is called periodically during autonomous.
    */
-
-   /**
-    * Need to implement cancelling for autonomous
-    */
   @Override
   public void autonomousPeriodic() {
     //grabber.periodic();
@@ -169,6 +165,8 @@ public class Robot extends TimedRobot {
 
       default:
     }
+    data.log();
+    data.send();
 
     if (driverstation.getNavJoystick().getJoystick().getPOV() == 0) {
       camera.forward();
@@ -216,6 +214,8 @@ public class Robot extends TimedRobot {
         break;
       default:
     }
+    data.log();
+    data.send();
   }
 
   @Override
@@ -229,6 +229,26 @@ public class Robot extends TimedRobot {
 
   @Override
   public void disabledPeriodic() {
+    data.log();
+    LOGGER.trace("Disabled Periodic");
+    String[] autoList = {
+      "None", 
+      "Just_Go_Forward", 
+      "Left_Switch_Only", 
+      "Left_Basic", 
+      "Left_Advanced", 
+      "Left_Our_Side_Only",
+      "Center", 
+      "Center_Advanced", 
+      "Right_Switch_Only", 
+      "Right_Basic", 
+      "Right_Advanced", 
+      "Right_Our_Side_Only"
+    };
+    dashboard.getEntry("Auto List").setStringArray(autoList);
+    //LOGGER.info("Selected Auto Mode: " + SmartDashboard.getString("Auto Selector", "None"));
+    data.log();
+    data.send();
     driverstation.readInputs();
     LOGGER.trace("Disabled Periodic");
 
@@ -243,5 +263,6 @@ public class Robot extends TimedRobot {
     }
 
   }
+
 
 }

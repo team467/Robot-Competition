@@ -7,6 +7,8 @@ import static org.junit.Assert.fail;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Robot;
 import frc.robot.RobotMap;
+import frc.robot.autonomous.ActionGroup;
+import frc.robot.autonomous.Actions;
 import frc.robot.RobotMap.RobotId;
 import frc.robot.drive.Drive;
 import frc.robot.logging.RobotLogManager;

@@ -17,6 +17,8 @@ import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.effect.BlendMode;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Line;
+import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 
@@ -31,19 +33,32 @@ public class RobotShape {
   int not = 102;
   private Robot robot; // For local processing
 
+
+
   private static final Logger LOGGER = RobotLogManager.getMainLogger(RobotShape.class.getName());
   private DecimalFormat df = new DecimalFormat("####0.00");
 
   // Robot Shapes
   private Shape robotShape = null;
   private Rectangle chassisShape = null;
-  private Rectangle elevatorShape = null;
+  private Rectangle hatchGrabber = null;
+  private Rectangle ballGrabber = null;
+  private Rectangle rollerShape = null;
+  private Polygon view = new Polygon();
+  private Line aligner = null;
+  private Line turretAligner = null;
+  private Line camAligner = null;
   private Group robotGroup = new Group();
+  private Group turretGroup = new Group();
+  private Group cameraGroup = new Group();
 
-  private static int time = 0;
+
+  private static final double CAM_ANGLE = 70;
+  private static final double CAM_RANGE = 50;
+  private final double BUFFER = CAM_RANGE*4;
   // Network Tables
   RobotData data = RobotData.getInstance();
-  CSVReplayer replayer;
+  CSVFile replaySrc = new CSVFile();
   CSVFile replayLog = new CSVFile();
 
   private Coordinate startingLocation = new Coordinate(0.0, 0.0);
@@ -63,6 +78,12 @@ public class RobotShape {
   private Coordinate right = new Coordinate((RobotMap.WHEEL_BASE_WIDTH / 2), 0);
   private double mapHeadingAngle = 0.0;
 
+  private double turretAngle = 0.0;
+  private double cameraAngle = 0.0;
+  private boolean rollerUp = false;
+  private boolean hasHatch = false;
+  private boolean hasBall = false;
+  
   public RobotShape() {
     // Use run local for pure simulation. Remote is for observation of actual robot
     if (RUN_LOCAL | RUN_REPLAY) {
@@ -91,10 +112,10 @@ public class RobotShape {
   }
 
   public void init() {
-    if (RUN_REPLAY) {
-      replayer = new CSVReplayer(replaySource);
-    }
     LOGGER.info("logging working");
+    if (RUN_REPLAY) {
+      replaySrc.loadFromFile(replaySource);
+    }
     if (RUN_LOCAL) {
       switch (SimulatedData.driveMode) {
 
@@ -116,9 +137,11 @@ public class RobotShape {
       }
     } else if (RUN_REPLAY) {
       robot.disabledInit();
-      LOGGER.info(replayer.csvFile);
     } else {
       data.startClient();
+      LOGGER.info("+--------------client started---------------+");
+      data.log();
+      LOGGER.info("x--------------client started---------------x");
     }
   }
 
@@ -127,23 +150,55 @@ public class RobotShape {
    * 
    * @param observableList the list of stuff viewable on the drawn field
    */
-  public Shape createRobotShape(ObservableList<Node> observableList) {
+  public void createRobotShape(ObservableList<Node> observableList) {
 
-    chassisShape = new Rectangle(RobotMap.BUMPER_LENGTH * 12, RobotMap.BUMPER_WIDTH * 12, Color.DARKSLATEGREY);
+    chassisShape = new Rectangle(RobotMap.BUMPER_LENGTH * 12, RobotMap.BUMPER_WIDTH * 12, Color.LIGHTGRAY);
     chassisShape.relocate(FieldShape.FIELD_OFFSET_Y, FieldShape.FIELD_OFFSET_X);
 
-    elevatorShape = new Rectangle(RobotMap.BUMPER_LENGTH * 12 / 2, (RobotMap.BUMPER_WIDTH * 12 - 4), Color.WHITESMOKE);
-    elevatorShape.relocate(FieldShape.FIELD_OFFSET_Y + (RobotMap.BUMPER_LENGTH / 2) * 12,
-        (FieldShape.FIELD_OFFSET_X + 2));
+    rollerShape = new Rectangle(1 * 12, 1 * 12, Color.CORAL);
+    rollerShape.relocate(FieldShape.FIELD_OFFSET_Y + RobotMap.BUMPER_LENGTH * 12 - 12,
+        FieldShape.FIELD_OFFSET_X + RobotMap.BUMPER_WIDTH * 6 - 6);
 
-    robotShape = Shape.intersect(chassisShape, elevatorShape);
+    hatchGrabber = new Rectangle(12, 12, Color.LIGHTYELLOW);
+    hatchGrabber.relocate(0, 0);
 
+    ballGrabber = new Rectangle(12, 12, Color.CORAL);
+    ballGrabber.relocate(0, 12);
+
+    view.getPoints().addAll(
+    0.0,0.0,
+    -Math.tan(Math.toRadians(CAM_ANGLE/2))*CAM_RANGE, CAM_RANGE,
+    Math.tan(Math.toRadians(CAM_ANGLE/2))*CAM_RANGE, CAM_RANGE);
+    view.setFill(Color.LIME);
+    view.setOpacity(0.5);
+
+    turretGroup.relocate(FieldShape.FIELD_OFFSET_Y, FieldShape.FIELD_OFFSET_X - 12 + RobotMap.BUMPER_WIDTH * 6);
+    
+    cameraGroup.relocate(FieldShape.FIELD_OFFSET_Y, FieldShape.FIELD_OFFSET_X + RobotMap.BUMPER_WIDTH * 6);
+
+    aligner = new Line(-BUFFER, -BUFFER, RobotMap.BUMPER_LENGTH * 12+BUFFER, RobotMap.BUMPER_WIDTH * 12+BUFFER);
+    aligner.relocate(FieldShape.FIELD_OFFSET_Y-BUFFER, FieldShape.FIELD_OFFSET_X-BUFFER);
+    aligner.setOpacity(0);
+
+    turretAligner = new Line(-BUFFER/2, -BUFFER/2, 12+BUFFER/2, 24+BUFFER/2);
+    turretAligner.relocate(-BUFFER/2, -BUFFER/2);
+    turretAligner.setOpacity(0);
+    camAligner = new Line(-BUFFER/2, -BUFFER/2, BUFFER/2, BUFFER/2);
+    camAligner.relocate(-BUFFER/2, -BUFFER/2);
+    camAligner.setOpacity(0);
+    
     robotGroup.setBlendMode(BlendMode.SRC_OVER);
     robotGroup.getChildren().add(chassisShape);
-    robotGroup.getChildren().add(elevatorShape);
+    robotGroup.getChildren().add(rollerShape);
+      turretGroup.getChildren().add(hatchGrabber);
+      turretGroup.getChildren().add(ballGrabber);
+      turretGroup.getChildren().add(turretAligner);
+    robotGroup.getChildren().add(turretGroup);
+      cameraGroup.getChildren().add(view);
+      cameraGroup.getChildren().add(camAligner);
+    robotGroup.getChildren().add(cameraGroup);
+    robotGroup.getChildren().add(aligner);
     robotGroup.setVisible(true);
-
-    return robotShape;
   }
 
   public void zero() {
@@ -249,45 +304,37 @@ public class RobotShape {
       }
     } else if (RUN_REPLAY) {
       robot.disabledPeriodic();
+      data.load(replaySrc);
     } else {
       data.receive();
+      LOGGER.info("+--------------liveperiodic---------------+");
+      data.log();
+      LOGGER.info("x--------------liveperiodic---------------x");
     }
-    isZeroed = data.isZeroed();
-    if (RUN_REPLAY) {
-      isZeroed = replayer.isZeroed;
+    if (LOG_REPLAY) {
+      data.flush(replayLog);
     }
+    isZeroed = (RUN_LOCAL|RUN_REPLAY)&data.isZeroed();
     if (isZeroed) {
       zero();
     }
+    previousLeftDistance = leftDistance;
+    previousRightDistance = rightDistance;
+    leftDistance = data.leftDistance();
+    rightDistance = data.rightDistance();
+    startingLocation = data.startingLocation();
 
-    if (RUN_REPLAY) {
-      previousLeftDistance = leftDistance;
-      previousRightDistance = rightDistance;
-      leftDistance = replayer.leftDistance;
-      rightDistance = replayer.rightDistance;
-      startingLocation.x = replayer.startX;
-      startingLocation.y = replayer.startY;
-      replayer.next();
-      LOGGER.info("Data read: " + replayer.leftDistance + ", " + replayer.rightDistance);
-      LOGGER.info("frame: " + replayer.steps);
-    } else {
-      previousLeftDistance = leftDistance;
-      previousRightDistance = rightDistance;
-      leftDistance = data.leftDistance();
-      rightDistance = -data.rightDistance();
-      startingLocation = data.startingLocation();
-    }
-    if (LOG_REPLAY) {
-      replayLog.addRow();
-      replayLog.pushVar(leftDistance);
-      replayLog.pushVar(rightDistance);
-      replayLog.pushVar(startingLocation.x);
-      replayLog.pushVar(startingLocation.y);
-      replayLog.pushVar("basement");
-      replayLog.pushVar(isZeroed);
-    }
-    LOGGER.info("left: " + (leftDistance) + ", right: " + (rightDistance));
+    LOGGER.info("left: " + (leftDistance) + ", right: " + (rightDistance)+ ", zeroed" + isZeroed);
     updateMapPosition(leftDistance - previousLeftDistance, rightDistance - previousRightDistance);
+  }
+
+  private void updateShape() {
+    turretGroup.setRotate(Math.toDegrees(turretAngle));
+    cameraGroup.setRotate(Math.toDegrees(cameraAngle)+90);
+    // if true if false
+    ballGrabber.setFill(hasBall ?  Color.color(0.8, 0.4, 0):Color.color(0.4, 0.2, 0));
+    hatchGrabber.setFill(hasHatch ? Color.color(0.8, 0.8, 0):Color.color(0.4, 0.4, 0));
+    rollerShape.setFill(rollerUp ? Color.LIME : Color.MAROON);
   }
 
   /**
@@ -296,16 +343,14 @@ public class RobotShape {
   public void draw() {
 
     loadData();
+    updateShape();
+    cameraAngle+=0.1;
     double radius = RobotMap.WHEEL_BASE_WIDTH / 2;
     double x = radius * Math.cos(mapHeadingAngle);
     double y = -radius * Math.sin(mapHeadingAngle);
-    robotShape.setRotate(Math.toDegrees(mapHeadingAngle));
-    robotShape.relocate((FieldShape.FIELD_OFFSET_Y + (leftY() + y) * 12),
-        (FieldShape.FIELD_OFFSET_X + (leftX() + x) * 12));
-
     robotGroup.setRotate(Math.toDegrees(mapHeadingAngle));
-    robotGroup.relocate((FieldShape.FIELD_OFFSET_Y + (leftY() + y) * 12),
-        (FieldShape.FIELD_OFFSET_X + (leftX() + x) * 12));
+    robotGroup.relocate((FieldShape.FIELD_OFFSET_Y + (leftY() + y) * 12-BUFFER),
+        (FieldShape.FIELD_OFFSET_X + (leftX() + x) * 12-BUFFER));
 
   }
 

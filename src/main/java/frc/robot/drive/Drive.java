@@ -6,7 +6,6 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import frc.robot.RobotMap;
-import frc.robot.drive.motorcontrol.pathtracking.FieldPosition;
 import frc.robot.logging.RobotLogManager;
 import frc.robot.simulator.communications.RobotData;
 
