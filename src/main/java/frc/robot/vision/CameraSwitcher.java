@@ -32,28 +32,27 @@ public class CameraSwitcher {
 
   private CameraSwitcher() {
     NetworkTable table = NetworkTableInstance.getDefault().getTable("camera");
-    cameraOrder = table.getEntry("order").getDoubleArray(new double[] {0, 1, 2, 3});
     cameraNetworkTableEntry = table.getEntry("camera");
   }
 
   public void forward() {
     LOGGER.debug("Setting camera forward at index {}", RobotMap.FORWARD_CAMERA_INDEX);
-    cameraNetworkTableEntry.setDouble(cameraOrder[RobotMap.FORWARD_CAMERA_INDEX]);
+    cameraNetworkTableEntry.setDouble(RobotMap.FORWARD_CAMERA_INDEX);
   }
 
   public void backward() {
     LOGGER.debug("Setting camera backward at index {}", RobotMap.BACKWARD_CAMERA_INDEX);
-    cameraNetworkTableEntry.setDouble(cameraOrder[RobotMap.BACKWARD_CAMERA_INDEX]);
+    cameraNetworkTableEntry.setDouble(RobotMap.BACKWARD_CAMERA_INDEX);
   }
 
   public void cargo() {
     LOGGER.debug("Setting to cargo camera at index {}", RobotMap.CARGO_CAMERA_INDEX);
-    cameraNetworkTableEntry.setDouble(cameraOrder[RobotMap.CARGO_CAMERA_INDEX]);
+    cameraNetworkTableEntry.setDouble(RobotMap.CARGO_CAMERA_INDEX);
   }
 
   public void hatch() {
     LOGGER.debug("Setting to hatch camera at index {}", RobotMap.HATCH_CAMERA_INDEX);
-    cameraNetworkTableEntry.setDouble(cameraOrder[RobotMap.HATCH_CAMERA_INDEX]);
+    cameraNetworkTableEntry.setDouble(RobotMap.HATCH_CAMERA_INDEX);
   }
 
 }
