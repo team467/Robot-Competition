@@ -217,7 +217,7 @@ public class DriverStation467 {
     return getDriveJoystick().getRightTrigger() == 0.9;
   }
 
-  public boolean toggleMode() {
+  public boolean defenseMode() {
     if(getDriveJoystick().down(Button.BumperLeft) == true && getDriveJoystick().down(Button.BumperRight) == true) {
       return true;
     } else {
