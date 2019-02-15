@@ -28,7 +28,8 @@ public class CargoMech extends GamePieceBase implements GamePiece {
     // height values measured empirically
     CARGO_BIN(RobotMap.CARGO_MECH_CARGO_BIN), 
     LOW_ROCKET(RobotMap.CARGO_MECH_LOW_ROCKET),
-    CARGO_SHIP(RobotMap.CARGO_MECH_CARGO_SHIP);
+    CARGO_SHIP(RobotMap.CARGO_MECH_CARGO_SHIP),
+    SAFE_TURRET(RobotMap.CARGO_MECH_SAFE_TURRET);
 
     // Height in sensor units
     public double height;
@@ -95,6 +96,7 @@ public class CargoMech extends GamePieceBase implements GamePiece {
     private static AnalogPotentiometer sensor = null;
     private static CargoMechArmState previousState = UNKNOWN;
     private static double simulatedReading = 0.0;
+    private static double height = 0.0;
 
     private static void initialize() {
       // Config arm sensors
@@ -103,21 +105,21 @@ public class CargoMech extends GamePieceBase implements GamePiece {
     }
 
     private static CargoMechArmState read() {
-      double value = simulatedReading;
+      height = simulatedReading;
       if (!RobotMap.useSimulator) {
-        value = sensor.get();
+        height = sensor.get();
       }
-      value *= (RobotMap.CARGO_MECH_ARM_SENSOR_INVERTED) ? -1.0 : 1.0;
+      height *= (RobotMap.CARGO_MECH_ARM_SENSOR_INVERTED) ? -1.0 : 1.0;
 
       CargoMechArmState state;
-      if (value >= (CargoMechArm.CARGO_BIN.height 
+      if (height >= (CargoMechArm.CARGO_BIN.height 
           - RobotMap.CARGO_MECH_ARM_ALLOWABLE_ERROR_TICKS)
-          && value <= (CargoMechArm.CARGO_BIN.height 
+          && height <= (CargoMechArm.CARGO_BIN.height 
           + RobotMap.CARGO_MECH_ARM_ALLOWABLE_ERROR_TICKS)) {
         state = CARGO_BIN;
-      } else if (value > (CargoMechArm.CARGO_BIN.height 
+      } else if (height > (CargoMechArm.CARGO_BIN.height 
           + RobotMap.CARGO_MECH_ARM_ALLOWABLE_ERROR_TICKS) 
-          && value < (CargoMechArm.LOW_ROCKET.height 
+          && height < (CargoMechArm.LOW_ROCKET.height 
           - RobotMap.CARGO_MECH_ARM_ALLOWABLE_ERROR_TICKS)) {
         if (previousState == CARGO_BIN || previousState == MOVING_UP_TO_LOW_ROCKET) {
           state = MOVING_UP_TO_LOW_ROCKET;
@@ -125,14 +127,14 @@ public class CargoMech extends GamePieceBase implements GamePiece {
           state = MOVING_DOWN_TO_CARGO_BIN;
         }
       } else if (
-          value >= (CargoMechArm.LOW_ROCKET.height 
+          height >= (CargoMechArm.LOW_ROCKET.height 
           - RobotMap.CARGO_MECH_ARM_ALLOWABLE_ERROR_TICKS)
-          && value <= (CargoMechArm.LOW_ROCKET.height 
+          && height <= (CargoMechArm.LOW_ROCKET.height 
           + RobotMap.CARGO_MECH_ARM_ALLOWABLE_ERROR_TICKS)) {
         state = LOW_ROCKET;
-      } else if (value > (CargoMechArm.LOW_ROCKET.height 
+      } else if (height > (CargoMechArm.LOW_ROCKET.height 
           + RobotMap.CARGO_MECH_ARM_ALLOWABLE_ERROR_TICKS)
-          && value < (CargoMechArm.CARGO_SHIP.height 
+          && height < (CargoMechArm.CARGO_SHIP.height 
           - RobotMap.CARGO_MECH_ARM_ALLOWABLE_ERROR_TICKS)) {
         if (previousState == LOW_ROCKET || previousState == MOVING_UP_TO_CARGO_SHIP) {
           state = MOVING_UP_TO_CARGO_SHIP;
@@ -140,15 +142,15 @@ public class CargoMech extends GamePieceBase implements GamePiece {
           state = MOVING_DOWN_TO_LOW_ROCKET;
         }
       } else if (
-          value >= (CargoMechArm.CARGO_SHIP.height 
+          height >= (CargoMechArm.CARGO_SHIP.height 
           - RobotMap.CARGO_MECH_ARM_ALLOWABLE_ERROR_TICKS)
-          && value <= (CargoMechArm.CARGO_SHIP.height 
+          && height <= (CargoMechArm.CARGO_SHIP.height 
           + RobotMap.CARGO_MECH_ARM_ALLOWABLE_ERROR_TICKS)) {
         state = CARGO_SHIP;
       } else {
         state = UNKNOWN;
       }
-      LOGGER.debug("Current state: {}", state.name());
+      LOGGER.debug("Current state: {} at height in ticks {}", state.name(), height);
       previousState = state;
       return state;
     }
@@ -227,6 +229,20 @@ public class CargoMech extends GamePieceBase implements GamePiece {
 
     initSendable(TelemetryBuilder.getInstance());
     LOGGER.trace("Created Ball Mech game piece.");
+  }
+
+  /**
+   * Checks to see if the cargo mechanism arm at or above a safe distance
+   * to turn the turret.
+   * 
+   * @return boolean true if safe to turn.
+   */
+  public boolean isSafeToMoveTurret() {
+    if (CargoMechArmState.height >= CargoMechArm.SAFE_TURRET.height) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   /**

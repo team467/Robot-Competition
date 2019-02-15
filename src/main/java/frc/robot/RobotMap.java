@@ -257,6 +257,7 @@ public class RobotMap {
         CARGO_MECH_CARGO_BIN = 0; // TODO
         CARGO_MECH_LOW_ROCKET = 0.3; // TODO
         CARGO_MECH_CARGO_SHIP = 0.7; // TODO
+        CARGO_MECH_SAFE_TURRET = 1.0; // TODO
 
         CARGO_MECH_CLAW_MOTOR_CHANNEL = 0; // TODO
         CARGO_MECH_MOTOR_INVERTED = false; // TODO
@@ -430,6 +431,7 @@ public class RobotMap {
   public static double CARGO_MECH_CARGO_BIN;
   public static double CARGO_MECH_LOW_ROCKET;
   public static double CARGO_MECH_CARGO_SHIP;
+  public static double CARGO_MECH_SAFE_TURRET;
 
   public static int CARGO_MECH_CLAW_MOTOR_CHANNEL;
   public static boolean CARGO_MECH_MOTOR_INVERTED;
