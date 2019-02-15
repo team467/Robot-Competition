@@ -16,7 +16,7 @@ public class HatchMechanism extends GamePieceBase implements GamePiece{
 
     //Actuators
     private HatchArm hatchArm;
-    private Firer firer;
+    private HatchFirer firer;
 
     //TODO: Place these values in RobotMap
     public static int HATCH_ARM_FORWARD_CHANNEL;
@@ -84,7 +84,7 @@ public class HatchMechanism extends GamePieceBase implements GamePiece{
 
     }
 
-    public enum Firer{
+    public enum HatchFirer{
         FIRE,
         UNKNOWN;
 
@@ -99,7 +99,7 @@ public class HatchMechanism extends GamePieceBase implements GamePiece{
         }
 
         /**
-         * Fires tthe three firing solenoids forwards and then retracts them
+         * Fires the three firing solenoids forwards and then retracts them
          */
         private void fire(){
             //Fire solenoids forward
@@ -138,7 +138,7 @@ public class HatchMechanism extends GamePieceBase implements GamePiece{
 
         //Initialize sensors and actuators
         HatchArm.initialize();
-        Firer.initialize();
+        HatchFirer.initialize();
 
         hatchArm = HatchArm.IN;
     }
@@ -166,8 +166,31 @@ public class HatchMechanism extends GamePieceBase implements GamePiece{
         return hatchArm;
     }
 
-      @Override
-      public void initSendable(SendableBuilder builder) {
+      /**
+   * Moves the arm in or out.
+   * 
+   * @param command to move the arm in or out.
+   */
+    public void firer(HatchFirer command){
+        firer = command;
+    }
+
+    /**
+   * Moves the arm in or out. The String version sets the 
+   * command from the Smart Dashboard.
+   * 
+   * @param command which way to move the arm.
+   */
+    public void firer(String command){
+        firer = HatchFirer.valueOf(command);
+    }
+
+    public HatchFirer firer(){
+        return firer;
+    }
+
+    @Override
+    public void initSendable(SendableBuilder builder) {
         builder.addStringProperty("HatchArm", hatchArm::name, (command) -> arm(command));
-      }
+    }
 }

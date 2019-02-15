@@ -176,4 +176,7 @@ public class Turret extends GamePieceBase implements GamePiece {
     instance.target(RobotMap.TURRET_HOME);
   }
 
+  public void safeToMoveTurret(){
+    //TODO: implement function
+  }
 }

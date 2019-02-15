@@ -4,7 +4,9 @@ import frc.robot.gamepieces.CargoIntake.CargoIntakeArm;
 import frc.robot.gamepieces.CargoIntake.CargoIntakeRoller;
 import frc.robot.gamepieces.CargoMech.CargoMechArm;
 import frc.robot.gamepieces.CargoMech.CargoMechArmState;
+import frc.robot.gamepieces.CargoMech.CargoMechClaw;
 import frc.robot.gamepieces.HatchMechanism.HatchArm;
+import frc.robot.gamepieces.HatchMechanism.HatchFirer;
 import frc.robot.logging.RobotLogManager;
 import frc.robot.usercontrol.DriverStation467;
 import frc.robot.vision.CameraSwitcher;
@@ -147,8 +149,8 @@ public class GamePieceController {
       gamePieceMode = GamePieceMode.HATCH;
     }
     if (gamePieceMode == GamePieceMode.HATCH) {
-      if (hatchMech.arm() == HatchMechArm.RETRACT) {
-        hatchMech.launcher(HatchLauncher.FIRE); //?
+      if (hatchMech.arm() == HatchArm.IN) { 
+        hatchMech.arm(HatchArm.OUT);
       }
     }
 
@@ -165,8 +167,15 @@ public class GamePieceController {
     }
     if (gamePieceMode == GamePieceMode.CARGO) {
       if (cargoIntake.arm() == CargoIntakeArm.DOWN) {
+        cargoIntake.arm(CargoIntakeArm.DOWN);
+      }
+      if (cargoIntake.roller() != CargoIntakeRoller.REVERSE){
         cargoIntake.roller(CargoIntakeRoller.REVERSE);
       }
+      turret.moveTurretToHome();
+      cargoMech.arm(CargoMechArm.CARGO_BIN);
+      cargoMech.claw(CargoMechClaw.REVERSE);
+      turret.safeToMoveTurret();
     }
 
 
@@ -177,6 +186,20 @@ public class GamePieceController {
      *  Must check that it is safe to move turret.
      *  Cancels Target Lock
      */
+
+     if(true){
+       gamePieceMode = GamePieceMode.CARGO;
+     }
+     if (gamePiecemode == GamePieceMode.CARGO){
+       if (CargoIntake.arm() == CargoIntakeArm.UP){
+         cargoIntake.arm(CargoIntakeArm.DOWN);
+       }
+       turret.moveTurretToHome();
+       cargoMech.claw(CargoMechClaw.FORWARD);
+       cargoMech.arm(CargoIntakeArm.DOWN);
+       turret.moveTurretToHome();
+       //cancel Target Lock
+     }
 
     /*
      *  //TODO: Reject Cargo
@@ -231,6 +254,8 @@ public class GamePieceController {
      *  Should check for unsafe turret situations.
      *  Cancels target lock
      */
+      if (get)
+
 
     /*
      *  //TODO: On Target Cargo
@@ -255,7 +280,6 @@ public class GamePieceController {
     cargoMech.periodic();
     hatchMech.periodic();
     turret.periodic();
-    
   }
 
   /**
