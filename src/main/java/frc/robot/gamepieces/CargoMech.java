@@ -90,7 +90,7 @@ public class CargoMech extends GamePieceBase implements GamePiece {
     LOW_ROCKET, 
     MOVING_DOWN_TO_LOW_ROCKET,
     MOVING_UP_TO_CARGO_SHIP, 
-    CARGO_SHIP, 
+    CARGO_SHIP,
     UNKNOWN;
 
     private static AnalogPotentiometer sensor = null;

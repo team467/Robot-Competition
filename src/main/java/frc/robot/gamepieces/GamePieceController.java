@@ -6,8 +6,10 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import frc.robot.gamepieces.CargoIntake.CargoIntakeArm;
 import frc.robot.gamepieces.CargoIntake.CargoIntakeRoller;
 import frc.robot.gamepieces.CargoMech.CargoMechArm;
+import frc.robot.gamepieces.CargoMech.CargoMechArmState;
 import frc.robot.gamepieces.CargoMech.CargoMechClaw;
 import frc.robot.gamepieces.HatchMechanism.HatchArm;
+import frc.robot.gamepieces.HatchMechanism.HatchLauncher;
 import frc.robot.logging.RobotLogManager;
 import frc.robot.usercontrol.DriverStation467;
 import frc.robot.vision.CameraSwitcher;
@@ -117,13 +119,10 @@ public class GamePieceController {
       case DEFENSE:
         turret.moveTurretToHome();
         if (turret.isHome()) {
-          if (cargoIntake.arm() == CargoIntakeArm.DOWN) {
+          if (cargoIntake.arm() == CargoIntakeArm.DOWN)
             cargoIntake.arm(CargoIntakeArm.UP);
-          } else {
-            if (hatchMech.arm() == HatchArm.OUT) {
-              hatchMech.arm(HatchArm.IN);
-            }
-          }
+          if (hatchMech.arm() == HatchArm.OUT) 
+            hatchMech.arm(HatchArm.IN);
         }
         break;
 
@@ -131,21 +130,19 @@ public class GamePieceController {
         if (driverStation.getAcquireBall()) {
           /*
           *  //TODO: Acquire Cargo:
-          *  Must be in Cargo Mode and roller are must be down.
+          *  Must be in Cargo Mode and roller arm must be down.
           *  Turn on roller, move turret to home, lower down, and turn on claw.
           *  Must check that it is safe to move turret.
           *  Cancels Target Lock
           */
-          if (cargoIntake.arm() == CargoIntakeArm.DOWN) {
-            cargoIntake.roller(CargoIntakeRoller.REVERSE);
-            if (turret.isHome() == false) {
-              if (isSafeToMoveTurret()) {
-                turret.moveTurretToHome();
-              }
+          if (cargoIntake.arm() == CargoIntakeArm.DOWN) { // If cargo intake arm is down
+            cargoIntake.roller(CargoIntakeRoller.REVERSE); // suck in ball
+            if (turret.isHome() == false && isSafeToMoveTurret()) {
+              turret.moveTurretToHome();
             }
-            else {
-              cargoMech.claw(CargoMechClaw.REVERSE);
-              cargoMech.arm(CargoMechArm.CARGO_BIN);
+            else { // if cargo intake arm is up
+              cargoMech.arm(CargoMechArm.CARGO_BIN); //
+              cargoMech.claw(CargoMechClaw.REVERSE); 
             }
           }
         } else if (driverStation.setCargoPos()) {
@@ -184,11 +181,20 @@ public class GamePieceController {
         /*
         *  //TODO: Fire Hatch
         *  Must be in hatch mode. Pushes cargo arm forward for some count of cycles,
-        *  then activates hatch solinoids. After trigger is released, moves both 
-        *  hatch and arm solidoids to the retracted position. May need to be combined with
+        *  then activates hatch solenoids. After trigger is released, moves both 
+        *  hatch and arm soledoids to the retracted position. May need to be combined with
         *  acquire hatch to insure that the arm can move forward during acquisition. 
         *  Could just be before acquire hatch as moves happen at end.
         */
+          gamePieceMode = GamePieceMode.HATCH;
+          if (gamePieceMode == GamePieceMode.HATCH){
+            if (hatchMech.arm() != HatchArm.IN){
+              hatchMech.arm(HatchArm.OUT);
+            }
+            if (hatchMech.arm() == HatchArm.OUT){
+              hatchMech.launcher(HatchLauncher.FIRE);
+            }
+          }
 
         } else if (driverStation.getAcquireHatch()) {
         /*
@@ -196,7 +202,18 @@ public class GamePieceController {
         *  When acquireing a hatch, the arm should move forward,
         *  but the hatch launcher should not fire.
         */
-
+          if(gamePieceMode == GamePieceMode.HATCH){
+            if (hatchMech.arm() == HatchArm.IN){
+              hatchMech.arm(HatchArm.OUT);
+            }
+            if (hatchMech.launcher() == HatchLauncher.FIRE){
+              hatchMech.launcher(HatchLauncher.RESET);
+            }
+          }
+        }
+        else {
+          hatchMech.arm(HatchArm.IN);
+          hatchMech.launcher(HatchLauncher.RESET);
         }
 
         break;
@@ -241,6 +258,14 @@ public class GamePieceController {
       *  Must check that it is safe to move turret.
       *  Cancels Target Lock
       */
+
+      if (true) {
+        if (gamePieceMode == GamePieceMode.CARGO || gamePieceMode == GamePieceMode.HATCH){
+          if (cargoMech.arm() != CargoMechArmState.LOW_ROCKET){
+            cargoMech.arm(CargoMechArm.LOW_ROCKET);
+          }
+        }
+      }
 
       /*
       *  //TODO: Move Turret Left
