@@ -199,6 +199,10 @@ public class RobotMap {
         RIGHT_TURN_PID_D = 450.0;
         RIGHT_TURN_PID_F = 0.0;
 
+        // Cameras
+        FORWARD_CAMERA_INDEX = 0;
+        BACKWARD_CAMERA_INDEX = 2;
+
         // Game Pieces
         HAS_TURRET = true;
         HAS_CARGO_INTAKE = true;
@@ -232,7 +236,9 @@ public class RobotMap {
         HATCH_LAUNCHER_S3_REVERSE_CHANNEL = 0; // TODO
         HATCH_MECH_ARM_FORWARD_CHANNEL = 0; // TODO
         HATCH_MECH_ARM_REVERSE_CHANNEL = 0; // TODO
-
+        HATCH_CAMERA_INDEX = 3;
+      
+      
         // Cargo Intake
         CARGO_INTAKE_ARM_UP_SOLINOID_CHANNEL = 0; // TODO
         CARGO_INTAKE_ARM_DOWN_SOLINOID_CHANNEL = 0; // TODO
@@ -249,6 +255,8 @@ public class RobotMap {
         CARGO_MECH_ARM_D = 0.0; // TODO
         CARGO_MECH_ARM_F = 0.0; // TODO
 
+        CARGO_CAMERA_INDEX = 1;
+      
         CARGO_MECH_ARM_TOP_TICKS = 0; // TODO
         CARGO_MECH_ARM_BOTTOM_TICKS = 0; // TODO
         CARGO_MECH_ARM_ALLOWABLE_ERROR_TICKS = 10; // TODO
@@ -373,6 +381,9 @@ public class RobotMap {
     }
   }
 
+  // Driver Cameras
+  public static int FORWARD_CAMERA_INDEX;
+  public static int BACKWARD_CAMERA_INDEX;
 
   // Game Pieces
 
@@ -396,6 +407,7 @@ public class RobotMap {
 
   // Hatch Mechanism
   public static boolean HAS_HATCH_MECHANISM;
+  public static int HATCH_CAMERA_INDEX;
   public static int HATCH_LAUNCHER_S1_FORWARD_CHANNEL;
   public static int HATCH_LAUNCHER_S1_REVERSE_CHANNEL;
   public static int HATCH_LAUNCHER_S2_FORWARD_CHANNEL;
@@ -414,6 +426,7 @@ public class RobotMap {
 
   // Cargo Mechanism
   public static boolean HAS_CARGO_MECHANISM = false;
+  public static int CARGO_CAMERA_INDEX;
   public static int CARGO_MECH_ARM_SENSOR_CHANNEL;
   public static int CARGO_MECH_ARM_MOTOR_CHANNEL;
   public static boolean CARGO_MECH_ARM_MOTOR_INVERTED;

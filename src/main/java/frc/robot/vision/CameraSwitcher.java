@@ -3,17 +3,12 @@ package frc.robot.vision;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
-
+import frc.robot.RobotMap;
 import frc.robot.logging.RobotLogManager;
 
 import org.apache.logging.log4j.Logger;
 
 public class CameraSwitcher {
-
-  public static int FORWARD_CAMERA_INDEX = 0;
-  public static int CARGO_CAMERA_INDEX = 1;
-  public static int BACKWARD_CAMERA_INDEX = 2;
-  public static int HATCH_CAMERA_INDEX = 3;
 
   private static CameraSwitcher instance = null;
 
@@ -42,23 +37,23 @@ public class CameraSwitcher {
   }
 
   public void forward() {
-    LOGGER.debug("Setting camera forward at index {}", FORWARD_CAMERA_INDEX);
-    cameraNetworkTableEntry.setDouble(cameraOrder[FORWARD_CAMERA_INDEX]);
+    LOGGER.debug("Setting camera forward at index {}", RobotMap.FORWARD_CAMERA_INDEX);
+    cameraNetworkTableEntry.setDouble(cameraOrder[RobotMap.FORWARD_CAMERA_INDEX]);
   }
 
   public void backward() {
-    LOGGER.debug("Setting camera backward at index {}", BACKWARD_CAMERA_INDEX);
-    cameraNetworkTableEntry.setDouble(cameraOrder[BACKWARD_CAMERA_INDEX]);
+    LOGGER.debug("Setting camera backward at index {}", RobotMap.BACKWARD_CAMERA_INDEX);
+    cameraNetworkTableEntry.setDouble(cameraOrder[RobotMap.BACKWARD_CAMERA_INDEX]);
   }
 
   public void cargo() {
-    LOGGER.debug("Setting to cargo camera at index {}", CARGO_CAMERA_INDEX);
-    cameraNetworkTableEntry.setDouble(cameraOrder[CARGO_CAMERA_INDEX]);
+    LOGGER.debug("Setting to cargo camera at index {}", RobotMap.CARGO_CAMERA_INDEX);
+    cameraNetworkTableEntry.setDouble(cameraOrder[RobotMap.CARGO_CAMERA_INDEX]);
   }
 
   public void hatch() {
-    LOGGER.debug("Setting to hatch camera at index {}", HATCH_CAMERA_INDEX);
-    cameraNetworkTableEntry.setDouble(cameraOrder[HATCH_CAMERA_INDEX]);
+    LOGGER.debug("Setting to hatch camera at index {}", RobotMap.HATCH_CAMERA_INDEX);
+    cameraNetworkTableEntry.setDouble(cameraOrder[RobotMap.HATCH_CAMERA_INDEX]);
   }
 
 }
