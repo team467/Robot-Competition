@@ -7,8 +7,7 @@ import frc.robot.gamepieces.CargoIntake.CargoIntakeArm;
 import frc.robot.gamepieces.CargoIntake.CargoIntakeRoller;
 import frc.robot.gamepieces.CargoMech.CargoMechArm;
 import frc.robot.gamepieces.CargoMech.CargoMechClaw;
-import frc.robot.gamepieces.HatchMech.HatchLauncher;
-import frc.robot.gamepieces.HatchMech.HatchMechArm;
+import frc.robot.gamepieces.HatchMechanism.HatchArm;
 import frc.robot.logging.RobotLogManager;
 import frc.robot.usercontrol.DriverStation467;
 import frc.robot.vision.CameraSwitcher;
@@ -25,7 +24,7 @@ public class GamePieceController {
   // Game Pieces
   private CargoIntake cargoIntake;
   private CargoMech cargoMech;
-  private HatchMech hatchMech;
+  private HatchMechanism hatchMech;
   private Turret turret;
   private CameraSwitcher camera;
 
@@ -56,7 +55,7 @@ public class GamePieceController {
     
     cargoIntake = CargoIntake.getInstance();
     cargoMech = CargoMech.getInstance();
-    hatchMech = HatchMech.getInstance();
+    hatchMech = HatchMechanism.getInstance();
     turret = Turret.getInstance();
     driverStation = DriverStation467.getInstance();
     gamePieceMode = GamePieceMode.DEFENSE;
@@ -121,8 +120,8 @@ public class GamePieceController {
           if (cargoIntake.arm() == CargoIntakeArm.DOWN) {
             cargoIntake.arm(CargoIntakeArm.UP);
           } else {
-            if (hatchMech.arm() == HatchMechArm.EXTEND) {
-              hatchMech.arm(HatchMechArm.RETRACT);
+            if (hatchMech.arm() == HatchArm.OUT) {
+              hatchMech.arm(HatchArm.IN);
             }
           }
         }
