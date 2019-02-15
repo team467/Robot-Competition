@@ -116,9 +116,9 @@ public class HatchMech extends GamePieceBase implements GamePiece {
   private static HatchMech instance = null;
 
   /**
-  * Returns a singleton instance of the telemery builder.
+  * Returns a singleton instance of the hatch mechanism.
   * 
-  * @return TelemetryBuilder the telemetry builder instance
+  * @return HatchMechanism the singleton instance
   */
   public static HatchMech getInstance() {
     if (instance == null) {

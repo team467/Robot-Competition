@@ -1,5 +1,8 @@
 package frc.robot.gamepieces;
 
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
+
 import frc.robot.gamepieces.CargoIntake.CargoIntakeArm;
 import frc.robot.gamepieces.CargoIntake.CargoIntakeRoller;
 import frc.robot.gamepieces.CargoMech.CargoMechArm;
@@ -11,9 +14,6 @@ import frc.robot.usercontrol.DriverStation467;
 import frc.robot.vision.CameraSwitcher;
 
 import org.apache.logging.log4j.Logger;
-
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableInstance;
 
 public class GamePieceController {
 
@@ -290,7 +290,6 @@ public class GamePieceController {
     cargoMech.periodic();
     hatchMech.periodic();
     turret.periodic();
-    
   }
 
   /**
