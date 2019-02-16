@@ -14,6 +14,8 @@ public class RobotMap {
 
   public static final int PID_SLOT_DRIVE = 0;
   public static final int PID_SLOT_TURN = 1;
+  public static final int PID_SLOT_TURRET = 0; //Slot will need to be determined and set
+
   
   // Steering motor ids
   public static boolean HAS_WHEELS;

@@ -254,6 +254,9 @@ public class GamePieceController {
         if (gamePieceMode == GamePieceMode.CARGO || gamePieceMode == GamePieceMode.HATCH){
           if (cargoMech.arm() != CargoMechArmState.LOW_ROCKET){
             cargoMech.arm(CargoMechArm.LOW_ROCKET);
+            if (isSafeToMoveTurret()) {
+              turret.target(90.0);
+            }
           }
         }
       }
@@ -267,11 +270,25 @@ public class GamePieceController {
       *  Cancels Target Lock
       */
 
+      if (true) {
+        if (gamePieceMode == GamePieceMode.CARGO || gamePieceMode == GamePieceMode.HATCH){
+          if (cargoMech.arm() != CargoMechArmState.LOW_ROCKET){
+            cargoMech.arm(CargoMechArm.LOW_ROCKET);
+            if (isSafeToMoveTurret()) {
+              turret.target(-90.0);
+            }
+          }
+        }
+      }
+
       /*
       *  //TODO: Target Lock Turret
       *  Must be in hatch or cargo mode. Set target to track mode.
       *  Should allow override if other turret move.
       */
+      if (gamePieceMode == GamePieceMode.CARGO || gamePieceMode == GamePieceMode.HATCH) {
+        // set target to track mode.
+      }
 
       /*
       *  //TODO: Fine Adjust Turret
@@ -298,7 +315,6 @@ public class GamePieceController {
       */
 
     }
-
     // Update all systems
     cargoIntake.periodic();
     cargoMech.periodic();
