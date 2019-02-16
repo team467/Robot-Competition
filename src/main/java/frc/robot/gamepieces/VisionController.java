@@ -4,6 +4,8 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import frc.robot.RobotMap;
+import frc.robot.usercontrol.DriverStation467;
+
 
 
 public class VisionController {
@@ -11,10 +13,13 @@ public class VisionController {
     private NetworkTable vision;
     private double degreeValues;
     private NetworkTableEntry cameraNetworkTableEntry;
+    private DriverStation467 driverStation;
 
     private VisionController() {
 
-    vision  = NetworkTableInstance.getDefault().getTable("vision");    
+    vision = NetworkTableInstance.getDefault().getTable("vision");  
+    driverStation = DriverStation467.getInstance();
+
     }
 
     public double getAngle() {

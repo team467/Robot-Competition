@@ -21,7 +21,8 @@ public class RobotMap {
   public static final double ANGLE_OFFSET_LEVEL_TWO = 10.0;
   public static final double ANGLE_OFFSET_LEVEL_THREE = 15.0;
   public static final double ANGLE_OFFSET_LEVEL_FOUR = 20.0;
-  
+  public static final int PID_SLOT_TURRET = 0; //Slot will need to be determined and set
+
   // Steering motor ids
   public static boolean HAS_WHEELS;
   public static int DRIVEMOTOR_NUM;
