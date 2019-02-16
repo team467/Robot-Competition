@@ -1,17 +1,15 @@
 package frc.robot.gamepieces;
 
-import edu.wpi.first.wpilibj.AnalogPotentiometer;
-import edu.wpi.first.wpilibj.PIDController;
-import edu.wpi.first.wpilibj.Spark;
+import com.ctre.phoenix.motorcontrol.ControlMode;
+
 import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
-import edu.wpi.first.wpilibj.networktables.NetworkTable;
 
 import frc.robot.RobotMap;
 import frc.robot.drive.TalonProxy;
-import frc.robot.drive.WpiTalonSrx;
 import frc.robot.drive.WpiTalonSrxInterface;
 import frc.robot.logging.RobotLogManager;
 import frc.robot.logging.TelemetryBuilder;
+import frc.robot.vision.VisionController;
 
 import org.apache.logging.log4j.Logger;
 
@@ -22,15 +20,14 @@ public class Turret extends GamePieceBase implements GamePiece {
   private static final Logger LOGGER = RobotLogManager.getMainLogger(Turret.class.getName());
 
   // Physical components
-  private Spark motor;
-  private AnalogPotentiometer rotationSensor;
-  private PIDController pidController;
-  private final WpiTalonSrxInterface turretMotor;
-
+  private final WpiTalonSrxInterface talon;
+  private static final int TALON_SENSOR_ID = 0;
+  private static final int TALON_PID_SLOT_ID = 0;
   private double ticksPerDegree;
   private boolean onManualControl = true;
-
   private boolean targetLock = false;
+
+  private VisionController vision;
 
   // Position in degress
   private double targetPosition;
@@ -55,57 +52,32 @@ public class Turret extends GamePieceBase implements GamePiece {
     super("Telemetry", "Turret");
 
     // Initialize the sensors and actuators
-    turretMotor = new TalonProxy().create(RobotMap.TURRET_MOTOR_CHANNEL);
-    // turretMotor.setInverted(RobotMap.TURRET_SENSOR_INVERTED);
-    turretMotor.setName("Telemetry", "TurretMotor");
+    talon = TalonProxy.create(RobotMap.TURRET_MOTOR_CHANNEL);
+    talon.setName("Telemetry", "TurretMotor");
+    talon.setInverted(RobotMap.TURRET_MOTOR_INVERTED);
+    talon.setSensorPhase(RobotMap.TURRET_SENSOR_INVERTED);
+    talon.selectProfileSlot(TALON_PID_SLOT_ID, TALON_SENSOR_ID);
+    talon.config_kP(TALON_PID_SLOT_ID, RobotMap.TURRET_P, RobotMap.TALON_TIMEOUT);
+    talon.config_kI(TALON_PID_SLOT_ID, RobotMap.TURRET_I, RobotMap.TALON_TIMEOUT);
+    talon.config_kD(TALON_PID_SLOT_ID, RobotMap.TURRET_D, RobotMap.TALON_TIMEOUT);
+    talon.config_kF(TALON_PID_SLOT_ID, RobotMap.TURRET_F, RobotMap.TALON_TIMEOUT);
+    talon.configForwardSoftLimitThreshold(
+        RobotMap.TURRET_RIGHT_LIMIT_TICKS, RobotMap.TALON_TIMEOUT);
+    talon.configForwardSoftLimitEnable(true, RobotMap.TALON_TIMEOUT);
+    talon.configReverseSoftLimitThreshold(
+        RobotMap.TURRET_LEFT_LIMIT_TICKS, RobotMap.TALON_TIMEOUT);
+    talon.configReverseSoftLimitEnable(true, RobotMap.TALON_TIMEOUT);
+    talon.configAllowableClosedloopError(TALON_PID_SLOT_ID,
+        RobotMap.TURRET_ALLOWABLE_ERROR_TICKS, RobotMap.TALON_TIMEOUT);
 
-    rotationSensor = new AnalogPotentiometer(RobotMap.TURRET_SENSOR_CHANNEL);
-    rotationSensor.setName("Telemetry", "TurretRotationSensor");
-
-    ticksPerDegree = (RobotMap.TURRET_RIGHT_LIMIT_TICKS - RobotMap.TURRET_LEFT_LIMIT_TICKS)
+    ticksPerDegree = 
+        ((double) (RobotMap.TURRET_RIGHT_LIMIT_TICKS - RobotMap.TURRET_LEFT_LIMIT_TICKS))
         / (RobotMap.TURRET_RIGHT_LIMIT_DEGREES - RobotMap.TURRET_LEFT_LIMIT_DEGREES);
 
-    pidController = new PIDController(RobotMap.TURRET_P, RobotMap.TURRET_I, RobotMap.TURRET_D, RobotMap.TURRET_F,
-        rotationSensor, motor);
-    pidController.setInputRange(RobotMap.TURRET_LEFT_LIMIT_DEGREES, RobotMap.TURRET_RIGHT_LIMIT_DEGREES);
-    pidController.setOutputRange(-1.0, 1.0);
-    pidController.setAbsoluteTolerance(RobotMap.TURRET_ALLOWABLE_ERROR_TICKS);
-    pidController.setContinuous(false);
-
-    ticksPerDegree = (RobotMap.TURRET_RIGHT_LIMIT_TICKS - RobotMap.TURRET_LEFT_LIMIT_TICKS)
-        / (RobotMap.TURRET_RIGHT_LIMIT_DEGREES - RobotMap.TURRET_LEFT_LIMIT_DEGREES);
-
-    // pidController = new PIDController(
-    // RobotMap.TURRET_P,
-    // RobotMap.TURRET_I,
-    // RobotMap.TURRET_D,
-    // RobotMap.TURRET_F,
-    // rotationSensor, motor);
-    // pidController.setInputRange(
-    // RobotMap.TURRET_LEFT_LIMIT_DEGREES,
-    // RobotMap.TURRET_RIGHT_LIMIT_DEGREES);
-    // pidController.setOutputRange(-1.0, 1.0);
-    // pidController.setAbsoluteTolerance(RobotMap.TURRET_ALLOWABLE_ERROR_TICKS);
-    // pidController.setContinuous(false);
+    vision = VisionController.getInstance();
 
     initSendable(TelemetryBuilder.getInstance());
     LOGGER.trace("Created Turret game piece.");
-  }
-
-  public void setPidsFromRobotMap() {
-    // Set turretMotor PIDs
-    double coefficientFTurret = RobotMap.TURRET_F;
-
-    double coefficientPTurret = RobotMap.TURRET_P;
-
-    double coefficientITurret = RobotMap.TURRET_I;
-
-    double coefficientDTurret = RobotMap.TURRET_D;
-
-    turretMotor.config_kP(RobotMap.PID_SLOT_TURRET, coefficientPTurret, RobotMap.TALON_TIMEOUT);
-    turretMotor.config_kI(RobotMap.PID_SLOT_TURRET, coefficientPTurret, RobotMap.TALON_TIMEOUT);
-    turretMotor.config_kD(RobotMap.PID_SLOT_TURRET, coefficientPTurret, RobotMap.TALON_TIMEOUT);
-    turretMotor.config_kF(RobotMap.PID_SLOT_TURRET, coefficientPTurret, RobotMap.TALON_TIMEOUT);
   }
 
   /**
@@ -121,17 +93,17 @@ public class Turret extends GamePieceBase implements GamePiece {
     targetPosition = currentPosition;
     if (!RobotMap.useSimulator && RobotMap.HAS_TURRET) {
       if (enabled) {
-        motor.set(speed);
+        talon.set(ControlMode.PercentOutput, speed);
       }
     }
   }
 
   private void followVision() {
     if (targetLock && !onManualControl) {
-      // TODO get from other class.
-      double visionAngle = 0;
-      double targetAngle = rotationSensor.get() + visionAngle;
-      target(targetAngle);
+      double visionAngle = vision.angle();
+      double targetAngle = talon.getSelectedSensorPosition(TALON_SENSOR_ID) + visionAngle;
+      targetPosition = targetAngle;
+      onManualControl = false;
 
     }
 
@@ -151,6 +123,7 @@ public class Turret extends GamePieceBase implements GamePiece {
     LOGGER.debug("Setting target position: {}", targetInDegrees);
     targetPosition = targetInDegrees;
     onManualControl = false;
+    targetLock = false;
   }
 
   /**
@@ -176,9 +149,6 @@ public class Turret extends GamePieceBase implements GamePiece {
   @Override
   public void enabled(boolean enabled) {
     super.enabled(enabled);
-    if (!RobotMap.useSimulator && RobotMap.HAS_TURRET) {
-      pidController.setEnabled(enabled);
-    }
   }
 
   /**
@@ -188,10 +158,10 @@ public class Turret extends GamePieceBase implements GamePiece {
     if (!RobotMap.useSimulator && RobotMap.HAS_TURRET) {
       if (enabled && !onManualControl) {
         followVision();
-        pidController.setSetpoint(targetPosition * ticksPerDegree);
+        talon.set(ControlMode.Position, (targetPosition * ticksPerDegree));
       }
       // Update state
-      currentPosition = (rotationSensor.get() / ticksPerDegree);
+      currentPosition = (talon.getSelectedSensorPosition(TALON_SENSOR_ID) / ticksPerDegree);
     } else {
       if (enabled) {
         currentPosition = simulatedPosition;
@@ -205,18 +175,18 @@ public class Turret extends GamePieceBase implements GamePiece {
 
   @Override
   public void initSendable(SendableBuilder builder) {
-    builder.addDoubleProperty("TurretTarget", this::target, (targetInDegrees) -> target(targetInDegrees));
+    builder.addDoubleProperty("TurretTarget", this::target, 
+        (targetInDegrees) -> target(targetInDegrees));
     builder.addDoubleProperty("TurretPosition", this::position, null);
-    motor.initSendable(builder);
-    rotationSensor.initSendable(builder);
+    talon.initSendable(builder);
   }
 
   /**
    * Checks if turret is in the Home (default) position.
    */
   public boolean isHome() {
-    // TODO: Find out the diff between position and target
-    if (instance.position() == RobotMap.TURRET_HOME) {
+    double distanceToHome = instance.position() - RobotMap.TURRET_HOME;
+    if (Math.abs(distanceToHome) <= RobotMap.TURRET_ALLOWABLE_ERROR_TICKS) {
       return true;
     }
     return false;
@@ -225,5 +195,4 @@ public class Turret extends GamePieceBase implements GamePiece {
   public void moveTurretToHome() {
     instance.target(RobotMap.TURRET_HOME);
   }
-
 }
