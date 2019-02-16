@@ -4,10 +4,9 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.NetworkTableType;
+import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.SendableBuilderImpl;
-import frc.robot.simulator.communications.RobotData;
-
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -26,6 +25,9 @@ public class TelemetryBuilder extends SendableBuilderImpl implements SendableBui
 
   private CSVPrinter csvPrinter = null;
 
+  private PowerDistributionPanel pdp = new PowerDistributionPanel();
+
+  private static Integer[] pins = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15};
   /**
    * Returns a singleton instance of the telemery builder.
    * 
@@ -75,7 +77,14 @@ public class TelemetryBuilder extends SendableBuilderImpl implements SendableBui
       try {
         NetworkTable table = super.getTable();
         if (!printedHeaders) {
-          csvPrinter.printRecord(keys);
+          for(Object o:(Object[])keys){
+            csvPrinter.print(o);
+          }
+          csvPrinter.print("voltage");
+          for(Object o:(Object[])pins){
+            csvPrinter.print(o);
+          }
+          csvPrinter.println();
           printedHeaders = true;
         }
         for (String key : keys) {
@@ -84,7 +93,7 @@ public class TelemetryBuilder extends SendableBuilderImpl implements SendableBui
           String text = "n/a";
           switch (type) {
             case kDouble: {
-              text = String.valueOf(entry.getDouble(Double.NaN));
+              text = String.format("%10.5f", entry.getDouble(Double.NaN));
               break;
             }
             case kString: {
@@ -96,11 +105,15 @@ public class TelemetryBuilder extends SendableBuilderImpl implements SendableBui
               break;
             }
             default:
-              text = entry.getString("")+": no types";
+              text = entry.getString("")+"no types";
               break;
           }
           csvPrinter.print(text);
           LOGGER.info(text);
+        }
+          csvPrinter.print(String.format("%10.5f",pdp.getVoltage()));
+        for(int pin:pins){
+          csvPrinter.print(String.format("%10.5f",pdp.getCurrent(pin)));
         }
         csvPrinter.println();
       } catch (IOException e) {
