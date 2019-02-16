@@ -16,7 +16,7 @@ import org.apache.logging.log4j.core.config.yaml.YamlConfigurationFactory;
 public class RobotLogManager {
 
   private static boolean initialized = false;
-  private static String directory = null;
+  private static String internalPath = "";
 
   private static String[] filepaths = { //File paths go in this array
     "/media/sda1/logging/log4j2.yaml",
@@ -39,15 +39,15 @@ public class RobotLogManager {
     return inidicies;
   }
 
-  public static String getDirectory(String s) {
-    ArrayList<Integer> indicies = getOccurenceIndicies(s);
-    String directory = s.substring(0,indicies.get(indicies.size() - 1));
-    return directory;
+  public static String getDirectory() {
+    ArrayList<Integer> indicies = getOccurenceIndicies(internalPath);
+    return internalPath.substring(0, indicies.get(indicies.size() - 1));
   }
 
   private static boolean doesFileExist(String filepath) {
-    if (new File(filepath).exists()) {
-      directory = getDirectory(filepath);
+    File file = new File(filepath);
+    if (file.exists()) {
+      internalPath = file.getPath();
       return true;
     } else {
       return false;
@@ -69,13 +69,14 @@ public class RobotLogManager {
     initialized = true;
   }
 
-  private static void init() {
+  private static boolean init() {
     for (String path : filepaths) {
       if (doesFileExist(path)) {
         init(path);
         break;
       }
     }
+    return initialized;
   }
 
   /**

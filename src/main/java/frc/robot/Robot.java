@@ -103,8 +103,8 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
-    telemetry.updateTable();
     data.send();
+    telemetry.updateTable();
   }
 
   @Override
@@ -120,7 +120,6 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousPeriodic() {
     //grabber.periodic();
-    telemetry.updateTable();
   }
 
   @Override
