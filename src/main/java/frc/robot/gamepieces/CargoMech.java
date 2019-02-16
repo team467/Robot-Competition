@@ -41,14 +41,14 @@ public class CargoMech extends GamePieceBase implements GamePiece {
     }
 
     private static void initialize() {
-      motor = new Spark(RobotMap.CARGO_MECH_ARM_MOTOR_CHANNEL);
-      motor.setInverted(RobotMap.CARGO_MECH_ARM_MOTOR_INVERTED);
+      motor = new Spark(RobotMap.CARGO_MECH_WRIST_MOTOR_CHANNEL);
+      motor.setInverted(RobotMap.CARGO_MECH_WRIST_MOTOR_INVERTED);
       motor.setName("Telemetry", "CargoMechArmMotor");
       arm = new PIDController(
-        RobotMap.CARGO_MECH_ARM_P,
-        RobotMap.CARGO_MECH_ARM_I,
-        RobotMap.CARGO_MECH_ARM_D,
-        RobotMap.CARGO_MECH_ARM_F,
+        RobotMap.CARGO_MECH_WRIST_P,
+        RobotMap.CARGO_MECH_WRIST_I,
+        RobotMap.CARGO_MECH_WRIST_D,
+        RobotMap.CARGO_MECH_WRIST_F,
         CargoMechArmState.sensor, motor);
       arm.setInputRange(CARGO_BIN.height, CARGO_SHIP.height);
       arm.setOutputRange(-1.0, 1.0);
@@ -100,7 +100,7 @@ public class CargoMech extends GamePieceBase implements GamePiece {
 
     private static void initialize() {
       // Config arm sensors
-      sensor = new AnalogPotentiometer(RobotMap.CARGO_MECH_ARM_SENSOR_CHANNEL);
+      sensor = new AnalogPotentiometer(RobotMap.CARGO_MECH_WRIST_SENSOR_CHANNEL);
       sensor.setName("Telemetry", "CargoMechArmSensor");
     }
 
@@ -109,7 +109,7 @@ public class CargoMech extends GamePieceBase implements GamePiece {
       if (!RobotMap.useSimulator) {
         height = sensor.get();
       }
-      height *= (RobotMap.CARGO_MECH_ARM_SENSOR_INVERTED) ? -1.0 : 1.0;
+      height *= (RobotMap.CARGO_MECH_WRIST_SENSOR_INVERTED) ? -1.0 : 1.0;
 
       CargoMechArmState state;
       if (height >= (CargoMechArm.CARGO_BIN.height 

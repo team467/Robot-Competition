@@ -213,9 +213,9 @@ public class RobotMap {
 
         // Game Pieces
         HAS_TURRET = true;
-        HAS_CARGO_INTAKE = true;
+        HAS_ROLLER_INTAKE = true;
         HAS_HATCH_MECHANISM = true;
-        HAS_CARGO_INTAKE = true;
+        HAS_ROLLER_INTAKE = true;
 
         // Turret
         TURRET_MOTOR_CHANNEL = 5;
@@ -251,29 +251,27 @@ public class RobotMap {
       
       
         // Cargo Intake
-        CARGO_INTAKE_PCM_CHANNEL = 9;
+        ROLLER_PCM_CHANNEL = 9;
         //TODO update up/down channel
-        CARGO_INTAKE_RIGHT_ARM_UP_SOLINOID_CHANNEL = 0;
-        CARGO_INTAKE_RIGHT_ARM_DOWN_SOLINOID_CHANNEL = 1;
+        ROLLER_RIGHT_ARM_UP_SOLINOID_CHANNEL = 0;
+        ROLLER_RIGHT_ARM_DOWN_SOLINOID_CHANNEL = 1;
         //TODO update up/down channel
-        CARGO_INTAKE_LEFT_ARM_UP_SOLINOID_CHANNEL = 2;
-        CARGO_INTAKE_LEFT_ARM_DOWN_SOLINOID_CHANNEL = 3;
+        ROLLER_LEFT_ARM_UP_SOLINOID_CHANNEL = 2;
+        ROLLER_LEFT_ARM_DOWN_SOLINOID_CHANNEL = 3;
         //TODO use two solenoids
-        CARGO_INTAKE_ROLLER_TOP_MOTOR_CHANNEL = 2;
-        CARGO_INTAKE_ROLLER_TOP_MOTOR_INVERTED = false; // TODO
-        CARGO_INTAKE_ROLLER_BOTTOM_MOTOR_CHANNEL = 3;
-        CARGO_INTAKE_ROLLER_BOTTOM_MOTOR_INVERTED = false; // TODO
+        ROLLER_MOTOR_CHANNEL = 2;
+        ROLLER_MOTOR_INVERTED = false; // TODO
         //TODO use two sparks
 
         // Cargo Mechanism
         //CARGO_MECH_ARM_SENSOR_CHANNEL = 0; // TODO Change from spark to talon
-        CARGO_MECH_ARM_MOTOR_CHANNEL = 6; // TODO
-        CARGO_MECH_ARM_MOTOR_INVERTED = false; // TODO
+        CARGO_MECH_WRIST_MOTOR_CHANNEL = 6; // TODO
+        CARGO_MECH_WRIST_MOTOR_INVERTED = false; // TODO
         //CARGO_MECH_ARM_SENSOR_INVERTED = false;  // TODO Remove
-        CARGO_MECH_ARM_P = 1.0; // TODO
-        CARGO_MECH_ARM_I = 0.0; // TODO
-        CARGO_MECH_ARM_D = 0.0; // TODO
-        CARGO_MECH_ARM_F = 0.0; // TODO
+        CARGO_MECH_WRIST_P = 1.0; // TODO
+        CARGO_MECH_WRIST_I = 0.0; // TODO
+        CARGO_MECH_WRIST_D = 0.0; // TODO
+        CARGO_MECH_WRIST_F = 0.0; // TODO
 
         CARGO_CAMERA_INDEX = 1;
       
@@ -439,29 +437,26 @@ public class RobotMap {
   public static int HATCH_LAUNCHER_PCM_CHANNEL = 0;
   public static int HATCH_MECH_ARM_PCM_CHANNEL = 0;
 
-  // Cargo Intake
-  public static boolean HAS_CARGO_INTAKE = false;
-  public static int CARGO_INTAKE_RIGHT_ARM_UP_SOLINOID_CHANNEL = 0;
-  public static int CARGO_INTAKE_RIGHT_ARM_DOWN_SOLINOID_CHANNEL = 0;
-  public static int CARGO_INTAKE_LEFT_ARM_UP_SOLINOID_CHANNEL = 0;
-  public static int CARGO_INTAKE_LEFT_ARM_DOWN_SOLINOID_CHANNEL = 0;
-  public static int CARGO_INTAKE_ROLLER_TOP_MOTOR_CHANNEL = 0;
-  public static boolean CARGO_INTAKE_ROLLER_TOP_MOTOR_INVERTED = false;
-  public static int CARGO_INTAKE_ROLLER_BOTTOM_MOTOR_CHANNEL = 0;
-  public static boolean CARGO_INTAKE_ROLLER_BOTTOM_MOTOR_INVERTED = false;
-  public static int CARGO_INTAKE_PCM_CHANNEL = 0;
+  // Cargo Intake aka Roller
+  public static boolean HAS_ROLLER_INTAKE = false;
+  public static int ROLLER_RIGHT_ARM_UP_SOLINOID_CHANNEL;
+  public static int ROLLER_RIGHT_ARM_DOWN_SOLINOID_CHANNEL;
+  public static int ROLLER_LEFT_ARM_UP_SOLINOID_CHANNEL;
+  public static int ROLLER_LEFT_ARM_DOWN_SOLINOID_CHANNEL;
+  public static int ROLLER_MOTOR_CHANNEL;
+  public static boolean ROLLER_MOTOR_INVERTED;
+  public static int ROLLER_PCM_CHANNEL;
 
   // Cargo Mechanism
   public static boolean HAS_CARGO_MECHANISM = false;
   public static int CARGO_CAMERA_INDEX;
-  public static int CARGO_MECH_ARM_SENSOR_CHANNEL;
-  public static int CARGO_MECH_ARM_MOTOR_CHANNEL;
-  public static boolean CARGO_MECH_ARM_MOTOR_INVERTED;
-  public static boolean CARGO_MECH_ARM_SENSOR_INVERTED;
-  public static double CARGO_MECH_ARM_P;
-  public static double CARGO_MECH_ARM_I;
-  public static double CARGO_MECH_ARM_D;
-  public static double CARGO_MECH_ARM_F;
+  public static int CARGO_MECH_WRIST_MOTOR_CHANNEL;
+  public static boolean CARGO_MECH_WRIST_MOTOR_INVERTED;
+  public static boolean CARGO_MECH_WRIST_SENSOR_INVERTED;
+  public static double CARGO_MECH_WRIST_P;
+  public static double CARGO_MECH_WRIST_I;
+  public static double CARGO_MECH_WRIST_D;
+  public static double CARGO_MECH_WRIST_F;
 
   public static int CARGO_MECH_ARM_TOP_TICKS;
   public static int CARGO_MECH_ARM_BOTTOM_TICKS;
