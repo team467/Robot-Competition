@@ -124,8 +124,7 @@ public class GamePieceController {
 
       case CARGO:
         if (driverStation.getAcquireBall()) {
-        
-          /*
+         /*
           * Acquire Cargo:
           * - Must be in CARGO mode and roller arm must be DOWN.
           * - Turn on roller, move turret to home, lower down, and turn on claw.
@@ -143,27 +142,22 @@ public class GamePieceController {
             }
           }
         } else if (driverStation.setCargoPos()) {
-          /*
-           *  Must be in cargo mode. Stop claw. Move cargo arm to cargo ship height.
-           */
+          // Must be in cargo mode. Stop claw. Move cargo arm to cargo ship height.
           cargoMech.claw(CargoMechClaw.STOP);
           cargoMech.arm(CargoMechArm.CARGO_SHIP);
+
         } else if (driverStation.setCargoPos()) {
-          /*
-           *  //TODO: Set Low Rocket
-           *  Must be in cargo mode. Stop claw. Move cargo arm to low rocket height.
-           */
+          // Must be in cargo mode. Stop claw. Move cargo arm to low rocket height.
           cargoMech.claw(CargoMechClaw.STOP);
           cargoMech.arm(CargoMechArm.LOW_ROCKET);
+
         } else if (driverStation.getFireCargo()) {
-          /*
-           *  Must be in cargo mode. Reverses claw motor to throw cargo.
-           */
+          // Must be in cargo mode. Reverses claw motor to throw cargo.
           cargoMech.claw(CargoMechClaw.FORWARD);
+        
         } else {
           cargoMech.claw(CargoMechClaw.STOP);
         }
-
           /*
           *  //TODO: Load Cargo onto arm:
           *  Must be in Cargo Mode and roller are must be down.
@@ -321,14 +315,12 @@ public class GamePieceController {
       */
 
     }
-    
     // Update all systems
     cargoIntake.periodic();
     cargoMech.periodic();
     hatchMech.periodic();
     turret.periodic();
   }
-
   /**
    * Checks to see if the turret would hit something if moved.
    * 
@@ -340,5 +332,4 @@ public class GamePieceController {
     LOGGER.debug("Safe to move turret? {}", isSafe);
     return isSafe;
   }
-
 }
