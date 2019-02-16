@@ -135,11 +135,13 @@ public class RobotMap {
 
         LEFT_LEAD_CHANNEL = 1;
         LEFT_FOLLOWER_1_CHANNEL = 2;
+        LEFT_FOLLOWER_2_CHANNEL = 3;
         LEFT_DRIVE_SENSOR_IS_INVERTED = false;
         LEFT_DRIVE_MOTOR_IS_INVERTED = false;
 
-        RIGHT_LEAD_CHANNEL = 3;
-        RIGHT_FOLLOWER_1_CHANNEL = 4;
+        RIGHT_LEAD_CHANNEL = 4;
+        RIGHT_FOLLOWER_1_CHANNEL = 5;
+        RIGHT_FOLLOWER_2_CHANNEL = 6;
         RIGHT_DRIVE_SENSOR_IS_INVERTED = true;
         RIGHT_DRIVE_MOTOR_IS_INVERTED = false;
         
@@ -173,15 +175,13 @@ public class RobotMap {
         DRIVEMOTOR_NUM = 4;
         WHEEL_CIRCUMFERENCE = 18.50;
 
-        LEFT_LEAD_CHANNEL = 1;
-        LEFT_FOLLOWER_1_CHANNEL = 2;
-        LEFT_FOLLOWER_2_CHANNEL = 3;
+        LEFT_LEAD_CHANNEL = 3;
+        LEFT_FOLLOWER_1_CHANNEL = 4;
         LEFT_DRIVE_SENSOR_IS_INVERTED = true;
         LEFT_DRIVE_MOTOR_IS_INVERTED = false;
 
-        RIGHT_LEAD_CHANNEL = 4;
-        RIGHT_FOLLOWER_1_CHANNEL = 5;
-        RIGHT_FOLLOWER_2_CHANNEL = 6;
+        RIGHT_LEAD_CHANNEL = 1;
+        RIGHT_FOLLOWER_1_CHANNEL = 2;
         RIGHT_DRIVE_SENSOR_IS_INVERTED = true;
         RIGHT_DRIVE_MOTOR_IS_INVERTED = false;
         
@@ -218,9 +218,8 @@ public class RobotMap {
         HAS_CARGO_INTAKE = true;
 
         // Turret
-        TURRET_MOTOR_CHANNEL = 0;
+        TURRET_MOTOR_CHANNEL = 5;
         TURRET_MOTOR_INVERTED = false; // TODO
-        TURRET_SENSOR_CHANNEL = 0; // TODO
         TURRET_SENSOR_INVERTED = false; // TODO
         TURRET_RIGHT_LIMIT_TICKS = 0; // TODO
         TURRET_LEFT_LIMIT_TICKS = 0; // TODO
@@ -236,28 +235,41 @@ public class RobotMap {
       
       
         // Hatch Mechanism
-        HATCH_LAUNCHER_S1_FORWARD_CHANNEL = 0; // TODO
-        HATCH_LAUNCHER_S1_REVERSE_CHANNEL = 0; // TODO
-        HATCH_LAUNCHER_S2_FORWARD_CHANNEL = 0; // TODO
-        HATCH_LAUNCHER_S2_REVERSE_CHANNEL = 0; // TODO
-        HATCH_LAUNCHER_S3_FORWARD_CHANNEL = 0; // TODO
-        HATCH_LAUNCHER_S3_REVERSE_CHANNEL = 0; // TODO
-        HATCH_MECH_ARM_FORWARD_CHANNEL = 0; // TODO
-        HATCH_MECH_ARM_REVERSE_CHANNEL = 0; // TODO
+        HATCH_LAUNCHER_PCM_CHANNEL = 8;
+        //TODO update forward/reverse channel
+        HATCH_LAUNCHER_S1_FORWARD_CHANNEL = 0;
+        HATCH_LAUNCHER_S1_REVERSE_CHANNEL = 1;
+        HATCH_LAUNCHER_S2_FORWARD_CHANNEL = 2;
+        HATCH_LAUNCHER_S2_REVERSE_CHANNEL = 3;
+        HATCH_LAUNCHER_S3_FORWARD_CHANNEL = 4;
+        HATCH_LAUNCHER_S3_REVERSE_CHANNEL = 5;
+        HATCH_MECH_ARM_PCM_CHANNEL = 9;
+        //TODO update forward/reverse channel
+        HATCH_MECH_ARM_FORWARD_CHANNEL = 4;
+        HATCH_MECH_ARM_REVERSE_CHANNEL = 5;
         HATCH_CAMERA_INDEX = 3;
       
       
         // Cargo Intake
-        CARGO_INTAKE_ARM_UP_SOLINOID_CHANNEL = 0; // TODO
-        CARGO_INTAKE_ARM_DOWN_SOLINOID_CHANNEL = 0; // TODO
-        CARGO_INTAKE_ROLLER_MOTOR_CHANNEL = 0; // TODO
-        CARGO_INTAKE_ROLLER_MOTOR_INVERTED = false; // TODO
+        CARGO_INTAKE_PCM_CHANNEL = 9;
+        //TODO update up/down channel
+        CARGO_INTAKE_RIGHT_ARM_UP_SOLINOID_CHANNEL = 0;
+        CARGO_INTAKE_RIGHT_ARM_DOWN_SOLINOID_CHANNEL = 1;
+        //TODO update up/down channel
+        CARGO_INTAKE_LEFT_ARM_UP_SOLINOID_CHANNEL = 2;
+        CARGO_INTAKE_LEFT_ARM_DOWN_SOLINOID_CHANNEL = 3;
+        //TODO use two solenoids
+        CARGO_INTAKE_ROLLER_TOP_MOTOR_CHANNEL = 2;
+        CARGO_INTAKE_ROLLER_TOP_MOTOR_INVERTED = false; // TODO
+        CARGO_INTAKE_ROLLER_BOTTOM_MOTOR_CHANNEL = 3;
+        CARGO_INTAKE_ROLLER_BOTTOM_MOTOR_INVERTED = false; // TODO
+        //TODO use two sparks
 
         // Cargo Mechanism
-        CARGO_MECH_ARM_SENSOR_CHANNEL = 0; // TODO
-        CARGO_MECH_ARM_MOTOR_CHANNEL = 0; // TODO
+        //CARGO_MECH_ARM_SENSOR_CHANNEL = 0; // TODO Change from spark to talon
+        CARGO_MECH_ARM_MOTOR_CHANNEL = 6; // TODO
         CARGO_MECH_ARM_MOTOR_INVERTED = false; // TODO
-        CARGO_MECH_ARM_SENSOR_INVERTED = false;  // TODO
+        //CARGO_MECH_ARM_SENSOR_INVERTED = false;  // TODO Remove
         CARGO_MECH_ARM_P = 1.0; // TODO
         CARGO_MECH_ARM_I = 0.0; // TODO
         CARGO_MECH_ARM_D = 0.0; // TODO
@@ -275,7 +287,7 @@ public class RobotMap {
         CARGO_MECH_CARGO_SHIP = 0.7; // TODO
         CARGO_MECH_SAFE_TURRET = 1.0; // TODO
 
-        CARGO_MECH_CLAW_MOTOR_CHANNEL = 0; // TODO
+        CARGO_MECH_CLAW_MOTOR_CHANNEL = 4; // TODO
         CARGO_MECH_MOTOR_INVERTED = false; // TODO
 
 
@@ -424,13 +436,20 @@ public class RobotMap {
   public static int HATCH_LAUNCHER_S3_REVERSE_CHANNEL;
   public static int HATCH_MECH_ARM_FORWARD_CHANNEL;
   public static int HATCH_MECH_ARM_REVERSE_CHANNEL;
+  public static int HATCH_LAUNCHER_PCM_CHANNEL = 0;
+  public static int HATCH_MECH_ARM_PCM_CHANNEL = 0;
 
   // Cargo Intake
   public static boolean HAS_CARGO_INTAKE = false;
-  public static int CARGO_INTAKE_ARM_UP_SOLINOID_CHANNEL = 0;
-  public static int CARGO_INTAKE_ARM_DOWN_SOLINOID_CHANNEL = 0;
-  public static int CARGO_INTAKE_ROLLER_MOTOR_CHANNEL = 0;
-  public static boolean CARGO_INTAKE_ROLLER_MOTOR_INVERTED = false;
+  public static int CARGO_INTAKE_RIGHT_ARM_UP_SOLINOID_CHANNEL = 0;
+  public static int CARGO_INTAKE_RIGHT_ARM_DOWN_SOLINOID_CHANNEL = 0;
+  public static int CARGO_INTAKE_LEFT_ARM_UP_SOLINOID_CHANNEL = 0;
+  public static int CARGO_INTAKE_LEFT_ARM_DOWN_SOLINOID_CHANNEL = 0;
+  public static int CARGO_INTAKE_ROLLER_TOP_MOTOR_CHANNEL = 0;
+  public static boolean CARGO_INTAKE_ROLLER_TOP_MOTOR_INVERTED = false;
+  public static int CARGO_INTAKE_ROLLER_BOTTOM_MOTOR_CHANNEL = 0;
+  public static boolean CARGO_INTAKE_ROLLER_BOTTOM_MOTOR_INVERTED = false;
+  public static int CARGO_INTAKE_PCM_CHANNEL = 0;
 
   // Cargo Mechanism
   public static boolean HAS_CARGO_MECHANISM = false;
