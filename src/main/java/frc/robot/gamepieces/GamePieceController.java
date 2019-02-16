@@ -1,6 +1,11 @@
 package frc.robot.gamepieces;
 
 import frc.robot.RobotMap;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.Sendable;
+import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
+import frc.robot.gamepieces.CargoIntake.CargoIntakeRoller;
 import frc.robot.gamepieces.CargoIntake.CargoIntakeArm;
 import frc.robot.gamepieces.CargoIntake.CargoIntakeRoller;
 import frc.robot.gamepieces.CargoMech.CargoMechClaw;
@@ -15,12 +20,15 @@ import frc.robot.vision.VisionController;
 
 import org.apache.logging.log4j.Logger;
 
-public class GamePieceController {
+public class GamePieceController implements Sendable {
 
   private static GamePieceController instance = null;
 
   private static final Logger LOGGER 
       = RobotLogManager.getMainLogger(GamePieceController.class.getName());
+
+  protected String name = "Game Piece Controller";
+  protected String subsystem = "Gamepieces";
 
   // Game Pieces
   private CargoIntake cargoIntake;
@@ -46,13 +54,58 @@ public class GamePieceController {
     return instance;
   }
 
+  @Override
+  public String getName() {
+    return name;
+  }
+
+  @Override
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  @Override
+  public String getSubsystem() {
+    return subsystem;
+  }
+
+  @Override
+  public void setSubsystem(String subsystem) {
+    this.subsystem = subsystem;
+  }
+
+  private double getMode() {
+    return this.gamePieceMode.getModeNumber();
+  }
+
+  private void setMode(double gamePieceMode) {
+    if (gamePieceMode == 0.0) {
+      this.gamePieceMode = GamePieceMode.DEFENSE;
+    } else if (gamePieceMode == 1.0) {
+      this.gamePieceMode = GamePieceMode.CARGO;
+    } else if (gamePieceMode == 1.0) {
+      this.gamePieceMode = GamePieceMode.HATCH;
+    } else {
+      this.gamePieceMode = GamePieceMode.DEFENSE;
+    }
+  }
+
   public enum GamePieceMode {
-    DEFENSE, CARGO, HATCH;
+    DEFENSE(0.0), CARGO(1.0), HATCH(2.0);
+
+    private double mode;
+
+    GamePieceMode(double mode) {
+      this.mode = mode;
+    }
+
+    public double getModeNumber() {
+      return this.mode;
+    }
   }
 
   private GamePieceController() {
     driverStation = DriverStation467.getInstance();
-
 
     if (RobotMap.HAS_ROLLER_INTAKE) {
       cargoIntake = CargoIntake.getInstance();
@@ -271,7 +324,7 @@ public class GamePieceController {
           if (cargoMech.wrist() != CargoMechWristState.LOW_ROCKET) {
             cargoMech.wrist(CargoMechWrist.LOW_ROCKET);
             if (isSafeToMoveTurret()) {
-              turret.target(-90.0); //target lock handled here
+              turret.target(-90.0); // target lock handled here
             }
           }
         }
@@ -291,7 +344,7 @@ public class GamePieceController {
        */
       if (driverStation.getFineAdjustTurret() != 0.0) {
         if (isSafeToMoveTurret()) {
-          turret.manual(driverStation.getFineAdjustTurret()); //cancel target lock handled here
+          turret.manual(driverStation.getFineAdjustTurret()); // cancel target lock handled here
         }
       }
 
@@ -329,5 +382,13 @@ public class GamePieceController {
         (cargoMech.isSafeToMoveTurret() && cargoIntake.arm() == CargoIntakeArm.DOWN) ? true : false;
     LOGGER.debug("Safe to move turret? {}", isSafe);
     return isSafe;
+  }
+
+  @Override
+  public void initSendable(SendableBuilder builder) {
+    builder.addDoubleProperty(
+      name + "Enabled", 
+      this::getMode, // Lambda called when updating network table
+      (gamePieceMode) -> setMode(gamePieceMode)); // Lambda calls set enabled if changed in Network table
   }
 }
