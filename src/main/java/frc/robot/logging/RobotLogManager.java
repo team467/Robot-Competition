@@ -40,8 +40,7 @@ public class RobotLogManager {
 
   public static String getDirectory() {
     ArrayList<Integer> indicies = getOccurenceIndicies(internalPath);
-    String directory = internalPath.substring(0,indicies.get(indicies.size()-1));
-    return directory;
+    return internalPath.substring(0,indicies.get(indicies.size()-1));
   }
 
   private static boolean doesFileExist(String filepath) {
