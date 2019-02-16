@@ -14,6 +14,13 @@ public class RobotMap {
 
   public static final int PID_SLOT_DRIVE = 0;
   public static final int PID_SLOT_TURN = 1;
+
+  //Turret angle offsets
+  public static final double ON_TARGET = 1.0;
+  public static final double ANGLE_OFFSET_LEVEL_ONE = 5.0;
+  public static final double ANGLE_OFFSET_LEVEL_TWO = 10.0;
+  public static final double ANGLE_OFFSET_LEVEL_THREE = 15.0;
+  public static final double ANGLE_OFFSET_LEVEL_FOUR = 20.0;
   
   // Steering motor ids
   public static boolean HAS_WHEELS;
@@ -448,7 +455,4 @@ public class RobotMap {
 
   public static int CARGO_MECH_CLAW_MOTOR_CHANNEL;
   public static boolean CARGO_MECH_MOTOR_INVERTED;
-
-  
-
 }
