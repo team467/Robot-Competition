@@ -10,7 +10,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 public class RobotLogManagerTest {
-    private static String testDirectoryFile = "C:\\Users\\Team467\\Documents\\GitHub\\Robot2019-Competition\\src\\main\\deploy\\log4j2.yaml";
+    private static String testDirectoryFile = "/media/sda1/logging/log4j2.yaml";
     private static Logger LOGGER = RobotLogManager.getTestLogger(RobotLogManagerTest.class.getName());
     
     @BeforeClass
@@ -23,7 +23,11 @@ public class RobotLogManagerTest {
 
     @Test
     public void directoryTest() {
-        System.out.println(RobotLogManager.getDirectory(testDirectoryFile));
+        if(new File(testDirectoryFile).exists()) {
+            System.out.println("File exists");
+        } else {
+            System.out.println("File does not exist.");
+        }
         assertTrue(true);
     }
 
