@@ -252,7 +252,7 @@ public class GamePieceController {
           if (cargoMech.wrist() != CargoMechArmState.LOW_ROCKET) {
             cargoMech.wrist(CargoMechWrist.LOW_ROCKET);
             if (isSafeToMoveTurret()) {
-              turret.target(-90.0);
+              turret.target(-90.0); //target lock handled here
             }
           }
         }
@@ -263,7 +263,7 @@ public class GamePieceController {
        * track mode. Should allow override if other turret move.
        */
       if (gamePieceMode == GamePieceMode.CARGO || gamePieceMode == GamePieceMode.HATCH) {
-        // set target to track mode.
+        turret.lockOnTarget();
       }
 
       /*
@@ -272,7 +272,7 @@ public class GamePieceController {
        */
       if (driverStation.getFineAdjustTurret() != 0.0) {
         if (isSafeToMoveTurret()) {
-          turret.manual(driverStation.getFineAdjustTurret());
+          turret.manual(driverStation.getFineAdjustTurret()); //target lock handled here
         }
       }
 
@@ -285,6 +285,10 @@ public class GamePieceController {
        * //TODO: On Target Hatch Must be in hatch mode. If vision reports on target,
        * blink gold LEDs and rumble nav controller
        */
+
+       if (gamePieceMode == GamePieceMode.HATCH){
+         //vision target reporting
+       }
 
     }
     // Update all systems
