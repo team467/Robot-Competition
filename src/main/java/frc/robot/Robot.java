@@ -80,7 +80,7 @@ public class Robot extends TimedRobot {
     //table.deleteAllEntries(); // Uncomment to clear table once.
     
     // Initialize RobotMap
-    RobotMap.init(RobotId.Competition_2);
+    RobotMap.init(RobotId.Competition_1);
 
     // Used after init, should be set only by the Simulator GUI
     // this ensures that the simulator is off otherwise.
