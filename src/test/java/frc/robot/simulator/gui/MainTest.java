@@ -26,6 +26,7 @@ public class MainTest {
   }
 
   @Test
+  @Ignore("Don't run GUI as standard part of test.")
   public void runGui() {
     Map.main(null);
   }

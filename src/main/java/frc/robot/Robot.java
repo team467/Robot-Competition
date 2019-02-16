@@ -41,6 +41,7 @@ public class Robot extends TimedRobot {
   private MatchConfiguration matchConfig;
   private RobotData data;
   private TelemetryBuilder telemetry;
+  private CameraSwitcher camera;
 
   private NetworkTableInstance table;
   private NetworkTable dashboard;
@@ -70,7 +71,7 @@ public class Robot extends TimedRobot {
     //table.deleteAllEntries(); // Uncomment to clear table once.
     
     // Initialize RobotMap
-    RobotMap.init(RobotId.Robot2018);
+    RobotMap.init(RobotId.ROBOT_2018);
 
     // Used after init, should be set only by the Simulator GUI
     // this ensures that the simulator is off otherwise.
@@ -85,6 +86,7 @@ public class Robot extends TimedRobot {
     drive = Drive.getInstance();
     matchConfig = MatchConfiguration.getInstance();
     telemetry = TelemetryBuilder.getInstance();
+    camera = CameraSwitcher.getInstance();
 
     drive.setPidsFromRobotMap();
     data.log();
@@ -166,13 +168,13 @@ public class Robot extends TimedRobot {
     data.send();
 
     if (driverstation.getNavJoystick().getJoystick().getPOV() == 0) {
-      CameraSwitcher.update(0);
+      camera.forward();
     } else if (driverstation.getNavJoystick().getJoystick().getPOV() == 90) {
-      CameraSwitcher.update(1);
+      camera.cargo();
     } else if (driverstation.getNavJoystick().getJoystick().getPOV() == 180) {
-      CameraSwitcher.update(2);
+      camera.backward();
     } else if (driverstation.getNavJoystick().getJoystick().getPOV() == 270) {
-      CameraSwitcher.update(3);
+      camera.hatch();
     }
 
   }
@@ -250,13 +252,13 @@ public class Robot extends TimedRobot {
     LOGGER.trace("Disabled Periodic");
 
     if (driverstation.getNavJoystick().getJoystick().getPOV() == 0) {
-      CameraSwitcher.update(0);
+      camera.forward();
     } else if (driverstation.getNavJoystick().getJoystick().getPOV() == 90) {
-      CameraSwitcher.update(1);
+      camera.cargo();
     } else if (driverstation.getNavJoystick().getJoystick().getPOV() == 180) {
-      CameraSwitcher.update(2);
+      camera.backward();
     } else if (driverstation.getNavJoystick().getJoystick().getPOV() == 270) {
-      CameraSwitcher.update(3);
+      camera.hatch();
     }
 
   }

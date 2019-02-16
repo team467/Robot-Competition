@@ -4,49 +4,37 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class RobotMap {
 
+  // Global robot constants
+  public static RobotId robotId;
+
+  public static final int ITERATION_TIME_MS = 20;
+
   // 0 is non-blocking (i.e. it doesn't wait for a response before going to the next statement)
   public static final int TALON_TIMEOUT = 0; 
 
   public static final int PID_SLOT_DRIVE = 0;
   public static final int PID_SLOT_TURN = 1;
-  
-  /* The lowest value is 196.0, the maximum value is 3741.0. The middle is 1968.5
-   * New max: 2980, new min:956.5
-   * 16.9 ticks = 1 inch
-   * 1 rotation=253 ticks
-   */
+
+  //Turret angle offsets
+  public static final double ON_TARGET = 1.0;
+  public static final double ANGLE_OFFSET_LEVEL_ONE = 5.0;
+  public static final double ANGLE_OFFSET_LEVEL_TWO = 10.0;
+  public static final double ANGLE_OFFSET_LEVEL_THREE = 15.0;
+  public static final double ANGLE_OFFSET_LEVEL_FOUR = 20.0;
+  public static final int PID_SLOT_TURRET = 0; //Slot will need to be determined and set
 
   // Steering motor ids
-  // TODO: Enumerate steering motor IDS
   public static boolean HAS_WHEELS;
+  public static int DRIVEMOTOR_NUM;
+  public static int AUTONOMOUS_DRIVE_TIMEOUT_MS = 200;
+  public static int AUTONOMOUS_TURN_TIMEOUT_MS = 300;
+
+
   public static int LEFT_LEAD_CHANNEL;
   public static int LEFT_FOLLOWER_1_CHANNEL;
   public static int LEFT_FOLLOWER_2_CHANNEL;
-
-  public static int RIGHT_LEAD_CHANNEL;
-  public static int RIGHT_FOLLOWER_1_CHANNEL;
-  public static int RIGHT_FOLLOWER_2_CHANNEL;
-  
-  public static int ALLOWED_GRABBER_ERROR = 2; // in degrees
-
-  public static int AUTONOMOUS_DRIVE_TIMEOUT_MS;
-  public static int AUTONOMOUS_TURN_TIMEOUT_MS;
-
-  public static boolean RIGHT_DRIVE_SENSOR_IS_INVERTED;
   public static boolean LEFT_DRIVE_SENSOR_IS_INVERTED;
-  public static boolean RIGHT_DRIVE_MOTOR_IS_INVERTED;
   public static boolean LEFT_DRIVE_MOTOR_IS_INVERTED;
-  public static int DRIVEMOTOR_NUM;
-
-  public static double RIGHT_TURN_PID_P;
-  public static double RIGHT_TURN_PID_I;
-  public static double RIGHT_TURN_PID_D;
-  public static double RIGHT_TURN_PID_F;
-
-  public static double RIGHT_DRIVE_PID_P;
-  public static double RIGHT_DRIVE_PID_I;
-  public static double RIGHT_DRIVE_PID_D;
-  public static double RIGHT_DRIVE_PID_F;
 
   public static double LEFT_TURN_PID_P;
   public static double LEFT_TURN_PID_I;
@@ -58,26 +46,97 @@ public class RobotMap {
   public static double LEFT_DRIVE_PID_D;
   public static double LEFT_DRIVE_PID_F;
 
+  public static int RIGHT_LEAD_CHANNEL;
+  public static int RIGHT_FOLLOWER_1_CHANNEL;
+  public static int RIGHT_FOLLOWER_2_CHANNEL;
+  public static boolean RIGHT_DRIVE_SENSOR_IS_INVERTED;
+  public static boolean RIGHT_DRIVE_MOTOR_IS_INVERTED;
+    
+  public static double RIGHT_TURN_PID_P;
+  public static double RIGHT_TURN_PID_I;
+  public static double RIGHT_TURN_PID_D;
+  public static double RIGHT_TURN_PID_F;
+
+  public static double RIGHT_DRIVE_PID_P;
+  public static double RIGHT_DRIVE_PID_I;
+  public static double RIGHT_DRIVE_PID_D;
+  public static double RIGHT_DRIVE_PID_F;
+
+  public static boolean useSpeedControllers;
+
+
+  public static double ALLOWED_ERROR_INCHES = 0.5;
+
+  public static double POSITION_ALLOWED_ERROR;
+
+  public static int POSITION_ALLOWABLE_CLOSED_LOOP_ERROR;
+
+  public static final double FAST_MAX_SPEED = 1.0;
+  public static final double NORMAL_MAX_SPEED = 0.8;
+  public static final double SLOW_MAX_SPEED = 0.5;
+
+  public static final double NORMAL_TURN_MAX_SPEED = 1.0;
+  public static final double SLOW_TURN_MAX_SPEED = 0.8;
+
+  public static boolean useSimulator = true;
+  public static final double MIN_DRIVE_SPEED = 0.1;
+  public static final double CLIMB_MIN_DRIVE_SPEED = 0.3;
+
+  // How far the sensor speeds can be and still be considered turning in place,
+  // in sensor units per 100 ms
+  public static final int TURN_IN_PLACE_DETECT_TOLERANCE = 150;
+
+  // Robot Dimensions
+  // TODO: Measure robot dimensions
+  public static double WHEEL_BASE_LENGTH = 3.33;
+  public static double WHEEL_BASE_WIDTH = 1.99; 
+  public static double BUMPER_LENGTH = 3.33;
+  public static double BUMPER_WIDTH = 2.92;
+
+  /**
+   * Used to ensure that all Talon SRX outputs are relative to a fixed value.
+   * If the available voltage is below the nominal and a value about that is
+   * requested, the output will be 100%.
+   */
+  public static final double NOMINAL_BATTERY_VOLTAGE = 12.0;
+
+  // The circumference of the wheels for use in determining distance in
+  // position mode
+  public static double WHEEL_CIRCUMFERENCE;
+
+  // The number of encoder ticks per one revolution of the wheel. This is used
+  // for correctly determining RPM and position.
+  public static final int WHEEL_ENCODER_CODES_PER_REVOLUTION = 1024;
+
+  // Set to true to use LSM9DS1 IMU on Raspberry Pi
+  // Set to false to use the local ADIS16448 IMU on the Robo Rio
+  public static final boolean useRemoteImu = false;
+
   public enum RobotId {
-    MiniBot, Robot2018, Robot2019
+    MINIBOT, ROBOT_2018, ROBOT_2019
   }
 
-  // Initialize robot map. 
+  /**
+   *  Initialize robot map.
+   * 
+   * @param id  the robot identifier.
+   */ 
   public static void init(RobotId id) {
+
     robotId = id;
+    useSimulator = false;
+
     switch (id) {
       
-      case Robot2018:
+      case ROBOT_2018:
         HAS_WHEELS = true;
         DRIVEMOTOR_NUM = 4;
         WHEEL_CIRCUMFERENCE = 18.50;
-        WHEEL_ENCODER_CODES_PER_REVOLUTION = 1024;
-        useSpeedControllers = true;
 
         LEFT_LEAD_CHANNEL = 1;
         LEFT_FOLLOWER_1_CHANNEL = 2;
         LEFT_FOLLOWER_2_CHANNEL = 3;
-        LEFT_DRIVE_SENSOR_IS_INVERTED = true;
+        LEFT_DRIVE_SENSOR_IS_INVERTED = false;
         LEFT_DRIVE_MOTOR_IS_INVERTED = false;
 
         RIGHT_LEAD_CHANNEL = 4;
@@ -107,19 +166,176 @@ public class RobotMap {
         RIGHT_TURN_PID_I = 0.0;
         RIGHT_TURN_PID_D = 450.0;
         RIGHT_TURN_PID_F = 0.0;
-
-        useSimulator = false;
-
-        AUTONOMOUS_DRIVE_TIMEOUT_MS = 200;
-        AUTONOMOUS_TURN_TIMEOUT_MS = 300;
+  
         break;
 
+      case ROBOT_2019:
+      default:
+        HAS_WHEELS = true;
+        DRIVEMOTOR_NUM = 4;
+        WHEEL_CIRCUMFERENCE = 18.50;
+
+        LEFT_LEAD_CHANNEL = 3;
+        LEFT_FOLLOWER_1_CHANNEL = 4;
+        LEFT_DRIVE_SENSOR_IS_INVERTED = true;
+        LEFT_DRIVE_MOTOR_IS_INVERTED = false;
+
+        RIGHT_LEAD_CHANNEL = 1;
+        RIGHT_FOLLOWER_1_CHANNEL = 2;
+        RIGHT_DRIVE_SENSOR_IS_INVERTED = true;
+        RIGHT_DRIVE_MOTOR_IS_INVERTED = false;
+        
+        //Linear PIDS
+        LEFT_DRIVE_PID_P = 1.0;
+        LEFT_DRIVE_PID_I = 0.0;
+        LEFT_DRIVE_PID_D = 450.0;
+        LEFT_DRIVE_PID_F = 0.0;
+
+        RIGHT_DRIVE_PID_P = 1.0;
+        RIGHT_DRIVE_PID_I = 0.0;
+        RIGHT_DRIVE_PID_D = 450.0;
+        RIGHT_DRIVE_PID_F = 0.0;
+
+        // Turn PIDs
+        LEFT_TURN_PID_P = 1.0;
+        LEFT_TURN_PID_I = 0.0;
+        LEFT_TURN_PID_D = 450.0;
+        LEFT_TURN_PID_F = 0.0;
+
+        RIGHT_TURN_PID_P = 1.0;
+        RIGHT_TURN_PID_I = 0.0;
+        RIGHT_TURN_PID_D = 450.0;
+        RIGHT_TURN_PID_F = 0.0;
+
+        // Cameras
+        FORWARD_CAMERA_INDEX = 0;
+        BACKWARD_CAMERA_INDEX = 2;
+
+        // Game Pieces
+        HAS_TURRET = true;
+        HAS_ROLLER_INTAKE = true;
+        HAS_HATCH_MECHANISM = true;
+        HAS_ROLLER_INTAKE = true;
+
+        // Turret
+        TURRET_MOTOR_CHANNEL = 5;
+        TURRET_MOTOR_INVERTED = false; // TODO
+        TURRET_SENSOR_INVERTED = false; // TODO
+        TURRET_RIGHT_LIMIT_TICKS = 0; // TODO
+        TURRET_LEFT_LIMIT_TICKS = 0; // TODO
+        TURRET_RIGHT_LIMIT_DEGREES = 0.0; // TODO
+        TURRET_LEFT_LIMIT_DEGREES = 0.0; // TODO
+        TURRET_ALLOWABLE_ERROR_TICKS = 10; // TODO
+        TURRET_HOME = 0.0;
+        //TODO: Set TURRET_OFFSET
+        TURRET_P = 1.0; // TODO
+        TURRET_I = 0.0; // TODO
+        TURRET_D = 0.0; // TODO
+        TURRET_F = 0.0; // TODO
+      
+      
+        // Hatch Mechanism
+        HATCH_LAUNCHER_PCM_CHANNEL = 8;
+        //TODO update forward/reverse channel
+        HATCH_LAUNCHER_S1_FORWARD_CHANNEL = 0;
+        HATCH_LAUNCHER_S1_REVERSE_CHANNEL = 1;
+        HATCH_LAUNCHER_S2_FORWARD_CHANNEL = 2;
+        HATCH_LAUNCHER_S2_REVERSE_CHANNEL = 3;
+        HATCH_LAUNCHER_S3_FORWARD_CHANNEL = 4;
+        HATCH_LAUNCHER_S3_REVERSE_CHANNEL = 5;
+        HATCH_MECH_ARM_PCM_CHANNEL = 9;
+        //TODO update forward/reverse channel
+        HATCH_MECH_ARM_FORWARD_CHANNEL = 4;
+        HATCH_MECH_ARM_REVERSE_CHANNEL = 5;
+        HATCH_CAMERA_INDEX = 3;
+      
+      
+        // Cargo Intake
+        ROLLER_PCM_CHANNEL = 9;
+        //TODO update up/down channel
+        ROLLER_RIGHT_ARM_UP_SOLINOID_CHANNEL = 0;
+        ROLLER_RIGHT_ARM_DOWN_SOLINOID_CHANNEL = 1;
+        //TODO update up/down channel
+        ROLLER_LEFT_ARM_UP_SOLINOID_CHANNEL = 2;
+        ROLLER_LEFT_ARM_DOWN_SOLINOID_CHANNEL = 3;
+        //TODO use two solenoids
+        ROLLER_MOTOR_CHANNEL = 2;
+        ROLLER_MOTOR_INVERTED = false; // TODO
+        //TODO use two sparks
+
+        // Cargo Mechanism
+        //CARGO_MECH_ARM_SENSOR_CHANNEL = 0; // TODO Change from spark to talon
+        CARGO_MECH_WRIST_MOTOR_CHANNEL = 6; // TODO
+        CARGO_MECH_WRIST_MOTOR_INVERTED = false; // TODO
+        //CARGO_MECH_ARM_SENSOR_INVERTED = false;  // TODO Remove
+        CARGO_MECH_WRIST_P = 1.0; // TODO
+        CARGO_MECH_WRIST_I = 0.0; // TODO
+        CARGO_MECH_WRIST_D = 0.0; // TODO
+        CARGO_MECH_WRIST_F = 0.0; // TODO
+
+        CARGO_CAMERA_INDEX = 1;
+      
+        CARGO_MECH_ARM_TOP_TICKS = 0; // TODO
+        CARGO_MECH_ARM_BOTTOM_TICKS = 0; // TODO
+        CARGO_MECH_ARM_ALLOWABLE_ERROR_TICKS = 10; // TODO
+
+        // Relative
+        CARGO_MECH_CARGO_BIN = 0; // TODO
+        CARGO_MECH_LOW_ROCKET = 0.3; // TODO
+        CARGO_MECH_CARGO_SHIP = 0.7; // TODO
+        CARGO_MECH_SAFE_TURRET = 1.0; // TODO
+
+        CARGO_MECH_CLAW_MOTOR_CHANNEL = 4; // TODO
+        CARGO_MECH_MOTOR_INVERTED = false; // TODO
+
+
+        break;
+
+      case MINIBOT:
+        HAS_WHEELS = true;
+        DRIVEMOTOR_NUM = 2;
+        WHEEL_CIRCUMFERENCE = 18.50;
+
+        LEFT_LEAD_CHANNEL = 1;
+        LEFT_DRIVE_SENSOR_IS_INVERTED = false;
+        LEFT_DRIVE_MOTOR_IS_INVERTED = false;
+
+        RIGHT_LEAD_CHANNEL = 4;
+        RIGHT_DRIVE_SENSOR_IS_INVERTED = false;
+        RIGHT_DRIVE_MOTOR_IS_INVERTED = false;
+        
+        //Linear PIDS
+        LEFT_DRIVE_PID_P = 1.0;
+        LEFT_DRIVE_PID_I = 0.0;
+        LEFT_DRIVE_PID_D = 450.0;
+        LEFT_DRIVE_PID_F = 0.0;
+
+        RIGHT_DRIVE_PID_P = 1.0;
+        RIGHT_DRIVE_PID_I = 0.0;
+        RIGHT_DRIVE_PID_D = 450.0;
+        RIGHT_DRIVE_PID_F = 0.0;
+
+        // Turn PIDs
+        LEFT_TURN_PID_P = 1.0;
+        LEFT_TURN_PID_I = 0.0;
+        LEFT_TURN_PID_D = 450.0;
+        LEFT_TURN_PID_F = 0.0;
+
+        RIGHT_TURN_PID_P = 1.0;
+        RIGHT_TURN_PID_I = 0.0;
+        RIGHT_TURN_PID_D = 450.0;
+        RIGHT_TURN_PID_F = 0.0;
+  
+        break;
 
     }
+
     //These calculations can be made after the robot-specific constants are set. 
     POSITION_ALLOWED_ERROR = ALLOWED_ERROR_INCHES / RobotMap.WHEEL_CIRCUMFERENCE;
+
+    // This is in encoder ticks
     POSITION_ALLOWABLE_CLOSED_LOOP_ERROR 
-        = (int) (POSITION_ALLOWED_ERROR * 1024 * 0.95);// This is in encoder ticks
+        = (int) (POSITION_ALLOWED_ERROR * WHEEL_ENCODER_CODES_PER_REVOLUTION * 0.95);
   }
 
   /**
@@ -127,7 +343,7 @@ public class RobotMap {
    */
   static void setSimulator() {
 
-    RobotMap.useSimulator = true;
+    useSimulator = true;
 
     //Linear PIDS
     LEFT_DRIVE_PID_P = 0.00033;
@@ -183,81 +399,75 @@ public class RobotMap {
     }
   }
 
-  // Global robot constants
-  public static RobotId robotId;
-
-  public static final int ITERATION_TIME_MS = 20;
-
-  public static boolean[] isDriveMotorInverted;
-
-  public static boolean useSpeedControllers;
-
-  public static final int VELOCITY_PID_PROFILE = 0;
-
-  public static final int POSITION_PID_PROFILE = 1;
-
-  public static double ALLOWED_ERROR_INCHES = 0.5;
-
-  public static double POSITION_ALLOWED_ERROR;
-
-  public static int POSITION_ALLOWABLE_CLOSED_LOOP_ERROR;
-
-  public static final double FAST_MAX_SPEED = 1.0;
-  public static final double NORMAL_MAX_SPEED = 0.8;
-  public static final double SLOW_MAX_SPEED = 0.5;
-
-  public static final double ELEVATOR_HIGH_DRIVE_RAMP_TIME = 2.5;
-  public static final double ELEVATOR_LOW_DRIVE_RAMP_TIME = 0.0;
-
-  // TODO These values need to be tested on the robot and possibly adjusted.
-  public static final double NORMAL_TURN_MAX_SPEED = 1.0;
-  public static final double SLOW_TURN_MAX_SPEED = 0.8;
-  public static final double MAX_CARROT_LENGTH = 4.0;
-
-  public static boolean useSimulator = true;
-  public static final double MIN_DRIVE_SPEED = 0.1;
-  public static final double CLIMB_MIN_DRIVE_SPEED = 0.3;
-
-  // How far the sensor speeds can be and still be considered turning in place,
-  // in sensor units per 100 ms
-  public static final int TURN_IN_PLACE_DETECT_TOLERANCE = 150;
-
-  // Robot Dimensions
-  public static double WHEEL_BASE_LENGTH = 3.33;
-  public static double WHEEL_BASE_WIDTH = 1.99; // TODO: MEASURE TRUE WHEEL BASE WIDTH
-  public static double BUMPER_LENGTH = 3.33;
-  public static double BUMPER_WIDTH = 2.92;
-
-  public static double CamToCenterWidthInches;
-  public static double CamToCenterLengthInches;
-
-  /**
-   * Used to ensure that all Talon SRX outputs are relative to a fixed value.
-   * If the available voltage is below the nominal and a value about that is
-   * requested, the output will be 100%.
-   */
-  public static final double NOMINAL_BATTERY_VOLTAGE = 12.0;
-
-  // The circumference of the wheels for use in determining distance in
-  // position mode
-  public static double WHEEL_CIRCUMFERENCE;
-
-  // The number of encoder ticks per one revolution of the wheel. This is used
-  // for correctly determining RPM and position.
-  public static int WHEEL_ENCODER_CODES_PER_REVOLUTION = 1024;
-
-  // Set to true to use LSM9DS1 IMU on Raspberry Pi
-  // Set to false to use the local ADIS16448 IMU on the Robo Rio
-  public static final boolean useRemoteImu = false;
+  // Driver Cameras
+  public static int FORWARD_CAMERA_INDEX;
+  public static int BACKWARD_CAMERA_INDEX;
 
   // Game Pieces
-  public static boolean HAS_HATCH;
-  public static int HATCH_S1_FORWARD_CHANNEL;
-  public static int HATCH_S1_REVERSE_CHANNEL;
-  public static int HATCH_S2_FORWARD_CHANNEL;
-  public static int HATCH_S2_REVERSE_CHANNEL;
-  public static int HATCH_S3_FORWARD_CHANNEL;
-  public static int HATCH_S3_REVERSE_CHANNEL;
-  
-  
+
+  // Turret
+  public static boolean HAS_TURRET = false;
+  public static int TURRET_MOTOR_CHANNEL;
+  public static boolean TURRET_MOTOR_INVERTED;
+  public static int TURRET_SENSOR_CHANNEL;
+  public static boolean TURRET_SENSOR_INVERTED;
+  public static int TURRET_RIGHT_LIMIT_TICKS;
+  public static int TURRET_LEFT_LIMIT_TICKS;
+  public static double TURRET_RIGHT_LIMIT_DEGREES;
+  public static double TURRET_LEFT_LIMIT_DEGREES;
+  public static int TURRET_ALLOWABLE_ERROR_TICKS = 10;
+  public static double TURRET_P;
+  public static double TURRET_I;
+  public static double TURRET_D;
+  public static double TURRET_F;
+  public static double TURRET_HOME;
+  public static int TURRET_OFFSET;
+
+  // Hatch Mechanism
+  public static boolean HAS_HATCH_MECHANISM;
+  public static int HATCH_CAMERA_INDEX;
+  public static int HATCH_LAUNCHER_S1_FORWARD_CHANNEL;
+  public static int HATCH_LAUNCHER_S1_REVERSE_CHANNEL;
+  public static int HATCH_LAUNCHER_S2_FORWARD_CHANNEL;
+  public static int HATCH_LAUNCHER_S2_REVERSE_CHANNEL;
+  public static int HATCH_LAUNCHER_S3_FORWARD_CHANNEL;
+  public static int HATCH_LAUNCHER_S3_REVERSE_CHANNEL;
+  public static int HATCH_MECH_ARM_FORWARD_CHANNEL;
+  public static int HATCH_MECH_ARM_REVERSE_CHANNEL;
+  public static int HATCH_LAUNCHER_PCM_CHANNEL = 0;
+  public static int HATCH_MECH_ARM_PCM_CHANNEL = 0;
+
+  // Cargo Intake aka Roller
+  public static boolean HAS_ROLLER_INTAKE = false;
+  public static int ROLLER_RIGHT_ARM_UP_SOLINOID_CHANNEL;
+  public static int ROLLER_RIGHT_ARM_DOWN_SOLINOID_CHANNEL;
+  public static int ROLLER_LEFT_ARM_UP_SOLINOID_CHANNEL;
+  public static int ROLLER_LEFT_ARM_DOWN_SOLINOID_CHANNEL;
+  public static int ROLLER_MOTOR_CHANNEL;
+  public static boolean ROLLER_MOTOR_INVERTED;
+  public static int ROLLER_PCM_CHANNEL;
+
+  // Cargo Mechanism
+  public static boolean HAS_CARGO_MECHANISM = false;
+  public static int CARGO_CAMERA_INDEX;
+  public static int CARGO_MECH_WRIST_MOTOR_CHANNEL;
+  public static boolean CARGO_MECH_WRIST_MOTOR_INVERTED;
+  public static boolean CARGO_MECH_WRIST_SENSOR_INVERTED;
+  public static double CARGO_MECH_WRIST_P;
+  public static double CARGO_MECH_WRIST_I;
+  public static double CARGO_MECH_WRIST_D;
+  public static double CARGO_MECH_WRIST_F;
+
+  public static int CARGO_MECH_ARM_TOP_TICKS;
+  public static int CARGO_MECH_ARM_BOTTOM_TICKS;
+  public static int CARGO_MECH_ARM_ALLOWABLE_ERROR_TICKS = 10;
+
+  // Relative heights
+  public static double CARGO_MECH_CARGO_BIN;
+  public static double CARGO_MECH_LOW_ROCKET;
+  public static double CARGO_MECH_CARGO_SHIP;
+  public static double CARGO_MECH_SAFE_TURRET;
+
+  public static int CARGO_MECH_CLAW_MOTOR_CHANNEL;
+  public static boolean CARGO_MECH_MOTOR_INVERTED;
 }

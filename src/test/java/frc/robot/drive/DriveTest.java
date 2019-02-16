@@ -28,7 +28,7 @@ public class DriveTest {
    */
   @BeforeClass
   public static void initAll() {
-    RobotMap.init(RobotId.Robot2018);
+    RobotMap.init(RobotId.ROBOT_2018);
     RobotMap.useSimulator = true;
     drive = Drive.getInstance();
     SmartDashboard.putString("DB/String 1", "0.001"); // P Left

@@ -118,60 +118,72 @@ public class DriverStation467 {
     return false;
   }
 
-  public double getArcadeSpeed() {
-    return getDriveJoystick().getAdjustedSpeed(driverJoy.getLeftStickY());
-  }
-  
-  public double getArcadeTurn() {
-    return getDriveJoystick().getAdjustedTurnSpeed();
+  public double getFineAdjustTurret() {
+    return getNavJoystick().getRightStickX();
   }
 
-  public double getElevatorSpeed() {
-    return getNavJoystick().getRightStickY();
-  }
-
-  public boolean getClimbUp() {
+  public boolean getAcquireHatch() {
+    //Nav
     return getNavJoystick().getRightTrigger() > 0.9;
   }
   
-  public boolean getLeftRampLiftButton() {
+  public boolean setlowRocketShipPos() {
+    //Nav
     return getNavJoystick().pov() == 0;
   }
 
-  public boolean getLeftRampDropButton() {
+  public boolean setCargoPos() {
+    //Nav
     return getNavJoystick().pov() == 180;
   }
 
   public boolean getRightRampLiftButton() {
+    //Driver
     return getDriveJoystick().pov() == 0;
   }
 
   public boolean getRightRampDropButton() {
+    //Driver
     return getDriveJoystick().pov() == 180;
   }
 
-  public boolean getFloorHeightButtonPressed() {
+  public boolean getAutoTargetButtonPressed() {
+    //Nav 
+    //TODO: check if implemented
     return getNavJoystick().pressed(Button.a);
   }
 
-  public boolean getSwitchHeightButtonPressed() {
+  public boolean getTurretRight() {
+    //Nav
     return getNavJoystick().pressed(Button.b);
   }
 
-  public boolean getLowScaleHeightButtonPressed() {
+  public boolean getAquireSeq() {
+    //Nav
     return getNavJoystick().pressed(Button.y);
   }
 
-  public boolean getHighScaleHeightButtonPressed() {
+  public boolean getTurretLeft() {
+    //NAV
     return getNavJoystick().pressed(Button.x);
   }
   
-  public boolean getGrabberOpen() {
+  public boolean getHatchMode() {
+    //NAV
+    return getNavJoystick().down(Button.BumperRight);
+  }
+
+  public boolean setHatchMode(){
     return getNavJoystick().down(Button.BumperLeft);
   }
   
-  public double getGrabThrottle() {
+  public double getArmManualOverride() {
+
     return getNavJoystick().getLeftStickY();
+  }
+
+  public boolean getFireCargo(){
+    return getNavJoystick().getLeftTrigger() > 0.9;
   }
 
   public void navSetLeftRumble(double value) {
@@ -180,6 +192,40 @@ public class DriverStation467 {
 
   public void navSetRightRumble(double value) {
     navJoy.rightRumble(value);
+  }
+
+  //Driver controls
+
+  public double getArcadeSpeed() {
+    return getDriveJoystick().getAdjustedSpeed(driverJoy.getLeftStickY());
+  }
+  
+  public double getArcadeTurn() {
+    return getDriveJoystick().getAdjustedTurnSpeed();
+  }
+
+  public boolean getDriveCameraBack() {
+    return getDriveJoystick().pov() == 0;
+  }
+
+  public boolean getDriveCameraFront() {
+    return getDriveJoystick().pov() == 180;
+  }
+
+  public boolean getAcquireBall() {
+    return getDriveJoystick().getRightTrigger() == 0.9;
+  }
+
+  public boolean defenseMode() {
+    if(getDriveJoystick().down(Button.BumperLeft) == true && getDriveJoystick().down(Button.BumperRight) == true) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  public boolean getRejectBall() {
+    return getDriveJoystick().getLeftTrigger() == 0.9;
   }
 
   public void driverSetLeftRumble(double value) {

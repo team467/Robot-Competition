@@ -27,7 +27,7 @@ public class WpiTalonSrxTest {
 
   @BeforeClass
   public static void initAll() {
-    RobotMap.init(RobotId.Robot2018);
+    RobotMap.init(RobotId.ROBOT_2018);
     motor = new WpiTalonSrx(TEST_DEVICE_NUMBER);
   }
 
