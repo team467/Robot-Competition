@@ -210,6 +210,7 @@ public class RobotMap {
         // Cameras
         FORWARD_CAMERA_INDEX = 0;
         BACKWARD_CAMERA_INDEX = 2;
+        HAS_CAMERA = true;
 
         // Game Pieces
         HAS_TURRET = true;
@@ -402,6 +403,7 @@ public class RobotMap {
   // Driver Cameras
   public static int FORWARD_CAMERA_INDEX;
   public static int BACKWARD_CAMERA_INDEX;
+  public static boolean HAS_CAMERA = false;
 
   // Game Pieces
 

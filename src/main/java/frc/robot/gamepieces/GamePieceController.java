@@ -13,6 +13,9 @@ import frc.robot.logging.RobotLogManager;
 import frc.robot.usercontrol.DriverStation467;
 import frc.robot.vision.CameraSwitcher;
 import frc.robot.vision.VisionController;
+import frc.robot.RobotMap;
+
+
 
 import org.apache.logging.log4j.Logger;
 
@@ -51,14 +54,33 @@ public class GamePieceController {
   }
 
   private GamePieceController() {
-
-    cargoIntake = CargoIntake.getInstance();
-    cargoMech = CargoMech.getInstance();
-    hatchMech = HatchMechanism.getInstance();
-    turret = Turret.getInstance();
     driverStation = DriverStation467.getInstance();
+
+
+    if (RobotMap.HAS_ROLLER_INTAKE) {
+      cargoIntake = CargoIntake.getInstance();
+    }
+
+    if (RobotMap.HAS_CARGO_MECHANISM) {
+      cargoMech = CargoMech.getInstance();
+    }
+
+    if (RobotMap.HAS_HATCH_MECHANISM) {
+      hatchMech = HatchMechanism.getInstance();
+    }
+
+    if (RobotMap.HAS_TURRET) {
+      turret = Turret.getInstance();
+    }
+
+    if (RobotMap.HAS_CAMERA) {
+      camera = CameraSwitcher.getInstance();
+    }
+
+    // If it has it make it
+    
+
     gamePieceMode = GamePieceMode.DEFENSE;
-    camera = CameraSwitcher.getInstance();
     visionController = VisionController.getInstance();
   }
 
