@@ -275,9 +275,9 @@ public class RobotMap {
 
         CARGO_CAMERA_INDEX = 1;
       
-        CARGO_MECH_ARM_TOP_TICKS = 0; // TODO
-        CARGO_MECH_ARM_BOTTOM_TICKS = 0; // TODO
-        CARGO_MECH_ARM_ALLOWABLE_ERROR_TICKS = 10; // TODO
+        CARGO_MECH_WRIST_TOP_TICKS = 0; // TODO
+        CARGO_MECH_WRIST_BOTTOM_TICKS = 0; // TODO
+        CARGO_MECH_WRIST_ALLOWABLE_ERROR_TICKS = 10; // TODO
 
         // Relative
         CARGO_MECH_CARGO_BIN = 0; // TODO
@@ -285,8 +285,8 @@ public class RobotMap {
         CARGO_MECH_CARGO_SHIP = 0.7; // TODO
         CARGO_MECH_SAFE_TURRET = 1.0; // TODO
 
-        CARGO_MECH_CLAW_MOTOR_CHANNEL = 4; // TODO
-        CARGO_MECH_MOTOR_INVERTED = false; // TODO
+        CARGO_MECH_CLAW_LEFT_MOTOR_CHANNEL = 4; // TODO
+        CARGO_MECH_CLAW_LEFT_MOTOR_INVERTED = false; // TODO
 
 
         break;
@@ -458,9 +458,9 @@ public class RobotMap {
   public static double CARGO_MECH_WRIST_D;
   public static double CARGO_MECH_WRIST_F;
 
-  public static int CARGO_MECH_ARM_TOP_TICKS;
-  public static int CARGO_MECH_ARM_BOTTOM_TICKS;
-  public static int CARGO_MECH_ARM_ALLOWABLE_ERROR_TICKS = 10;
+  public static int CARGO_MECH_WRIST_TOP_TICKS;
+  public static int CARGO_MECH_WRIST_BOTTOM_TICKS;
+  public static int CARGO_MECH_WRIST_ALLOWABLE_ERROR_TICKS = 10;
 
   // Relative heights
   public static double CARGO_MECH_CARGO_BIN;
@@ -468,6 +468,8 @@ public class RobotMap {
   public static double CARGO_MECH_CARGO_SHIP;
   public static double CARGO_MECH_SAFE_TURRET;
 
-  public static int CARGO_MECH_CLAW_MOTOR_CHANNEL;
-  public static boolean CARGO_MECH_MOTOR_INVERTED;
+  public static int CARGO_MECH_CLAW_LEFT_MOTOR_CHANNEL;
+  public static boolean CARGO_MECH_CLAW_LEFT_MOTOR_INVERTED;
+  public static int CARGO_MECH_CLAW_RIGHT_MOTOR_CHANNEL;
+  public static boolean CARGO_MECH_RIGHT_MOTOR_INVERTED;
 }

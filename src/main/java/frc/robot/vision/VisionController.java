@@ -53,10 +53,14 @@ public class VisionController {
         // TODO: Debug Log
         // TODO: LED FUNCTION
         // TODO: RUMBLE
+        driverStation.driverSetLeftRumble(1.0);
+        driverStation.driverSetRightRumble(1.0);
       } else if (Math.abs(angle) <= RobotMap.ANGLE_OFFSET_LEVEL_ONE) {
         // TODO: Debug Log
         // TODO: LED FUNCTION
         // TODO: RUMBLE
+        driverStation.driverSetLeftRumble(0.2);
+        driverStation.driverSetRightRumble(0.2);
       } else if (Math.abs(angle) <= RobotMap.ANGLE_OFFSET_LEVEL_TWO) {
         // TODO: Debug Log
         // TODO: LED FUNCTION
