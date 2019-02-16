@@ -12,31 +12,29 @@ import org.apache.logging.log4j.Logger;
 
 public class CargoMech extends GamePieceBase implements GamePiece {
 
-  private static CargoMech instance  = null; // set to null
+  private static CargoMech instance = null; // set to null
 
   private static final Logger LOGGER = RobotLogManager.getMainLogger(CargoMech.class.getName());
 
   // Actuators
   private CargoMechClaw claw;
-  private CargoMechArm arm; // stores desired height
+  private CargoMechWrist wrist; // stores desired height
 
   // State
   private CargoMechArmState armState;
 
-  public enum CargoMechArm {
+  public enum CargoMechWrist {
 
     // height values measured empirically
-    CARGO_BIN(RobotMap.CARGO_MECH_CARGO_BIN), 
-    LOW_ROCKET(RobotMap.CARGO_MECH_LOW_ROCKET),
-    CARGO_SHIP(RobotMap.CARGO_MECH_CARGO_SHIP),
-    SAFE_TURRET(RobotMap.CARGO_MECH_SAFE_TURRET);
+    CARGO_BIN(RobotMap.CARGO_MECH_CARGO_BIN), LOW_ROCKET(RobotMap.CARGO_MECH_LOW_ROCKET),
+    CARGO_SHIP(RobotMap.CARGO_MECH_CARGO_SHIP), SAFE_TURRET(RobotMap.CARGO_MECH_SAFE_TURRET);
 
     // Height in sensor units
     public double height;
     private static PIDController arm;
     private static Spark motor;
-  
-    private CargoMechArm(double heightProportion) {
+
+    private CargoMechWrist(double heightProportion) {
       height = heightTicksFromProportion(heightProportion);
     }
 
@@ -44,12 +42,8 @@ public class CargoMech extends GamePieceBase implements GamePiece {
       motor = new Spark(RobotMap.CARGO_MECH_ARM_MOTOR_CHANNEL);
       motor.setInverted(RobotMap.CARGO_MECH_ARM_MOTOR_INVERTED);
       motor.setName("Telemetry", "CargoMechArmMotor");
-      arm = new PIDController(
-        RobotMap.CARGO_MECH_ARM_P,
-        RobotMap.CARGO_MECH_ARM_I,
-        RobotMap.CARGO_MECH_ARM_D,
-        RobotMap.CARGO_MECH_ARM_F,
-        CargoMechArmState.sensor, motor);
+      arm = new PIDController(RobotMap.CARGO_MECH_ARM_P, RobotMap.CARGO_MECH_ARM_I, RobotMap.CARGO_MECH_ARM_D,
+          RobotMap.CARGO_MECH_ARM_F, CargoMechArmState.sensor, motor);
       arm.setInputRange(CARGO_BIN.height, CARGO_SHIP.height);
       arm.setOutputRange(-1.0, 1.0);
       arm.setAbsoluteTolerance(RobotMap.CARGO_MECH_ARM_ALLOWABLE_ERROR_TICKS);
@@ -60,7 +54,7 @@ public class CargoMech extends GamePieceBase implements GamePiece {
     // 0.0 is the bottom, 1.0 is the top (proportion)
     // takes proportion and converts it to ticks
     private static double heightTicksFromProportion(double proportion) {
-      return ((proportion) * RobotMap.CARGO_MECH_ARM_TOP_TICKS 
+      return ((proportion) * RobotMap.CARGO_MECH_ARM_TOP_TICKS
           + (1.0 - proportion) * RobotMap.CARGO_MECH_ARM_BOTTOM_TICKS);
     }
 
@@ -84,14 +78,8 @@ public class CargoMech extends GamePieceBase implements GamePiece {
   }
 
   public enum CargoMechArmState {
-    CARGO_BIN, 
-    MOVING_DOWN_TO_CARGO_BIN, 
-    MOVING_UP_TO_LOW_ROCKET, 
-    LOW_ROCKET, 
-    MOVING_DOWN_TO_LOW_ROCKET,
-    MOVING_UP_TO_CARGO_SHIP, 
-    CARGO_SHIP,
-    UNKNOWN;
+    CARGO_BIN, MOVING_DOWN_TO_CARGO_BIN, MOVING_UP_TO_LOW_ROCKET, LOW_ROCKET, MOVING_DOWN_TO_LOW_ROCKET,
+    MOVING_UP_TO_CARGO_SHIP, CARGO_SHIP, UNKNOWN;
 
     private static AnalogPotentiometer sensor = null;
     private static CargoMechArmState previousState = UNKNOWN;
@@ -112,40 +100,28 @@ public class CargoMech extends GamePieceBase implements GamePiece {
       height *= (RobotMap.CARGO_MECH_ARM_SENSOR_INVERTED) ? -1.0 : 1.0;
 
       CargoMechArmState state;
-      if (height >= (CargoMechArm.CARGO_BIN.height 
-          - RobotMap.CARGO_MECH_ARM_ALLOWABLE_ERROR_TICKS)
-          && height <= (CargoMechArm.CARGO_BIN.height 
-          + RobotMap.CARGO_MECH_ARM_ALLOWABLE_ERROR_TICKS)) {
+      if (height >= (CargoMechWrist.CARGO_BIN.height - RobotMap.CARGO_MECH_ARM_ALLOWABLE_ERROR_TICKS)
+          && height <= (CargoMechWrist.CARGO_BIN.height + RobotMap.CARGO_MECH_ARM_ALLOWABLE_ERROR_TICKS)) {
         state = CARGO_BIN;
-      } else if (height > (CargoMechArm.CARGO_BIN.height 
-          + RobotMap.CARGO_MECH_ARM_ALLOWABLE_ERROR_TICKS) 
-          && height < (CargoMechArm.LOW_ROCKET.height 
-          - RobotMap.CARGO_MECH_ARM_ALLOWABLE_ERROR_TICKS)) {
+      } else if (height > (CargoMechWrist.CARGO_BIN.height + RobotMap.CARGO_MECH_ARM_ALLOWABLE_ERROR_TICKS)
+          && height < (CargoMechWrist.LOW_ROCKET.height - RobotMap.CARGO_MECH_ARM_ALLOWABLE_ERROR_TICKS)) {
         if (previousState == CARGO_BIN || previousState == MOVING_UP_TO_LOW_ROCKET) {
           state = MOVING_UP_TO_LOW_ROCKET;
         } else {
           state = MOVING_DOWN_TO_CARGO_BIN;
         }
-      } else if (
-          height >= (CargoMechArm.LOW_ROCKET.height 
-          - RobotMap.CARGO_MECH_ARM_ALLOWABLE_ERROR_TICKS)
-          && height <= (CargoMechArm.LOW_ROCKET.height 
-          + RobotMap.CARGO_MECH_ARM_ALLOWABLE_ERROR_TICKS)) {
+      } else if (height >= (CargoMechWrist.LOW_ROCKET.height - RobotMap.CARGO_MECH_ARM_ALLOWABLE_ERROR_TICKS)
+          && height <= (CargoMechWrist.LOW_ROCKET.height + RobotMap.CARGO_MECH_ARM_ALLOWABLE_ERROR_TICKS)) {
         state = LOW_ROCKET;
-      } else if (height > (CargoMechArm.LOW_ROCKET.height 
-          + RobotMap.CARGO_MECH_ARM_ALLOWABLE_ERROR_TICKS)
-          && height < (CargoMechArm.CARGO_SHIP.height 
-          - RobotMap.CARGO_MECH_ARM_ALLOWABLE_ERROR_TICKS)) {
+      } else if (height > (CargoMechWrist.LOW_ROCKET.height + RobotMap.CARGO_MECH_ARM_ALLOWABLE_ERROR_TICKS)
+          && height < (CargoMechWrist.CARGO_SHIP.height - RobotMap.CARGO_MECH_ARM_ALLOWABLE_ERROR_TICKS)) {
         if (previousState == LOW_ROCKET || previousState == MOVING_UP_TO_CARGO_SHIP) {
           state = MOVING_UP_TO_CARGO_SHIP;
         } else {
           state = MOVING_DOWN_TO_LOW_ROCKET;
         }
-      } else if (
-          height >= (CargoMechArm.CARGO_SHIP.height 
-          - RobotMap.CARGO_MECH_ARM_ALLOWABLE_ERROR_TICKS)
-          && height <= (CargoMechArm.CARGO_SHIP.height 
-          + RobotMap.CARGO_MECH_ARM_ALLOWABLE_ERROR_TICKS)) {
+      } else if (height >= (CargoMechWrist.CARGO_SHIP.height - RobotMap.CARGO_MECH_ARM_ALLOWABLE_ERROR_TICKS)
+          && height <= (CargoMechWrist.CARGO_SHIP.height + RobotMap.CARGO_MECH_ARM_ALLOWABLE_ERROR_TICKS)) {
         state = CARGO_SHIP;
       } else {
         state = UNKNOWN;
@@ -156,6 +132,7 @@ public class CargoMech extends GamePieceBase implements GamePiece {
     }
 
   }
+
   /**
    * Forward means the roller is spinning inwards, essentially pulling balls in.
    * Reverse means the roller is spinning outwards not letting the ball in.
@@ -163,9 +140,7 @@ public class CargoMech extends GamePieceBase implements GamePiece {
    */
 
   public enum CargoMechClaw {
-    FORWARD,
-    REVERSE,
-    STOP;
+    FORWARD, REVERSE, STOP;
 
     private static Spark motor;
 
@@ -177,7 +152,8 @@ public class CargoMech extends GamePieceBase implements GamePiece {
     }
 
     /**
-     * Moves the belts of the claw forward or backward based on the requested command.
+     * Moves the belts of the claw forward or backward based on the requested
+     * command.
      */
     private void actuate() {
       LOGGER.debug("Actuating cargo mech claw: {}", name());
@@ -186,21 +162,21 @@ public class CargoMech extends GamePieceBase implements GamePiece {
       }
       switch (this) {
 
-        case FORWARD:
-          motor.set(1.0);
-          break;
-        
-        case REVERSE:
-          motor.set(-1.0);
-          break;
+      case FORWARD:
+        motor.set(1.0);
+        break;
 
-        case STOP:
-        default:
-          motor.set(0.0);
+      case REVERSE:
+        motor.set(-1.0);
+        break;
+
+      case STOP:
+      default:
+        motor.set(0.0);
       }
-      
+
     }
-      
+
   }
 
   /**
@@ -208,7 +184,7 @@ public class CargoMech extends GamePieceBase implements GamePiece {
    * 
    * @return TelemetryBuilder the telemetry builder instance
    */
-  public static CargoMech getInstance()  {
+  public static CargoMech getInstance() {
     if (instance == null) {
       instance = new CargoMech();
     }
@@ -216,15 +192,15 @@ public class CargoMech extends GamePieceBase implements GamePiece {
   }
 
   private CargoMech() {
-    super("Telemetry" , "CargoMech");
+    super("Telemetry", "CargoMech");
 
     // Initialize the sensors and actuators
     CargoMechArmState.initialize();
-    CargoMechArm.initialize();
+    CargoMechWrist.initialize();
     CargoMechClaw.initialize();
 
     claw = CargoMechClaw.STOP;
-    arm = CargoMechArm.CARGO_BIN;
+    wrist = CargoMechWrist.CARGO_BIN;
     armState = CargoMechArmState.read();
 
     initSendable(TelemetryBuilder.getInstance());
@@ -232,13 +208,13 @@ public class CargoMech extends GamePieceBase implements GamePiece {
   }
 
   /**
-   * Checks to see if the cargo mechanism arm at or above a safe distance
-   * to turn the turret.
+   * Checks to see if the cargo mechanism arm at or above a safe distance to turn
+   * the turret.
    * 
    * @return boolean true if safe to turn.
    */
   public boolean isSafeToMoveTurret() {
-    if (CargoMechArmState.height >= CargoMechArm.SAFE_TURRET.height) {
+    if (CargoMechArmState.height >= CargoMechWrist.SAFE_TURRET.height) {
       return true;
     } else {
       return false;
@@ -250,18 +226,18 @@ public class CargoMech extends GamePieceBase implements GamePiece {
    * 
    * @param command which way to move the arm.
    */
-  public void arm(CargoMechArm command) {
-    arm = command;
+  public void wrist(CargoMechWrist command) {
+    wrist = command;
   }
 
   /**
-   * Moves the claw arm up or down. The String version sets the 
-   * command from the Smart Dashboard.
+   * Moves the claw arm up or down. The String version sets the command from the
+   * Smart Dashboard.
    * 
    * @param command which way to move the arm.
    */
-  public void arm(String command) {
-    arm = CargoMechArm.valueOf(command);
+  public void wrist(String command) {
+    wrist = CargoMechWrist.valueOf(command);
   }
 
   /**
@@ -269,7 +245,7 @@ public class CargoMech extends GamePieceBase implements GamePiece {
    * 
    * @return the state of the arm, including if unknown or moving.
    */
-  public CargoMechArmState arm() {
+  public CargoMechArmState wrist() {
     return armState;
   }
 
@@ -283,8 +259,8 @@ public class CargoMech extends GamePieceBase implements GamePiece {
   }
 
   /**
-   * Sets the belt based on the given command. The String version
-   * is used for setting the command from the SmartDashboard.
+   * Sets the belt based on the given command. The String version is used for
+   * setting the command from the SmartDashboard.
    * 
    * @param command the belt command
    */
@@ -300,7 +276,7 @@ public class CargoMech extends GamePieceBase implements GamePiece {
   }
 
   public void overrideArm(double speed) {
-    CargoMechArm.override(speed);
+    CargoMechWrist.override(speed);
   }
 
   /**
@@ -310,7 +286,7 @@ public class CargoMech extends GamePieceBase implements GamePiece {
     // Take Actions
     if (enabled) {
       claw.actuate();
-      arm.actuate();
+      wrist.actuate();
     }
 
     // Update state
@@ -324,10 +300,10 @@ public class CargoMech extends GamePieceBase implements GamePiece {
   @Override
   public void initSendable(SendableBuilder builder) {
     builder.addStringProperty("CargoMechClaw", claw::name, (command) -> claw(command));
-    builder.addStringProperty("CargoMechArm", arm::name, (command) -> arm(command));
+    builder.addStringProperty("CargoMechArm", wrist::name, (command) -> wrist(command));
     builder.addStringProperty("CargoMechArmState", armState::name, null);
     CargoMechClaw.motor.initSendable(builder);
-    CargoMechArm.motor.initSendable(builder);
+    CargoMechWrist.motor.initSendable(builder);
     CargoMechArmState.sensor.initSendable(builder);
   }
 }
