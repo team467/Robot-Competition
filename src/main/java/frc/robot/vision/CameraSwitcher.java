@@ -14,6 +14,7 @@ public class CameraSwitcher {
 
   private double[] cameraOrder;
   private NetworkTableEntry cameraNetworkTableEntry;
+  private NetworkTableEntry resetNetworkTableEntry;
 
   private static final Logger LOGGER 
       = RobotLogManager.getMainLogger(CameraSwitcher.class.getName());
@@ -33,26 +34,31 @@ public class CameraSwitcher {
   private CameraSwitcher() {
     NetworkTable table = NetworkTableInstance.getDefault().getTable("camera");
     cameraNetworkTableEntry = table.getEntry("camera");
+    resetNetworkTableEntry = table.getEntry("reset");
   }
 
   public void forward() {
-    LOGGER.debug("Setting camera forward at index {}", RobotMap.FORWARD_CAMERA_INDEX);
+    LOGGER.info("Setting camera forward at index {}", RobotMap.FORWARD_CAMERA_INDEX);
     cameraNetworkTableEntry.setDouble(RobotMap.FORWARD_CAMERA_INDEX);
   }
 
   public void backward() {
-    LOGGER.debug("Setting camera backward at index {}", RobotMap.BACKWARD_CAMERA_INDEX);
+    LOGGER.info("Setting camera backward at index {}", RobotMap.BACKWARD_CAMERA_INDEX);
     cameraNetworkTableEntry.setDouble(RobotMap.BACKWARD_CAMERA_INDEX);
   }
 
   public void cargo() {
-    LOGGER.debug("Setting to cargo camera at index {}", RobotMap.CARGO_CAMERA_INDEX);
+    LOGGER.info("Setting to cargo camera at index {}", RobotMap.CARGO_CAMERA_INDEX);
     cameraNetworkTableEntry.setDouble(RobotMap.CARGO_CAMERA_INDEX);
   }
 
   public void hatch() {
-    LOGGER.debug("Setting to hatch camera at index {}", RobotMap.HATCH_CAMERA_INDEX);
+    LOGGER.info("Setting to hatch camera at index {}", RobotMap.HATCH_CAMERA_INDEX);
     cameraNetworkTableEntry.setDouble(RobotMap.HATCH_CAMERA_INDEX);
   }
 
+  public void restart() {
+    LOGGER.info("Restarting Camera");
+    resetNetworkTableEntry.setBoolean(true);
+  }
 }

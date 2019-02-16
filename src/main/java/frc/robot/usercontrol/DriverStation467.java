@@ -240,4 +240,8 @@ public class DriverStation467 {
     return driverJoy.down(Button.a);
   }
 
+  public boolean restartCamera() {
+    return navJoy.pressed(Button.start);
+  }
+
 }

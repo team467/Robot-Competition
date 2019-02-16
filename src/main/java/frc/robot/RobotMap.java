@@ -166,6 +166,11 @@ public class RobotMap {
         RIGHT_TURN_PID_I = 0.0;
         RIGHT_TURN_PID_D = 450.0;
         RIGHT_TURN_PID_F = 0.0;
+
+        FORWARD_CAMERA_INDEX = 0;
+        BACKWARD_CAMERA_INDEX = 2;
+        HATCH_CAMERA_INDEX = 1;
+        CARGO_CAMERA_INDEX = 3;
   
         break;
 
