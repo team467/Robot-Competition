@@ -5,7 +5,7 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import frc.robot.gamepieces.CargoIntake.CargoIntakeRoller;
 import frc.robot.gamepieces.CargoIntake.CargoIntakeArm;
 import frc.robot.gamepieces.CargoMech.CargoMechWrist;
-import frc.robot.gamepieces.CargoMech.CargoMechArmState;
+import frc.robot.gamepieces.CargoMech.CargoMechWristState;
 import frc.robot.gamepieces.CargoMech.CargoMechClaw;
 import frc.robot.gamepieces.HatchMechanism.HatchArm;
 import frc.robot.gamepieces.HatchMechanism.HatchLauncher;
@@ -234,7 +234,7 @@ public class GamePieceController {
 
       if (true) {
         if (gamePieceMode == GamePieceMode.CARGO || gamePieceMode == GamePieceMode.HATCH) {
-          if (cargoMech.wrist() != CargoMechArmState.LOW_ROCKET) {
+          if (cargoMech.wrist() != CargoMechWristState.LOW_ROCKET) {
             cargoMech.wrist(CargoMechWrist.LOW_ROCKET);
             if (isSafeToMoveTurret()) {
               turret.target(90.0);
@@ -252,7 +252,7 @@ public class GamePieceController {
 
       if (true) {
         if (gamePieceMode == GamePieceMode.CARGO || gamePieceMode == GamePieceMode.HATCH) {
-          if (cargoMech.wrist() != CargoMechArmState.LOW_ROCKET) {
+          if (cargoMech.wrist() != CargoMechWristState.LOW_ROCKET) {
             cargoMech.wrist(CargoMechWrist.LOW_ROCKET);
             if (isSafeToMoveTurret()) {
               turret.target(-90.0); //target lock handled here

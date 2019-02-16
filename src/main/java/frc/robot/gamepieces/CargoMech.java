@@ -25,7 +25,7 @@ public class CargoMech extends GamePieceBase implements GamePiece {
   private CargoMechWrist wrist; // stores desired height
 
   // State
-  private CargoMechArmState armState;
+  private CargoMechWristState armState;
 
   private static final int TALON_SENSOR_ID = 0;
   private static final int TALON_PID_SLOT_ID = 0;
@@ -92,7 +92,7 @@ public class CargoMech extends GamePieceBase implements GamePiece {
     }
   }
 
-  public enum CargoMechArmState {
+  public enum CargoMechWristState {
     CARGO_BIN, 
     MOVING_DOWN_TO_CARGO_BIN, 
     MOVING_UP_TO_LOW_ROCKET, 
@@ -102,18 +102,18 @@ public class CargoMech extends GamePieceBase implements GamePiece {
     CARGO_SHIP, 
     UNKNOWN;
 
-    private static CargoMechArmState previousState = UNKNOWN;
+    private static CargoMechWristState previousState = UNKNOWN;
     private static double simulatedReading = 0.0;
     private static double height = 0.0;
 
-    private static CargoMechArmState read() {
+    private static CargoMechWristState read() {
       height = simulatedReading;
       if (!RobotMap.useSimulator) {
         height = CargoMechWrist.talon.getSelectedSensorPosition(TALON_SENSOR_ID);
       }
       height *= (RobotMap.CARGO_MECH_WRIST_SENSOR_INVERTED) ? -1.0 : 1.0;
 
-      CargoMechArmState state;
+      CargoMechWristState state;
       if (height >= (CargoMechWrist.CARGO_BIN.height 
             - RobotMap.CARGO_MECH_WRIST_ALLOWABLE_ERROR_TICKS)
           && height <= (CargoMechWrist.CARGO_BIN.height 
@@ -223,7 +223,7 @@ public class CargoMech extends GamePieceBase implements GamePiece {
 
     claw = CargoMechClaw.STOP;
     wrist = CargoMechWrist.CARGO_BIN;
-    armState = CargoMechArmState.read();
+    armState = CargoMechWristState.read();
 
     initSendable(TelemetryBuilder.getInstance());
     LOGGER.trace("Created Ball Mech game piece.");
@@ -236,7 +236,7 @@ public class CargoMech extends GamePieceBase implements GamePiece {
    * @return boolean true if safe to turn.
    */
   public boolean isSafeToMoveTurret() {
-    if (CargoMechArmState.height >= CargoMechWrist.SAFE_TURRET.height) {
+    if (CargoMechWristState.height >= CargoMechWrist.SAFE_TURRET.height) {
       return true;
     } else {
       return false;
@@ -267,7 +267,7 @@ public class CargoMech extends GamePieceBase implements GamePiece {
    * 
    * @return the state of the arm, including if unknown or moving.
    */
-  public CargoMechArmState wrist() {
+  public CargoMechWristState wrist() {
     return armState;
   }
 
@@ -312,11 +312,11 @@ public class CargoMech extends GamePieceBase implements GamePiece {
     }
 
     // Update state
-    armState = CargoMechArmState.read();
+    armState = CargoMechWristState.read();
   }
 
   static void simulatedSensorData(double reading) {
-    CargoMechArmState.simulatedReading = reading;
+    CargoMechWristState.simulatedReading = reading;
   }
 
   @Override

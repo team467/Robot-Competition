@@ -52,16 +52,16 @@ public class TalonSpeedControllerGroup implements SpeedController, Sendable {
     }
     this.leader = leader;
     this.follower1 = follower1;
-    this.follower2 = follower2;
+    //this.follower2 = follower2;
     this.controlMode = controlMode;
 
     initMotor(this.leader);
     if (follower1 != null) {
       initMotor(this.follower1);
     }
-    if (follower2 != null) {
-      initMotor(this.follower2);
-    }
+    // if (follower2 != null) {
+    //   initMotor(this.follower2);
+    // }
 
     // only have sensor on leader
     leader.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, RobotMap.TALON_TIMEOUT);
@@ -215,12 +215,12 @@ public class TalonSpeedControllerGroup implements SpeedController, Sendable {
     }
 
     leader.setInverted(isInverted);
-    if (follower1 != null) {
-      follower1.setInverted(isInverted);
-    }
-    if (follower2 != null) {
-      follower2.setInverted(isInverted);
-    }
+    // if (follower1 != null) {
+    //   follower1.setInverted(isInverted);
+    // }
+    // if (follower2 != null) {
+    //   follower2.setInverted(isInverted);
+    // }
   }
 
   @Override
@@ -243,9 +243,9 @@ public class TalonSpeedControllerGroup implements SpeedController, Sendable {
     if (follower1 != null) {
       follower1.stopMotor();
     }
-    if (follower2 != null) {
-      follower2.stopMotor();
-    }
+    // if (follower2 != null) {
+    //   follower2.stopMotor();
+    // }
   }
 
   public boolean isStopped() {
