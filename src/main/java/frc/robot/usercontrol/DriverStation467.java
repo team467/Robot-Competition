@@ -119,7 +119,6 @@ public class DriverStation467 {
   }
 
   public double getFineAdjustTurret() {
-    //NAV
     return getNavJoystick().getRightStickX();
   }
 

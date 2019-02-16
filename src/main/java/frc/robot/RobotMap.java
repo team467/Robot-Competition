@@ -135,11 +135,11 @@ public class RobotMap {
 
         LEFT_LEAD_CHANNEL = 1;
         LEFT_FOLLOWER_1_CHANNEL = 2;
-        LEFT_DRIVE_SENSOR_IS_INVERTED = true;
+        LEFT_DRIVE_SENSOR_IS_INVERTED = false;
         LEFT_DRIVE_MOTOR_IS_INVERTED = false;
 
-        RIGHT_LEAD_CHANNEL = 4;
-        RIGHT_FOLLOWER_1_CHANNEL = 5;
+        RIGHT_LEAD_CHANNEL = 3;
+        RIGHT_FOLLOWER_1_CHANNEL = 4;
         RIGHT_DRIVE_SENSOR_IS_INVERTED = true;
         RIGHT_DRIVE_MOTOR_IS_INVERTED = false;
         
