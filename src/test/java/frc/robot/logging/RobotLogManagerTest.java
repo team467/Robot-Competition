@@ -24,7 +24,11 @@ public class RobotLogManagerTest {
 
     @Test
     public void directoryTest() {
-        System.out.println(RobotLogManager.getDirectory());
+        if(new File(testDirectoryFile).exists()) {
+            System.out.println("File exists");
+        } else {
+            System.out.println("File does not exist.");
+        }
         assertTrue(true);
     }
 
