@@ -12,6 +12,7 @@ import frc.robot.gamepieces.HatchMechanism.HatchLauncher;
 import frc.robot.logging.RobotLogManager;
 import frc.robot.usercontrol.DriverStation467;
 import frc.robot.vision.CameraSwitcher;
+import frc.robot.vision.VisionController;
 
 import org.apache.logging.log4j.Logger;
 
@@ -29,7 +30,7 @@ public class GamePieceController {
   private CameraSwitcher camera;
 
   private DriverStation467 driverStation;
-  private NetworkTable vision;
+  private VisionController visionController;
 
   private GamePieceMode gamePieceMode;
 
@@ -58,8 +59,7 @@ public class GamePieceController {
     driverStation = DriverStation467.getInstance();
     gamePieceMode = GamePieceMode.DEFENSE;
     camera = CameraSwitcher.getInstance();
-    vision = NetworkTableInstance.getDefault().getTable("Vision");
-
+    visionController = VisionController.getInstance();
   }
 
   /**
@@ -83,6 +83,7 @@ public class GamePieceController {
        * Target Lock
        */
       gamePieceMode = GamePieceMode.DEFENSE;
+      visionController.navigatorFeedback();
     } else if (driverStation.getHatchMode()) {
       /*
        * 1. Switches to hatch mode. 2. LEDs should change to gold. 3. Camera changes
@@ -91,6 +92,7 @@ public class GamePieceController {
        */
       gamePieceMode = GamePieceMode.HATCH;
       camera.hatch();
+      visionController.navigatorFeedback();
     } else if (true) {
       /*
        * 1. Switches to cargo mode. 2. LEDs should change to blue. 3. Camera changes
@@ -99,6 +101,7 @@ public class GamePieceController {
        */
       gamePieceMode = GamePieceMode.CARGO;
       camera.cargo();
+      visionController.navigatorFeedback();
     }
 
     switch (gamePieceMode) {
@@ -252,7 +255,7 @@ public class GamePieceController {
           if (cargoMech.wrist() != CargoMechArmState.LOW_ROCKET) {
             cargoMech.wrist(CargoMechWrist.LOW_ROCKET);
             if (isSafeToMoveTurret()) {
-              turret.target(-90.0);
+              turret.target(-90.0); //target lock handled here
             }
           }
         }
@@ -263,7 +266,7 @@ public class GamePieceController {
        * track mode. Should allow override if other turret move.
        */
       if (gamePieceMode == GamePieceMode.CARGO || gamePieceMode == GamePieceMode.HATCH) {
-        // set target to track mode.
+        turret.lockOnTarget();
       }
 
       /*
@@ -272,7 +275,7 @@ public class GamePieceController {
        */
       if (driverStation.getFineAdjustTurret() != 0.0) {
         if (isSafeToMoveTurret()) {
-          turret.manual(driverStation.getFineAdjustTurret());
+          turret.manual(driverStation.getFineAdjustTurret()); //cancel target lock handled here
         }
       }
 
@@ -280,11 +283,17 @@ public class GamePieceController {
        * //TODO: On Target Cargo Must be in cargo mode. If vision reports on target,
        * blink blue LEDs and rumble nav controller
        */
+      if (gamePieceMode == GamePieceMode.CARGO) {
+        visionController.navigatorFeedback();
+      }
 
       /*
        * //TODO: On Target Hatch Must be in hatch mode. If vision reports on target,
        * blink gold LEDs and rumble nav controller
        */
+      if (gamePieceMode == GamePieceMode.HATCH) {
+        visionController.navigatorFeedback();
+      }
 
     }
     // Update all systems

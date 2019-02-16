@@ -102,7 +102,8 @@ public class Turret extends GamePieceBase implements GamePiece {
     if (targetLock && !onManualControl) {
       double visionAngle = vision.angle();
       double targetAngle = talon.getSelectedSensorPosition(TALON_SENSOR_ID) + visionAngle;
-      target(targetAngle);
+      targetPosition = targetAngle;
+      onManualControl = false;
 
     }
 
@@ -122,6 +123,7 @@ public class Turret extends GamePieceBase implements GamePiece {
     LOGGER.debug("Setting target position: {}", targetInDegrees);
     targetPosition = targetInDegrees;
     onManualControl = false;
+    targetLock = false;
   }
 
   /**
@@ -193,5 +195,4 @@ public class Turret extends GamePieceBase implements GamePiece {
   public void moveTurretToHome() {
     instance.target(RobotMap.TURRET_HOME);
   }
-
 }
