@@ -38,27 +38,27 @@ public class CameraSwitcher {
   }
 
   public void forward() {
-    LOGGER.info("Setting camera forward at index {}", RobotMap.FORWARD_CAMERA_INDEX);
+    LOGGER.debug("Setting camera forward at index {}", RobotMap.FORWARD_CAMERA_INDEX);
     cameraNetworkTableEntry.setDouble(RobotMap.FORWARD_CAMERA_INDEX);
   }
 
   public void backward() {
-    LOGGER.info("Setting camera backward at index {}", RobotMap.BACKWARD_CAMERA_INDEX);
+    LOGGER.debug("Setting camera backward at index {}", RobotMap.BACKWARD_CAMERA_INDEX);
     cameraNetworkTableEntry.setDouble(RobotMap.BACKWARD_CAMERA_INDEX);
   }
 
   public void cargo() {
-    LOGGER.info("Setting to cargo camera at index {}", RobotMap.CARGO_CAMERA_INDEX);
+    LOGGER.debug("Setting to cargo camera at index {}", RobotMap.CARGO_CAMERA_INDEX);
     cameraNetworkTableEntry.setDouble(RobotMap.CARGO_CAMERA_INDEX);
   }
 
   public void hatch() {
-    LOGGER.info("Setting to hatch camera at index {}", RobotMap.HATCH_CAMERA_INDEX);
+    LOGGER.debug("Setting to hatch camera at index {}", RobotMap.HATCH_CAMERA_INDEX);
     cameraNetworkTableEntry.setDouble(RobotMap.HATCH_CAMERA_INDEX);
   }
 
   public void restart() {
-    LOGGER.info("Restarting Camera");
+    LOGGER.debug("Restarting Camera");
     resetNetworkTableEntry.setBoolean(true);
   }
 }

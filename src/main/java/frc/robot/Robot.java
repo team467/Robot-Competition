@@ -254,7 +254,6 @@ public class Robot extends TimedRobot {
     data.send();
     driverstation.readInputs();
     LOGGER.trace("Disabled Periodic");
-    LOGGER.info(driverstation.getNavJoystick().getJoystick().getPOV());
 
     if (driverstation.getNavJoystick().getJoystick().getPOV() == 0) {
       camera.forward();
