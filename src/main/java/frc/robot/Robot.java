@@ -177,6 +177,10 @@ public class Robot extends TimedRobot {
       camera.hatch();
     }
 
+    if (driverstation.restartCamera()) {
+      camera.restart();
+    }
+
   }
 
   @Override
@@ -250,6 +254,7 @@ public class Robot extends TimedRobot {
     data.send();
     driverstation.readInputs();
     LOGGER.trace("Disabled Periodic");
+    LOGGER.info(driverstation.getNavJoystick().getJoystick().getPOV());
 
     if (driverstation.getNavJoystick().getJoystick().getPOV() == 0) {
       camera.forward();
@@ -259,6 +264,10 @@ public class Robot extends TimedRobot {
       camera.backward();
     } else if (driverstation.getNavJoystick().getJoystick().getPOV() == 270) {
       camera.hatch();
+    }
+
+    if (driverstation.restartCamera()) {
+      camera.restart();
     }
 
   }
