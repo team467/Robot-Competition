@@ -67,26 +67,22 @@ public class GamePieceController {
   }
 
   /**
-   * checks for states.
+   * checks for states from driverStation
    */
   public void periodic() {
-
-    /*
-     *  //TODO: Switch Camera:
-     *  Switch to front or back camera. Does not change mode away from 
-     *  Hatch or Cargo, but does take camera. 
-     */
+    
+    //  Depending on driver input, camera view switches to front or back.
+    //  Does not change the mode away from Hatch or Cargo, but does take camera.
     if (driverStation.getDriveCameraFront()) {
       camera.forward();
     } else if (driverStation.getDriveCameraBack()) {
       camera.backward();
     }
 
-    // Check for mode changes
-    if (driverStation.defenseMode()) {
-      /*
+    if (driverStation.defenseMode()) { // gets action from driver input
+     /*
       *  Enter Defense Mode:
-      *  Defence mode must first move the turret to home, 
+      *  Moves turret to home, 
       *  then lower the arm, and finally lift the roller.
       *  The LEDs should blink red while transitioning, 
       *  and be solid red when in defence mode.
@@ -95,20 +91,20 @@ public class GamePieceController {
       */
       gamePieceMode = GamePieceMode.DEFENSE;
     } else if (driverStation.getHatchMode()) {
-      /*
-      *  //TODO: Change to Hatch mode
-      *  Switches to hatch  mode. LEDs should change to gold. Camera changes to
-      *  the hatch camera. Should change to cargo camera even if already in hatch mode.
-      *  Cargo intake arm should go down so that turret can move.
+     /*
+      * 1. Switches to hatch mode.
+      * 2. LEDs should change to gold.
+      * 3. Camera changes to hatch view. Should change to hatch view even if already in hatch mode.
+      * 4. Cargo intake arm should go down so that turret can move.
       */
       gamePieceMode = GamePieceMode.HATCH;
       camera.hatch();
-    } else if (true) { // TODO Need enter cargo mode
-      /*
-      *  //TODO: Change to Cargo mode
-      *  Switches to cargo mode. LEDs should change to blue. Camera changes to
-      *  the cargo camera. Should change to cargo camera even if already in cargo mode.
-      *  Cargo intake arm should go down.
+    } else if (true) {
+     /*
+      * 1. Switches to cargo mode. 
+      * 2. LEDs should change to blue. 
+      * 3. Camera changes to cargo view. Should change to cargo camera even if already in cargo mode.
+      * 4. Cargo intake arm should go down so that turret can move.
       */
       gamePieceMode = GamePieceMode.CARGO;
       camera.cargo();
@@ -128,21 +124,22 @@ public class GamePieceController {
 
       case CARGO:
         if (driverStation.getAcquireBall()) {
+        
           /*
-          *  //TODO: Acquire Cargo:
-          *  Must be in Cargo Mode and roller arm must be down.
-          *  Turn on roller, move turret to home, lower down, and turn on claw.
-          *  Must check that it is safe to move turret.
-          *  Cancels Target Lock
+          * Acquire Cargo:
+          * - Must be in CARGO mode and roller arm must be DOWN.
+          * - Turn on roller, move turret to home, lower down, and turn on claw.
+          * - Must check that it is safe to move turret.
+          * - Cancels Target Lock
           */
           if (cargoIntake.arm() == CargoIntakeArm.DOWN) { // If cargo intake arm is down
-            cargoIntake.roller(CargoIntakeRoller.REVERSE); // suck in ball
+            cargoIntake.roller(CargoIntakeRoller.REVERSE); // Suck ball into cargo intake mech
             if (turret.isHome() == false && isSafeToMoveTurret()) {
               turret.moveTurretToHome();
             }
-            else { // if cargo intake arm is up
-              cargoMech.arm(CargoMechArm.CARGO_BIN); //
-              cargoMech.claw(CargoMechClaw.REVERSE); 
+            else {
+              cargoMech.arm(CargoMechArm.CARGO_BIN); // Move cargo mech arm down to pick up cargo
+              cargoMech.claw(CargoMechClaw.REVERSE); // Suck ball into cargo arm mech
             }
           }
         } else if (driverStation.setCargoPos()) {
