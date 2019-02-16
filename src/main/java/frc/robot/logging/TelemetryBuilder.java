@@ -4,16 +4,16 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.NetworkTableType;
-import edu.wpi.first.networktables.NetworkTableValue;
 import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.SendableBuilderImpl;
+import frc.robot.simulator.communications.RobotData;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
-import org.apache.commons.math3.ml.neuralnet.Network;
 import org.apache.logging.log4j.Logger;
 
 public class TelemetryBuilder extends SendableBuilderImpl implements SendableBuilder {
@@ -23,6 +23,7 @@ public class TelemetryBuilder extends SendableBuilderImpl implements SendableBui
   private static TelemetryBuilder instance = null;
 
   private boolean printedHeaders = false;
+
   private CSVPrinter csvPrinter = null;
 
   /**
@@ -45,7 +46,8 @@ public class TelemetryBuilder extends SendableBuilderImpl implements SendableBui
     super();
     super.setTable(NetworkTableInstance.getDefault().getTable("Telemetry"));
     try {
-      csvPrinter = new CSVPrinter(new FileWriter("csv.txt"),
+      File csvFile = new File(RobotLogManager.getDirectory()+"/logs", "telemetry_" + System.currentTimeMillis()+".csv");
+      csvPrinter = new CSVPrinter(new FileWriter(csvFile),
           CSVFormat.DEFAULT.withAllowMissingColumnNames(false).withTrim().withTrailingDelimiter());
       LOGGER.info("linked");
     } catch (IOException e) {
@@ -66,16 +68,17 @@ public class TelemetryBuilder extends SendableBuilderImpl implements SendableBui
    * Update the network table values by calling the getters for all properties.
    * Extended to print out the values to the CSV.
    */
+  static String[] keys = {"/startingLocation/x","/startingLocation/y","/rightDistance","/leftDistance","/isZeroed","/headingAngle"};
   public void updateTable() {
     super.updateTable();
     if (csvPrinter != null) {
       try {
         NetworkTable table = super.getTable();
         if (!printedHeaders) {
-          csvPrinter.printRecord(table.getKeys());
+          csvPrinter.printRecord(keys);
           printedHeaders = true;
         }
-        for (String key : table.getKeys()) {
+        for (String key : keys) {
           NetworkTableEntry entry = table.getEntry(key);
           NetworkTableType type = entry.getType();
           String text = "n/a";
@@ -93,7 +96,7 @@ public class TelemetryBuilder extends SendableBuilderImpl implements SendableBui
               break;
             }
             default:
-              text = "n/a";
+              text = entry.getString("")+": no types";
               break;
           }
           csvPrinter.print(text);

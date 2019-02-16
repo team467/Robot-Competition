@@ -24,7 +24,7 @@ public class RobotLogManagerTest {
 
     @Test
     public void directoryTest() {
-        System.out.println(RobotLogManager.getDirectory(testDirectoryFile));
+        System.out.println(RobotLogManager.getDirectory());
         assertTrue(true);
     }
 

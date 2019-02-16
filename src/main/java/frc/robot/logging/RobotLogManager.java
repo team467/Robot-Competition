@@ -16,10 +16,13 @@ import org.apache.logging.log4j.core.config.yaml.YamlConfigurationFactory;
 public class RobotLogManager {
 
   private static boolean initialized = false;
-  private static String directory = "";
+  private static String internalPath = "";
 
   private static String[] filepaths = { //Filepaths go in this array
     "/media/sda1/logging/log4j2.yaml",
+    "/media/sdb1/logging/log4j2.yaml",
+    "/media/sda2/logging/log4j2.yaml",
+    "/media/sdb2/logging/log4j2.yaml",
     "C:\\Users\\Team467\\Documents\\GitHub\\Robot2019-Competition\\src\\main\\deploy\\log4j2.yaml",
     "C:\\Users\\Team467\\Documents\\GitHub\\Robot2019-Competition\\src\\main\\deploy\\log4j2-test.yaml",
     ".\\src\\main\\deploy\\log4j2-test.yaml"
@@ -35,17 +38,16 @@ public class RobotLogManager {
     return inidicies;
   }
 
-  public static String getDirectory(String s) {
-    ArrayList<Integer> indicies = getOccurenceIndicies(s);
-    String directory = s.substring(0,indicies.get(indicies.size()-1));
+  public static String getDirectory() {
+    ArrayList<Integer> indicies = getOccurenceIndicies(internalPath);
+    String directory = internalPath.substring(0,indicies.get(indicies.size()-1));
     return directory;
   }
 
   private static boolean doesFileExist(String filepath) {
     File file = new File(filepath);
     if(file.exists()) {
-      directory = file.getPath();
-      directory = getDirectory(filepath);
+      internalPath = file.getPath();
       return true;
     } else {
       return false;
@@ -67,7 +69,7 @@ public class RobotLogManager {
     initialized = true;
   }
 
-  private static void init() {
+  private static boolean init() {
     // String path = "./src/main/deploy/log4j2-test.yaml"; default path (already in array) in case the other filepaths dont load
     for(String path : filepaths) {
       if(doesFileExist(path)) {
@@ -75,6 +77,7 @@ public class RobotLogManager {
         break;
       }
     }
+    return initialized;
   }
 
   /**

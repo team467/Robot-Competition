@@ -46,10 +46,8 @@ public class RobotData {
   
   public static RobotData getInstance() {
     if (instance == null) {
-      LOGGER.info("D-------D-------D");
       instance = new RobotData();
     }
-    LOGGER.info("B---------------B");
     instance.log();
     return instance;
   }
