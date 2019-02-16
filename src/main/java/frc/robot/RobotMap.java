@@ -401,8 +401,8 @@ public class RobotMap {
   public static boolean TURRET_MOTOR_INVERTED;
   public static int TURRET_SENSOR_CHANNEL;
   public static boolean TURRET_SENSOR_INVERTED;
-  public static double TURRET_RIGHT_LIMIT_TICKS;
-  public static double TURRET_LEFT_LIMIT_TICKS;
+  public static int TURRET_RIGHT_LIMIT_TICKS;
+  public static int TURRET_LEFT_LIMIT_TICKS;
   public static double TURRET_RIGHT_LIMIT_DEGREES;
   public static double TURRET_LEFT_LIMIT_DEGREES;
   public static int TURRET_ALLOWABLE_ERROR_TICKS = 10;
