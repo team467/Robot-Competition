@@ -195,10 +195,4 @@ public class Turret extends GamePieceBase implements GamePiece {
   public void moveTurretToHome() {
     instance.target(RobotMap.TURRET_HOME);
   }
-
-  public boolean onTarget(){
-    //some logic that checks if turret is on target
-    retrun 
-  }
-
 }
