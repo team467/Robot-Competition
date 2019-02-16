@@ -140,7 +140,6 @@ public class Turret extends GamePieceBase implements GamePiece {
   public void lockOnTarget() {
     targetLock = true;
     onManualControl = false;
-
   }
 
   /**
