@@ -1,21 +1,17 @@
 package frc.robot.gamepieces;
 
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableInstance;
-import frc.robot.gamepieces.CargoIntake.CargoIntakeRoller;
+import frc.robot.RobotMap;
 import frc.robot.gamepieces.CargoIntake.CargoIntakeArm;
+import frc.robot.gamepieces.CargoIntake.CargoIntakeRoller;
+import frc.robot.gamepieces.CargoMech.CargoMechClaw;
 import frc.robot.gamepieces.CargoMech.CargoMechWrist;
 import frc.robot.gamepieces.CargoMech.CargoMechWristState;
-import frc.robot.gamepieces.CargoMech.CargoMechClaw;
 import frc.robot.gamepieces.HatchMechanism.HatchArm;
 import frc.robot.gamepieces.HatchMechanism.HatchLauncher;
 import frc.robot.logging.RobotLogManager;
 import frc.robot.usercontrol.DriverStation467;
 import frc.robot.vision.CameraSwitcher;
 import frc.robot.vision.VisionController;
-import frc.robot.RobotMap;
-
-
 
 import org.apache.logging.log4j.Logger;
 
@@ -23,7 +19,8 @@ public class GamePieceController {
 
   private static GamePieceController instance = null;
 
-  private static final Logger LOGGER = RobotLogManager.getMainLogger(GamePieceController.class.getName());
+  private static final Logger LOGGER 
+      = RobotLogManager.getMainLogger(GamePieceController.class.getName());
 
   // Game Pieces
   private CargoIntake cargoIntake;
@@ -76,16 +73,13 @@ public class GamePieceController {
     if (RobotMap.HAS_CAMERA) {
       camera = CameraSwitcher.getInstance();
     }
-
-    // If it has it make it
     
-
     gamePieceMode = GamePieceMode.DEFENSE;
     visionController = VisionController.getInstance();
   }
 
   /**
-   * checks for states from driverStation
+   * Checks for states from driverStation.
    */
   public void periodic() {
 
@@ -128,94 +122,94 @@ public class GamePieceController {
 
     switch (gamePieceMode) {
 
-    case DEFENSE:
-      turret.moveTurretToHome();
-      if (turret.isHome()) {
-        if (cargoIntake.arm() == CargoIntakeArm.DOWN)
-          cargoIntake.arm(CargoIntakeArm.UP);
-        if (hatchMech.arm() == HatchArm.OUT)
+      case DEFENSE:
+        turret.moveTurretToHome();
+        if (turret.isHome()) {
+          if (cargoIntake.arm() == CargoIntakeArm.DOWN)
+            cargoIntake.arm(CargoIntakeArm.UP);
+          if (hatchMech.arm() == HatchArm.OUT)
+            hatchMech.arm(HatchArm.IN);
+        }
+        break;
+
+      case CARGO:
+        if (driverStation.getAcquireBall()) {
+          /*
+          * Acquire Cargo: - Must be in CARGO mode and roller arm must be DOWN. - Turn on
+          * roller, move turret to home, lower down, and turn on claw. - Must check that
+          * it is safe to move turret. - Cancels Target Lock
+          */
+          if (cargoIntake.arm() == CargoIntakeArm.DOWN) { // If cargo intake arm is down
+            cargoIntake.roller(CargoIntakeRoller.REVERSE); // Suck ball into cargo intake mech
+            if (turret.isHome() == false && isSafeToMoveTurret()) {
+              turret.moveTurretToHome();
+            } else {
+              cargoMech.wrist(CargoMechWrist.CARGO_BIN); // Move cargo mech arm down to pick up cargo
+              cargoMech.claw(CargoMechClaw.REVERSE); // Suck ball into cargo arm mech
+            }
+          }
+        } else if (driverStation.setCargoPos()) {
+          // Must be in cargo mode. Stop claw. Move cargo arm to cargo ship height.
+          cargoMech.claw(CargoMechClaw.STOP);
+          cargoMech.wrist(CargoMechWrist.CARGO_SHIP);
+
+        } else if (driverStation.setCargoPos()) {
+          // Must be in cargo mode. Stop claw. Move cargo arm to low rocket height.
+          cargoMech.claw(CargoMechClaw.STOP);
+          cargoMech.wrist(CargoMechWrist.LOW_ROCKET);
+
+        } else if (driverStation.getFireCargo()) {
+          // Must be in cargo mode. Reverses claw motor to throw cargo.
+          cargoMech.claw(CargoMechClaw.FORWARD);
+
+        } else {
+          cargoMech.claw(CargoMechClaw.STOP);
+        }
+        /*
+        * //TODO: Load Cargo onto arm: Must be in Cargo Mode and roller are must be
+        * down. move turret to home, turn on claw, lower arm. Must check that it is
+        * safe to move turret. Cancels Target Lock
+        */
+        break;
+
+      case HATCH:
+        if (driverStation.fireHatch()) {
+          /*
+          * //TODO: Fire Hatch Must be in hatch mode. Pushes cargo arm forward for some
+          * count of cycles, then activates hatch solenoids. After trigger is released,
+          * moves both hatch and arm soledoids to the retracted position. May need to be
+          * combined with acquire hatch to insure that the arm can move forward during
+          * acquisition. Could just be before acquire hatch as moves happen at end.
+          */
+          gamePieceMode = GamePieceMode.HATCH;
+          if (gamePieceMode == GamePieceMode.HATCH) {
+            if (hatchMech.arm() != HatchArm.IN) {
+              hatchMech.arm(HatchArm.OUT);
+            }
+            if (hatchMech.arm() == HatchArm.OUT) {
+              hatchMech.launcher(HatchLauncher.FIRE);
+            }
+          }
+
+        } else if (driverStation.getAcquireHatch()) {
+          /*
+          * Acquire Hatch: When acquireing a hatch, the arm should move forward, but the
+          * hatch launcher should not fire.
+          */
+          if (gamePieceMode == GamePieceMode.HATCH) {
+            if (hatchMech.arm() == HatchArm.IN) {
+              hatchMech.arm(HatchArm.OUT);
+            }
+            if (hatchMech.launcher() == HatchLauncher.FIRE) {
+              hatchMech.launcher(HatchLauncher.RESET);
+            }
+          }
+        } else {
           hatchMech.arm(HatchArm.IN);
-      }
-      break;
-
-    case CARGO:
-      if (driverStation.getAcquireBall()) {
-        /*
-         * Acquire Cargo: - Must be in CARGO mode and roller arm must be DOWN. - Turn on
-         * roller, move turret to home, lower down, and turn on claw. - Must check that
-         * it is safe to move turret. - Cancels Target Lock
-         */
-        if (cargoIntake.arm() == CargoIntakeArm.DOWN) { // If cargo intake arm is down
-          cargoIntake.roller(CargoIntakeRoller.REVERSE); // Suck ball into cargo intake mech
-          if (turret.isHome() == false && isSafeToMoveTurret()) {
-            turret.moveTurretToHome();
-          } else {
-            cargoMech.wrist(CargoMechWrist.CARGO_BIN); // Move cargo mech arm down to pick up cargo
-            cargoMech.claw(CargoMechClaw.REVERSE); // Suck ball into cargo arm mech
-          }
-        }
-      } else if (driverStation.setCargoPos()) {
-        // Must be in cargo mode. Stop claw. Move cargo arm to cargo ship height.
-        cargoMech.claw(CargoMechClaw.STOP);
-        cargoMech.wrist(CargoMechWrist.CARGO_SHIP);
-
-      } else if (driverStation.setCargoPos()) {
-        // Must be in cargo mode. Stop claw. Move cargo arm to low rocket height.
-        cargoMech.claw(CargoMechClaw.STOP);
-        cargoMech.wrist(CargoMechWrist.LOW_ROCKET);
-
-      } else if (driverStation.getFireCargo()) {
-        // Must be in cargo mode. Reverses claw motor to throw cargo.
-        cargoMech.claw(CargoMechClaw.FORWARD);
-
-      } else {
-        cargoMech.claw(CargoMechClaw.STOP);
-      }
-      /*
-       * //TODO: Load Cargo onto arm: Must be in Cargo Mode and roller are must be
-       * down. move turret to home, turn on claw, lower arm. Must check that it is
-       * safe to move turret. Cancels Target Lock
-       */
-      break;
-
-    case HATCH:
-      if (driverStation.fireHatch()) {
-        /*
-         * //TODO: Fire Hatch Must be in hatch mode. Pushes cargo arm forward for some
-         * count of cycles, then activates hatch solenoids. After trigger is released,
-         * moves both hatch and arm soledoids to the retracted position. May need to be
-         * combined with acquire hatch to insure that the arm can move forward during
-         * acquisition. Could just be before acquire hatch as moves happen at end.
-         */
-        gamePieceMode = GamePieceMode.HATCH;
-        if (gamePieceMode == GamePieceMode.HATCH) {
-          if (hatchMech.arm() != HatchArm.IN) {
-            hatchMech.arm(HatchArm.OUT);
-          }
-          if (hatchMech.arm() == HatchArm.OUT) {
-            hatchMech.launcher(HatchLauncher.FIRE);
-          }
+          hatchMech.launcher(HatchLauncher.RESET);
         }
 
-      } else if (driverStation.getAcquireHatch()) {
-        /*
-         * Acquire Hatch: When acquireing a hatch, the arm should move forward, but the
-         * hatch launcher should not fire.
-         */
-        if (gamePieceMode == GamePieceMode.HATCH) {
-          if (hatchMech.arm() == HatchArm.IN) {
-            hatchMech.arm(HatchArm.OUT);
-          }
-          if (hatchMech.launcher() == HatchLauncher.FIRE) {
-            hatchMech.launcher(HatchLauncher.RESET);
-          }
-        }
-      } else {
-        hatchMech.arm(HatchArm.IN);
-        hatchMech.launcher(HatchLauncher.RESET);
-      }
-
-      break;
+        break;
 
     default:
       LOGGER.error("Should always have a game piece mode.");
@@ -331,7 +325,8 @@ public class GamePieceController {
    * @return boolean true if safe to move, false otherwise.
    */
   private boolean isSafeToMoveTurret() {
-    boolean isSafe = (cargoMech.isSafeToMoveTurret() && cargoIntake.arm() == CargoIntakeArm.DOWN) ? true : false;
+    boolean isSafe = 
+        (cargoMech.isSafeToMoveTurret() && cargoIntake.arm() == CargoIntakeArm.DOWN) ? true : false;
     LOGGER.debug("Safe to move turret? {}", isSafe);
     return isSafe;
   }
