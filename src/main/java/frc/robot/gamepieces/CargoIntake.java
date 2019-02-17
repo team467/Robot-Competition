@@ -21,6 +21,9 @@ public class CargoIntake extends GamePieceBase implements GamePiece {
   private CargoIntakeRoller roller;
   private CargoIntakeArm arm;
 
+  //State 
+  private CargoIntakeArmState armState;
+
   public enum CargoIntakeArm {
     OFF,
     UP,
@@ -147,6 +150,9 @@ public class CargoIntake extends GamePieceBase implements GamePiece {
           state = CargoIntakeArmState.MOVING_UP;
         }
       }
+      else {
+        state = CargoIntakeArmState.UNKNOWN;
+      }
       previousState = state;
       return state;
     }
@@ -170,9 +176,11 @@ public class CargoIntake extends GamePieceBase implements GamePiece {
     // Initialize the actuators
     CargoIntakeRoller.initialize();
     CargoIntakeArm.initialize();
+    CargoIntakeArmState.initialize();
 
     roller = CargoIntakeRoller.STOP;
     arm = CargoIntakeArm.UP;
+    armState = CargoIntakeArmState.read();
 
     initSendable(TelemetryBuilder.getInstance());
     LOGGER.trace("Created roller arm game piece.");
@@ -202,8 +210,8 @@ public class CargoIntake extends GamePieceBase implements GamePiece {
    * 
    * @return the cargo intake command
    */
-  public CargoIntakeArm arm() {
-    return arm;
+  public CargoIntakeArmState arm() {
+    return armState;
   }
 
   /**
