@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.RobotMap.RobotId;
 import frc.robot.autonomous.MatchConfiguration;
 import frc.robot.drive.Drive;
+import frc.robot.gamepieces.Turret;
 import frc.robot.logging.RobotLogManager;
 import frc.robot.logging.TelemetryBuilder;
 import frc.robot.simulator.communications.RobotData;
@@ -42,6 +43,7 @@ public class Robot extends TimedRobot {
   private RobotData data;
   private TelemetryBuilder telemetry;
   private CameraSwitcher camera;
+  private Turret turret;
 
   private NetworkTableInstance table;
   private NetworkTable dashboard;
@@ -87,6 +89,7 @@ public class Robot extends TimedRobot {
     matchConfig = MatchConfiguration.getInstance();
     telemetry = TelemetryBuilder.getInstance();
     camera = CameraSwitcher.getInstance();
+    turret = Turret.getInstance();
 
     drive.setPidsFromRobotMap();
     data.log();
@@ -138,6 +141,10 @@ public class Robot extends TimedRobot {
 
     double speed = driverstation.getArcadeSpeed();
     double turn = driverstation.getArcadeTurn();
+    double turretSpeed = driverstation.getArmManualOverride();
+
+    turret.manual(0.5);
+    
 
     if (Math.abs(speed) < RobotMap.MIN_DRIVE_SPEED) {
       speed = 0.0;

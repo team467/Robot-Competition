@@ -218,7 +218,7 @@ public class RobotMap {
         HAS_CAMERA = true;
 
         // Game Pieces
-        HAS_TURRET = false;
+        HAS_TURRET = true;
         HAS_ROLLER_INTAKE = false;
         HAS_HATCH_MECHANISM = false;
         HAS_ROLLER_INTAKE = false;

@@ -53,6 +53,7 @@ public class Turret extends GamePieceBase implements GamePiece {
 
     // Initialize the sensors and actuators
     talon = TalonProxy.create(RobotMap.TURRET_MOTOR_CHANNEL);
+    LOGGER.error("Talon created: {}, Motor Channel: {}", talon, RobotMap.TURRET_MOTOR_CHANNEL);
     talon.setName("Telemetry", "TurretMotor");
     talon.setInverted(RobotMap.TURRET_MOTOR_INVERTED);
     talon.setSensorPhase(RobotMap.TURRET_SENSOR_INVERTED);
@@ -87,15 +88,17 @@ public class Turret extends GamePieceBase implements GamePiece {
    * @param speed the speed to move the turret.
    */
   public void manual(double speed) {
-    LOGGER.debug("Manual override for turret position: {}", speed);
+    //LOGGER.error("Manual override for turret position: {}", speed);
     onManualControl = true;
     targetLock = false;
     targetPosition = currentPosition;
-    if (!RobotMap.useSimulator && RobotMap.HAS_TURRET) {
-      if (enabled) {
-        talon.set(ControlMode.PercentOutput, speed);
-      }
-    }
+    talon.set(ControlMode.PercentOutput, speed);
+    LOGGER.error("Manual override for turret position: {}", talon.getMotorOutputPercent());
+    // if (!RobotMap.useSimulator && RobotMap.HAS_TURRET) {
+    //   if (enabled) {
+    //     talon.set(ControlMode.PercentOutput, speed);
+    //   }
+    // }
   }
 
   private void followVision() {
@@ -178,7 +181,7 @@ public class Turret extends GamePieceBase implements GamePiece {
     builder.addDoubleProperty("TurretTarget", this::target, 
         (targetInDegrees) -> target(targetInDegrees));
     builder.addDoubleProperty("TurretPosition", this::position, null);
-    talon.initSendable(builder);
+   // talon.initSendable(builder); //TODO fix this, gets a null pointer
   }
 
   /**
