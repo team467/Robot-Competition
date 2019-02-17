@@ -64,10 +64,10 @@ public class Turret extends GamePieceBase implements GamePiece {
     talon.config_kF(TALON_PID_SLOT_ID, RobotMap.TURRET_F, RobotMap.TALON_TIMEOUT);
     talon.configForwardSoftLimitThreshold(
         RobotMap.TURRET_RIGHT_LIMIT_TICKS, RobotMap.TALON_TIMEOUT);
-    talon.configForwardSoftLimitEnable(true, RobotMap.TALON_TIMEOUT);
+    talon.configForwardSoftLimitEnable(false, RobotMap.TALON_TIMEOUT);
     talon.configReverseSoftLimitThreshold(
         RobotMap.TURRET_LEFT_LIMIT_TICKS, RobotMap.TALON_TIMEOUT);
-    talon.configReverseSoftLimitEnable(true, RobotMap.TALON_TIMEOUT);
+    talon.configReverseSoftLimitEnable(false, RobotMap.TALON_TIMEOUT);
     talon.configAllowableClosedloopError(TALON_PID_SLOT_ID,
         RobotMap.TURRET_ALLOWABLE_ERROR_TICKS, RobotMap.TALON_TIMEOUT);
 
@@ -92,13 +92,18 @@ public class Turret extends GamePieceBase implements GamePiece {
     onManualControl = true;
     targetLock = false;
     targetPosition = currentPosition;
-    talon.set(ControlMode.PercentOutput, speed);
-    LOGGER.error("Manual override for turret position: {}", talon.getMotorOutputPercent());
-    // if (!RobotMap.useSimulator && RobotMap.HAS_TURRET) {
-    //   if (enabled) {
-    //     talon.set(ControlMode.PercentOutput, speed);
-    //   }
-    // }
+
+    if(Math.abs(speed) < 0.2 || speed == 0) {
+      talon.set(ControlMode.PercentOutput, 0);
+    } else {
+      talon.set(ControlMode.PercentOutput, speed);
+      LOGGER.error("Manual override for turret: {} Expected: {}", talon.getMotorOutputPercent(), speed);
+    }
+    if (!RobotMap.useSimulator && RobotMap.HAS_TURRET) {
+      if (enabled) {
+        
+      }
+    }
   }
 
   private void followVision() {
@@ -160,7 +165,7 @@ public class Turret extends GamePieceBase implements GamePiece {
   public void periodic() {
     if (!RobotMap.useSimulator && RobotMap.HAS_TURRET) {
       if (enabled && !onManualControl) {
-        followVision();
+       // followVision();
         talon.set(ControlMode.Position, (targetPosition * ticksPerDegree));
       }
       // Update state
@@ -181,7 +186,7 @@ public class Turret extends GamePieceBase implements GamePiece {
     builder.addDoubleProperty("TurretTarget", this::target, 
         (targetInDegrees) -> target(targetInDegrees));
     builder.addDoubleProperty("TurretPosition", this::position, null);
-   // talon.initSendable(builder); //TODO fix this, gets a null pointer
+   //talon.initSendable(builder); //TODO fix this, gets a null pointer
   }
 
   /**

@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.RobotMap.RobotId;
 import frc.robot.autonomous.MatchConfiguration;
 import frc.robot.drive.Drive;
+import frc.robot.gamepieces.GamePieceController;
 import frc.robot.gamepieces.Turret;
 import frc.robot.logging.RobotLogManager;
 import frc.robot.logging.TelemetryBuilder;
@@ -44,6 +45,7 @@ public class Robot extends TimedRobot {
   private TelemetryBuilder telemetry;
   private CameraSwitcher camera;
   private Turret turret;
+  private GamePieceController gamePieceController;
 
   private NetworkTableInstance table;
   private NetworkTable dashboard;
@@ -90,6 +92,7 @@ public class Robot extends TimedRobot {
     telemetry = TelemetryBuilder.getInstance();
     camera = CameraSwitcher.getInstance();
     turret = Turret.getInstance();
+    gamePieceController = GamePieceController.getInstance();
 
     drive.setPidsFromRobotMap();
     data.log();
@@ -143,7 +146,7 @@ public class Robot extends TimedRobot {
     double turn = driverstation.getArcadeTurn();
     double turretSpeed = driverstation.getArmManualOverride();
 
-    turret.manual(0.5);
+    gamePieceController.periodic();
     
 
     if (Math.abs(speed) < RobotMap.MIN_DRIVE_SPEED) {
@@ -201,6 +204,8 @@ public class Robot extends TimedRobot {
         drive.readPidsFromSmartDashboard(tuneSlot);
         tuningValue = Double.parseDouble(SmartDashboard.getString("DB/String 0", "0.0"));
         LOGGER.info("Tuning Value: " + tuningValue);
+
+      case 2:
         break;
       default:
         LOGGER.info("Invalid Tune Mode: {}", tuneSlot);
@@ -221,6 +226,9 @@ public class Robot extends TimedRobot {
       case 1: // Turn PID Slot
         drive.tuneTurn(tuningValue, RobotMap.PID_SLOT_TURN);
         LOGGER.debug("Turn {} degrees",Math.toDegrees(drive.getLeftDistance()));
+        break;
+      case 2:
+        turret.manual(1.0);
         break;
       default:
     }

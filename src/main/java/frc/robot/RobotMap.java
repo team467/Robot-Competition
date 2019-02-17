@@ -133,15 +133,15 @@ public class RobotMap {
         DRIVEMOTOR_NUM = 4;
         WHEEL_CIRCUMFERENCE = 18.50;
 
-        LEFT_LEAD_CHANNEL = 1;
-        LEFT_FOLLOWER_1_CHANNEL = 2;
-        LEFT_FOLLOWER_2_CHANNEL = 3;
+        LEFT_LEAD_CHANNEL = 2;
+        LEFT_FOLLOWER_1_CHANNEL = 3;
+        //LEFT_FOLLOWER_2_CHANNEL = 3;
         LEFT_DRIVE_SENSOR_IS_INVERTED = false;
         LEFT_DRIVE_MOTOR_IS_INVERTED = false;
 
         RIGHT_LEAD_CHANNEL = 4;
         RIGHT_FOLLOWER_1_CHANNEL = 5;
-        RIGHT_FOLLOWER_2_CHANNEL = 6;
+        //RIGHT_FOLLOWER_2_CHANNEL = 6;
         RIGHT_DRIVE_SENSOR_IS_INVERTED = true;
         RIGHT_DRIVE_MOTOR_IS_INVERTED = false;
         
@@ -171,6 +171,11 @@ public class RobotMap {
         BACKWARD_CAMERA_INDEX = 2;
         HATCH_CAMERA_INDEX = 1;
         CARGO_CAMERA_INDEX = 3;
+
+        HAS_TURRET = true;
+        TURRET_MOTOR_CHANNEL = 1;
+        TURRET_MOTOR_INVERTED = false;
+        TURRET_SENSOR_INVERTED = false; // TODO
   
         break;
 
