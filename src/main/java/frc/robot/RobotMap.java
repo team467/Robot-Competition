@@ -258,6 +258,8 @@ public class RobotMap {
       
         // Cargo Intake
         ROLLER_PCM_CHANNEL = 9;
+        ROLLER_SWITCH_UP_CHANNEL = 1; //Channel must be changed to correct one
+        ROLLER_SWITCH_DOWN_CHANNEL = 2; //Channel must be changed to correct one
         //TODO update up/down channel
         ROLLER_RIGHT_ARM_UP_SOLINOID_CHANNEL = 0;
         ROLLER_RIGHT_ARM_DOWN_SOLINOID_CHANNEL = 1;
@@ -453,6 +455,8 @@ public class RobotMap {
   public static int ROLLER_MOTOR_CHANNEL;
   public static boolean ROLLER_MOTOR_INVERTED;
   public static int ROLLER_PCM_CHANNEL;
+  public static int ROLLER_SWITCH_UP_CHANNEL;
+  public static int ROLLER_SWITCH_DOWN_CHANNEL;
 
   // Cargo Mechanism
   public static boolean HAS_CARGO_MECHANISM = false;

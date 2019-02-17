@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
 import frc.robot.RobotMap;
 import frc.robot.logging.RobotLogManager;
 import frc.robot.logging.TelemetryBuilder;
+import edu.wpi.first.wpilibj.DigitalInput;
 
 import org.apache.logging.log4j.Logger;
 
@@ -102,6 +103,53 @@ public class CargoIntake extends GamePieceBase implements GamePiece {
       
     }
 
+  }
+
+  public enum CargoIntakeArmState {
+    UP,
+    MOVING_UP,
+    DOWN,
+    MOVING_DOWN,
+    UNKNOWN;
+
+    private static DigitalInput rollerSwitchUp;
+    private static DigitalInput rollerSwitchDown;
+    private static CargoIntakeArmState state;
+    private static CargoIntakeArmState previousState;
+
+    private static void initialize() {
+      rollerSwitchUp = new DigitalInput(RobotMap.ROLLER_SWITCH_UP_CHANNEL);
+      rollerSwitchUp.setName("Telemetry", "rollerSwitchUp");
+      rollerSwitchDown = new DigitalInput(RobotMap.ROLLER_SWITCH_DOWN_CHANNEL);
+      rollerSwitchDown.setName("Telemetry", "rollerswitchDown");
+    }
+
+    private static boolean rollerSwitchUp() {
+      return rollerSwitchUp.get();
+    }
+
+    private static boolean rollerSwitchDown() {
+      return rollerSwitchDown.get();
+    }
+
+    private static CargoIntakeArmState read() {
+      if (rollerSwitchDown() && !rollerSwitchUp()) {
+        state = CargoIntakeArmState.DOWN;
+      }
+      if (!rollerSwitchDown() && rollerSwitchUp()) {
+        state = CargoIntakeArmState.UP;
+      }
+      if (!rollerSwitchDown() && !rollerSwitchDown()) {
+        if (previousState == CargoIntakeArmState.UP) {
+          state = CargoIntakeArmState.MOVING_DOWN;
+        }
+        if (previousState == CargoIntakeArmState.DOWN) {
+          state = CargoIntakeArmState.MOVING_UP;
+        }
+      }
+      previousState = state;
+      return state;
+    }
   }
 
   /**
