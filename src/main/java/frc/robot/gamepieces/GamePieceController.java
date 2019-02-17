@@ -1,11 +1,9 @@
 package frc.robot.gamepieces;
 
-import frc.robot.RobotMap;
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Sendable;
 import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
-import frc.robot.gamepieces.CargoIntake.CargoIntakeRoller;
+
+import frc.robot.RobotMap;
 import frc.robot.gamepieces.CargoIntake.CargoIntakeArm;
 import frc.robot.gamepieces.CargoIntake.CargoIntakeRoller;
 import frc.robot.gamepieces.CargoMech.CargoMechClaw;

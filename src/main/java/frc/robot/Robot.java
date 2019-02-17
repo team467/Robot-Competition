@@ -7,19 +7,20 @@
 
 package frc.robot;
 
-import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 import frc.robot.RobotMap.RobotId;
-import frc.robot.autonomous.MatchConfiguration;
 import frc.robot.drive.Drive;
+import frc.robot.gamepieces.GamePieceController;
 import frc.robot.logging.RobotLogManager;
 import frc.robot.logging.TelemetryBuilder;
 import frc.robot.simulator.communications.RobotData;
 import frc.robot.usercontrol.DriverStation467;
 import frc.robot.vision.CameraSwitcher;
+
 import org.apache.logging.log4j.Logger;
 
 /**
@@ -38,18 +39,11 @@ public class Robot extends TimedRobot {
   // Robot objects
   private DriverStation467 driverstation;
   private Drive drive;
-  private MatchConfiguration matchConfig;
   private RobotData data;
   private TelemetryBuilder telemetry;
   private CameraSwitcher camera;
-
   private NetworkTableInstance table;
-  private NetworkTable dashboard;
-
-  /**
-   * Time in milliseconds.
-   */
-  private double time;
+  private GamePieceController gamePieceController;
 
   private int tuneSlot = 0;
   private double tuningValue = 0.0;
@@ -65,9 +59,8 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
 
-    // Delete all Network Table keys; relevant ones will be added when they are set
     table = NetworkTableInstance.getDefault();
-    dashboard  = table.getTable("Telemetry");
+    // Delete all Network Table keys; relevant ones will be added when they are set
     //table.deleteAllEntries(); // Uncomment to clear table once.
     
     // Initialize RobotMap
@@ -84,9 +77,9 @@ public class Robot extends TimedRobot {
     LOGGER.info("Initialized Driverstation");
     data = RobotData.getInstance();
     drive = Drive.getInstance();
-    matchConfig = MatchConfiguration.getInstance();
     telemetry = TelemetryBuilder.getInstance();
     camera = CameraSwitcher.getInstance();
+    gamePieceController = GamePieceController.getInstance();
 
     drive.setPidsFromRobotMap();
     data.log();
@@ -103,14 +96,13 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
+    data.log();
     data.send();
     telemetry.updateTable();
   }
 
   @Override
   public void autonomousInit() {
-    driverstation.readInputs();
-    matchConfig.load();
     LOGGER.info("No Autonomous");
   }
 
@@ -119,7 +111,6 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousPeriodic() {
-    //grabber.periodic();
   }
 
   @Override
@@ -164,8 +155,8 @@ public class Robot extends TimedRobot {
 
       default:
     }
-    data.log();
-    data.send();
+
+    gamePieceController.periodic();
 
     if (driverstation.getNavJoystick().getJoystick().getPOV() == 0) {
       camera.forward();
@@ -217,15 +208,11 @@ public class Robot extends TimedRobot {
         break;
       default:
     }
-    data.log();
-    data.send();
   }
 
   @Override
   public void disabledInit() {
     LOGGER.info("Init Disabled");
-    //drive.logClosedLoopErrors();
-
     driverstation.readInputs();
 
   }
@@ -234,26 +221,9 @@ public class Robot extends TimedRobot {
   public void disabledPeriodic() {
     data.log();
     LOGGER.trace("Disabled Periodic");
-    String[] autoList = {
-      "None", 
-      "Just_Go_Forward", 
-      "Left_Switch_Only", 
-      "Left_Basic", 
-      "Left_Advanced", 
-      "Left_Our_Side_Only",
-      "Center", 
-      "Center_Advanced", 
-      "Right_Switch_Only", 
-      "Right_Basic", 
-      "Right_Advanced", 
-      "Right_Our_Side_Only"
-    };
-    dashboard.getEntry("Auto List").setStringArray(autoList);
-    //LOGGER.info("Selected Auto Mode: " + SmartDashboard.getString("Auto Selector", "None"));
     data.log();
     data.send();
     driverstation.readInputs();
-    LOGGER.trace("Disabled Periodic");
 
     if (driverstation.getNavJoystick().getJoystick().getPOV() == 0) {
       camera.forward();
