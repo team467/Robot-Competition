@@ -64,12 +64,12 @@ public class RobotMapData implements Serializable, Cloneable {
   }
 
   public void log(NetworkTable table){
-    LOGGER.info(table.getEntry("/startingLocation/x").getDouble(startingLocation.x));
-    LOGGER.info(table.getEntry("/startingLocation/y").getDouble(startingLocation.y));
-    LOGGER.info(table.getEntry("/rightDistance").getDouble(rightPosition));
-    LOGGER.info(table.getEntry("/leftDistance").getDouble(leftPosition));
-    LOGGER.info(table.getEntry("/isZeroed").getBoolean(isZeroed));
-    LOGGER.info(table.getEntry("/headingAngle").getDouble(headingAngle));
+    LOGGER.debug(table.getEntry("/startingLocation/x").getDouble(startingLocation.x));
+    LOGGER.debug(table.getEntry("/startingLocation/y").getDouble(startingLocation.y));
+    LOGGER.debug(table.getEntry("/rightDistance").getDouble(rightPosition));
+    LOGGER.debug(table.getEntry("/leftDistance").getDouble(leftPosition));
+    LOGGER.debug(table.getEntry("/isZeroed").getBoolean(isZeroed));
+    LOGGER.debug(table.getEntry("/headingAngle").getDouble(headingAngle));
   }
 
   /**

@@ -180,13 +180,13 @@ public class RobotMap {
         DRIVEMOTOR_NUM = 4;
         WHEEL_CIRCUMFERENCE = 18.50;
 
-        LEFT_LEAD_CHANNEL = 3;
-        LEFT_FOLLOWER_1_CHANNEL = 4;
+        LEFT_LEAD_CHANNEL = 1;
+        LEFT_FOLLOWER_1_CHANNEL = 2;
         LEFT_DRIVE_SENSOR_IS_INVERTED = true;
         LEFT_DRIVE_MOTOR_IS_INVERTED = false;
 
-        RIGHT_LEAD_CHANNEL = 1;
-        RIGHT_FOLLOWER_1_CHANNEL = 2;
+        RIGHT_LEAD_CHANNEL = 3;
+        RIGHT_FOLLOWER_1_CHANNEL = 4;
         RIGHT_DRIVE_SENSOR_IS_INVERTED = true;
         RIGHT_DRIVE_MOTOR_IS_INVERTED = false;
         
