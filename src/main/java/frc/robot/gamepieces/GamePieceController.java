@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
 
 import frc.robot.RobotMap;
 import frc.robot.gamepieces.CargoIntake.CargoIntakeArm;
+import frc.robot.gamepieces.CargoIntake.CargoIntakeArmState;
 import frc.robot.gamepieces.CargoIntake.CargoIntakeRoller;
 import frc.robot.gamepieces.CargoMech.CargoMechClaw;
 import frc.robot.gamepieces.CargoMech.CargoMechWrist;
@@ -172,17 +173,15 @@ public class GamePieceController implements Sendable {
     }
 
     switch (gamePieceMode) {
-
       case DEFENSE:
         turret.moveTurretToHome();
         if (turret.isHome()) {
-          if (cargoIntake.arm() == CargoIntakeArm.DOWN)
+          if (cargoIntake.arm() == CargoIntakeArmState.DOWN)
             cargoIntake.arm(CargoIntakeArm.UP);
           if (hatchMech.arm() == HatchArm.OUT)
             hatchMech.arm(HatchArm.IN);
         }
         break;
-
       case CARGO:
         if (driverStation.getAcquireBall()) {
           /*
@@ -190,7 +189,7 @@ public class GamePieceController implements Sendable {
           * roller, move turret to home, lower down, and turn on claw. - Must check that
           * it is safe to move turret. - Cancels Target Lock
           */
-          if (cargoIntake.arm() == CargoIntakeArm.DOWN) { // If cargo intake arm is down
+          if (cargoIntake.arm() == CargoIntakeArmState.DOWN) { // If cargo intake arm is down
             cargoIntake.roller(CargoIntakeRoller.REVERSE); // Suck ball into cargo intake mech
             if (turret.isHome() == false && isSafeToMoveTurret()) {
               turret.moveTurretToHome();
@@ -268,7 +267,7 @@ public class GamePieceController implements Sendable {
 
     // Actions that apply in either cargo or hatch mode
     if ((gamePieceMode == GamePieceMode.CARGO || gamePieceMode == GamePieceMode.HATCH)) {
-      if (driverStation.getRejectBall() && cargoIntake.arm() == CargoIntakeArm.DOWN) {
+      if (driverStation.getRejectBall() && cargoIntake.arm() == CargoIntakeArmState.DOWN) {
         /*
          * Works in cargo or hatch mode. Cargo intake reverses motor to spit cargo.
          */
@@ -376,8 +375,7 @@ public class GamePieceController implements Sendable {
    * @return boolean true if safe to move, false otherwise.
    */
   private boolean isSafeToMoveTurret() {
-    boolean isSafe = 
-        (cargoMech.isSafeToMoveTurret() && cargoIntake.arm() == CargoIntakeArm.DOWN) ? true : false;
+    boolean isSafe = (cargoMech.isSafeToMoveTurret() && cargoIntake.arm() == CargoIntakeArmState.DOWN) ? true : false;
     LOGGER.debug("Safe to move turret? {}", isSafe);
     return isSafe;
   }
