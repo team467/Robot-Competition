@@ -220,8 +220,9 @@ public class Drive extends DifferentialDrive implements AutoDrive {
     LOGGER.debug("Target: L: {} R: {} Current L: {} R: {}", 
         df.format(leftDistance), df.format(rightDistance), 
         df.format(getLeftDistance()), df.format(getRightDistance()));
-    left.set(ControlMode.Velocity, 20); //TODO get velocity
-    right.set(ControlMode.Velocity, 20); //TODO get velocity
+    left.set(ControlMode.Position, feetToTicks(leftDistance));
+    // The right motor is reversed
+    right.set(ControlMode.Position, feetToTicks(rightDistance));
     data.updateDrivePosition(getLeftDistance(), getRightDistance());
   }
 
@@ -317,6 +318,22 @@ public class Drive extends DifferentialDrive implements AutoDrive {
     LOGGER.debug("The absolute distance moved: {}", df.format(lowestAbsDist));
     return lowestAbsDist;
   }
+
+  private double feetToTicks(double feet) {
+    double ticks = (feet / (RobotMap.WHEEL_CIRCUMFERENCE / 12.0)) 
+        * RobotMap.WHEEL_ENCODER_CODES_PER_REVOLUTION;
+    LOGGER.trace("Feet = {} ticks = {}", df.format(feet), df.format(ticks));
+    //what do i do here
+    return ticks;
+  }
+
+  private double ticksToFeet(double ticks) {
+    double feet = (ticks / RobotMap.WHEEL_ENCODER_CODES_PER_REVOLUTION) 
+        * (RobotMap.WHEEL_CIRCUMFERENCE / 12);
+    LOGGER.trace("Ticks = {} feet = {}", df.format(ticks), df.format(feet));
+    return feet;
+  }
+
 
   // This section overrides the standard Differential Drive 
   // class functions to capture the move state
