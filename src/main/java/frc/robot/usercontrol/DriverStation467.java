@@ -119,8 +119,9 @@ public class DriverStation467 {
   }
 
   public double getFineAdjustTurret() {
-    
-    return (getNavJoystick().getRightStickX() > 0.2)? 0 : getNavJoystick().getRightStickX();
+    double navVal = (Math.abs(getNavJoystick().getRightStickX()) < 0.3)? 0 : getNavJoystick().getRightStickX();
+
+    return navVal;
   }
 
   public boolean getAcquireHatch() {

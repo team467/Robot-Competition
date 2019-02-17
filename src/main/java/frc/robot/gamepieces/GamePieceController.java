@@ -348,7 +348,7 @@ public class GamePieceController implements Sendable {
        * //TODO: Fine Adjust Turret Manually move the turret based on stick. Should
        * check for unsafe turret situations. Cancels target lock
        */
-      if (driverStation.getFineAdjustTurret() != 0.0) {
+      if (true) {
         if (isSafeToMoveTurret()) {
           turret.manual(driverStation.getFineAdjustTurret()); // cancel target lock handled here
         }
