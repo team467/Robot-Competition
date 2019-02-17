@@ -48,7 +48,8 @@ public class TelemetryBuilder extends SendableBuilderImpl implements SendableBui
     super();
     super.setTable(NetworkTableInstance.getDefault().getTable("Telemetry"));
     try {
-      File csvFile = new File(RobotLogManager.getDirectory()+"/logs", "telemetry_" + System.currentTimeMillis()+".csv");
+      String csvFileName = "telemetry_" + System.currentTimeMillis() + ".csv";
+      File csvFile = new File(RobotLogManager.getDirectory(), csvFileName);
       csvPrinter = new CSVPrinter(new FileWriter(csvFile),
           CSVFormat.DEFAULT.withAllowMissingColumnNames(false).withTrim().withTrailingDelimiter());
       LOGGER.info("linked");
