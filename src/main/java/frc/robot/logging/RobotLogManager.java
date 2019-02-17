@@ -3,7 +3,6 @@ package frc.robot.logging;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -16,7 +15,8 @@ import org.apache.logging.log4j.core.config.yaml.YamlConfigurationFactory;
 public class RobotLogManager {
 
   private static boolean initialized = false;
-  private static String internalPath = "";
+
+  private static File directory;
 
   private static String[] filepaths = { //File paths go in this array
     "/media/sda1/logging/log4j2.yaml",
@@ -29,25 +29,17 @@ public class RobotLogManager {
     "./src/main/deploy/log4j2-test.yaml"
   };
   
-  private static ArrayList<Integer> getOccurenceIndicies(String s) {
-    ArrayList<Integer> inidicies = new ArrayList<Integer>();
-    for (int i = 0; i < s.length(); i++) {
-      if (s.charAt(i) == '\\' | s.charAt(i) == '/') {
-        inidicies.add(i);
-      }
-    }
-    return inidicies;
-  }
-
-  public static String getDirectory() {
-    ArrayList<Integer> indicies = getOccurenceIndicies(internalPath);
-    return internalPath.substring(0, indicies.get(indicies.size() - 1));
+  public static File getDirectory() {
+    return directory;
   }
 
   private static boolean doesFileExist(String filepath) {
     File file = new File(filepath);
     if (file.exists()) {
-      internalPath = file.getPath();
+      directory = new File(file.getParent(), "logs");
+      if (!directory.exists()) {
+        directory.mkdirs();
+      }
       return true;
     } else {
       return false;
