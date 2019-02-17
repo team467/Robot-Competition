@@ -1,16 +1,15 @@
 package frc.robot.gamepieces;
 
-import edu.wpi.first.wpilibj.AnalogPotentiometer;
-import edu.wpi.first.wpilibj.PIDController;
+import com.ctre.phoenix.motorcontrol.ControlMode;
+
 import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
+
 import frc.robot.RobotMap;
 import frc.robot.drive.TalonProxy;
 import frc.robot.drive.WpiTalonSrxInterface;
 import frc.robot.logging.RobotLogManager;
 import frc.robot.logging.TelemetryBuilder;
-
-import com.ctre.phoenix.motorcontrol.ControlMode;
 
 import org.apache.logging.log4j.Logger;
 

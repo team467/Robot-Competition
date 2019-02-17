@@ -176,10 +176,12 @@ public class GamePieceController implements Sendable {
       case DEFENSE:
         turret.moveTurretToHome();
         if (turret.isHome()) {
-          if (cargoIntake.arm() == CargoIntakeArmState.DOWN)
+          if (cargoIntake.arm() == CargoIntakeArmState.DOWN) {
             cargoIntake.arm(CargoIntakeArm.UP);
-          if (hatchMech.arm() == HatchArm.OUT)
+          }
+          if (hatchMech.arm() == HatchArm.OUT) {
             hatchMech.arm(HatchArm.IN);
+          }
         }
         break;
       case CARGO:
@@ -194,7 +196,8 @@ public class GamePieceController implements Sendable {
             if (turret.isHome() == false && isSafeToMoveTurret()) {
               turret.moveTurretToHome();
             } else {
-              cargoMech.wrist(CargoMechWrist.CARGO_BIN); // Move cargo mech arm down to pick up cargo
+              // Move cargo mech arm down to pick up cargo
+              cargoMech.wrist(CargoMechWrist.CARGO_BIN); 
               cargoMech.claw(CargoMechClaw.REVERSE); // Suck ball into cargo arm mech
             }
           }
@@ -261,8 +264,8 @@ public class GamePieceController implements Sendable {
 
         break;
 
-    default:
-      LOGGER.error("Should always have a game piece mode.");
+      default:
+        LOGGER.error("Should always have a game piece mode.");
     }
 
     // Actions that apply in either cargo or hatch mode
@@ -375,7 +378,8 @@ public class GamePieceController implements Sendable {
    * @return boolean true if safe to move, false otherwise.
    */
   private boolean isSafeToMoveTurret() {
-    boolean isSafe = (cargoMech.isSafeToMoveTurret() && cargoIntake.arm() == CargoIntakeArmState.DOWN) ? true : false;
+    boolean isSafe = (cargoMech.isSafeToMoveTurret() 
+        && cargoIntake.arm() == CargoIntakeArmState.DOWN) ? true : false;
     LOGGER.debug("Safe to move turret? {}", isSafe);
     return isSafe;
   }
@@ -383,8 +387,9 @@ public class GamePieceController implements Sendable {
   @Override
   public void initSendable(SendableBuilder builder) {
     builder.addDoubleProperty(
-      name + "Enabled", 
-      this::getMode, // Lambda called when updating network table
-      (gamePieceMode) -> setMode(gamePieceMode)); // Lambda calls set enabled if changed in Network table
+        name + "Enabled", 
+        this::getMode, // Lambda called when updating network table
+        // Lambda calls set enabled if changed in Network table
+        (gamePieceMode) -> setMode(gamePieceMode)); 
   }
 }

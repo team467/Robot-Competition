@@ -1,12 +1,12 @@
 package frc.robot.gamepieces;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
 import frc.robot.RobotMap;
 import frc.robot.logging.RobotLogManager;
 import frc.robot.logging.TelemetryBuilder;
-import edu.wpi.first.wpilibj.DigitalInput;
 
 import org.apache.logging.log4j.Logger;
 
@@ -122,9 +122,9 @@ public class CargoIntake extends GamePieceBase implements GamePiece {
 
     private static void initialize() {
       rollerSwitchUp = new DigitalInput(RobotMap.ROLLER_SWITCH_UP_CHANNEL);
-      rollerSwitchUp.setName("Telemetry", "rollerSwitchUp");
+      rollerSwitchUp.setName("Telemetry", "RollerSwitchUp");
       rollerSwitchDown = new DigitalInput(RobotMap.ROLLER_SWITCH_DOWN_CHANNEL);
-      rollerSwitchDown.setName("Telemetry", "rollerswitchDown");
+      rollerSwitchDown.setName("Telemetry", "RollerswitchDown");
     }
 
     private static boolean rollerSwitchUp() {
@@ -136,21 +136,17 @@ public class CargoIntake extends GamePieceBase implements GamePiece {
     }
 
     private static CargoIntakeArmState read() {
-      if (rollerSwitchDown() && !rollerSwitchUp()) {
+      if (rollerSwitchDown()) {
         state = CargoIntakeArmState.DOWN;
-      }
-      if (!rollerSwitchDown() && rollerSwitchUp()) {
+      } else if (rollerSwitchUp()) {
         state = CargoIntakeArmState.UP;
-      }
-      if (!rollerSwitchDown() && !rollerSwitchDown()) {
-        if (previousState == CargoIntakeArmState.UP) {
-          state = CargoIntakeArmState.MOVING_DOWN;
-        }
-        if (previousState == CargoIntakeArmState.DOWN) {
-          state = CargoIntakeArmState.MOVING_UP;
-        }
-      }
-      else {
+      } else if (previousState == CargoIntakeArmState.UP
+          || previousState == CargoIntakeArmState.MOVING_DOWN) {
+        state = CargoIntakeArmState.MOVING_DOWN;
+      } else if (previousState == CargoIntakeArmState.DOWN 
+          || previousState == CargoIntakeArmState.MOVING_UP) {
+        state = CargoIntakeArmState.MOVING_UP;
+      } else {
         state = CargoIntakeArmState.UNKNOWN;
       }
       previousState = state;
@@ -206,12 +202,21 @@ public class CargoIntake extends GamePieceBase implements GamePiece {
   }
 
   /**
+   * Gets the current state of the cargo intake arm.
+   * 
+   * @return the current state.
+   */
+  public CargoIntakeArmState arm() {
+    return armState;
+  }
+
+  /**
    * Gets the last command given to the cargo intake arm.
    * 
    * @return the cargo intake command
    */
-  public CargoIntakeArmState arm() {
-    return armState;
+  public CargoIntakeArm armCommand() {
+    return arm;
   }
 
   /**
@@ -249,15 +254,19 @@ public class CargoIntake extends GamePieceBase implements GamePiece {
       roller.actuate();
       arm.actuate();
     }
+    armState = CargoIntakeArmState.read();
   }
 
   @Override
   public void initSendable(SendableBuilder builder) {
     builder.addStringProperty("CargoIntakeRoller", roller::name, (command) -> roller(command));
     builder.addStringProperty("CargoIntakeArm", arm::name, (command) -> arm(command));
+    builder.addStringProperty("CargoIntakeArmState", armState::name, null);
     CargoIntakeRoller.motor.initSendable(builder);
     CargoIntakeArm.leftSolenoid.initSendable(builder);
     CargoIntakeArm.rightSolenoid.initSendable(builder);
+    CargoIntakeArmState.rollerSwitchUp.initSendable(builder);
+    CargoIntakeArmState.rollerSwitchDown.initSendable(builder);
   }
 
 }
