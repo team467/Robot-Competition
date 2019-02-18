@@ -170,13 +170,10 @@ public class TalonSpeedControllerGroup implements SpeedController, Sendable {
       LOGGER.trace("No drive system");
       return;
     }
-    // leader.pidWrite(output);
-    // if (follower1 != null) {
-    //   follower1.follow(leader);
-    // }
-    // if (follower2 != null) {
-    //   follower2.follow(leader);
-    // }
+    leader.pidWrite(output);
+    if (follower1 != null) {
+      follower1.follow(leader);
+    }
   }
 
   @Override
@@ -200,9 +197,6 @@ public class TalonSpeedControllerGroup implements SpeedController, Sendable {
     if (follower1 != null) {
       follower1.follow(leader);
     }
-    // if (follower2 != null) {
-    //   follower2.follow(leader);
-    // }
 
     LOGGER.error("name: {} Requested Velocity: {} Velocity = {} Error: {}", leader.getName(), outputValue, leader.getSelectedSensorVelocity(0), leader.getClosedLoopError(0));
     //LOGGER.error("Name: {}, Error: {}, Output Voltage: {}, Output Percent; {}", name, leader.getClosedLoopError(0), leader.getMotorOutputVoltage(), leader.getMotorOutputPercent());
@@ -229,9 +223,6 @@ public class TalonSpeedControllerGroup implements SpeedController, Sendable {
     if (follower1 != null) {
       follower1.setInverted(isInverted);
     }
-    // if (follower2 != null) {
-    //   follower2.setInverted(isInverted);
-    // }
   }
 
   @Override
@@ -254,9 +245,6 @@ public class TalonSpeedControllerGroup implements SpeedController, Sendable {
     if (follower1 != null) {
       follower1.stopMotor();
     }
-    // if (follower2 != null) {
-    //   follower2.stopMotor();
-    // }
   }
 
   public boolean isStopped() {

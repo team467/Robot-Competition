@@ -150,8 +150,7 @@ public class RobotMap {
         RIGHT_DRIVE_MOTOR_IS_INVERTED = false;
         
         //Linear PIDS
-        LEFT_DRIVE_PID_P = 0.5
-        ;//2.001
+        LEFT_DRIVE_PID_P = 0.5;//2.001
         LEFT_DRIVE_PID_I = 0.0;
         LEFT_DRIVE_PID_D = 0.0;
         LEFT_DRIVE_PID_F = 1.137;

@@ -74,8 +74,6 @@ public class Drive extends DifferentialDrive implements AutoDrive {
         left = new TalonSpeedControllerGroup();
         right = new TalonSpeedControllerGroup();
       }
-      //  left.set(ControlMode.Velocity, 102.4);
-      //  right.set(ControlMode.Velocity, 102.4);
       instance = new Drive(left, right);
       instance.zero();
 
