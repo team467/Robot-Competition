@@ -106,26 +106,11 @@ public class GamePieceController implements Sendable {
 
   private GamePieceController() {
     driverStation = DriverStation467.getInstance();
-
-    if (RobotMap.HAS_ROLLER_INTAKE) {
       cargoIntake = CargoIntake.getInstance();
-    }
-
-    if (RobotMap.HAS_CARGO_MECHANISM) {
       cargoMech = CargoMech.getInstance();
-    }
-
-    if (RobotMap.HAS_HATCH_MECHANISM) {
       hatchMech = HatchMechanism.getInstance();
-    }
-
-    if (RobotMap.HAS_TURRET) {
       turret = Turret.getInstance();
-    }
-
-    if (RobotMap.HAS_CAMERA) {
       camera = CameraSwitcher.getInstance();
-    }
     
     gamePieceMode = GamePieceMode.DEFENSE;
     visionController = VisionController.getInstance();
@@ -169,14 +154,13 @@ public class GamePieceController implements Sendable {
        * 4. Cargo intake arm should go down so that turret can move.
        */
       gamePieceMode = GamePieceMode.CARGO;
-      // camera.cargo();
-      // visionController.navigatorFeedback();
+      camera.cargo();
+      visionController.navigatorFeedback();
     }
 
     switch (gamePieceMode) {
 
       case DEFENSE:
-      if(hatchMech != null && cargoIntake != null && turret != null) {
         turret.moveTurretToHome();
         if (turret.isHome()) {
           if (cargoIntake.arm() == CargoIntakeArm.DOWN)
@@ -184,11 +168,9 @@ public class GamePieceController implements Sendable {
           if (hatchMech.arm() == HatchArm.OUT)
             hatchMech.arm(HatchArm.IN);
         }
-      }
         break;
 
       case CARGO:
-      if(cargoIntake != null && turret != null && cargoMech != null) {
         if (driverStation.getAcquireBall()) {
           /*
           * Acquire Cargo: - Must be in CARGO mode and roller arm must be DOWN. - Turn on
@@ -226,11 +208,9 @@ public class GamePieceController implements Sendable {
         * down. move turret to home, turn on claw, lower arm. Must check that it is
         * safe to move turret. Cancels Target Lock
         */
-      }
         break;
 
       case HATCH:
-      if(hatchMech != null) {
         if (driverStation.fireHatch()) {
           /*
           * //TODO: Fire Hatch Must be in hatch mode. Pushes cargo arm forward for some
@@ -266,8 +246,6 @@ public class GamePieceController implements Sendable {
           hatchMech.arm(HatchArm.IN);
           hatchMech.launcher(HatchLauncher.RESET);
         }
-      }
-
         break;
 
     default:
@@ -283,7 +261,7 @@ public class GamePieceController implements Sendable {
         cargoIntake.roller(CargoIntakeRoller.FORWARD);
       }
 
-      if (cargoMech != null &&  turret != null) {
+      if (true) {
         /*
          * //TODO: Move Turret Home Must be in hatch or cargo mode. Moves the turret to
          * zero. If arm is in low cargo acquire postion and move is required, move to
@@ -307,7 +285,7 @@ public class GamePieceController implements Sendable {
        * Target Lock
        */
 
-      if (cargoMech != null && turret != null) {
+      if (true) {
         if (gamePieceMode == GamePieceMode.CARGO || gamePieceMode == GamePieceMode.HATCH) {
           if (cargoMech.wrist() != CargoMechWristState.LOW_ROCKET) {
             cargoMech.wrist(CargoMechWrist.LOW_ROCKET);
@@ -325,7 +303,7 @@ public class GamePieceController implements Sendable {
        * Target Lock
        */
 
-      if (cargoMech != null && turret != null) {
+      if (true) {
         if (gamePieceMode == GamePieceMode.CARGO || gamePieceMode == GamePieceMode.HATCH) {
           if (cargoMech.wrist() != CargoMechWristState.LOW_ROCKET) {
             cargoMech.wrist(CargoMechWrist.LOW_ROCKET);
