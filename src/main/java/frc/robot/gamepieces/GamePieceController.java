@@ -122,11 +122,11 @@ public class GamePieceController implements Sendable {
 
     // Depending on driver input, camera view switches to front or back.
     // // Does not change the mode away from Hatch or Cargo, but does take camera.
-    // if (driverStation.getDriveCameraFront()) {
-    //   camera.forward();
-    // } else if (driverStation.getDriveCameraBack()) {
-    //   camera.backward();
-    // }
+    if (driverStation.getDriveCameraFront()) {
+      camera.forward();
+    } else if (driverStation.getDriveCameraBack()) {
+      camera.backward();
+    }
 
     if (driverStation.defenseMode()) { // gets action from driver input
       /*
@@ -371,11 +371,10 @@ public class GamePieceController implements Sendable {
 
   @Override
   public void initSendable(SendableBuilder builder) {
-     //TODO : FIX THIS!!!!!
-    // builder.addDoubleProperty(
-    //     name + "Enabled", 
-    //     this::getMode, // Lambda called when updating network table
-    //     // Lambda calls set enabled if changed in Network table
-    //     (gamePieceMode) -> setMode(gamePieceMode)); 
+    builder.addDoubleProperty(
+        name + "Enabled", 
+        this::getMode, // Lambda called when updating network table
+        // Lambda calls set enabled if changed in Network table
+        (gamePieceMode) -> setMode(gamePieceMode)); 
   }
 }
