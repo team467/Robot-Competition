@@ -170,6 +170,9 @@ public class CargoMech extends GamePieceBase implements GamePiece {
     private static void initialize() {
       // Create the roller object. No sensors
       LOGGER.trace("Initializing Claw");
+      if (RobotMap.useSimulator || !RobotMap.HAS_CARGO_MECHANISM) {
+        return;
+      }
       motor = new Spark(RobotMap.CARGO_MECH_CLAW_LEFT_MOTOR_CHANNEL);
       motor.setInverted(RobotMap.CARGO_MECH_CLAW_LEFT_MOTOR_INVERTED);
     }
@@ -180,7 +183,7 @@ public class CargoMech extends GamePieceBase implements GamePiece {
      */
     private void actuate() {
       LOGGER.debug("Actuating cargo mech claw: {}", name());
-      if (RobotMap.useSimulator) {
+      if (RobotMap.useSimulator || !RobotMap.HAS_CARGO_MECHANISM) {
         return;
       }
 
@@ -323,7 +326,10 @@ public class CargoMech extends GamePieceBase implements GamePiece {
     builder.addStringProperty("CargoMechClaw", claw::name, (command) -> claw(command));
     builder.addStringProperty("CargoMechArm", wrist::name, (command) -> wrist(command));
     builder.addStringProperty("CargoMechArmState", armState::name, null);
+    
+    if(RobotMap.HAS_CARGO_MECHANISM){
     CargoMechClaw.motor.initSendable(builder);
     CargoMechWrist.talon.initSendable(builder);
+    }
   }
 }

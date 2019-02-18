@@ -37,6 +37,8 @@ public class TelemetryBuilder extends SendableBuilderImpl implements SendableBui
     if (instance == null) {
       instance = new TelemetryBuilder();
     }
+
+  //  LOGGER.error("Telemetry instance = {}", instance);
     return instance;
   }
 
@@ -65,6 +67,7 @@ public class TelemetryBuilder extends SendableBuilderImpl implements SendableBui
       }
 
     });
+    
   }
 
   /**

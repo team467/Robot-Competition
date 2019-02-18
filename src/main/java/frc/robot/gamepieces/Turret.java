@@ -181,7 +181,9 @@ public class Turret extends GamePieceBase implements GamePiece {
     builder.addDoubleProperty("TurretTarget", this::target, 
         (targetInDegrees) -> target(targetInDegrees));
     builder.addDoubleProperty("TurretPosition", this::position, null);
-   //talon.initSendable(builder); //TODO fix this, gets a null pointer
+    if(RobotMap.HAS_TURRET){
+      talon.initSendable(builder); //TODO fix this, gets a null pointer
+    }
   }
 
   /**

@@ -371,10 +371,11 @@ public class GamePieceController implements Sendable {
 
   @Override
   public void initSendable(SendableBuilder builder) {
-    builder.addDoubleProperty(
-        name + "Enabled", 
-        this::getMode, // Lambda called when updating network table
-        // Lambda calls set enabled if changed in Network table
-        (gamePieceMode) -> setMode(gamePieceMode)); 
+     //TODO : FIX THIS!!!!!
+    // builder.addDoubleProperty(
+    //     name + "Enabled", 
+    //     this::getMode, // Lambda called when updating network table
+    //     // Lambda calls set enabled if changed in Network table
+    //     (gamePieceMode) -> setMode(gamePieceMode)); 
   }
 }

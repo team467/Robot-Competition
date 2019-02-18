@@ -175,6 +175,13 @@ public class RobotMap {
         BACKWARD_CAMERA_INDEX = 2;
         HATCH_CAMERA_INDEX = 1;
         CARGO_CAMERA_INDEX = 3;  
+
+        //Game Pieces
+        HAS_TURRET = false;
+        HAS_ROLLER_INTAKE = false;
+        HAS_HATCH_MECHANISM = false;
+        HAS_CARGO_MECHANISM = false;
+
         break;
 
       case ROBOT_2019:
@@ -228,6 +235,7 @@ public class RobotMap {
         HAS_ROLLER_INTAKE = false;
         HAS_HATCH_MECHANISM = false;
         HAS_ROLLER_INTAKE = false;
+        HAS_CARGO_MECHANISM = false;
 
         // Turret
         TURRET_MOTOR_CHANNEL = 5;

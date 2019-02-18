@@ -33,6 +33,9 @@ public class CargoIntake extends GamePieceBase implements GamePiece {
     private static DoubleSolenoid rightSolenoid;
 
     private static void initialize() {
+      if (RobotMap.useSimulator || !RobotMap.HAS_ROLLER_INTAKE) {
+        return;
+      }
       leftSolenoid = new DoubleSolenoid(
           RobotMap.ROLLER_LEFT_ARM_UP_SOLINOID_CHANNEL, 
           RobotMap.ROLLER_LEFT_ARM_DOWN_SOLINOID_CHANNEL);
@@ -42,6 +45,7 @@ public class CargoIntake extends GamePieceBase implements GamePiece {
           RobotMap.ROLLER_RIGHT_ARM_DOWN_SOLINOID_CHANNEL);
       rightSolenoid.setName("Telemetry", "RollerArmRightSolenoid");
     }
+  
 
     /**
      * Moves the arm based on the requested command.
@@ -79,6 +83,7 @@ public class CargoIntake extends GamePieceBase implements GamePiece {
       motor = new Spark(RobotMap.ROLLER_MOTOR_CHANNEL);
       motor.setInverted(RobotMap.ROLLER_MOTOR_INVERTED);
       motor.setName("Telemetry", "CargoIntakeRollerMotor");
+      
     }
 
     /**
@@ -121,10 +126,11 @@ public class CargoIntake extends GamePieceBase implements GamePiece {
     private static CargoIntakeArmState previousState;
 
     private static void initialize() {
-      rollerSwitchUp = new DigitalInput(RobotMap.ROLLER_SWITCH_UP_CHANNEL);
+      rollerSwitchUp = new DigitalInput(0);//TODO:figure out the channels
       rollerSwitchUp.setName("Telemetry", "RollerSwitchUp");
-      rollerSwitchDown = new DigitalInput(RobotMap.ROLLER_SWITCH_DOWN_CHANNEL);
+      rollerSwitchDown = new DigitalInput(1);//TODO: Figure out the channels
       rollerSwitchDown.setName("Telemetry", "RollerswitchDown");
+      
     }
 
     private static boolean rollerSwitchUp() {
@@ -175,11 +181,14 @@ public class CargoIntake extends GamePieceBase implements GamePiece {
     CargoIntakeArmState.initialize();
 
     roller = CargoIntakeRoller.STOP;
+    LOGGER.error("Roller == {}", roller);
     arm = CargoIntakeArm.UP;
     armState = CargoIntakeArmState.read();
 
     initSendable(TelemetryBuilder.getInstance());
     LOGGER.trace("Created roller arm game piece.");
+
+
   }
 
   /**
@@ -225,6 +234,7 @@ public class CargoIntake extends GamePieceBase implements GamePiece {
    * @param command the roller command
    */
   public void roller(CargoIntakeRoller command) {
+    LOGGER.error("Command: {}", command);
     roller = command;
   }
 
@@ -235,6 +245,7 @@ public class CargoIntake extends GamePieceBase implements GamePiece {
    * @param command the roller command
    */
   public void roller(String command) {
+    LOGGER.error("Command: {}", command);
     roller = CargoIntakeRoller.valueOf(command);
   }
 
@@ -259,14 +270,20 @@ public class CargoIntake extends GamePieceBase implements GamePiece {
 
   @Override
   public void initSendable(SendableBuilder builder) {
+    //TODO : FIX THIS!!!!!
+  
     builder.addStringProperty("CargoIntakeRoller", roller::name, (command) -> roller(command));
     builder.addStringProperty("CargoIntakeArm", arm::name, (command) -> arm(command));
     builder.addStringProperty("CargoIntakeArmState", armState::name, null);
-    CargoIntakeRoller.motor.initSendable(builder);
-    CargoIntakeArm.leftSolenoid.initSendable(builder);
-    CargoIntakeArm.rightSolenoid.initSendable(builder);
-    CargoIntakeArmState.rollerSwitchUp.initSendable(builder);
-    CargoIntakeArmState.rollerSwitchDown.initSendable(builder);
+    LOGGER.error("Cargo intake L= {} Cargo intake R= {}",  CargoIntakeArm.leftSolenoid, CargoIntakeArm.rightSolenoid);
+    
+    if(RobotMap.HAS_ROLLER_INTAKE){
+      CargoIntakeRoller.motor.initSendable(builder);
+      CargoIntakeArm.leftSolenoid.initSendable(builder);
+      CargoIntakeArm.rightSolenoid.initSendable(builder);
+      CargoIntakeArmState.rollerSwitchUp.initSendable(builder);
+      CargoIntakeArmState.rollerSwitchDown.initSendable(builder);
+    }
   }
 
 }
