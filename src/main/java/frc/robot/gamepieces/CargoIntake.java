@@ -33,14 +33,16 @@ public class CargoIntake extends GamePieceBase implements GamePiece {
     private static DoubleSolenoid rightSolenoid;
 
     private static void initialize() {
-      leftSolenoid = new DoubleSolenoid(
-          RobotMap.ROLLER_LEFT_ARM_UP_SOLINOID_CHANNEL, 
-          RobotMap.ROLLER_LEFT_ARM_DOWN_SOLINOID_CHANNEL);
-      leftSolenoid.setName("Telemetry", "RollerArmLeftSolenoid");
-      rightSolenoid = new DoubleSolenoid(
-          RobotMap.ROLLER_RIGHT_ARM_UP_SOLINOID_CHANNEL, 
-          RobotMap.ROLLER_RIGHT_ARM_DOWN_SOLINOID_CHANNEL);
-      rightSolenoid.setName("Telemetry", "RollerArmRightSolenoid");
+      if (RobotMap.HAS_ROLLER_INTAKE) {
+        leftSolenoid = new DoubleSolenoid(
+            RobotMap.ROLLER_LEFT_ARM_UP_SOLINOID_CHANNEL, 
+            RobotMap.ROLLER_LEFT_ARM_DOWN_SOLINOID_CHANNEL);
+        leftSolenoid.setName("Telemetry", "RollerArmLeftSolenoid");
+        rightSolenoid = new DoubleSolenoid(
+            RobotMap.ROLLER_RIGHT_ARM_UP_SOLINOID_CHANNEL, 
+            RobotMap.ROLLER_RIGHT_ARM_DOWN_SOLINOID_CHANNEL);
+        rightSolenoid.setName("Telemetry", "RollerArmRightSolenoid");
+      }
     }
 
     /**
@@ -53,16 +55,22 @@ public class CargoIntake extends GamePieceBase implements GamePiece {
       }
       switch (this) {
         case DOWN:
-          leftSolenoid.set(DoubleSolenoid.Value.kReverse);
-          rightSolenoid.set(DoubleSolenoid.Value.kReverse);
+          if (RobotMap.HAS_ROLLER_INTAKE) {
+            leftSolenoid.set(DoubleSolenoid.Value.kReverse);
+            rightSolenoid.set(DoubleSolenoid.Value.kReverse);
+          }
           break;
         case UP:
-          leftSolenoid.set(DoubleSolenoid.Value.kForward);
-          rightSolenoid.set(DoubleSolenoid.Value.kForward);
+          if (RobotMap.HAS_ROLLER_INTAKE) {
+            leftSolenoid.set(DoubleSolenoid.Value.kForward);
+            rightSolenoid.set(DoubleSolenoid.Value.kForward);
+          }
           break;
         default:
-          leftSolenoid.set(DoubleSolenoid.Value.kOff);
-          rightSolenoid.set(DoubleSolenoid.Value.kOff);
+          if (RobotMap.HAS_ROLLER_INTAKE) {
+            leftSolenoid.set(DoubleSolenoid.Value.kOff);
+            rightSolenoid.set(DoubleSolenoid.Value.kOff);
+          }
       }
     }
 
@@ -76,9 +84,11 @@ public class CargoIntake extends GamePieceBase implements GamePiece {
     private static Spark motor;
 
     private static void initialize() {
-      motor = new Spark(RobotMap.ROLLER_MOTOR_CHANNEL);
-      motor.setInverted(RobotMap.ROLLER_MOTOR_INVERTED);
-      motor.setName("Telemetry", "CargoIntakeRollerMotor");
+      if (RobotMap.HAS_ROLLER_INTAKE) {
+        motor = new Spark(RobotMap.ROLLER_MOTOR_CHANNEL);
+        motor.setInverted(RobotMap.ROLLER_MOTOR_INVERTED);
+        motor.setName("Telemetry", "CargoIntakeRollerMotor");
+      }
     }
 
     /**
@@ -86,22 +96,28 @@ public class CargoIntake extends GamePieceBase implements GamePiece {
      */
     private void actuate() {
       LOGGER.debug("Actuate cargo intake roller: {}", name());
-      if (RobotMap.useSimulator || !RobotMap.HAS_ROLLER_INTAKE) {
+      if (RobotMap.useSimulator) {
         return;
       }
       switch (this) {
 
         case FORWARD:
-          motor.set(1.0);
+          if (RobotMap.HAS_ROLLER_INTAKE) {
+            motor.set(1.0);
+          }
           break;
         
         case REVERSE:
-          motor.set(-1.0);
+          if (RobotMap.HAS_ROLLER_INTAKE) {
+            motor.set(-1.0);
+          }
           break;
 
         case STOP:
         default:
-          motor.set(0.0);
+          if (RobotMap.HAS_ROLLER_INTAKE) {
+            motor.set(0.0);
+          }
       }
       
     }
@@ -121,21 +137,32 @@ public class CargoIntake extends GamePieceBase implements GamePiece {
     private static CargoIntakeArmState previousState;
 
     private static void initialize() {
-      rollerSwitchUp = new DigitalInput(RobotMap.ROLLER_SWITCH_UP_CHANNEL);
-      rollerSwitchUp.setName("Telemetry", "RollerSwitchUp");
-      rollerSwitchDown = new DigitalInput(RobotMap.ROLLER_SWITCH_DOWN_CHANNEL);
-      rollerSwitchDown.setName("Telemetry", "RollerswitchDown");
+      if (RobotMap.HAS_ROLLER_INTAKE) {
+        rollerSwitchUp = new DigitalInput(RobotMap.ROLLER_SWITCH_UP_CHANNEL);
+        rollerSwitchUp.setName("Telemetry", "RollerSwitchUp");
+        rollerSwitchDown = new DigitalInput(RobotMap.ROLLER_SWITCH_DOWN_CHANNEL);
+        rollerSwitchDown.setName("Telemetry", "RollerswitchDown");
+      }
     }
 
     private static boolean rollerSwitchUp() {
-      return rollerSwitchUp.get();
+      if (RobotMap.HAS_ROLLER_INTAKE) {
+        return rollerSwitchUp.get();
+      } else {
+        return false;
+      }
     }
 
     private static boolean rollerSwitchDown() {
-      return rollerSwitchDown.get();
+      if (RobotMap.HAS_ROLLER_INTAKE) {
+        return rollerSwitchDown.get();
+      } else {
+        return false;
+      }
     }
 
     private static CargoIntakeArmState read() {
+      // If no cargo intake, state will remain as unknown.
       if (rollerSwitchDown()) {
         state = CargoIntakeArmState.DOWN;
       } else if (rollerSwitchUp()) {
@@ -262,11 +289,13 @@ public class CargoIntake extends GamePieceBase implements GamePiece {
     builder.addStringProperty("CargoIntakeRoller", roller::name, (command) -> roller(command));
     builder.addStringProperty("CargoIntakeArm", arm::name, (command) -> arm(command));
     builder.addStringProperty("CargoIntakeArmState", armState::name, null);
-    CargoIntakeRoller.motor.initSendable(builder);
-    CargoIntakeArm.leftSolenoid.initSendable(builder);
-    CargoIntakeArm.rightSolenoid.initSendable(builder);
-    CargoIntakeArmState.rollerSwitchUp.initSendable(builder);
-    CargoIntakeArmState.rollerSwitchDown.initSendable(builder);
+    if (RobotMap.HAS_ROLLER_INTAKE) {
+      CargoIntakeRoller.motor.initSendable(builder);
+      CargoIntakeArm.leftSolenoid.initSendable(builder);
+      CargoIntakeArm.rightSolenoid.initSendable(builder);
+      CargoIntakeArmState.rollerSwitchUp.initSendable(builder);
+      CargoIntakeArmState.rollerSwitchDown.initSendable(builder);
+    }
   }
 
 }

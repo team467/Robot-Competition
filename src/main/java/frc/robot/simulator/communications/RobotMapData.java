@@ -58,7 +58,7 @@ public class RobotMapData implements Serializable, Cloneable {
     table.getEntry("/leftDistance").setDouble(leftPosition);
     table.getEntry("/isZeroed").setBoolean(isZeroed);
     table.getEntry("/headingAngle").setDouble(headingAngle);
-    table.getEntry("/LoggingFileExists").setBoolean(new File("/media/sda1/logging/log4j2.yaml").exists());
+    // table.getEntry("/LoggingFileExists").setBoolean(new File("/media/sda1/logging/log4j2.yaml").exists());
   }
 
   public void log(NetworkTable table){

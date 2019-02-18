@@ -3,13 +3,11 @@ package frc.robot.gamepieces;
 import edu.wpi.first.wpilibj.Sendable;
 import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
 
-import frc.robot.RobotMap;
 import frc.robot.gamepieces.CargoIntake.CargoIntakeArm;
 import frc.robot.gamepieces.CargoIntake.CargoIntakeArmState;
 import frc.robot.gamepieces.CargoIntake.CargoIntakeRoller;
 import frc.robot.gamepieces.CargoMech.CargoMechClaw;
 import frc.robot.gamepieces.CargoMech.CargoMechWrist;
-import frc.robot.gamepieces.CargoMech.CargoMechWristState;
 import frc.robot.gamepieces.HatchMechanism.HatchArm;
 import frc.robot.gamepieces.HatchMechanism.HatchLauncher;
 import frc.robot.logging.RobotLogManager;
@@ -39,7 +37,7 @@ public class GamePieceController implements Sendable {
   private DriverStation467 driverStation;
   private VisionController visionController;
 
-  private GamePieceMode gamePieceMode;
+  private GamePieceMode mode;
 
   /**
    * Returns a singleton instance of the game piece controller.
@@ -52,6 +50,8 @@ public class GamePieceController implements Sendable {
     }
     return instance;
   }
+
+  // This methods are required for the Sendable interface 
 
   @Override
   public String getName() {
@@ -73,61 +73,32 @@ public class GamePieceController implements Sendable {
     this.subsystem = subsystem;
   }
 
-  private double getMode() {
-    return this.gamePieceMode.getModeNumber();
-  }
-
-  private void setMode(double gamePieceMode) {
-    if (gamePieceMode == 0.0) {
-      this.gamePieceMode = GamePieceMode.DEFENSE;
-    } else if (gamePieceMode == 1.0) {
-      this.gamePieceMode = GamePieceMode.CARGO;
-    } else if (gamePieceMode == 1.0) {
-      this.gamePieceMode = GamePieceMode.HATCH;
-    } else {
-      this.gamePieceMode = GamePieceMode.DEFENSE;
-    }
+  /**
+   * This method would be used to override the mode for testing
+   * by using Network Tables. It is private as that is the only
+   * use method.
+   * 
+   * @param mode the mode for testing.
+   */
+  private void testMode(String mode) {
+    this.mode = GamePieceMode.valueOf(mode);
   }
 
   public enum GamePieceMode {
-    DEFENSE(0.0), CARGO(1.0), HATCH(2.0);
-
-    private double mode;
-
-    GamePieceMode(double mode) {
-      this.mode = mode;
-    }
-
-    public double getModeNumber() {
-      return this.mode;
-    }
+    DEFENSE, 
+    CARGO,
+    HATCH
   }
 
   private GamePieceController() {
     driverStation = DriverStation467.getInstance();
-
-    if (RobotMap.HAS_ROLLER_INTAKE) {
-      cargoIntake = CargoIntake.getInstance();
-    }
-
-    if (RobotMap.HAS_CARGO_MECHANISM) {
-      cargoMech = CargoMech.getInstance();
-    }
-
-    if (RobotMap.HAS_HATCH_MECHANISM) {
-      hatchMech = HatchMechanism.getInstance();
-    }
-
-    if (RobotMap.HAS_TURRET) {
-      turret = Turret.getInstance();
-    }
-
-    if (RobotMap.HAS_CAMERA) {
-      camera = CameraSwitcher.getInstance();
-    }
-    
-    gamePieceMode = GamePieceMode.DEFENSE;
+    cargoIntake = CargoIntake.getInstance();
+    cargoMech = CargoMech.getInstance();
+    hatchMech = HatchMechanism.getInstance();
+    turret = Turret.getInstance();
+    camera = CameraSwitcher.getInstance();    
     visionController = VisionController.getInstance();
+    mode = GamePieceMode.DEFENSE;
   }
 
   /**
@@ -150,29 +121,26 @@ public class GamePieceController implements Sendable {
        * red when in defence mode. Must check that it is safe to move turret. Cancels
        * Target Lock
        */
-      gamePieceMode = GamePieceMode.DEFENSE;
-      visionController.navigatorFeedback();
+      mode = GamePieceMode.DEFENSE;
     } else if (driverStation.getHatchMode()) {
       /*
        * 1. Switches to hatch mode. 2. LEDs should change to gold. 3. Camera changes
        * to hatch view. Should change to hatch view even if already in hatch mode. 4.
        * Cargo intake arm should go down so that turret can move.
        */
-      gamePieceMode = GamePieceMode.HATCH;
+      mode = GamePieceMode.HATCH;
       camera.hatch();
-      visionController.navigatorFeedback();
-    } else if (true) {
+    } else if (driverStation.getCargoMode()) {
       /*
        * 1. Switches to cargo mode. 2. LEDs should change to blue. 3. Camera changes
        * to cargo view. Should change to cargo camera even if already in cargo mode.
        * 4. Cargo intake arm should go down so that turret can move.
        */
-      gamePieceMode = GamePieceMode.CARGO;
+      mode = GamePieceMode.CARGO;
       camera.cargo();
-      visionController.navigatorFeedback();
     }
 
-    switch (gamePieceMode) {
+    switch (mode) {
       case DEFENSE:
         turret.moveTurretToHome();
         if (turret.isHome()) {
@@ -201,20 +169,17 @@ public class GamePieceController implements Sendable {
               cargoMech.claw(CargoMechClaw.REVERSE); // Suck ball into cargo arm mech
             }
           }
-        } else if (driverStation.setCargoPos()) {
+        } else if (driverStation.getCargoArmCargoShipPosition()) {
           // Must be in cargo mode. Stop claw. Move cargo arm to cargo ship height.
           cargoMech.claw(CargoMechClaw.STOP);
           cargoMech.wrist(CargoMechWrist.CARGO_SHIP);
-
-        } else if (driverStation.setCargoPos()) {
+        } else if (driverStation.getCargoArmLowRocketShipPosition()) {
           // Must be in cargo mode. Stop claw. Move cargo arm to low rocket height.
           cargoMech.claw(CargoMechClaw.STOP);
           cargoMech.wrist(CargoMechWrist.LOW_ROCKET);
-
         } else if (driverStation.getFireCargo()) {
           // Must be in cargo mode. Reverses claw motor to throw cargo.
           cargoMech.claw(CargoMechClaw.FORWARD);
-
         } else {
           cargoMech.claw(CargoMechClaw.STOP);
         }
@@ -234,34 +199,24 @@ public class GamePieceController implements Sendable {
           * combined with acquire hatch to insure that the arm can move forward during
           * acquisition. Could just be before acquire hatch as moves happen at end.
           */
-          gamePieceMode = GamePieceMode.HATCH;
-          if (gamePieceMode == GamePieceMode.HATCH) {
-            if (hatchMech.arm() != HatchArm.IN) {
-              hatchMech.arm(HatchArm.OUT);
-            }
-            if (hatchMech.arm() == HatchArm.OUT) {
-              hatchMech.launcher(HatchLauncher.FIRE);
-            }
+          if (hatchMech.arm() == HatchArm.IN) {
+            hatchMech.arm(HatchArm.OUT);
+          } else if (hatchMech.arm() == HatchArm.OUT) {
+            hatchMech.launcher(HatchLauncher.FIRE);
           }
-
         } else if (driverStation.getAcquireHatch()) {
           /*
           * Acquire Hatch: When acquireing a hatch, the arm should move forward, but the
           * hatch launcher should not fire.
           */
-          if (gamePieceMode == GamePieceMode.HATCH) {
-            if (hatchMech.arm() == HatchArm.IN) {
-              hatchMech.arm(HatchArm.OUT);
-            }
-            if (hatchMech.launcher() == HatchLauncher.FIRE) {
-              hatchMech.launcher(HatchLauncher.RESET);
-            }
+          if (hatchMech.arm() == HatchArm.IN) {
+            hatchMech.arm(HatchArm.OUT);
           }
         } else {
+          // Reset the hatch mechanism
           hatchMech.arm(HatchArm.IN);
           hatchMech.launcher(HatchLauncher.RESET);
         }
-
         break;
 
       default:
@@ -269,7 +224,9 @@ public class GamePieceController implements Sendable {
     }
 
     // Actions that apply in either cargo or hatch mode
-    if ((gamePieceMode == GamePieceMode.CARGO || gamePieceMode == GamePieceMode.HATCH)) {
+    if ((mode == GamePieceMode.CARGO || mode == GamePieceMode.HATCH)) {
+      visionController.navigatorFeedback();
+
       if (driverStation.getRejectBall() && cargoIntake.arm() == CargoIntakeArmState.DOWN) {
         /*
          * Works in cargo or hatch mode. Cargo intake reverses motor to spit cargo.
@@ -277,7 +234,7 @@ public class GamePieceController implements Sendable {
         cargoIntake.roller(CargoIntakeRoller.FORWARD);
       }
 
-      if (true) {
+      if (driverStation.getTurretHome()) {
         /*
          * //TODO: Move Turret Home Must be in hatch or cargo mode. Moves the turret to
          * zero. If arm is in low cargo acquire postion and move is required, move to
@@ -288,83 +245,63 @@ public class GamePieceController implements Sendable {
           if (isSafeToMoveTurret()) {
             turret.moveTurretToHome();
           } else {
-            cargoMech.wrist(CargoMechWrist.LOW_ROCKET);
-            turret.moveTurretToHome();
+            cargoMech.wrist(CargoMechWrist.SAFE_TURRET);
           }
         }
       }
 
       /*
-       * //TODO: Move Turret Right Must be in hatch or cargo mode. Moves the turret to
+       * //Move Turret Right Must be in hatch or cargo mode. Moves the turret to
        * +90. If arm is in low cargo acquire postion and move is required, move to
        * cargo arm to low rocket Must check that it is safe to move turret. Cancels
-       * Target Lock
+       * Target Lock.
        */
 
-      if (true) {
-        if (gamePieceMode == GamePieceMode.CARGO || gamePieceMode == GamePieceMode.HATCH) {
-          if (cargoMech.wrist() != CargoMechWristState.LOW_ROCKET) {
-            cargoMech.wrist(CargoMechWrist.LOW_ROCKET);
-            if (isSafeToMoveTurret()) {
-              turret.target(90.0);
-            }
-          }
+      if (driverStation.getTurretRight()) {
+        if (isSafeToMoveTurret()) {
+          turret.target(90.0);
+        } else {
+          cargoMech.wrist(CargoMechWrist.SAFE_TURRET);
         }
       }
 
       /*
-       * //TODO: Move Turret Left Must be in hatch or cargo mode. Moves the turret to
+       * //Move Turret Left Must be in hatch or cargo mode. Moves the turret to
        * -90. If arm is in low cargo acquire postion and move is required, move to
        * cargo arm to low rocket Must check that it is safe to move turret. Cancels
        * Target Lock
        */
 
-      if (true) {
-        if (gamePieceMode == GamePieceMode.CARGO || gamePieceMode == GamePieceMode.HATCH) {
-          if (cargoMech.wrist() != CargoMechWristState.LOW_ROCKET) {
-            cargoMech.wrist(CargoMechWrist.LOW_ROCKET);
-            if (isSafeToMoveTurret()) {
-              turret.target(-90.0); // target lock handled here
-            }
-          }
+      if (driverStation.getTurretLeft()) {
+        if (isSafeToMoveTurret()) {
+          turret.target(-90.0);
+        } else {
+          cargoMech.wrist(CargoMechWrist.SAFE_TURRET);
         }
       }
 
       /*
-       * //TODO: Target Lock Turret Must be in hatch or cargo mode. Set target to
+       * //Target Lock Turret Must be in hatch or cargo mode. Set target to
        * track mode. Should allow override if other turret move.
        */
-      if (gamePieceMode == GamePieceMode.CARGO || gamePieceMode == GamePieceMode.HATCH) {
+      if (driverStation.getAutoTargetButtonPressed()) {
         turret.lockOnTarget();
       }
 
       /*
-       * //TODO: Fine Adjust Turret Manually move the turret based on stick. Should
+       * //Fine Adjust Turret Manually move the turret based on stick. Should
        * check for unsafe turret situations. Cancels target lock
        */
       if (driverStation.getFineAdjustTurret() != 0.0) {
         if (isSafeToMoveTurret()) {
           turret.manual(driverStation.getFineAdjustTurret()); // cancel target lock handled here
+        } else {
+          cargoMech.wrist(CargoMechWrist.SAFE_TURRET);
         }
-      }
 
-      /*
-       * //TODO: On Target Cargo Must be in cargo mode. If vision reports on target,
-       * blink blue LEDs and rumble nav controller
-       */
-      if (gamePieceMode == GamePieceMode.CARGO) {
-        visionController.navigatorFeedback();
       }
+    } // End combined Hatch and Turret mode capabilities.
 
-      /*
-       * //TODO: On Target Hatch Must be in hatch mode. If vision reports on target,
-       * blink gold LEDs and rumble nav controller
-       */
-      if (gamePieceMode == GamePieceMode.HATCH) {
-        visionController.navigatorFeedback();
-      }
-
-    }
     // Update all systems
     cargoIntake.periodic();
     cargoMech.periodic();
@@ -386,10 +323,10 @@ public class GamePieceController implements Sendable {
 
   @Override
   public void initSendable(SendableBuilder builder) {
-    builder.addDoubleProperty(
-        name + "Enabled", 
-        this::getMode, // Lambda called when updating network table
+    builder.addStringProperty(
+        name + "Mode",
+        mode::name, // Lambda called when updating network table
         // Lambda calls set enabled if changed in Network table
-        (gamePieceMode) -> setMode(gamePieceMode)); 
+        (gamePieceMode) -> testMode(gamePieceMode)); 
   }
 }

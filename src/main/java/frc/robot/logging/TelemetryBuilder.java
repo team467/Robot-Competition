@@ -71,18 +71,25 @@ public class TelemetryBuilder extends SendableBuilderImpl implements SendableBui
    * Update the network table values by calling the getters for all properties.
    * Extended to print out the values to the CSV.
    */
-  static String[] keys = {"/startingLocation/x","/startingLocation/y","/rightDistance","/leftDistance","/isZeroed","/headingAngle"};
+  static String[] keys = {
+    "/startingLocation/x", 
+    "/startingLocation/y", 
+    "/rightDistance", 
+    "/leftDistance", 
+    "/isZeroed", 
+    "/headingAngle"};
+
   public void updateTable() {
     super.updateTable();
     if (csvPrinter != null) {
       try {
         NetworkTable table = super.getTable();
         if (!printedHeaders) {
-          for(Object o:(Object[])keys){
+          for (Object o: (Object[]) keys) {
             csvPrinter.print(o);
           }
           csvPrinter.print("voltage");
-          for(Object o:(Object[])pins){
+          for (Object o: (Object[]) pins) {
             csvPrinter.print(o);
           }
           csvPrinter.println();
@@ -106,14 +113,15 @@ public class TelemetryBuilder extends SendableBuilderImpl implements SendableBui
               break;
             }
             default:
-              text = entry.getString("")+"no types";
+              text = entry.getString("") + "no types";
               break;
           }
           csvPrinter.print(text);
           LOGGER.info(text);
         }
-          csvPrinter.print(String.format("%10.5f",pdp.getVoltage()));
-        for(int pin:pins){
+        
+        csvPrinter.print(String.format("%10.5f",pdp.getVoltage()));
+        for (int pin: pins) {
           csvPrinter.print(String.format("%10.5f",pdp.getCurrent(pin)));
         }
         csvPrinter.println();

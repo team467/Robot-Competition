@@ -127,24 +127,14 @@ public class DriverStation467 {
     return getNavJoystick().getRightTrigger() > 0.9;
   }
   
-  public boolean setlowRocketShipPos() {
+  public boolean getCargoArmLowRocketShipPosition() {
     //Nav
     return getNavJoystick().pov() == 0;
   }
 
-  public boolean setCargoPos() {
+  public boolean getCargoArmCargoShipPosition() {
     //Nav
     return getNavJoystick().pov() == 180;
-  }
-
-  public boolean getRightRampLiftButton() {
-    //Driver
-    return getDriveJoystick().pov() == 0;
-  }
-
-  public boolean getRightRampDropButton() {
-    //Driver
-    return getDriveJoystick().pov() == 180;
   }
 
   public boolean getAutoTargetButtonPressed() {
@@ -158,7 +148,7 @@ public class DriverStation467 {
     return getNavJoystick().pressed(Button.b);
   }
 
-  public boolean getAquireSeq() {
+  public boolean getTurretHome() {
     //Nav
     return getNavJoystick().pressed(Button.y);
   }
@@ -173,7 +163,7 @@ public class DriverStation467 {
     return getNavJoystick().down(Button.BumperRight);
   }
 
-  public boolean setHatchMode(){
+  public boolean getCargoMode() {
     return getNavJoystick().down(Button.BumperLeft);
   }
   
