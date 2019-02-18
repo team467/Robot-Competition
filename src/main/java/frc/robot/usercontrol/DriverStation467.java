@@ -1,6 +1,5 @@
 package frc.robot.usercontrol;
 
-import frc.robot.autonomous.ActionGroup;
 import frc.robot.drive.DriveMode;
 import frc.robot.usercontrol.XBoxJoystick467.Button;
 
@@ -20,7 +19,7 @@ public class DriverStation467 {
   /**
    * Singleton instance of the object.
    *
-   * @return
+   * @return the instance
    */
   public static DriverStation467 getInstance() {
     if (station == null) {
@@ -100,16 +99,6 @@ public class DriverStation467 {
     return DriveMode.ArcadeDrive;
   }
 
-  public boolean getTerminateAuto() {
-    // TODO: Manually break out of autonoumous mode
-    return true;
-  }
-
-  public ActionGroup getActionGroup() {
-    // TODO: Get an action group if required
-    return null; 
-  }
-
   /**
    * @return true if button to reset the gyroscope selection is pressed
    */
@@ -172,8 +161,8 @@ public class DriverStation467 {
     return getNavJoystick().getLeftStickY();
   }
 
-  public boolean getFireCargo(){
-    return getNavJoystick().getLeftTrigger() > 0.9;
+  public boolean getFireCargo() {
+    return getNavJoystick().getLeftTrigger() >= 0.9;
   }
 
   public void navSetLeftRumble(double value) {
@@ -207,7 +196,8 @@ public class DriverStation467 {
   }
 
   public boolean defenseMode() {
-    if(getDriveJoystick().down(Button.BumperLeft) == true && getDriveJoystick().down(Button.BumperRight) == true) {
+    if(getDriveJoystick().down(Button.BumperLeft) == true 
+        && getDriveJoystick().down(Button.BumperRight) == true) {
       return true;
     } else {
       return false;
@@ -215,7 +205,7 @@ public class DriverStation467 {
   }
 
   public boolean getRejectBall() {
-    return getDriveJoystick().getLeftTrigger() == 0.9;
+    return getDriveJoystick().getLeftTrigger() >= 0.9;
   }
 
   public void driverSetLeftRumble(double value) {
