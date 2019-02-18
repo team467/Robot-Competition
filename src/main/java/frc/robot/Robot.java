@@ -20,6 +20,7 @@ import frc.robot.logging.TelemetryBuilder;
 import frc.robot.simulator.communications.RobotData;
 import frc.robot.usercontrol.DriverStation467;
 import frc.robot.vision.CameraSwitcher;
+import frc.robot.usercontrol.DeepSpaceGamepad;
 
 
 import org.apache.logging.log4j.Logger;
@@ -39,10 +40,12 @@ public class Robot extends TimedRobot {
 
   // Robot objects
   private DriverStation467 driverstation;
+  private DeepSpaceGamepad gamepad;
   private Drive drive;
   private RobotData data;
   private TelemetryBuilder telemetry;
   private CameraSwitcher camera;
+
 
   private NetworkTableInstance table;
   private GamePieceController gamePieceController;
@@ -81,6 +84,7 @@ public class Robot extends TimedRobot {
     drive = Drive.getInstance();
     telemetry = TelemetryBuilder.getInstance();
     camera = CameraSwitcher.getInstance();
+    gamepad= DeepSpaceGamepad.getInstance();
 
     gamePieceController = GamePieceController.getInstance();
 
@@ -120,6 +124,7 @@ public class Robot extends TimedRobot {
   public void teleopInit() {
     LOGGER.info("Init Teleop");
     driverstation.readInputs();
+    gamepad.initKnob();
   }
 
   /**
@@ -129,10 +134,10 @@ public class Robot extends TimedRobot {
   public void teleopPeriodic() {
     LOGGER.debug("Match time {}", DriverStation.getInstance().getMatchTime());
     driverstation.readInputs();
+    gamepad.read();
 
     double speed = driverstation.getArcadeSpeed();
     double turn = driverstation.getArcadeTurn();
-    double turretSpeed = driverstation.getArmManualOverride();
     
 
     if (Math.abs(speed) < RobotMap.MIN_DRIVE_SPEED) {

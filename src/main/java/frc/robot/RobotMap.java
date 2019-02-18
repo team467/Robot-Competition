@@ -194,6 +194,9 @@ public class RobotMap {
 
         CONTROLS_INVERTED_FB = true;
         CONTROLS_INVERTED_TURN = false;
+        NAV_TURRET_INVERTED = true;
+        NAV_TICK_MULTIPLIER = 110;
+
         VELOCITY_MULTIPLIER_RIGHT = 1300; //TODO fix this
         VELOCITY_MULTIPLIER_LEFT = 1300;
 
@@ -500,6 +503,8 @@ public class RobotMap {
 
   public static boolean CONTROLS_INVERTED_FB;
   public static boolean CONTROLS_INVERTED_TURN;
+  public static boolean NAV_TURRET_INVERTED; 
   public static double VELOCITY_MULTIPLIER_RIGHT;
   public static double VELOCITY_MULTIPLIER_LEFT;
+  public static double NAV_TICK_MULTIPLIER;
 }

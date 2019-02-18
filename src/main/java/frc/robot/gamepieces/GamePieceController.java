@@ -14,6 +14,7 @@ import frc.robot.gamepieces.HatchMechanism.HatchArm;
 import frc.robot.gamepieces.HatchMechanism.HatchLauncher;
 import frc.robot.logging.RobotLogManager;
 import frc.robot.usercontrol.DriverStation467;
+import frc.robot.usercontrol.DeepSpaceGamepad;
 import frc.robot.vision.CameraSwitcher;
 import frc.robot.vision.VisionController;
 
@@ -37,6 +38,7 @@ public class GamePieceController implements Sendable {
   private CameraSwitcher camera;
 
   private DriverStation467 driverStation;
+  private DeepSpaceGamepad gamepad;
   private VisionController visionController;
 
   private GamePieceMode gamePieceMode;
@@ -105,6 +107,7 @@ public class GamePieceController implements Sendable {
 
   private GamePieceController() {
     driverStation = DriverStation467.getInstance();
+    gamepad = DeepSpaceGamepad.getInstance();
       cargoIntake = CargoIntake.getInstance();
       cargoMech = CargoMech.getInstance();
       hatchMech = HatchMechanism.getInstance();
@@ -328,7 +331,7 @@ public class GamePieceController implements Sendable {
        */
       if (true) {
         if (isSafeToMoveTurret()) {
-          turret.manual(driverStation.getFineAdjustTurret()); // cancel target lock handled here
+          turret.manual(gamepad.getDegrees()); // cancel target lock handled here
         }
       }
 
