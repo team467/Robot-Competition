@@ -200,13 +200,13 @@ public class DriverStation467 {
   //Driver controls
 
   public double getArcadeSpeed() {
-    return (RobotMap.CONTROLS_INVERTED == true) 
+    return (RobotMap.CONTROLS_INVERTED_FB == true) 
       ? -getDriveJoystick().getAdjustedSpeed(driverJoy.getLeftStickY()) 
       :  getDriveJoystick().getAdjustedSpeed(driverJoy.getLeftStickY());
   }
   
   public double getArcadeTurn() {
-    return (RobotMap.CONTROLS_INVERTED == true) 
+    return (RobotMap.CONTROLS_INVERTED_TURN == true) 
     ? -getDriveJoystick().getAdjustedTurnSpeed()
     : getDriveJoystick().getAdjustedTurnSpeed();
   }
