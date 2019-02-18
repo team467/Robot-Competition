@@ -1,12 +1,11 @@
 package frc.robot.gamepieces;
 
-import frc.robot.RobotMap;
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Sendable;
 import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
-import frc.robot.gamepieces.CargoIntake.CargoIntakeRoller;
+
+import frc.robot.RobotMap;
 import frc.robot.gamepieces.CargoIntake.CargoIntakeArm;
+import frc.robot.gamepieces.CargoIntake.CargoIntakeArmState;
 import frc.robot.gamepieces.CargoIntake.CargoIntakeRoller;
 import frc.robot.gamepieces.CargoMech.CargoMechClaw;
 import frc.robot.gamepieces.CargoMech.CargoMechWrist;
@@ -159,17 +158,17 @@ public class GamePieceController implements Sendable {
     }
 
     switch (gamePieceMode) {
-
       case DEFENSE:
         turret.moveTurretToHome();
         if (turret.isHome()) {
-          if (cargoIntake.arm() == CargoIntakeArm.DOWN)
+          if (cargoIntake.arm() == CargoIntakeArmState.DOWN) {
             cargoIntake.arm(CargoIntakeArm.UP);
-          if (hatchMech.arm() == HatchArm.OUT)
+          }
+          if (hatchMech.arm() == HatchArm.OUT) {
             hatchMech.arm(HatchArm.IN);
+          }
         }
         break;
-
       case CARGO:
         if (driverStation.getAcquireBall()) {
           /*
@@ -177,12 +176,13 @@ public class GamePieceController implements Sendable {
           * roller, move turret to home, lower down, and turn on claw. - Must check that
           * it is safe to move turret. - Cancels Target Lock
           */
-          if (cargoIntake.arm() == CargoIntakeArm.DOWN) { // If cargo intake arm is down
+          if (cargoIntake.arm() == CargoIntakeArmState.DOWN) { // If cargo intake arm is down
             cargoIntake.roller(CargoIntakeRoller.REVERSE); // Suck ball into cargo intake mech
             if (turret.isHome() == false && isSafeToMoveTurret()) {
               turret.moveTurretToHome();
             } else {
-              cargoMech.wrist(CargoMechWrist.CARGO_BIN); // Move cargo mech arm down to pick up cargo
+              // Move cargo mech arm down to pick up cargo
+              cargoMech.wrist(CargoMechWrist.CARGO_BIN); 
               cargoMech.claw(CargoMechClaw.REVERSE); // Suck ball into cargo arm mech
             }
           }
@@ -248,13 +248,13 @@ public class GamePieceController implements Sendable {
         }
         break;
 
-    default:
-      LOGGER.error("Should always have a game piece mode.");
+      default:
+        LOGGER.error("Should always have a game piece mode.");
     }
 
     // Actions that apply in either cargo or hatch mode
     if ((gamePieceMode == GamePieceMode.CARGO || gamePieceMode == GamePieceMode.HATCH)) {
-      if (driverStation.getRejectBall() && cargoIntake.arm() == CargoIntakeArm.DOWN) {
+      if (driverStation.getRejectBall() && cargoIntake.arm() == CargoIntakeArmState.DOWN) {
         /*
          * Works in cargo or hatch mode. Cargo intake reverses motor to spit cargo.
          */
@@ -362,18 +362,19 @@ public class GamePieceController implements Sendable {
    * @return boolean true if safe to move, false otherwise.
    */
   private boolean isSafeToMoveTurret() {
-    // boolean isSafe = 
-    //     (cargoMech.isSafeToMoveTurret() && cargoIntake.arm() == CargoIntakeArm.DOWN) ? true : false;
-    // LOGGER.debug("Safe to move turret? {}", isSafe);
-   // return isSafe; //TODO change this when have all GP
-   return true;
+
+    boolean isSafe = (cargoMech.isSafeToMoveTurret() 
+        && cargoIntake.arm() == CargoIntakeArmState.DOWN) ? true : false;
+    LOGGER.debug("Safe to move turret? {}", isSafe);
+    return isSafe;
   }
 
   @Override
   public void initSendable(SendableBuilder builder) {
     builder.addDoubleProperty(
-      name + "Enabled", 
-      this::getMode, // Lambda called when updating network table
-      (gamePieceMode) -> setMode(gamePieceMode)); // Lambda calls set enabled if changed in Network table
+        name + "Enabled", 
+        this::getMode, // Lambda called when updating network table
+        // Lambda calls set enabled if changed in Network table
+        (gamePieceMode) -> setMode(gamePieceMode)); 
   }
 }
