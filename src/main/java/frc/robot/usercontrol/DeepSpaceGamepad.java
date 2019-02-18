@@ -24,25 +24,23 @@ public class DeepSpaceGamepad {
   private static final double TURRET_RANGE = 270.0; //Put this in robot map
   private static DeepSpaceGamepad instance = null;
 
-public DeepSpaceGamepad() {
+  public DeepSpaceGamepad() {
     gamepad = new Joystick(0);
     buttonA = false;
     buttonB = false;
     buttonC = false;
     toggle = false;
     turretKnob = 0.0;
-}
-
-public static DeepSpaceGamepad getInstance() {
-  if (instance == null) {
-    instance = new DeepSpaceGamepad();
   }
-  return instance;
-}
 
+  public static DeepSpaceGamepad getInstance() {
+    if (instance == null) {
+      instance = new DeepSpaceGamepad();
+    }
+    return instance;
+  }
 
   public void read() {
-
     buttonA = gamepad.getRawButton(12);
     buttonB = gamepad.getRawButton(13);
     buttonC = gamepad.getRawButton(14);
@@ -50,40 +48,35 @@ public static DeepSpaceGamepad getInstance() {
 
     turretKnob = gamepad.getRawAxis(0);
 
-      if (toggle) {
-        gamepad.setOutput(5, true);
-        gamepad.setOutput(6, true);
-      }
-      else {
-        gamepad.setOutput(5, false);
-        gamepad.setOutput(6, false);
-      }
-
-      }
-
-      public void initKnob(){
-        turretoffset = gamepad.getRawAxis(0);
+    if (toggle) {
+      gamepad.setOutput(5, true);
+      gamepad.setOutput(6, true);
     }
-
-      public double getDegrees() {
-        double angle = RobotMap.NAV_TICK_MULTIPLIER * (turretKnob - turretoffset);
-        LOGGER.debug("Turret knob: {}", turretKnob - turretoffset);
-        return (RobotMap.NAV_TURRET_INVERTED)? -angle : angle; 
-      }
-
-
-
-    public boolean getButtonA(){
-        return buttonA;
+    else {
+      gamepad.setOutput(5, false);
+      gamepad.setOutput(6, false);
     }
-
-    public boolean getButtonB(){
-        return buttonB;
-    }
-
-    public boolean getButtonC(){
-        return buttonC;
-    }
-
-
   }
+
+  public void initKnob() {
+    turretoffset = gamepad.getRawAxis(0);
+  }
+
+  public double getDegrees() {
+    double angle = RobotMap.NAV_TICK_MULTIPLIER * (turretKnob - turretoffset);
+    LOGGER.debug("Turret knob: {}", turretKnob - turretoffset);
+    return (RobotMap.NAV_TURRET_INVERTED)? -angle : angle; 
+  }
+
+  public boolean getButtonA() {
+    return buttonA;
+  }
+
+  public boolean getButtonB() {
+    return buttonB;
+  }
+
+  public boolean getButtonC() {
+    return buttonC;
+  }
+}
