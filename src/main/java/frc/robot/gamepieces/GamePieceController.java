@@ -97,6 +97,7 @@ public class GamePieceController implements Sendable {
     hatchMech = HatchMechanism.getInstance();
     turret = Turret.getInstance();
     camera = CameraSwitcher.getInstance();    
+
     visionController = VisionController.getInstance();
     mode = GamePieceMode.DEFENSE;
   }
@@ -107,7 +108,7 @@ public class GamePieceController implements Sendable {
   public void periodic() {
 
     // Depending on driver input, camera view switches to front or back.
-    // Does not change the mode away from Hatch or Cargo, but does take camera.
+    // // Does not change the mode away from Hatch or Cargo, but does take camera.
     if (driverStation.getDriveCameraFront()) {
       camera.forward();
     } else if (driverStation.getDriveCameraBack()) {
@@ -292,7 +293,7 @@ public class GamePieceController implements Sendable {
        * //Fine Adjust Turret Manually move the turret based on stick. Should
        * check for unsafe turret situations. Cancels target lock
        */
-      if (driverStation.getFineAdjustTurret() != 0.0) {
+      if (true) {
         if (isSafeToMoveTurret()) {
           turret.manual(driverStation.getFineAdjustTurret()); // cancel target lock handled here
         } else {
@@ -303,10 +304,10 @@ public class GamePieceController implements Sendable {
     } // End combined Hatch and Turret mode capabilities.
 
     // Update all systems
-    cargoIntake.periodic();
-    cargoMech.periodic();
-    hatchMech.periodic();
-    turret.periodic();
+    if(cargoIntake != null)cargoIntake.periodic();
+    if(cargoMech != null)cargoMech.periodic();
+    if(hatchMech != null) hatchMech.periodic();
+    if(turret != null)turret.periodic();
   }
 
   /**
@@ -315,6 +316,7 @@ public class GamePieceController implements Sendable {
    * @return boolean true if safe to move, false otherwise.
    */
   private boolean isSafeToMoveTurret() {
+
     boolean isSafe = (cargoMech.isSafeToMoveTurret() 
         && cargoIntake.arm() == CargoIntakeArmState.DOWN) ? true : false;
     LOGGER.debug("Safe to move turret? {}", isSafe);

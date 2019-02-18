@@ -91,10 +91,11 @@ public class Turret extends GamePieceBase implements GamePiece {
    * @param speed the speed to move the turret.
    */
   public void manual(double speed) {
-    LOGGER.debug("Manual override for turret position: {}", speed);
     onManualControl = true;
     targetLock = false;
     targetPosition = currentPosition;
+    LOGGER.debug("Manual override for turret: {} Expected: {}", talon.getMotorOutputPercent(), speed);
+    
     if (!RobotMap.useSimulator && RobotMap.HAS_TURRET) {
       if (enabled) {
         talon.set(ControlMode.PercentOutput, speed);
@@ -163,7 +164,7 @@ public class Turret extends GamePieceBase implements GamePiece {
   public void periodic() {
     if (!RobotMap.useSimulator && RobotMap.HAS_TURRET) {
       if (enabled && !onManualControl) {
-        followVision();
+       // followVision();
         talon.set(ControlMode.Position, (targetPosition * ticksPerDegree));
         // Update state
         currentPosition = (talon.getSelectedSensorPosition(TALON_SENSOR_ID) / ticksPerDegree);

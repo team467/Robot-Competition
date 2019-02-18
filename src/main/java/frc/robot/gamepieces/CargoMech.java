@@ -177,6 +177,7 @@ public class CargoMech extends GamePieceBase implements GamePiece {
         motor = new Spark(RobotMap.CARGO_MECH_CLAW_LEFT_MOTOR_CHANNEL);
         motor.setInverted(RobotMap.CARGO_MECH_CLAW_LEFT_MOTOR_INVERTED);
       }
+
     }
 
     /**
@@ -185,7 +186,7 @@ public class CargoMech extends GamePieceBase implements GamePiece {
      */
     private void actuate() {
       LOGGER.debug("Actuating cargo mech claw: {}", name());
-      if (RobotMap.useSimulator) {
+      if (RobotMap.useSimulator || !RobotMap.HAS_CARGO_MECHANISM) {
         return;
       }
 

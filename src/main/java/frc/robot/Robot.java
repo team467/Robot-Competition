@@ -21,6 +21,7 @@ import frc.robot.simulator.communications.RobotData;
 import frc.robot.usercontrol.DriverStation467;
 import frc.robot.vision.CameraSwitcher;
 
+
 import org.apache.logging.log4j.Logger;
 
 /**
@@ -42,6 +43,7 @@ public class Robot extends TimedRobot {
   private RobotData data;
   private TelemetryBuilder telemetry;
   private CameraSwitcher camera;
+
   private NetworkTableInstance table;
   private GamePieceController gamePieceController;
 
@@ -64,7 +66,7 @@ public class Robot extends TimedRobot {
     //table.deleteAllEntries(); // Uncomment to clear table once.
     
     // Initialize RobotMap
-    RobotMap.init(RobotId.ROBOT_2019);
+    RobotMap.init(RobotId.ROBOT_2018);
 
     // Used after init, should be set only by the Simulator GUI
     // this ensures that the simulator is off otherwise.
@@ -79,6 +81,7 @@ public class Robot extends TimedRobot {
     drive = Drive.getInstance();
     telemetry = TelemetryBuilder.getInstance();
     camera = CameraSwitcher.getInstance();
+
     gamePieceController = GamePieceController.getInstance();
 
     drive.setPidsFromRobotMap();
@@ -94,6 +97,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
+
     // TODO: Determine time to run each
     // data.send();
     // telemetry.updateTable();
@@ -126,6 +130,8 @@ public class Robot extends TimedRobot {
 
     double speed = driverstation.getArcadeSpeed();
     double turn = driverstation.getArcadeTurn();
+    double turretSpeed = driverstation.getArmManualOverride();
+    
 
     if (Math.abs(speed) < RobotMap.MIN_DRIVE_SPEED) {
       speed = 0.0;
@@ -175,6 +181,7 @@ public class Robot extends TimedRobot {
         drive.readPidsFromSmartDashboard(tuneSlot);
         tuningValue = Double.parseDouble(SmartDashboard.getString("DB/String 0", "0.0"));
         LOGGER.info("Tuning Value: " + tuningValue);
+      case 2:
         break;
       default:
         LOGGER.info("Invalid Tune Mode: {}", tuneSlot);
@@ -195,6 +202,9 @@ public class Robot extends TimedRobot {
       case 1: // Turn PID Slot
         drive.tuneTurn(tuningValue, RobotMap.PID_SLOT_TURN);
         LOGGER.debug("Turn {} degrees",Math.toDegrees(drive.getLeftDistance()));
+        break;
+      case 2:        
+        drive.arcadeDrive(1,0, true);
         break;
       default:
     }

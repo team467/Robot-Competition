@@ -205,7 +205,8 @@ public class HatchMechanism extends GamePieceBase implements GamePiece {
   public void initSendable(SendableBuilder builder) {
     builder.addStringProperty("HatchLauncher", launcher::name, (command) -> launcher(command));
     builder.addStringProperty("HatchArm", arm::name, (command) -> arm(command));
-    if (RobotMap.HAS_HATCH_MECHANISM) {
+
+    if(RobotMap.HAS_HATCH_MECHANISM){
       HatchLauncher.launcher1.initSendable(builder);
       HatchLauncher.launcher2.initSendable(builder);
       HatchLauncher.launcher3.initSendable(builder);
