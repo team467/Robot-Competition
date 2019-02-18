@@ -23,7 +23,7 @@ public class Turret extends GamePieceBase implements GamePiece {
   private final WpiTalonSrxInterface talon;
   private static final int TALON_SENSOR_ID = 0;
   private static final int TALON_PID_SLOT_ID = 0;
-  private double ticksPerDegree;
+  private double ticksPerDegree = 2;
   private boolean onManualControl = true;
   private boolean targetLock = false;
 

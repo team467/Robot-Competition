@@ -288,7 +288,7 @@ public class GamePieceController implements Sendable {
        * Target Lock
        */
 
-      if (driverStation.getTurretRight()) {
+      if (gamepad.getButtonB()) {
         if (gamePieceMode == GamePieceMode.CARGO || gamePieceMode == GamePieceMode.HATCH) {
           if (cargoMech.wrist() != CargoMechWristState.LOW_ROCKET) {
             cargoMech.wrist(CargoMechWrist.LOW_ROCKET);
@@ -306,7 +306,7 @@ public class GamePieceController implements Sendable {
        * Target Lock
        */
 
-      if (driverStation.getTurretLeft()) {
+      if (gamepad.getButtonA()) {
         if (gamePieceMode == GamePieceMode.CARGO || gamePieceMode == GamePieceMode.HATCH) {
           if (cargoMech.wrist() != CargoMechWristState.LOW_ROCKET) {
             cargoMech.wrist(CargoMechWrist.LOW_ROCKET);
