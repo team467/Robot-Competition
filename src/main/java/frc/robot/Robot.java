@@ -133,8 +133,6 @@ public class Robot extends TimedRobot {
     double speed = driverstation.getArcadeSpeed();
     double turn = driverstation.getArcadeTurn();
     double turretSpeed = driverstation.getArmManualOverride();
-
-    //gamePieceController.periodic();
     
 
     if (Math.abs(speed) < RobotMap.MIN_DRIVE_SPEED) {
@@ -195,7 +193,6 @@ public class Robot extends TimedRobot {
         drive.readPidsFromSmartDashboard(tuneSlot);
         tuningValue = Double.parseDouble(SmartDashboard.getString("DB/String 0", "0.0"));
         LOGGER.info("Tuning Value: " + tuningValue);
-
       case 2:
         break;
       default:
@@ -219,9 +216,7 @@ public class Robot extends TimedRobot {
         LOGGER.debug("Turn {} degrees",Math.toDegrees(drive.getLeftDistance()));
         break;
       case 2:        
-        
         drive.arcadeDrive(1,0, true);
-
         break;
       default:
     }

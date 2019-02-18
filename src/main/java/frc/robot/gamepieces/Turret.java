@@ -53,7 +53,6 @@ public class Turret extends GamePieceBase implements GamePiece {
 
     // Initialize the sensors and actuators
     talon = TalonProxy.create(RobotMap.TURRET_MOTOR_CHANNEL);
-    LOGGER.error("Talon created: {}, Motor Channel: {}", talon, RobotMap.TURRET_MOTOR_CHANNEL);
     talon.setName("Telemetry", "TurretMotor");
     talon.setInverted(RobotMap.TURRET_MOTOR_INVERTED);
     talon.setSensorPhase(RobotMap.TURRET_SENSOR_INVERTED);
@@ -88,7 +87,6 @@ public class Turret extends GamePieceBase implements GamePiece {
    * @param speed the speed to move the turret.
    */
   public void manual(double speed) {
-    //LOGGER.error("Manual override for turret position: {}", speed);
     onManualControl = true;
     targetLock = false;
     targetPosition = currentPosition;

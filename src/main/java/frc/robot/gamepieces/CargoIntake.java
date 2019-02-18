@@ -181,7 +181,6 @@ public class CargoIntake extends GamePieceBase implements GamePiece {
     CargoIntakeArmState.initialize();
 
     roller = CargoIntakeRoller.STOP;
-    LOGGER.error("Roller == {}", roller);
     arm = CargoIntakeArm.UP;
     armState = CargoIntakeArmState.read();
 
@@ -234,7 +233,6 @@ public class CargoIntake extends GamePieceBase implements GamePiece {
    * @param command the roller command
    */
   public void roller(CargoIntakeRoller command) {
-    LOGGER.error("Command: {}", command);
     roller = command;
   }
 
@@ -245,7 +243,6 @@ public class CargoIntake extends GamePieceBase implements GamePiece {
    * @param command the roller command
    */
   public void roller(String command) {
-    LOGGER.error("Command: {}", command);
     roller = CargoIntakeRoller.valueOf(command);
   }
 
@@ -275,7 +272,6 @@ public class CargoIntake extends GamePieceBase implements GamePiece {
     builder.addStringProperty("CargoIntakeRoller", roller::name, (command) -> roller(command));
     builder.addStringProperty("CargoIntakeArm", arm::name, (command) -> arm(command));
     builder.addStringProperty("CargoIntakeArmState", armState::name, null);
-    LOGGER.error("Cargo intake L= {} Cargo intake R= {}",  CargoIntakeArm.leftSolenoid, CargoIntakeArm.rightSolenoid);
     
     if(RobotMap.HAS_ROLLER_INTAKE){
       CargoIntakeRoller.motor.initSendable(builder);
