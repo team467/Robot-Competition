@@ -30,6 +30,7 @@ public class TalonSpeedControllerGroup implements SpeedController, Sendable {
   private WpiTalonSrxInterface follower2;
 
   private int previousSensorPosition;
+  private double maxVelocity;
 
   private ControlMode controlMode = ControlMode.PercentOutput;
 
@@ -112,7 +113,7 @@ public class TalonSpeedControllerGroup implements SpeedController, Sendable {
         leader.getSelectedSensorPosition(0), leader.getClosedLoopError(0));
   }
 
-  public void pidf(int slotId, double p, double i, double d, double f) {
+  public void pidf(int slotId, double p, double i, double d, double f, double maxVelocity) {
     if (!RobotMap.HAS_WHEELS) {
       LOGGER.debug("No PIDF");
       return;
@@ -122,6 +123,7 @@ public class TalonSpeedControllerGroup implements SpeedController, Sendable {
     leader.config_kD(slotId, d, RobotMap.TALON_TIMEOUT);
     leader.config_kF(slotId, f, RobotMap.TALON_TIMEOUT);
 
+    this.maxVelocity = maxVelocity;
     leader.configNeutralDeadband(0.04, RobotMap.TALON_TIMEOUT);
   }
 
@@ -145,12 +147,12 @@ public class TalonSpeedControllerGroup implements SpeedController, Sendable {
       return;
     }
     leader.disable();
-    if (follower1 != null) {
-      follower1.disable();
-    }
-    if (follower2 != null) {
-      follower2.disable();
-    }
+    // if (follower1 != null) {
+    //   follower1.disable();
+    // }
+    // if (follower2 != null) {
+    //   follower2.disable();
+    // }
   }
 
   @Override
@@ -168,13 +170,13 @@ public class TalonSpeedControllerGroup implements SpeedController, Sendable {
       LOGGER.trace("No drive system");
       return;
     }
-    leader.pidWrite(output);
-    if (follower1 != null) {
-      follower1.follow(leader);
-    }
-    if (follower2 != null) {
-      follower2.follow(leader);
-    }
+    // leader.pidWrite(output);
+    // if (follower1 != null) {
+    //   follower1.follow(leader);
+    // }
+    // if (follower2 != null) {
+    //   follower2.follow(leader);
+    // }
   }
 
   @Override
@@ -188,13 +190,22 @@ public class TalonSpeedControllerGroup implements SpeedController, Sendable {
       return;
     }
 
+    //LOGGER.error("Output to {} drive is {} in mode: {}", name, outputValue, controlMode);
+
+    if (controlMode == ControlMode.Velocity) {
+      outputValue *= maxVelocity;
+    }
+
     leader.set(controlMode, outputValue);
     if (follower1 != null) {
       follower1.follow(leader);
     }
-    if (follower2 != null) {
-      follower2.follow(leader);
-    }
+    // if (follower2 != null) {
+    //   follower2.follow(leader);
+    // }
+
+    LOGGER.error("name: {} Requested Velocity: {} Velocity = {} Error: {}", leader.getName(), outputValue, leader.getSelectedSensorVelocity(0), leader.getClosedLoopError(0));
+    //LOGGER.error("Name: {}, Error: {}, Output Voltage: {}, Output Percent; {}", name, leader.getClosedLoopError(0), leader.getMotorOutputVoltage(), leader.getMotorOutputPercent());
   }
 
   public void configPeakOutput(double percentOut) {
@@ -215,9 +226,9 @@ public class TalonSpeedControllerGroup implements SpeedController, Sendable {
     }
 
     leader.setInverted(isInverted);
-    // if (follower1 != null) {
-    //   follower1.setInverted(isInverted);
-    // }
+    if (follower1 != null) {
+      follower1.setInverted(isInverted);
+    }
     // if (follower2 != null) {
     //   follower2.setInverted(isInverted);
     // }

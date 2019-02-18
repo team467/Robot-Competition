@@ -92,13 +92,8 @@ public class Turret extends GamePieceBase implements GamePiece {
     onManualControl = true;
     targetLock = false;
     targetPosition = currentPosition;
-
-    if(Math.abs(speed) < 0.2 || speed == 0) {
-      talon.set(ControlMode.PercentOutput, 0);
-    } else {
       talon.set(ControlMode.PercentOutput, speed);
-      LOGGER.error("Manual override for turret: {} Expected: {}", talon.getMotorOutputPercent(), speed);
-    }
+      LOGGER.debug("Manual override for turret: {} Expected: {}", talon.getMotorOutputPercent(), speed);
     if (!RobotMap.useSimulator && RobotMap.HAS_TURRET) {
       if (enabled) {
         

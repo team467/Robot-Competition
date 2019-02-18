@@ -22,6 +22,9 @@ import frc.robot.logging.TelemetryBuilder;
 import frc.robot.simulator.communications.RobotData;
 import frc.robot.usercontrol.DriverStation467;
 import frc.robot.vision.CameraSwitcher;
+
+import java.sql.Time;
+
 import org.apache.logging.log4j.Logger;
 
 /**
@@ -109,8 +112,8 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
-    data.send();
-    telemetry.updateTable();
+     //data.send();
+    // telemetry.updateTable();
   }
 
   @Override
@@ -146,7 +149,7 @@ public class Robot extends TimedRobot {
     double turn = driverstation.getArcadeTurn();
     double turretSpeed = driverstation.getArmManualOverride();
 
-    gamePieceController.periodic();
+    //gamePieceController.periodic();
     
 
     if (Math.abs(speed) < RobotMap.MIN_DRIVE_SPEED) {
@@ -227,8 +230,10 @@ public class Robot extends TimedRobot {
         drive.tuneTurn(tuningValue, RobotMap.PID_SLOT_TURN);
         LOGGER.debug("Turn {} degrees",Math.toDegrees(drive.getLeftDistance()));
         break;
-      case 2:
-        turret.manual(1.0);
+      case 2:        
+        
+        drive.arcadeDrive(1,0, true);
+
         break;
       default:
     }

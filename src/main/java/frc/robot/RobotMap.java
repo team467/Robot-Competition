@@ -133,28 +133,33 @@ public class RobotMap {
         DRIVEMOTOR_NUM = 4;
         WHEEL_CIRCUMFERENCE = 18.50;
 
-        LEFT_LEAD_CHANNEL = 2;
-        LEFT_FOLLOWER_1_CHANNEL = 3;
+        CONTROLS_INVERTED = false;
+        VELOCITY_MULTIPLIER_RIGHT = 900;
+        VELOCITY_MULTIPLIER_LEFT = 900;
+
+        LEFT_LEAD_CHANNEL = 1;
+        LEFT_FOLLOWER_1_CHANNEL = 2;
         //LEFT_FOLLOWER_2_CHANNEL = 3;
-        LEFT_DRIVE_SENSOR_IS_INVERTED = false;
+        LEFT_DRIVE_SENSOR_IS_INVERTED = true;
         LEFT_DRIVE_MOTOR_IS_INVERTED = false;
 
         RIGHT_LEAD_CHANNEL = 4;
-        RIGHT_FOLLOWER_1_CHANNEL = 5;
+        RIGHT_FOLLOWER_1_CHANNEL = 5;      
         //RIGHT_FOLLOWER_2_CHANNEL = 6;
         RIGHT_DRIVE_SENSOR_IS_INVERTED = true;
         RIGHT_DRIVE_MOTOR_IS_INVERTED = false;
         
         //Linear PIDS
-        LEFT_DRIVE_PID_P = 1.0;
+        LEFT_DRIVE_PID_P = 0.5
+        ;//2.001
         LEFT_DRIVE_PID_I = 0.0;
-        LEFT_DRIVE_PID_D = 450.0;
-        LEFT_DRIVE_PID_F = 0.0;
+        LEFT_DRIVE_PID_D = 0.0;
+        LEFT_DRIVE_PID_F = 1.137;
 
-        RIGHT_DRIVE_PID_P = 1.0;
+        RIGHT_DRIVE_PID_P = 0.5;//1.915
         RIGHT_DRIVE_PID_I = 0.0;
-        RIGHT_DRIVE_PID_D = 450.0;
-        RIGHT_DRIVE_PID_F = 0.0;
+        RIGHT_DRIVE_PID_D = 0.0;
+        RIGHT_DRIVE_PID_F = 1.088;
 
         // Turn PIDs
         LEFT_TURN_PID_P = 1.0;
@@ -170,13 +175,7 @@ public class RobotMap {
         FORWARD_CAMERA_INDEX = 0;
         BACKWARD_CAMERA_INDEX = 2;
         HATCH_CAMERA_INDEX = 1;
-        CARGO_CAMERA_INDEX = 3;
-
-        HAS_TURRET = true;
-        TURRET_MOTOR_CHANNEL = 1;
-        TURRET_MOTOR_INVERTED = false;
-        TURRET_SENSOR_INVERTED = false; // TODO
-  
+        CARGO_CAMERA_INDEX = 3;  
         break;
 
       case ROBOT_2019:
@@ -184,6 +183,9 @@ public class RobotMap {
         HAS_WHEELS = true;
         DRIVEMOTOR_NUM = 4;
         WHEEL_CIRCUMFERENCE = 18.50;
+
+        CONTROLS_INVERTED = true;
+        VELOCITY_MULTIPLIER_RIGHT = 100; //TODO fix this
 
         LEFT_LEAD_CHANNEL = 1;
         LEFT_FOLLOWER_1_CHANNEL = 2;
@@ -484,4 +486,8 @@ public class RobotMap {
   public static boolean CARGO_MECH_CLAW_LEFT_MOTOR_INVERTED;
   public static int CARGO_MECH_CLAW_RIGHT_MOTOR_CHANNEL;
   public static boolean CARGO_MECH_RIGHT_MOTOR_INVERTED;
+
+  public static boolean CONTROLS_INVERTED;
+  public static double VELOCITY_MULTIPLIER_RIGHT;
+  public static double VELOCITY_MULTIPLIER_LEFT;
 }

@@ -64,16 +64,18 @@ public class Drive extends DifferentialDrive implements AutoDrive {
           rightFollower2 = TalonProxy.create(RobotMap.RIGHT_FOLLOWER_2_CHANNEL);
         }
 
-        left = new TalonSpeedControllerGroup("Left_Drive", ControlMode.PercentOutput,
+        left = new TalonSpeedControllerGroup("Left_Drive", ControlMode.Velocity,
             RobotMap.LEFT_DRIVE_SENSOR_IS_INVERTED, RobotMap.LEFT_DRIVE_MOTOR_IS_INVERTED, 
             leftLead, leftFollower1, leftFollower2);
-        right = new TalonSpeedControllerGroup("Right_Drive", ControlMode.PercentOutput,
+        right = new TalonSpeedControllerGroup("Right_Drive", ControlMode.Velocity,
             RobotMap.RIGHT_DRIVE_SENSOR_IS_INVERTED, RobotMap.RIGHT_DRIVE_MOTOR_IS_INVERTED, 
             rightLead, rightFollower1, rightFollower2);
       } else {
         left = new TalonSpeedControllerGroup();
         right = new TalonSpeedControllerGroup();
       }
+      //  left.set(ControlMode.Velocity, 102.4);
+      //  right.set(ControlMode.Velocity, 102.4);
       instance = new Drive(left, right);
       instance.zero();
 
@@ -86,6 +88,7 @@ public class Drive extends DifferentialDrive implements AutoDrive {
     super(left, right);
     this.left = left;
     this.right = right;
+    
     
     
     setPidsFromRobotMap();
@@ -114,9 +117,9 @@ public class Drive extends DifferentialDrive implements AutoDrive {
         = Double.parseDouble(SmartDashboard.getString("DB/String 9", "1.2208")); // 0.0
 
     left.pidf(pidSlot, 
-        coefficientPLeft, coefficientILeft, coefficientDLeft, coefficientFLeft);
+        coefficientPLeft, coefficientILeft, coefficientDLeft, coefficientFLeft, RobotMap.VELOCITY_MULTIPLIER_LEFT);
     right.pidf(pidSlot, 
-        coefficientPRight, coefficientIRight, coefficientDRight, coefficientFRight);
+        coefficientPRight, coefficientIRight, coefficientDRight, coefficientFRight, RobotMap.VELOCITY_MULTIPLIER_RIGHT);
   }
 
   public void setPidsFromRobotMap() {
@@ -134,9 +137,9 @@ public class Drive extends DifferentialDrive implements AutoDrive {
     double coefficientDLeft = RobotMap.LEFT_DRIVE_PID_D;
 
     left.pidf(RobotMap.PID_SLOT_DRIVE, 
-        coefficientPLeft, coefficientILeft, coefficientDLeft, coefficientFLeft);
+        coefficientPLeft, coefficientILeft, coefficientDLeft, coefficientFLeft, RobotMap.VELOCITY_MULTIPLIER_LEFT);
     right.pidf(RobotMap.PID_SLOT_DRIVE, 
-        coefficientPRight, coefficientIRight, coefficientDRight, coefficientFRight);
+        coefficientPRight, coefficientIRight, coefficientDRight, coefficientFRight, RobotMap.VELOCITY_MULTIPLIER_RIGHT);
 
     // Set turn PIDs
     coefficientFRight = RobotMap.RIGHT_TURN_PID_F;
@@ -152,9 +155,9 @@ public class Drive extends DifferentialDrive implements AutoDrive {
     coefficientDLeft = RobotMap.LEFT_TURN_PID_D;
 
     left.pidf(RobotMap.PID_SLOT_TURN, 
-        coefficientPLeft, coefficientILeft, coefficientDLeft, coefficientFLeft);
+        coefficientPLeft, coefficientILeft, coefficientDLeft, coefficientFLeft, RobotMap.VELOCITY_MULTIPLIER_LEFT);
     right.pidf(RobotMap.PID_SLOT_TURN, 
-        coefficientPRight, coefficientIRight, coefficientDRight, coefficientFRight);
+        coefficientPRight, coefficientIRight, coefficientDRight, coefficientFRight, RobotMap.VELOCITY_MULTIPLIER_RIGHT);
   }
 
   public void configPeakOutput(double percentOut) {
@@ -295,6 +298,18 @@ public class Drive extends DifferentialDrive implements AutoDrive {
 
     data.updateDrivePosition(getLeftDistance(), getRightDistance());
   }
+
+  public void moveVelMode(double leftOut , double rightOut) {
+
+    // LOGGER.debug("Automated move of right: {} left: {} feet ", 
+    //     df.format(targetRightDistance), df.format(targetLeftDistance));
+
+    left.set(ControlMode.Velocity, leftOut);
+    // The right motor is reversed
+    right.set(ControlMode.Velocity, rightOut);
+
+    data.updateDrivePosition(getLeftDistance(), getRightDistance());
+  }
   
   public double getLeftDistance() {
     double leftLeadSensorPos = left.position();
@@ -344,6 +359,7 @@ public class Drive extends DifferentialDrive implements AutoDrive {
 
   public void arcadeDrive(double speed, double rotation, boolean squaredInputs) {
     super.arcadeDrive(speed, rotation, squaredInputs);
+    LOGGER.error("Expected Output: {}", speed);
     data.updateDrivePosition(getLeftDistance(), getRightDistance());
   }
 
@@ -352,6 +368,7 @@ public class Drive extends DifferentialDrive implements AutoDrive {
   }
 
   public void tankDrive(double leftSpeed, double rightSpeed, boolean squaredInputs) {
+    LOGGER.error("expected left: {}, expected right: {} ", leftSpeed, rightSpeed);
     super.tankDrive(leftSpeed, rightSpeed, squaredInputs);
     data.updateDrivePosition(getLeftDistance(), getRightDistance());
   }
