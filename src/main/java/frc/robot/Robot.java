@@ -69,7 +69,7 @@ public class Robot extends TimedRobot {
     //table.deleteAllEntries(); // Uncomment to clear table once.
     
     // Initialize RobotMap
-    RobotMap.init(RobotId.ROBOT_2019);
+    RobotMap.init(RobotId.ROBOT_2018);
 
     // Used after init, should be set only by the Simulator GUI
     // this ensures that the simulator is off otherwise.
@@ -89,8 +89,6 @@ public class Robot extends TimedRobot {
     gamePieceController = GamePieceController.getInstance();
 
     drive.setPidsFromRobotMap();
-    data.log();
-    data.send();
   }
 
   /**
@@ -103,9 +101,10 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
-     //data.send();
-    // telemetry.updateTable();
 
+    // TODO: Determine time to run each
+    // data.send();
+    // telemetry.updateTable();
   }
 
   @Override
@@ -125,6 +124,7 @@ public class Robot extends TimedRobot {
     LOGGER.info("Init Teleop");
     driverstation.readInputs();
     gamepad.initKnob();
+    LOGGER.debug("Match time {}", DriverStation.getInstance().getMatchTime());
   }
 
   /**
@@ -132,7 +132,6 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
-    LOGGER.debug("Match time {}", DriverStation.getInstance().getMatchTime());
     driverstation.readInputs();
     gamepad.read();
 
@@ -170,16 +169,6 @@ public class Robot extends TimedRobot {
     }
 
     gamePieceController.periodic();
-
-    if (driverstation.getNavJoystick().getJoystick().getPOV() == 0) {
-      camera.forward();
-    } else if (driverstation.getNavJoystick().getJoystick().getPOV() == 90) {
-      camera.cargo();
-    } else if (driverstation.getNavJoystick().getJoystick().getPOV() == 180) {
-      camera.backward();
-    } else if (driverstation.getNavJoystick().getJoystick().getPOV() == 270) {
-      camera.hatch();
-    }
 
     if (driverstation.restartCamera()) {
       camera.restart();
@@ -230,18 +219,14 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledInit() {
     LOGGER.info("Init Disabled");
-    driverstation.readInputs();
 
   }
 
   @Override
   public void disabledPeriodic() {
-    data.log();
     LOGGER.trace("Disabled Periodic");
-    data.log();
-    data.send();
-    driverstation.readInputs();
 
+    driverstation.readInputs();
     if (driverstation.getNavJoystick().getJoystick().getPOV() == 0) {
       camera.forward();
     } else if (driverstation.getNavJoystick().getJoystick().getPOV() == 90) {

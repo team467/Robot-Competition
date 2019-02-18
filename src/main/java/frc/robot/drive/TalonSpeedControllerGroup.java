@@ -60,10 +60,6 @@ public class TalonSpeedControllerGroup implements SpeedController, Sendable {
     if (follower1 != null) {
       initMotor(this.follower1);
     }
-    // if (follower2 != null) {
-    //   initMotor(this.follower2);
-    // }
-
     // only have sensor on leader
     leader.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, RobotMap.TALON_TIMEOUT);
     leader.setSensorPhase(sensorIsInverted);
@@ -147,12 +143,9 @@ public class TalonSpeedControllerGroup implements SpeedController, Sendable {
       return;
     }
     leader.disable();
-    // if (follower1 != null) {
-    //   follower1.disable();
-    // }
-    // if (follower2 != null) {
-    //   follower2.disable();
-    // }
+    if (follower1 != null) {
+      follower1.disable();
+    }
   }
 
   @Override
@@ -198,8 +191,8 @@ public class TalonSpeedControllerGroup implements SpeedController, Sendable {
       follower1.follow(leader);
     }
 
-    LOGGER.error("name: {} Requested Velocity: {} Velocity = {} Error: {}", leader.getName(), outputValue, leader.getSelectedSensorVelocity(0), leader.getClosedLoopError(0));
-    //LOGGER.error("Name: {}, Error: {}, Output Voltage: {}, Output Percent; {}", name, leader.getClosedLoopError(0), leader.getMotorOutputVoltage(), leader.getMotorOutputPercent());
+    LOGGER.debug("name: {} Requested Velocity: {} Velocity = {} Error: {}", leader.getName(), outputValue, leader.getSelectedSensorVelocity(0), leader.getClosedLoopError(0));
+    LOGGER.debug("Name: {}, Error: {}, Output Voltage: {}, Output Percent; {}", name, leader.getClosedLoopError(0), leader.getMotorOutputVoltage(), leader.getMotorOutputPercent());
   }
 
   public void configPeakOutput(double percentOut) {

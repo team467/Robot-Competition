@@ -357,7 +357,7 @@ public class Drive extends DifferentialDrive implements AutoDrive {
 
   public void arcadeDrive(double speed, double rotation, boolean squaredInputs) {
     super.arcadeDrive(speed, rotation, squaredInputs);
-    LOGGER.error("Expected Output: {}", speed);
+    LOGGER.debug("Expected Output: {}", speed);
     data.updateDrivePosition(getLeftDistance(), getRightDistance());
   }
 
@@ -366,7 +366,7 @@ public class Drive extends DifferentialDrive implements AutoDrive {
   }
 
   public void tankDrive(double leftSpeed, double rightSpeed, boolean squaredInputs) {
-    LOGGER.error("expected left: {}, expected right: {} ", leftSpeed, rightSpeed);
+    LOGGER.debug("expected left: {}, expected right: {} ", leftSpeed, rightSpeed);
     super.tankDrive(leftSpeed, rightSpeed, squaredInputs);
     data.updateDrivePosition(getLeftDistance(), getRightDistance());
   }

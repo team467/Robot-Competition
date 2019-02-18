@@ -12,7 +12,6 @@ public class CameraSwitcher {
 
   private static CameraSwitcher instance = null;
 
-  private double[] cameraOrder;
   private NetworkTableEntry cameraNetworkTableEntry;
   private NetworkTableEntry resetNetworkTableEntry;
 
