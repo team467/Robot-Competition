@@ -136,7 +136,11 @@ public class RobotData {
   public void send() {
     dataRow.send(table);
   }
-  public void log(){
+
+  /**
+   * Puts the data onto the telemetry file.
+   */
+  public void log() {
     dataRow.log(table);
   }
   

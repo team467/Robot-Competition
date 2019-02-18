@@ -85,8 +85,6 @@ public class Robot extends TimedRobot {
     gamePieceController = GamePieceController.getInstance();
 
     drive.setPidsFromRobotMap();
-    data.log();
-    data.send();
   }
 
   /**
@@ -99,9 +97,10 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
-     //data.send();
-    // telemetry.updateTable();
 
+    // TODO: Determine time to run each
+    // data.send();
+    // telemetry.updateTable();
   }
 
   @Override
@@ -119,7 +118,7 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopInit() {
     LOGGER.info("Init Teleop");
-    driverstation.readInputs();
+    LOGGER.debug("Match time {}", DriverStation.getInstance().getMatchTime());
   }
 
   /**
@@ -127,7 +126,6 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
-    LOGGER.debug("Match time {}", DriverStation.getInstance().getMatchTime());
     driverstation.readInputs();
 
     double speed = driverstation.getArcadeSpeed();
@@ -165,16 +163,6 @@ public class Robot extends TimedRobot {
     }
 
     gamePieceController.periodic();
-
-    if (driverstation.getNavJoystick().getJoystick().getPOV() == 0) {
-      camera.forward();
-    } else if (driverstation.getNavJoystick().getJoystick().getPOV() == 90) {
-      camera.cargo();
-    } else if (driverstation.getNavJoystick().getJoystick().getPOV() == 180) {
-      camera.backward();
-    } else if (driverstation.getNavJoystick().getJoystick().getPOV() == 270) {
-      camera.hatch();
-    }
 
     if (driverstation.restartCamera()) {
       camera.restart();
@@ -225,18 +213,14 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledInit() {
     LOGGER.info("Init Disabled");
-    driverstation.readInputs();
 
   }
 
   @Override
   public void disabledPeriodic() {
-    data.log();
     LOGGER.trace("Disabled Periodic");
-    data.log();
-    data.send();
-    driverstation.readInputs();
 
+    driverstation.readInputs();
     if (driverstation.getNavJoystick().getJoystick().getPOV() == 0) {
       camera.forward();
     } else if (driverstation.getNavJoystick().getJoystick().getPOV() == 90) {
