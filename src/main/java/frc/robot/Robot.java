@@ -20,6 +20,7 @@ import frc.robot.logging.TelemetryBuilder;
 import frc.robot.simulator.communications.RobotData;
 import frc.robot.usercontrol.DriverStation467;
 import frc.robot.vision.CameraSwitcher;
+import frc.robot.sensors.LedI2C;
 import org.apache.logging.log4j.Logger;
 
 /**
@@ -45,6 +46,7 @@ public class Robot extends TimedRobot {
   private NetworkTableInstance table;
   private NetworkTable dashboard;
 
+  private LedI2C leds;
   /**
    * Time in milliseconds.
    */
@@ -86,7 +88,7 @@ public class Robot extends TimedRobot {
     drive = Drive.getInstance();
     matchConfig = MatchConfiguration.getInstance();
     telemetry = TelemetryBuilder.getInstance();
-
+    leds = new LedI2C();
     drive.setPidsFromRobotMap();
     data.send();
   }
@@ -196,6 +198,8 @@ public class Robot extends TimedRobot {
         LOGGER.info("Invalid Tune Mode: {}", tuneSlot);
     }
     drive.zero();
+
+    leds.cargoInLine();
   }
 
   /**
@@ -222,14 +226,14 @@ public class Robot extends TimedRobot {
     //drive.logClosedLoopErrors();
 
     driverstation.readInputs();
-
+    leds.whenDisabled();
   }
 
   @Override
   public void disabledPeriodic() {
     driverstation.readInputs();
     LOGGER.trace("Disabled Periodic");
-
+    leds.whenDisabled();
     if (driverstation.getNavJoystick().getJoystick().getPOV() == 0) {
       CameraSwitcher.update(0);
     } else if (driverstation.getNavJoystick().getJoystick().getPOV() == 90) {
