@@ -177,7 +177,7 @@ public class GamePieceController implements Sendable {
 
       break;
     case CARGO:
-      LOGGER.error("Cargo Mode Activated");
+      //LOGGER.info("Cargo Mode Activated");
       if (driverStation.getAcquireBall()) {
         LOGGER.info("trying to aqcuire ball");
         /*
@@ -190,7 +190,7 @@ public class GamePieceController implements Sendable {
           if (moveTurretHome()) {
             LOGGER.info("Moving wrist to bin");
             cargoMech.wrist(CargoMechWrist.CARGO_BIN);
-            LOGGER.info("Putting rollers in reverse");
+            LOGGER.error("Putting rollers in reverse");
             cargoMech.claw(CargoMechClaw.REVERSE);
             cargoIntake.roller(CargoIntakeRoller.REVERSE); // Suck ball into cargo intake mech
           } else {
@@ -216,9 +216,10 @@ public class GamePieceController implements Sendable {
       } else if (driverStation.getFireCargo()) {
         // Must be in cargo mode. Reverses claw motor to throw cargo.
         cargoMech.claw(CargoMechClaw.FORWARD);
-        LOGGER.info("Move Cargo Mech claw to the Cargo Ship height.");
+        LOGGER.info("FIRING BALL.");
       } else {
         cargoMech.claw(CargoMechClaw.STOP);
+        cargoIntake.roller(CargoIntakeRoller.STOP);
       }
       break;
 
@@ -232,31 +233,21 @@ public class GamePieceController implements Sendable {
          * combined with acquire hatch to insure that the arm can move forward during
          * acquisition. Could just be before acquire hatch as moves happen at end.
          */
-
-        if (hatchMech.arm() == HatchArm.IN) {
-          LOGGER.info("Moving the hatch arm in.");
-          hatchMech.arm(HatchArm.OUT);
-        } else if (hatchMech.arm() == HatchArm.OUT) {
-          LOGGER.info("Firing hatch using launcher.");
+          LOGGER.debug("Moving the hatch arm in.");
           hatchMech.launcher(HatchLauncher.FIRE);
-        }
+        
       } else if (driverStation.getAcquireHatch()) {
         /*
          * Acquire Hatch: When acquireing a hatch, the arm should move forward, but the
          * hatch launcher should not fire.
          */
-        if (hatchMech.arm() == HatchArm.IN) {
-          LOGGER.info("Moving the hatch arm in.");
+          LOGGER.debug("Moving the hatch arm out.");
           hatchMech.arm(HatchArm.OUT);
-        } else if (hatchMech.arm() == HatchArm.OUT) {
-          LOGGER.info("Moving hatch arm in.");
+        } else {
+          LOGGER.debug("Moving hatch arm in.");
+          // Reset the hatch mechanism
           hatchMech.arm(HatchArm.IN);
-        }
-
-      } else {
-        // Reset the hatch mechanism
-        hatchMech.arm(HatchArm.IN);
-        hatchMech.launcher(HatchLauncher.RESET);
+          hatchMech.launcher(HatchLauncher.RESET);
       }
       break;
 
@@ -272,7 +263,13 @@ public class GamePieceController implements Sendable {
       /*
        * Works in cargo or hatch mode. Cargo intake reverses motor to spit cargo.
        */
+      LOGGER.info("rejecting ball");
       cargoIntake.roller(CargoIntakeRoller.FORWARD);
+    }
+    if(driverStation.getIntakeBall() && cargoIntake.arm() == CargoIntakeArmState.DOWN){
+
+      LOGGER.info("intaking ball");
+      cargoIntake.roller(CargoIntakeRoller.REVERSE);
     }
 
     if (driverStation.getTurretHome()) {
@@ -346,28 +343,18 @@ public class GamePieceController implements Sendable {
      */
     if (driverStation.getWristManualOverride() != 0.0) {
       if (isSafeToMoveWrist() && mode != GamePieceMode.DEFENSE) {
-        LOGGER.info("Setting wrist speed to {}.", driverStation.getWristManualOverride());
+       // LOGGER.info("Setting wrist speed to {}.", driverStation.getWristManualOverride());
         cargoMech.overrideArm(driverStation.getWristManualOverride());
       }
     }
     // End combined Hatch and Turret mode capabilities.
 
     // Update all systems
-    if (cargoIntake != null) {
       cargoIntake.periodic();
-    }
-
-    if (cargoMech != null) {
       cargoMech.periodic();
-    }
-
-    if (hatchMech != null) {
       hatchMech.periodic();
-    }
-
-    if (turret != null) {
       turret.periodic();
-    }
+    
   }
 
   /**

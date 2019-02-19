@@ -26,22 +26,24 @@ public class HatchMechanism extends GamePieceBase implements GamePiece {
 
     private static void initialize() {
       if (RobotMap.HAS_HATCH_MECHANISM) {
-        arm = new DoubleSolenoid(RobotMap.HATCH_MECH_ARM_FORWARD_CHANNEL, RobotMap.HATCH_MECH_ARM_REVERSE_CHANNEL);
+        arm = new DoubleSolenoid(RobotMap.HATCH_MECH_ARM_PCM_CHANNEL, RobotMap.HATCH_MECH_ARM_FORWARD_CHANNEL, RobotMap.HATCH_MECH_ARM_REVERSE_CHANNEL);
+        //LOGGER.error("Hatch forward: {} Hatch Reverse: {}",RobotMap.HATCH_MECH_ARM_FORWARD_CHANNEL, RobotMap.HATCH_MECH_ARM_REVERSE_CHANNEL);
       }
     }
 
     private void actuate() {
+      //LOGGER.error("Calling Actuate state: {}", this);
       switch (this) {
       case IN:
         if (RobotMap.HAS_HATCH_MECHANISM) {
           arm.set(DoubleSolenoid.Value.kReverse);
+          //LOGGER.info("Hatch arm going IN.");
         }
-        LOGGER.info("Hatch arm is IN.");
         break;
       case OUT:
         if (RobotMap.HAS_HATCH_MECHANISM) {
           arm.set(DoubleSolenoid.Value.kForward);
-          LOGGER.info("Hatch arm is OUT.");
+         // LOGGER.info("Hatch arm is OUT.");
         }
         break;
       default:
@@ -55,21 +57,13 @@ public class HatchMechanism extends GamePieceBase implements GamePiece {
   public enum HatchLauncher {
     FIRE, RESET;
 
-    private static DoubleSolenoid launcher1;
-    private static DoubleSolenoid launcher2;
-    private static DoubleSolenoid launcher3;
+    private static DoubleSolenoid launcher;
 
     private static void initialize() {
       if (RobotMap.HAS_HATCH_MECHANISM) {
-        launcher1 = new DoubleSolenoid(RobotMap.HATCH_LAUNCHER_S1_FORWARD_CHANNEL,
-            RobotMap.HATCH_LAUNCHER_S1_REVERSE_CHANNEL);
-        launcher1.setName("Telemetry", "HatchLauncherSolenoid1");
-        launcher2 = new DoubleSolenoid(RobotMap.HATCH_LAUNCHER_S2_FORWARD_CHANNEL,
-            RobotMap.HATCH_LAUNCHER_S2_REVERSE_CHANNEL);
-        launcher2.setName("Telemetry", "HatchLauncherSolenoid2");
-        launcher3 = new DoubleSolenoid(RobotMap.HATCH_LAUNCHER_S3_FORWARD_CHANNEL,
-            RobotMap.HATCH_LAUNCHER_S3_REVERSE_CHANNEL);
-        launcher3.setName("Telemetry", "HatchLauncherSolenoid3");
+        launcher = new DoubleSolenoid( RobotMap.HATCH_LAUNCHER_PCM_CHANNEL, RobotMap.HATCH_LAUNCHER_SOL_FORWARD_CHANNEL,
+            RobotMap.HATCH_LAUNCHER_SOL_REVERSE_CHANNEL);
+        launcher.setName("Telemetry", "HatchLauncherSolenoid1");
       }
     }
 
@@ -79,18 +73,14 @@ public class HatchMechanism extends GamePieceBase implements GamePiece {
     private void fire() {
       // Fire solenoids forward
       if (RobotMap.HAS_HATCH_MECHANISM) {
-        launcher1.set(DoubleSolenoid.Value.kForward);
-        launcher2.set(DoubleSolenoid.Value.kForward);
-        launcher3.set(DoubleSolenoid.Value.kForward);
+        launcher.set(DoubleSolenoid.Value.kForward);
       }
     }
 
     private void reset() {
       // Retract solenoids after firing
       if (RobotMap.HAS_HATCH_MECHANISM) {
-        launcher1.set(DoubleSolenoid.Value.kReverse);
-        launcher2.set(DoubleSolenoid.Value.kReverse);
-        launcher3.set(DoubleSolenoid.Value.kReverse);
+        launcher.set(DoubleSolenoid.Value.kReverse);
       }
     }
 
@@ -187,7 +177,8 @@ public class HatchMechanism extends GamePieceBase implements GamePiece {
   @Override
   public void periodic() {
     // Take Actions
-    if (enabled) {
+    //LOGGER.warn("periodic called");
+    if (true) {
       arm.actuate();
       launcher.actuate();
     }
@@ -199,9 +190,7 @@ public class HatchMechanism extends GamePieceBase implements GamePiece {
     builder.addStringProperty("HatchArm", arm::name, (command) -> arm(command));
 
     if (RobotMap.HAS_HATCH_MECHANISM) {
-      HatchLauncher.launcher1.initSendable(builder);
-      HatchLauncher.launcher2.initSendable(builder);
-      HatchLauncher.launcher3.initSendable(builder);
+      HatchLauncher.launcher.initSendable(builder);
       HatchArm.arm.initSendable(builder);
     }
   }
