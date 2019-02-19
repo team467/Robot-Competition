@@ -21,7 +21,6 @@ import frc.robot.simulator.communications.RobotData;
 import frc.robot.usercontrol.DriverStation467;
 import frc.robot.vision.CameraSwitcher;
 
-
 import org.apache.logging.log4j.Logger;
 
 /**
@@ -55,16 +54,16 @@ public class Robot extends TimedRobot {
   }
 
   /**
-   * This function is run when the robot is first started up and should be
-   * used for any initialization code.
+   * This function is run when the robot is first started up and should be used
+   * for any initialization code.
    */
   @Override
   public void robotInit() {
 
     table = NetworkTableInstance.getDefault();
     // Delete all Network Table keys; relevant ones will be added when they are set
-    //table.deleteAllEntries(); // Uncomment to clear table once.
-    
+    // table.deleteAllEntries(); // Uncomment to clear table once.
+
     // Initialize RobotMap
     RobotMap.init(RobotId.ROBOT_2018);
 
@@ -88,12 +87,13 @@ public class Robot extends TimedRobot {
   }
 
   /**
-   * This function is called every robot packet, no matter the mode. Use
-   * this for items like diagnostics that you want ran during disabled,
-   * autonomous, teleoperated and test.
+   * This function is called every robot packet, no matter the mode. Use this for
+   * items like diagnostics that you want ran during disabled, autonomous,
+   * teleoperated and test.
    *
-   * <p>This runs after the mode specific periodic functions, but before
-   * LiveWindow and SmartDashboard integrated updating.
+   * <p>
+   * This runs after the mode specific periodic functions, but before LiveWindow
+   * and SmartDashboard integrated updating.
    */
   @Override
   public void robotPeriodic() {
@@ -130,7 +130,6 @@ public class Robot extends TimedRobot {
 
     double speed = driverstation.getArcadeSpeed();
     double turn = driverstation.getArcadeTurn();
-    
 
     if (Math.abs(speed) < RobotMap.MIN_DRIVE_SPEED) {
       speed = 0.0;
@@ -139,26 +138,32 @@ public class Robot extends TimedRobot {
       turn = 0.0;
     }
 
-    LOGGER.debug("Driver Station Inputs mode: {} speed: {} turn: {}", 
-        driverstation.getDriveMode(), speed, turn);
+    LOGGER.debug("Driver Station Inputs mode: {} speed: {} turn: {}", driverstation.getDriveMode(), speed, turn);
 
     switch (driverstation.getDriveMode()) {
 
-      case ArcadeDrive:
-        drive.arcadeDrive(speed, turn, true);
-        break;
+    case ArcadeDrive:
+      drive.arcadeDrive(speed, turn, true);
+      if (RobotMap.AUTO_CAMERA) {
+        if (speed >= 0) {
+          camera.forward();
+        } else if (speed < 0) {
+          camera.backward();
+        }
+      }
+      break;
 
-      case CurvatureDrive:
-        drive.curvatureDrive(speed, turn, true);
-        break;
+    case CurvatureDrive:
+      drive.curvatureDrive(speed, turn, true);
+      break;
 
-      case TankDrive:
-        double leftTank = driverstation.getDriveJoystick().getLeftStickY();
-        double rightTank = driverstation.getDriveJoystick().getRightStickY();
-        drive.tankDrive(leftTank, rightTank, true);
-        break;
+    case TankDrive:
+      double leftTank = driverstation.getDriveJoystick().getLeftStickY();
+      double rightTank = driverstation.getDriveJoystick().getRightStickY();
+      drive.tankDrive(leftTank, rightTank, true);
+      break;
 
-      default:
+    default:
     }
 
     gamePieceController.periodic();
@@ -174,16 +179,16 @@ public class Robot extends TimedRobot {
     LOGGER.info("Init Test");
     tuneSlot = Integer.parseInt(SmartDashboard.getString("DB/String 5", "0"));
     switch (tuneSlot) {
-      case 0:
-      case 1:
-        LOGGER.info("Tuning PID Slot {}", tuneSlot);
-        drive.readPidsFromSmartDashboard(tuneSlot);
-        tuningValue = Double.parseDouble(SmartDashboard.getString("DB/String 0", "0.0"));
-        LOGGER.info("Tuning Value: " + tuningValue);
-      case 2:
-        break;
-      default:
-        LOGGER.info("Invalid Tune Mode: {}", tuneSlot);
+    case 0:
+    case 1:
+      LOGGER.info("Tuning PID Slot {}", tuneSlot);
+      drive.readPidsFromSmartDashboard(tuneSlot);
+      tuningValue = Double.parseDouble(SmartDashboard.getString("DB/String 0", "0.0"));
+      LOGGER.info("Tuning Value: " + tuningValue);
+    case 2:
+      break;
+    default:
+      LOGGER.info("Invalid Tune Mode: {}", tuneSlot);
     }
     drive.zero();
   }
@@ -194,18 +199,18 @@ public class Robot extends TimedRobot {
   @Override
   public void testPeriodic() {
     switch (tuneSlot) {
-      case 0: // Drive PID SLot
-        drive.tuneForward(tuningValue, RobotMap.PID_SLOT_DRIVE);
-        LOGGER.debug("Distance {} feet", drive.getLeftDistance());
-        break;
-      case 1: // Turn PID Slot
-        drive.tuneTurn(tuningValue, RobotMap.PID_SLOT_TURN);
-        LOGGER.debug("Turn {} degrees",Math.toDegrees(drive.getLeftDistance()));
-        break;
-      case 2:        
-        drive.arcadeDrive(1,0, true);
-        break;
-      default:
+    case 0: // Drive PID SLot
+      drive.tuneForward(tuningValue, RobotMap.PID_SLOT_DRIVE);
+      LOGGER.debug("Distance {} feet", drive.getLeftDistance());
+      break;
+    case 1: // Turn PID Slot
+      drive.tuneTurn(tuningValue, RobotMap.PID_SLOT_TURN);
+      LOGGER.debug("Turn {} degrees", Math.toDegrees(drive.getLeftDistance()));
+      break;
+    case 2:
+      drive.arcadeDrive(1, 0, true);
+      break;
+    default:
     }
   }
 
@@ -235,6 +240,5 @@ public class Robot extends TimedRobot {
     }
 
   }
-
 
 }

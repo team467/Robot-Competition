@@ -336,7 +336,7 @@ public class GamePieceController implements Sendable {
       if (isSafeToMoveTurret() && mode != GamePieceMode.DEFENSE) {
         turret.manual(driverStation.getFineAdjustTurret()); // cancel target lock handled here
       } else {
-        
+
         cargoMech.wrist(CargoMechWrist.SAFE_TURRET);
       }
     }
@@ -393,6 +393,18 @@ public class GamePieceController implements Sendable {
     builder.addStringProperty(name + "Mode", mode::name, // Lambda called when updating network table
         // Lambda calls set enabled if changed in Network table
         (gamePieceMode) -> testMode(gamePieceMode));
+  }
+
+  private void makeSafeToMoveTurret() {
+    if (cargoIntake.arm() != CargoIntakeArmState.DOWN) {
+      LOGGER.info("Moving arm down.");
+      cargoIntake.arm(CargoIntakeArm.DOWN);
+      LOGGER.info("Moveing wrist to safe position.");
+      cargoMech.wrist(CargoMechWrist.SAFE_TURRET);
+    } else {
+      LOGGER.info("Moveing wrist to safe position.");
+      cargoMech.wrist(CargoMechWrist.SAFE_TURRET);
+    }
   }
 
   private boolean moveTurretHome() {

@@ -19,11 +19,9 @@ import java.util.EnumMap;
 
 import org.apache.logging.log4j.Logger;
 
-
 public class XBoxJoystick467 {
 
-  private static final Logger LOGGER 
-      = RobotLogManager.getMainLogger(XBoxJoystick467.class.getName());
+  private static final Logger LOGGER = RobotLogManager.getMainLogger(XBoxJoystick467.class.getName());
   private XboxController xbox;
   private String name;
   private int pov = 0;
@@ -40,16 +38,7 @@ public class XBoxJoystick467 {
   public EnumMap<Axis, Double> axes = new EnumMap<>(Axis.class);
 
   public enum Button {
-    a(1),
-    b(2),
-    x(3),
-    y(4),
-    BumperLeft(5),
-    BumperRight(6),
-    back(7),
-    start(8),
-    left(9),
-    right(10);
+    a(1), b(2), x(3), y(4), BumperLeft(5), BumperRight(6), back(7), start(8), left(9), right(10);
 
     public final int channel;
 
@@ -59,7 +48,7 @@ public class XBoxJoystick467 {
   }
 
   /**
-   * Check if a specific button is being held down. Ignores first button press, 
+   * Check if a specific button is being held down. Ignores first button press,
    * but the robot loops too quickly for this to matter.
    *
    * @return
@@ -91,12 +80,7 @@ public class XBoxJoystick467 {
   }
 
   private enum Axis {
-    leftX(0),
-    leftY(1),
-    leftTrigger(2),
-    rightTrigger(3),
-    rightX(4),
-    rightY(5);
+    leftX(0), leftY(1), leftTrigger(2), rightTrigger(3), rightX(4), rightY(5);
 
     public final int channel;
 
@@ -107,8 +91,8 @@ public class XBoxJoystick467 {
   }
 
   /**
-   * Implement a dead zone for Joystick centering - and a non-linear acceleration as 
-   * the user moves away from the zero position.
+   * Implement a dead zone for Joystick centering - and a non-linear acceleration
+   * as the user moves away from the zero position.
    *
    * @param input
    * @return processed input
@@ -180,32 +164,28 @@ public class XBoxJoystick467 {
   public double getAdjustedSpeed(double speed) {
     if (getLeftTrigger() > 0.0) {
       // For some reason, up stick is negative, so we flip it
-      return turboFastSpeed(speed); 
+      return turboFastSpeed(speed);
     } else {
-      return turboSlowSpeed(speed); 
+      return turboSlowSpeed(speed);
     }
   }
-  
+
   public double turboFastSpeed(double speed) {
     // Speed multiplied by acceleration determined by left trigger
-    return speed * MathUtils.weightedAverage(
-        RobotMap.NORMAL_MAX_SPEED, RobotMap.FAST_MAX_SPEED, getLeftTrigger());
+    return speed * MathUtils.weightedAverage(RobotMap.NORMAL_MAX_SPEED, RobotMap.FAST_MAX_SPEED, getLeftTrigger());
   }
 
   public double turboSlowSpeed(double speed) {
     // Speed multiplied by deceleration determined by right trigger
-    return speed * MathUtils.weightedAverage(
-        RobotMap.NORMAL_MAX_SPEED, RobotMap.SLOW_MAX_SPEED, getRightTrigger());
+    return speed * MathUtils.weightedAverage(RobotMap.NORMAL_MAX_SPEED, RobotMap.SLOW_MAX_SPEED, getRightTrigger());
   }
 
   /**
    * Returns the turn speed, which is slower when the robot is driving fast.
    */
   public double getAdjustedTurnSpeed() {
-    return getAdjustedSpeed(getRightStickX()) * MathUtils.weightedAverage(
-      RobotMap.NORMAL_TURN_MAX_SPEED, 
-      RobotMap.SLOW_TURN_MAX_SPEED, 
-      Math.abs(getAdjustedSpeed(getLeftStickY())));
+    return getAdjustedSpeed(getRightStickX()) * MathUtils.weightedAverage(RobotMap.NORMAL_TURN_MAX_SPEED,
+        RobotMap.SLOW_TURN_MAX_SPEED, Math.abs(getAdjustedSpeed(getLeftStickY())));
   }
 
   public double pov() {
@@ -288,7 +268,7 @@ public class XBoxJoystick467 {
   public double getRightTrigger() {
     return axes.get(Axis.rightTrigger);
   }
-  
+
   /**
    * Calculate the angle of this joystick.
    *
