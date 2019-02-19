@@ -145,11 +145,7 @@ public class Robot extends TimedRobot {
     case ArcadeDrive:
       drive.arcadeDrive(speed, turn, true);
       if (RobotMap.AUTO_CAMERA) {
-        if (speed >= 0) {
-          camera.forward();
-        } else if (speed < 0) {
-          camera.backward();
-        }
+        camera.autoSwitch(speed);
       }
       break;
 
