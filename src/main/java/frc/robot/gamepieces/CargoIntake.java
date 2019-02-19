@@ -33,7 +33,8 @@ public class CargoIntake extends GamePieceBase implements GamePiece {
     private static DoubleSolenoid rightSolenoid;
 
     private static void initialize() {
-      if (RobotMap.HAS_ROLLER_INTAKE) {
+
+      if (!RobotMap.useSimulator && RobotMap.HAS_ROLLER_INTAKE) {
         leftSolenoid = new DoubleSolenoid(
             RobotMap.ROLLER_LEFT_ARM_UP_SOLINOID_CHANNEL, 
             RobotMap.ROLLER_LEFT_ARM_DOWN_SOLINOID_CHANNEL);
@@ -44,6 +45,7 @@ public class CargoIntake extends GamePieceBase implements GamePiece {
         rightSolenoid.setName("Telemetry", "RollerArmRightSolenoid");
       }
     }
+  
 
     /**
      * Moves the arm based on the requested command.
@@ -137,12 +139,13 @@ public class CargoIntake extends GamePieceBase implements GamePiece {
     private static CargoIntakeArmState previousState;
 
     private static void initialize() {
-      if (RobotMap.HAS_ROLLER_INTAKE) {
-        rollerSwitchUp = new DigitalInput(RobotMap.ROLLER_SWITCH_UP_CHANNEL);
-        rollerSwitchUp.setName("Telemetry", "RollerSwitchUp");
-        rollerSwitchDown = new DigitalInput(RobotMap.ROLLER_SWITCH_DOWN_CHANNEL);
-        rollerSwitchDown.setName("Telemetry", "RollerswitchDown");
-      }
+  
+    if (RobotMap.HAS_ROLLER_INTAKE) {
+      rollerSwitchUp = new DigitalInput(0);//TODO:figure out the channels
+      rollerSwitchUp.setName("Telemetry", "RollerSwitchUp");
+      rollerSwitchDown = new DigitalInput(1);//TODO: Figure out the channels
+      rollerSwitchDown.setName("Telemetry", "RollerswitchDown");
+    }
     }
 
     private static boolean rollerSwitchUp() {
@@ -207,6 +210,8 @@ public class CargoIntake extends GamePieceBase implements GamePiece {
 
     initSendable(TelemetryBuilder.getInstance());
     LOGGER.trace("Created roller arm game piece.");
+
+
   }
 
   /**
@@ -286,10 +291,15 @@ public class CargoIntake extends GamePieceBase implements GamePiece {
 
   @Override
   public void initSendable(SendableBuilder builder) {
+    //TODO : FIX THIS!!!!!
+  
     builder.addStringProperty("CargoIntakeRoller", roller::name, (command) -> roller(command));
     builder.addStringProperty("CargoIntakeArm", arm::name, (command) -> arm(command));
     builder.addStringProperty("CargoIntakeArmState", armState::name, null);
-    if (RobotMap.HAS_ROLLER_INTAKE) {
+
+    
+    if(RobotMap.HAS_ROLLER_INTAKE){
+
       CargoIntakeRoller.motor.initSendable(builder);
       CargoIntakeArm.leftSolenoid.initSendable(builder);
       CargoIntakeArm.rightSolenoid.initSendable(builder);

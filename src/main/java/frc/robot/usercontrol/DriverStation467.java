@@ -1,5 +1,6 @@
 package frc.robot.usercontrol;
 
+import frc.robot.RobotMap;
 import frc.robot.drive.DriveMode;
 import frc.robot.usercontrol.XBoxJoystick467.Button;
 
@@ -108,7 +109,9 @@ public class DriverStation467 {
   }
 
   public double getFineAdjustTurret() {
-    return getNavJoystick().getRightStickX();
+    double navVal = (Math.abs(getNavJoystick().getRightStickX()) < 0.3)? 0 : getNavJoystick().getRightStickX();
+
+    return navVal;
   }
 
   public boolean getAcquireHatch() {
@@ -176,11 +179,15 @@ public class DriverStation467 {
   //Driver controls
 
   public double getArcadeSpeed() {
-    return -getDriveJoystick().getAdjustedSpeed(driverJoy.getLeftStickY());
+    return (RobotMap.CONTROLS_INVERTED_FB == true) 
+      ? -getDriveJoystick().getAdjustedSpeed(driverJoy.getLeftStickY()) 
+      :  getDriveJoystick().getAdjustedSpeed(driverJoy.getLeftStickY());
   }
   
   public double getArcadeTurn() {
-    return getDriveJoystick().getAdjustedTurnSpeed();
+    return (RobotMap.CONTROLS_INVERTED_TURN == true) 
+    ? -getDriveJoystick().getAdjustedTurnSpeed()
+    : getDriveJoystick().getAdjustedTurnSpeed();
   }
 
   public boolean getDriveCameraBack() {

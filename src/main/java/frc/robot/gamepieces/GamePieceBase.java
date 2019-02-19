@@ -19,7 +19,7 @@ abstract class GamePieceBase implements GamePiece {
   protected GamePieceBase(String subsystem, String name) {
     this.subsystem = subsystem;
     this.name = name;
-    initSendable(TelemetryBuilder.getInstance());
+    
     LOGGER.trace("Created base game piece");
   }
 

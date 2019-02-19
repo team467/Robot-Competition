@@ -37,6 +37,8 @@ public class TelemetryBuilder extends SendableBuilderImpl implements SendableBui
     if (instance == null) {
       instance = new TelemetryBuilder();
     }
+
+  //  LOGGER.error("Telemetry instance = {}", instance);
     return instance;
   }
 
@@ -52,7 +54,7 @@ public class TelemetryBuilder extends SendableBuilderImpl implements SendableBui
       File csvFile = new File(RobotLogManager.getDirectory(), csvFileName);
       csvPrinter = new CSVPrinter(new FileWriter(csvFile),
           CSVFormat.DEFAULT.withAllowMissingColumnNames(false).withTrim().withTrailingDelimiter());
-      LOGGER.info("linked");
+      LOGGER.debug("linked");
     } catch (IOException e) {
       LOGGER.error(e.getStackTrace());
       e.printStackTrace();
@@ -65,6 +67,7 @@ public class TelemetryBuilder extends SendableBuilderImpl implements SendableBui
       }
 
     });
+    
   }
 
   /**
@@ -117,7 +120,7 @@ public class TelemetryBuilder extends SendableBuilderImpl implements SendableBui
               break;
           }
           csvPrinter.print(text);
-          LOGGER.info(text);
+          LOGGER.debug(text);
         }
         
         csvPrinter.print(String.format("%10.5f",pdp.getVoltage()));
@@ -138,7 +141,7 @@ public class TelemetryBuilder extends SendableBuilderImpl implements SendableBui
         csvPrinter.close(true);
       }
     } catch (IOException e) {
-      LOGGER.info(e.getMessage());
+      LOGGER.debug(e.getMessage());
     }
   }
 
