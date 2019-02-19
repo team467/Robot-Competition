@@ -351,10 +351,15 @@ public class GamePieceController implements Sendable {
         (gamePieceMode) -> testMode(gamePieceMode)); 
   }
   public boolean makeTurretSafeToMove() {
-    if (!isSafeToMoveTurret) {
-      if (cargoIntake.arm() == CargoIntakeArm.UP) {
+    boolean isTurretSafeToMove = isSafeToMoveTurret();
+    if (!isTurretSafeToMove) {
+      if (cargoIntake.armCommand() == CargoIntakeArm.UP) {
         cargoIntake.arm(CargoIntakeArm.DOWN);
       }
-    }
+      cargoMech.wrist(CargoMechWrist.SAFE_TURRET);
+      hatchMech.arm(HatchArm.IN);
+      isTurretSafeToMove = true;
+    } 
+    return isTurretSafeToMove;
   }
 }
