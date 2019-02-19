@@ -236,10 +236,10 @@ public class RobotMap {
 
         // Game Pieces
         HAS_TURRET = true;
-        HAS_ROLLER_INTAKE = false;
-        HAS_HATCH_MECHANISM = false;
-        HAS_ROLLER_INTAKE = false;
-        HAS_CARGO_MECHANISM = false;
+        HAS_ROLLER_INTAKE = true;
+        HAS_HATCH_MECHANISM = true;
+        HAS_ROLLER_INTAKE = true;
+        HAS_CARGO_MECHANISM = true;
 
         // Turret
         TURRET_MOTOR_CHANNEL = 5;

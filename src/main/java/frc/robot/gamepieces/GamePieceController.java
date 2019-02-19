@@ -220,12 +220,6 @@ public class GamePieceController implements Sendable {
       } else {
         cargoMech.claw(CargoMechClaw.STOP);
       }
-      if (driverStation.getWristManualOverride() != 0.0) {
-        if (isSafeToMoveWrist()) {
-          LOGGER.info("Setting wrist speed to {}.", driverStation.getWristManualOverride());
-          cargoMech.overrideArm(driverStation.getWristManualOverride());
-        }
-      }
       break;
 
     case HATCH:
@@ -339,9 +333,10 @@ public class GamePieceController implements Sendable {
      * for unsafe turret situations. Cancels target lock
      */
     if (driverStation.getFineAdjustTurret() != 0.0) {
-      if (isSafeToMoveTurret()) {
+      if (isSafeToMoveTurret() && mode != GamePieceMode.DEFENSE) {
         turret.manual(driverStation.getFineAdjustTurret()); // cancel target lock handled here
       } else {
+        
         cargoMech.wrist(CargoMechWrist.SAFE_TURRET);
       }
     }
@@ -349,6 +344,12 @@ public class GamePieceController implements Sendable {
     /*
      * Manual Override of the wrist check to make sure the roller is dd
      */
+    if (driverStation.getWristManualOverride() != 0.0) {
+      if (isSafeToMoveWrist() && mode != GamePieceMode.DEFENSE) {
+        LOGGER.info("Setting wrist speed to {}.", driverStation.getWristManualOverride());
+        cargoMech.overrideArm(driverStation.getWristManualOverride());
+      }
+    }
     // End combined Hatch and Turret mode capabilities.
 
     // Update all systems
