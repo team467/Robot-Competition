@@ -237,6 +237,9 @@ public class GamePieceController implements Sendable {
           cargoMech.wrist(CargoMechWrist.SAFE_TURRET);
         }
       }
+
+      // TODO: Check which is way is which for the Hatch and the Cargo
+      
         if (driverStation.fireHatch()) {
           /*
           * //TODO: Fire Hatch Must be in hatch mode. Pushes cargo arm forward for some
