@@ -130,7 +130,6 @@ public class Robot extends TimedRobot {
 
     double speed = driverstation.getArcadeSpeed();
     double turn = driverstation.getArcadeTurn();
-    double turretSpeed = driverstation.getArmManualOverride();
     
 
     if (Math.abs(speed) < RobotMap.MIN_DRIVE_SPEED) {

@@ -210,7 +210,7 @@ public class DriverStation467 {
   }
 
   public boolean getAcquireBall() {
-    return getDriveJoystick().getRightTrigger() == 0.9;
+    return getDriveJoystick().getRightTrigger() >= 0.9;
   }
 
   public boolean defenseMode() {
@@ -222,7 +222,7 @@ public class DriverStation467 {
   }
 
   public boolean getRejectBall() {
-    return getDriveJoystick().getLeftTrigger() == 0.9;
+    return getDriveJoystick().getLeftTrigger() >= 0.9;
   }
 
   public void driverSetLeftRumble(double value) {
