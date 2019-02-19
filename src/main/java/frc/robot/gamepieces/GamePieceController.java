@@ -239,7 +239,7 @@ public class GamePieceController implements Sendable {
       }
 
       // TODO: Check which is way is which for the Hatch and the Cargo
-      
+
         if (driverStation.fireHatch()) {
           /*
           * //TODO: Fire Hatch Must be in hatch mode. Pushes cargo arm forward for some
@@ -349,5 +349,12 @@ public class GamePieceController implements Sendable {
         mode::name, // Lambda called when updating network table
         // Lambda calls set enabled if changed in Network table
         (gamePieceMode) -> testMode(gamePieceMode)); 
+  }
+  public boolean makeTurretSafeToMove() {
+    if (!isSafeToMoveTurret) {
+      if (cargoIntake.arm() == CargoIntakeArm.UP) {
+        cargoIntake.arm(CargoIntakeArm.DOWN);
+      }
+    }
   }
 }
