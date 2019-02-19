@@ -7,7 +7,6 @@
 
 package frc.robot;
 
-import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -17,7 +16,6 @@ import frc.robot.drive.Drive;
 import frc.robot.gamepieces.GamePieceController;
 import frc.robot.logging.RobotLogManager;
 import frc.robot.logging.TelemetryBuilder;
-import frc.robot.simulator.communications.RobotData;
 import frc.robot.usercontrol.DriverStation467;
 import frc.robot.vision.CameraSwitcher;
 
@@ -39,15 +37,26 @@ public class Robot extends TimedRobot {
   // Robot objects
   private DriverStation467 driverstation;
   private Drive drive;
-  private RobotData data;
   private TelemetryBuilder telemetry;
   private CameraSwitcher camera;
 
-  private NetworkTableInstance table;
   private GamePieceController gamePieceController;
 
   private int tuneSlot = 0;
   private double tuningValue = 0.0;
+
+  public static long time = System.nanoTime();
+  public static long previousTime = time;
+  public static int dt = 0;
+
+  /**
+   * Used for timing.
+   */
+  public static void tick() {
+    dt = (int) (time - previousTime);
+    previousTime = time;
+    time = System.nanoTime();
+  }
 
   public static void enableSimulator() {
     Robot.enableSimulator = true;
@@ -60,7 +69,7 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
 
-    table = NetworkTableInstance.getDefault();
+    // table = NetworkTableInstance.getDefault();
     // Delete all Network Table keys; relevant ones will be added when they are set
     // table.deleteAllEntries(); // Uncomment to clear table once.
 
@@ -76,7 +85,6 @@ public class Robot extends TimedRobot {
     // Make robot objects
     driverstation = DriverStation467.getInstance();
     LOGGER.info("Initialized Driverstation");
-    data = RobotData.getInstance();
     drive = Drive.getInstance();
     telemetry = TelemetryBuilder.getInstance();
     camera = CameraSwitcher.getInstance();
@@ -91,16 +99,13 @@ public class Robot extends TimedRobot {
    * items like diagnostics that you want ran during disabled, autonomous,
    * teleoperated and test.
    *
-   * <p>
-   * This runs after the mode specific periodic functions, but before LiveWindow
+   * <p>This runs after the mode specific periodic functions, but before LiveWindow
    * and SmartDashboard integrated updating.
    */
+
   @Override
   public void robotPeriodic() {
-
-    // TODO: Determine time to run each
-    // data.send();
-    // telemetry.updateTable();
+    telemetry.updateTable();
   }
 
   @Override
@@ -175,19 +180,21 @@ public class Robot extends TimedRobot {
     LOGGER.info("Init Test");
     tuneSlot = Integer.parseInt(SmartDashboard.getString("DB/String 5", "0"));
     switch (tuneSlot) {
-    case 0:
-    case 1:
-      LOGGER.info("Tuning PID Slot {}", tuneSlot);
-      drive.readPidsFromSmartDashboard(tuneSlot);
-      tuningValue = Double.parseDouble(SmartDashboard.getString("DB/String 0", "0.0"));
-      LOGGER.info("Tuning Value: " + tuningValue);
-    case 2:
-      break;
-    default:
-      LOGGER.info("Invalid Tune Mode: {}", tuneSlot);
+      case 0:
+      case 1:
+        LOGGER.info("Tuning PID Slot {}", tuneSlot);
+        drive.readPidsFromSmartDashboard(tuneSlot);
+        tuningValue = Double.parseDouble(SmartDashboard.getString("DB/String 0", "0.0"));
+        LOGGER.info("Tuning Value: " + tuningValue);
+        break;
+      case 2:
+        break;
+      default:
+        LOGGER.info("Invalid Tune Mode: {}", tuneSlot);
     }
     drive.zero();
   }
+
 
   /**
    * This function is called periodically during test mode.
@@ -207,14 +214,15 @@ public class Robot extends TimedRobot {
       drive.arcadeDrive(1, 0, true);
       break;
     default:
+    LOGGER.info("Invalid Tune Mode: {}", tuneSlot);
     }
   }
-
   @Override
   public void disabledInit() {
     LOGGER.info("Init Disabled");
 
   }
+
 
   @Override
   public void disabledPeriodic() {

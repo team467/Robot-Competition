@@ -6,7 +6,7 @@ public class LedI2C {
   private static I2C wire = new I2C(Port.kOnboard, 8);
   private static final int maxSize = 32;
 
-  public void writeBulk(byte[]message, int length) {
+  public void writeBulk(byte[] message, int length) {
     wire.writeBulk(message,length);
   }
 

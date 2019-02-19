@@ -1,6 +1,8 @@
 package frc.robot.simulator.communications;
 
 import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import frc.robot.Robot;
 import frc.robot.logging.RobotLogManager;
 import frc.robot.simulator.gui.Coordinate;
 
@@ -31,6 +33,24 @@ public class RobotMapData implements Serializable, Cloneable {
 
   public boolean isZeroed = false;
 
+  private static NetworkTableEntry testEntry;
+  private static NetworkTableEntry startingLocationXEntry;
+  private static NetworkTableEntry startingLocationYEntry;
+  private static NetworkTableEntry rightDistanceEntry;
+  private static NetworkTableEntry leftDistanceEntry;
+  private static NetworkTableEntry zeroedEntry;
+  private static NetworkTableEntry headingAngleEntry;
+  
+  public static void initNetworkTable(NetworkTable table) {
+    testEntry = table.getEntry("/test");
+    startingLocationXEntry = table.getEntry("/startingLocation/x");
+    startingLocationYEntry = table.getEntry("/startingLocation/y");
+    rightDistanceEntry = table.getEntry("/rightDistance");
+    leftDistanceEntry = table.getEntry("/leftDistance");
+    zeroedEntry = table.getEntry("/isZeroed");
+    headingAngleEntry = table.getEntry("/headingAngle");
+  }
+
   /**
    * The current robot heading.
    */
@@ -51,13 +71,46 @@ public class RobotMapData implements Serializable, Cloneable {
   /**
    * Puts the data onto the network table.
    */
+  // static int ticks = 1;
+  // static long testTime = 0;
+  // static long startXTime = 0;
+  // static long startYTime = 0;
+  // static long rightDistanceTime = 0;
+  // static long leftDistanceTime = 0;
+  // static long zeroTime = 0;
+  // static long headingAngleTime = 0;
   public void send(NetworkTable table) {
-    table.getEntry("/startingLocation/x").setDouble(startingLocation.x);
-    table.getEntry("/startingLocation/y").setDouble(startingLocation.y);
-    table.getEntry("/rightDistance").setDouble(rightPosition);
-    table.getEntry("/leftDistance").setDouble(leftPosition);
-    table.getEntry("/isZeroed").setBoolean(isZeroed);
-    table.getEntry("/headingAngle").setDouble(headingAngle);
+    // LOGGER.debug("avg time since last send:\t {} uS", Robot.dt/1000);
+    startingLocationXEntry.setDouble(1000);
+
+    // testTime += Robot.dt;
+    // LOGGER.error("time for test push:\t {} uS",testTime/ticks/1000);
+    startingLocationXEntry.setDouble(startingLocation.x);
+
+    // startXTime += Robot.dt;
+    // LOGGER.error("time for startX push:\t {} uS",startXTime/ticks/1000);
+    startingLocationYEntry.setDouble(startingLocation.y);
+
+    // startYTime += Robot.dt;
+    // LOGGER.error("time for startY push:\t {} uS",startYTime/ticks/1000);
+    rightDistanceEntry.setDouble(rightPosition);
+
+    // rightDistanceTime += Robot.dt;
+    // LOGGER.error("time for rightdistance push:\t {} uS",rightDistanceTime/ticks/1000);
+    leftDistanceEntry.setDouble(leftPosition);
+
+    // leftDistanceTime += Robot.dt;
+    // LOGGER.error("time for leftdistance push:\t {} uS",leftDistanceTime/ticks/1000);
+    zeroedEntry.setBoolean(isZeroed);
+
+    // zeroTime += Robot.dt;
+    // LOGGER.error("time for isZeroed push:\t {} uS",zeroTime/ticks/1000);
+    headingAngleEntry.setDouble(headingAngle);
+
+    // headingAngleTime += Robot.dt;
+    // LOGGER.error("time for headingangle push:\t {} uS",headingAngleTime/ticks/1000);
+    // LOGGER.error("----------------------=---------");
+    // ticks++;
     // table.getEntry("/LoggingFileExists").setBoolean(new File("/media/sda1/logging/log4j2.yaml").exists());
   }
 

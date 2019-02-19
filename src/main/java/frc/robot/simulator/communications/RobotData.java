@@ -40,6 +40,7 @@ public class RobotData {
     isZeroed = false;
     tableInstance = NetworkTableInstance.getDefault();
     table  = tableInstance.getTable("Telemetry");
+    RobotMapData.initNetworkTable(table);
 
     addToHistory();
   }

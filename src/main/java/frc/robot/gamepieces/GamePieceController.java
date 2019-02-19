@@ -414,4 +414,16 @@ public class GamePieceController implements Sendable {
     }
     return isHome;
   }
+  public boolean makeTurretSafeToMove() {
+    boolean isTurretSafeToMove = isSafeToMoveTurret();
+    if (!isTurretSafeToMove) {
+      if (cargoIntake.armCommand() == CargoIntakeArm.UP) {
+        cargoIntake.arm(CargoIntakeArm.DOWN);
+      }
+      cargoMech.wrist(CargoMechWrist.SAFE_TURRET);
+      hatchMech.arm(HatchArm.IN);
+      isTurretSafeToMove = true;
+    } 
+    return isTurretSafeToMove;
+  }
 }

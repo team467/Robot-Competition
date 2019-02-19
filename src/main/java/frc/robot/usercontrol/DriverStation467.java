@@ -1,7 +1,6 @@
 package frc.robot.usercontrol;
 
 import frc.robot.RobotMap;
-import frc.robot.autonomous.ActionGroup;
 import frc.robot.drive.DriveMode;
 import frc.robot.usercontrol.XBoxJoystick467.Button;
 
@@ -21,7 +20,7 @@ public class DriverStation467 {
   /**
    * Singleton instance of the object.
    *
-   * @return
+   * @return the instance
    */
   public static DriverStation467 getInstance() {
     if (station == null) {
@@ -99,16 +98,6 @@ public class DriverStation467 {
    */
   public DriveMode getDriveMode() {
     return DriveMode.ArcadeDrive;
-  }
-
-  public boolean getTerminateAuto() {
-    // TODO: Manually break out of autonoumous mode
-    return true;
-  }
-
-  public ActionGroup getActionGroup() {
-    // TODO: Get an action group if required
-    return null; 
   }
 
   /**
