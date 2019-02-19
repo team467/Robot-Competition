@@ -131,6 +131,7 @@ public class GamePieceController implements Sendable {
        * Target Lock
        */
       mode = GamePieceMode.DEFENSE;
+      LOGGER.info("Changing game mode to DEFENSE");
     } else if (driverStation.getHatchMode()) {
       /*
        * 1. Switches to hatch mode. 2. LEDs should change to gold. 3. Camera changes
@@ -138,6 +139,7 @@ public class GamePieceController implements Sendable {
        * Cargo intake arm should go down so that turret can move.
        */
       mode = GamePieceMode.HATCH;
+      LOGGER.info("Changing game mode to HATCH");
       camera.hatch();
     } else if (driverStation.getCargoMode()) {
       /*
@@ -146,6 +148,7 @@ public class GamePieceController implements Sendable {
        * 4. Cargo intake arm should go down so that turret can move.
        */
       mode = GamePieceMode.CARGO;
+      LOGGER.info("Changing game mode to CARGO");
       camera.cargo();
     }
 
@@ -396,10 +399,13 @@ public class GamePieceController implements Sendable {
     if (!turret.isHome()) {
       if (isSafeToMoveTurret()) {
         turret.moveTurretToHome();
+        LOGGER.info("Moving Turret Home.");
         isHome = true;
       } else {
         cargoIntake.arm(CargoIntakeArm.DOWN);
+        LOGGER.info("Moved Arm Down.");
         cargoMech.wrist(CargoMechWrist.SAFE_TURRET);
+        LOGGER.info("CargoWrist is at safe height -Turret moved to home.");
         turret.moveTurretToHome();
         isHome = true;
       }
