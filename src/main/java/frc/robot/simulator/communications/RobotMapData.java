@@ -71,46 +71,46 @@ public class RobotMapData implements Serializable, Cloneable {
   /**
    * Puts the data onto the network table.
    */
-  static int ticks = 1;
-  static long testTime = 0;
-  static long startXTime = 0;
-  static long startYTime = 0;
-  static long rightDistanceTime = 0;
-  static long leftDistanceTime = 0;
-  static long zeroTime = 0;
-  static long headingAngleTime = 0;
+  // static int ticks = 1;
+  // static long testTime = 0;
+  // static long startXTime = 0;
+  // static long startYTime = 0;
+  // static long rightDistanceTime = 0;
+  // static long leftDistanceTime = 0;
+  // static long zeroTime = 0;
+  // static long headingAngleTime = 0;
   public void send(NetworkTable table) {
     // LOGGER.debug("avg time since last send:\t {} uS", Robot.dt/1000);
     startingLocationXEntry.setDouble(1000);
 
-    testTime += Robot.dt;
+    // testTime += Robot.dt;
     // LOGGER.error("time for test push:\t {} uS",testTime/ticks/1000);
     startingLocationXEntry.setDouble(startingLocation.x);
 
-    startXTime += Robot.dt;
+    // startXTime += Robot.dt;
     // LOGGER.error("time for startX push:\t {} uS",startXTime/ticks/1000);
     startingLocationYEntry.setDouble(startingLocation.y);
 
-    startYTime += Robot.dt;
+    // startYTime += Robot.dt;
     // LOGGER.error("time for startY push:\t {} uS",startYTime/ticks/1000);
     rightDistanceEntry.setDouble(rightPosition);
 
-    rightDistanceTime += Robot.dt;
+    // rightDistanceTime += Robot.dt;
     // LOGGER.error("time for rightdistance push:\t {} uS",rightDistanceTime/ticks/1000);
     leftDistanceEntry.setDouble(leftPosition);
 
-    leftDistanceTime += Robot.dt;
+    // leftDistanceTime += Robot.dt;
     // LOGGER.error("time for leftdistance push:\t {} uS",leftDistanceTime/ticks/1000);
     zeroedEntry.setBoolean(isZeroed);
 
-    zeroTime += Robot.dt;
+    // zeroTime += Robot.dt;
     // LOGGER.error("time for isZeroed push:\t {} uS",zeroTime/ticks/1000);
     headingAngleEntry.setDouble(headingAngle);
 
-    headingAngleTime += Robot.dt;
+    // headingAngleTime += Robot.dt;
     // LOGGER.error("time for headingangle push:\t {} uS",headingAngleTime/ticks/1000);
     // LOGGER.error("----------------------=---------");
-    ticks++;
+    // ticks++;
     // table.getEntry("/LoggingFileExists").setBoolean(new File("/media/sda1/logging/log4j2.yaml").exists());
   }
 

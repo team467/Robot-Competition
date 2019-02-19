@@ -14,6 +14,7 @@ import java.io.IOException;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.core.layout.CsvLogEventLayout;
 
 public class TelemetryBuilder extends SendableBuilderImpl implements SendableBuilder {
 
@@ -80,7 +81,18 @@ public class TelemetryBuilder extends SendableBuilderImpl implements SendableBui
     "/rightDistance", 
     "/leftDistance", 
     "/isZeroed", 
-    "/headingAngle"};
+    "/headingAngle",
+    "CargoIntakeArm",
+    "CargoIntakeArmState",
+    "CargoIntakeRoller",
+    "CargoMechArm",
+    "CargoMechArmState",
+    "CargoMechClaw",
+    "HatchArm",
+    "HatchLauncher",
+    "TurretPosition",
+    "TurretTarget"
+  };
 
   public void updateTable() {
     super.updateTable();
@@ -95,6 +107,7 @@ public class TelemetryBuilder extends SendableBuilderImpl implements SendableBui
           for (Object o: (Object[]) pins) {
             csvPrinter.print(o);
           }
+          csvPrinter.print("Time in millis");
           csvPrinter.println();
           printedHeaders = true;
         }
@@ -116,7 +129,8 @@ public class TelemetryBuilder extends SendableBuilderImpl implements SendableBui
               break;
             }
             default:
-              text = entry.getString("") + "no types";
+//            text = String.valueOf(entry.getType().toString());
+              text = entry.getString("BLAH");
               break;
           }
           csvPrinter.print(text);
@@ -127,6 +141,7 @@ public class TelemetryBuilder extends SendableBuilderImpl implements SendableBui
         for (int pin: pins) {
           csvPrinter.print(String.format("%10.5f",pdp.getCurrent(pin)));
         }
+        csvPrinter.print(System.nanoTime() / 1000000.0);
         csvPrinter.println();
       } catch (IOException e) {
         LOGGER.error(e.getStackTrace());
