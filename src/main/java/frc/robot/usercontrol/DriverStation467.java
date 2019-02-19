@@ -163,14 +163,14 @@ public class DriverStation467 {
   
   public boolean getHatchMode() {
     //NAV
-    return getNavJoystick().down(Button.BumperRight);
+    return getNavJoystick().down(Button.BumperLeft);
   }
 
   public boolean getCargoMode() {
-    return getNavJoystick().down(Button.BumperLeft);
+    return getNavJoystick().down(Button.BumperRight);
   }
   
-  public double getArmManualOverride() {
+  public double getWristManualOverride() {
 
     return getNavJoystick().getLeftStickY();
   }

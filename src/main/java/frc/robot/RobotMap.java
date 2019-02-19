@@ -283,14 +283,13 @@ public class RobotMap {
         ROLLER_LEFT_ARM_UP_SOLINOID_CHANNEL = 2;
         ROLLER_LEFT_ARM_DOWN_SOLINOID_CHANNEL = 3;
         //TODO use two solenoids
-        ROLLER_MOTOR_CHANNEL = 2;
+        ROLLER_MOTOR_CHANNEL = 4;
         ROLLER_MOTOR_INVERTED = false; // TODO
         //TODO use two sparks
 
         // Cargo Mechanism
-        //CARGO_MECH_ARM_SENSOR_CHANNEL = 0; // TODO Change from spark to talon
         CARGO_MECH_WRIST_MOTOR_CHANNEL = 6; // TODO
-        CARGO_MECH_WRIST_MOTOR_INVERTED = false; // TODO
+        CARGO_MECH_WRIST_MOTOR_INVERTED = false; 
         //CARGO_MECH_ARM_SENSOR_INVERTED = false;  // TODO Remove
         CARGO_MECH_WRIST_P = 1.0; // TODO
         CARGO_MECH_WRIST_I = 0.0; // TODO
@@ -303,14 +302,19 @@ public class RobotMap {
         CARGO_MECH_WRIST_BOTTOM_TICKS = 0; // TODO
         CARGO_MECH_WRIST_ALLOWABLE_ERROR_TICKS = 10; // TODO
 
+        CARGO_WRIST_UP_LIMIT_TICKS = 0; // TODO
+        CARGO_WRIST_DOWN_LIMIT_TICKS = 0; // TODO
+
         // Relative
         CARGO_MECH_CARGO_BIN = 0; // TODO
         CARGO_MECH_LOW_ROCKET = 0.3; // TODO
         CARGO_MECH_CARGO_SHIP = 0.7; // TODO
         CARGO_MECH_SAFE_TURRET = 1.0; // TODO
 
-        CARGO_MECH_CLAW_LEFT_MOTOR_CHANNEL = 4; // TODO
-        CARGO_MECH_CLAW_LEFT_MOTOR_INVERTED = false; // TODO
+        CARGO_MECH_CLAW_LEFT_MOTOR_CHANNEL = 10;
+        CARGO_MECH_CLAW_LEFT_MOTOR_INVERTED = false;
+        CARGO_MECH_CLAW_RIGHT_MOTOR_CHANNEL = 11;
+        CARGO_MECH_CLAW_RIGHT_MOTOR_INVERTED = false;
 
 
         break;
@@ -487,6 +491,9 @@ public class RobotMap {
   public static int CARGO_MECH_WRIST_BOTTOM_TICKS;
   public static int CARGO_MECH_WRIST_ALLOWABLE_ERROR_TICKS = 10;
 
+  public static int CARGO_WRIST_UP_LIMIT_TICKS;
+  public static int CARGO_WRIST_DOWN_LIMIT_TICKS;
+
   // Relative heights
   public static double CARGO_MECH_CARGO_BIN;
   public static double CARGO_MECH_LOW_ROCKET;
@@ -496,7 +503,7 @@ public class RobotMap {
   public static int CARGO_MECH_CLAW_LEFT_MOTOR_CHANNEL;
   public static boolean CARGO_MECH_CLAW_LEFT_MOTOR_INVERTED;
   public static int CARGO_MECH_CLAW_RIGHT_MOTOR_CHANNEL;
-  public static boolean CARGO_MECH_RIGHT_MOTOR_INVERTED;
+  public static boolean CARGO_MECH_CLAW_RIGHT_MOTOR_INVERTED;
 
   public static boolean CONTROLS_INVERTED_FB;
   public static boolean CONTROLS_INVERTED_TURN;

@@ -143,6 +143,7 @@ public class GamePieceController implements Sendable {
 
     switch (mode) {
       case DEFENSE:
+      LOGGER.error("defense Mode Activated");
         turret.moveTurretToHome();
         if (turret.isHome()) {
           if (cargoIntake.arm() == CargoIntakeArmState.DOWN) {
@@ -154,6 +155,7 @@ public class GamePieceController implements Sendable {
         }
         break;
       case CARGO:
+      LOGGER.error("Cargo Mode Activated");
         if (driverStation.getAcquireBall()) {
           /*
           * Acquire Cargo: - Must be in CARGO mode and roller arm must be DOWN. - Turn on
@@ -189,10 +191,18 @@ public class GamePieceController implements Sendable {
         * down. move turret to home, turn on claw, lower arm. Must check that it is
         * safe to move turret. Cancels Target Lock
         */
+        /*
+        */
+        if(driverStation.getWristManualOverride() != 0.0){
+          if(isSafeToMoveWrist()) {
+              cargoMech.overrideArm(driverStation.getWristManualOverride());
+          }
+        }
         break;
 
       case HATCH:
         if (driverStation.fireHatch()) {
+          LOGGER.error("Hatch Mode Activated");
           /*
           * //TODO: Fire Hatch Must be in hatch mode. Pushes cargo arm forward for some
           * count of cycles, then activates hatch solenoids. After trigger is released,
@@ -200,6 +210,7 @@ public class GamePieceController implements Sendable {
           * combined with acquire hatch to insure that the arm can move forward during
           * acquisition. Could just be before acquire hatch as moves happen at end.
           */
+
           if (hatchMech.arm() == HatchArm.IN) {
             hatchMech.arm(HatchArm.OUT);
           } else if (hatchMech.arm() == HatchArm.OUT) {
@@ -293,7 +304,7 @@ public class GamePieceController implements Sendable {
        * //Fine Adjust Turret Manually move the turret based on stick. Should
        * check for unsafe turret situations. Cancels target lock
        */
-      if (true) {
+      if (driverStation.getFineAdjustTurret() != 0.0) {
         if (isSafeToMoveTurret()) {
           turret.manual(driverStation.getFineAdjustTurret()); // cancel target lock handled here
         } else {
@@ -301,6 +312,11 @@ public class GamePieceController implements Sendable {
         }
 
       }
+
+      /*
+      * Manual Override of the wrist
+      * check to make sure the roller is dd
+      */
     } // End combined Hatch and Turret mode capabilities.
 
     // Update all systems
@@ -322,6 +338,12 @@ public class GamePieceController implements Sendable {
     LOGGER.debug("Safe to move turret? {}", isSafe);
     return isSafe;
   }
+
+  private boolean isSafeToMoveWrist() {
+    boolean isSafe = (cargoIntake.arm() == CargoIntakeArmState.DOWN) ? true : false;
+    LOGGER.debug("Safe to move wrist? {}", isSafe);
+    return isSafe;    
+  }        
 
   @Override
   public void initSendable(SendableBuilder builder) {
