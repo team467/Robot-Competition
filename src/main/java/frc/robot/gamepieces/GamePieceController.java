@@ -154,7 +154,30 @@ public class GamePieceController implements Sendable {
         }
         break;
       case CARGO:
-        if (driverStation.getAcquireBall()) {
+      if (driverStation.getTurretRight()) {
+        if (isSafeToMoveTurret()) {
+          turret.target(90.0);
+        } else {
+          cargoMech.wrist(CargoMechWrist.SAFE_TURRET);
+        }
+      }
+
+      /*
+       * //Move Turret Left Must be in hatch or cargo mode. Moves the turret to
+       * -90. If arm is in low cargo acquire postion and move is required, move to
+       * cargo arm to low rocket Must check that it is safe to move turret. Cancels
+       * Target Lock
+       */
+
+      if (driverStation.getTurretLeft()) {
+        if (isSafeToMoveTurret()) {
+          turret.target(-90.0);
+        } else {
+          cargoMech.wrist(CargoMechWrist.SAFE_TURRET);
+        }
+      }
+        
+      if (driverStation.getAcquireBall()) {
           /*
           * Acquire Cargo: - Must be in CARGO mode and roller arm must be DOWN. - Turn on
           * roller, move turret to home, lower down, and turn on claw. - Must check that
@@ -192,6 +215,28 @@ public class GamePieceController implements Sendable {
         break;
 
       case HATCH:
+      if (driverStation.getTurretRight()) {
+        if (isSafeToMoveTurret()) {
+          turret.target(-90.0);
+        } else {
+          cargoMech.wrist(CargoMechWrist.SAFE_TURRET);
+        }
+      }
+
+      /*
+       * //Move Turret Left Must be in hatch or cargo mode. Moves the turret to
+       * -90. If arm is in low cargo acquire postion and move is required, move to
+       * cargo arm to low rocket Must check that it is safe to move turret. Cancels
+       * Target Lock
+       */
+
+      if (driverStation.getTurretLeft()) {
+        if (isSafeToMoveTurret()) {
+          turret.target(90.0);
+        } else {
+          cargoMech.wrist(CargoMechWrist.SAFE_TURRET);
+        }
+      }
         if (driverStation.fireHatch()) {
           /*
           * //TODO: Fire Hatch Must be in hatch mode. Pushes cargo arm forward for some
@@ -251,35 +296,6 @@ public class GamePieceController implements Sendable {
         }
       }
 
-      /*
-       * //Move Turret Right Must be in hatch or cargo mode. Moves the turret to
-       * +90. If arm is in low cargo acquire postion and move is required, move to
-       * cargo arm to low rocket Must check that it is safe to move turret. Cancels
-       * Target Lock.
-       */
-
-      if (driverStation.getTurretRight()) {
-        if (isSafeToMoveTurret()) {
-          turret.target(90.0);
-        } else {
-          cargoMech.wrist(CargoMechWrist.SAFE_TURRET);
-        }
-      }
-
-      /*
-       * //Move Turret Left Must be in hatch or cargo mode. Moves the turret to
-       * -90. If arm is in low cargo acquire postion and move is required, move to
-       * cargo arm to low rocket Must check that it is safe to move turret. Cancels
-       * Target Lock
-       */
-
-      if (driverStation.getTurretLeft()) {
-        if (isSafeToMoveTurret()) {
-          turret.target(-90.0);
-        } else {
-          cargoMech.wrist(CargoMechWrist.SAFE_TURRET);
-        }
-      }
 
       /*
        * //Target Lock Turret Must be in hatch or cargo mode. Set target to
