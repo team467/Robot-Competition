@@ -25,7 +25,6 @@ public class CargoMech extends GamePieceBase implements GamePiece {
 
   // State
   private CargoMechWristState armState;
-
   private static boolean onManualControl = true;
 
   private static final int TALON_SENSOR_ID = 0;
@@ -64,8 +63,8 @@ public class CargoMech extends GamePieceBase implements GamePiece {
         // talon.configReverseSoftLimitThreshold(
         //     RobotMap.CARGO_WRIST_DOWN_LIMIT_TICKS, RobotMap.TALON_TIMEOUT);
        // talon.configReverseSoftLimitEnable(true, RobotMap.TALON_TIMEOUT);
-        talon.configForwardSoftLimitEnable(false, RobotMap.TALON_TIMEOUT);
-        talon.configReverseSoftLimitEnable(false, RobotMap.TALON_TIMEOUT);
+        // talon.configForwardSoftLimitEnable(false, RobotMap.TALON_TIMEOUT);
+        // talon.configReverseSoftLimitEnable(false, RobotMap.TALON_TIMEOUT);
         talon.configAllowableClosedloopError(TALON_PID_SLOT_ID,
             RobotMap.CARGO_MECH_WRIST_ALLOWABLE_ERROR_TICKS, RobotMap.TALON_TIMEOUT);
       } else {
@@ -82,6 +81,7 @@ public class CargoMech extends GamePieceBase implements GamePiece {
 
     private static void override(double speed) {
       if (!RobotMap.useSimulator && RobotMap.HAS_CARGO_MECHANISM) {
+        onManualControl = true;
         talon.set(ControlMode.PercentOutput, speed);
         LOGGER.debug("Manual override cargo mech arm Speed: {}, Channel: {}, talon speed = {}, Control mode: {}",
             speed, talon.getDeviceID(), talon.getMotorOutputPercent(), talon.getControlMode());
@@ -126,7 +126,7 @@ public class CargoMech extends GamePieceBase implements GamePiece {
     private static CargoMechWristState read() {
       height = simulatedReading;
       if (!RobotMap.useSimulator && RobotMap.HAS_CARGO_MECHANISM) {
-        height = CargoMechWrist.talon.getSensorCollection().getAnalogIn();
+        height = CargoMechWrist.talon.getSelectedSensorPosition(TALON_SENSOR_ID);
       }
       height *= (RobotMap.CARGO_MECH_WRIST_SENSOR_INVERTED) ? -1.0 : 1.0;
 
@@ -195,7 +195,9 @@ public class CargoMech extends GamePieceBase implements GamePiece {
         
         motorFollower = new Spark(RobotMap.CARGO_MECH_CLAW_RIGHT_MOTOR_CHANNEL);
         motorFollower.setInverted(RobotMap.CARGO_MECH_CLAW_RIGHT_MOTOR_INVERTED);
-        LOGGER.debug("spark channels: {}, {}, spark speed: {}, ", motorLeader.getChannel(), motorFollower.getChannel(), motorLeader.getSpeed(), motorFollower.getSpeed());
+        LOGGER.debug("spark channels: {}, {}, spark speed: {}, ", 
+            motorLeader.getChannel(), motorFollower.getChannel(), 
+            motorLeader.getSpeed(), motorFollower.getSpeed());
       }
 
     }
@@ -346,9 +348,8 @@ public class CargoMech extends GamePieceBase implements GamePiece {
    */
   public void periodic() { // In progress
     // Take Actions
-    //LOGGER.debug("Mech Periodic Called");
-    if (true) {
-      claw.actuate();
+    claw.actuate();
+    if (!onManualControl) {
       wrist.actuate();
     }
 

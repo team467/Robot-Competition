@@ -160,8 +160,7 @@ public class DriverStation467 {
   }
   
   public double getWristManualOverride() {
-
-    return getNavJoystick().getLeftStickY();
+    return (Math.abs(getNavJoystick().getLeftStickY()) < 0.2)? 0 : getNavJoystick().getLeftStickY();
   }
 
   public boolean getFireCargo(){
