@@ -52,7 +52,7 @@ public class GamePieceController implements Sendable {
     return instance;
   }
 
-  // This methods are required for the Sendable interface 
+  // This methods are required for the Sendable interface
 
   @Override
   public String getName() {
@@ -75,9 +75,8 @@ public class GamePieceController implements Sendable {
   }
 
   /**
-   * This method would be used to override the mode for testing
-   * by using Network Tables. It is private as that is the only
-   * use method.
+   * This method would be used to override the mode for testing by using Network
+   * Tables. It is private as that is the only use method.
    * 
    * @param mode the mode for testing.
    */
@@ -86,24 +85,30 @@ public class GamePieceController implements Sendable {
   }
 
   public enum GamePieceMode {
-    DEFENSE, 
-    CARGO,
-    HATCH
+    DEFENSE, CARGO, HATCH
   }
 
   private GamePieceController() {
     driverStation = DriverStation467.getInstance();
+    LOGGER.info("Initializing driverstation");
     cargoIntake = CargoIntake.getInstance();
+    LOGGER.info("Initializing cargoIntake");
     cargoMech = CargoMech.getInstance();
+    LOGGER.info("Initializing cargoMech");
     hatchMech = HatchMechanism.getInstance();
+    LOGGER.info("Initializing turret");
     turret = Turret.getInstance();
-    camera = CameraSwitcher.getInstance();    
+    camera = CameraSwitcher.getInstance();
+    LOGGER.info("Initializing camera");
     visionController = VisionController.getInstance();
+    LOGGER.info("Initializing visionController");
 
+    // Enabling game pieces
     cargoIntake.enabled(true);
     cargoMech.enabled(true);
     hatchMech.enabled(true);
     turret.enabled(true);
+
     mode = GamePieceMode.DEFENSE;
   }
 
@@ -113,20 +118,25 @@ public class GamePieceController implements Sendable {
   public void periodic() {
 
     // Depending on driver input, camera view switches to front or back.
-    // // Does not change the mode away from Hatch or Cargo, but does take camera.
+    // Does not change the mode away from Hatch or Cargo, but does take camera.
     if (driverStation.getDriveCameraFront()) {
+      LOGGER.debug("Forward Camera");
       camera.forward();
     } else if (driverStation.getDriveCameraBack()) {
+      LOGGER.debug("Backward Camera");
       camera.backward();
     }
 
     if (driverStation.defenseMode()) { // gets action from driver input
+      LOGGER.info("Changing game mode to DEFENSE");
       mode = GamePieceMode.DEFENSE;
       // TODO: LED Red
     } else if (driverStation.getHatchMode()) {
+      LOGGER.info("Changing game mode to HATCH");
       mode = GamePieceMode.HATCH;
       camera.hatch();
     } else if (driverStation.getCargoMode()) {
+      LOGGER.info("Changing game mode to CARGO");
       mode = GamePieceMode.CARGO;
       camera.cargo();
     }
@@ -134,78 +144,112 @@ public class GamePieceController implements Sendable {
     switch (mode) {
 
       case DEFENSE:
-        if (makeTurretSafeToMove()) {
-          turret.moveTurretToHome();
-        } else if (turret.isHome()) {
-          if (cargoIntake.arm() == CargoIntakeArmState.DOWN) {
-            cargoIntake.arm(CargoIntakeArm.UP);
-          }
+        if (moveTurretHome()) {
           if (hatchMech.arm() == HatchArm.OUT) {
+            LOGGER.info("Moving hatch arm in");
             hatchMech.arm(HatchArm.IN);
+          }
+          if (cargoMech.wrist() != CargoMechWristState.CARGO_BIN) {
+            if (ensureSafeToMoveWrist()) {
+              cargoMech.wrist(CargoMechWrist.CARGO_BIN);
+            }
+          } else if (cargoIntake.armCommand() == CargoIntakeArm.DOWN) {
+            LOGGER.info("Moving cargo intake arm up");
+            cargoIntake.arm(CargoIntakeArm.UP);
           }
         }
         break;
 
       case CARGO:
         if (driverStation.getTurretRight()) {
-          if (makeTurretSafeToMove()) {
-            turret.target(90.0);
+          if (ensureTurretSafeToMove()) {
+            turret.target(-90.0);
           }
         } else if (driverStation.getTurretLeft()) {
-          if (makeTurretSafeToMove()) {
-            turret.target(-90.0);
-          } 
-        } else if (driverStation.getAcquireBall()) {
-          if (!turret.isHome()) {
-            if (makeTurretSafeToMove()) {
-              turret.moveTurretToHome();
-            }
-          } else {
-            if (cargoMech.wrist() != CargoMechWristState.CARGO_BIN) {
-              cargoMech.wrist(CargoMechWrist.CARGO_BIN);
-            } else {
-              cargoIntake.roller(CargoIntakeRoller.REVERSE);
-              cargoMech.claw(CargoMechClaw.REVERSE); // Suck ball into cargo arm mech
-            }
+          if (ensureTurretSafeToMove()) {
+            turret.target(90.0);
+          }
+        } 
+
+        if (driverStation.getAcquireBall()) {
+          LOGGER.info("Trying to acquire ball");
+          if (cargoIntake.armCommand() == CargoIntakeArm.DOWN) {
+            LOGGER.info("Cargo intake arm is down");
+            if (moveTurretHome()) { // Overrides move turret right or left
+              if (cargoMech.wrist() != CargoMechWristState.CARGO_BIN) {
+                if (ensureSafeToMoveWrist()) {
+                  LOGGER.info("Moving wrist to bin");
+                  cargoMech.wrist(CargoMechWrist.CARGO_BIN);
+                }
+              } else {
+                LOGGER.info("Putting rollers in reverse");
+                cargoMech.claw(CargoMechClaw.REVERSE);
+                cargoIntake.roller(CargoIntakeRoller.REVERSE); // Suck ball into cargo intake mech
+              }
+            } 
           }
         } else if (driverStation.getCargoArmCargoShipPosition()) {
+          LOGGER.debug("Stop the claw.");
           cargoMech.claw(CargoMechClaw.STOP);
-          cargoMech.wrist(CargoMechWrist.CARGO_SHIP);
           cargoIntake.roller(CargoIntakeRoller.STOP);
+          LOGGER.info("Move Cargo Mech wrist to the Cargo Ship height.");
+          if (ensureSafeToMoveWrist()) {
+            cargoMech.wrist(CargoMechWrist.CARGO_SHIP);
+          }
         } else if (driverStation.getCargoArmLowRocketShipPosition()) {
+          LOGGER.info("Stop the claw.");
           cargoMech.claw(CargoMechClaw.STOP);
-          cargoMech.wrist(CargoMechWrist.LOW_ROCKET);
           cargoIntake.roller(CargoIntakeRoller.STOP);
+          if (ensureSafeToMoveWrist()) {
+            LOGGER.info("Move Cargo Mech wrist to the Low Rocket height.");
+            cargoMech.wrist(CargoMechWrist.LOW_ROCKET);
+          }
         } else if (driverStation.getFireCargo()) {
+          LOGGER.info("FIRING BALL.");
           cargoMech.claw(CargoMechClaw.FORWARD);
-          cargoIntake.roller(CargoIntakeRoller.STOP);
         } else {
           cargoMech.claw(CargoMechClaw.STOP);
           cargoIntake.roller(CargoIntakeRoller.STOP);
         }
+
+        /*
+         * Manual Override of the wrist check to make sure the roller is dd
+         */
+        if (driverStation.getWristManualOverride() != 0.0) {
+          if (ensureSafeToMoveWrist()) {
+            LOGGER.debug("Setting wrist speed to {}.", driverStation.getWristManualOverride());
+            cargoMech.overrideArm(driverStation.getWristManualOverride());
+          }
+        }
+
         break;
 
       case HATCH:
-        if (driverStation.getTurretRight()) {
-          if (makeTurretSafeToMove()) {
-            turret.target(-90.0);
-          }
-        } else if (driverStation.getTurretLeft()) {
-          if (makeTurretSafeToMove()) {
-            turret.target(90.0);
-          }
-        } else {          
-          if (driverStation.fireHatch()) {
-            hatchMech.launcher(HatchLauncher.FIRE);
-          } else {
-            hatchMech.launcher(HatchLauncher.RESET);
-          }
-          if (driverStation.getAcquireHatch()) {
-            hatchMech.arm(HatchArm.OUT);
-          } else {
-            hatchMech.arm(HatchArm.IN);
-          }
+        if (driverStation.getAcquireHatch()) {
+          LOGGER.debug("Moving the hatch arm out.");
+          hatchMech.arm(HatchArm.OUT);
+        } else {
+          LOGGER.debug("Moving hatch arm in.");
+          hatchMech.arm(HatchArm.IN);
         }
+
+        if (driverStation.fireHatch()) {
+          LOGGER.info("Fire hatch!");
+          hatchMech.launcher(HatchLauncher.FIRE);
+        } else {
+          LOGGER.info("Reset hatch launcher.");
+          hatchMech.launcher(HatchLauncher.RESET);
+
+          if (driverStation.getTurretRight()) {
+            if (ensureTurretSafeToMove()) {
+              turret.target(90.0);
+            }
+          } else if (driverStation.getTurretLeft()) {
+            if (ensureTurretSafeToMove()) {
+              turret.target(-90.0);
+            }
+          } 
+        }    
         break;
 
       default:
@@ -216,91 +260,83 @@ public class GamePieceController implements Sendable {
     if ((mode == GamePieceMode.CARGO || mode == GamePieceMode.HATCH)) {
       visionController.navigatorFeedback();
 
-      if (driverStation.getRejectBall() && cargoIntake.arm() == CargoIntakeArmState.DOWN) {
+      if (driverStation.getRejectBall() && cargoIntake.armCommand() == CargoIntakeArm.DOWN) {
         /*
          * Works in cargo or hatch mode. Cargo intake reverses motor to spit cargo.
          */
+        LOGGER.info("Rejecting ball");
         cargoIntake.roller(CargoIntakeRoller.FORWARD);
+      }
+  
+      if (driverStation.getIntakeBall() && cargoIntake.armCommand() == CargoIntakeArm.DOWN) {
+        LOGGER.info("Grabbing ball");
+        cargoIntake.roller(CargoIntakeRoller.REVERSE);
       }
 
       if (driverStation.getTurretHome()) {
-        /*
-         * //TODO: Move Turret Home Must be in hatch or cargo mode. Moves the turret to
-         * zero. If arm is in low cargo acquire postion and move is required, move to
-         * cargo arm to low rocket Must check that it is safe to move turret. Cancels
-         * Target Lock
-         */
-        if (!turret.isHome()) {
-          if (isSafeToMoveTurret()) {
-            turret.moveTurretToHome();
-          } else {
-            cargoMech.wrist(CargoMechWrist.SAFE_TURRET);
-          }
-        }
+        moveTurretHome();
       }
 
-
-      /*
-       * //Target Lock Turret Must be in hatch or cargo mode. Set target to
-       * track mode. Should allow override if other turret move.
-       */
       if (driverStation.getAutoTargetButtonPressed()) {
         turret.lockOnTarget();
       }
 
-      /*
-       * //Fine Adjust Turret Manually move the turret based on stick. Should
-       * check for unsafe turret situations. Cancels target lock
-       */
-      if (true) {
-        if (isSafeToMoveTurret()) {
+      if (driverStation.getFineAdjustTurret() != 0.0) {
+        if (ensureTurretSafeToMove()) {
           turret.manual(driverStation.getFineAdjustTurret()); // cancel target lock handled here
-        } else {
-          cargoMech.wrist(CargoMechWrist.SAFE_TURRET);
         }
-
       }
-    } // End combined Hatch and Turret mode capabilities.
+
+    } // End if ((mode == GamePieceMode.CARGO || mode == GamePieceMode.HATCH))
 
     // Update all systems
     cargoIntake.periodic();
     cargoMech.periodic();
     hatchMech.periodic();
     turret.periodic();
+    
   }
 
-  /**
-   * Checks to see if the turret would hit something if moved.
-   * 
-   * @return boolean true if safe to move, false otherwise.
-   */
-  private boolean isSafeToMoveTurret() {
-
-    boolean isSafe = (cargoMech.isSafeToMoveTurret() 
-        && cargoIntake.arm() == CargoIntakeArmState.DOWN) ? true : false;
-    LOGGER.debug("Safe to move turret? {}", isSafe);
+  private boolean ensureSafeToMoveWrist() {
+    boolean isSafe = (cargoIntake.armCommand() == CargoIntakeArm.DOWN) ? true : false;
+    LOGGER.debug("Safe to move wrist? {}", isSafe);
+    if (!isSafe) {
+      cargoIntake.arm(CargoIntakeArm.DOWN);
+    }
     return isSafe;
+  }
+
+  private boolean ensureTurretSafeToMove() {
+    boolean isSafe = (cargoMech.isSafeToMoveTurret() 
+        && cargoIntake.armCommand() == CargoIntakeArm.DOWN) ? true : false;
+    LOGGER.debug("Safe to move turret? {}", isSafe);
+    if (!isSafe) {
+      if (ensureSafeToMoveWrist()) {
+        LOGGER.info("Moving wrist to safe position.");
+        cargoMech.wrist(CargoMechWrist.SAFE_TURRET);
+      }
+      hatchMech.arm(HatchArm.IN);
+    } 
+    return isSafe;
+  }
+
+  private boolean moveTurretHome() {
+    boolean isHome = turret.isHome();
+    if (!isHome) {
+      if (ensureTurretSafeToMove()) {
+        LOGGER.info("Moving Turret Home.");
+        turret.moveTurretToHome();
+      }
+    }
+    return isHome;
   }
 
   @Override
   public void initSendable(SendableBuilder builder) {
-    builder.addStringProperty(
-        name + "Mode",
-        mode::name, // Lambda called when updating network table
+    // Lambda called when updating network table
+    builder.addStringProperty(name + "Mode", mode::name,
         // Lambda calls set enabled if changed in Network table
-        (gamePieceMode) -> testMode(gamePieceMode)); 
+        (gamePieceMode) -> testMode(gamePieceMode));
   }
 
-  private boolean makeTurretSafeToMove() {
-    boolean isTurretSafeToMove = isSafeToMoveTurret();
-    if (!isTurretSafeToMove) {
-      if (cargoIntake.armCommand() == CargoIntakeArm.UP) {
-        cargoIntake.arm(CargoIntakeArm.DOWN);
-      }
-      cargoMech.wrist(CargoMechWrist.SAFE_TURRET);
-      hatchMech.arm(HatchArm.IN);
-      isTurretSafeToMove = true;
-    } 
-    return isTurretSafeToMove;
-  }
 }

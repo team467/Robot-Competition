@@ -35,11 +35,11 @@ public class CargoIntake extends GamePieceBase implements GamePiece {
     private static void initialize() {
 
       if (!RobotMap.useSimulator && RobotMap.HAS_ROLLER_INTAKE) {
-        leftSolenoid = new DoubleSolenoid(
+        leftSolenoid = new DoubleSolenoid(RobotMap.ROLLER_PCM_CHANNEL,
             RobotMap.ROLLER_LEFT_ARM_UP_SOLINOID_CHANNEL, 
             RobotMap.ROLLER_LEFT_ARM_DOWN_SOLINOID_CHANNEL);
         leftSolenoid.setName("Telemetry", "RollerArmLeftSolenoid");
-        rightSolenoid = new DoubleSolenoid(
+        rightSolenoid = new DoubleSolenoid(RobotMap.ROLLER_PCM_CHANNEL,
             RobotMap.ROLLER_RIGHT_ARM_UP_SOLINOID_CHANNEL, 
             RobotMap.ROLLER_RIGHT_ARM_DOWN_SOLINOID_CHANNEL);
         rightSolenoid.setName("Telemetry", "RollerArmRightSolenoid");
@@ -51,10 +51,11 @@ public class CargoIntake extends GamePieceBase implements GamePiece {
      * Moves the arm based on the requested command.
      */
     private void actuate() {
-      LOGGER.debug("Actuate cargo intake arm: {}", name());
+      
       if (RobotMap.useSimulator || !RobotMap.HAS_ROLLER_INTAKE) {
         return;
       }
+      LOGGER.error("Actuate cargo intake arm: {}", this);
       switch (this) {
         case DOWN:
           if (RobotMap.HAS_ROLLER_INTAKE) {
@@ -97,10 +98,11 @@ public class CargoIntake extends GamePieceBase implements GamePiece {
      * Moves the roller forward or backward based on the requested command.
      */
     private void actuate() {
-      LOGGER.debug("Actuate cargo intake roller: {}", name());
       if (RobotMap.useSimulator) {
         return;
       }
+
+      LOGGER.error("Actuate cargo intake roller: {}", this);
       switch (this) {
 
         case FORWARD:
@@ -282,7 +284,7 @@ public class CargoIntake extends GamePieceBase implements GamePiece {
    */
   public void periodic() {
     // Take Actions
-    if (enabled) {
+    if (true) {
       roller.actuate();
       arm.actuate();
     }

@@ -115,8 +115,8 @@ public class DriverStation467 {
   }
 
   public boolean getAcquireHatch() {
-    //Nav
-    return getNavJoystick().getRightTrigger() > 0.9;
+    //Nav getNavJoystick().getRightTrigger() > 0.9
+    return getNavJoystick().down(Button.BumperRight);
   }
   
   public boolean getCargoArmLowRocketShipPosition() {
@@ -151,21 +151,21 @@ public class DriverStation467 {
   }
   
   public boolean getHatchMode() {
-    //NAV
-    return getNavJoystick().down(Button.BumperRight);
+    //NAV getNavJoystick().down(Button.BumperLeft)
+    return getNavJoystick().getLeftTrigger() > 0.9;
   }
 
   public boolean getCargoMode() {
-    return getNavJoystick().down(Button.BumperLeft);
+    return getNavJoystick().getRightTrigger() > 0.9;
   }
   
-  public double getArmManualOverride() {
+  public double getWristManualOverride() {
 
     return getNavJoystick().getLeftStickY();
   }
 
-  public boolean getFireCargo() {
-    return getNavJoystick().getLeftTrigger() >= 0.9;
+  public boolean getFireCargo(){
+    return getNavJoystick().down(Button.BumperLeft);
   }
 
   public void navSetLeftRumble(double value) {
@@ -199,12 +199,11 @@ public class DriverStation467 {
   }
 
   public boolean getAcquireBall() {
-    return getDriveJoystick().getRightTrigger() == 0.9;
+    return getNavJoystick().down(Button.y);//getDriveJoystick().getRightTrigger() >= 0.9;
   }
 
   public boolean defenseMode() {
-    if(getDriveJoystick().down(Button.BumperLeft) == true 
-        && getDriveJoystick().down(Button.BumperRight) == true) {
+    if( getNavJoystick().getLeftTrigger() > 0.9 == true &&  getNavJoystick().getRightTrigger() > 0.9 == true) {
       return true;
     } else {
       return false;
@@ -213,6 +212,10 @@ public class DriverStation467 {
 
   public boolean getRejectBall() {
     return getDriveJoystick().getLeftTrigger() >= 0.9;
+  }
+
+  public boolean getIntakeBall(){
+    return getDriveJoystick().getRightTrigger() >= 0.9;
   }
 
   public void driverSetLeftRumble(double value) {
@@ -224,7 +227,7 @@ public class DriverStation467 {
   }
 
   public boolean fireHatch() {
-    return driverJoy.down(Button.a);
+    return getNavJoystick().down(Button.BumperLeft);
   }
 
   public boolean restartCamera() {

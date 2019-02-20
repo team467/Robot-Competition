@@ -47,23 +47,25 @@ public class CargoMech extends GamePieceBase implements GamePiece {
 
     private static void initialize() {
       if (RobotMap.HAS_CARGO_MECHANISM) {
-        talon = TalonProxy.create(RobotMap.TURRET_MOTOR_CHANNEL);
-        talon.setName("Telemetry", "TurretMotor");
-        talon.setInverted(RobotMap.TURRET_MOTOR_INVERTED);
-        talon.setSensorPhase(RobotMap.TURRET_SENSOR_INVERTED);
+        talon = TalonProxy.create(RobotMap.CARGO_MECH_WRIST_MOTOR_CHANNEL);
+        talon.setName("Telemetry", "Cargo Wrist Motor");
+        talon.setInverted(RobotMap.CARGO_MECH_WRIST_MOTOR_INVERTED);
+        talon.setSensorPhase(RobotMap.CARGO_MECH_WRIST_SENSOR_INVERTED);
         talon.selectProfileSlot(TALON_PID_SLOT_ID, TALON_SENSOR_ID);
-        talon.config_kP(TALON_PID_SLOT_ID, RobotMap.TURRET_P, RobotMap.TALON_TIMEOUT);
-        talon.config_kI(TALON_PID_SLOT_ID, RobotMap.TURRET_I, RobotMap.TALON_TIMEOUT);
-        talon.config_kD(TALON_PID_SLOT_ID, RobotMap.TURRET_D, RobotMap.TALON_TIMEOUT);
-        talon.config_kF(TALON_PID_SLOT_ID, RobotMap.TURRET_F, RobotMap.TALON_TIMEOUT);
-        talon.configForwardSoftLimitThreshold(
-            RobotMap.TURRET_RIGHT_LIMIT_TICKS, RobotMap.TALON_TIMEOUT);
-        talon.configForwardSoftLimitEnable(true, RobotMap.TALON_TIMEOUT);
-        talon.configReverseSoftLimitThreshold(
-            RobotMap.TURRET_LEFT_LIMIT_TICKS, RobotMap.TALON_TIMEOUT);
-        talon.configReverseSoftLimitEnable(true, RobotMap.TALON_TIMEOUT);
+        talon.config_kP(TALON_PID_SLOT_ID, RobotMap.CARGO_MECH_WRIST_P, RobotMap.TALON_TIMEOUT);
+        talon.config_kI(TALON_PID_SLOT_ID, RobotMap.CARGO_MECH_WRIST_I, RobotMap.TALON_TIMEOUT);
+        talon.config_kD(TALON_PID_SLOT_ID, RobotMap.CARGO_MECH_WRIST_D, RobotMap.TALON_TIMEOUT);
+        talon.config_kF(TALON_PID_SLOT_ID, RobotMap.CARGO_MECH_WRIST_F, RobotMap.TALON_TIMEOUT);
+        // talon.configForwardSoftLimitThreshold(
+        //     RobotMap.CARGO_WRIST_UP_LIMIT_TICKS, RobotMap.TALON_TIMEOUT);
+        // talon.configForwardSoftLimitEnable(true, RobotMap.TALON_TIMEOUT);
+        // talon.configReverseSoftLimitThreshold(
+        //     RobotMap.CARGO_WRIST_DOWN_LIMIT_TICKS, RobotMap.TALON_TIMEOUT);
+       // talon.configReverseSoftLimitEnable(true, RobotMap.TALON_TIMEOUT);
+        talon.configForwardSoftLimitEnable(false, RobotMap.TALON_TIMEOUT);
+        talon.configReverseSoftLimitEnable(false, RobotMap.TALON_TIMEOUT);
         talon.configAllowableClosedloopError(TALON_PID_SLOT_ID,
-            RobotMap.TURRET_ALLOWABLE_ERROR_TICKS, RobotMap.TALON_TIMEOUT);
+            RobotMap.CARGO_MECH_WRIST_ALLOWABLE_ERROR_TICKS, RobotMap.TALON_TIMEOUT);
       } else {
         talon = null;
       }
@@ -77,10 +79,18 @@ public class CargoMech extends GamePieceBase implements GamePiece {
     }
 
     private static void override(double speed) {
-      LOGGER.debug("Manual override cargo mech arm: {}", speed);
       if (!RobotMap.useSimulator && RobotMap.HAS_CARGO_MECHANISM) {
         talon.set(ControlMode.PercentOutput, speed);
+        LOGGER.debug("Manual override cargo mech arm Speed: {}, Channel: {}, talon speed = {}, Control mode: {}", speed, talon.getDeviceID(), talon.getMotorOutputPercent(), talon.getControlMode());
       }
+    }
+
+    public static int cargoMechWristTickValueIn(){
+      return talon.getSensorCollection().getAnalogIn();
+    }
+
+    public static int cargoMechWristTickValueInRaw(){
+      return talon.getSensorCollection().getAnalogInRaw();
     }
 
     /**
@@ -111,7 +121,7 @@ public class CargoMech extends GamePieceBase implements GamePiece {
     private static CargoMechWristState read() {
       height = simulatedReading;
       if (!RobotMap.useSimulator && RobotMap.HAS_CARGO_MECHANISM) {
-        height = CargoMechWrist.talon.getSelectedSensorPosition(TALON_SENSOR_ID);
+        height = CargoMechWrist.talon.getSensorCollection().getAnalogIn();
       }
       height *= (RobotMap.CARGO_MECH_WRIST_SENSOR_INVERTED) ? -1.0 : 1.0;
 
@@ -168,14 +178,19 @@ public class CargoMech extends GamePieceBase implements GamePiece {
   public enum CargoMechClaw {
     FORWARD, REVERSE, STOP;
 
-    private static Spark motor;
+    private static Spark motorLeader;
+    private static Spark motorFollower;
 
     private static void initialize() {
       // Create the roller object. No sensors
       LOGGER.trace("Initializing Claw");
       if (RobotMap.HAS_CARGO_MECHANISM) {
-        motor = new Spark(RobotMap.CARGO_MECH_CLAW_LEFT_MOTOR_CHANNEL);
-        motor.setInverted(RobotMap.CARGO_MECH_CLAW_LEFT_MOTOR_INVERTED);
+        motorLeader = new Spark(RobotMap.CARGO_MECH_CLAW_LEFT_MOTOR_CHANNEL);
+        motorLeader.setInverted(RobotMap.CARGO_MECH_CLAW_LEFT_MOTOR_INVERTED);
+        
+        motorFollower = new Spark(RobotMap.CARGO_MECH_CLAW_RIGHT_MOTOR_CHANNEL);
+        motorFollower.setInverted(RobotMap.CARGO_MECH_CLAW_RIGHT_MOTOR_INVERTED);
+        LOGGER.debug("spark channels: {}, {}, spark speed: {}, ", motorLeader.getChannel(), motorFollower.getChannel(), motorLeader.getSpeed(), motorFollower.getSpeed());
       }
 
     }
@@ -185,29 +200,35 @@ public class CargoMech extends GamePieceBase implements GamePiece {
      * command.
      */
     private void actuate() {
-      LOGGER.debug("Actuating cargo mech claw: {}", name());
-      if (RobotMap.useSimulator || !RobotMap.HAS_CARGO_MECHANISM) {
-        return;
-      }
-
+      // LOGGER.debug("Actuating cargo mech claw");
+      // if (RobotMap.useSimulator || !RobotMap.HAS_CARGO_MECHANISM) {
+      //   return;
+      // }
+      
+      LOGGER.debug("Calling Claw Actuate state: {}", this);
       switch (this) {
-
         case FORWARD:
           if (RobotMap.HAS_CARGO_MECHANISM) {
-            motor.set(1.0);
+            motorLeader.set(1.0);
+            motorFollower.set(1.0);
+            LOGGER.debug("going forward");
           }
           break;
 
         case REVERSE:
           if (RobotMap.HAS_CARGO_MECHANISM) {
-            motor.set(-1.0);
+            motorLeader.set(-1.0);
+            motorFollower.set(-1.0);
+            LOGGER.debug("going backward");
           }
           break;
 
         case STOP:
         default:
           if (RobotMap.HAS_CARGO_MECHANISM) {
-            motor.set(0.0);
+            motorLeader.set(0.0);
+            motorFollower.set(0.0);
+            LOGGER.debug("stopping");
           }
       }
     }
@@ -317,7 +338,8 @@ public class CargoMech extends GamePieceBase implements GamePiece {
    */
   public void periodic() { // In progress
     // Take Actions
-    if (enabled) {
+    //LOGGER.debug("Mech Periodic Called");
+    if (true) {
       claw.actuate();
       wrist.actuate();
     }
@@ -336,7 +358,7 @@ public class CargoMech extends GamePieceBase implements GamePiece {
     builder.addStringProperty("CargoMechArm", wrist::name, (command) -> wrist(command));
     builder.addStringProperty("CargoMechArmState", armState::name, null);
     if (RobotMap.HAS_CARGO_MECHANISM) {
-      CargoMechClaw.motor.initSendable(builder);
+      CargoMechClaw.motorLeader.initSendable(builder);
       CargoMechWrist.talon.initSendable(builder);
     }
   }

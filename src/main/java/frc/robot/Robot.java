@@ -76,7 +76,7 @@ public class Robot extends TimedRobot {
     // table.deleteAllEntries(); // Uncomment to clear table once.
 
     // Initialize RobotMap
-    RobotMap.init(RobotId.ROBOT_2018);
+    RobotMap.init(RobotId.ROBOT_2019);
 
     // Used after init, should be set only by the Simulator GUI
     // this ensures that the simulator is off otherwise.
@@ -143,26 +143,28 @@ public class Robot extends TimedRobot {
       turn = 0.0;
     }
 
-    LOGGER.debug("Driver Station Inputs mode: {} speed: {} turn: {}", 
-        driverstation.getDriveMode(), speed, turn);
+    LOGGER.debug("Driver Station Inputs mode: {} speed: {} turn: {}", driverstation.getDriveMode(), speed, turn);
 
     switch (driverstation.getDriveMode()) {
 
-      case ArcadeDrive:
-        drive.arcadeDrive(speed, turn, true);
-        break;
+    case ArcadeDrive:
+      drive.arcadeDrive(speed, turn, true);
+      if (RobotMap.AUTO_CAMERA) {
+        camera.autoSwitch(speed);
+      }
+      break;
 
-      case CurvatureDrive:
-        drive.curvatureDrive(speed, turn, true);
-        break;
+    case CurvatureDrive:
+      drive.curvatureDrive(speed, turn, true);
+      break;
 
-      case TankDrive:
-        double leftTank = driverstation.getDriveJoystick().getLeftStickY();
-        double rightTank = driverstation.getDriveJoystick().getRightStickY();
-        drive.tankDrive(leftTank, rightTank, true);
-        break;
+    case TankDrive:
+      double leftTank = driverstation.getDriveJoystick().getLeftStickY();
+      double rightTank = driverstation.getDriveJoystick().getRightStickY();
+      drive.tankDrive(leftTank, rightTank, true);
+      break;
 
-      default:
+    default:
     }
 
     gamePieceController.periodic();
@@ -195,31 +197,33 @@ public class Robot extends TimedRobot {
     leds.cargoInLine();
   }
 
+
   /**
    * This function is called periodically during test mode.
    */
   @Override
   public void testPeriodic() {
     switch (tuneSlot) {
-      case 0: // Drive PID SLot
-        drive.tuneForward(tuningValue, RobotMap.PID_SLOT_DRIVE);
-        LOGGER.debug("Distance {} feet", drive.getLeftDistance());
-        break;
-      case 1: // Turn PID Slot
-        drive.tuneTurn(tuningValue, RobotMap.PID_SLOT_TURN);
-        LOGGER.debug("Turn {} degrees", Math.toDegrees(drive.getLeftDistance()));
-        break;
-      case 2:
-        drive.arcadeDrive(1, 0, true);
-        break;
-      default:
+    case 0: // Drive PID SLot
+      drive.tuneForward(tuningValue, RobotMap.PID_SLOT_DRIVE);
+      LOGGER.debug("Distance {} feet", drive.getLeftDistance());
+      break;
+    case 1: // Turn PID Slot
+      drive.tuneTurn(tuningValue, RobotMap.PID_SLOT_TURN);
+      LOGGER.debug("Turn {} degrees", Math.toDegrees(drive.getLeftDistance()));
+      break;
+    case 2:
+      drive.arcadeDrive(1, 0, true);
+      break;
+    default:
+    LOGGER.info("Invalid Tune Mode: {}", tuneSlot);
     }
   }
-
   @Override
   public void disabledInit() {
     LOGGER.info("Init Disabled");
   }
+
 
   @Override
   public void disabledPeriodic() {
