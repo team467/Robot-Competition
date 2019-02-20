@@ -18,7 +18,7 @@ import frc.robot.logging.RobotLogManager;
 import frc.robot.logging.TelemetryBuilder;
 import frc.robot.usercontrol.DriverStation467;
 import frc.robot.vision.CameraSwitcher;
-
+import frc.robot.sensors.LedI2C;
 import org.apache.logging.log4j.Logger;
 
 /**
@@ -41,6 +41,8 @@ public class Robot extends TimedRobot {
   private CameraSwitcher camera;
 
   private GamePieceController gamePieceController;
+
+  private LedI2C leds;
 
   private int tuneSlot = 0;
   private double tuningValue = 0.0;
@@ -84,13 +86,11 @@ public class Robot extends TimedRobot {
 
     // Make robot objects
     driverstation = DriverStation467.getInstance();
-    LOGGER.info("Initialized Driverstation");
     drive = Drive.getInstance();
     telemetry = TelemetryBuilder.getInstance();
     camera = CameraSwitcher.getInstance();
-
     gamePieceController = GamePieceController.getInstance();
-
+    leds = new LedI2C();
     drive.setPidsFromRobotMap();
   }
 
@@ -191,6 +191,8 @@ public class Robot extends TimedRobot {
         LOGGER.info("Invalid Tune Mode: {}", tuneSlot);
     }
     drive.zero();
+
+    leds.cargoInLine();
   }
 
   /**
@@ -217,7 +219,6 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledInit() {
     LOGGER.info("Init Disabled");
-
   }
 
   @Override
@@ -225,6 +226,8 @@ public class Robot extends TimedRobot {
     LOGGER.trace("Disabled Periodic");
 
     driverstation.readInputs();
+    leds.whenDisabled();
+    
     if (driverstation.getNavJoystick().getJoystick().getPOV() == 0) {
       camera.forward();
     } else if (driverstation.getNavJoystick().getJoystick().getPOV() == 90) {

@@ -1,89 +1,108 @@
 package frc.robot.sensors;
+
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.I2C.Port;
 
-public class LedI2C {
-  private static I2C wire = new I2C(Port.kOnboard, 8);
-  private static final int maxSize = 32;
+import frc.robot.logging.RobotLogManager;
 
-  public void writeBulk(byte[] message, int length) {
+import java.util.Arrays;
+
+import org.apache.logging.log4j.Logger;
+
+public class LedI2C {
+  byte[] previousMessage;
+  private static final Logger LOGGER = RobotLogManager.getMainLogger(LedI2C.class.getName());
+
+  private static I2C wire = new I2C(Port.kOnboard, 8);
+
+  public void writeBulk(byte[]message, int length) {
     wire.writeBulk(message,length);
   }
 
-    // Color of LEDs
-  public static enum LEDColor {
-    NONE(0), BLUE(1), GOLD(2), RED(3);
+  // Color of LEDs
+  public static enum LedColor {
+    NONE(0), BLUE(1), GOLD(2), RED(3), ORANGE(4);
 
     private final int color;
-    private LEDColor(int color) {
+    private LedColor(int color) {
       this.color = color;
     }
+
     public int getColor() {
       return color;
     }
   }
 
   // Blinking of LEDs
-  public static enum LEDBlink {
-    NONE(0), SHOOTING(6), ALL(255);
-        
+  public static enum LedBlink {
+
+    // NONE(0), SHOOTING(6), ALL(255);
+    NONE(0);   
+    
     private final int blink;
-    private LEDBlink(int blink) {
+    
+    private LedBlink(int blink) {
       this.blink = blink;
     }
+    
     public int getBlink() {
       return blink;
     }
-}
+  }
 
   // Enum for different LED modes
-  public static enum LEDMode {
-  NONE(0);
-            
-  private final int modes;
-  private LEDMode(int modes) {
-    this.modes = modes;
-  }
-  public int getMode() {
-    return modes;
-  }
-}
+  public static enum LedMode {
+    NONE(0), SOLID(1), SHOOTING(2), ALLBLINK(3), BLUEANDGOLD(4);
+              
+    private final int modes;
 
-public void sendLEDCmd(LEDMode ledMode, LEDColor ledColor, LEDBlink ledBlink) {
-    int ledModeValue = ledMode.getMode();
-    int ledColorValue = ledColor.getColor();
-    int ledBlinkValue = ledBlink.getBlink();
+    private LedMode(int modes) {
+      this.modes = modes;
+    }
+
+    public int getMode() {
+      return modes;
+    }
+  }
+
+  public void sendLedCommand(LedMode ledMode, LedColor ledColor, LedBlink ledBlink) {
     byte[] message = new byte[10];
-    message[0] = (byte)ledModeValue;
-    message[1] = (byte)ledColorValue;
-    message[2] = (byte)ledBlinkValue;
-    wire.writeBulk(message,3);
-}
+    message[0] = (byte) 0x55;
+    message[1] = (byte)0xaa;
 
-public void cargoInLine() {
-  LEDColor ledColor;
-  LEDBlink ledBlink;
-  LEDMode ledMode;
-  ledColor = LEDColor.BLUE;
-  ledBlink = LEDBlink.ALL;
-  ledMode = LEDMode.NONE;
-  sendLEDCmd(ledMode,ledColor,ledBlink);
-}
+    int ledModeValue = ledMode.getMode();
+    message[2] = (byte)ledModeValue;
 
-public void defensiveMode() { 
-  LEDColor ledColor;
-  LEDBlink ledBlink;
-  LEDMode ledMode;
-  ledColor = LEDColor.RED;
-  ledBlink = LEDBlink.ALL;
-  ledMode = LEDMode.NONE;
-}
+    int ledColorValue = ledColor.getColor();
+    message[3] = (byte)ledColorValue;
 
-public void shootingMode() {
-  LEDColor ledColor;
-  LEDBlink ledBlink;
-  LEDMode ledMode;
-  ledColor = LEDColor.BLUE;
-  ledBlink = LEDBlink.SHOOTING;
-  ledMode = LEDMode.NONE;
-}}
+    int ledBlinkValue = ledBlink.getBlink();
+    message[4] = (byte)ledBlinkValue;
+
+    if (Arrays.equals(message, previousMessage)) {
+      LOGGER.error("I am the same");
+    } else {
+      wire.writeBulk(message,5);
+      previousMessage = message;
+    }
+  }
+
+  public void cargoInLine() {
+    sendLedCommand(LedMode.ALLBLINK,LedColor.BLUE,LedBlink.NONE);
+  }
+
+  public void defensiveMode() { 
+    sendLedCommand(LedMode.ALLBLINK, LedColor.RED, LedBlink.NONE);
+  }
+
+  public void shootingMode() {
+    sendLedCommand(LedMode.SHOOTING, LedColor.NONE, LedBlink.NONE);
+  }
+
+  public void whenDisabled(){
+    LOGGER.error("whenDisabled Mode={} Color={} Blink={}", 
+        LedMode.NONE, LedColor.ORANGE, LedBlink.NONE);
+    sendLedCommand(LedMode.NONE, LedColor.ORANGE, LedBlink.NONE);
+  }
+  
+}
