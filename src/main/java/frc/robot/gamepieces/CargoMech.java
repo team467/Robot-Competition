@@ -26,6 +26,8 @@ public class CargoMech extends GamePieceBase implements GamePiece {
   // State
   private CargoMechWristState armState;
 
+  private static boolean onManualControl = true;
+
   private static final int TALON_SENSOR_ID = 0;
   private static final int TALON_PID_SLOT_ID = 0;
 
@@ -81,7 +83,8 @@ public class CargoMech extends GamePieceBase implements GamePiece {
     private static void override(double speed) {
       if (!RobotMap.useSimulator && RobotMap.HAS_CARGO_MECHANISM) {
         talon.set(ControlMode.PercentOutput, speed);
-        LOGGER.debug("Manual override cargo mech arm Speed: {}, Channel: {}, talon speed = {}, Control mode: {}", speed, talon.getDeviceID(), talon.getMotorOutputPercent(), talon.getControlMode());
+        LOGGER.debug("Manual override cargo mech arm Speed: {}, Channel: {}, talon speed = {}, Control mode: {}",
+            speed, talon.getDeviceID(), talon.getMotorOutputPercent(), talon.getControlMode());
       }
     }
 
@@ -99,7 +102,9 @@ public class CargoMech extends GamePieceBase implements GamePiece {
     private void actuate() {
       LOGGER.debug("Actuating cargo mechanism arm: {}", name());
       if (!RobotMap.useSimulator && RobotMap.HAS_CARGO_MECHANISM) {
-        talon.set(ControlMode.Position, height);
+        if (!onManualControl) {
+          talon.set(ControlMode.Position, height);
+        }
       } 
     }
   }
@@ -281,6 +286,7 @@ public class CargoMech extends GamePieceBase implements GamePiece {
    * @param command which way to move the arm.
    */
   public void wrist(CargoMechWrist command) {
+    onManualControl = false;
     wrist = command;
   }
 
@@ -291,6 +297,7 @@ public class CargoMech extends GamePieceBase implements GamePiece {
    * @param command which way to move the arm.
    */
   public void wrist(String command) {
+    onManualControl = false;
     wrist = CargoMechWrist.valueOf(command);
   }
 
@@ -330,6 +337,7 @@ public class CargoMech extends GamePieceBase implements GamePiece {
   }
 
   public void overrideArm(double speed) {
+    onManualControl = true;
     CargoMechWrist.override(speed);
   }
 

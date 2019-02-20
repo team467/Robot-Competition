@@ -4,7 +4,6 @@ import edu.wpi.first.wpilibj.Sendable;
 import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
 
 import frc.robot.gamepieces.CargoIntake.CargoIntakeArm;
-import frc.robot.gamepieces.CargoIntake.CargoIntakeArmState;
 import frc.robot.gamepieces.CargoIntake.CargoIntakeRoller;
 import frc.robot.gamepieces.CargoMech.CargoMechClaw;
 import frc.robot.gamepieces.CargoMech.CargoMechWrist;
@@ -217,8 +216,9 @@ public class GamePieceController implements Sendable {
          */
         if (driverStation.getWristManualOverride() != 0.0) {
           if (ensureSafeToMoveWrist()) {
-            LOGGER.debug("Setting wrist speed to {}.", driverStation.getWristManualOverride());
-            cargoMech.overrideArm(driverStation.getWristManualOverride());
+            double speed = driverStation.getWristManualOverride();
+            LOGGER.debug("Setting wrist speed to {}.", speed);
+            cargoMech.overrideArm(speed);
           }
         }
 
