@@ -7,9 +7,9 @@ import frc.robot.RobotMap;
 import frc.robot.logging.RobotLogManager;
 import frc.robot.usercontrol.DriverStation467;
 import frc.robot.sensors.LedI2C;
-import frc.robot.sensors.LedI2C.LEDBlink;
-import frc.robot.sensors.LedI2C.LEDColor;
-import frc.robot.sensors.LedI2C.LEDMode;
+import frc.robot.sensors.LedI2C.LedBlink;
+import frc.robot.sensors.LedI2C.LedColor;
+import frc.robot.sensors.LedI2C.LedMode;
 
 import org.apache.logging.log4j.Logger;
 
@@ -25,9 +25,9 @@ public class VisionController {
 
   // Led Variables
   private LedI2C lights;
-  private LEDMode ledMode;
-  private LEDColor ledColor;
-  private LEDBlink ledBlink;
+  private LedMode ledMode;
+  private LedColor ledColor;
+  private LedBlink ledBlink;
 
 
 
@@ -69,7 +69,7 @@ public class VisionController {
         driverStation.driverSetRightRumble(1.0);
         // mode, color, blink
         // all none for now because it needs to be implemented later
-        lights.sendLEDCmd(ledMode.NONE, ledColor.NONE, ledBlink.NONE);
+        lights.sendLedCommand(ledMode.NONE, ledColor.NONE, ledBlink.NONE);
 
       } else if (Math.abs(angle) <= RobotMap.ANGLE_OFFSET_LEVEL_ONE) {
         // TODO: Debug Log
@@ -77,23 +77,23 @@ public class VisionController {
         // TODO: RUMBLE
         driverStation.driverSetLeftRumble(0.2);
         driverStation.driverSetRightRumble(0.2);
-        lights.sendLEDCmd(ledMode.NONE, ledColor.NONE, ledBlink.NONE);
+        lights.sendLedCommand(ledMode.NONE, ledColor.NONE, ledBlink.NONE);
 
       } else if (Math.abs(angle) <= RobotMap.ANGLE_OFFSET_LEVEL_TWO) {
         // TODO: Debug Log
         // TODO: LED FUNCTION
-        lights.sendLEDCmd(ledMode.NONE, ledColor.NONE, ledBlink.NONE);
+        lights.sendLedCommand(ledMode.NONE, ledColor.NONE, ledBlink.NONE);
       } else if (Math.abs(angle) <= RobotMap.ANGLE_OFFSET_LEVEL_THREE) {
         // TODO: Debug Log
         // TODO: LED FUNCTION
-        lights.sendLEDCmd(ledMode.NONE, ledColor.NONE, ledBlink.NONE);
+        lights.sendLedCommand(ledMode.NONE, ledColor.NONE, ledBlink.NONE);
       } else if (Math.abs(angle) <= RobotMap.ANGLE_OFFSET_LEVEL_FOUR) {
         // TODO: Debug Log
         // TODO: LED FUNCTION
-        lights.sendLEDCmd(ledMode.NONE, ledColor.NONE, ledBlink.NONE);
+        lights.sendLedCommand(ledMode.NONE, ledColor.NONE, ledBlink.NONE);
       } else {
         // TODO: Debug Log
-        lights.sendLEDCmd(ledMode.NONE, ledColor.NONE, ledBlink.NONE);
+        lights.sendLedCommand(ledMode.NONE, ledColor.NONE, ledBlink.NONE);
       }
     }
   }
