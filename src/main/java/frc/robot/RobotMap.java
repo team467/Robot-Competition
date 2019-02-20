@@ -264,10 +264,10 @@ public class RobotMap {
       // TODO update forward/reverse channel
       HATCH_LAUNCHER_SOL_FORWARD_CHANNEL = 0;
       HATCH_LAUNCHER_SOL_REVERSE_CHANNEL = 1;
-      HATCH_MECH_ARM_PCM_CHANNEL = 8;
+      HATCH_MECH_ARM_PCM_CHANNEL = 9;
       // TODO update forward/reverse channel
-      HATCH_MECH_ARM_FORWARD_CHANNEL = 2;
-      HATCH_MECH_ARM_REVERSE_CHANNEL = 3;
+      HATCH_MECH_ARM_FORWARD_CHANNEL = 4;
+      HATCH_MECH_ARM_REVERSE_CHANNEL = 5;
       HATCH_CAMERA_INDEX = 3;
 
       // Cargo Intake
@@ -309,9 +309,9 @@ public class RobotMap {
       CARGO_MECH_SAFE_TURRET = 1.0; // TODO
 
       CARGO_MECH_CLAW_LEFT_MOTOR_CHANNEL = 2;
-      CARGO_MECH_CLAW_LEFT_MOTOR_INVERTED = false;
+      CARGO_MECH_CLAW_LEFT_MOTOR_INVERTED = true;
       CARGO_MECH_CLAW_RIGHT_MOTOR_CHANNEL = 3;
-      CARGO_MECH_CLAW_RIGHT_MOTOR_INVERTED = false;
+      CARGO_MECH_CLAW_RIGHT_MOTOR_INVERTED = true;
 
       break;
 

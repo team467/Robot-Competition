@@ -217,6 +217,9 @@ public class GamePieceController implements Sendable {
         // Must be in cargo mode. Reverses claw motor to throw cargo.
         cargoMech.claw(CargoMechClaw.FORWARD);
         LOGGER.info("FIRING BALL.");
+      } else if (isSafeToMoveWrist()) {
+        LOGGER.debug("Setting wrist speed to {}.", driverStation.getWristManualOverride());
+        cargoMech.overrideArm(driverStation.getWristManualOverride());
       } else {
         cargoMech.claw(CargoMechClaw.STOP);
         cargoIntake.roller(CargoIntakeRoller.STOP);
@@ -341,12 +344,6 @@ public class GamePieceController implements Sendable {
     /*
      * Manual Override of the wrist check to make sure the roller is dd
      */
-    if (driverStation.getWristManualOverride() != 0.0) {
-      if (isSafeToMoveWrist() && mode != GamePieceMode.DEFENSE) {
-       // LOGGER.info("Setting wrist speed to {}.", driverStation.getWristManualOverride());
-        cargoMech.overrideArm(driverStation.getWristManualOverride());
-      }
-    }
     // End combined Hatch and Turret mode capabilities.
 
     // Update all systems
@@ -413,17 +410,5 @@ public class GamePieceController implements Sendable {
       isHome = true;
     }
     return isHome;
-  }
-  public boolean makeTurretSafeToMove() {
-    boolean isTurretSafeToMove = isSafeToMoveTurret();
-    if (!isTurretSafeToMove) {
-      if (cargoIntake.armCommand() == CargoIntakeArm.UP) {
-        cargoIntake.arm(CargoIntakeArm.DOWN);
-      }
-      cargoMech.wrist(CargoMechWrist.SAFE_TURRET);
-      hatchMech.arm(HatchArm.IN);
-      isTurretSafeToMove = true;
-    } 
-    return isTurretSafeToMove;
   }
 }

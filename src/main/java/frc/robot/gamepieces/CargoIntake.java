@@ -55,7 +55,7 @@ public class CargoIntake extends GamePieceBase implements GamePiece {
       if (RobotMap.useSimulator || !RobotMap.HAS_ROLLER_INTAKE) {
         return;
       }
-      LOGGER.error("Actuate cargo intake arm: {}", this);
+      //LOGGER.error("Actuate cargo intake arm: {}", this);
       switch (this) {
         case DOWN:
           if (RobotMap.HAS_ROLLER_INTAKE) {
@@ -102,7 +102,7 @@ public class CargoIntake extends GamePieceBase implements GamePiece {
         return;
       }
 
-      LOGGER.error("Actuate cargo intake roller: {}", this);
+      //LOGGER.error("Actuate cargo intake roller: {}", this);
       switch (this) {
 
         case FORWARD:
