@@ -62,12 +62,12 @@ public class Turret extends GamePieceBase implements GamePiece {
       talon.config_kI(TALON_PID_SLOT_ID, RobotMap.TURRET_I, RobotMap.TALON_TIMEOUT);
       talon.config_kD(TALON_PID_SLOT_ID, RobotMap.TURRET_D, RobotMap.TALON_TIMEOUT);
       talon.config_kF(TALON_PID_SLOT_ID, RobotMap.TURRET_F, RobotMap.TALON_TIMEOUT);
-      talon.configForwardSoftLimitThreshold(
-          RobotMap.TURRET_RIGHT_LIMIT_TICKS, RobotMap.TALON_TIMEOUT);
-      talon.configForwardSoftLimitEnable(true, RobotMap.TALON_TIMEOUT);
-      talon.configReverseSoftLimitThreshold(
-          RobotMap.TURRET_LEFT_LIMIT_TICKS, RobotMap.TALON_TIMEOUT);
-      talon.configReverseSoftLimitEnable(true, RobotMap.TALON_TIMEOUT);
+      // talon.configForwardSoftLimitThreshold(
+      //     RobotMap.TURRET_RIGHT_LIMIT_TICKS, RobotMap.TALON_TIMEOUT);
+      // talon.configForwardSoftLimitEnable(true, RobotMap.TALON_TIMEOUT);
+      // talon.configReverseSoftLimitThreshold(
+      //     RobotMap.TURRET_LEFT_LIMIT_TICKS, RobotMap.TALON_TIMEOUT);
+      // talon.configReverseSoftLimitEnable(true, RobotMap.TALON_TIMEOUT);
       talon.configAllowableClosedloopError(TALON_PID_SLOT_ID,
           RobotMap.TURRET_ALLOWABLE_ERROR_TICKS, RobotMap.TALON_TIMEOUT);
     } else {
@@ -94,7 +94,8 @@ public class Turret extends GamePieceBase implements GamePiece {
     onManualControl = true;
     targetLock = false;
     targetPosition = currentPosition;
-    LOGGER.debug("Manual override for turret: {} Expected: {}", talon.getMotorOutputPercent(), speed);
+    LOGGER.debug("Manual override for turret: {} Expected: {}", 
+        talon.getMotorOutputPercent(), speed);
     
     if (!RobotMap.useSimulator && RobotMap.HAS_TURRET) {
       if (enabled) {
@@ -104,6 +105,7 @@ public class Turret extends GamePieceBase implements GamePiece {
   }
 
   private void followVision() {
+    LOGGER.debug("Following vision.");
     if (targetLock && !onManualControl) {
       double visionAngle = vision.angle();
       if (RobotMap.HAS_TURRET) {
@@ -116,7 +118,11 @@ public class Turret extends GamePieceBase implements GamePiece {
     }
   }
 
+  /**
+   * Sets the turret to follow directions from an angle offset.
+   */
   public void lockOnTarget() {
+    LOGGER.debug("Locking on target.");
     targetLock = true;
     onManualControl = false;
   }
@@ -153,30 +159,32 @@ public class Turret extends GamePieceBase implements GamePiece {
     return currentPosition;
   }
 
-  @Override
-  public void enabled(boolean enabled) {
-    super.enabled(enabled);
-  }
-
   /**
    * Handles commands and update state.
    */
   public void periodic() {
-    if (!RobotMap.useSimulator && RobotMap.HAS_TURRET) {
-      if (enabled && !onManualControl) {
-       // followVision();
-        talon.set(ControlMode.Position, (targetPosition * ticksPerDegree));
-        // Update state
-        currentPosition = (talon.getSelectedSensorPosition(TALON_SENSOR_ID) / ticksPerDegree);
-      }
-    } else {
+    if (RobotMap.HAS_TURRET) {
       if (enabled) {
-        currentPosition = simulatedPosition;
+        if (!RobotMap.useSimulator) {
+          if (!onManualControl) {
+           // followVision();
+           talon.set(ControlMode.Position, (targetPosition * ticksPerDegree));
+          }
+          // Update state
+          currentPosition = (talon.getSelectedSensorPosition(TALON_SENSOR_ID) / ticksPerDegree);
+        } else {
+          LOGGER.debug("Using simulated position of {}", simulatedPosition);
+          currentPosition = simulatedPosition;
+        } 
+      } else {
+        LOGGER.debug("Turret is disabled.");
       }
+      LOGGER.debug("Current turrent position is {}", currentPosition);
     }
   }
 
   void simulatedSensorData(double simulatedPosition) {
+    LOGGER.debug("Setting simulated turret data to {}", simulatedPosition);
     this.simulatedPosition = simulatedPosition;
   }
 
@@ -185,7 +193,7 @@ public class Turret extends GamePieceBase implements GamePiece {
     builder.addDoubleProperty("TurretTarget", this::target, 
         (targetInDegrees) -> target(targetInDegrees));
     builder.addDoubleProperty("TurretPosition", this::position, null);
-    if (RobotMap.HAS_TURRET) {
+    if (RobotMap.HAS_TURRET && !RobotMap.useSimulator) {
       talon.initSendable(builder);
     } 
   }
@@ -196,12 +204,15 @@ public class Turret extends GamePieceBase implements GamePiece {
   public boolean isHome() {
     double distanceToHome = instance.position() - RobotMap.TURRET_HOME;
     if (Math.abs(distanceToHome) <= RobotMap.TURRET_ALLOWABLE_ERROR_TICKS) {
+      LOGGER.debug("Turret is home at distance {}", distanceToHome);
       return true;
     }
+    LOGGER.debug("Turret is NOT home at distance {}", distanceToHome);
     return false;
   }
 
   public void moveTurretToHome() {
+    LOGGER.debug("Moving turret to home.");
     instance.target(RobotMap.TURRET_HOME);
   }
 }

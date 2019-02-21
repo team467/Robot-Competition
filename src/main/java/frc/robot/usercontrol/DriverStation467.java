@@ -108,9 +108,9 @@ public class DriverStation467 {
     return false;
   }
 
-  public double getFineAdjustTurret() {
-    double navVal = (Math.abs(getNavJoystick().getRightStickX()) < 0.3)? 0 : getNavJoystick().getRightStickX();
-
+  public double getManualTurretMove() {
+    double navVal = (Math.abs(getNavJoystick().getRightStickX()) < 0.3) 
+        ? 0 : getNavJoystick().getRightStickX();
     return navVal;
   }
 
@@ -119,12 +119,12 @@ public class DriverStation467 {
     return getNavJoystick().down(Button.BumperRight);
   }
   
-  public boolean getCargoArmLowRocketShipPosition() {
+  public boolean getCargoWristLowRocketPosition() {
     //Nav
     return getNavJoystick().pov() == 0;
   }
 
-  public boolean getCargoArmCargoShipPosition() {
+  public boolean getCargoWristCargoShipPosition() {
     //Nav
     return getNavJoystick().pov() == 180;
   }
@@ -159,11 +159,11 @@ public class DriverStation467 {
     return getNavJoystick().getRightTrigger() > 0.9;
   }
   
-  public double getWristManualOverride() {
+  public double getManualWristMove() {
     return (Math.abs(getNavJoystick().getLeftStickY()) < 0.2)? 0 : getNavJoystick().getLeftStickY();
   }
 
-  public boolean getFireCargo(){
+  public boolean getFireCall(){
     return getNavJoystick().down(Button.BumperLeft);
   }
 
@@ -201,7 +201,7 @@ public class DriverStation467 {
     return getNavJoystick().down(Button.y);//getDriveJoystick().getRightTrigger() >= 0.9;
   }
 
-  public boolean defenseMode() {
+  public boolean getDefenseMode() {
     if( getNavJoystick().getLeftTrigger() > 0.9 == true &&  getNavJoystick().getRightTrigger() > 0.9 == true) {
       return true;
     } else {
@@ -225,7 +225,7 @@ public class DriverStation467 {
     driverJoy.rightRumble(value);
   }
 
-  public boolean fireHatch() {
+  public boolean getFireHatch() {
     return getNavJoystick().down(Button.BumperLeft);
   }
 

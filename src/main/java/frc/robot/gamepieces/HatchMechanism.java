@@ -131,6 +131,7 @@ public class HatchMechanism extends GamePieceBase implements GamePiece {
    * @param command to move the arm in or out.
    */
   public void arm(HatchArm command) {
+    LOGGER.debug("Hatch mechanism arm command is {}.", command);
     arm = command;
   }
 
@@ -140,11 +141,13 @@ public class HatchMechanism extends GamePieceBase implements GamePiece {
    * 
    * @param command which way to move the arm.
    */
-  public void arm(String command) {
+  private void arm(String command) {
+    LOGGER.debug("Hatch mechanism arm command is {} using string interface.", command);
     arm = HatchArm.valueOf(command);
   }
 
   public HatchArm arm() {
+    LOGGER.debug("Current hatch mechanism arm command is {}.", arm);
     return arm;
   }
 
@@ -154,6 +157,7 @@ public class HatchMechanism extends GamePieceBase implements GamePiece {
    * @param command to move the arm in or out.
    */
   public void launcher(HatchLauncher command) {
+    LOGGER.debug("Hatch launcher command is {}.", command);
     launcher = command;
   }
 
@@ -163,11 +167,13 @@ public class HatchMechanism extends GamePieceBase implements GamePiece {
    * 
    * @param command which way to move the arm.
    */
-  public void launcher(String command) {
+  private void launcher(String command) {
+    LOGGER.debug("Hatch launcher command is {} using string interface.", command);
     launcher = HatchLauncher.valueOf(command);
   }
 
   public HatchLauncher launcher() {
+    LOGGER.debug("Current hatch launcher command is {}.", launcher);
     return launcher;
   }
 
@@ -177,10 +183,11 @@ public class HatchMechanism extends GamePieceBase implements GamePiece {
   @Override
   public void periodic() {
     // Take Actions
-    //LOGGER.warn("periodic called");
-    if (true) {
+    if (enabled) {
       arm.actuate();
       launcher.actuate();
+    } else {
+      LOGGER.debug("Hatch mechanism is disabled.");
     }
   }
 
@@ -188,8 +195,7 @@ public class HatchMechanism extends GamePieceBase implements GamePiece {
   public void initSendable(SendableBuilder builder) {
     builder.addStringProperty("HatchLauncher", launcher::name, (command) -> launcher(command));
     builder.addStringProperty("HatchArm", arm::name, (command) -> arm(command));
-
-    if (RobotMap.HAS_HATCH_MECHANISM) {
+    if (RobotMap.HAS_HATCH_MECHANISM && !RobotMap.useSimulator) {
       HatchLauncher.launcher.initSendable(builder);
       HatchArm.arm.initSendable(builder);
     }
