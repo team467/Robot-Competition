@@ -190,9 +190,9 @@ public class Turret extends GamePieceBase implements GamePiece {
 
   @Override
   public void initSendable(SendableBuilder builder) {
-    builder.addDoubleProperty("TurretTarget", this::target, 
+    builder.addDoubleProperty("Turret Target", this::target, 
         (targetInDegrees) -> target(targetInDegrees));
-    builder.addDoubleProperty("TurretPosition", this::position, null);
+    builder.addDoubleProperty("Turret Position", this::position, null);
     if (RobotMap.HAS_TURRET && !RobotMap.useSimulator) {
       talon.initSendable(builder);
     } 

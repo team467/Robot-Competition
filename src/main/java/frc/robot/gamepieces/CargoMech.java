@@ -81,11 +81,13 @@ public class CargoMech extends GamePieceBase implements GamePiece {
     }
 
     private static void manual(double speed) {
-      if (!RobotMap.useSimulator && RobotMap.HAS_CARGO_MECHANISM) {
-        onManualControl = true;
-        talon.set(ControlMode.PercentOutput, speed);
-        LOGGER.debug("Manual override cargo mech arm Speed: {}, Channel: {}, talon speed = {}, Control mode: {}",
-            speed, talon.getDeviceID(), talon.getMotorOutputPercent(), talon.getControlMode());
+      if (RobotMap.HAS_CARGO_MECHANISM) {
+        if (!RobotMap.useSimulator) {
+          onManualControl = true;
+          talon.set(ControlMode.PercentOutput, speed);
+          LOGGER.debug("Manual override cargo mech wrist Speed: {}, Channel: {}, talon speed = {}, Control mode: {}",
+              speed, talon.getDeviceID(), talon.getMotorOutputPercent(), talon.getControlMode());
+          }
       }
     }
 
@@ -98,10 +100,10 @@ public class CargoMech extends GamePieceBase implements GamePiece {
     }
 
     /**
-     * Moves the arm based on the requested command.
+     * Moves the wrist based on the requested command.
      */
     private void actuate() {
-      LOGGER.debug("Actuating cargo mechanism arm: {}", this);
+      LOGGER.debug("Actuating cargo mechanism wrist: {}", this);
       if (RobotMap.HAS_CARGO_MECHANISM) {
         if (!RobotMap.useSimulator) {
           if (!onManualControl) {
@@ -278,7 +280,7 @@ public class CargoMech extends GamePieceBase implements GamePiece {
   }
 
   /**
-   * Checks to see if the cargo mechanism arm at or above a safe distance to turn
+   * Checks to see if the cargo mechanism wrist at or above a safe distance to turn
    * the turret.
    * 
    * @return boolean true if safe to turn.
@@ -296,9 +298,9 @@ public class CargoMech extends GamePieceBase implements GamePiece {
   }
 
   /**
-   * Moves the claw arm up or down.
+   * Moves the claw wrist up or down.
    * 
-   * @param command which way to move the arm.
+   * @param command which way to move the wrist.
    */
   public void wrist(CargoMechWrist command) {
     LOGGER.debug("Moving cargo mechanism wrist to {}", command);
@@ -307,10 +309,10 @@ public class CargoMech extends GamePieceBase implements GamePiece {
   }
 
   /**
-   * Moves the claw arm up or down. The String version sets the command from the
+   * Moves the claw wrist up or down. The String version sets the command from the
    * Smart Dashboard.
    * 
-   * @param command which way to move the arm.
+   * @param command which way to move the wrist.
    */
   private void wrist(String command) {
     LOGGER.debug("Moving cargo mechanism wrist to {} using string interface.", command);
@@ -319,12 +321,12 @@ public class CargoMech extends GamePieceBase implements GamePiece {
   }
 
   /**
-   * Reads the arm state from the sensors.
+   * Reads the wrist state from the sensors.
    * 
-   * @return the state of the arm, including if unknown or moving.
+   * @return the state of the wrist, including if unknown or moving.
    */
   public CargoMechWristState wrist() {
-    LOGGER.debug("Wrist arm state is {}", wristState);
+    LOGGER.debug("Cargo wrist state is {}", wristState);
     return wristState;
   }
 
@@ -357,7 +359,7 @@ public class CargoMech extends GamePieceBase implements GamePiece {
     return claw;
   }
 
-  public void manualArm(double speed) {
+  public void manualWristMove(double speed) {
     onManualControl = true;
     CargoMechWrist.manual(speed);
   }
@@ -386,12 +388,34 @@ public class CargoMech extends GamePieceBase implements GamePiece {
 
   @Override
   public void initSendable(SendableBuilder builder) {
-    builder.addStringProperty("CargoMechClaw", claw::name, (command) -> claw(command));
-    builder.addStringProperty("CargoMechArm", wrist::name, (command) -> wrist(command));
-    builder.addStringProperty("CargoMechArmState", wristState::name, null);
+    builder.addStringProperty("Cargo Claw Command", 
+        this::telemetryClawCommand, (command) -> claw(command));
+    builder.addStringProperty("Cargo Wrist Command", 
+        this::telemetryWristCommand, (command) -> wrist(command));
+    builder.addStringProperty("Cargo Wrist State", this::telemetryWristState, null);
+    builder.addDoubleProperty("Cargo Wrist Height Proportion", this::heightProportion, null);
     if (RobotMap.HAS_CARGO_MECHANISM && !RobotMap.useSimulator) {
       CargoMechClaw.motorLeader.initSendable(builder);
       CargoMechWrist.talon.initSendable(builder);
     }
   }
+
+  private double heightProportion() {
+    return (wrist.height - RobotMap.CARGO_MECH_WRIST_BOTTOM_TICKS)
+        / (RobotMap.CARGO_MECH_WRIST_TOP_TICKS - RobotMap.CARGO_MECH_WRIST_BOTTOM_TICKS);
+  }
+
+  private String telemetryWristState() {
+    return wristState.toString();
+  }
+
+  private String telemetryWristCommand() {
+    return wrist.toString();
+  }
+
+  private String telemetryClawCommand() {
+    return claw.toString();
+  }
+
+
 }

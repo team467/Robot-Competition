@@ -40,7 +40,7 @@ public class HatchMechanismTest {
 
   @Test
   public void testHatchArmIn() {
-    LOGGER.trace("TEST|GAMEPIECES", "Testing hatch arn in");
+    LOGGER.trace("Testing hatch arn in");
     hatch.arm(HatchArm.IN);
     boolean armState = false;
     for (int i = 0; i < TEST_PERIODIC_ITERATIONS; i++) {
@@ -50,7 +50,6 @@ public class HatchMechanismTest {
         Thread.sleep(RobotMap.ITERATION_TIME_MS);
       } catch (InterruptedException e) {
         fail(e.toString());
-        LOGGER.trace("SIMULATOR|DRIVE|TEST", e);
       }
     }
     assertTrue(armState);
@@ -58,7 +57,7 @@ public class HatchMechanismTest {
 
   @Test
   public void testHatchArmOut() {
-    LOGGER.trace("TEST|GAMEPIECES", "Testing hatch arm out");
+    LOGGER.trace("Testing hatch arm out");
     hatch.arm(HatchArm.OUT);
     boolean armState = false;
     for (int i = 0; i < TEST_PERIODIC_ITERATIONS; i++) {
@@ -68,7 +67,6 @@ public class HatchMechanismTest {
         Thread.sleep(RobotMap.ITERATION_TIME_MS);
       } catch (InterruptedException e) {
         fail(e.toString());
-        LOGGER.trace("SIMULATOR|DRIVE|TEST", e);
       }
     }
     assertTrue(armState);
@@ -76,7 +74,7 @@ public class HatchMechanismTest {
 
   @Test
   public void testHatchLauncherFire() {
-    LOGGER.trace("TEST|GAMEPIECES", "Testing firing hatch launcher");
+    LOGGER.trace("Testing firing hatch launcher");
     hatch.launcher(HatchLauncher.FIRE);
     boolean launcherState = false;
     for (int i = 0; i < TEST_PERIODIC_ITERATIONS; i++) {
@@ -86,7 +84,6 @@ public class HatchMechanismTest {
         Thread.sleep(RobotMap.ITERATION_TIME_MS);
       } catch (InterruptedException e) {
         fail(e.toString());
-        LOGGER.trace("SIMULATOR|DRIVE|TEST", e);
       }
     }
     assertTrue(launcherState);
@@ -94,7 +91,7 @@ public class HatchMechanismTest {
 
   @Test
   public void testHatchLauncherReset() {
-    LOGGER.trace("TEST|GAMEPIECES", "Testing resetting hatch launcher");
+    LOGGER.trace("Testing resetting hatch launcher");
     hatch.launcher(HatchLauncher.RESET);
     boolean launcherState = false;
     for (int i = 0; i < TEST_PERIODIC_ITERATIONS; i++) {
@@ -104,7 +101,6 @@ public class HatchMechanismTest {
         Thread.sleep(RobotMap.ITERATION_TIME_MS);
       } catch (InterruptedException e) {
         fail(e.toString());
-        LOGGER.trace("SIMULATOR|DRIVE|TEST", e);
       }
     }
     assertTrue(launcherState);

@@ -14,11 +14,11 @@ import java.io.IOException;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.core.layout.CsvLogEventLayout;
 
 public class TelemetryBuilder extends SendableBuilderImpl implements SendableBuilder {
 
-  private static final Logger LOGGER = RobotLogManager.getMainLogger(TelemetryBuilder.class.getName());
+  private static final Logger LOGGER 
+      = RobotLogManager.getMainLogger(TelemetryBuilder.class.getName());
 
   private static TelemetryBuilder instance = null;
 
@@ -26,9 +26,12 @@ public class TelemetryBuilder extends SendableBuilderImpl implements SendableBui
 
   private CSVPrinter csvPrinter = null;
 
+  private long startTime = -1;
+
   private PowerDistributionPanel pdp = new PowerDistributionPanel();
 
   private static Integer[] pins = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15};
+  
   /**
    * Returns a singleton instance of the telemery builder.
    * 
@@ -39,7 +42,6 @@ public class TelemetryBuilder extends SendableBuilderImpl implements SendableBui
       instance = new TelemetryBuilder();
     }
 
-  //  LOGGER.error("Telemetry instance = {}", instance);
     return instance;
   }
 
@@ -64,7 +66,7 @@ public class TelemetryBuilder extends SendableBuilderImpl implements SendableBui
 
       @Override
       public void run() {
-         close();
+        close();
       }
 
     });
@@ -82,16 +84,16 @@ public class TelemetryBuilder extends SendableBuilderImpl implements SendableBui
     "/leftDistance", 
     "/isZeroed", 
     "/headingAngle",
-    "CargoIntakeArm",
-    "CargoIntakeArmState",
-    "CargoIntakeRoller",
-    "CargoMechArm",
-    "CargoMechArmState",
-    "CargoMechClaw",
-    "HatchArm",
-    "HatchLauncher",
-    "TurretPosition",
-    "TurretTarget"
+    "Intake Arm Command",
+    "Intake Roller Command",
+    "Cargo Wrist Command",
+    "Cargo Wrist State",
+    "Cargo Wrist Height Proportion",
+    "Cargo Claw Command",
+    "Hatch Arm Command",
+    "Hatch Launcher Command",
+    "Turret Position",
+    "Turret Target"
   };
 
   public void updateTable() {
@@ -110,6 +112,7 @@ public class TelemetryBuilder extends SendableBuilderImpl implements SendableBui
           csvPrinter.print("Time in millis");
           csvPrinter.println();
           printedHeaders = true;
+          startTime = System.nanoTime();
         }
         for (String key : keys) {
           NetworkTableEntry entry = table.getEntry(key);
@@ -129,8 +132,7 @@ public class TelemetryBuilder extends SendableBuilderImpl implements SendableBui
               break;
             }
             default:
-//            text = String.valueOf(entry.getType().toString());
-              text = entry.getString("BLAH");
+              text = String.valueOf(entry.getType().toString());
               break;
           }
           csvPrinter.print(text);
@@ -141,7 +143,8 @@ public class TelemetryBuilder extends SendableBuilderImpl implements SendableBui
         for (int pin: pins) {
           csvPrinter.print(String.format("%10.5f",pdp.getCurrent(pin)));
         }
-        csvPrinter.print(System.nanoTime() / 1000000.0);
+        // csvPrinter.print(System.nanoTime() / 1000000.0);
+        csvPrinter.print((System.nanoTime() - startTime) / 1000000.0);
         csvPrinter.println();
       } catch (IOException e) {
         LOGGER.error(e.getStackTrace());
@@ -150,11 +153,12 @@ public class TelemetryBuilder extends SendableBuilderImpl implements SendableBui
     }
   }
 
-  public void close() {
+  private void close() {
     try {
       if (csvPrinter != null) {
         csvPrinter.close(true);
       }
+      instance = null;
     } catch (IOException e) {
       LOGGER.debug(e.getMessage());
     }

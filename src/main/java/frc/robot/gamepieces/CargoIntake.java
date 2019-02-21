@@ -221,13 +221,23 @@ public class CargoIntake extends GamePieceBase implements GamePiece {
 
   @Override
   public void initSendable(SendableBuilder builder) {
-    builder.addStringProperty("CargoIntakeRoller", roller::name, (command) -> roller(command));
-    builder.addStringProperty("CargoIntakeArm", arm::name, (command) -> arm(command));
+    builder.addStringProperty("Intake Roller Command", 
+        this::telemetryRollerCommand, (command) -> roller(command));
+    builder.addStringProperty("Intake Arm Command", 
+        this::telemetryArmCommand, (command) -> arm(command));
     if (RobotMap.HAS_ROLLER_INTAKE && !RobotMap.useSimulator) {
       CargoIntakeRoller.motor.initSendable(builder);
       CargoIntakeArm.leftSolenoid.initSendable(builder);
       CargoIntakeArm.rightSolenoid.initSendable(builder);
     }
+  }
+
+  private String telemetryRollerCommand() {
+    return roller.toString();
+  }
+
+  private String telemetryArmCommand() {
+    return arm.toString();
   }
 
 }

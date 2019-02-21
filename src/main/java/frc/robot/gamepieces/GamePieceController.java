@@ -340,7 +340,7 @@ public class GamePieceController implements Sendable {
     if (manualWristMove != 0.0) {
       if (ensureSafeToMoveWrist()) {
         LOGGER.debug("CARGO: Setting wrist speed to {} manually.", manualWristMove);
-        cargoMech.manualArm(manualWristMove);
+        cargoMech.manualWristMove(manualWristMove);
       }
     }
 
