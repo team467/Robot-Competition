@@ -421,9 +421,9 @@ public class GamePieceController implements Sendable {
     visionController.navigatorFeedback();
 
     // Cargo arm needs to go down in both cargo and hatch modes.
-    if (cargoIntake.arm() != CargoIntakeArm.DOWN) {
+//    if (cargoIntake.arm() != CargoIntakeArm.DOWN) {
       cargoIntake.arm(CargoIntakeArm.DOWN);
-    }
+ //   }
 
     if (rejectBall && cargoIntake.arm() == CargoIntakeArm.DOWN) {
       //Works in cargo or hatch mode. Cargo intake reverses motor to spit cargo.
