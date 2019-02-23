@@ -48,7 +48,7 @@ public class CargoMech extends GamePieceBase implements GamePiece {
     }
 
     private static void initialize() {
-      // if (RobotMap.HAS_CARGO_MECHANISM) {
+      if (RobotMap.HAS_CARGO_MECHANISM) {
         talon = TalonProxy.create(RobotMap.CARGO_MECH_WRIST_MOTOR_CHANNEL);
         talon.setName("Telemetry", "Cargo Wrist Motor");
         talon.setInverted(RobotMap.CARGO_MECH_WRIST_MOTOR_INVERTED);
@@ -68,9 +68,9 @@ public class CargoMech extends GamePieceBase implements GamePiece {
         // talon.configReverseSoftLimitEnable(false, RobotMap.TALON_TIMEOUT);
         talon.configAllowableClosedloopError(TALON_PID_SLOT_ID,
             RobotMap.CARGO_MECH_WRIST_ALLOWABLE_ERROR_TICKS, RobotMap.TALON_TIMEOUT);
-      // } else {
-      //   talon = null;
-      // }
+      } else {
+        talon = null;
+      }
     }
 
     // 0.0 is the bottom, 1.0 is the top (proportion)
@@ -81,14 +81,12 @@ public class CargoMech extends GamePieceBase implements GamePiece {
     }
 
     private static void manual(double speed) {
-      // if (RobotMap.HAS_CARGO_MECHANISM) {
-        // if (!RobotMap.useSimulator) {
-          onManualControl = true;
-          talon.set(ControlMode.PercentOutput, speed);
-          LOGGER.debug("Manual override cargo mech wrist Speed: {}, Channel: {}, talon speed = {}, Control mode: {}",
-              speed, talon.getDeviceID(), talon.getMotorOutputPercent(), talon.getControlMode());
-          // }
-      // }
+      if (RobotMap.HAS_CARGO_MECHANISM) {
+        onManualControl = true;
+        talon.set(ControlMode.PercentOutput, speed);
+        LOGGER.debug("Manual override cargo mech wrist Speed: {}, Channel: {}, talon speed = {}, Control mode: {}",
+            speed, talon.getDeviceID(), talon.getMotorOutputPercent(), talon.getControlMode());
+      }
     }
 
     public static int cargoMechWristTickValueIn() {
@@ -104,13 +102,11 @@ public class CargoMech extends GamePieceBase implements GamePiece {
      */
     private void actuate() {
       LOGGER.debug("Actuating cargo mechanism wrist: {}", this);
-      // if (RobotMap.HAS_CARGO_MECHANISM) {
-        // if (!RobotMap.useSimulator) {
-          if (!onManualControl) {
-            talon.set(ControlMode.Position, height);
-          }
-        // }
-      // } 
+      if (RobotMap.HAS_CARGO_MECHANISM) {
+        if (!onManualControl) {
+          talon.set(ControlMode.Position, height);
+        }
+      } 
     }
   }
 
@@ -138,6 +134,7 @@ public class CargoMech extends GamePieceBase implements GamePiece {
       LOGGER.debug("Read cargo wrist height as {}.", height);
 
       CargoMechWristState state;
+
       if (Math.abs(height - CargoMechWrist.CARGO_BIN.height) 
           <= RobotMap.CARGO_MECH_WRIST_ALLOWABLE_ERROR_TICKS) {
         state = CARGO_BIN;
@@ -379,13 +376,15 @@ public class CargoMech extends GamePieceBase implements GamePiece {
   public void initSendable(SendableBuilder builder) {
     builder.addStringProperty("Cargo Claw Command", 
         this::clawCommandString, (command) -> claw(command));
-    builder.addDoubleProperty("Cargo Claw Lead Motor Output", this::clawLeaderMotorOutput, null);
-    builder.addDoubleProperty("Cargo Claw Follower Motor Output", 
-        this::clawFollowerMotorOutput, null);
     builder.addStringProperty("Cargo Wrist Command", 
         this::wristCommandString, (command) -> wrist(command));
-    builder.addStringProperty("Cargo Wrist State", this::wristStateString, null);
-    builder.addDoubleProperty("Cargo Wrist Height Proportion", this::heightProportion, null);
+    if (RobotMap.HAS_CARGO_MECHANISM) {
+      builder.addDoubleProperty("Cargo Claw Lead Motor Output", this::clawLeaderMotorOutput, null);
+      builder.addDoubleProperty("Cargo Claw Follower Motor Output", 
+          this::clawFollowerMotorOutput, null);
+      builder.addStringProperty("Cargo Wrist State", this::wristStateString, null);
+      builder.addDoubleProperty("Cargo Wrist Height Proportion", this::heightProportion, null);
+    }
   }
 
   private double heightProportion() {
