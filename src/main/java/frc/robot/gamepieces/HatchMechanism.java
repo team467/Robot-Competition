@@ -203,11 +203,11 @@ public class HatchMechanism extends GamePieceBase implements GamePiece {
   public void initSendable(SendableBuilder builder) {
     builder.addStringProperty("Hatch Launcher Command", 
         this::launcherCommandString, (command) -> this.launcher(command));
-    builder.addStringProperty("Hatch Launcher Solinoid", 
-        this::launcherSolinoidString, null);
+    builder.addStringProperty("Hatch Arm Command", 
+        this::armCommandString, (command) -> this.arm(command));
     if (RobotMap.HAS_HATCH_MECHANISM){
-      builder.addStringProperty("Hatch Arm Command", 
-      this::armCommandString, (command) -> this.arm(command));
+      builder.addStringProperty("Hatch Launcher Solinoid", 
+        this::launcherSolinoidString, null);
       builder.addStringProperty("Hatch Arm Solinoid", 
           this::armSolinoidString, null);
     } 
