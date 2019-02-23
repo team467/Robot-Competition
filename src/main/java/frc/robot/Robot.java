@@ -109,7 +109,7 @@ public class Robot extends TimedRobot {
     driverstation = DriverStation467.getInstance();
     drive = Drive.getInstance();
     camera = CameraSwitcher.getInstance();
-    gamePieceController = GamePieceController.getInstance();
+    //gamePieceController = GamePieceController.getInstance();
     leds = new LedI2C();
     pdp = PowerDistributionPanel.getInstance();
     drive.setPidsFromRobotMap();
@@ -171,7 +171,7 @@ public class Robot extends TimedRobot {
     if (driverstation.getSlow()) {
       speed = speed * RobotMap.SLOW_DRIVE_SPEED_MULTIPLIER;
       turn = turn * RobotMap.SLOW_DRIVE_SPEED_MULTIPLIER;
-    } else if (!driverstation.getTurbo()) {
+    } else if (!driverstation.getTurbo() && !driverstation.getSlow()) {
       speed = speed * RobotMap.NORMAL_DRIVE_SPEED_MULTIPLIER;
       turn = turn * RobotMap.NORMAL_DRIVE_SPEED_MULTIPLIER;
     }
@@ -201,7 +201,7 @@ public class Robot extends TimedRobot {
       default:
     }
 
-    gamePieceController.periodic();
+    //gamePieceController.periodic();
 
     if (driverstation.restartCamera()) {
       camera.restart();
