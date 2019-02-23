@@ -399,4 +399,9 @@ public class TalonSrx extends BaseMotorController
     getAllConfigs(allConfigs, timeoutMs);
   }
 
+  @Override
+  public ErrorCode configMotionSCurveStrength(int curveStrength, int timeoutMs) {
+    return null; 
+  }
+
 }
