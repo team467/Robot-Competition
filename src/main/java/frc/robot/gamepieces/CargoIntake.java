@@ -1,9 +1,9 @@
 package frc.robot.gamepieces;
 
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
+
 import frc.robot.RobotMap;
 import frc.robot.logging.RobotLogManager;
 import frc.robot.logging.TelemetryBuilder;
@@ -21,9 +21,6 @@ public class CargoIntake extends GamePieceBase implements GamePiece {
   private CargoIntakeRoller roller;
   private CargoIntakeArm arm;
 
-  //State 
-  private CargoIntakeArmState armState;
-
   public enum CargoIntakeArm {
     OFF,
     UP,
@@ -34,16 +31,14 @@ public class CargoIntake extends GamePieceBase implements GamePiece {
 
     private static void initialize() {
 
-      if (!RobotMap.useSimulator && RobotMap.HAS_ROLLER_INTAKE) {
-        leftSolenoid = new DoubleSolenoid(RobotMap.ROLLER_PCM_CHANNEL,
-            RobotMap.ROLLER_LEFT_ARM_UP_SOLINOID_CHANNEL, 
-            RobotMap.ROLLER_LEFT_ARM_DOWN_SOLINOID_CHANNEL);
-        leftSolenoid.setName("Telemetry", "RollerArmLeftSolenoid");
-        rightSolenoid = new DoubleSolenoid(RobotMap.ROLLER_PCM_CHANNEL,
-            RobotMap.ROLLER_RIGHT_ARM_UP_SOLINOID_CHANNEL, 
-            RobotMap.ROLLER_RIGHT_ARM_DOWN_SOLINOID_CHANNEL);
-        rightSolenoid.setName("Telemetry", "RollerArmRightSolenoid");
-      }
+      leftSolenoid = new DoubleSolenoid(RobotMap.ROLLER_PCM_CHANNEL,
+          RobotMap.ROLLER_LEFT_ARM_UP_SOLINOID_CHANNEL, 
+          RobotMap.ROLLER_LEFT_ARM_DOWN_SOLINOID_CHANNEL);
+      leftSolenoid.setName("Telemetry", "RollerArmLeftSolenoid");
+      rightSolenoid = new DoubleSolenoid(RobotMap.ROLLER_PCM_CHANNEL,
+          RobotMap.ROLLER_RIGHT_ARM_UP_SOLINOID_CHANNEL, 
+          RobotMap.ROLLER_RIGHT_ARM_DOWN_SOLINOID_CHANNEL);
+      rightSolenoid.setName("Telemetry", "RollerArmRightSolenoid");
     }
   
 
@@ -52,138 +47,65 @@ public class CargoIntake extends GamePieceBase implements GamePiece {
      */
     private void actuate() {
       
-      if (RobotMap.useSimulator || !RobotMap.HAS_ROLLER_INTAKE) {
-        return;
-      }
-      //LOGGER.error("Actuate cargo intake arm: {}", this);
+      LOGGER.debug("Actuate cargo intake arm: {}", this);
       switch (this) {
         case DOWN:
-          if (RobotMap.HAS_ROLLER_INTAKE) {
-            leftSolenoid.set(DoubleSolenoid.Value.kReverse);
-            rightSolenoid.set(DoubleSolenoid.Value.kReverse);
-          }
+          leftSolenoid.set(DoubleSolenoid.Value.kReverse);
+          rightSolenoid.set(DoubleSolenoid.Value.kReverse);
           break;
         case UP:
-          if (RobotMap.HAS_ROLLER_INTAKE) {
-            leftSolenoid.set(DoubleSolenoid.Value.kForward);
-            rightSolenoid.set(DoubleSolenoid.Value.kForward);
-          }
+          leftSolenoid.set(DoubleSolenoid.Value.kForward);
+          rightSolenoid.set(DoubleSolenoid.Value.kForward);
           break;
         default:
-          if (RobotMap.HAS_ROLLER_INTAKE) {
-            leftSolenoid.set(DoubleSolenoid.Value.kOff);
-            rightSolenoid.set(DoubleSolenoid.Value.kOff);
-          }
+          leftSolenoid.set(DoubleSolenoid.Value.kOff);
+          rightSolenoid.set(DoubleSolenoid.Value.kOff);
       }
     }
 
   }
 
   public enum CargoIntakeRoller {
-    FORWARD,
+    REJECT,
     STOP,
-    REVERSE;
+    INTAKE;
 
     private static Spark motor;
 
     private static void initialize() {
-      if (RobotMap.HAS_ROLLER_INTAKE) {
-        motor = new Spark(RobotMap.ROLLER_MOTOR_CHANNEL);
-        motor.setInverted(RobotMap.ROLLER_MOTOR_INVERTED);
-        motor.setName("Telemetry", "CargoIntakeRollerMotor");
-      }
+      motor = new Spark(RobotMap.ROLLER_MOTOR_CHANNEL);
+      motor.setInverted(RobotMap.ROLLER_MOTOR_INVERTED);
+      motor.setName("Telemetry", "CargoIntakeRollerMotor");
     }
 
     /**
      * Moves the roller forward or backward based on the requested command.
      */
     private void actuate() {
-      if (RobotMap.useSimulator) {
-        return;
-      }
-
-      //LOGGER.error("Actuate cargo intake roller: {}", this);
+      LOGGER.debug("Actuate cargo intake roller: {}", this);
       switch (this) {
 
-        case FORWARD:
-          if (RobotMap.HAS_ROLLER_INTAKE) {
+        case REJECT:
+          if (RobotMap.HAS_ROLLER_INTAKE && !RobotMap.useSimulator) {
             motor.set(1.0);
           }
           break;
         
-        case REVERSE:
-          if (RobotMap.HAS_ROLLER_INTAKE) {
+        case INTAKE:
+          if (RobotMap.HAS_ROLLER_INTAKE && !RobotMap.useSimulator) {
             motor.set(-1.0);
           }
           break;
 
         case STOP:
         default:
-          if (RobotMap.HAS_ROLLER_INTAKE) {
+          if (RobotMap.HAS_ROLLER_INTAKE && !RobotMap.useSimulator) {
             motor.set(0.0);
           }
       }
       
     }
 
-  }
-
-  public enum CargoIntakeArmState {
-    UP,
-    MOVING_UP,
-    DOWN,
-    MOVING_DOWN,
-    UNKNOWN;
-
-    private static DigitalInput rollerSwitchUp;
-    private static DigitalInput rollerSwitchDown;
-    private static CargoIntakeArmState state;
-    private static CargoIntakeArmState previousState;
-
-    private static void initialize() {
-  
-    if (RobotMap.HAS_ROLLER_INTAKE) {
-      rollerSwitchUp = new DigitalInput(0);//TODO:figure out the channels
-      rollerSwitchUp.setName("Telemetry", "RollerSwitchUp");
-      rollerSwitchDown = new DigitalInput(1);//TODO: Figure out the channels
-      rollerSwitchDown.setName("Telemetry", "RollerswitchDown");
-    }
-    }
-
-    private static boolean rollerSwitchUp() {
-      if (RobotMap.HAS_ROLLER_INTAKE) {
-        return rollerSwitchUp.get();
-      } else {
-        return false;
-      }
-    }
-
-    private static boolean rollerSwitchDown() {
-      if (RobotMap.HAS_ROLLER_INTAKE) {
-        return rollerSwitchDown.get();
-      } else {
-        return false;
-      }
-    }
-
-    private static CargoIntakeArmState read() {
-      // If no cargo intake, state will remain as unknown.
-      if (rollerSwitchDown()) {
-        state = CargoIntakeArmState.DOWN;
-      } else if (rollerSwitchUp()) {
-        state = CargoIntakeArmState.UP;
-      } else if (previousState == CargoIntakeArmState.UP
-          || previousState == CargoIntakeArmState.MOVING_DOWN) {
-        state = CargoIntakeArmState.MOVING_DOWN;
-      } else if (previousState == CargoIntakeArmState.DOWN 
-          || previousState == CargoIntakeArmState.MOVING_UP) {
-        state = CargoIntakeArmState.MOVING_UP;
-      } else {
-        state = CargoIntakeArmState.UNKNOWN;
-      }
-      previousState = state;
-      return state;
-    }
   }
 
   /**
@@ -204,11 +126,9 @@ public class CargoIntake extends GamePieceBase implements GamePiece {
     // Initialize the actuators
     CargoIntakeRoller.initialize();
     CargoIntakeArm.initialize();
-    CargoIntakeArmState.initialize();
 
     roller = CargoIntakeRoller.STOP;
     arm = CargoIntakeArm.UP;
-    armState = CargoIntakeArmState.read();
 
     initSendable(TelemetryBuilder.getInstance());
     LOGGER.trace("Created roller arm game piece.");
@@ -222,6 +142,7 @@ public class CargoIntake extends GamePieceBase implements GamePiece {
    * @param command which way to move the arm.
    */
   public void arm(CargoIntakeArm command) {
+    LOGGER.debug("Setting intake arm position to {}.", command);
     arm = command;
   }
 
@@ -231,17 +152,9 @@ public class CargoIntake extends GamePieceBase implements GamePiece {
    * 
    * @param command which way to move the arm.
    */
-  public void arm(String command) {
+  private void arm(String command) {
+    LOGGER.debug("Setting intake arm position to {} using string interface.", command);
     arm = CargoIntakeArm.valueOf(command);
-  }
-
-  /**
-   * Gets the current state of the cargo intake arm.
-   * 
-   * @return the current state.
-   */
-  public CargoIntakeArmState arm() {
-    return armState;
   }
 
   /**
@@ -249,7 +162,8 @@ public class CargoIntake extends GamePieceBase implements GamePiece {
    * 
    * @return the cargo intake command
    */
-  public CargoIntakeArm armCommand() {
+  public CargoIntakeArm arm() {
+    LOGGER.debug("Current cargo intake arm command is {}.", arm);
     return arm;
   }
 
@@ -259,6 +173,7 @@ public class CargoIntake extends GamePieceBase implements GamePiece {
    * @param command the roller command
    */
   public void roller(CargoIntakeRoller command) {
+    LOGGER.debug("Setting cargo intake roller command to {}.", command);
     roller = command;
   }
 
@@ -269,6 +184,7 @@ public class CargoIntake extends GamePieceBase implements GamePiece {
    * @param command the roller command
    */
   public void roller(String command) {
+    LOGGER.debug("Setting cargo intake roller command to {} using string interface.", command);
     roller = CargoIntakeRoller.valueOf(command);
   }
 
@@ -276,6 +192,7 @@ public class CargoIntake extends GamePieceBase implements GamePiece {
    * Returns the current rollar command. There is no external sensor on this motor.
    */
   public CargoIntakeRoller roller() {
+    LOGGER.debug("Current cargo intake roller command is {}.", roller);
     return roller;
   }
 
@@ -284,30 +201,47 @@ public class CargoIntake extends GamePieceBase implements GamePiece {
    */
   public void periodic() {
     // Take Actions
-    if (true) {
+    if (enabled) {
       roller.actuate();
       arm.actuate();
+    } else {
+      LOGGER.debug("Cargo intake mechanism is disabled.");
     }
-    armState = CargoIntakeArmState.read();
   }
 
   @Override
   public void initSendable(SendableBuilder builder) {
-    //TODO : FIX THIS!!!!!
-  
-    builder.addStringProperty("CargoIntakeRoller", roller::name, (command) -> roller(command));
-    builder.addStringProperty("CargoIntakeArm", arm::name, (command) -> arm(command));
-    builder.addStringProperty("CargoIntakeArmState", armState::name, null);
-
-    
-    if(RobotMap.HAS_ROLLER_INTAKE){
-
-      CargoIntakeRoller.motor.initSendable(builder);
-      CargoIntakeArm.leftSolenoid.initSendable(builder);
-      CargoIntakeArm.rightSolenoid.initSendable(builder);
-      CargoIntakeArmState.rollerSwitchUp.initSendable(builder);
-      CargoIntakeArmState.rollerSwitchDown.initSendable(builder);
-    }
+    builder.addStringProperty("Intake Roller Command", 
+        this::rollerCommandString, (command) -> roller(command));
+    builder.addStringProperty("Intake Arm Command",
+        this::armCommandString, (command) -> arm(command));
+    builder.addStringProperty("Intake Left Arm Solenoid",
+        this::armLeftSolinoidString, null);
+    builder.addStringProperty("Intake Right Arm Solenoid",
+        this::armRightSolinoidString, null);
+    builder.addDoubleProperty("Intake Roller Motor Output",
+        this::rollerMotorOutput, null);
   }
+
+  private String rollerCommandString() {
+    return roller.toString();
+  }
+
+  private double rollerMotorOutput() {
+    return CargoIntakeRoller.motor.get();
+  }
+
+  private String armLeftSolinoidString() {
+    return CargoIntakeArm.leftSolenoid.get().toString();
+  }
+
+  private String armRightSolinoidString() {
+    return CargoIntakeArm.rightSolenoid.get().toString();
+  }
+
+  private String armCommandString() {
+    return arm.toString();
+  }
+
 
 }

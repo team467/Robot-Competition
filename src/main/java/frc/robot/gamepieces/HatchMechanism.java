@@ -10,7 +10,8 @@ import org.apache.logging.log4j.Logger;
 
 public class HatchMechanism extends GamePieceBase implements GamePiece {
 
-  private static final Logger LOGGER = RobotLogManager.getMainLogger(HatchMechanism.class.getName());
+  private static final Logger LOGGER 
+      = RobotLogManager.getMainLogger(HatchMechanism.class.getName());
 
   private static HatchMechanism instance = null;
 
@@ -25,31 +26,32 @@ public class HatchMechanism extends GamePieceBase implements GamePiece {
     private static DoubleSolenoid arm;
 
     private static void initialize() {
-      if (RobotMap.HAS_HATCH_MECHANISM) {
-        arm = new DoubleSolenoid(RobotMap.HATCH_MECH_ARM_PCM_CHANNEL, RobotMap.HATCH_MECH_ARM_FORWARD_CHANNEL, RobotMap.HATCH_MECH_ARM_REVERSE_CHANNEL);
-        //LOGGER.error("Hatch forward: {} Hatch Reverse: {}",RobotMap.HATCH_MECH_ARM_FORWARD_CHANNEL, RobotMap.HATCH_MECH_ARM_REVERSE_CHANNEL);
-      }
+      arm = new DoubleSolenoid(
+          RobotMap.HATCH_MECH_ARM_PCM_CHANNEL, 
+          RobotMap.HATCH_MECH_ARM_FORWARD_CHANNEL, 
+          RobotMap.HATCH_MECH_ARM_REVERSE_CHANNEL);
+      LOGGER.debug("Hatch channels forward: {} Hatch Reverse: {}",
+          RobotMap.HATCH_MECH_ARM_FORWARD_CHANNEL, 
+          RobotMap.HATCH_MECH_ARM_REVERSE_CHANNEL);
     }
 
     private void actuate() {
-      //LOGGER.error("Calling Actuate state: {}", this);
+      LOGGER.debug("Calling Actuate state: {}", this);
       switch (this) {
-      case IN:
-        if (RobotMap.HAS_HATCH_MECHANISM) {
-          arm.set(DoubleSolenoid.Value.kReverse);
-          //LOGGER.info("Hatch arm going IN.");
-        }
-        break;
-      case OUT:
-        if (RobotMap.HAS_HATCH_MECHANISM) {
-          arm.set(DoubleSolenoid.Value.kForward);
-         // LOGGER.info("Hatch arm is OUT.");
-        }
-        break;
-      default:
-        if (RobotMap.HAS_HATCH_MECHANISM) {
-          arm.set(DoubleSolenoid.Value.kOff);
-        }
+        case IN:
+          if (RobotMap.HAS_HATCH_MECHANISM) {
+            arm.set(DoubleSolenoid.Value.kReverse);
+          }
+          break;
+        case OUT:
+          if (RobotMap.HAS_HATCH_MECHANISM) {
+            arm.set(DoubleSolenoid.Value.kForward);
+          }
+          break;
+        default:
+          if (RobotMap.HAS_HATCH_MECHANISM) {
+            arm.set(DoubleSolenoid.Value.kOff);
+          }
       }
     }
   }
@@ -60,11 +62,11 @@ public class HatchMechanism extends GamePieceBase implements GamePiece {
     private static DoubleSolenoid launcher;
 
     private static void initialize() {
-      if (RobotMap.HAS_HATCH_MECHANISM) {
-        launcher = new DoubleSolenoid( RobotMap.HATCH_LAUNCHER_PCM_CHANNEL, RobotMap.HATCH_LAUNCHER_SOL_FORWARD_CHANNEL,
-            RobotMap.HATCH_LAUNCHER_SOL_REVERSE_CHANNEL);
-        launcher.setName("Telemetry", "HatchLauncherSolenoid1");
-      }
+      launcher = new DoubleSolenoid(
+          RobotMap.HATCH_LAUNCHER_PCM_CHANNEL, 
+          RobotMap.HATCH_LAUNCHER_SOL_FORWARD_CHANNEL,
+          RobotMap.HATCH_LAUNCHER_SOL_REVERSE_CHANNEL);
+      launcher.setName("Telemetry", "HatchLauncherSolenoid1");
     }
 
     /**
@@ -86,15 +88,15 @@ public class HatchMechanism extends GamePieceBase implements GamePiece {
 
     private void actuate() {
       switch (this) {
-      case FIRE:
-        fire();
-        break;
-      case RESET:
-        reset();
-        break;
-      default:
-        LOGGER.info("No movement was done with the Hatch Mechanism");
-        break;
+        case FIRE:
+          fire();
+          break;
+        case RESET:
+          reset();
+          break;
+        default:
+          LOGGER.info("No movement was done with the Hatch Mechanism");
+          break;
       }
     }
   }
@@ -113,7 +115,7 @@ public class HatchMechanism extends GamePieceBase implements GamePiece {
 
   // Constructor
   private HatchMechanism() {
-    super("Telemetry", "HatchMechanism");
+    super("Telemetry", "Hatch Mechanism");
 
     // Initialize sensors and actuators
     HatchArm.initialize();
@@ -131,6 +133,7 @@ public class HatchMechanism extends GamePieceBase implements GamePiece {
    * @param command to move the arm in or out.
    */
   public void arm(HatchArm command) {
+    LOGGER.debug("Hatch mechanism arm command is {}.", command);
     arm = command;
   }
 
@@ -140,11 +143,13 @@ public class HatchMechanism extends GamePieceBase implements GamePiece {
    * 
    * @param command which way to move the arm.
    */
-  public void arm(String command) {
+  private void arm(String command) {
+    LOGGER.debug("Hatch mechanism arm command is {} using string interface.", command);
     arm = HatchArm.valueOf(command);
   }
 
   public HatchArm arm() {
+    LOGGER.debug("Current hatch mechanism arm command is {}.", arm);
     return arm;
   }
 
@@ -154,6 +159,7 @@ public class HatchMechanism extends GamePieceBase implements GamePiece {
    * @param command to move the arm in or out.
    */
   public void launcher(HatchLauncher command) {
+    LOGGER.debug("Hatch launcher command is {}.", command);
     launcher = command;
   }
 
@@ -163,11 +169,13 @@ public class HatchMechanism extends GamePieceBase implements GamePiece {
    * 
    * @param command which way to move the arm.
    */
-  public void launcher(String command) {
+  private void launcher(String command) {
+    LOGGER.debug("Hatch launcher command is {} using string interface.", command);
     launcher = HatchLauncher.valueOf(command);
   }
 
   public HatchLauncher launcher() {
+    LOGGER.debug("Current hatch launcher command is {}.", launcher);
     return launcher;
   }
 
@@ -177,22 +185,40 @@ public class HatchMechanism extends GamePieceBase implements GamePiece {
   @Override
   public void periodic() {
     // Take Actions
-    //LOGGER.warn("periodic called");
-    if (true) {
+    if (enabled) {
       arm.actuate();
       launcher.actuate();
+    } else {
+      LOGGER.debug("Hatch mechanism is disabled.");
     }
   }
 
   @Override
   public void initSendable(SendableBuilder builder) {
-    builder.addStringProperty("HatchLauncher", launcher::name, (command) -> launcher(command));
-    builder.addStringProperty("HatchArm", arm::name, (command) -> arm(command));
+    builder.addStringProperty("Hatch Launcher Command", 
+        this::launcherCommandString, (command) -> this.launcher(command));
+    builder.addStringProperty("Hatch Launcher Solinoid", 
+        this::launcherSolinoidString, null);
+    builder.addStringProperty("Hatch Arm Command", 
+        this::armCommandString, (command) -> this.arm(command));
+    builder.addStringProperty("Hatch Arm Solinoid", 
+        this::armSolinoidString, null);
+  }
 
-    if (RobotMap.HAS_HATCH_MECHANISM) {
-      HatchLauncher.launcher.initSendable(builder);
-      HatchArm.arm.initSendable(builder);
-    }
+  private String launcherCommandString() {
+    return launcher.toString();
+  }
+
+  private String armCommandString() {
+    return arm.toString();
+  }
+
+  private String armSolinoidString() {
+    return HatchArm.arm.get().toString();
+  }
+
+  private String launcherSolinoidString() {
+    return HatchLauncher.launcher.get().toString();
   }
 
 }

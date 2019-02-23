@@ -4,31 +4,40 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.NetworkTableType;
-import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.SendableBuilderImpl;
+import frc.robot.Robot.RobotMode;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.TreeSet;
 
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.core.layout.CsvLogEventLayout;
 
 public class TelemetryBuilder extends SendableBuilderImpl implements SendableBuilder {
 
-  private static final Logger LOGGER = RobotLogManager.getMainLogger(TelemetryBuilder.class.getName());
+  private static final Logger LOGGER 
+      = RobotLogManager.getMainLogger(TelemetryBuilder.class.getName());
 
   private static TelemetryBuilder instance = null;
+
+  /**
+   * Update the network table values by calling the getters for all properties.
+   * Extended to print out the values to the CSV.
+   */
+  private TreeSet<String> metrics;
 
   private boolean printedHeaders = false;
 
   private CSVPrinter csvPrinter = null;
 
-  private PowerDistributionPanel pdp = new PowerDistributionPanel();
+  private long startTime = -1;
 
-  private static Integer[] pins = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15};
+  private RobotMode robotMode;
+
   /**
    * Returns a singleton instance of the telemery builder.
    * 
@@ -39,7 +48,6 @@ public class TelemetryBuilder extends SendableBuilderImpl implements SendableBui
       instance = new TelemetryBuilder();
     }
 
-  //  LOGGER.error("Telemetry instance = {}", instance);
     return instance;
   }
 
@@ -50,6 +58,16 @@ public class TelemetryBuilder extends SendableBuilderImpl implements SendableBui
   public TelemetryBuilder() {
     super();
     super.setTable(NetworkTableInstance.getDefault().getTable("Telemetry"));
+    robotMode = RobotMode.STARTED;
+
+    // metrics = new ArrayList<String>();
+    // addMetric("/startingLocation/x"); 
+    // addMetric("/startingLocation/y"); 
+    // addMetric("/rightDistance"); 
+    // addMetric("/leftDistance"); 
+    // addMetric("/isZeroed");
+    // addMetric("/headingAngle");
+
     try {
       String csvFileName = "telemetry_" + System.currentTimeMillis() + ".csv";
       File csvFile = new File(RobotLogManager.getDirectory(), csvFileName);
@@ -64,7 +82,7 @@ public class TelemetryBuilder extends SendableBuilderImpl implements SendableBui
 
       @Override
       public void run() {
-         close();
+        close();
       }
 
     });
@@ -72,47 +90,32 @@ public class TelemetryBuilder extends SendableBuilderImpl implements SendableBui
   }
 
   /**
-   * Update the network table values by calling the getters for all properties.
-   * Extended to print out the values to the CSV.
+   * After WPILib updates the Sendables on the network tables, this grabs the 
+   * values and puts them into a row in a CSV telemetry file.
    */
-  static String[] keys = {
-    "/startingLocation/x", 
-    "/startingLocation/y", 
-    "/rightDistance", 
-    "/leftDistance", 
-    "/isZeroed", 
-    "/headingAngle",
-    "CargoIntakeArm",
-    "CargoIntakeArmState",
-    "CargoIntakeRoller",
-    "CargoMechArm",
-    "CargoMechArmState",
-    "CargoMechClaw",
-    "HatchArm",
-    "HatchLauncher",
-    "TurretPosition",
-    "TurretTarget"
-  };
-
   public void updateTable() {
     super.updateTable();
     if (csvPrinter != null) {
       try {
         NetworkTable table = super.getTable();
         if (!printedHeaders) {
-          for (Object o: (Object[]) keys) {
-            csvPrinter.print(o);
+          metrics = new TreeSet<String>();
+          for (String entry : table.getKeys()) {
+            metrics.add(entry);
           }
-          csvPrinter.print("voltage");
-          for (Object o: (Object[]) pins) {
-            csvPrinter.print(o);
+          csvPrinter.print("Time (ms)");
+          csvPrinter.print("Robot Mode");
+          for (String metric:  metrics) {
+            csvPrinter.print(metric);
           }
-          csvPrinter.print("Time in millis");
           csvPrinter.println();
           printedHeaders = true;
+          startTime = System.currentTimeMillis();
         }
-        for (String key : keys) {
-          NetworkTableEntry entry = table.getEntry(key);
+        csvPrinter.print(System.currentTimeMillis() - startTime);
+        csvPrinter.print(robotMode);
+        for (String metric:  metrics) {
+          NetworkTableEntry entry = table.getEntry(metric);
           NetworkTableType type = entry.getType();
           String text = "n/a";
           switch (type) {
@@ -129,19 +132,12 @@ public class TelemetryBuilder extends SendableBuilderImpl implements SendableBui
               break;
             }
             default:
-//            text = String.valueOf(entry.getType().toString());
-              text = entry.getString("BLAH");
+              text = String.valueOf(entry.getType().toString());
               break;
           }
           csvPrinter.print(text);
           LOGGER.debug(text);
-        }
-        
-        csvPrinter.print(String.format("%10.5f",pdp.getVoltage()));
-        for (int pin: pins) {
-          csvPrinter.print(String.format("%10.5f",pdp.getCurrent(pin)));
-        }
-        csvPrinter.print(System.nanoTime() / 1000000.0);
+        }        
         csvPrinter.println();
       } catch (IOException e) {
         LOGGER.error(e.getStackTrace());
@@ -150,11 +146,28 @@ public class TelemetryBuilder extends SendableBuilderImpl implements SendableBui
     }
   }
 
-  public void close() {
+  /**
+   * For making sure data is written to csv. Call from robot init disabled.
+   */
+  public void flush() {
+    try {
+      csvPrinter.flush();
+    } catch (IOException e) {
+      LOGGER.error(e.getStackTrace());
+      e.printStackTrace();
+    }
+  }
+
+  public void robotMode(RobotMode robotMode) {
+    this.robotMode = robotMode;
+  }
+
+  private void close() {
     try {
       if (csvPrinter != null) {
         csvPrinter.close(true);
       }
+      instance = null;
     } catch (IOException e) {
       LOGGER.debug(e.getMessage());
     }
