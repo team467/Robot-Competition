@@ -127,6 +127,9 @@ public class RobotMap {
     switch (id) {
 
       case ROBOT_2018:
+        NORMAL_DRIVE_SPEED_MULTIPLIER = 0.8;
+        SLOW_DRIVE_SPEED_MULTIPLIER = 0.6;
+
         HAS_WHEELS = true;
         DRIVEMOTOR_NUM = 4;
         WHEEL_CIRCUMFERENCE = 18.50;
@@ -184,10 +187,84 @@ public class RobotMap {
         HAS_HATCH_MECHANISM = false;
         HAS_CARGO_MECHANISM = false;
 
+        // Turret
+        TURRET_MOTOR_CHANNEL = 5;
+        TURRET_MOTOR_INVERTED = false; // TODO
+        TURRET_SENSOR_INVERTED = false; // TODO
+        TURRET_RIGHT_LIMIT_TICKS = 0; // TODO
+        TURRET_LEFT_LIMIT_TICKS = 0; // TODO
+        TURRET_RIGHT_LIMIT_DEGREES = 0.0; // TODO
+        TURRET_LEFT_LIMIT_DEGREES = 0.0; // TODO
+        TURRET_ALLOWABLE_ERROR_TICKS = 10; // TODO
+        TURRET_HOME = 0.0;
+        // TODO: Set TURRET_OFFSET
+        TURRET_P = 1.0; // TODO
+        TURRET_I = 0.0; // TODO
+        TURRET_D = 0.0; // TODO
+        TURRET_F = 0.0; // TODO
+
+        // Hatch Mechanism
+        HATCH_LAUNCHER_PCM_CHANNEL = 0;
+        // TODO update forward/reverse channel
+        HATCH_LAUNCHER_SOL_FORWARD_CHANNEL = 6;
+        HATCH_LAUNCHER_SOL_REVERSE_CHANNEL = 7;
+        HATCH_MECH_ARM_PCM_CHANNEL = 0;
+        // TODO update forward/reverse channel
+        HATCH_MECH_ARM_FORWARD_CHANNEL = 4;
+        HATCH_MECH_ARM_REVERSE_CHANNEL = 5;
+        HATCH_CAMERA_INDEX = 3;
+
+        // Cargo Intake
+        ROLLER_PCM_CHANNEL = 0;
+        // TODO update up/down channel
+        ROLLER_RIGHT_ARM_UP_SOLINOID_CHANNEL = 0;
+        ROLLER_RIGHT_ARM_DOWN_SOLINOID_CHANNEL = 1;
+        // unused
+        ROLLER_LEFT_ARM_UP_SOLINOID_CHANNEL = 2;
+        ROLLER_LEFT_ARM_DOWN_SOLINOID_CHANNEL = 3;
+        // TODO use two solenoids
+        ROLLER_MOTOR_CHANNEL = 1;
+        ROLLER_MOTOR_INVERTED = false; // TODO
+        // TODO use two sparks
+
+        // Cargo Mechanism
+        CARGO_MECH_WRIST_MOTOR_CHANNEL = 6; // TODO
+        CARGO_MECH_WRIST_MOTOR_INVERTED = false;
+        // CARGO_MECH_ARM_SENSOR_INVERTED = false; // TODO Remove
+        CARGO_MECH_WRIST_P = 1.0; // TODO
+        CARGO_MECH_WRIST_I = 0.0; // TODO
+        CARGO_MECH_WRIST_D = 0.0; // TODO
+        CARGO_MECH_WRIST_F = 0.0; // TODO
+
+        CARGO_CAMERA_INDEX = 1;
+
+        CARGO_MECH_WRIST_TOP_TICKS = 979; 
+        CARGO_MECH_WRIST_BOTTOM_TICKS = 49;
+        CARGO_MECH_WRIST_ALLOWABLE_ERROR_TICKS = 10; // TODO
+        CARGO_MECH_WRIST_SENSOR_INVERTED = false;
+
+        CARGO_WRIST_UP_LIMIT_TICKS = 0; // TODO
+        CARGO_WRIST_DOWN_LIMIT_TICKS = 0; // TODO
+
+        // Ticks
+        CARGO_MECH_CARGO_BIN_PROPORTION = 0.02; // TODO
+        CARGO_MECH_LOW_ROCKET_PROPORTION = 0.55; // TODO
+        CARGO_MECH_CARGO_SHIP_PROPORTION = 0.67; // TODO
+        CARGO_MECH_SAFE_TURRET_PROPORTION = 0.95; // TODO
+
+        CARGO_MECH_CLAW_LEFT_MOTOR_CHANNEL = 2;
+        CARGO_MECH_CLAW_LEFT_MOTOR_INVERTED = true;
+        CARGO_MECH_CLAW_RIGHT_MOTOR_CHANNEL = 3;
+        CARGO_MECH_CLAW_RIGHT_MOTOR_INVERTED = true;
+
         break;
 
       case ROBOT_2019:
       default:
+        
+        NORMAL_DRIVE_SPEED_MULTIPLIER = 0.8;
+        SLOW_DRIVE_SPEED_MULTIPLIER = 0.6;
+
         HAS_WHEELS = true;
         DRIVEMOTOR_NUM = 4;
         WHEEL_CIRCUMFERENCE = 18.50;
@@ -422,6 +499,9 @@ public class RobotMap {
     }
   }
 
+  //Speed Controls
+  public static double NORMAL_DRIVE_SPEED_MULTIPLIER;
+  public static double SLOW_DRIVE_SPEED_MULTIPLIER;
   // Driver Cameras
   public static int FORWARD_CAMERA_INDEX;
   public static int BACKWARD_CAMERA_INDEX;

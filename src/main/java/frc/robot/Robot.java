@@ -168,6 +168,14 @@ public class Robot extends TimedRobot {
       turn = 0.0;
     }
 
+    if (driverstation.getSlow()) {
+      speed = speed * RobotMap.SLOW_DRIVE_SPEED_MULTIPLIER;
+      turn = turn * RobotMap.SLOW_DRIVE_SPEED_MULTIPLIER;
+    } else if (!driverstation.getTurbo() && !driverstation.getSlow()) {
+      speed = speed * RobotMap.NORMAL_DRIVE_SPEED_MULTIPLIER;
+      turn = turn * RobotMap.NORMAL_DRIVE_SPEED_MULTIPLIER;
+    }
+
     LOGGER.debug("Driver Station Inputs mode: {} speed: {} turn: {}", 
         driverstation.getDriveMode(), speed, turn);
 

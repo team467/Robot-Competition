@@ -2,9 +2,11 @@ package frc.robot.vision;
 
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
-
+import edu.wpi.first.wpilibj.Sendable;
+import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
 import frc.robot.RobotMap;
 import frc.robot.logging.RobotLogManager;
+import frc.robot.logging.TelemetryBuilder;
 import frc.robot.usercontrol.DriverStation467;
 import frc.robot.sensors.LedI2C;
 import frc.robot.sensors.LedI2C.LedBlink;
@@ -13,12 +15,11 @@ import frc.robot.sensors.LedI2C.LedMode;
 
 import org.apache.logging.log4j.Logger;
 
-public class VisionController {
+public class VisionController implements Sendable {
 
   private static VisionController instance = null;
 
-  private static final Logger LOGGER 
-      = RobotLogManager.getMainLogger(VisionController.class.getName());
+  private static final Logger LOGGER = RobotLogManager.getMainLogger(VisionController.class.getName());
 
   private NetworkTable vision;
   private DriverStation467 driverStation;
@@ -28,8 +29,6 @@ public class VisionController {
   private LedMode ledMode;
   private LedColor ledColor;
   private LedBlink ledBlink;
-
-
 
   /**
    * Returns a singleton instance of the telemery builder.
@@ -43,15 +42,28 @@ public class VisionController {
     return instance;
   }
 
+  // TODO log these
   private VisionController() {
-    vision = NetworkTableInstance.getDefault().getTable("vision");  
+    vision = NetworkTableInstance.getDefault().getTable("vision");
     driverStation = DriverStation467.getInstance();
+    initSendable(TelemetryBuilder.getInstance());
   }
 
   public double angle() {
     double angle = vision.getEntry("angle").getDouble(-1000);
     LOGGER.debug("Angle from network table is {}", angle);
     return angle;
+  }
+
+public boolean hasAngle(){
+  return vision.getEntry("angle").exists();
+}
+  public double getAngle(){
+    return vision.getEntry("angle").getDouble(-1000);
+  }
+  
+  public void setAngle(double angle){
+    vision.getEntry("angle").setDouble(angle);
   }
 
   /**
@@ -96,6 +108,35 @@ public class VisionController {
         lights.sendLedCommand(ledMode.NONE, ledColor.NONE, ledBlink.NONE);
       }
     }
+  }
+
+  private String name;
+  private String subsystem;
+
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public void setName(String subsystem, String name) {
+    setSubsystem(subsystem);
+    setName(name);
+  }
+
+  public String getSubsystem() {
+    return subsystem;
+  }
+
+  public void setSubsystem(String subsystem) {
+    this.subsystem = subsystem;
+  }
+
+  public void initSendable(SendableBuilder builder) {
+    builder.addDoubleProperty("Vision Angle", this::getAngle, (angle)->setAngle(angle));
+    builder.addBooleanProperty("Vision Has Angle", this::hasAngle, null);
   }
 
 }

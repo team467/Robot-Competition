@@ -30,15 +30,16 @@ public class CargoIntake extends GamePieceBase implements GamePiece {
     private static DoubleSolenoid rightSolenoid;
 
     private static void initialize() {
-
-      leftSolenoid = new DoubleSolenoid(RobotMap.ROLLER_PCM_CHANNEL,
-          RobotMap.ROLLER_LEFT_ARM_UP_SOLINOID_CHANNEL, 
-          RobotMap.ROLLER_LEFT_ARM_DOWN_SOLINOID_CHANNEL);
-      leftSolenoid.setName("Telemetry", "RollerArmLeftSolenoid");
-      rightSolenoid = new DoubleSolenoid(RobotMap.ROLLER_PCM_CHANNEL,
-          RobotMap.ROLLER_RIGHT_ARM_UP_SOLINOID_CHANNEL, 
-          RobotMap.ROLLER_RIGHT_ARM_DOWN_SOLINOID_CHANNEL);
-      rightSolenoid.setName("Telemetry", "RollerArmRightSolenoid");
+      if (RobotMap.HAS_ROLLER_INTAKE) {
+        leftSolenoid = new DoubleSolenoid(RobotMap.ROLLER_PCM_CHANNEL,
+        RobotMap.ROLLER_LEFT_ARM_UP_SOLINOID_CHANNEL, 
+        RobotMap.ROLLER_LEFT_ARM_DOWN_SOLINOID_CHANNEL);
+        leftSolenoid.setName("Telemetry", "RollerArmLeftSolenoid");
+        rightSolenoid = new DoubleSolenoid(RobotMap.ROLLER_PCM_CHANNEL,
+            RobotMap.ROLLER_RIGHT_ARM_UP_SOLINOID_CHANNEL, 
+            RobotMap.ROLLER_RIGHT_ARM_DOWN_SOLINOID_CHANNEL);
+        rightSolenoid.setName("Telemetry", "RollerArmRightSolenoid");
+      }
     }
   
 
@@ -48,18 +49,20 @@ public class CargoIntake extends GamePieceBase implements GamePiece {
     private void actuate() {
       
       LOGGER.debug("Actuate cargo intake arm: {}", this);
-      switch (this) {
-        case DOWN:
-          leftSolenoid.set(DoubleSolenoid.Value.kReverse);
-          rightSolenoid.set(DoubleSolenoid.Value.kReverse);
-          break;
-        case UP:
-          leftSolenoid.set(DoubleSolenoid.Value.kForward);
-          rightSolenoid.set(DoubleSolenoid.Value.kForward);
-          break;
-        default:
-          leftSolenoid.set(DoubleSolenoid.Value.kOff);
-          rightSolenoid.set(DoubleSolenoid.Value.kOff);
+      if (RobotMap.HAS_ROLLER_INTAKE) {
+          switch (this) {
+          case DOWN:
+            leftSolenoid.set(DoubleSolenoid.Value.kReverse);
+            rightSolenoid.set(DoubleSolenoid.Value.kReverse);
+            break;
+          case UP:
+            leftSolenoid.set(DoubleSolenoid.Value.kForward);
+            rightSolenoid.set(DoubleSolenoid.Value.kForward);
+            break;
+          default:
+            leftSolenoid.set(DoubleSolenoid.Value.kOff);
+            rightSolenoid.set(DoubleSolenoid.Value.kOff);
+        }
       }
     }
 
@@ -215,12 +218,14 @@ public class CargoIntake extends GamePieceBase implements GamePiece {
         this::rollerCommandString, (command) -> roller(command));
     builder.addStringProperty("Intake Arm Command",
         this::armCommandString, (command) -> arm(command));
-    builder.addStringProperty("Intake Left Arm Solenoid",
-        this::armLeftSolinoidString, null);
-    builder.addStringProperty("Intake Right Arm Solenoid",
-        this::armRightSolinoidString, null);
-    builder.addDoubleProperty("Intake Roller Motor Output",
-        this::rollerMotorOutput, null);
+    if (RobotMap.HAS_ROLLER_INTAKE) {
+      builder.addStringProperty("Intake Left Arm Solenoid",
+          this::armLeftSolinoidString, null);
+      builder.addStringProperty("Intake Right Arm Solenoid",
+          this::armRightSolinoidString, null);
+      builder.addDoubleProperty("Intake Roller Motor Output",
+          this::rollerMotorOutput, null);
+    }
   }
 
   private String rollerCommandString() {

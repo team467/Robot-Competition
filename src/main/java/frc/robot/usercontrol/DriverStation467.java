@@ -206,7 +206,7 @@ public class DriverStation467 extends SendableBase implements Sendable {
   }
 
   public boolean getDefenseMode() {
-    if (getNavJoystick().getLeftTrigger() > 0.9 == true && getNavJoystick().getRightTrigger() > 0.9 == true) {
+    if (getDriveJoystick().down(Button.start) == true && getDriveJoystick().down(Button.back) == true) {
       return true;
     } else {
       return false;
@@ -214,11 +214,11 @@ public class DriverStation467 extends SendableBase implements Sendable {
   }
 
   public boolean getRejectBall() {
-    return getDriveJoystick().getLeftTrigger() >= 0.9;
+    return getDriveJoystick().down(Button.BumperLeft);
   }
 
   public boolean getIntakeBall() {
-    return getDriveJoystick().getRightTrigger() >= 0.9;
+    return getDriveJoystick().down(Button.BumperRight);
   }
 
   public void driverSetLeftRumble(double value) {
@@ -230,11 +230,19 @@ public class DriverStation467 extends SendableBase implements Sendable {
   }
 
   public boolean getFireHatch() {
-    return getNavJoystick().down(Button.BumperLeft);
+    return getDriveJoystick().down(Button.BumperLeft);
   }
 
   public boolean restartCamera() {
-    return navJoy.pressed(Button.start);
+    return driverJoy.pressed(Button.start);
+  }
+
+  public boolean getSlow(){
+    return getDriveJoystick().getRightTrigger() > 0.9;
+  }
+
+  public boolean getTurbo(){
+    return getDriveJoystick().getLeftTrigger() > 0.9;
   }
 
   @Override
