@@ -11,6 +11,7 @@ import frc.robot.gamepieces.CargoMech.CargoMechWristState;
 import frc.robot.gamepieces.HatchMechanism.HatchArm;
 import frc.robot.gamepieces.HatchMechanism.HatchLauncher;
 import frc.robot.logging.RobotLogManager;
+import frc.robot.sensors.LedI2C;
 import frc.robot.usercontrol.DriverStation467;
 import frc.robot.vision.CameraSwitcher;
 import frc.robot.vision.VisionController;
@@ -36,6 +37,7 @@ public class GamePieceController implements Sendable {
 
   private DriverStation467 driverStation;
   private VisionController visionController;
+  private LedI2C led;
 
   private GamePieceMode mode;
 
@@ -102,6 +104,7 @@ public class GamePieceController implements Sendable {
     LOGGER.debug("Initializing camera");
     visionController = VisionController.getInstance();
     LOGGER.debug("Initializing vision controller");
+    led = new LedI2C();
 
     // Enabling game pieces
     LOGGER.debug("Enabling the game pieces.");
@@ -259,6 +262,7 @@ public class GamePieceController implements Sendable {
   }
 
   void activateDefenseMode() {
+    led.defensiveMode();
     if (moveTurretHome()) {
       if (hatchMech.arm() == HatchArm.OUT) {
         LOGGER.debug("DEFENSE: Move hatch in.");
@@ -462,7 +466,6 @@ public class GamePieceController implements Sendable {
     if (defenseMode) { // gets action from driver input
       LOGGER.info("Changing game mode to DEFENSE");
       mode = GamePieceMode.DEFENSE;
-      // TODO: LED Red
     } else if (hatchMode) {
       LOGGER.info("Changing game mode to HATCH");
       mode = GamePieceMode.HATCH;

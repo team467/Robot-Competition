@@ -91,7 +91,7 @@ public class Robot extends TimedRobot {
     //NetworkTableInstance.getDefault().deleteAllEntries(); // Uncomment to clear table once.
 
     // Initialize RobotMap
-    RobotMap.init(RobotId.ROBOT_2019);
+    RobotMap.init(RobotId.MINIBOT);
     mode = RobotMode.STARTED;
 
     // Used after init, should be set only by the Simulator GUI
@@ -220,9 +220,8 @@ public class Robot extends TimedRobot {
         LOGGER.info("Invalid Tune Mode: {}", tuneSlot);
     }
     drive.zero();
-
-    leds.cargoInLine();
   }
+
 
 
   /**
