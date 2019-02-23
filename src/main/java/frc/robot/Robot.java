@@ -91,7 +91,7 @@ public class Robot extends TimedRobot {
     //NetworkTableInstance.getDefault().deleteAllEntries(); // Uncomment to clear table once.
 
     // Initialize RobotMap
-    RobotMap.init(RobotId.ROBOT_2018);
+    RobotMap.init(RobotId.ROBOT_2019);
     mode = RobotMode.STARTED;
 
     // Used after init, should be set only by the Simulator GUI
@@ -109,7 +109,7 @@ public class Robot extends TimedRobot {
     driverstation = DriverStation467.getInstance();
     drive = Drive.getInstance();
     camera = CameraSwitcher.getInstance();
-    //gamePieceController = GamePieceController.getInstance();
+    gamePieceController = GamePieceController.getInstance();
     leds = new LedI2C();
     pdp = PowerDistributionPanel.getInstance();
     drive.setPidsFromRobotMap();
@@ -201,7 +201,7 @@ public class Robot extends TimedRobot {
       default:
     }
 
-    //gamePieceController.periodic();
+    gamePieceController.periodic();
 
     if (driverstation.restartCamera()) {
       camera.restart();
