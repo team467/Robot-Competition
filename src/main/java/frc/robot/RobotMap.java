@@ -188,6 +188,10 @@ public class RobotMap {
 
       case ROBOT_2019:
       default:
+        
+        NORMAL_DRIVE_SPEED_MULTIPLIER = 0.8;
+        SLOW_DRIVE_SPEED_MULTIPLIER = 0.5;
+
         HAS_WHEELS = true;
         DRIVEMOTOR_NUM = 4;
         WHEEL_CIRCUMFERENCE = 18.50;
@@ -422,6 +426,9 @@ public class RobotMap {
     }
   }
 
+  //Speed Controls
+  public static double NORMAL_DRIVE_SPEED_MULTIPLIER;
+  public static double SLOW_DRIVE_SPEED_MULTIPLIER;
   // Driver Cameras
   public static int FORWARD_CAMERA_INDEX;
   public static int BACKWARD_CAMERA_INDEX;

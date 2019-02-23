@@ -30,7 +30,6 @@ public class CargoIntake extends GamePieceBase implements GamePiece {
     private static DoubleSolenoid rightSolenoid;
 
     private static void initialize() {
-
       leftSolenoid = new DoubleSolenoid(RobotMap.ROLLER_PCM_CHANNEL,
           RobotMap.ROLLER_LEFT_ARM_UP_SOLINOID_CHANNEL, 
           RobotMap.ROLLER_LEFT_ARM_DOWN_SOLINOID_CHANNEL);

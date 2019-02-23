@@ -462,15 +462,18 @@ public class GamePieceController implements Sendable {
     if (defenseMode) { // gets action from driver input
       LOGGER.info("Changing game mode to DEFENSE");
       mode = GamePieceMode.DEFENSE;
+      camera.unlock();
       // TODO: LED Red
     } else if (hatchMode) {
       LOGGER.info("Changing game mode to HATCH");
       mode = GamePieceMode.HATCH;
       camera.hatch();
+      camera.lock();
     } else if (cargoMode) {
       LOGGER.info("Changing game mode to CARGO");
       mode = GamePieceMode.CARGO;
       camera.cargo();
+      camera.lock();
     }
 
     return mode;

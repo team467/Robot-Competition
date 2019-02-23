@@ -91,7 +91,7 @@ public class Robot extends TimedRobot {
     //NetworkTableInstance.getDefault().deleteAllEntries(); // Uncomment to clear table once.
 
     // Initialize RobotMap
-    RobotMap.init(RobotId.ROBOT_2019);
+    RobotMap.init(RobotId.ROBOT_2018);
     mode = RobotMode.STARTED;
 
     // Used after init, should be set only by the Simulator GUI
@@ -166,6 +166,14 @@ public class Robot extends TimedRobot {
     }
     if (Math.abs(turn) < RobotMap.MIN_DRIVE_SPEED) {
       turn = 0.0;
+    }
+
+    if (driverstation.getSlow()) {
+      speed = speed * RobotMap.SLOW_DRIVE_SPEED_MULTIPLIER;
+      turn = turn * RobotMap.SLOW_DRIVE_SPEED_MULTIPLIER;
+    } else if (!driverstation.getTurbo()) {
+      speed = speed * RobotMap.NORMAL_DRIVE_SPEED_MULTIPLIER;
+      turn = turn * RobotMap.NORMAL_DRIVE_SPEED_MULTIPLIER;
     }
 
     LOGGER.debug("Driver Station Inputs mode: {} speed: {} turn: {}", 

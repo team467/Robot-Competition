@@ -122,9 +122,7 @@ public class CargoMech extends GamePieceBase implements GamePiece {
     MOVING_DOWN_TO_LOW_ROCKET,
     MOVING_UP_TO_CARGO_SHIP, 
     CARGO_SHIP,
-    MOVING_DOWN_TO_CARGO_SHIP,
-    MOVING_UP_TO_SAFE_TURRET, 
-    SAFE_TURRET, 
+    ABOVE_CARGO_SHIP,
     UNKNOWN;
 
     private static CargoMechWristState previousState = UNKNOWN;
@@ -134,7 +132,7 @@ public class CargoMech extends GamePieceBase implements GamePiece {
     private static CargoMechWristState read() {
       height = simulatedReading;
       if (!RobotMap.useSimulator && RobotMap.HAS_CARGO_MECHANISM) {
-        height = CargoMechWrist.talon.getSelectedSensorPosition(TALON_SENSOR_ID);
+        height = CargoMechWrist.talon.getSensorCollection().getAnalogInRaw();
       }
       height *= (RobotMap.CARGO_MECH_WRIST_SENSOR_INVERTED) ? -1.0 : 1.0;
       LOGGER.debug("Read cargo wrist height as {}.", height);
@@ -149,9 +147,9 @@ public class CargoMech extends GamePieceBase implements GamePiece {
       } else if (Math.abs(height - CargoMechWrist.CARGO_SHIP.height) 
           <= RobotMap.CARGO_MECH_WRIST_ALLOWABLE_ERROR_TICKS) {
         state = CARGO_SHIP;
-      } else if (Math.abs(height - CargoMechWrist.SAFE_TURRET.height)
-          <= RobotMap.CARGO_MECH_WRIST_ALLOWABLE_ERROR_TICKS) {
-        state = SAFE_TURRET;
+      } else if (height > (CargoMechWrist.CARGO_SHIP.height 
+          + RobotMap.CARGO_MECH_WRIST_ALLOWABLE_ERROR_TICKS)) {
+        state = ABOVE_CARGO_SHIP;
       } else if (height > CargoMechWrist.CARGO_BIN.height
           && height < (CargoMechWrist.LOW_ROCKET.height 
             - RobotMap.CARGO_MECH_WRIST_ALLOWABLE_ERROR_TICKS)) {
@@ -168,14 +166,6 @@ public class CargoMech extends GamePieceBase implements GamePiece {
         } else {
           state = MOVING_DOWN_TO_LOW_ROCKET;
         }
-      } else if (height > CargoMechWrist.CARGO_SHIP.height
-          && height < (CargoMechWrist.SAFE_TURRET.height 
-            - RobotMap.CARGO_MECH_WRIST_ALLOWABLE_ERROR_TICKS)) {
-        if (previousState == CARGO_SHIP || previousState == MOVING_UP_TO_SAFE_TURRET) {
-          state = MOVING_UP_TO_SAFE_TURRET;
-        } else {
-          state = MOVING_DOWN_TO_CARGO_SHIP;
-        }
       } else {
         state = UNKNOWN;
       }
@@ -183,7 +173,6 @@ public class CargoMech extends GamePieceBase implements GamePiece {
       previousState = state;
       return state;
     }
-
   }
 
   /**
