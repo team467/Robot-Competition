@@ -80,7 +80,7 @@ public class LedI2C {
     message[4] = (byte)ledBlinkValue;
 
     if (Arrays.equals(message, previousMessage)) {
-      LOGGER.error("I am the same");
+      LOGGER.debug("Message is the same");
     } else {
       wire.writeBulk(message,5);
       previousMessage = message;
@@ -100,7 +100,7 @@ public class LedI2C {
   }
 
   public void whenDisabled(){
-    LOGGER.error("whenDisabled Mode={} Color={} Blink={}", 
+    LOGGER.debug("whenDisabled Mode={} Color={} Blink={}", 
         LedMode.NONE, LedColor.ORANGE, LedBlink.NONE);
     sendLedCommand(LedMode.NONE, LedColor.ORANGE, LedBlink.NONE);
   }
