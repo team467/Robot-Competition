@@ -109,7 +109,7 @@ public class Robot extends TimedRobot {
     driverstation = DriverStation467.getInstance();
     drive = Drive.getInstance();
     camera = CameraSwitcher.getInstance();
-    //gamePieceController = GamePieceController.getInstance();
+    gamePieceController = GamePieceController.getInstance();
     leds = new LedI2C();
     pdp = PowerDistributionPanel.getInstance();
     drive.setPidsFromRobotMap();
@@ -201,7 +201,7 @@ public class Robot extends TimedRobot {
       default:
     }
 
-    //gamePieceController.periodic();
+    gamePieceController.periodic();
 
     if (driverstation.restartCamera()) {
       camera.restart();
