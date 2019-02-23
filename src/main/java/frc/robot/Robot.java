@@ -7,6 +7,8 @@
 
 package frc.robot;
 
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -16,9 +18,10 @@ import frc.robot.drive.Drive;
 import frc.robot.gamepieces.GamePieceController;
 import frc.robot.logging.RobotLogManager;
 import frc.robot.logging.TelemetryBuilder;
+import frc.robot.sensors.LedI2C;
+import frc.robot.sensors.PowerDistributionPanel;
 import frc.robot.usercontrol.DriverStation467;
 import frc.robot.vision.CameraSwitcher;
-import frc.robot.sensors.LedI2C;
 import org.apache.logging.log4j.Logger;
 
 /**
@@ -35,14 +38,15 @@ public class Robot extends TimedRobot {
   private static boolean enableSimulator = false;
 
   // Robot objects
+  NetworkTable table;
   private DriverStation467 driverstation;
   private Drive drive;
   private TelemetryBuilder telemetry;
   private CameraSwitcher camera;
-
   private GamePieceController gamePieceController;
-
   private LedI2C leds;
+  private PowerDistributionPanel pdp;
+
 
   private int tuneSlot = 0;
   private double tuningValue = 0.0;
@@ -64,6 +68,18 @@ public class Robot extends TimedRobot {
     Robot.enableSimulator = true;
   }
 
+  // For tracking state in telemetry
+  public enum RobotMode {
+    STARTED,
+    DISABLED,
+    AUTONOMOUS,
+    TELEOP,
+    TEST,
+    EXTERNAL_TEST // Not for test periodic
+  }
+
+  private RobotMode mode;
+
   /**
    * This function is run when the robot is first started up and should be used
    * for any initialization code.
@@ -71,12 +87,12 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
 
-    // table = NetworkTableInstance.getDefault();
     // Delete all Network Table keys; relevant ones will be added when they are set
-    // table.deleteAllEntries(); // Uncomment to clear table once.
+    //NetworkTableInstance.getDefault().deleteAllEntries(); // Uncomment to clear table once.
 
     // Initialize RobotMap
     RobotMap.init(RobotId.ROBOT_2019);
+    mode = RobotMode.STARTED;
 
     // Used after init, should be set only by the Simulator GUI
     // this ensures that the simulator is off otherwise.
@@ -84,14 +100,20 @@ public class Robot extends TimedRobot {
       RobotMap.setSimulator();
     }
 
+    table = NetworkTableInstance.getDefault().getTable("Telemetry");
+    NetworkTable pdpTable = table.getSubTable("Power Distribution Panel");
+    pdpTable.getKeys(); // Removes warning, need to get the table for creation.
+
     // Make robot objects
+    telemetry = TelemetryBuilder.getInstance();
     driverstation = DriverStation467.getInstance();
     drive = Drive.getInstance();
-    telemetry = TelemetryBuilder.getInstance();
     camera = CameraSwitcher.getInstance();
     gamePieceController = GamePieceController.getInstance();
     leds = new LedI2C();
+    pdp = PowerDistributionPanel.getInstance();
     drive.setPidsFromRobotMap();
+
   }
 
   /**
@@ -105,11 +127,13 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotPeriodic() {
+    telemetry.robotMode(mode);
     telemetry.updateTable();
   }
 
   @Override
   public void autonomousInit() {
+    mode = RobotMode.AUTONOMOUS;
     LOGGER.info("No Autonomous");
   }
 
@@ -122,6 +146,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
+    mode = RobotMode.TELEOP;
     LOGGER.info("Init Teleop");
     LOGGER.debug("Match time {}", DriverStation.getInstance().getMatchTime());
   }
@@ -143,28 +168,29 @@ public class Robot extends TimedRobot {
       turn = 0.0;
     }
 
-    LOGGER.debug("Driver Station Inputs mode: {} speed: {} turn: {}", driverstation.getDriveMode(), speed, turn);
+    LOGGER.debug("Driver Station Inputs mode: {} speed: {} turn: {}", 
+        driverstation.getDriveMode(), speed, turn);
 
     switch (driverstation.getDriveMode()) {
 
-    case ArcadeDrive:
-      drive.arcadeDrive(speed, turn, true);
-      if (RobotMap.AUTO_CAMERA) {
-        camera.autoSwitch(speed);
-      }
-      break;
+      case ArcadeDrive:
+        drive.arcadeDrive(speed, turn, true);
+        if (RobotMap.AUTO_CAMERA) {
+          camera.autoSwitch(speed);
+        }
+        break;
 
-    case CurvatureDrive:
-      drive.curvatureDrive(speed, turn, true);
-      break;
+      case CurvatureDrive:
+        drive.curvatureDrive(speed, turn, true);
+        break;
 
-    case TankDrive:
-      double leftTank = driverstation.getDriveJoystick().getLeftStickY();
-      double rightTank = driverstation.getDriveJoystick().getRightStickY();
-      drive.tankDrive(leftTank, rightTank, true);
-      break;
+      case TankDrive:
+        double leftTank = driverstation.getDriveJoystick().getLeftStickY();
+        double rightTank = driverstation.getDriveJoystick().getRightStickY();
+        drive.tankDrive(leftTank, rightTank, true);
+        break;
 
-    default:
+      default:
     }
 
     gamePieceController.periodic();
@@ -177,6 +203,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void testInit() {
+    mode = RobotMode.TEST;
     LOGGER.info("Init Test");
     tuneSlot = Integer.parseInt(SmartDashboard.getString("DB/String 5", "0"));
     switch (tuneSlot) {
@@ -204,24 +231,26 @@ public class Robot extends TimedRobot {
   @Override
   public void testPeriodic() {
     switch (tuneSlot) {
-    case 0: // Drive PID SLot
-      drive.tuneForward(tuningValue, RobotMap.PID_SLOT_DRIVE);
-      LOGGER.debug("Distance {} feet", drive.getLeftDistance());
-      break;
-    case 1: // Turn PID Slot
-      drive.tuneTurn(tuningValue, RobotMap.PID_SLOT_TURN);
-      LOGGER.debug("Turn {} degrees", Math.toDegrees(drive.getLeftDistance()));
-      break;
-    case 2:
-      drive.arcadeDrive(1, 0, true);
-      break;
-    default:
-    LOGGER.info("Invalid Tune Mode: {}", tuneSlot);
+      case 0: // Drive PID SLot
+        drive.tuneForward(tuningValue, RobotMap.PID_SLOT_DRIVE);
+        LOGGER.debug("Distance {} feet", drive.getLeftDistance());
+        break;
+      case 1: // Turn PID Slot
+        drive.tuneTurn(tuningValue, RobotMap.PID_SLOT_TURN);
+        LOGGER.debug("Turn {} degrees", Math.toDegrees(drive.getLeftDistance()));
+        break;
+      case 2:
+        drive.arcadeDrive(1, 0, true);
+        break;
+      default:
+        LOGGER.info("Invalid Tune Mode: {}", tuneSlot);
     }
   }
+
   @Override
   public void disabledInit() {
     LOGGER.info("Init Disabled");
+    telemetry.flush();
   }
 
 

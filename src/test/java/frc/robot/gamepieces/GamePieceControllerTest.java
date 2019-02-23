@@ -2,9 +2,9 @@ package frc.robot.gamepieces;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 import frc.robot.Robot;
+import frc.robot.Robot.RobotMode;
 import frc.robot.RobotMap;
 import frc.robot.RobotMap.RobotId;
 import frc.robot.gamepieces.CargoIntake.CargoIntakeArm;
@@ -92,6 +92,7 @@ public class GamePieceControllerTest {
     turret.enabled(true);
 
     telemetry = TelemetryBuilder.getInstance();
+    telemetry.robotMode(RobotMode.EXTERNAL_TEST);
   }
 
   /**

@@ -48,7 +48,7 @@ public class CargoMech extends GamePieceBase implements GamePiece {
     }
 
     private static void initialize() {
-      if (RobotMap.HAS_CARGO_MECHANISM) {
+      // if (RobotMap.HAS_CARGO_MECHANISM) {
         talon = TalonProxy.create(RobotMap.CARGO_MECH_WRIST_MOTOR_CHANNEL);
         talon.setName("Telemetry", "Cargo Wrist Motor");
         talon.setInverted(RobotMap.CARGO_MECH_WRIST_MOTOR_INVERTED);
@@ -68,9 +68,9 @@ public class CargoMech extends GamePieceBase implements GamePiece {
         // talon.configReverseSoftLimitEnable(false, RobotMap.TALON_TIMEOUT);
         talon.configAllowableClosedloopError(TALON_PID_SLOT_ID,
             RobotMap.CARGO_MECH_WRIST_ALLOWABLE_ERROR_TICKS, RobotMap.TALON_TIMEOUT);
-      } else {
-        talon = null;
-      }
+      // } else {
+      //   talon = null;
+      // }
     }
 
     // 0.0 is the bottom, 1.0 is the top (proportion)
@@ -81,14 +81,14 @@ public class CargoMech extends GamePieceBase implements GamePiece {
     }
 
     private static void manual(double speed) {
-      if (RobotMap.HAS_CARGO_MECHANISM) {
-        if (!RobotMap.useSimulator) {
+      // if (RobotMap.HAS_CARGO_MECHANISM) {
+        // if (!RobotMap.useSimulator) {
           onManualControl = true;
           talon.set(ControlMode.PercentOutput, speed);
           LOGGER.debug("Manual override cargo mech wrist Speed: {}, Channel: {}, talon speed = {}, Control mode: {}",
               speed, talon.getDeviceID(), talon.getMotorOutputPercent(), talon.getControlMode());
-          }
-      }
+          // }
+      // }
     }
 
     public static int cargoMechWristTickValueIn() {
@@ -104,13 +104,13 @@ public class CargoMech extends GamePieceBase implements GamePiece {
      */
     private void actuate() {
       LOGGER.debug("Actuating cargo mechanism wrist: {}", this);
-      if (RobotMap.HAS_CARGO_MECHANISM) {
-        if (!RobotMap.useSimulator) {
+      // if (RobotMap.HAS_CARGO_MECHANISM) {
+        // if (!RobotMap.useSimulator) {
           if (!onManualControl) {
             talon.set(ControlMode.Position, height);
           }
-        }
-      } 
+        // }
+      // } 
     }
   }
 
@@ -201,7 +201,7 @@ public class CargoMech extends GamePieceBase implements GamePiece {
     private static void initialize() {
       // Create the roller object. No sensors
       LOGGER.trace("Initializing Claw");
-      if (RobotMap.HAS_CARGO_MECHANISM) {
+      // if (RobotMap.HAS_CARGO_MECHANISM) {
         motorLeader = new Spark(RobotMap.CARGO_MECH_CLAW_LEFT_MOTOR_CHANNEL);
         motorLeader.setInverted(RobotMap.CARGO_MECH_CLAW_LEFT_MOTOR_INVERTED);
         
@@ -209,7 +209,7 @@ public class CargoMech extends GamePieceBase implements GamePiece {
         motorFollower.setInverted(RobotMap.CARGO_MECH_CLAW_RIGHT_MOTOR_INVERTED);
         LOGGER.debug("Spark channels: {}, {}", 
             motorLeader.getChannel(), motorFollower.getChannel());
-      }
+      // }
 
     }
 
@@ -219,34 +219,34 @@ public class CargoMech extends GamePieceBase implements GamePiece {
      */
     private void actuate() {
       LOGGER.debug("Actuating cargo mech claw");
-      if (RobotMap.useSimulator || !RobotMap.HAS_CARGO_MECHANISM) {
-        return;
-      }
+      // if (RobotMap.useSimulator || !RobotMap.HAS_CARGO_MECHANISM) {
+      //   return;
+      // }
       
       LOGGER.debug("Calling Claw Actuate state: {}", this);
       switch (this) {
         case FIRE:
-          if (RobotMap.HAS_CARGO_MECHANISM) {
+          // if (RobotMap.HAS_CARGO_MECHANISM) {
             motorLeader.set(1.0);
             motorFollower.set(1.0);
-          }
+          // }
           LOGGER.debug("Claw going forward");
           break;
 
         case INTAKE:
-          if (RobotMap.HAS_CARGO_MECHANISM) {
+          // if (RobotMap.HAS_CARGO_MECHANISM) {
             motorLeader.set(-1.0);
             motorFollower.set(-1.0);
-          }
+          // }
           LOGGER.debug("Claw going backward");
           break;
 
         case STOP:
         default:
-          if (RobotMap.HAS_CARGO_MECHANISM) {
+          // if (RobotMap.HAS_CARGO_MECHANISM) {
             motorLeader.set(0.0);
             motorFollower.set(0.0);
-          }
+          // }
           LOGGER.debug("Claw is stopping");
       }
     }
@@ -389,15 +389,14 @@ public class CargoMech extends GamePieceBase implements GamePiece {
   @Override
   public void initSendable(SendableBuilder builder) {
     builder.addStringProperty("Cargo Claw Command", 
-        this::telemetryClawCommand, (command) -> claw(command));
+        this::clawCommandString, (command) -> claw(command));
+    builder.addDoubleProperty("Cargo Claw Lead Motor Output", this::clawLeaderMotorOutput, null);
+    builder.addDoubleProperty("Cargo Claw Follower Motor Output", 
+        this::clawFollowerMotorOutput, null);
     builder.addStringProperty("Cargo Wrist Command", 
-        this::telemetryWristCommand, (command) -> wrist(command));
-    builder.addStringProperty("Cargo Wrist State", this::telemetryWristState, null);
+        this::wristCommandString, (command) -> wrist(command));
+    builder.addStringProperty("Cargo Wrist State", this::wristStateString, null);
     builder.addDoubleProperty("Cargo Wrist Height Proportion", this::heightProportion, null);
-    if (RobotMap.HAS_CARGO_MECHANISM && !RobotMap.useSimulator) {
-      CargoMechClaw.motorLeader.initSendable(builder);
-      CargoMechWrist.talon.initSendable(builder);
-    }
   }
 
   private double heightProportion() {
@@ -405,16 +404,24 @@ public class CargoMech extends GamePieceBase implements GamePiece {
         / (RobotMap.CARGO_MECH_WRIST_TOP_TICKS - RobotMap.CARGO_MECH_WRIST_BOTTOM_TICKS);
   }
 
-  private String telemetryWristState() {
+  private String wristStateString() {
     return wristState.toString();
   }
 
-  private String telemetryWristCommand() {
+  private String wristCommandString() {
     return wrist.toString();
   }
 
-  private String telemetryClawCommand() {
+  private String clawCommandString() {
     return claw.toString();
+  }
+
+  private double clawLeaderMotorOutput() {
+    return CargoMechClaw.motorLeader.get();
+  }
+
+  private double clawFollowerMotorOutput() {
+    return CargoMechClaw.motorFollower.get();
   }
 
 

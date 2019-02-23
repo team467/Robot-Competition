@@ -428,6 +428,9 @@ public class RobotMap {
   public static boolean HAS_CAMERA = false;
   public static boolean AUTO_CAMERA = false;
 
+  // Telemetry Enables
+  public static boolean ENABLE_DRIVER_STATION_TELEMETRY = true;
+
   // Game Pieces
 
   // Turret
