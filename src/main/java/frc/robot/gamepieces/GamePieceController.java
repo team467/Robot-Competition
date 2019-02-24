@@ -111,6 +111,7 @@ public class GamePieceController implements Sendable {
     turret.enabled(true);
 
     LOGGER.debug("Starting in DEFENSE mode.");
+
     mode = GamePieceMode.DEFENSE;
   }
 
@@ -269,7 +270,8 @@ public class GamePieceController implements Sendable {
           LOGGER.debug("DEFENSE: Move cargo wrist to bin.");
           cargoMech.wrist(CargoMechWrist.CARGO_BIN);
         }
-      } else if (cargoIntake.arm() == CargoIntakeArm.DOWN) {
+      }
+      if (cargoIntake.arm() == CargoIntakeArm.DOWN) {
         LOGGER.debug("DEFENSE: Moving cargo intake arm up, final step.");
         cargoIntake.arm(CargoIntakeArm.UP);
       }
@@ -342,6 +344,8 @@ public class GamePieceController implements Sendable {
         LOGGER.debug("CARGO: Setting wrist speed to {} manually.", manualWristMove);
         cargoMech.manualWristMove(manualWristMove);
       }
+    } else {
+      cargoMech.manualWristMove(0);
     }
 
     // Turret moves are last as turret safety takes precidence over other wrist moves
@@ -429,11 +433,12 @@ public class GamePieceController implements Sendable {
       //Works in cargo or hatch mode. Cargo intake reverses motor to spit cargo.
       LOGGER.debug("HATCH or CARGO: Rejecting ball");
       cargoIntake.roller(CargoIntakeRoller.REJECT);
-    }
-
-    if (intakeBall && cargoIntake.arm() == CargoIntakeArm.DOWN) {
+    } else if (intakeBall && cargoIntake.arm() == CargoIntakeArm.DOWN) {
       LOGGER.debug("HATCH or CARGO: Grabbing ball");
       cargoIntake.roller(CargoIntakeRoller.INTAKE);
+    } else if (!driverStation.getAcquireBall()) {
+      LOGGER.debug("HATCH or CARGO: Stopping roller");
+      cargoIntake.roller(CargoIntakeRoller.STOP);
     }
 
     if (moveTurretToHome) {
@@ -447,10 +452,13 @@ public class GamePieceController implements Sendable {
     }
 
     if (manualTurretMove != 0.0) {
-      LOGGER.debug("HATCH or CARGO: Manually move the turret.");
-      if (ensureTurretSafeToMove()) {
+      LOGGER.error("HATCH or CARGO: Manually move the turret.");
+      if (true) { //ensureTurretSafeToMove()
+        LOGGER.warn("turret is safe to move, manualTurret move: {}", manualTurretMove);
         turret.manual(manualTurretMove);
       }
+    } else {
+      turret.manual(0);
     }
   }
 
@@ -493,5 +501,9 @@ public class GamePieceController implements Sendable {
     builder.addStringProperty(name + "Mode", mode::name,
         // Lambda calls set enabled if changed in Network table
         (gamePieceMode) -> testMode(gamePieceMode));
+  }
+
+  public void runOnTeleopInit(){
+    mode = GamePieceMode.DEFENSE;
   }
 }

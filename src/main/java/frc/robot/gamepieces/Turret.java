@@ -64,15 +64,16 @@ public class Turret extends GamePieceBase implements GamePiece {
       talon.config_kF(TALON_PID_SLOT_ID, RobotMap.TURRET_F, RobotMap.TALON_TIMEOUT);
       // talon.configForwardSoftLimitThreshold(
       //     RobotMap.TURRET_RIGHT_LIMIT_TICKS, RobotMap.TALON_TIMEOUT);
-      // talon.configForwardSoftLimitEnable(true, RobotMap.TALON_TIMEOUT);
+      talon.configForwardSoftLimitEnable(false, RobotMap.TALON_TIMEOUT);
       // talon.configReverseSoftLimitThreshold(
       //     RobotMap.TURRET_LEFT_LIMIT_TICKS, RobotMap.TALON_TIMEOUT);
-      // talon.configReverseSoftLimitEnable(true, RobotMap.TALON_TIMEOUT);
+       talon.configReverseSoftLimitEnable(false, RobotMap.TALON_TIMEOUT);
       talon.configAllowableClosedloopError(TALON_PID_SLOT_ID,
           RobotMap.TURRET_ALLOWABLE_ERROR_TICKS, RobotMap.TALON_TIMEOUT);
     } else {
       talon = null;
     }
+   
     ticksPerDegree = 
         ((double) (RobotMap.TURRET_RIGHT_LIMIT_TICKS - RobotMap.TURRET_LEFT_LIMIT_TICKS))
         / (RobotMap.TURRET_RIGHT_LIMIT_DEGREES - RobotMap.TURRET_LEFT_LIMIT_DEGREES);
@@ -80,7 +81,7 @@ public class Turret extends GamePieceBase implements GamePiece {
     vision = VisionController.getInstance();
     
     initSendable(TelemetryBuilder.getInstance());
-    LOGGER.trace("Created Turret game piece.");
+    LOGGER.error("Created Turret game piece. Channel: {}", talon.getDeviceID());
   }
 
   /**
@@ -93,13 +94,13 @@ public class Turret extends GamePieceBase implements GamePiece {
     onManualControl = true;
     targetLock = false;
     targetPosition = currentPosition;
+    LOGGER.error("talon mode: {}", talon.getControlMode());
 
-    if (RobotMap.HAS_TURRET) {
-      LOGGER.debug("Manual override for turret: {} Expected: {}", 
-      talon.getMotorOutputPercent(), speed);
-  
-      if (enabled) {
+    if (RobotMap.HAS_TURRET) { 
+      if (true) { //enabled
         talon.set(ControlMode.PercentOutput, speed);
+        LOGGER.error("Control mode: {} Manual override for turret: {} Expected: {}", talon.getControlMode(), 
+        talon.getMotorOutputPercent(), speed);
       }
     }
   }
@@ -143,7 +144,7 @@ public class Turret extends GamePieceBase implements GamePiece {
    * @return the target position
    */
   public double target() {
-    LOGGER.debug("Current target position: {}", targetPosition);
+    //LOGGER.debug("Current target position: {}", targetPosition);
     return targetPosition;
   }
 
@@ -153,7 +154,7 @@ public class Turret extends GamePieceBase implements GamePiece {
    * @return the position in degrees
    */
   public double position() {
-    LOGGER.debug("Current position: {}", currentPosition);
+    //LOGGER.debug("Current position: {}", currentPosition);
     return currentPosition;
   }
 
@@ -167,6 +168,7 @@ public class Turret extends GamePieceBase implements GamePiece {
           if (!onManualControl) {
             // followVision();
             talon.set(ControlMode.Position, (targetPosition * ticksPerDegree));
+            LOGGER.info("trying to move turret to: {}", targetPosition * ticksPerDegree);
           }
           // Update state
           currentPosition = (talon.getSelectedSensorPosition(TALON_SENSOR_ID) / ticksPerDegree);

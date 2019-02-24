@@ -64,8 +64,8 @@ public class CargoMech extends GamePieceBase implements GamePiece {
         // talon.configReverseSoftLimitThreshold(
         //     RobotMap.CARGO_WRIST_DOWN_LIMIT_TICKS, RobotMap.TALON_TIMEOUT);
         // talon.configReverseSoftLimitEnable(true, RobotMap.TALON_TIMEOUT);
-        // talon.configForwardSoftLimitEnable(false, RobotMap.TALON_TIMEOUT);
-        // talon.configReverseSoftLimitEnable(false, RobotMap.TALON_TIMEOUT);
+        talon.configForwardSoftLimitEnable(false, RobotMap.TALON_TIMEOUT);
+        talon.configReverseSoftLimitEnable(false, RobotMap.TALON_TIMEOUT);
         talon.configAllowableClosedloopError(TALON_PID_SLOT_ID,
             RobotMap.CARGO_MECH_WRIST_ALLOWABLE_ERROR_TICKS, RobotMap.TALON_TIMEOUT);
       } else {
@@ -105,6 +105,7 @@ public class CargoMech extends GamePieceBase implements GamePiece {
       if (RobotMap.HAS_CARGO_MECHANISM) {
         if (!onManualControl) {
           talon.set(ControlMode.Position, height);
+          LOGGER.debug("Height set on wrist: {}, Sensor: {}, Error: {}", height, talon.getSensorCollection().getAnalogIn(), talon.getClosedLoopError(0));
         }
       } 
     }

@@ -157,6 +157,7 @@ public class Robot extends TimedRobot {
     mode = RobotMode.TELEOP;
     LOGGER.info("Init Teleop");
     LOGGER.debug("Match time {}", DriverStation.getInstance().getMatchTime());
+    gamePieceController.runOnTeleopInit();
   }
 
   /**

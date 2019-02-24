@@ -230,7 +230,7 @@ public class DriverStation467 extends SendableBase implements Sendable {
   }
 
   public boolean getFireHatch() {
-    return getDriveJoystick().down(Button.BumperLeft);
+    return getNavJoystick().down(Button.BumperLeft);
   }
 
   public boolean restartCamera() {

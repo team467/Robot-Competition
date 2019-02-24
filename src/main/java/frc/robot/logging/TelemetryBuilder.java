@@ -75,7 +75,7 @@ public class TelemetryBuilder extends SendableBuilderImpl implements SendableBui
           CSVFormat.DEFAULT.withAllowMissingColumnNames(false).withTrim().withTrailingDelimiter());
       LOGGER.debug("linked");
     } catch (IOException e) {
-      LOGGER.error(e.getStackTrace());
+      LOGGER.debug(e.getStackTrace());
       e.printStackTrace();
     }
     Runtime.getRuntime().addShutdownHook(new Thread() {
@@ -140,7 +140,7 @@ public class TelemetryBuilder extends SendableBuilderImpl implements SendableBui
         }        
         csvPrinter.println();
       } catch (IOException e) {
-        LOGGER.error(e.getStackTrace());
+        LOGGER.debug(e.getStackTrace());
         e.printStackTrace();
       }
     }
@@ -154,7 +154,7 @@ public class TelemetryBuilder extends SendableBuilderImpl implements SendableBui
       try {
         csvPrinter.flush();
       } catch (IOException e) {
-        LOGGER.error(e.getStackTrace());
+        LOGGER.debug(e.getStackTrace());
         e.printStackTrace();
       }
     }
