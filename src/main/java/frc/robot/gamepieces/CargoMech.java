@@ -188,13 +188,13 @@ public class CargoMech extends GamePieceBase implements GamePiece {
       // Create the roller object. No sensors
       LOGGER.trace("Initializing Claw");
       // if (RobotMap.HAS_CARGO_MECHANISM) {
-        motorLeader = new Spark(RobotMap.CARGO_MECH_CLAW_LEFT_MOTOR_CHANNEL);
-        motorLeader.setInverted(RobotMap.CARGO_MECH_CLAW_LEFT_MOTOR_INVERTED);
+      //   motorLeader = new Spark(RobotMap.CARGO_MECH_CLAW_LEFT_MOTOR_CHANNEL);
+      //   motorLeader.setInverted(RobotMap.CARGO_MECH_CLAW_LEFT_MOTOR_INVERTED);
         
-        motorFollower = new Spark(RobotMap.CARGO_MECH_CLAW_RIGHT_MOTOR_CHANNEL);
-        motorFollower.setInverted(RobotMap.CARGO_MECH_CLAW_RIGHT_MOTOR_INVERTED);
-        LOGGER.debug("Spark channels: {}, {}", 
-            motorLeader.getChannel(), motorFollower.getChannel());
+      //   motorFollower = new Spark(RobotMap.CARGO_MECH_CLAW_RIGHT_MOTOR_CHANNEL);
+      //   motorFollower.setInverted(RobotMap.CARGO_MECH_CLAW_RIGHT_MOTOR_INVERTED);
+      //   LOGGER.debug("Spark channels: {}, {}", 
+      //       motorLeader.getChannel(), motorFollower.getChannel());
       // }
 
     }
@@ -229,7 +229,7 @@ public class CargoMech extends GamePieceBase implements GamePiece {
 
         case STOP:
         default:
-          // if (RobotMap.HAS_CARGO_MECHANISM) {
+          //if (RobotMap.HAS_CARGO_MECHANISM) {
             motorLeader.set(0.0);
             motorFollower.set(0.0);
           // }

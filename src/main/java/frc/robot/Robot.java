@@ -219,22 +219,22 @@ public class Robot extends TimedRobot {
 
   @Override
   public void testInit() {
-    mode = RobotMode.TEST;
-    LOGGER.info("Init Test");
-    tuneSlot = Integer.parseInt(SmartDashboard.getString("DB/String 5", "0"));
-    switch (tuneSlot) {
-      case 0:
-      case 1:
-        LOGGER.info("Tuning PID Slot {}", tuneSlot);
-        drive.readPidsFromSmartDashboard(tuneSlot);
-        tuningValue = Double.parseDouble(SmartDashboard.getString("DB/String 0", "0.0"));
-        LOGGER.info("Tuning Value: " + tuningValue);
-        break;
-      case 2:
-        break;
-      default:
-        LOGGER.info("Invalid Tune Mode: {}", tuneSlot);
-    }
+    // mode = RobotMode.TEST;
+    // LOGGER.info("Init Test");
+    // tuneSlot = Integer.parseInt(SmartDashboard.getString("DB/String 5", "0"));
+    // switch (tuneSlot) {
+    //   case 0:
+    //   case 1:
+    //     LOGGER.info("Tuning PID Slot {}", tuneSlot);
+    //     drive.readPidsFromSmartDashboard(tuneSlot);
+    //     tuningValue = Double.parseDouble(SmartDashboard.getString("DB/String 0", "0.0"));
+    //     LOGGER.info("Tuning Value: " + tuningValue);
+    //     break;
+    //   case 2:
+    //     break;
+    //   default:
+    //     LOGGER.info("Invalid Tune Mode: {}", tuneSlot);
+    // }
     drive.zero();
   }
 
@@ -264,6 +264,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void disabledInit() {
+    leds.whenDisabled();
     LOGGER.info("Init Disabled");
     telemetry.flush();
   }
