@@ -18,11 +18,13 @@ public class CameraSwitcher {
   private static final Logger LOGGER 
       = RobotLogManager.getMainLogger(CameraSwitcher.class.getName());
 
-  enum currentCamera {
+  enum cameraState {
     FORWARDS, BACKWARDS, CARGO, HATCH;
   }
 
-  private currentCamera current;
+  private cameraState currentState;
+  private cameraState prevState;
+  private boolean locked;
 
   /**
    * Returns a singleton instance of the game piece controller.
@@ -41,32 +43,37 @@ public class CameraSwitcher {
     NetworkTable table = NetworkTableInstance.getDefault().getTable("camera");
     cameraNetworkTableEntry = table.getEntry("camera");
     resetNetworkTableEntry = table.getEntry("reset");
-    current = currentCamera.FORWARDS;
+    locked = false;
+    currentState = cameraState.FORWARDS;
     forward();
   }
 
   public void forward() {
     LOGGER.debug("Setting camera forward at index {}", RobotMap.FORWARD_CAMERA_INDEX);
     cameraNetworkTableEntry.setDouble(RobotMap.FORWARD_CAMERA_INDEX);
-    current = currentCamera.FORWARDS;
+    prevState = currentState;
+    currentState = cameraState.FORWARDS;
   }
 
   public void backward() {
     LOGGER.debug("Setting camera backward at index {}", RobotMap.BACKWARD_CAMERA_INDEX);
     cameraNetworkTableEntry.setDouble(RobotMap.BACKWARD_CAMERA_INDEX);
-    current = currentCamera.BACKWARDS;
+    prevState = currentState;
+    currentState = cameraState.BACKWARDS;
   }
 
   public void cargo() {
     LOGGER.debug("Setting to cargo camera at index {}", RobotMap.CARGO_CAMERA_INDEX);
     cameraNetworkTableEntry.setDouble(RobotMap.CARGO_CAMERA_INDEX);
-    current = currentCamera.CARGO;
+    prevState = currentState;
+    currentState = cameraState.CARGO;
   }
 
   public void hatch() {
     LOGGER.debug("Setting to hatch camera at index {}", RobotMap.HATCH_CAMERA_INDEX);
     cameraNetworkTableEntry.setDouble(RobotMap.HATCH_CAMERA_INDEX);
-    current = currentCamera.HATCH;
+    prevState = currentState;
+    currentState = cameraState.HATCH;
   }
 
   public void restart() {
@@ -74,8 +81,18 @@ public class CameraSwitcher {
     resetNetworkTableEntry.setBoolean(true);
   }
 
+  public void lock() {
+    LOGGER.debug("Locking Camera");
+    locked = true;
+  }
+
+  public void unlock() {
+    LOGGER.debug("Unlocking Camera");
+    locked = false;
+  }
+
   public void autoSwitch(double speed) {
-    if (current != currentCamera.CARGO && current != currentCamera.HATCH) {
+    if (!locked) {
       if (speed < 0) {
         forward();
       } else if (speed > 0) {

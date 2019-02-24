@@ -156,5 +156,10 @@ gradle-app.setting
 .settings/
 bin/
 
-
 # End of https://www.gitignore.io/api/c++,java,linux,macos,gradle,windows,visualstudiocode
+
+# # Telemetry
+src/main/deploy/logs
+
+# # Extra
+.wpilib/wpilib_preferences.json

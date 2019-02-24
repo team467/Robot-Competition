@@ -22,6 +22,9 @@ import frc.robot.sensors.LedI2C;
 import frc.robot.sensors.PowerDistributionPanel;
 import frc.robot.usercontrol.DriverStation467;
 import frc.robot.vision.CameraSwitcher;
+
+import java.io.IOException;
+
 import org.apache.logging.log4j.Logger;
 
 /**
@@ -47,7 +50,6 @@ public class Robot extends TimedRobot {
   private LedI2C leds;
   private PowerDistributionPanel pdp;
 
-
   private int tuneSlot = 0;
   private double tuningValue = 0.0;
 
@@ -70,12 +72,7 @@ public class Robot extends TimedRobot {
 
   // For tracking state in telemetry
   public enum RobotMode {
-    STARTED,
-    DISABLED,
-    AUTONOMOUS,
-    TELEOP,
-    TEST,
-    EXTERNAL_TEST // Not for test periodic
+    STARTED, DISABLED, AUTONOMOUS, TELEOP, TEST, EXTERNAL_TEST // Not for test periodic
   }
 
   private RobotMode mode;
@@ -88,7 +85,8 @@ public class Robot extends TimedRobot {
   public void robotInit() {
 
     // Delete all Network Table keys; relevant ones will be added when they are set
-    //NetworkTableInstance.getDefault().deleteAllEntries(); // Uncomment to clear table once.
+    // NetworkTableInstance.getDefault().deleteAllEntries(); // Uncomment to clear
+    // table once.
 
     // Initialize RobotMap
     RobotMap.init(RobotId.MINIBOT);
@@ -98,6 +96,16 @@ public class Robot extends TimedRobot {
     // this ensures that the simulator is off otherwise.
     if (enableSimulator) {
       RobotMap.setSimulator();
+    }
+
+    // Mounting USB
+    ProcessBuilder builder = new ProcessBuilder();
+    builder.command("sudo", "mount", "/dev/sda1", "/media");
+    try {
+      Process process = builder.start();
+    } catch (IOException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
     }
 
     table = NetworkTableInstance.getDefault().getTable("Telemetry");
@@ -166,6 +174,14 @@ public class Robot extends TimedRobot {
     }
     if (Math.abs(turn) < RobotMap.MIN_DRIVE_SPEED) {
       turn = 0.0;
+    }
+
+    if (driverstation.getSlow()) {
+      speed = speed * RobotMap.SLOW_DRIVE_SPEED_MULTIPLIER;
+      turn = turn * RobotMap.SLOW_DRIVE_SPEED_MULTIPLIER;
+    } else if (!driverstation.getTurbo() && !driverstation.getSlow()) {
+      speed = speed * RobotMap.NORMAL_DRIVE_SPEED_MULTIPLIER;
+      turn = turn * RobotMap.NORMAL_DRIVE_SPEED_MULTIPLIER;
     }
 
     LOGGER.debug("Driver Station Inputs mode: {} speed: {} turn: {}", 

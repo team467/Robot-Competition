@@ -150,11 +150,13 @@ public class TelemetryBuilder extends SendableBuilderImpl implements SendableBui
    * For making sure data is written to csv. Call from robot init disabled.
    */
   public void flush() {
-    try {
-      csvPrinter.flush();
-    } catch (IOException e) {
-      LOGGER.error(e.getStackTrace());
-      e.printStackTrace();
+    if (csvPrinter != null) {
+      try {
+        csvPrinter.flush();
+      } catch (IOException e) {
+        LOGGER.error(e.getStackTrace());
+        e.printStackTrace();
+      }
     }
   }
 
