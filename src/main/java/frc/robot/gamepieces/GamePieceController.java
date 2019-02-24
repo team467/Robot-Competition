@@ -262,7 +262,7 @@ public class GamePieceController implements Sendable {
   }
 
   void activateDefenseMode() {
-    led.cargoInLine();
+    led.defensiveMode();
     LOGGER.error("Hello ");
     if (moveTurretHome()) {
       if (hatchMech.arm() == HatchArm.OUT) {
