@@ -494,5 +494,4 @@ public class GamePieceController implements Sendable {
         // Lambda calls set enabled if changed in Network table
         (gamePieceMode) -> testMode(gamePieceMode));
   }
-
 }
