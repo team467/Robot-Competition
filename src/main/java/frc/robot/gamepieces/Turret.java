@@ -64,6 +64,8 @@ public class Turret extends GamePieceBase implements GamePiece {
       talon.config_kF(TALON_PID_SLOT_ID, RobotMap.TURRET_F, RobotMap.TALON_TIMEOUT);
       // talon.configForwardSoftLimitThreshold(
       //     RobotMap.TURRET_RIGHT_LIMIT_TICKS, RobotMap.TALON_TIMEOUT);
+      
+      
       talon.configForwardSoftLimitEnable(false, RobotMap.TALON_TIMEOUT);
       // talon.configReverseSoftLimitThreshold(
       //     RobotMap.TURRET_LEFT_LIMIT_TICKS, RobotMap.TALON_TIMEOUT);
@@ -81,7 +83,7 @@ public class Turret extends GamePieceBase implements GamePiece {
     vision = VisionController.getInstance();
     
     initSendable(TelemetryBuilder.getInstance());
-    LOGGER.error("Created Turret game piece. Channel: {}", talon.getDeviceID());
+    LOGGER.debug("Created Turret game piece. Channel: {}", talon.getDeviceID());
   }
 
   /**
@@ -94,12 +96,12 @@ public class Turret extends GamePieceBase implements GamePiece {
     onManualControl = true;
     targetLock = false;
     targetPosition = currentPosition;
-    LOGGER.error("talon mode: {}", talon.getControlMode());
+    LOGGER.debug("talon mode: {}", talon.getControlMode());
 
     if (RobotMap.HAS_TURRET) { 
       if (true) { //enabled
         talon.set(ControlMode.PercentOutput, speed);
-        LOGGER.error("Control mode: {} Manual override for turret: {} Expected: {}", talon.getControlMode(), 
+        LOGGER.debug("Control mode: {} Manual override for turret: {} Expected: {}", talon.getControlMode(), 
         talon.getMotorOutputPercent(), speed);
       }
     }

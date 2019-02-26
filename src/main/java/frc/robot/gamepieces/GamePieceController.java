@@ -452,7 +452,7 @@ public class GamePieceController implements Sendable {
     }
 
     if (manualTurretMove != 0.0) {
-      LOGGER.error("HATCH or CARGO: Manually move the turret.");
+      LOGGER.debug("HATCH or CARGO: Manually move the turret.");
       if (true) { //ensureTurretSafeToMove()
         LOGGER.warn("turret is safe to move, manualTurret move: {}", manualTurretMove);
         turret.manual(manualTurretMove);
