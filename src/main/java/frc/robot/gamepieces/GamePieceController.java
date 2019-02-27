@@ -104,7 +104,7 @@ public class GamePieceController implements Sendable {
     LOGGER.debug("Initializing camera");
     visionController = VisionController.getInstance();
     LOGGER.debug("Initializing vision controller");
-    led = new LedI2C();
+    led = LedI2C.getInstance();
 
     // Enabling game pieces
     LOGGER.debug("Enabling the game pieces.");

@@ -1,5 +1,7 @@
 package frc.robot.sensors;
 
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
 import frc.robot.logging.TelemetryBuilder;
 
@@ -17,7 +19,19 @@ public class PowerDistributionPanel extends edu.wpi.first.wpilibj.PowerDistribut
       instance = new PowerDistributionPanel();
     }
     instance.initSendable(TelemetryBuilder.getInstance());
+
     return instance;
+  }
+
+  /**
+   * This registers the power distribution with telemetry;
+   */
+  public static void registerPowerDistributionWithTelemetry() {
+    // Register PDP with Telemetry
+    PowerDistributionPanel.getInstance(); // need to create the panel before registry.
+    NetworkTable table = NetworkTableInstance.getDefault().getTable("Telemetry");
+    NetworkTable pdpTable = table.getSubTable("Power Distribution Panel");
+    pdpTable.getKeys(); // Removes warning, need to get the table for creation.
   }
 
   private PowerDistributionPanel() {
@@ -36,16 +50,16 @@ public class PowerDistributionPanel extends edu.wpi.first.wpilibj.PowerDistribut
     builder.addDoubleProperty("PDP Current (2)", this::current2, null);
     builder.addDoubleProperty("PDP Current (3)", this::current3, null);
     builder.addDoubleProperty("PDP Current (4)", this::current4, null);
-    // builder.addDoubleProperty("PDP Current (5)", this::current5, null); /Empty
-    // builder.addDoubleProperty("PDP Current (6)", this::current6, null);
+    builder.addDoubleProperty("PDP Current (5)", this::current5, null);
+    builder.addDoubleProperty("PDP Current (6)", this::current6, null);
     builder.addDoubleProperty("PDP Current (7)", this::current7, null);
     builder.addDoubleProperty("PDP Current (8)", this::current8, null);
     builder.addDoubleProperty("PDP Current (9)", this::current9, null);
     builder.addDoubleProperty("PDP Current (10)", this::current10, null);
     builder.addDoubleProperty("PDP Current (11)", this::current11, null);
     builder.addDoubleProperty("PDP Current (12)", this::current12, null);
-    // builder.addDoubleProperty("PDP Current (13)", this::current13, null);
-    // builder.addDoubleProperty("PDP Current (14)", this::current14, null);
+    builder.addDoubleProperty("PDP Current (13)", this::current13, null);
+    builder.addDoubleProperty("PDP Current (14)", this::current14, null);
     builder.addDoubleProperty("PDP Current (15)", this::current15, null);
   }
 
@@ -69,13 +83,13 @@ public class PowerDistributionPanel extends edu.wpi.first.wpilibj.PowerDistribut
     return getCurrent(4);
   }
 
-  // private double current5() {
-  //   return getCurrent(5);
-  // }
+  private double current5() {
+    return getCurrent(5);
+  }
 
-  // private double current6() {
-  //   return getCurrent(6);
-  // }
+  private double current6() {
+    return getCurrent(6);
+  }
 
   private double current7() {
     return getCurrent(7);
@@ -101,13 +115,13 @@ public class PowerDistributionPanel extends edu.wpi.first.wpilibj.PowerDistribut
     return getCurrent(12);
   }
 
-  // private double current13() {
-  //   return getCurrent(13);
-  // }
+  private double current13() {
+    return getCurrent(13);
+  }
 
-  // private double current14() {
-  //   return getCurrent(14);
-  // }
+  private double current14() {
+    return getCurrent(14);
+  }
 
   private double current15() {
     return getCurrent(15);

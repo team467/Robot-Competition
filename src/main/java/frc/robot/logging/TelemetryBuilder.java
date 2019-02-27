@@ -11,6 +11,8 @@ import frc.robot.Robot.RobotMode;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.TreeSet;
 
 import org.apache.commons.csv.CSVFormat;
@@ -37,6 +39,8 @@ public class TelemetryBuilder extends SendableBuilderImpl implements SendableBui
   private long startTime = -1;
 
   private RobotMode robotMode;
+
+  private Timer timer;
 
   /**
    * Returns a singleton instance of the telemery builder.
@@ -89,63 +93,97 @@ public class TelemetryBuilder extends SendableBuilderImpl implements SendableBui
     
   }
 
+  private class PrintTimer extends TimerTask {
+    private TelemetryBuilder telemetry;
+
+    private PrintTimer() {
+      telemetry = TelemetryBuilder.getInstance();
+    }
+
+    @Override
+    public void run() {
+      telemetry.printCsvLine();
+    }
+
+    @Override
+    public boolean cancel() {
+      telemetry.close();
+      return super.cancel();
+    }
+  }
+
   /**
    * After WPILib updates the Sendables on the network tables, this grabs the 
    * values and puts them into a row in a CSV telemetry file.
    */
   public void updateTable() {
     super.updateTable();
+    if (!printedHeaders) {
+      printHeaders();
+      Timer timer = new Timer("Telemetry Timer", true);
+      timer.scheduleAtFixedRate(new PrintTimer(), 0, 20);
+    }
+  }
+
+  private void printHeaders() {
+    metrics = new TreeSet<String>();
+    NetworkTable table = super.getTable();
     if (csvPrinter != null) {
       try {
-        NetworkTable table = super.getTable();
-        if (!printedHeaders) {
-          metrics = new TreeSet<String>();
-          for (String entry : table.getKeys()) {
-            metrics.add(entry);
-          }
-          csvPrinter.print("Time (ms)");
-          csvPrinter.print("Robot Mode");
-          for (String metric:  metrics) {
-            csvPrinter.print(metric);
-          }
-          csvPrinter.println();
-          printedHeaders = true;
-          startTime = System.currentTimeMillis();
+        for (String entry : table.getKeys()) {
+          metrics.add(entry);
         }
-        csvPrinter.print(System.currentTimeMillis() - startTime);
-        csvPrinter.print(robotMode);
+        csvPrinter.print("Time (ms)");
+        csvPrinter.print("Robot Mode");
         for (String metric:  metrics) {
-          NetworkTableEntry entry = table.getEntry(metric);
-          NetworkTableType type = entry.getType();
-          String text = "n/a";
-          switch (type) {
-            case kDouble: {
-              text = String.format("%10.5f", entry.getDouble(Double.NaN));
-              break;
-            }
-            case kString: {
-              text = entry.getString("n/a");
-              break;
-            }
-            case kBoolean: {
-              text = String.valueOf(entry.getBoolean(false));
-              break;
-            }
-            default:
-              text = String.valueOf(entry.getType().toString());
-              break;
-          }
-          csvPrinter.print(text);
-          LOGGER.debug(text);
-        }        
+          csvPrinter.print(metric);
+        }
         csvPrinter.println();
+        startTime = System.currentTimeMillis();
       } catch (IOException e) {
         LOGGER.error(e.getStackTrace());
         e.printStackTrace();
       }
     }
+    printedHeaders = true;
   }
 
+  void printCsvLine() {
+    try {
+      NetworkTable table = super.getTable();
+      csvPrinter.print(System.currentTimeMillis() - startTime);
+      csvPrinter.print(robotMode);
+      for (String metric:  metrics) {
+        NetworkTableEntry entry = table.getEntry(metric);
+        NetworkTableType type = entry.getType();
+        String text;
+        switch (type) {
+          case kDouble: {
+            text = String.format("%10.5f", entry.getDouble(Double.NaN));
+            break;
+          }
+          case kString: {
+            text = entry.getString("n/a");
+            break;
+          }
+          case kBoolean: {
+            text = String.valueOf(entry.getBoolean(false));
+            break;
+          }
+          default:
+            text = String.valueOf(entry.getType().toString());
+            break;
+        }
+        csvPrinter.print(text);
+        LOGGER.debug(text);
+      }        
+      csvPrinter.println();
+    } catch (IOException e) {
+      LOGGER.error(e.getStackTrace());
+      e.printStackTrace();
+    }
+  }
+ 
   /**
    * For making sure data is written to csv. Call from robot init disabled.
    */
@@ -167,6 +205,7 @@ public class TelemetryBuilder extends SendableBuilderImpl implements SendableBui
   private void close() {
     try {
       if (csvPrinter != null) {
+        csvPrinter.flush();
         csvPrinter.close(true);
       }
       instance = null;

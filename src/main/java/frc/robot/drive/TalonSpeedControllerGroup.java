@@ -27,7 +27,6 @@ public class TalonSpeedControllerGroup implements SpeedController, Sendable {
 
   private WpiTalonSrxInterface leader;
   private WpiTalonSrxInterface follower1;
-  private WpiTalonSrxInterface follower2;
 
   private int previousSensorPosition;
   private double maxVelocity;
@@ -37,7 +36,6 @@ public class TalonSpeedControllerGroup implements SpeedController, Sendable {
   public TalonSpeedControllerGroup() {
     leader = null;
     follower1 = null;
-    follower2 = null;
   }
 
   public TalonSpeedControllerGroup(String name, ControlMode controlMode, boolean sensorIsInverted,
@@ -47,7 +45,6 @@ public class TalonSpeedControllerGroup implements SpeedController, Sendable {
     if (!RobotMap.HAS_WHEELS) {
       leader = null;
       follower1 = null;
-      follower2 = null;
       LOGGER.trace("No drive system");
       return;
     }
@@ -180,7 +177,7 @@ public class TalonSpeedControllerGroup implements SpeedController, Sendable {
       return;
     }
 
-    //LOGGER.error("Output to {} drive is {} in mode: {}", name, outputValue, controlMode);
+    LOGGER.debug("Output to {} drive is {} in mode: {}", name, outputValue, controlMode);
 
     if (controlMode == ControlMode.Velocity) {
       outputValue *= maxVelocity;

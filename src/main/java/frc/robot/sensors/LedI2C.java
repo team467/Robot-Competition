@@ -10,6 +10,27 @@ import java.util.Arrays;
 import org.apache.logging.log4j.Logger;
 
 public class LedI2C {
+
+  private static LedI2C instance = null;
+
+  /**
+   * Returns a singleton instance of the LED communication controller.
+   * 
+   * @return LedI2C the instance
+   */
+  public static LedI2C getInstance() {
+    if (instance == null) {
+      instance = new LedI2C();
+    }
+
+    return instance;
+  }
+
+  private LedI2C() {
+
+  }
+
+
   byte[] previousMessage;
   private static final Logger LOGGER = RobotLogManager.getMainLogger(LedI2C.class.getName());
 

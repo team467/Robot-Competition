@@ -60,12 +60,10 @@ public class CargoMech extends GamePieceBase implements GamePiece {
         talon.config_kF(TALON_PID_SLOT_ID, RobotMap.CARGO_MECH_WRIST_F, RobotMap.TALON_TIMEOUT);
         // talon.configForwardSoftLimitThreshold(
         //     RobotMap.CARGO_WRIST_UP_LIMIT_TICKS, RobotMap.TALON_TIMEOUT);
-        // talon.configForwardSoftLimitEnable(true, RobotMap.TALON_TIMEOUT);
         // talon.configReverseSoftLimitThreshold(
         //     RobotMap.CARGO_WRIST_DOWN_LIMIT_TICKS, RobotMap.TALON_TIMEOUT);
-        // talon.configReverseSoftLimitEnable(true, RobotMap.TALON_TIMEOUT);
-        // talon.configForwardSoftLimitEnable(false, RobotMap.TALON_TIMEOUT);
-        // talon.configReverseSoftLimitEnable(false, RobotMap.TALON_TIMEOUT);
+        talon.configForwardSoftLimitEnable(false, RobotMap.TALON_TIMEOUT);
+        talon.configReverseSoftLimitEnable(false, RobotMap.TALON_TIMEOUT);
         talon.configAllowableClosedloopError(TALON_PID_SLOT_ID,
             RobotMap.CARGO_MECH_WRIST_ALLOWABLE_ERROR_TICKS, RobotMap.TALON_TIMEOUT);
       } else {
@@ -187,15 +185,15 @@ public class CargoMech extends GamePieceBase implements GamePiece {
     private static void initialize() {
       // Create the roller object. No sensors
       LOGGER.trace("Initializing Claw");
-      // if (RobotMap.HAS_CARGO_MECHANISM) {
-      //   motorLeader = new Spark(RobotMap.CARGO_MECH_CLAW_LEFT_MOTOR_CHANNEL);
-      //   motorLeader.setInverted(RobotMap.CARGO_MECH_CLAW_LEFT_MOTOR_INVERTED);
+      if (RobotMap.HAS_CARGO_MECHANISM) {
+        motorLeader = new Spark(RobotMap.CARGO_MECH_CLAW_LEFT_MOTOR_CHANNEL);
+        motorLeader.setInverted(RobotMap.CARGO_MECH_CLAW_LEFT_MOTOR_INVERTED);
         
-      //   motorFollower = new Spark(RobotMap.CARGO_MECH_CLAW_RIGHT_MOTOR_CHANNEL);
-      //   motorFollower.setInverted(RobotMap.CARGO_MECH_CLAW_RIGHT_MOTOR_INVERTED);
-      //   LOGGER.debug("Spark channels: {}, {}", 
-      //       motorLeader.getChannel(), motorFollower.getChannel());
-      // }
+        motorFollower = new Spark(RobotMap.CARGO_MECH_CLAW_RIGHT_MOTOR_CHANNEL);
+        motorFollower.setInverted(RobotMap.CARGO_MECH_CLAW_RIGHT_MOTOR_INVERTED);
+        LOGGER.debug("Spark channels: {}, {}", 
+            motorLeader.getChannel(), motorFollower.getChannel());
+      }
 
     }
 
@@ -205,35 +203,28 @@ public class CargoMech extends GamePieceBase implements GamePiece {
      */
     private void actuate() {
       LOGGER.debug("Actuating cargo mech claw");
-      // if (RobotMap.useSimulator || !RobotMap.HAS_CARGO_MECHANISM) {
-      //   return;
-      // }
       
       LOGGER.debug("Calling Claw Actuate state: {}", this);
-      switch (this) {
-        case FIRE:
-          // if (RobotMap.HAS_CARGO_MECHANISM) {
-            motorLeader.set(1.0);
-            motorFollower.set(1.0);
-          // }
-          LOGGER.debug("Claw going forward");
-          break;
+      if (RobotMap.HAS_CARGO_MECHANISM) {
+        switch (this) {
+          case FIRE:
+              motorLeader.set(1.0);
+              motorFollower.set(1.0);
+            LOGGER.debug("Claw going forward");
+            break;
 
-        case INTAKE:
-          // if (RobotMap.HAS_CARGO_MECHANISM) {
-            motorLeader.set(-1.0);
-            motorFollower.set(-1.0);
-          // }
-          LOGGER.debug("Claw going backward");
-          break;
+          case INTAKE:
+              motorLeader.set(-1.0);
+              motorFollower.set(-1.0);
+            LOGGER.debug("Claw going backward");
+            break;
 
-        case STOP:
-        default:
-          //if (RobotMap.HAS_CARGO_MECHANISM) {
-            motorLeader.set(0.0);
-            motorFollower.set(0.0);
-          // }
-          LOGGER.debug("Claw is stopping");
+          case STOP:
+          default:
+              motorLeader.set(0.0);
+              motorFollower.set(0.0);
+            LOGGER.debug("Claw is stopping");
+        }
       }
     }
 

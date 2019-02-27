@@ -8,10 +8,8 @@
 package frc.robot;
 
 import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import frc.robot.RobotMap.RobotId;
 import frc.robot.drive.Drive;
@@ -48,7 +46,6 @@ public class Robot extends TimedRobot {
   private CameraSwitcher camera;
   private GamePieceController gamePieceController;
   private LedI2C leds;
-  private PowerDistributionPanel pdp;
 
   private int tuneSlot = 0;
   private double tuningValue = 0.0;
@@ -89,7 +86,7 @@ public class Robot extends TimedRobot {
     // table once.
 
     // Initialize RobotMap
-    RobotMap.init(RobotId.MINIBOT);
+    RobotMap.init(RobotId.ROBOT_2019);
     mode = RobotMode.STARTED;
 
     // Used after init, should be set only by the Simulator GUI
@@ -99,18 +96,15 @@ public class Robot extends TimedRobot {
     }
 
     // Mounting USB
-    ProcessBuilder builder = new ProcessBuilder();
-    builder.command("sudo", "mount", "/dev/sda1", "/media");
-    try {
-      Process process = builder.start();
-    } catch (IOException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
+    if (!RobotMap.useSimulator) { // Only mount on the RoboRIO
+      ProcessBuilder builder = new ProcessBuilder();
+      builder.command("sudo", "mount", "/dev/sda1", "/media");
+      try {
+        builder.start();
+      } catch (IOException e) {
+        e.printStackTrace();
+      }  
     }
-
-    table = NetworkTableInstance.getDefault().getTable("Telemetry");
-    NetworkTable pdpTable = table.getSubTable("Power Distribution Panel");
-    pdpTable.getKeys(); // Removes warning, need to get the table for creation.
 
     // Make robot objects
     telemetry = TelemetryBuilder.getInstance();
@@ -118,9 +112,9 @@ public class Robot extends TimedRobot {
     drive = Drive.getInstance();
     camera = CameraSwitcher.getInstance();
     gamePieceController = GamePieceController.getInstance();
-    leds = new LedI2C();
-    pdp = PowerDistributionPanel.getInstance();
+    leds = LedI2C.getInstance();
     drive.setPidsFromRobotMap();
+    PowerDistributionPanel.registerPowerDistributionWithTelemetry();
 
   }
 

@@ -137,18 +137,17 @@ public class RobotMap {
         CONTROLS_INVERTED_FB = false;
         CONTROLS_INVERTED_TURN = false;
 
+        USE_VELOCITY_SPEED_CONTROL_FOR_TELOP = true;
         VELOCITY_MULTIPLIER_RIGHT = 900;
         VELOCITY_MULTIPLIER_LEFT = 900;
 
         LEFT_LEAD_CHANNEL = 1;
         LEFT_FOLLOWER_1_CHANNEL = 2;
-        // LEFT_FOLLOWER_2_CHANNEL = 3;
         LEFT_DRIVE_SENSOR_IS_INVERTED = true;
         LEFT_DRIVE_MOTOR_IS_INVERTED = false;
 
         RIGHT_LEAD_CHANNEL = 4;
         RIGHT_FOLLOWER_1_CHANNEL = 5;
-        // RIGHT_FOLLOWER_2_CHANNEL = 6;
         RIGHT_DRIVE_SENSOR_IS_INVERTED = true;
         RIGHT_DRIVE_MOTOR_IS_INVERTED = false;
 
@@ -262,17 +261,19 @@ public class RobotMap {
       case ROBOT_2019:
       default:
         
-        NORMAL_DRIVE_SPEED_MULTIPLIER = 0.8;
-        SLOW_DRIVE_SPEED_MULTIPLIER = 0.6;
-
         HAS_WHEELS = true;
         DRIVEMOTOR_NUM = 4;
         WHEEL_CIRCUMFERENCE = 18.50;
 
         CONTROLS_INVERTED_FB = true;
         CONTROLS_INVERTED_TURN = false;
-        VELOCITY_MULTIPLIER_RIGHT = 1300; // TODO fix this
+
+        USE_VELOCITY_SPEED_CONTROL_FOR_TELOP = true;
+        VELOCITY_MULTIPLIER_RIGHT = 1300;
         VELOCITY_MULTIPLIER_LEFT = 1300;
+        NORMAL_DRIVE_SPEED_MULTIPLIER = 0.8;
+        SLOW_DRIVE_SPEED_MULTIPLIER = 0.6;
+
 
         LEFT_LEAD_CHANNEL = 1;
         LEFT_FOLLOWER_1_CHANNEL = 2;
@@ -503,6 +504,8 @@ public class RobotMap {
   //Speed Controls
   public static double NORMAL_DRIVE_SPEED_MULTIPLIER;
   public static double SLOW_DRIVE_SPEED_MULTIPLIER;
+  public static boolean USE_VELOCITY_SPEED_CONTROL_FOR_TELOP = false;
+
   // Driver Cameras
   public static int FORWARD_CAMERA_INDEX;
   public static int BACKWARD_CAMERA_INDEX;

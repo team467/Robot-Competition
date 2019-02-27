@@ -63,9 +63,14 @@ public class Drive extends DifferentialDrive implements AutoDrive {
           rightFollower2 = TalonProxy.create(RobotMap.RIGHT_FOLLOWER_2_CHANNEL);
         }
 
-        left = new TalonSpeedControllerGroup("Left_Drive", ControlMode.Velocity, RobotMap.LEFT_DRIVE_SENSOR_IS_INVERTED,
+        ControlMode teleopControlMode = ControlMode.PercentOutput;
+        if (RobotMap.USE_VELOCITY_SPEED_CONTROL_FOR_TELOP) {
+          teleopControlMode = ControlMode.Velocity;
+        }
+
+        left = new TalonSpeedControllerGroup("Left_Drive", teleopControlMode, RobotMap.LEFT_DRIVE_SENSOR_IS_INVERTED,
             RobotMap.LEFT_DRIVE_MOTOR_IS_INVERTED, leftLead, leftFollower1, leftFollower2);
-        right = new TalonSpeedControllerGroup("Right_Drive", ControlMode.Velocity,
+        right = new TalonSpeedControllerGroup("Right_Drive", teleopControlMode,
             RobotMap.RIGHT_DRIVE_SENSOR_IS_INVERTED, RobotMap.RIGHT_DRIVE_MOTOR_IS_INVERTED, rightLead, rightFollower1,
             rightFollower2);
       } else {
