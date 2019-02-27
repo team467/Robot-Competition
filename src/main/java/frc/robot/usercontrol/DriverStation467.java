@@ -116,8 +116,9 @@ public class DriverStation467 extends SendableBase implements Sendable {
   }
 
   public double getManualTurretMove() {
-    double navVal = (Math.abs(getNavJoystick().getRightStickX()) < 0.3) ? 0 : getNavJoystick().getRightStickX();
-    return navVal;
+    double baseMode = (Math.abs(getNavJoystick().getRightStickX()) < 0.2) ? 0 : getNavJoystick().getRightStickX();
+    double squaredInputs = Math.signum(baseMode) * Math.pow(baseMode, 2);
+    return (RobotMap.TURRET_SQR_INP)? squaredInputs : baseMode;
   }
 
   public boolean getAcquireHatch() {
@@ -166,7 +167,9 @@ public class DriverStation467 extends SendableBase implements Sendable {
   }
 
   public double getManualWristMove() {
-    return (Math.abs(getNavJoystick().getLeftStickY()) < 0.2) ? 0 : getNavJoystick().getLeftStickY();
+    double baseMode = (Math.abs(getNavJoystick().getLeftStickY()) < 0.2) ? 0 : getNavJoystick().getLeftStickY();
+    double squaredInputs = Math.signum(baseMode) * Math.pow(baseMode, 2);
+    return (RobotMap.WRIST_SQR_INP)? squaredInputs : baseMode;
   }
 
   public boolean getFireCall() {

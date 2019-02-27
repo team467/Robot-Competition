@@ -63,9 +63,9 @@ public class Drive extends DifferentialDrive implements AutoDrive {
           rightFollower2 = TalonProxy.create(RobotMap.RIGHT_FOLLOWER_2_CHANNEL);
         }
 
-        left = new TalonSpeedControllerGroup("Left_Drive", ControlMode.Velocity, RobotMap.LEFT_DRIVE_SENSOR_IS_INVERTED,
+        left = new TalonSpeedControllerGroup("Left_Drive", ControlMode.PercentOutput, RobotMap.LEFT_DRIVE_SENSOR_IS_INVERTED,
             RobotMap.LEFT_DRIVE_MOTOR_IS_INVERTED, leftLead, leftFollower1, leftFollower2);
-        right = new TalonSpeedControllerGroup("Right_Drive", ControlMode.Velocity,
+        right = new TalonSpeedControllerGroup("Right_Drive", ControlMode.PercentOutput,
             RobotMap.RIGHT_DRIVE_SENSOR_IS_INVERTED, RobotMap.RIGHT_DRIVE_MOTOR_IS_INVERTED, rightLead, rightFollower1,
             rightFollower2);
       } else {
@@ -288,9 +288,9 @@ public class Drive extends DifferentialDrive implements AutoDrive {
     // LOGGER.debug("Automated move of right: {} left: {} feet ",
     // df.format(targetRightDistance), df.format(targetLeftDistance));
 
-    left.set(ControlMode.Velocity, leftOut);
+    left.set(ControlMode.PercentOutput, leftOut);
     // The right motor is reversed
-    right.set(ControlMode.Velocity, rightOut);
+    right.set(ControlMode.PercentOutput, rightOut);
 
     data.updateDrivePosition(getLeftDistance(), getRightDistance());
   }

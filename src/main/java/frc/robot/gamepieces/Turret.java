@@ -72,6 +72,7 @@ public class Turret extends GamePieceBase implements GamePiece {
        talon.configReverseSoftLimitEnable(false, RobotMap.TALON_TIMEOUT);
       talon.configAllowableClosedloopError(TALON_PID_SLOT_ID,
           RobotMap.TURRET_ALLOWABLE_ERROR_TICKS, RobotMap.TALON_TIMEOUT);
+      LOGGER.debug("Created Turret game piece. Channel: {}", talon.getDeviceID());
     } else {
       talon = null;
     }
@@ -83,7 +84,6 @@ public class Turret extends GamePieceBase implements GamePiece {
     vision = VisionController.getInstance();
     
     initSendable(TelemetryBuilder.getInstance());
-    LOGGER.debug("Created Turret game piece. Channel: {}", talon.getDeviceID());
   }
 
   /**

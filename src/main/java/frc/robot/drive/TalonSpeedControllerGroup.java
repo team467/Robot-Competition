@@ -96,8 +96,8 @@ public class TalonSpeedControllerGroup implements SpeedController, Sendable {
     talon.configOpenloopRamp(0.2, RobotMap.TALON_TIMEOUT);
     // talon.configClosedloopRamp(1.0, RobotMap.TALON_TIMEOUT);
 
-    talon.configVelocityMeasurementPeriod(VelocityMeasPeriod.Period_10Ms, 0);
-    talon.configVelocityMeasurementWindow(2, 0);
+    // talon.configVelocityMeasurementPeriod(VelocityMeasPeriod.Period_10Ms, 0);
+    // talon.configVelocityMeasurementWindow(2, 0);
   }
 
   public void logClosedLoopErrors() {

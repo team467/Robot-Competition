@@ -2,7 +2,7 @@ package frc.robot.gamepieces;
 
 import edu.wpi.first.wpilibj.Sendable;
 import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
-
+import frc.robot.RobotMap;
 import frc.robot.gamepieces.CargoIntake.CargoIntakeArm;
 import frc.robot.gamepieces.CargoIntake.CargoIntakeRoller;
 import frc.robot.gamepieces.CargoMech.CargoMechClaw;
@@ -361,6 +361,17 @@ public class GamePieceController implements Sendable {
       }
     }
 
+    if (manualTurretMove != 0.0) {
+      LOGGER.debug("CARGO: Manually move the turret.");
+      if (true) { //ensureTurretSafeToMove()
+        LOGGER.warn("turret is safe to move, manualTurret move: {}", manualTurretMove);
+        turret.manual(manualTurretMove);
+      }
+    } else {
+      turret.manual(0);
+    }
+
+
     eitherHatchOrCargoMode(
         rejectCargo, 
         intakeCargo, 
@@ -406,7 +417,17 @@ public class GamePieceController implements Sendable {
           turret.target(-90.0);
         }
       } 
+      if (manualTurretMove != 0.0) {
+        LOGGER.debug("HATCH: Manually move the turret.");
+        if (true) { //ensureTurretSafeToMove()
+          LOGGER.warn("turret is safe to move, manualTurret move: {}", manualTurretMove);
+          turret.manual(RobotMap.INVERT_TURRET_FOR_HATCHMODE * manualTurretMove);
+        }
+      } else {
+        turret.manual(0);
+      }
     }
+
     eitherHatchOrCargoMode(
         rejectCargo, 
         intakeCargo, 
@@ -451,13 +472,7 @@ public class GamePieceController implements Sendable {
       turret.lockOnTarget();
     }
 
-    if (manualTurretMove != 0.0) {
-      LOGGER.debug("HATCH or CARGO: Manually move the turret.");
-      if (true) { //ensureTurretSafeToMove()
-        LOGGER.warn("turret is safe to move, manualTurret move: {}", manualTurretMove);
-        turret.manual(manualTurretMove);
-      }
-    } else {
+    if (manualTurretMove == 0.0) {
       turret.manual(0);
     }
   }
