@@ -7,6 +7,7 @@ import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 
+@Ignore("Don't run GUI as standard part of test.")
 public class MainTest {
 
   @BeforeClass
@@ -26,7 +27,6 @@ public class MainTest {
   }
 
   @Test
-  @Ignore("Don't run GUI as standard part of test.")
   public void runGui() {
     Map.main(null);
   }

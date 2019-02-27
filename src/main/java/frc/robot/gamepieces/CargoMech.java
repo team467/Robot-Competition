@@ -103,6 +103,10 @@ public class CargoMech extends GamePieceBase implements GamePiece {
       if (RobotMap.HAS_CARGO_MECHANISM) {
         if (!onManualControl) {
           talon.set(ControlMode.Position, height);
+          if (!RobotMap.useSimulator) { // No sensor collection capability in the talon simulator
+            LOGGER.debug("Height set on wrist: {}, Sensor: {}, Error: {}",
+                height, talon.getSensorCollection().getAnalogIn(), talon.getClosedLoopError(0));
+          }
         }
       } 
     }

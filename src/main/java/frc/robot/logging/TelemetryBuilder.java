@@ -6,6 +6,7 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.NetworkTableType;
 import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.SendableBuilderImpl;
+import frc.robot.RobotMap;
 import frc.robot.Robot.RobotMode;
 
 import java.io.File;
@@ -37,6 +38,7 @@ public class TelemetryBuilder extends SendableBuilderImpl implements SendableBui
   private CSVPrinter csvPrinter = null;
 
   private long startTime = -1;
+  private long lastIterationTime = -1;
 
   private RobotMode robotMode;
 
@@ -79,7 +81,7 @@ public class TelemetryBuilder extends SendableBuilderImpl implements SendableBui
           CSVFormat.DEFAULT.withAllowMissingColumnNames(false).withTrim().withTrailingDelimiter());
       LOGGER.debug("linked");
     } catch (IOException e) {
-      LOGGER.error(e.getStackTrace());
+      LOGGER.debug(e.getStackTrace());
       e.printStackTrace();
     }
     Runtime.getRuntime().addShutdownHook(new Thread() {
@@ -105,11 +107,6 @@ public class TelemetryBuilder extends SendableBuilderImpl implements SendableBui
       telemetry.printCsvLine();
     }
 
-    @Override
-    public boolean cancel() {
-      telemetry.close();
-      return super.cancel();
-    }
   }
 
   /**
@@ -118,10 +115,10 @@ public class TelemetryBuilder extends SendableBuilderImpl implements SendableBui
    */
   public void updateTable() {
     super.updateTable();
-    if (!printedHeaders) {
+    if (RobotMap.ENABLE_TELEMETRY && !printedHeaders) {
       printHeaders();
-      Timer timer = new Timer("Telemetry Timer", true);
-      timer.scheduleAtFixedRate(new PrintTimer(), 0, 20);
+      timer = new Timer("Telemetry Timer", true);
+      timer.scheduleAtFixedRate(new PrintTimer(), 0, RobotMap.TELEMETRY_TIMER_MS);
     }
   }
 
@@ -134,14 +131,16 @@ public class TelemetryBuilder extends SendableBuilderImpl implements SendableBui
           metrics.add(entry);
         }
         csvPrinter.print("Time (ms)");
+        csvPrinter.print("Iteration Time (ms)");
         csvPrinter.print("Robot Mode");
         for (String metric:  metrics) {
           csvPrinter.print(metric);
         }
         csvPrinter.println();
         startTime = System.currentTimeMillis();
+        lastIterationTime = 0;
       } catch (IOException e) {
-        LOGGER.error(e.getStackTrace());
+        LOGGER.debug(e.getStackTrace());
         e.printStackTrace();
       }
     }
@@ -149,38 +148,43 @@ public class TelemetryBuilder extends SendableBuilderImpl implements SendableBui
   }
 
   void printCsvLine() {
-    try {
-      NetworkTable table = super.getTable();
-      csvPrinter.print(System.currentTimeMillis() - startTime);
-      csvPrinter.print(robotMode);
-      for (String metric:  metrics) {
-        NetworkTableEntry entry = table.getEntry(metric);
-        NetworkTableType type = entry.getType();
-        String text;
-        switch (type) {
-          case kDouble: {
-            text = String.format("%10.5f", entry.getDouble(Double.NaN));
-            break;
+    if (csvPrinter != null) {
+      try {
+        NetworkTable table = super.getTable();
+        long currentTime = System.currentTimeMillis() - startTime;
+        csvPrinter.print(currentTime);
+        csvPrinter.print(currentTime - lastIterationTime);
+        lastIterationTime = currentTime;
+        csvPrinter.print(robotMode);
+        for (String metric:  metrics) {
+          NetworkTableEntry entry = table.getEntry(metric);
+          NetworkTableType type = entry.getType();
+          String text;
+          switch (type) {
+            case kDouble: {
+              text = String.format("%10.5f", entry.getDouble(Double.NaN));
+              break;
+            }
+            case kString: {
+              text = entry.getString("n/a");
+              break;
+            }
+            case kBoolean: {
+              text = String.valueOf(entry.getBoolean(false));
+              break;
+            }
+            default:
+              text = String.valueOf(entry.getType().toString());
+              break;
           }
-          case kString: {
-            text = entry.getString("n/a");
-            break;
-          }
-          case kBoolean: {
-            text = String.valueOf(entry.getBoolean(false));
-            break;
-          }
-          default:
-            text = String.valueOf(entry.getType().toString());
-            break;
-        }
-        csvPrinter.print(text);
-        LOGGER.debug(text);
-      }        
-      csvPrinter.println();
-    } catch (IOException e) {
-      LOGGER.error(e.getStackTrace());
-      e.printStackTrace();
+          csvPrinter.print(text);
+          LOGGER.debug(text);
+        }        
+        csvPrinter.println();
+      } catch (IOException e) {
+        LOGGER.error(e.getStackTrace());
+        e.printStackTrace();
+      }
     }
   }
  
@@ -192,7 +196,7 @@ public class TelemetryBuilder extends SendableBuilderImpl implements SendableBui
       try {
         csvPrinter.flush();
       } catch (IOException e) {
-        LOGGER.error(e.getStackTrace());
+        LOGGER.debug(e.getStackTrace());
         e.printStackTrace();
       }
     }
@@ -205,8 +209,8 @@ public class TelemetryBuilder extends SendableBuilderImpl implements SendableBui
   private void close() {
     try {
       if (csvPrinter != null) {
-        csvPrinter.flush();
-        csvPrinter.close(true);
+        boolean finalFlush = true;
+        csvPrinter.close(finalFlush);
       }
       instance = null;
     } catch (IOException e) {

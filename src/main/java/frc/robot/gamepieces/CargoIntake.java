@@ -135,8 +135,6 @@ public class CargoIntake extends GamePieceBase implements GamePiece {
 
     initSendable(TelemetryBuilder.getInstance());
     LOGGER.trace("Created roller arm game piece.");
-
-
   }
 
   /**

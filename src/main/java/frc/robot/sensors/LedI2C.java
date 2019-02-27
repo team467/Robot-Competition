@@ -108,8 +108,12 @@ public class LedI2C {
     }
   }
 
-  public void cargoInLine() {
+  public void cargoMode() {
     sendLedCommand(LedMode.ALLBLINK,LedColor.BLUE,LedBlink.NONE);
+  }
+
+  public void hatchMode() {
+    sendLedCommand(LedMode.ALLBLINK,LedColor.GOLD,LedBlink.NONE);
   }
 
   public void defensiveMode() { 

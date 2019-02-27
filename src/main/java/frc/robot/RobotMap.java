@@ -274,7 +274,6 @@ public class RobotMap {
         NORMAL_DRIVE_SPEED_MULTIPLIER = 0.8;
         SLOW_DRIVE_SPEED_MULTIPLIER = 0.6;
 
-
         LEFT_LEAD_CHANNEL = 1;
         LEFT_FOLLOWER_1_CHANNEL = 2;
         LEFT_DRIVE_SENSOR_IS_INVERTED = true;
@@ -286,30 +285,30 @@ public class RobotMap {
         RIGHT_DRIVE_MOTOR_IS_INVERTED = false;
 
         // Linear PIDS
-        LEFT_DRIVE_PID_P = 1.0;
+        LEFT_DRIVE_PID_P = 0.5;
         LEFT_DRIVE_PID_I = 0.0;
         LEFT_DRIVE_PID_D = 0.0;
         LEFT_DRIVE_PID_F = 0.682;
 
-        RIGHT_DRIVE_PID_P = 1.0;
+        RIGHT_DRIVE_PID_P = 0.5;
         RIGHT_DRIVE_PID_I = 0.0;
         RIGHT_DRIVE_PID_D = 0.0;
         RIGHT_DRIVE_PID_F = 0.781;
 
         // Turn PIDs
-        LEFT_TURN_PID_P = 1.0;
+        LEFT_TURN_PID_P = 0.5;
         LEFT_TURN_PID_I = 0.0;
         LEFT_TURN_PID_D = 450.0;
         LEFT_TURN_PID_F = 0.0;
 
-        RIGHT_TURN_PID_P = 1.0;
+        RIGHT_TURN_PID_P = 0.5;
         RIGHT_TURN_PID_I = 0.0;
         RIGHT_TURN_PID_D = 450.0;
         RIGHT_TURN_PID_F = 0.0;
 
         // Cameras
         FORWARD_CAMERA_INDEX = 0;
-        BACKWARD_CAMERA_INDEX = 2;
+        BACKWARD_CAMERA_INDEX = 1;
         HAS_CAMERA = false;
         AUTO_CAMERA = false;
 
@@ -330,9 +329,12 @@ public class RobotMap {
         TURRET_LEFT_LIMIT_DEGREES = 95.0;
         TURRET_ALLOWABLE_ERROR_TICKS = 10;
         TURRET_HOME = 0.0;
+        INVERT_TURRET_FOR_HATCHMODE = -1;
+        TURRET_SQR_INP = true;
+
         
         // TODO: Set TURRET_OFFSET
-        TURRET_P = 1.0; // TODO
+        TURRET_P = 5.0; // TODO
         TURRET_I = 0.0; // TODO
         TURRET_D = 0.0; // TODO
         TURRET_F = 0.0; // TODO
@@ -369,6 +371,7 @@ public class RobotMap {
         CARGO_MECH_WRIST_I = 0.0; // TODO
         CARGO_MECH_WRIST_D = 0.0; // TODO
         CARGO_MECH_WRIST_F = 0.0; // TODO
+        WRIST_SQR_INP = true;
 
         CARGO_CAMERA_INDEX = 1;
 
@@ -513,7 +516,9 @@ public class RobotMap {
   public static boolean AUTO_CAMERA = false;
 
   // Telemetry Enables
+  public static boolean ENABLE_TELEMETRY = true;
   public static boolean ENABLE_DRIVER_STATION_TELEMETRY = true;
+  public static int TELEMETRY_TIMER_MS = 20;
 
   // Game Pieces
 
@@ -590,6 +595,9 @@ public class RobotMap {
 
   public static boolean CONTROLS_INVERTED_FB;
   public static boolean CONTROLS_INVERTED_TURN;
+  public static int INVERT_TURRET_FOR_HATCHMODE; //1 or -1
   public static double VELOCITY_MULTIPLIER_RIGHT;
   public static double VELOCITY_MULTIPLIER_LEFT;
+  public static boolean WRIST_SQR_INP;
+  public static boolean TURRET_SQR_INP;
 }

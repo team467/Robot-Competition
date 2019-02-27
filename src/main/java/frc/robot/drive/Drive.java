@@ -293,9 +293,9 @@ public class Drive extends DifferentialDrive implements AutoDrive {
     // LOGGER.debug("Automated move of right: {} left: {} feet ",
     // df.format(targetRightDistance), df.format(targetLeftDistance));
 
-    left.set(ControlMode.Velocity, leftOut);
+    left.set(ControlMode.PercentOutput, leftOut);
     // The right motor is reversed
-    right.set(ControlMode.Velocity, rightOut);
+    right.set(ControlMode.PercentOutput, rightOut);
 
     data.updateDrivePosition(getLeftDistance(), getRightDistance());
   }

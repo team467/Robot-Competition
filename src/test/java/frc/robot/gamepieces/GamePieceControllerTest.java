@@ -166,7 +166,7 @@ public class GamePieceControllerTest {
     cargoMode = true;
     LOGGER.debug("Press cargo mode button");
 
-    // Verify initial cargo mode state
+    LOGGER.debug("Verify initial CARGO mode state.");
     callProcessState();
     assertTrue(intake.arm() == CargoIntakeArm.DOWN);
     assertTrue(intake.roller() == CargoIntakeRoller.STOP);
@@ -185,6 +185,7 @@ public class GamePieceControllerTest {
 
     // Iteration 1, Arm started down and turret started in position, 
     // so verify rollers turned on
+    LOGGER.debug("Iteration 1: Arm is down, turn rollers on.");
     callProcessState();
     assertTrue(intake.arm() == CargoIntakeArm.DOWN);
     assertTrue(intake.roller() == CargoIntakeRoller.INTAKE);
@@ -199,6 +200,7 @@ public class GamePieceControllerTest {
     LOGGER.debug("Release acquire cargo button.");
 
     // Iteration 2, Verify rollers stopped
+    LOGGER.debug("Final: verify rollers stopped.");
     callProcessState();
     assertTrue(intake.arm() == CargoIntakeArm.DOWN);
     assertTrue(intake.roller() == CargoIntakeRoller.STOP);
@@ -216,7 +218,7 @@ public class GamePieceControllerTest {
     cargoMode = true;
     LOGGER.debug("Press cargo mode button.");
 
-    // Verify initial cargo mode state
+    LOGGER.debug("Verify initial CARGO mode state.");
     callProcessState();
     assertTrue(intake.arm() == CargoIntakeArm.DOWN);
     assertTrue(intake.roller() == CargoIntakeRoller.STOP);
@@ -341,6 +343,7 @@ public class GamePieceControllerTest {
     callProcessState();
 
     // Verify initial state
+    LOGGER.debug("Verify initial state with turret turned 90 and wrist up at cargo ship.");
     assertTrue(intake.arm() == CargoIntakeArm.DOWN);
     assertTrue(intake.roller() == CargoIntakeRoller.STOP);
     assertTrue(cargo.wrist() == CargoMechWristState.CARGO_SHIP);
@@ -353,23 +356,7 @@ public class GamePieceControllerTest {
     LOGGER.debug("Press the activate DEFENSE mode button");
     defenseMode = true;
 
-    // Iteration 1: move wrist to safe turret height
-    CargoMech.simulatedSensorData(
-        CargoMechWrist.heightTicksFromProportion(RobotMap.CARGO_MECH_SAFE_TURRET_PROPORTION));
-    callProcessState();
-    assertTrue(intake.arm() == CargoIntakeArm.DOWN);
-    assertTrue(intake.roller() == CargoIntakeRoller.STOP);
-    assertTrue(cargo.isSafeToMoveTurret());
-    assertTrue(cargo.claw() == CargoMechClaw.STOP);
-    assertTrue(hatch.arm() == HatchArm.IN);
-    assertTrue(hatch.launcher() == HatchLauncher.RESET);
-    assertEquals(90.0, turret.position(), 1.0);
-
-    // Release pilot/specialist input
-    LOGGER.debug("Relase the DEFENSE mode button.");
-    defenseMode = false; // Conversion should continue   
-    
-    // Iteration 2: move the turret home
+    LOGGER.debug("Iteration 1: Wrist is safe, move the turret home.");
     turret.simulatedSensorData(0.0); 
     callProcessState();
     assertTrue(intake.arm() == CargoIntakeArm.DOWN);
@@ -380,7 +367,11 @@ public class GamePieceControllerTest {
     assertTrue(hatch.launcher() == HatchLauncher.RESET);
     assertEquals(0.0, turret.position(), 1.0);
 
-    // Iteration 3: move the wrist down into the bin
+    // Release pilot/specialist input
+    LOGGER.debug("Release the DEFENSE mode button.");
+    defenseMode = false; // Conversion should continue   
+    
+    LOGGER.debug("Iteration 2: Moving wrist down into to bin.");
     CargoMech.simulatedSensorData(
         CargoMechWrist.heightTicksFromProportion(RobotMap.CARGO_MECH_CARGO_BIN_PROPORTION));
     callProcessState();
@@ -392,7 +383,7 @@ public class GamePieceControllerTest {
     assertTrue(hatch.launcher() == HatchLauncher.RESET);
     assertEquals(0.0, turret.position(), 1.0);
 
-    // Iteration 3: move intake arm up
+    LOGGER.debug("Iteration 3: Moving intake arm up.");
     callProcessState();
     assertTrue(intake.arm() == CargoIntakeArm.UP);
     assertTrue(intake.roller() == CargoIntakeRoller.STOP);
@@ -402,7 +393,7 @@ public class GamePieceControllerTest {
     assertTrue(hatch.launcher() == HatchLauncher.RESET);
     assertEquals(0.0, turret.position(), 1.0);
 
-    // Final verify in DEFENSE state
+    LOGGER.debug("Final verify in DEFENSE state");
     callProcessState();
     assertTrue(intake.arm() == CargoIntakeArm.UP);
     assertTrue(intake.roller() == CargoIntakeRoller.STOP);
