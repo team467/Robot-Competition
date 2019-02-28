@@ -18,6 +18,7 @@ import frc.robot.logging.RobotLogManager;
 import frc.robot.logging.TelemetryBuilder;
 import frc.robot.sensors.LedI2C;
 import frc.robot.sensors.PowerDistributionPanel;
+import frc.robot.tuning.TuneController;
 import frc.robot.usercontrol.DriverStation467;
 import frc.robot.vision.CameraSwitcher;
 
@@ -46,9 +47,6 @@ public class Robot extends TimedRobot {
   private CameraSwitcher camera;
   private GamePieceController gamePieceController;
   private LedI2C leds;
-
-  private int tuneSlot = 0;
-  private double tuningValue = 0.0;
 
   public static long time = System.nanoTime();
   public static long previousTime = time;
@@ -113,6 +111,8 @@ public class Robot extends TimedRobot {
     camera = CameraSwitcher.getInstance();
     gamePieceController = GamePieceController.getInstance();
     leds = LedI2C.getInstance();
+
+    TuneController.loadTuners();
     drive.setPidsFromRobotMap();
     PowerDistributionPanel.registerPowerDistributionWithTelemetry();
 
@@ -214,23 +214,8 @@ public class Robot extends TimedRobot {
 
   @Override
   public void testInit() {
-    // mode = RobotMode.TEST;
-    // LOGGER.info("Init Test");
-    // tuneSlot = Integer.parseInt(SmartDashboard.getString("DB/String 5", "0"));
-    // switch (tuneSlot) {
-    //   case 0:
-    //   case 1:
-    //     LOGGER.info("Tuning PID Slot {}", tuneSlot);
-    //     drive.readPidsFromSmartDashboard(tuneSlot);
-    //     tuningValue = Double.parseDouble(SmartDashboard.getString("DB/String 0", "0.0"));
-    //     LOGGER.info("Tuning Value: " + tuningValue);
-    //     break;
-    //   case 2:
-    //     break;
-    //   default:
-    //     LOGGER.info("Invalid Tune Mode: {}", tuneSlot);
-    // }
-    drive.zero();
+    mode = RobotMode.TEST;
+    TuneController.init();
   }
 
 
@@ -240,21 +225,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void testPeriodic() {
-    switch (tuneSlot) {
-      case 0: // Drive PID SLot
-        drive.tuneForward(tuningValue, RobotMap.PID_SLOT_DRIVE);
-        LOGGER.debug("Distance {} feet", drive.getLeftDistance());
-        break;
-      case 1: // Turn PID Slot
-        drive.tuneTurn(tuningValue, RobotMap.PID_SLOT_TURN);
-        LOGGER.debug("Turn {} degrees", Math.toDegrees(drive.getLeftDistance()));
-        break;
-      case 2:
-        drive.arcadeDrive(1, 0, true);
-        break;
-      default:
-        LOGGER.info("Invalid Tune Mode: {}", tuneSlot);
-    }
+    TuneController.periodic();
   }
 
   @Override

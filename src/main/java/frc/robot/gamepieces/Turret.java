@@ -86,6 +86,14 @@ public class Turret extends GamePieceBase implements GamePiece {
     initSendable(TelemetryBuilder.getInstance());
   }
 
+  public void configPid(double kP, double kI, double kD) {
+    if (talon != null) {
+      talon.config_kP(TALON_PID_SLOT_ID, kP, RobotMap.TALON_TIMEOUT);
+      talon.config_kI(TALON_PID_SLOT_ID, kI, RobotMap.TALON_TIMEOUT);
+      talon.config_kD(TALON_PID_SLOT_ID, kD, RobotMap.TALON_TIMEOUT);
+    }
+  }
+
   /**
    * Manually overides the automated turret position. Used by navigator for fine
    * tuning.
