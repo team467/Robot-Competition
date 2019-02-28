@@ -11,6 +11,7 @@ public class TuneController {
     register("Drive Straight", new DriveStraightTuner());
     register("Drive Turn", new DriveTurnTuner());
     register("Turret", new TurretTuner());
+    register("Wrist", new WristTuner());
   }
 
   private static final Logger LOGGER
