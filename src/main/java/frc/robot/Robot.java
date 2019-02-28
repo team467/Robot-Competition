@@ -239,22 +239,13 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledPeriodic() {
     LOGGER.trace("Disabled Periodic");
-
-    driverstation.readInputs();
     leds.whenDisabled();
     
-    if (driverstation.getNavJoystick().getJoystick().getPOV() == 0) {
-      camera.forward();
-    } else if (driverstation.getNavJoystick().getJoystick().getPOV() == 90) {
-      camera.cargo();
-    } else if (driverstation.getNavJoystick().getJoystick().getPOV() == 180) {
-      camera.backward();
-    } else if (driverstation.getNavJoystick().getJoystick().getPOV() == 270) {
-      camera.hatch();
-    }
-
+    driverstation.readInputs();
     if (driverstation.restartCamera()) {
       camera.restart();
+    } else {
+      camera.fourWaySwitch(driverstation.getNavJoystick().getJoystick().getPOV());
     }
 
   }

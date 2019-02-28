@@ -14,6 +14,7 @@ public class CameraSwitcher {
 
   private NetworkTableEntry cameraNetworkTableEntry;
   private NetworkTableEntry resetNetworkTableEntry;
+  private NetworkTableEntry totalNetworkTableEntry;
 
   private static final Logger LOGGER 
       = RobotLogManager.getMainLogger(CameraSwitcher.class.getName());
@@ -23,7 +24,7 @@ public class CameraSwitcher {
   }
 
   private cameraState currentState;
-  private cameraState prevState;
+  private cameraState prevState; // Used if we decide to change to temporary camera override.
   private boolean locked;
 
   /**
@@ -43,6 +44,7 @@ public class CameraSwitcher {
     NetworkTable table = NetworkTableInstance.getDefault().getTable("camera");
     cameraNetworkTableEntry = table.getEntry("camera");
     resetNetworkTableEntry = table.getEntry("reset");
+    totalNetworkTableEntry = table.getEntry("total");
     locked = false;
     currentState = cameraState.FORWARDS;
     forward();
@@ -81,6 +83,10 @@ public class CameraSwitcher {
     resetNetworkTableEntry.setBoolean(true);
   }
 
+  public boolean isLocked() {
+    return locked;
+  }
+
   public void lock() {
     LOGGER.debug("Locking Camera");
     locked = true;
@@ -99,5 +105,21 @@ public class CameraSwitcher {
         backward();
       }
     }
+  }
+
+  public void fourWaySwitch(int direction) {
+    if (direction == 0) {
+      forward();
+    } else if (direction == 90) {
+      cargo();
+    } else if (direction == 180) {
+      backward();
+    } else if (direction == 270) {
+      hatch();
+    }
+  }
+
+  public int totalCameras() {
+    return (int) totalNetworkTableEntry.getNumber(4);
   }
 }

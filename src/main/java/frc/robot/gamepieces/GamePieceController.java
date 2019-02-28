@@ -495,14 +495,18 @@ public class GamePieceController implements Sendable {
     } else if (hatchMode) {
       LOGGER.info("Changing game mode to HATCH");
       mode = GamePieceMode.HATCH;
-      camera.hatch();
-      camera.lock();
+      if (camera.totalCameras() >= 4) {
+        camera.hatch();
+        camera.lock();
+      }
       led.hatchMode();
     } else if (cargoMode) {
       LOGGER.info("Changing game mode to CARGO");
       mode = GamePieceMode.CARGO;
-      camera.cargo();
-      camera.lock();
+      if (camera.totalCameras() >= 4) {
+        camera.cargo();
+        camera.lock();
+      }
       led.cargoMode();
     }
 
