@@ -87,12 +87,31 @@ public class CargoMech extends GamePieceBase implements GamePiece {
       }
     }
 
+    public static void configPid(double kP, double kI, double kD) {
+      talon.config_kP(TALON_PID_SLOT_ID, kP, RobotMap.TALON_TIMEOUT);
+      talon.config_kI(TALON_PID_SLOT_ID, kI, RobotMap.TALON_TIMEOUT);
+      talon.config_kD(TALON_PID_SLOT_ID, kD, RobotMap.TALON_TIMEOUT);
+    }
+
     public static int cargoMechWristTickValueIn() {
       return talon.getSensorCollection().getAnalogIn();
     }
 
     public static int cargoMechWristTickValueInRaw() {
       return talon.getSensorCollection().getAnalogInRaw();
+    }
+
+    public static void tuneMove(double heightProportion) {
+      if (heightProportion > 1.0 || heightProportion < 0.0) {
+        LOGGER.warn("Tune move needs a number between 0.0 to 1.0");
+        return;
+      }
+
+      talon.set(ControlMode.Position, heightTicksFromProportion(heightProportion));
+
+      LOGGER.debug(" Height proportion: {}, Height set on wrist: {}, Sensor: {}, Error: {}",
+          heightProportion, heightTicksFromProportion(heightProportion), 
+          talon.getSensorCollection().getAnalogIn(), talon.getClosedLoopError(0));
     }
 
     /**
@@ -345,6 +364,13 @@ public class CargoMech extends GamePieceBase implements GamePiece {
     CargoMechWrist.manual(speed);
   }
 
+  public void configWristPid(double kP, double kI, double kD) {
+     CargoMechWrist.configPid(kP, kI, kD);
+  }
+
+  public void tuneMove(double heightProportion) {
+    CargoMechWrist.tuneMove(heightProportion);
+  }
   /**
    * Tries to handle commands and update state.
    */
