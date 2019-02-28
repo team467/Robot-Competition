@@ -23,12 +23,12 @@ public class TuneController {
 
   private static void register(String name, Tuner tuner) {
     if (name != null && tuner != null) {
-      tuners.put(name, tuner);
+      tuners.put(name.toUpperCase(), tuner);
     }
   }
 
   public static void init() {
-    String key = SmartDashboard.getString("DB/String 0", "NO_TEST");
+    String key = SmartDashboard.getString("DB/String 0", "NO_TEST").toUpperCase();
     if (tuners.containsKey(key)) {
       tuner = tuners.get(key);
       tuner.init();
