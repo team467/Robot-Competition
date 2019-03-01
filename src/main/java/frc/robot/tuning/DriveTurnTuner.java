@@ -27,7 +27,7 @@ public class DriveTurnTuner implements Tuner {
 
   public void periodic() {
     double tuningValue = Double.parseDouble(SmartDashboard.getString("DB/String 0", "0.0"));
-    LOGGER.info("Tuning Value: " + tuningValue);
+    LOGGER.info("Tuning Value: {}", tuningValue);
     drive.zero();
     drive.tuneTurn(tuningValue, RobotMap.PID_SLOT_TURN);
     LOGGER.debug("Distance {} feet", drive.getLeftDistance());

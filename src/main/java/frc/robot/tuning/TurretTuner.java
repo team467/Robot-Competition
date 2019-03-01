@@ -28,7 +28,7 @@ public class TurretTuner implements Tuner {
 
   public void periodic() {
     double tuningValue = Double.parseDouble(SmartDashboard.getString("DB/String 5", "0.0"));
-    LOGGER.info("Tuning Value: " + tuningValue);
+    LOGGER.info("Tuning Value: {}", tuningValue);
     turret.target(tuningValue);
     LOGGER.debug("Turret position at {} degrees", turret.position());
   }

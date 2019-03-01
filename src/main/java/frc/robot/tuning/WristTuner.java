@@ -28,7 +28,7 @@ public class WristTuner implements Tuner {
 
   public void periodic() {
     double tuningValue = Double.parseDouble(SmartDashboard.getString("DB/String 5", "0.0"));
-    LOGGER.info("Tuning Value: " + tuningValue);
+    LOGGER.info("Tuning Value: {}", tuningValue);
     cargoMech.tuneMove(tuningValue);
     LOGGER.debug("Wrist state: {}", cargoMech.wrist().toString());
   }
