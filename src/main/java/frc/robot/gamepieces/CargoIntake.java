@@ -52,14 +52,20 @@ public class CargoIntake extends GamePieceBase implements GamePiece {
       if (RobotMap.HAS_ROLLER_INTAKE) {
           switch (this) {
           case DOWN:
-            leftSolenoid.set(DoubleSolenoid.Value.kForward);
-            rightSolenoid.set(DoubleSolenoid.Value.kForward);
-            break;
-          case UP:
-            leftSolenoid.set(DoubleSolenoid.Value.kReverse);
+            // leftSolenoid.set(DoubleSolenoid.Value.kForward);
+            // rightSolenoid.set(DoubleSolenoid.Value.kForward);
+             leftSolenoid.set(DoubleSolenoid.Value.kReverse);
             rightSolenoid.set(DoubleSolenoid.Value.kReverse);
             break;
+          case UP:
+            leftSolenoid.set(DoubleSolenoid.Value.kForward);
+            rightSolenoid.set(DoubleSolenoid.Value.kForward);
+            // leftSolenoid.set(DoubleSolenoid.Value.kReverse);
+            // rightSolenoid.set(DoubleSolenoid.Value.kReverse);
+            break;
           default:
+          // leftSolenoid.set(DoubleSolenoid.Value.kReverse);
+          // rightSolenoid.set(DoubleSolenoid.Value.kReverse);
             leftSolenoid.set(DoubleSolenoid.Value.kOff);
             rightSolenoid.set(DoubleSolenoid.Value.kOff);
         }
