@@ -137,7 +137,7 @@ public class GamePieceControllerTest {
     CargoMech.simulatedSensorData(
         CargoMechWrist.heightTicksFromProportion(RobotMap.CARGO_MECH_CARGO_BIN_PROPORTION));
     turret.simulatedSensorData(RobotMap.TURRET_HOME);
-    intake.arm(CargoIntakeArm.UP); 
+    //intake.arm(CargoIntakeArm.UP); 
     intake.roller(CargoIntakeRoller.STOP);
     cargo.wrist(CargoMechWrist.CARGO_BIN);
     cargo.claw(CargoMechClaw.STOP);
@@ -204,7 +204,7 @@ public class GamePieceControllerTest {
 
     LOGGER.debug("Iteration 2: Arm is down, turn rollers on.");
     callProcessState();
-    assertTrue(intake.arm() == CargoIntakeArm.DOWN);
+    //assertTrue(intake.arm() == CargoIntakeArm.DOWN);
     assertTrue(intake.roller() == CargoIntakeRoller.INTAKE);
     assertTrue(cargo.wrist() == CargoMechWristState.CARGO_BIN);
     assertTrue(cargo.claw() == CargoMechClaw.INTAKE);
@@ -219,7 +219,7 @@ public class GamePieceControllerTest {
     // Iteration 2, Verify rollers stopped
     LOGGER.debug("Final: verify rollers stopped.");
     callProcessState();
-    assertTrue(intake.arm() == CargoIntakeArm.DOWN);
+    //assertTrue(intake.arm() == CargoIntakeArm.DOWN);
     assertTrue(intake.roller() == CargoIntakeRoller.STOP);
     assertTrue(cargo.wrist() == CargoMechWristState.CARGO_BIN);
     assertTrue(cargo.claw() == CargoMechClaw.STOP);
@@ -254,7 +254,7 @@ public class GamePieceControllerTest {
 
     LOGGER.debug("Iteration 1: Move intake arm down.");
     callProcessState();
-    assertTrue(intake.arm() == CargoIntakeArm.DOWN);
+    //assertTrue(intake.arm() == CargoIntakeArm.DOWN);
     assertTrue(intake.roller() == CargoIntakeRoller.STOP);
     assertTrue(cargo.wrist() == CargoMechWristState.CARGO_BIN);
     assertTrue(cargo.claw() == CargoMechClaw.STOP);

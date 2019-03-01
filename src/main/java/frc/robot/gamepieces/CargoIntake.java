@@ -51,12 +51,12 @@ public class CargoIntake extends GamePieceBase implements GamePiece {
       LOGGER.debug("Actuate cargo intake arm: {}", this);
       if (RobotMap.HAS_ROLLER_INTAKE) {
           switch (this) {
-          case DOWN:
-            // leftSolenoid.set(DoubleSolenoid.Value.kForward);
-            // rightSolenoid.set(DoubleSolenoid.Value.kForward);
+         case DOWN:
+          //   // leftSolenoid.set(DoubleSolenoid.Value.kForward);
+          //   // rightSolenoid.set(DoubleSolenoid.Value.kForward);
              leftSolenoid.set(DoubleSolenoid.Value.kReverse);
             rightSolenoid.set(DoubleSolenoid.Value.kReverse);
-            break;
+         break;
           case UP:
             leftSolenoid.set(DoubleSolenoid.Value.kForward);
             rightSolenoid.set(DoubleSolenoid.Value.kForward);
@@ -145,7 +145,7 @@ public class CargoIntake extends GamePieceBase implements GamePiece {
 
   /**
    * Moves the roller arm up or down.
-   * 
+   * s
    * @param command which way to move the arm.
    */
   public void arm(CargoIntakeArm command) {
@@ -153,7 +153,7 @@ public class CargoIntake extends GamePieceBase implements GamePiece {
       LOGGER.debug("Forcing intake to remain up!");
       arm = CargoIntakeArm.UP;
       } else {
-      LOGGER.debug("Setting intake arm position to {}.", command);
+      LOGGER.error("Setting intake arm position to {}.", command);
       arm = command;
       }
   }
@@ -165,7 +165,7 @@ public class CargoIntake extends GamePieceBase implements GamePiece {
    * @param command which way to move the arm.
    */
   private void arm(String command) {
-    LOGGER.debug("Setting intake arm position to {} using string interface.", command);
+    LOGGER.error("Setting intake arm position to {} using string interface.", command);
     arm(CargoIntakeArm.valueOf(command));
   }
 

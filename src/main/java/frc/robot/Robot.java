@@ -137,13 +137,15 @@ public class Robot extends TimedRobot {
   public void autonomousInit() {
     mode = RobotMode.AUTONOMOUS;
     LOGGER.info("No Autonomous");
+    gamePieceController.runOnTeleopInit();
   }
-
+  
   /**
    * This function is called periodically during autonomous.
    */
   @Override
   public void autonomousPeriodic() {
+    teleopPeriodic();
   }
 
   @Override
@@ -151,7 +153,6 @@ public class Robot extends TimedRobot {
     mode = RobotMode.TELEOP;
     LOGGER.info("Init Teleop");
     LOGGER.debug("Match time {}", DriverStation.getInstance().getMatchTime());
-    gamePieceController.runOnTeleopInit();
   }
 
   /**

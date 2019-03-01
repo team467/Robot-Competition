@@ -28,7 +28,7 @@ public class IntakeTuner implements Tuner {
     LOGGER.info("Tuning Value: {}", tuningValue);
     try {
       CargoIntakeArm command = CargoIntakeArm.valueOf(tuningValue.toUpperCase());
-      intake.arm(command);
+      //intake.arm(command);
       LOGGER.debug("Intake state: {}", intake.arm().toString());
     } catch (IllegalArgumentException e) {
       LOGGER.error("Need to enter one of UP, DOWN or OFF int DB/String 5.");

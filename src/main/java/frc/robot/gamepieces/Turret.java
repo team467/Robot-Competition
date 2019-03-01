@@ -115,6 +115,10 @@ public class Turret extends GamePieceBase implements GamePiece {
     }
   }
 
+  public boolean isOveride() {
+    return onManualControl;
+  }
+
   private void followVision() {
     LOGGER.debug("Following vision.");
     if (RobotMap.HAS_TURRET) {
@@ -208,12 +212,12 @@ public class Turret extends GamePieceBase implements GamePiece {
       return true;
     }
     LOGGER.debug("Turret is NOT home at distance {}", distanceToHome);
-    return false;
+    return true;
   }
 
   public void moveTurretToHome() {
-    LOGGER.debug("Moving turret to home.");
-    instance.target(RobotMap.TURRET_HOME);
+    LOGGER.error("Moving turret to home.");
+    //instance.target(RobotMap.TURRET_HOME);
   }
 
   @Override

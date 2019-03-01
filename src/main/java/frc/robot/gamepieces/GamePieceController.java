@@ -242,7 +242,7 @@ public class GamePieceController implements Sendable {
     LOGGER.debug("Safe to move wrist? {}", isSafe);
     if (!isSafe) {
       LOGGER.debug("Moving cargo intake arm down so wrist can move.");
-      cargoIntake.arm(CargoIntakeArm.DOWN);
+      //cargoIntake.arm(CargoIntakeArm.DOWN);
     }
     return isSafe;
   }
@@ -339,7 +339,7 @@ public class GamePieceController implements Sendable {
             }
           } 
         } else {
-          cargoIntake.arm(CargoIntakeArm.DOWN);
+         cargoIntake.arm(CargoIntakeArm.DOWN);
         }
       }
     } else if (moveCargoWristToCargoShipPosition) {
@@ -413,7 +413,7 @@ public class GamePieceController implements Sendable {
         LOGGER.warn("turret is safe to move, manualTurret move: {}", manualTurretMove);
         turret.manual(manualTurretMove);
       }
-    } else {
+    } else if (turret.isOveride()) {
       turret.manual(0);
     }
 
@@ -438,6 +438,8 @@ public class GamePieceController implements Sendable {
       boolean moveTurretToHome,
       boolean enableAutoTargeting,
       double  manualTurretMove) {
+      
+    disableSafety = true;
 
     if (acquireHatch) {
       LOGGER.debug("HATCH: Moving the hatch arm out.");
@@ -526,11 +528,13 @@ public class GamePieceController implements Sendable {
 
     if (defenseMode) { // gets action from driver input
       LOGGER.info("Changing game mode to DEFENSE");
+      cargoIntake.arm(CargoIntakeArm.UP);
       mode = GamePieceMode.DEFENSE;
       camera.unlock();
       led.defensiveMode();
     } else if (hatchMode) {
       LOGGER.info("Changing game mode to HATCH");
+      cargoIntake.arm(CargoIntakeArm.UP);
       mode = GamePieceMode.HATCH;
       if (camera.totalCameras() >= 4) {
         camera.hatch();
@@ -539,6 +543,7 @@ public class GamePieceController implements Sendable {
       led.hatchMode();
     } else if (cargoMode) {
       LOGGER.info("Changing game mode to CARGO");
+      cargoIntake.arm(CargoIntakeArm.DOWN);
       mode = GamePieceMode.CARGO;
       if (camera.totalCameras() >= 4) {
         camera.cargo();

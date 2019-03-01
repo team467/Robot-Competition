@@ -41,7 +41,7 @@ public class CargoIntakeTest {
   @Test
   public void testCargoIntakeArmUp() {
     LOGGER.trace("TEST|GAMEPIECES", "Testing cargo intake arm up");
-    cargoIntake.arm(CargoIntakeArm.UP);
+    //cargoIntake.arm(CargoIntakeArm.UP);
     boolean rollerState = false;
     for (int i = 0; i < TEST_PERIODIC_ITERATIONS; i++) {
       cargoIntake.periodic();
