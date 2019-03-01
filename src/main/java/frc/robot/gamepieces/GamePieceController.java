@@ -128,9 +128,12 @@ public class GamePieceController implements Sendable {
     processGamePieceState(
         driverStation.getDriveCameraFront(),
         driverStation.getDriveCameraBack(),
+        driverStation.getDisableSafety(),
         driverStation.getDefenseMode(),
         driverStation.getHatchMode(),
         driverStation.getCargoMode(),
+        driverStation.getIntakeUp(),
+        driverStation.getIntakeDown(),
         driverStation.getAcquireBall(),
         driverStation.getFireCall(),
         driverStation.getCargoWristCargoShipPosition(),
@@ -152,9 +155,12 @@ public class GamePieceController implements Sendable {
   void processGamePieceState(
       boolean driveCameraFront,
       boolean driveCameraRear,
+      boolean disableSafety,
       boolean defenseMode,
       boolean hatchMode,
       boolean cargoMode,
+      boolean intakeUp,
+      boolean intakeDown,
       boolean acquireCargo,
       boolean fireCargo,
       boolean moveCargoWristToCargoShipPosition,
@@ -185,12 +191,15 @@ public class GamePieceController implements Sendable {
     switch (mode) {
 
       case DEFENSE:
-        activateDefenseMode();
+        activateDefenseMode(disableSafety);
         break;
 
       case CARGO:
         cargoMode(
+            disableSafety,
             acquireCargo,
+            intakeUp,
+            intakeDown,
             fireCargo,
             moveCargoWristToCargoShipPosition,
             moveCargoWristToLowRocketPosition,
@@ -206,6 +215,7 @@ public class GamePieceController implements Sendable {
 
       case HATCH:
         hatchMode(
+            disableSafety,
             acquireHatch,
             fireHatch,
             rejectCargo,
@@ -224,7 +234,10 @@ public class GamePieceController implements Sendable {
     updateGamePieces();
   }
 
-  private boolean ensureSafeToMoveWrist() {
+  private boolean ensureSafeToMoveWrist(boolean disableSafety) {
+    if (disableSafety) {
+      return true;
+    }
     boolean isSafe = (cargoIntake.arm() == CargoIntakeArm.DOWN) ? true : false;
     LOGGER.debug("Safe to move wrist? {}", isSafe);
     if (!isSafe) {
@@ -234,12 +247,15 @@ public class GamePieceController implements Sendable {
     return isSafe;
   }
 
-  private boolean ensureTurretSafeToMove() {
+  private boolean ensureTurretSafeToMove(boolean disableSafety) {
+    if (disableSafety) {
+      return true;
+    }
     boolean isSafe = (cargoMech.isSafeToMoveTurret() 
         && cargoIntake.arm() == CargoIntakeArm.DOWN) ? true : false;
     LOGGER.debug("Safe to move turret? {}", isSafe);
     if (!isSafe) {
-      if (ensureSafeToMoveWrist()) {
+      if (ensureSafeToMoveWrist(disableSafety)) {
         LOGGER.debug("Moving wrist to safe position.");
         cargoMech.wrist(CargoMechWrist.SAFE_TURRET);
       }
@@ -249,11 +265,11 @@ public class GamePieceController implements Sendable {
     return isSafe;
   }
 
-  private boolean moveTurretHome() {
+  private boolean moveTurretHome(boolean disableSafety) {
     boolean isHome = turret.isHome();
     if (!isHome) {
       LOGGER.debug("Moving turret home.");
-      if (ensureTurretSafeToMove()) {
+      if (ensureTurretSafeToMove(disableSafety)) {
         turret.moveTurretToHome();
       }
     } else {
@@ -262,14 +278,14 @@ public class GamePieceController implements Sendable {
     return isHome;
   }
 
-  void activateDefenseMode() {
-    if (moveTurretHome()) {
+  void activateDefenseMode(boolean disableSafety) {
+    if (moveTurretHome(disableSafety)) {
       if (hatchMech.arm() == HatchArm.OUT) {
         LOGGER.debug("DEFENSE: Move hatch in.");
         hatchMech.arm(HatchArm.IN);
       }
       if (cargoMech.wrist() != CargoMechWristState.CARGO_BIN) {
-        if (ensureSafeToMoveWrist()) {
+        if (ensureSafeToMoveWrist(disableSafety)) {
           LOGGER.debug("DEFENSE: Move cargo wrist to bin.");
           cargoMech.wrist(CargoMechWrist.CARGO_BIN);
         }
@@ -281,7 +297,10 @@ public class GamePieceController implements Sendable {
   }
 
   void cargoMode(
+      boolean disableSafety,
       boolean acquireCargo,
+      boolean intakeUp,
+      boolean intakeDown,
       boolean fireCargo,
       boolean moveCargoWristToCargoShipPosition,
       boolean moveCargoWristToLowRocketPosition,
@@ -295,38 +314,47 @@ public class GamePieceController implements Sendable {
       double  manualTurretMove) {
 
     if (acquireCargo) {
-      LOGGER.debug("CARGO: Trying to acquire cargo");
-      if (cargoIntake.arm() == CargoIntakeArm.DOWN) {
-        LOGGER.debug("CARGO: Cargo intake arm is down");
-        if (moveTurretHome()) { // Overrides move turret right or left
-          if (cargoMech.wrist() != CargoMechWristState.CARGO_BIN) {
-            if (ensureSafeToMoveWrist()) {
-              LOGGER.debug("CARGO: Moving wrist to bin");
-              cargoMech.wrist(CargoMechWrist.CARGO_BIN);
-            }
-          } else {
-            LOGGER.debug("CARGO: Putting rollers in reverse");
-            cargoMech.claw(CargoMechClaw.INTAKE);
-            intakeCargo = true; // Set to true so that it isn't stopped
-            cargoIntake.roller(CargoIntakeRoller.INTAKE); // Suck ball into cargo intake mech
-          }
-        } 
-      } else {
+      if (disableSafety) {
+        moveTurretHome(disableSafety);
         cargoIntake.arm(CargoIntakeArm.DOWN);
+        cargoIntake.roller(CargoIntakeRoller.INTAKE); // Suck ball into cargo intake mech
+        cargoMech.wrist(CargoMechWrist.CARGO_BIN);
+        cargoMech.claw(CargoMechClaw.INTAKE);
+        intakeCargo = true; // Set to true so that it isn't stopped
+      } else {
+        LOGGER.debug("CARGO: Trying to acquire cargo");
+        if (cargoIntake.arm() == CargoIntakeArm.DOWN) {
+          LOGGER.debug("CARGO: Cargo intake arm is down");
+          if (moveTurretHome(disableSafety)) { // Overrides move turret right or left
+            if (cargoMech.wrist() != CargoMechWristState.CARGO_BIN) {
+              if (ensureSafeToMoveWrist(disableSafety)) {
+                LOGGER.debug("CARGO: Moving wrist to bin");
+                cargoMech.wrist(CargoMechWrist.CARGO_BIN);
+              }
+            } else {
+              LOGGER.debug("CARGO: Putting rollers in reverse");
+              cargoMech.claw(CargoMechClaw.INTAKE);
+              intakeCargo = true; // Set to true so that it isn't stopped
+              cargoIntake.roller(CargoIntakeRoller.INTAKE); // Suck ball into cargo intake mech
+            }
+          } 
+        } else {
+          cargoIntake.arm(CargoIntakeArm.DOWN);
+        }
       }
     } else if (moveCargoWristToCargoShipPosition) {
       LOGGER.debug("CARGO: Stopping cargo roller and claw");
       cargoMech.claw(CargoMechClaw.STOP);
       cargoIntake.roller(CargoIntakeRoller.STOP);
       LOGGER.debug("CARGO: Move Cargo Mech wrist to the Cargo Ship height.");
-      if (ensureSafeToMoveWrist()) {
+      if (ensureSafeToMoveWrist(disableSafety)) {
         cargoMech.wrist(CargoMechWrist.CARGO_SHIP);
       }
     } else if (moveCargoWristToLowRocketPosition) {
       LOGGER.debug("CARGO: Stopping cargo roller and claw");
       cargoMech.claw(CargoMechClaw.STOP);
       cargoIntake.roller(CargoIntakeRoller.STOP);
-      if (ensureSafeToMoveWrist()) {
+      if (ensureSafeToMoveWrist(disableSafety)) {
         LOGGER.info("CARGO: Move Cargo Mech wrist to the Low Rocket height.");
         cargoMech.wrist(CargoMechWrist.LOW_ROCKET);
       }
@@ -344,11 +372,21 @@ public class GamePieceController implements Sendable {
       cargoIntake.roller(CargoIntakeRoller.INTAKE);
     } // Reject and stop are handled in the eitherHatchOrCargoMode method.
 
+    if (intakeUp) {
+      if (cargoMech.wrist() == CargoMechWristState.CARGO_BIN || disableSafety) {
+        cargoIntake.arm(CargoIntakeArm.UP);
+      }
+    } else if (intakeDown) {
+      if (cargoMech.wrist() == CargoMechWristState.CARGO_BIN || disableSafety) {
+        cargoIntake.arm(CargoIntakeArm.DOWN);
+      }
+    }
+
     /*
      * Manual Override of the wrist check to make sure the roller is dd
      */
     if (manualWristMove != 0.0) {
-      if (ensureSafeToMoveWrist()) {
+      if (ensureSafeToMoveWrist(disableSafety)) {
         LOGGER.debug("CARGO: Setting wrist speed to {} manually.", manualWristMove);
         cargoMech.manualWristMove(manualWristMove);
       }
@@ -358,12 +396,12 @@ public class GamePieceController implements Sendable {
 
     // Turret moves are last as turret safety takes precidence over other wrist moves
     if (moveTurretRight) {
-      if (ensureTurretSafeToMove()) {
+      if (ensureTurretSafeToMove(disableSafety)) {
         LOGGER.debug("CARGO: Moving turret to right of cargo side.");
         turret.target(-90.0);
       }
     } else if (moveTurretLeft) {
-      if (ensureTurretSafeToMove()) {
+      if (ensureTurretSafeToMove(disableSafety)) {
         LOGGER.debug("CARGO: Moving turret to left of cargo side.");
         turret.target(90.0);
       }
@@ -381,6 +419,7 @@ public class GamePieceController implements Sendable {
 
 
     eitherHatchOrCargoMode(
+        disableSafety,
         rejectCargo, 
         intakeCargo, 
         moveTurretToHome, 
@@ -389,6 +428,7 @@ public class GamePieceController implements Sendable {
   }
 
   void hatchMode(
+      boolean disableSafety,
       boolean acquireHatch,
       boolean fireHatch,
       boolean rejectCargo,
@@ -416,12 +456,12 @@ public class GamePieceController implements Sendable {
 
       if (moveTurretRight) {
         LOGGER.debug("HATCH: Moving turret to right of hatch side.");
-        if (ensureTurretSafeToMove()) {
+        if (ensureTurretSafeToMove(disableSafety)) {
           turret.target(90.0);
         }
       } else if (moveTurretLeft) {
         LOGGER.debug("HATCH: Moving turret to left of hatch side.");
-        if (ensureTurretSafeToMove()) {
+        if (ensureTurretSafeToMove(disableSafety)) {
           turret.target(-90.0);
         }
       } 
@@ -437,6 +477,7 @@ public class GamePieceController implements Sendable {
     }
 
     eitherHatchOrCargoMode(
+        disableSafety,
         rejectCargo, 
         intakeCargo, 
         moveTurretToHome, 
@@ -445,6 +486,7 @@ public class GamePieceController implements Sendable {
   }
 
   void eitherHatchOrCargoMode(
+      boolean disableSafety,
       boolean rejectCargo,
       boolean intakeCargo,
       boolean moveTurretToHome,
@@ -452,11 +494,6 @@ public class GamePieceController implements Sendable {
       double  manualTurretMove
   ) {
     visionController.navigatorFeedback();
-
-    // Cargo arm needs to go down in both cargo and hatch modes.
-//    if (cargoIntake.arm() != CargoIntakeArm.DOWN) {
-      cargoIntake.arm(CargoIntakeArm.DOWN);
- //   }
 
     if (rejectCargo && cargoIntake.arm() == CargoIntakeArm.DOWN) {
       //Cargo intake reverses motor to spit cargo.
@@ -469,7 +506,7 @@ public class GamePieceController implements Sendable {
 
     if (moveTurretToHome) {
       LOGGER.debug("HATCH or CARGO: Move turret to home");
-      moveTurretHome();
+      moveTurretHome(disableSafety);
     }
 
     if (enableAutoTargeting) {

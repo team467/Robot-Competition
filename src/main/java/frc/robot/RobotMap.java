@@ -214,6 +214,7 @@ public class RobotMap {
         HATCH_CAMERA_INDEX = 3;
 
         // Cargo Intake
+        FORCE_INTAKE_REMAIN_UP = false;
         ROLLER_PCM_CHANNEL = 0;
         // TODO update up/down channel
         ROLLER_RIGHT_ARM_UP_SOLINOID_CHANNEL = 0;
@@ -221,10 +222,8 @@ public class RobotMap {
         // unused
         ROLLER_LEFT_ARM_UP_SOLINOID_CHANNEL = 2;
         ROLLER_LEFT_ARM_DOWN_SOLINOID_CHANNEL = 3;
-        // TODO use two solenoids
         ROLLER_MOTOR_CHANNEL = 1;
-        ROLLER_MOTOR_INVERTED = false; // TODO
-        // TODO use two sparks
+        ROLLER_MOTOR_INVERTED = false;
 
         // Cargo Mechanism
         CARGO_MECH_WRIST_MOTOR_CHANNEL = 6; // TODO
@@ -352,16 +351,15 @@ public class RobotMap {
 
         // Cargo Intake
         ROLLER_PCM_CHANNEL = 9;
+        FORCE_INTAKE_REMAIN_UP = false;
         // TODO update up/down channel
         ROLLER_RIGHT_ARM_UP_SOLINOID_CHANNEL = 0;
         ROLLER_RIGHT_ARM_DOWN_SOLINOID_CHANNEL = 1;
         // unused
         ROLLER_LEFT_ARM_UP_SOLINOID_CHANNEL = 2;
         ROLLER_LEFT_ARM_DOWN_SOLINOID_CHANNEL = 3;
-        // TODO use two solenoids
         ROLLER_MOTOR_CHANNEL = 1;
-        ROLLER_MOTOR_INVERTED = false; // TODO
-        // TODO use two sparks
+        ROLLER_MOTOR_INVERTED = false;
 
         // Cargo Mechanism
         CARGO_MECH_WRIST_MOTOR_CHANNEL = 6; // TODO
@@ -556,6 +554,7 @@ public class RobotMap {
 
   // Cargo Intake aka Roller
   public static boolean HAS_ROLLER_INTAKE = false;
+  public static boolean FORCE_INTAKE_REMAIN_UP = false;
   public static int ROLLER_RIGHT_ARM_UP_SOLINOID_CHANNEL;
   public static int ROLLER_RIGHT_ARM_DOWN_SOLINOID_CHANNEL;
   public static int ROLLER_LEFT_ARM_UP_SOLINOID_CHANNEL;

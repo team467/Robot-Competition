@@ -116,64 +116,64 @@ public class DriverStation467 extends SendableBase implements Sendable {
   }
 
   public double getManualTurretMove() {
-    double baseMode = (Math.abs(getNavJoystick().getRightStickX()) < 0.2) ? 0 : getNavJoystick().getRightStickX();
+    double baseMode = (Math.abs(navJoy.getRightStickX()) < 0.2) ? 0 : navJoy.getRightStickX();
     double squaredInputs = Math.signum(baseMode) * Math.pow(baseMode, 2);
     return (RobotMap.TURRET_SQR_INP)? squaredInputs : baseMode;
   }
 
   public boolean getAcquireHatch() {
-    // Nav getNavJoystick().getRightTrigger() > 0.9
-    return getNavJoystick().down(Button.BumperRight);
+    // Nav navJoy.getRightTrigger() > 0.9
+    return navJoy.down(Button.BumperRight);
   }
 
   public boolean getCargoWristLowRocketPosition() {
     // Nav
-    return getNavJoystick().pov() == 0;
+    return navJoy.pov() == 0;
   }
 
   public boolean getCargoWristCargoShipPosition() {
     // Nav
-    return getNavJoystick().pov() == 180;
+    return navJoy.pov() == 180;
   }
 
   public boolean getAutoTargetButtonPressed() {
     // Nav
     // TODO: check if implemented
-    return getNavJoystick().pressed(Button.a);
+    return navJoy.pressed(Button.a);
   }
 
   public boolean getTurretRight() {
     // Nav
-    return getNavJoystick().pressed(Button.b);
+    return navJoy.pressed(Button.b);
   }
 
   public boolean getTurretHome() {
     // Nav
-    return getNavJoystick().pressed(Button.y);
+    return navJoy.pressed(Button.y);
   }
 
   public boolean getTurretLeft() {
     // NAV
-    return getNavJoystick().pressed(Button.x);
+    return navJoy.pressed(Button.x);
   }
 
   public boolean getHatchMode() {
-    // NAV getNavJoystick().down(Button.BumperLeft)
-    return getNavJoystick().getLeftTrigger() > 0.9;
+    // NAV navJoy.down(Button.BumperLeft)
+    return navJoy.getLeftTrigger() > 0.9;
   }
 
   public boolean getCargoMode() {
-    return getNavJoystick().getRightTrigger() > 0.9;
+    return navJoy.getRightTrigger() > 0.9;
   }
 
   public double getManualWristMove() {
-    double baseMode = (Math.abs(getNavJoystick().getLeftStickY()) < 0.2) ? 0 : getNavJoystick().getLeftStickY();
+    double baseMode = (Math.abs(navJoy.getLeftStickY()) < 0.2) ? 0 : navJoy.getLeftStickY();
     double squaredInputs = Math.signum(baseMode) * Math.pow(baseMode, 2);
     return (RobotMap.WRIST_SQR_INP)? squaredInputs : baseMode;
   }
 
   public boolean getFireCall() {
-    return getNavJoystick().down(Button.BumperLeft);
+    return navJoy.down(Button.BumperLeft);
   }
 
   public void navSetLeftRumble(double value) {
@@ -187,29 +187,29 @@ public class DriverStation467 extends SendableBase implements Sendable {
   // Driver controls
 
   public double getArcadeSpeed() {
-    return (RobotMap.CONTROLS_INVERTED_FB == true) ? -getDriveJoystick().getAdjustedSpeed(driverJoy.getLeftStickY())
-        : getDriveJoystick().getAdjustedSpeed(driverJoy.getLeftStickY());
+    return (RobotMap.CONTROLS_INVERTED_FB == true) ? -driverJoy.getAdjustedSpeed(driverJoy.getLeftStickY())
+        : driverJoy.getAdjustedSpeed(driverJoy.getLeftStickY());
   }
 
   public double getArcadeTurn() {
-    return (RobotMap.CONTROLS_INVERTED_TURN == true) ? -getDriveJoystick().getAdjustedTurnSpeed()
-        : getDriveJoystick().getAdjustedTurnSpeed();
+    return (RobotMap.CONTROLS_INVERTED_TURN == true) ? -driverJoy.getAdjustedTurnSpeed()
+        : driverJoy.getAdjustedTurnSpeed();
   }
 
   public boolean getDriveCameraBack() {
-    return getDriveJoystick().pov() == 0;
+    return driverJoy.pov() == 0;
   }
 
   public boolean getDriveCameraFront() {
-    return getDriveJoystick().pov() == 180;
+    return driverJoy.pov() == 180;
   }
 
   public boolean getAcquireBall() {
-    return getNavJoystick().down(Button.y);// getDriveJoystick().getRightTrigger() >= 0.9;
+    return navJoy.down(Button.y);
   }
 
   public boolean getDefenseMode() {
-    if (getDriveJoystick().down(Button.start) == true && getDriveJoystick().down(Button.back) == true) {
+    if (driverJoy.down(Button.start) == true && driverJoy.down(Button.back) == true) {
       return true;
     } else {
       return false;
@@ -217,11 +217,11 @@ public class DriverStation467 extends SendableBase implements Sendable {
   }
 
   public boolean getRejectBall() {
-    return getDriveJoystick().down(Button.BumperLeft);
+    return driverJoy.down(Button.BumperLeft);
   }
 
   public boolean getIntakeBall() {
-    return getDriveJoystick().down(Button.BumperRight);
+    return navJoy.down(Button.y);
   }
 
   public void driverSetLeftRumble(double value) {
@@ -233,19 +233,31 @@ public class DriverStation467 extends SendableBase implements Sendable {
   }
 
   public boolean getFireHatch() {
-    return getNavJoystick().down(Button.BumperLeft);
+    return navJoy.down(Button.BumperLeft);
   }
 
   public boolean restartCamera() {
-    return driverJoy.pressed(Button.start);
+    return navJoy.pressed(Button.start);
   }
 
   public boolean getSlow(){
-    return getDriveJoystick().getRightTrigger() > 0.9;
+    return driverJoy.getRightTrigger() > 0.9;
   }
 
   public boolean getTurbo(){
-    return getDriveJoystick().getLeftTrigger() > 0.9;
+    return driverJoy.getLeftTrigger() > 0.9;
+  }
+
+  public boolean getDisableSafety() {
+    return driverJoy.down(Button.BumperRight);
+  }
+
+  public boolean getIntakeUp() {
+    return driverJoy.down(Button.y);
+  }
+
+  public boolean getIntakeDown() {
+    return driverJoy.down(Button.a);
   }
 
   @Override
@@ -254,9 +266,12 @@ public class DriverStation467 extends SendableBase implements Sendable {
       builder.addBooleanProperty("Input Restart Camera", this::restartCamera, null);
       builder.addBooleanProperty("Input Drive Camera Front", this::getDriveCameraFront, null);
       builder.addBooleanProperty("Input Drive Camera Back", this::getDriveCameraBack, null);
+      builder.addBooleanProperty("Input Disable Safety", this::getDisableSafety, null);
       builder.addBooleanProperty("Input Defense Mode", this::getDefenseMode, null);
       builder.addBooleanProperty("Input Hatch Mode", this::getHatchMode, null);
       builder.addBooleanProperty("Input Cargo Mode", this::getCargoMode, null);
+      builder.addBooleanProperty("Input Intake Up", this::getIntakeUp, null);
+      builder.addBooleanProperty("Input Intake Down", this::getIntakeDown, null);
       builder.addBooleanProperty("Input Acquire Ball", this::getAcquireBall, null);
       builder.addBooleanProperty("Input Fire Cargo", this::getFireCall, null);
       builder.addBooleanProperty("Input Wrist - Cargo Ship", 

@@ -149,8 +149,13 @@ public class CargoIntake extends GamePieceBase implements GamePiece {
    * @param command which way to move the arm.
    */
   public void arm(CargoIntakeArm command) {
-    LOGGER.debug("Setting intake arm position to {}.", command);
-    arm = command;
+    if (RobotMap.FORCE_INTAKE_REMAIN_UP) {
+      LOGGER.debug("Forcing intake to remain up!");
+      arm = CargoIntakeArm.UP;
+      } else {
+      LOGGER.debug("Setting intake arm position to {}.", command);
+      arm = command;
+      }
   }
 
   /**
@@ -161,7 +166,7 @@ public class CargoIntake extends GamePieceBase implements GamePiece {
    */
   private void arm(String command) {
     LOGGER.debug("Setting intake arm position to {} using string interface.", command);
-    arm = CargoIntakeArm.valueOf(command);
+    arm(CargoIntakeArm.valueOf(command));
   }
 
   /**
