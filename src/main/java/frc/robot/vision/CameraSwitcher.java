@@ -119,7 +119,7 @@ public class CameraSwitcher {
     }
   }
 
-  public int totalCameras() {
-    return (int) totalNetworkTableEntry.getNumber(4);
+  public double totalCameras() {
+    return 4;
   }
 }

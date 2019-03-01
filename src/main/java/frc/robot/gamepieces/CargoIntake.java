@@ -60,8 +60,8 @@ public class CargoIntake extends GamePieceBase implements GamePiece {
             rightSolenoid.set(DoubleSolenoid.Value.kReverse);
             break;
           default:
-            leftSolenoid.set(DoubleSolenoid.Value.kOff);
-            rightSolenoid.set(DoubleSolenoid.Value.kOff);
+          leftSolenoid.set(DoubleSolenoid.Value.kOff);
+          rightSolenoid.set(DoubleSolenoid.Value.kOff);
         }
       }
     }
