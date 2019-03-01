@@ -27,10 +27,10 @@ Configuration:
         AppenderRef:
           - ref: Console_Appender
       Logger:
-          - name: frc.robot.gamepieces.CargoIntake
-          level: debug
+        - name: frc.robot.gamepieces.CargoIntake
+          level: info
           AppenderRef:
-            - ref: File_Appender
-              level: info
+          - ref: File_Appender
+            level: info
  
      
