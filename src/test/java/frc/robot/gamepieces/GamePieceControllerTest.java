@@ -43,6 +43,9 @@ public class GamePieceControllerTest {
   private boolean driveCameraFront; 
   private boolean driveCameraRear;
 
+  // Disable Safety
+  private boolean disableSafety;
+
   // Mode switches
   private boolean defenseMode;
   private boolean cargoMode;
@@ -105,6 +108,7 @@ public class GamePieceControllerTest {
     // override in individual tests
     driveCameraFront = false; 
     driveCameraRear = false;
+    disableSafety = false;
     defenseMode = false;
     cargoMode = false;
     hatchMode = false;
@@ -407,7 +411,8 @@ public class GamePieceControllerTest {
   private void callProcessState() {
     controller.processGamePieceState(
         driveCameraFront, 
-        driveCameraRear, 
+        driveCameraRear,
+        disableSafety,
         defenseMode, 
         hatchMode, 
         cargoMode,
