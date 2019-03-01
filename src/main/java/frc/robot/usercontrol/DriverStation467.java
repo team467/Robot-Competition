@@ -252,6 +252,14 @@ public class DriverStation467 extends SendableBase implements Sendable {
     return driverJoy.down(Button.BumperRight);
   }
 
+  public boolean getIntakeUp() {
+    return driverJoy.down(Button.y);
+  }
+
+  public boolean getIntakeDown() {
+    return driverJoy.down(Button.a);
+  }
+
   @Override
   public void initSendable(SendableBuilder builder) {
     if (RobotMap.ENABLE_DRIVER_STATION_TELEMETRY && !RobotMap.useSimulator) {
@@ -262,6 +270,8 @@ public class DriverStation467 extends SendableBase implements Sendable {
       builder.addBooleanProperty("Input Defense Mode", this::getDefenseMode, null);
       builder.addBooleanProperty("Input Hatch Mode", this::getHatchMode, null);
       builder.addBooleanProperty("Input Cargo Mode", this::getCargoMode, null);
+      builder.addBooleanProperty("Input Intake Up", this::getIntakeUp, null);
+      builder.addBooleanProperty("Input Intake Down", this::getIntakeDown, null);
       builder.addBooleanProperty("Input Acquire Ball", this::getAcquireBall, null);
       builder.addBooleanProperty("Input Fire Cargo", this::getFireCall, null);
       builder.addBooleanProperty("Input Wrist - Cargo Ship", 

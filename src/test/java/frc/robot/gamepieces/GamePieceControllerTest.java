@@ -50,6 +50,10 @@ public class GamePieceControllerTest {
   private boolean defenseMode;
   private boolean cargoMode;
   private boolean hatchMode;
+
+  // Cargo Intake Arm
+  private boolean intakeUp;
+  private boolean intakeDown;
   
   // Hatch mode inputs
   private boolean acquireHatch;
@@ -112,6 +116,8 @@ public class GamePieceControllerTest {
     defenseMode = false;
     cargoMode = false;
     hatchMode = false;
+    intakeUp = false;
+    intakeDown = false;
     acquireCargo = false;
     fireCargo = false;
     moveCargoWristToCargoShipPosition = false;
@@ -172,7 +178,7 @@ public class GamePieceControllerTest {
 
     LOGGER.debug("Verify initial CARGO mode state.");
     callProcessState();
-    assertTrue(intake.arm() == CargoIntakeArm.DOWN);
+    assertTrue(intake.arm() == CargoIntakeArm.UP);
     assertTrue(intake.roller() == CargoIntakeRoller.STOP);
     assertTrue(cargo.wrist() == CargoMechWristState.CARGO_BIN);
     assertTrue(cargo.claw() == CargoMechClaw.STOP);
@@ -186,10 +192,17 @@ public class GamePieceControllerTest {
     acquireCargo = true;
     LOGGER.debug("Press acquire cargo button.");
 
+    LOGGER.debug("Iteration 1: Move arm down.");
+    callProcessState();
+    assertTrue(intake.arm() == CargoIntakeArm.DOWN);
+    assertTrue(intake.roller() == CargoIntakeRoller.STOP);
+    assertTrue(cargo.wrist() == CargoMechWristState.CARGO_BIN);
+    assertTrue(cargo.claw() == CargoMechClaw.STOP);
+    assertTrue(hatch.arm() == HatchArm.IN);
+    assertTrue(hatch.launcher() == HatchLauncher.RESET);
+    assertEquals(0.0, turret.position(), 1.0);
 
-    // Iteration 1, Arm started down and turret started in position, 
-    // so verify rollers turned on
-    LOGGER.debug("Iteration 1: Arm is down, turn rollers on.");
+    LOGGER.debug("Iteration 2: Arm is down, turn rollers on.");
     callProcessState();
     assertTrue(intake.arm() == CargoIntakeArm.DOWN);
     assertTrue(intake.roller() == CargoIntakeRoller.INTAKE);
@@ -224,7 +237,7 @@ public class GamePieceControllerTest {
 
     LOGGER.debug("Verify initial CARGO mode state.");
     callProcessState();
-    assertTrue(intake.arm() == CargoIntakeArm.DOWN);
+    assertTrue(intake.arm() == CargoIntakeArm.UP);
     assertTrue(intake.roller() == CargoIntakeRoller.STOP);
     assertTrue(cargo.wrist() == CargoMechWristState.CARGO_BIN);
     assertTrue(cargo.claw() == CargoMechClaw.STOP);
@@ -238,6 +251,16 @@ public class GamePieceControllerTest {
     moveTurretRight = true;
     moveCargoWristToLowRocketPosition = true;
     LOGGER.debug("Press both turret right and cargo wrist low rocket buttons.");
+
+    LOGGER.debug("Iteration 1: Move intake arm down.");
+    callProcessState();
+    assertTrue(intake.arm() == CargoIntakeArm.DOWN);
+    assertTrue(intake.roller() == CargoIntakeRoller.STOP);
+    assertTrue(cargo.wrist() == CargoMechWristState.CARGO_BIN);
+    assertTrue(cargo.claw() == CargoMechClaw.STOP);
+    assertTrue(hatch.arm() == HatchArm.IN);
+    assertTrue(hatch.launcher() == HatchLauncher.RESET);
+    assertEquals(0.0, turret.position(), 1.0);
 
     // Iteration 1, Arm started down and turret started at home. 
     // Assumes we have a cargo ball.
@@ -416,6 +439,8 @@ public class GamePieceControllerTest {
         defenseMode, 
         hatchMode, 
         cargoMode,
+        intakeUp,
+        intakeDown,
         acquireCargo, 
         fireCargo, 
         moveCargoWristToCargoShipPosition, 

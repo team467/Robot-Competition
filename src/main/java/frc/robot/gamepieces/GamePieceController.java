@@ -132,6 +132,8 @@ public class GamePieceController implements Sendable {
         driverStation.getDefenseMode(),
         driverStation.getHatchMode(),
         driverStation.getCargoMode(),
+        driverStation.getIntakeUp(),
+        driverStation.getIntakeDown(),
         driverStation.getAcquireBall(),
         driverStation.getFireCall(),
         driverStation.getCargoWristCargoShipPosition(),
@@ -157,6 +159,8 @@ public class GamePieceController implements Sendable {
       boolean defenseMode,
       boolean hatchMode,
       boolean cargoMode,
+      boolean intakeUp,
+      boolean intakeDown,
       boolean acquireCargo,
       boolean fireCargo,
       boolean moveCargoWristToCargoShipPosition,
@@ -194,6 +198,8 @@ public class GamePieceController implements Sendable {
         cargoMode(
             disableSafety,
             acquireCargo,
+            intakeUp,
+            intakeDown,
             fireCargo,
             moveCargoWristToCargoShipPosition,
             moveCargoWristToLowRocketPosition,
@@ -293,6 +299,8 @@ public class GamePieceController implements Sendable {
   void cargoMode(
       boolean disableSafety,
       boolean acquireCargo,
+      boolean intakeUp,
+      boolean intakeDown,
       boolean fireCargo,
       boolean moveCargoWristToCargoShipPosition,
       boolean moveCargoWristToLowRocketPosition,
@@ -363,6 +371,16 @@ public class GamePieceController implements Sendable {
       LOGGER.debug("CARGO: Grabbing ball");
       cargoIntake.roller(CargoIntakeRoller.INTAKE);
     } // Reject and stop are handled in the eitherHatchOrCargoMode method.
+
+    if (intakeUp) {
+      if (cargoMech.wrist() == CargoMechWristState.CARGO_BIN || disableSafety) {
+        cargoIntake.arm(CargoIntakeArm.UP);
+      }
+    } else if (intakeDown) {
+      if (cargoMech.wrist() == CargoMechWristState.CARGO_BIN || disableSafety) {
+        cargoIntake.arm(CargoIntakeArm.DOWN);
+      }
+    }
 
     /*
      * Manual Override of the wrist check to make sure the roller is dd
@@ -476,11 +494,6 @@ public class GamePieceController implements Sendable {
       double  manualTurretMove
   ) {
     visionController.navigatorFeedback();
-
-    // Cargo arm needs to go down in both cargo and hatch modes.
-//    if (cargoIntake.arm() != CargoIntakeArm.DOWN) {
-      cargoIntake.arm(CargoIntakeArm.DOWN);
- //   }
 
     if (rejectCargo && cargoIntake.arm() == CargoIntakeArm.DOWN) {
       //Cargo intake reverses motor to spit cargo.
