@@ -23,14 +23,6 @@ Configuration:
   Loggers:
  
       Root:
-        level: info
+        level: error
         AppenderRef:
           - ref: Console_Appender
-      Logger:
-          - name: frc.robot.gamepieces.CargoIntake
-          level: debug
-          AppenderRef:
-            - ref: File_Appender
-              level: info
- 
-     

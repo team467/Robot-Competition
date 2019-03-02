@@ -208,16 +208,16 @@ public class Turret extends GamePieceBase implements GamePiece {
   public boolean isHome() {
     double distanceToHome = instance.position() - RobotMap.TURRET_HOME;
     if (Math.abs(distanceToHome) <= RobotMap.TURRET_ALLOWABLE_ERROR_TICKS) {
-      LOGGER.debug("Turret is home at distance {}", distanceToHome);
+      LOGGER.error("Turret is home at distance {}", distanceToHome);
       return true;
     }
-    LOGGER.debug("Turret is NOT home at distance {}", distanceToHome);
-    return true;
+    LOGGER.error("Turret is NOT home at distance {}", distanceToHome);
+    return false;
   }
 
   public void moveTurretToHome() {
     LOGGER.error("Moving turret to home.");
-    //instance.target(RobotMap.TURRET_HOME);
+    instance.target(RobotMap.TURRET_HOME);
   }
 
   @Override

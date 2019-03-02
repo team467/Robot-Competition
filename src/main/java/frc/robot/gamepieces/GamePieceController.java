@@ -270,6 +270,7 @@ public class GamePieceController implements Sendable {
     if (!isHome) {
       LOGGER.debug("Moving turret home.");
       if (ensureTurretSafeToMove(disableSafety)) {
+        LOGGER.error("Safe to move, moving");
         turret.moveTurretToHome();
       }
     } else {
@@ -534,7 +535,7 @@ public class GamePieceController implements Sendable {
       led.defensiveMode();
     } else if (hatchMode) {
       LOGGER.info("Changing game mode to HATCH");
-      cargoIntake.arm(CargoIntakeArm.UP);
+      cargoIntake.arm(CargoIntakeArm.DOWN);
       mode = GamePieceMode.HATCH;
       if (camera.totalCameras() >= 4) {
         camera.hatch();
