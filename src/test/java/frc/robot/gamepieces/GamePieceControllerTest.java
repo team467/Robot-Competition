@@ -449,10 +449,17 @@ public class GamePieceControllerTest {
         fireHatch, 
         rejectCargo, 
         intakeCargo, 
+<<<<<<< HEAD
         moveTurretRight, 
         moveTurretLeft, 
         moveTurretToHome, 
         enableTargetLock, 
+=======
+        moveTurretRight,
+        moveTurretLeft,
+        moveTurretToHome,
+        enableTargetLock,
+>>>>>>> f798f3dd64c8e1f21c9157008465603b01f32f0b
         manualWristMove, 
         manualTurretMove);
     telemetry.updateTable();
