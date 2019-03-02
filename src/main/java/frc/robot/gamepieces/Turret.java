@@ -186,7 +186,7 @@ public class Turret extends GamePieceBase implements GamePiece {
             LOGGER.info("trying to move turret to: {}", targetTicks);
           }
           // Update state
-          currentPosition = ((talon.getSelectedSensorPosition(TALON_SENSOR_ID) - RobotMap.TURRET_HOME) / ticksPerDegree);
+          currentPosition = ((talon.getSensorCollection().getAnalogIn() - RobotMap.TURRET_HOME) / ticksPerDegree);
         } else {
           LOGGER.debug("Using simulated position of {}", simulatedPosition);
           currentPosition = simulatedPosition;
@@ -209,10 +209,10 @@ public class Turret extends GamePieceBase implements GamePiece {
   public boolean isHome() {
     double distanceToHome = instance.position();
     if (Math.abs(distanceToHome) <= RobotMap.TURRET_ALLOWABLE_ERROR_TICKS) {
-      LOGGER.error("Turret is home at distance {}", distanceToHome);
+      LOGGER.debug("Turret is home at distance {}", distanceToHome);
       return true;
     }
-    LOGGER.error("Turret is NOT home at distance {}", distanceToHome);
+    LOGGER.debug("Turret is NOT home at distance {}", distanceToHome);
     return false;
   }
 
