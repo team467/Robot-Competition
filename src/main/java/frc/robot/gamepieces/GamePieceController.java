@@ -535,7 +535,7 @@ public class GamePieceController implements Sendable {
       led.defensiveMode();
     } else if (hatchMode) {
       LOGGER.info("Changing game mode to HATCH");
-      cargoIntake.arm(CargoIntakeArm.DOWN);
+      cargoIntake.arm(CargoIntakeArm.UP);
       mode = GamePieceMode.HATCH;
       if (camera.totalCameras() >= 4) {
         camera.hatch();
@@ -544,7 +544,7 @@ public class GamePieceController implements Sendable {
       led.hatchMode();
     } else if (cargoMode) {
       LOGGER.info("Changing game mode to CARGO");
-      cargoIntake.arm(CargoIntakeArm.DOWN);
+      cargoIntake.arm(CargoIntakeArm.UP);
       mode = GamePieceMode.CARGO;
       if (camera.totalCameras() >= 4) {
         camera.cargo();

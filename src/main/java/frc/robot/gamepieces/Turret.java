@@ -1,6 +1,7 @@
 package frc.robot.gamepieces;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 
 import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
 
@@ -57,6 +58,8 @@ public class Turret extends GamePieceBase implements GamePiece {
       talon.setName("Telemetry", "TurretMotor");
       talon.setInverted(RobotMap.TURRET_MOTOR_INVERTED);
       talon.setSensorPhase(RobotMap.TURRET_SENSOR_INVERTED);
+      talon.configSelectedFeedbackSensor(FeedbackDevice.Analog, TALON_PID_SLOT_ID, 
+      RobotMap.TALON_TIMEOUT);
       talon.selectProfileSlot(TALON_PID_SLOT_ID, TALON_SENSOR_ID);
       talon.config_kP(TALON_PID_SLOT_ID, RobotMap.TURRET_P, RobotMap.TALON_TIMEOUT);
       talon.config_kI(TALON_PID_SLOT_ID, RobotMap.TURRET_I, RobotMap.TALON_TIMEOUT);
@@ -168,7 +171,7 @@ public class Turret extends GamePieceBase implements GamePiece {
    * @return the position in degrees
    */
   public double position() {
-    //LOGGER.debug("Current position: {}", currentPosition);
+    LOGGER.debug("Current position: {}", currentPosition);
     return currentPosition;
   }
 
@@ -187,6 +190,8 @@ public class Turret extends GamePieceBase implements GamePiece {
           }
           // Update state
           currentPosition = ((talon.getSensorCollection().getAnalogIn() - RobotMap.TURRET_HOME) / ticksPerDegree);
+          LOGGER.error("Turret analog in: {}, Selected sensor: {}", talon.getSensorCollection().getAnalogIn()
+          , talon.getSelectedSensorPosition(0));
         } else {
           LOGGER.debug("Using simulated position of {}", simulatedPosition);
           currentPosition = simulatedPosition;

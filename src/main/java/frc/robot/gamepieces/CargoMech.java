@@ -1,6 +1,7 @@
 package frc.robot.gamepieces;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 
 import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
@@ -53,6 +54,8 @@ public class CargoMech extends GamePieceBase implements GamePiece {
         talon.setName("Telemetry", "Cargo Wrist Motor");
         talon.setInverted(RobotMap.CARGO_MECH_WRIST_MOTOR_INVERTED);
         talon.setSensorPhase(RobotMap.CARGO_MECH_WRIST_SENSOR_INVERTED);
+        talon.configSelectedFeedbackSensor(FeedbackDevice.Analog, TALON_PID_SLOT_ID, 
+        RobotMap.TALON_TIMEOUT);
         talon.selectProfileSlot(TALON_PID_SLOT_ID, TALON_SENSOR_ID);
         talon.config_kP(TALON_PID_SLOT_ID, RobotMap.CARGO_MECH_WRIST_P, RobotMap.TALON_TIMEOUT);
         talon.config_kI(TALON_PID_SLOT_ID, RobotMap.CARGO_MECH_WRIST_I, RobotMap.TALON_TIMEOUT);
