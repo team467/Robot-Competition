@@ -21,20 +21,8 @@ Configuration:
         pattern: "[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n"
  
   Loggers:
- 
-      Root:
-        level: error
-        AppenderRef:
-<<<<<<< HEAD
-          - ref: Console_Appender
-=======
-          - ref: Console_Appender
-      Logger:
-        - name: frc.robot.gamepieces.CargoIntake
-          level: info
-          AppenderRef:
-          - ref: File_Appender
-            level: info
- 
      
->>>>>>> f798f3dd64c8e1f21c9157008465603b01f32f0b
+    Root:
+      level: error
+      AppenderRef:
+        - ref: Console_Appender

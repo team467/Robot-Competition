@@ -74,24 +74,24 @@ public class TelemetryBuilder extends SendableBuilderImpl implements SendableBui
     // addMetric("/isZeroed");
     // addMetric("/headingAngle");
 
-    try {
-      String csvFileName = "telemetry_" + System.currentTimeMillis() + ".csv";
-      File csvFile = new File(RobotLogManager.getDirectory(), csvFileName);
-      csvPrinter = new CSVPrinter(new FileWriter(csvFile),
-          CSVFormat.DEFAULT.withAllowMissingColumnNames(false).withTrim().withTrailingDelimiter());
-      LOGGER.debug("linked");
-    } catch (IOException e) {
-      LOGGER.debug(e.getStackTrace());
-      e.printStackTrace();
-    }
-    Runtime.getRuntime().addShutdownHook(new Thread() {
+    // try {
+    //   String csvFileName = "telemetry_" + System.currentTimeMillis() + ".csv";
+    //   File csvFile = new File(RobotLogManager.getDirectory(), csvFileName);
+    //   csvPrinter = new CSVPrinter(new FileWriter(csvFile),
+    //       CSVFormat.DEFAULT.withAllowMissingColumnNames(false).withTrim().withTrailingDelimiter());
+    //   LOGGER.debug("linked");
+    // } catch (IOException e) {
+    //   LOGGER.debug(e.getStackTrace());
+    //   e.printStackTrace();
+    // }
+    // Runtime.getRuntime().addShutdownHook(new Thread() {
 
-      @Override
-      public void run() {
-        close();
-      }
+    //   @Override
+    //   public void run() {
+    //     close();
+    //   }
 
-    });
+    // });
     
   }
 
@@ -115,11 +115,11 @@ public class TelemetryBuilder extends SendableBuilderImpl implements SendableBui
    */
   public void updateTable() {
     super.updateTable();
-    if (RobotMap.ENABLE_TELEMETRY && !printedHeaders) {
-      printHeaders();
-      timer = new Timer("Telemetry Timer", true);
-      timer.scheduleAtFixedRate(new PrintTimer(), 0, RobotMap.TELEMETRY_TIMER_MS);
-    }
+    // if (RobotMap.ENABLE_TELEMETRY && !printedHeaders) {
+    //   printHeaders();
+    //   timer = new Timer("Telemetry Timer", true);
+    //   timer.scheduleAtFixedRate(new PrintTimer(), 0, RobotMap.TELEMETRY_TIMER_MS);
+    // }
   }
 
   private void printHeaders() {

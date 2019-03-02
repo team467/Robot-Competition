@@ -275,7 +275,7 @@ public class CargoMech extends GamePieceBase implements GamePiece {
     wrist = CargoMechWrist.CARGO_BIN;
     wristState = CargoMechWristState.read();
 
-    initSendable(TelemetryBuilder.getInstance());
+    //initSendable(TelemetryBuilder.getInstance());
     LOGGER.trace("Created Ball Mech game piece.");
   }
 

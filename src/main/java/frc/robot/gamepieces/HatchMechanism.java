@@ -130,7 +130,7 @@ public class HatchMechanism extends GamePieceBase implements GamePiece {
     arm = HatchArm.IN;
     launcher = HatchLauncher.RESET;
 
-    initSendable(TelemetryBuilder.getInstance());
+    //sinitSendable(TelemetryBuilder.getInstance());
   }
 
   /**

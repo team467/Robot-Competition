@@ -62,7 +62,7 @@ public class TalonSpeedControllerGroup implements SpeedController, Sendable {
     leader.setSensorPhase(sensorIsInverted);
     leader.setInverted(motorIsInverted);
 
-    initSendable(TelemetryBuilder.getInstance());
+    //initSendable(TelemetryBuilder.getInstance());
 
     zero();
   }

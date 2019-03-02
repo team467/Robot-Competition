@@ -197,7 +197,7 @@ public class RobotMap {
         TURRET_ALLOWABLE_ERROR_TICKS = 10; // TODO
         TURRET_HOME = 0.0;
         // TODO: Set TURRET_OFFSET
-        TURRET_P = 1.0; // TODO
+        TURRET_P = 2.0; // TODO
         TURRET_I = 0.0; // TODO
         TURRET_D = 0.0; // TODO
         TURRET_F = 0.0; // TODO
@@ -333,7 +333,7 @@ public class RobotMap {
 
         
         // TODO: Set TURRET_OFFSET
-        TURRET_P = 0.1; // TODO
+        TURRET_P = 0.8; // TODO
         TURRET_I = 0.0; // TODO
         TURRET_D = 0.0; // TODO
         TURRET_F = 0.0; // TODO
@@ -374,7 +374,7 @@ public class RobotMap {
         CARGO_CAMERA_INDEX = 2;
 
         CARGO_MECH_WRIST_TOP_TICKS = 806; 
-        CARGO_MECH_WRIST_BOTTOM_TICKS = 786;
+        CARGO_MECH_WRIST_BOTTOM_TICKS = 785;
         CARGO_MECH_WRIST_ALLOWABLE_ERROR_TICKS = 1; // TODO
         CARGO_MECH_WRIST_SENSOR_INVERTED = false;
 

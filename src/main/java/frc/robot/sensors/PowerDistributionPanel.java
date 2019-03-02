@@ -18,7 +18,7 @@ public class PowerDistributionPanel extends edu.wpi.first.wpilibj.PowerDistribut
     if (instance == null) {
       instance = new PowerDistributionPanel();
     }
-    instance.initSendable(TelemetryBuilder.getInstance());
+    //instance.initSendable(TelemetryBuilder.getInstance());
 
     return instance;
   }

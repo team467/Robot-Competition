@@ -46,7 +46,7 @@ public class VisionController implements Sendable {
   private VisionController() {
     vision = NetworkTableInstance.getDefault().getTable("vision");
     driverStation = DriverStation467.getInstance();
-    initSendable(TelemetryBuilder.getInstance());
+    //initSendable(TelemetryBuilder.getInstance());
   }
 
   public double angle() {

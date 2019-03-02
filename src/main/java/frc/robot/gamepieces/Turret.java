@@ -26,7 +26,7 @@ public class Turret extends GamePieceBase implements GamePiece {
   private double ticksPerDegree;
   private boolean onManualControl = true;
   private boolean targetLock = false;
-
+  private double targetTicks;
   private VisionController vision;
 
   // Position in degress
@@ -83,7 +83,7 @@ public class Turret extends GamePieceBase implements GamePiece {
 
     vision = VisionController.getInstance();
     
-    initSendable(TelemetryBuilder.getInstance());
+    //initSendable(TelemetryBuilder.getInstance());
   }
 
   public void configPid(double kP, double kI, double kD) {
@@ -181,11 +181,12 @@ public class Turret extends GamePieceBase implements GamePiece {
         if (!RobotMap.useSimulator) {
           if (!onManualControl) {
             // followVision();
-            talon.set(ControlMode.Position, (targetPosition * ticksPerDegree));
-            LOGGER.info("trying to move turret to: {}", targetPosition * ticksPerDegree);
+            targetTicks = (targetPosition * ticksPerDegree) + RobotMap.TURRET_HOME;
+            talon.set(ControlMode.Position, (targetTicks));
+            LOGGER.info("trying to move turret to: {}", targetTicks);
           }
           // Update state
-          currentPosition = (talon.getSelectedSensorPosition(TALON_SENSOR_ID) / ticksPerDegree);
+          currentPosition = ((talon.getSelectedSensorPosition(TALON_SENSOR_ID) - RobotMap.TURRET_HOME) / ticksPerDegree);
         } else {
           LOGGER.debug("Using simulated position of {}", simulatedPosition);
           currentPosition = simulatedPosition;
@@ -206,7 +207,7 @@ public class Turret extends GamePieceBase implements GamePiece {
    * Checks if turret is in the Home (default) position.
    */
   public boolean isHome() {
-    double distanceToHome = instance.position() - RobotMap.TURRET_HOME;
+    double distanceToHome = instance.position();
     if (Math.abs(distanceToHome) <= RobotMap.TURRET_ALLOWABLE_ERROR_TICKS) {
       LOGGER.error("Turret is home at distance {}", distanceToHome);
       return true;
