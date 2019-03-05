@@ -1,6 +1,7 @@
 package frc.robot.gamepieces;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 
 import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
 
@@ -8,8 +9,6 @@ import frc.robot.RobotMap;
 import frc.robot.drive.TalonProxy;
 import frc.robot.drive.WpiTalonSrxInterface;
 import frc.robot.logging.RobotLogManager;
-import frc.robot.logging.TelemetryBuilder;
-import frc.robot.vision.VisionController;
 
 import org.apache.logging.log4j.Logger;
 
@@ -27,14 +26,14 @@ public class Turret extends GamePieceBase implements GamePiece {
   private boolean onManualControl = true;
   private boolean targetLock = false;
 
-  private VisionController vision;
-
   // Position in degress
-  private double targetPosition;
-  private double currentPosition;
-  private double simulatedPosition;
+  private double targetAngle;
+  private double currentAngle;
 
-  public double targetPositon;
+  // Ticks for tracking
+  private int targetTicks;
+  private int currentTicks;
+  private int simulatedTicks;
 
   /**
    * Returns a singleton instance of the telemery builder.
@@ -58,14 +57,14 @@ public class Turret extends GamePieceBase implements GamePiece {
       talon.setInverted(RobotMap.TURRET_MOTOR_INVERTED);
       talon.setSensorPhase(RobotMap.TURRET_SENSOR_INVERTED);
       talon.selectProfileSlot(TALON_PID_SLOT_ID, TALON_SENSOR_ID);
+      talon.configSelectedFeedbackSensor(FeedbackDevice.Analog, 
+          TALON_PID_SLOT_ID, RobotMap.TALON_TIMEOUT);
       talon.config_kP(TALON_PID_SLOT_ID, RobotMap.TURRET_P, RobotMap.TALON_TIMEOUT);
       talon.config_kI(TALON_PID_SLOT_ID, RobotMap.TURRET_I, RobotMap.TALON_TIMEOUT);
       talon.config_kD(TALON_PID_SLOT_ID, RobotMap.TURRET_D, RobotMap.TALON_TIMEOUT);
       talon.config_kF(TALON_PID_SLOT_ID, RobotMap.TURRET_F, RobotMap.TALON_TIMEOUT);
       // talon.configForwardSoftLimitThreshold(
-      //     RobotMap.TURRET_RIGHT_LIMIT_TICKS, RobotMap.TALON_TIMEOUT);
-      
-      
+      //     RobotMap.TURRET_RIGHT_LIMIT_TICKS, RobotMap.TALON_TIMEOUT);      
       talon.configForwardSoftLimitEnable(false, RobotMap.TALON_TIMEOUT);
       // talon.configReverseSoftLimitThreshold(
       //     RobotMap.TURRET_LEFT_LIMIT_TICKS, RobotMap.TALON_TIMEOUT);
@@ -81,9 +80,7 @@ public class Turret extends GamePieceBase implements GamePiece {
         ((double) (RobotMap.TURRET_RIGHT_LIMIT_TICKS - RobotMap.TURRET_LEFT_LIMIT_TICKS))
         / (RobotMap.TURRET_RIGHT_LIMIT_DEGREES - RobotMap.TURRET_LEFT_LIMIT_DEGREES);
 
-    vision = VisionController.getInstance();
-    
-    initSendable(TelemetryBuilder.getInstance());
+    // initSendable(TelemetryBuilder.getInstance());
   }
 
   public void configPid(double kP, double kI, double kD) {
@@ -103,32 +100,21 @@ public class Turret extends GamePieceBase implements GamePiece {
   public void manual(double speed) {
     onManualControl = true;
     targetLock = false;
-    targetPosition = currentPosition;
-    LOGGER.debug("talon mode: {}", talon.getControlMode());
+    targetAngle = currentAngle;
+    targetTicks = currentTicks;
+    LOGGER.debug("Talon mode: {}", talon.getControlMode());
 
     if (RobotMap.HAS_TURRET) { 
       if (true) { //enabled
         talon.set(ControlMode.PercentOutput, speed);
-        LOGGER.debug("Control mode: {} Manual override for turret: {} Expected: {}", talon.getControlMode(), 
-        talon.getMotorOutputPercent(), speed);
+        LOGGER.debug("Control mode: {} Manual override for turret: {} Expected: {}", 
+            talon.getControlMode(), talon.getMotorOutputPercent(), speed);
       }
     }
   }
 
   public boolean isOveride() {
     return onManualControl;
-  }
-
-  private void followVision() {
-    LOGGER.debug("Following vision.");
-    if (RobotMap.HAS_TURRET) {
-      if (targetLock && !onManualControl) {
-        double visionAngle = vision.angle();
-        double targetAngle = talon.getSelectedSensorPosition(TALON_SENSOR_ID) + visionAngle;
-        targetPosition = targetAngle;
-        onManualControl = false;
-      }
-    }
   }
 
   /**
@@ -147,7 +133,7 @@ public class Turret extends GamePieceBase implements GamePiece {
    */
   public void target(double targetInDegrees) {
     LOGGER.debug("Setting target position: {}", targetInDegrees);
-    targetPosition = targetInDegrees;
+    targetAngle = targetInDegrees;
     onManualControl = false;
     targetLock = false;
   }
@@ -158,8 +144,8 @@ public class Turret extends GamePieceBase implements GamePiece {
    * @return the target position
    */
   public double target() {
-    //LOGGER.debug("Current target position: {}", targetPosition);
-    return targetPosition;
+    LOGGER.debug("Current target position: {}", targetAngle);
+    return targetAngle;
   }
 
   /**
@@ -168,8 +154,8 @@ public class Turret extends GamePieceBase implements GamePiece {
    * @return the position in degrees
    */
   public double position() {
-    //LOGGER.debug("Current position: {}", currentPosition);
-    return currentPosition;
+    LOGGER.debug("Current position: {}", currentAngle);
+    return currentAngle;
   }
 
   /**
@@ -181,32 +167,34 @@ public class Turret extends GamePieceBase implements GamePiece {
         if (!RobotMap.useSimulator) {
           if (!onManualControl) {
             // followVision();
-            talon.set(ControlMode.Position, (targetPosition * ticksPerDegree));
-            LOGGER.info("trying to move turret to: {}", targetPosition * ticksPerDegree);
+            targetTicks = (int) Math.round(RobotMap.TURRET_HOME_TICKS + targetAngle * ticksPerDegree);
+            talon.set(ControlMode.Position, targetTicks);
+            LOGGER.info("trying to move turret to: {}", targetTicks);
           }
           // Update state
-          currentPosition = (talon.getSelectedSensorPosition(TALON_SENSOR_ID) / ticksPerDegree);
+          currentTicks = talon.getSelectedSensorPosition(TALON_SENSOR_ID);
         } else {
-          LOGGER.debug("Using simulated position of {}", simulatedPosition);
-          currentPosition = simulatedPosition;
+          LOGGER.debug("Using simulated position of {}", simulatedTicks);
+          currentTicks = simulatedTicks;
         } 
+        currentAngle = ((double) (currentTicks - RobotMap.TURRET_HOME_TICKS)) / ticksPerDegree;
       } else {
         LOGGER.debug("Turret is disabled.");
       }
-      LOGGER.debug("Current turrent position is {}", currentPosition);          
+      LOGGER.debug("Current turrent position is {}", currentAngle);          
     }
   }
 
-  void simulatedSensorData(double simulatedPosition) {
-    LOGGER.debug("Setting simulated turret data to {}", simulatedPosition);
-    this.simulatedPosition = simulatedPosition;
+  void simulatedSensorData(int ticks) {
+    LOGGER.debug("Setting simulated turret data to {}", ticks);
+    this.simulatedTicks = ticks;
   }
 
   /**
    * Checks if turret is in the Home (default) position.
    */
   public boolean isHome() {
-    double distanceToHome = instance.position() - RobotMap.TURRET_HOME;
+    double distanceToHome = instance.position() - RobotMap.TURRET_HOME_TICKS;
     if (Math.abs(distanceToHome) <= RobotMap.TURRET_ALLOWABLE_ERROR_TICKS) {
       LOGGER.error("Turret is home at distance {}", distanceToHome);
       return true;
@@ -217,7 +205,7 @@ public class Turret extends GamePieceBase implements GamePiece {
 
   public void moveTurretToHome() {
     LOGGER.error("Moving turret to home.");
-    instance.target(RobotMap.TURRET_HOME);
+    instance.target(RobotMap.TURRET_HOME_TICKS);
   }
 
   @Override

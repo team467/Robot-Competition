@@ -180,81 +180,6 @@ public class RobotMap {
         HAS_CAMERA = true;
         AUTO_CAMERA = true;
 
-        // Game Pieces
-        HAS_TURRET = false;
-        HAS_ROLLER_INTAKE = false;
-        HAS_HATCH_MECHANISM = false;
-        HAS_CARGO_MECHANISM = false;
-
-        // Turret
-        TURRET_MOTOR_CHANNEL = 5;
-        TURRET_MOTOR_INVERTED = false; // TODO
-        TURRET_SENSOR_INVERTED = false; // TODO
-        TURRET_RIGHT_LIMIT_TICKS = 0; // TODO
-        TURRET_LEFT_LIMIT_TICKS = 0; // TODO
-        TURRET_RIGHT_LIMIT_DEGREES = 0.0; // TODO
-        TURRET_LEFT_LIMIT_DEGREES = 0.0; // TODO
-        TURRET_ALLOWABLE_ERROR_TICKS = 10; // TODO
-        TURRET_HOME = 0.0;
-        // TODO: Set TURRET_OFFSET
-        TURRET_P = 1.0; // TODO
-        TURRET_I = 0.0; // TODO
-        TURRET_D = 0.0; // TODO
-        TURRET_F = 0.0; // TODO
-
-        // Hatch Mechanism
-        HATCH_LAUNCHER_PCM_CHANNEL = 0;
-        // TODO update forward/reverse channel
-        HATCH_LAUNCHER_SOL_FORWARD_CHANNEL = 6;
-        HATCH_LAUNCHER_SOL_REVERSE_CHANNEL = 7;
-        HATCH_MECH_ARM_PCM_CHANNEL = 0;
-        // TODO update forward/reverse channel
-        HATCH_MECH_ARM_FORWARD_CHANNEL = 4;
-        HATCH_MECH_ARM_REVERSE_CHANNEL = 5;
-        HATCH_CAMERA_INDEX = 3;
-
-        // Cargo Intake
-        FORCE_INTAKE_REMAIN_UP = false;
-        ROLLER_PCM_CHANNEL = 0;
-        // TODO update up/down channel
-        ROLLER_RIGHT_ARM_UP_SOLINOID_CHANNEL = 0;
-        ROLLER_RIGHT_ARM_DOWN_SOLINOID_CHANNEL = 1;
-        // unused
-        ROLLER_LEFT_ARM_UP_SOLINOID_CHANNEL = 2;
-        ROLLER_LEFT_ARM_DOWN_SOLINOID_CHANNEL = 3;
-        ROLLER_MOTOR_CHANNEL = 1;
-        ROLLER_MOTOR_INVERTED = false;
-
-        // Cargo Mechanism
-        CARGO_MECH_WRIST_MOTOR_CHANNEL = 6; // TODO
-        CARGO_MECH_WRIST_MOTOR_INVERTED = false;
-        // CARGO_MECH_ARM_SENSOR_INVERTED = false; // TODO Remove
-        CARGO_MECH_WRIST_P = 1.0; // TODO
-        CARGO_MECH_WRIST_I = 0.0; // TODO
-        CARGO_MECH_WRIST_D = 0.0; // TODO
-        CARGO_MECH_WRIST_F = 0.0; // TODO
-
-        CARGO_CAMERA_INDEX = 1;
-
-        CARGO_MECH_WRIST_TOP_TICKS = 979; 
-        CARGO_MECH_WRIST_BOTTOM_TICKS = 49;
-        CARGO_MECH_WRIST_ALLOWABLE_ERROR_TICKS = 10; // TODO
-        CARGO_MECH_WRIST_SENSOR_INVERTED = false;
-
-        CARGO_WRIST_UP_LIMIT_TICKS = 0; // TODO
-        CARGO_WRIST_DOWN_LIMIT_TICKS = 0; // TODO
-
-        // Ticks
-        CARGO_MECH_CARGO_BIN_PROPORTION = 0.02; // TODO
-        CARGO_MECH_LOW_ROCKET_PROPORTION = 0.55; // TODO
-        CARGO_MECH_CARGO_SHIP_PROPORTION = 0.67; // TODO
-        CARGO_MECH_SAFE_TURRET_PROPORTION = 0.55; // TODO
-
-        CARGO_MECH_CLAW_LEFT_MOTOR_CHANNEL = 2;
-        CARGO_MECH_CLAW_LEFT_MOTOR_INVERTED = true;
-        CARGO_MECH_CLAW_RIGHT_MOTOR_CHANNEL = 3;
-        CARGO_MECH_CLAW_RIGHT_MOTOR_INVERTED = true;
-
         break;
 
       case ROBOT_2019:
@@ -326,25 +251,20 @@ public class RobotMap {
         TURRET_LEFT_LIMIT_TICKS = 546;
         TURRET_RIGHT_LIMIT_DEGREES = -95.0;
         TURRET_LEFT_LIMIT_DEGREES = 95.0;
-        TURRET_ALLOWABLE_ERROR_TICKS = 10;
-        TURRET_HOME = 503;
+        TURRET_ALLOWABLE_ERROR_TICKS = 1;
+        TURRET_HOME_TICKS = 504;
         INVERT_TURRET_FOR_HATCHMODE = -1;
         TURRET_SQR_INP = true;
 
-        
-        // TODO: Set TURRET_OFFSET
-        TURRET_P = 0.1; // TODO
+        TURRET_P = 1.0; // TODO
         TURRET_I = 0.0; // TODO
         TURRET_D = 0.0; // TODO
-        TURRET_F = 0.0; // TODO
 
         // Hatch Mechanism
         HATCH_LAUNCHER_PCM_CHANNEL = 8;
-        // TODO update forward/reverse channel
         HATCH_LAUNCHER_SOL_FORWARD_CHANNEL = 0;
         HATCH_LAUNCHER_SOL_REVERSE_CHANNEL = 1;
         HATCH_MECH_ARM_PCM_CHANNEL = 9;
-        // TODO update forward/reverse channel
         HATCH_MECH_ARM_FORWARD_CHANNEL = 4;
         HATCH_MECH_ARM_REVERSE_CHANNEL = 5;
         HATCH_CAMERA_INDEX = 3;
@@ -352,10 +272,8 @@ public class RobotMap {
         // Cargo Intake
         ROLLER_PCM_CHANNEL = 9;
         FORCE_INTAKE_REMAIN_UP = false;
-        // TODO update up/down channel
         ROLLER_RIGHT_ARM_UP_SOLINOID_CHANNEL = 1;
         ROLLER_RIGHT_ARM_DOWN_SOLINOID_CHANNEL = 0;
-        // unused
         ROLLER_LEFT_ARM_UP_SOLINOID_CHANNEL = 3;
         ROLLER_LEFT_ARM_DOWN_SOLINOID_CHANNEL = 2;
         ROLLER_MOTOR_CHANNEL = 1;
@@ -364,13 +282,11 @@ public class RobotMap {
         // Cargo Mechanism
         CARGO_MECH_WRIST_MOTOR_CHANNEL = 6; // TODO
         CARGO_MECH_WRIST_MOTOR_INVERTED = false;
-        // CARGO_MECH_ARM_SENSOR_INVERTED = false; // TODO Remove
         CARGO_MECH_WRIST_P = 1.0; // TODO
         CARGO_MECH_WRIST_I = 0.0; // TODO
         CARGO_MECH_WRIST_D = 0.0; // TODO
         CARGO_MECH_WRIST_F = 0.0; // TODO
-        WRIST_SQR_INP = true;
-
+        CARGO_MECH_SQUARE_WRIST_INPUT = true;
         CARGO_CAMERA_INDEX = 2;
 
         CARGO_MECH_WRIST_TOP_TICKS = 806; 
@@ -535,7 +451,7 @@ public class RobotMap {
   public static double TURRET_I;
   public static double TURRET_D;
   public static double TURRET_F;
-  public static double TURRET_HOME;
+  public static int TURRET_HOME_TICKS;
   public static int TURRET_OFFSET;
 
   // Hatch Mechanism
@@ -597,6 +513,6 @@ public class RobotMap {
   public static int INVERT_TURRET_FOR_HATCHMODE; //1 or -1
   public static double VELOCITY_MULTIPLIER_RIGHT;
   public static double VELOCITY_MULTIPLIER_LEFT;
-  public static boolean WRIST_SQR_INP;
+  public static boolean CARGO_MECH_SQUARE_WRIST_INPUT;
   public static boolean TURRET_SQR_INP;
 }

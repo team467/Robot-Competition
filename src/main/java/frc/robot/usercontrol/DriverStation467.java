@@ -169,7 +169,7 @@ public class DriverStation467 extends SendableBase implements Sendable {
   public double getManualWristMove() {
     double baseMode = (Math.abs(navJoy.getLeftStickY()) < 0.2) ? 0 : navJoy.getLeftStickY();
     double squaredInputs = Math.signum(baseMode) * Math.pow(baseMode, 2);
-    return (RobotMap.WRIST_SQR_INP)? squaredInputs : baseMode;
+    return (RobotMap.CARGO_MECH_SQUARE_WRIST_INPUT)? squaredInputs : baseMode;
   }
 
   public boolean getFireCall() {

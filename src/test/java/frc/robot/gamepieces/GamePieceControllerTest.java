@@ -136,7 +136,7 @@ public class GamePieceControllerTest {
     // reset the robot
     CargoMech.simulatedSensorData(
         CargoMechWrist.heightTicksFromProportion(RobotMap.CARGO_MECH_CARGO_BIN_PROPORTION));
-    turret.simulatedSensorData(RobotMap.TURRET_HOME);
+    turret.simulatedSensorData(RobotMap.TURRET_HOME_TICKS);
     //intake.arm(CargoIntakeArm.UP); 
     intake.roller(CargoIntakeRoller.STOP);
     cargo.wrist(CargoMechWrist.CARGO_BIN);
@@ -278,7 +278,7 @@ public class GamePieceControllerTest {
     assertEquals(0.0, turret.position(), 1.0);
 
     // Iteration 2, move the turret to the right
-    turret.simulatedSensorData(-90.0); 
+    turret.simulatedSensorData(turretAngleToTicks(-90.0)); 
     // Sensor simulation should come before process state
     callProcessState();
     assertTrue(intake.arm() == CargoIntakeArm.DOWN);
@@ -360,7 +360,7 @@ public class GamePieceControllerTest {
     callProcessState();
     moveTurretLeft = true;
     moveCargoWristToCargoShipPosition = true;
-    turret.simulatedSensorData(90.0); 
+    turret.simulatedSensorData(turretAngleToTicks(90.0)); 
     callProcessState();
     CargoMech.simulatedSensorData(
         CargoMechWrist.heightTicksFromProportion(RobotMap.CARGO_MECH_CARGO_SHIP_PROPORTION));
@@ -384,7 +384,7 @@ public class GamePieceControllerTest {
     defenseMode = true;
 
     LOGGER.debug("Iteration 1: Wrist is safe, move the turret home.");
-    turret.simulatedSensorData(0.0); 
+    turret.simulatedSensorData(turretAngleToTicks(0.0)); 
     callProcessState();
     assertTrue(intake.arm() == CargoIntakeArm.DOWN);
     assertTrue(intake.roller() == CargoIntakeRoller.STOP);
@@ -461,6 +461,15 @@ public class GamePieceControllerTest {
   @AfterClass
   public static void closeAll() {
     robot.close();
+  }
+
+  private int turretAngleToTicks(double angle) {
+    double ticksPerDegree = ((double) 
+        (RobotMap.TURRET_RIGHT_LIMIT_TICKS - RobotMap.TURRET_LEFT_LIMIT_TICKS))
+        / (RobotMap.TURRET_RIGHT_LIMIT_DEGREES - RobotMap.TURRET_LEFT_LIMIT_DEGREES);
+    int home = RobotMap.TURRET_LEFT_LIMIT_TICKS + 
+        (RobotMap.TURRET_RIGHT_LIMIT_TICKS - RobotMap.TURRET_LEFT_LIMIT_TICKS) / 2;
+    return (int) Math.round(angle * ticksPerDegree) + home;
   }
 
 }
