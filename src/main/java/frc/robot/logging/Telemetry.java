@@ -24,6 +24,9 @@ public class Telemetry {
   private static final Logger LOGGER 
       = RobotLogManager.getMainLogger(Telemetry.class.getName());
 
+  private static final Logger CSV 
+      = RobotLogManager.getMainLogger("TELEMETRY");
+
   private static Telemetry instance = null;
 
   private SortedMap<String, Supplier<String>> stringMetrics;
