@@ -254,7 +254,7 @@ public class GamePieceControllerTest {
 
     LOGGER.debug("Iteration 1: Move intake arm down.");
     callProcessState();
-    //assertTrue(intake.arm() == CargoIntakeArm.DOWN);
+    assertTrue(intake.arm() == CargoIntakeArm.DOWN);
     assertTrue(intake.roller() == CargoIntakeRoller.STOP);
     assertTrue(cargo.wrist() == CargoMechWristState.CARGO_BIN);
     assertTrue(cargo.claw() == CargoMechClaw.STOP);

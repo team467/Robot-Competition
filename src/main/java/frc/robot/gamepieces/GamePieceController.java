@@ -245,7 +245,7 @@ public class GamePieceController implements Sendable {
     LOGGER.debug("Safe to move wrist? {}", isSafe);
     if (!isSafe) {
       LOGGER.debug("Moving cargo intake arm down so wrist can move.");
-      //cargoIntake.arm(CargoIntakeArm.DOWN);
+      cargoIntake.arm(CargoIntakeArm.DOWN);
     }
     return isSafe;
   }
@@ -260,7 +260,7 @@ public class GamePieceController implements Sendable {
     if (!isSafe) {
       if (ensureSafeToMoveWrist(disableSafety)) {
         LOGGER.debug("Moving wrist to safe position.");
-        cargoMech.wrist(CargoMechWrist.SAFE_TURRET);
+        cargoMech.wrist(CargoMechWrist.LOW_ROCKET);
       }
       LOGGER.debug("Making sure hatch mechanism arm is in so turret can move.");
       hatchMech.arm(HatchArm.IN);
@@ -351,14 +351,14 @@ public class GamePieceController implements Sendable {
       cargoMech.claw(CargoMechClaw.STOP);
       cargoIntake.roller(CargoIntakeRoller.STOP);
       LOGGER.debug("CARGO: Move Cargo Mech wrist to the Cargo Ship height.");
-      if (ensureSafeToMoveWrist(disableSafety)) {
+      if (cargoMech.wrist() != CargoMechWristState.CARGO_SHIP && ensureSafeToMoveWrist(disableSafety)) {
         cargoMech.wrist(CargoMechWrist.CARGO_SHIP);
       }
     } else if (moveCargoWristToLowRocketPosition) {
       LOGGER.debug("CARGO: Stopping cargo roller and claw");
       cargoMech.claw(CargoMechClaw.STOP);
       cargoIntake.roller(CargoIntakeRoller.STOP);
-      if (ensureSafeToMoveWrist(disableSafety)) {
+      if (cargoMech.wrist() != CargoMechWristState.LOW_ROCKET && ensureSafeToMoveWrist(disableSafety)) {
         LOGGER.debug("CARGO: Move Cargo Mech wrist to the Low Rocket height.");
         cargoMech.wrist(CargoMechWrist.LOW_ROCKET);
       }
