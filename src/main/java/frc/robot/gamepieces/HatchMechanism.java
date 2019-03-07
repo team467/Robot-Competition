@@ -6,7 +6,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
 import frc.robot.RobotMap;
 import frc.robot.logging.RobotLogManager;
 import frc.robot.logging.Telemetry;
-import frc.robot.logging.TelemetryBuilder;
 import org.apache.logging.log4j.Logger;
 
 public class HatchMechanism extends GamePieceBase implements GamePiece {
@@ -131,7 +130,6 @@ public class HatchMechanism extends GamePieceBase implements GamePiece {
     arm = HatchArm.IN;
     launcher = HatchLauncher.RESET;
 
-    // initSendable(TelemetryBuilder.getInstance());
     registerMetrics();
   }
 

@@ -74,24 +74,24 @@ public class TelemetryBuilder extends SendableBuilderImpl implements SendableBui
     // addMetric("/isZeroed");
     // addMetric("/headingAngle");
 
-    try {
-      String csvFileName = "telemetry_" + System.currentTimeMillis() + ".csv";
-      File csvFile = new File(RobotLogManager.getDirectory(), csvFileName);
-      csvPrinter = new CSVPrinter(new FileWriter(csvFile),
-          CSVFormat.DEFAULT.withAllowMissingColumnNames(false).withTrim().withTrailingDelimiter());
-      LOGGER.debug("linked");
-    } catch (IOException e) {
-      LOGGER.debug(e.getStackTrace());
-      e.printStackTrace();
-    }
-    Runtime.getRuntime().addShutdownHook(new Thread() {
+    // try {
+    //   String csvFileName = "telemetry_" + System.currentTimeMillis() + ".csv";
+    //   File csvFile = new File(RobotLogManager.getDirectory(), csvFileName);
+    //   csvPrinter = new CSVPrinter(new FileWriter(csvFile),
+    //       CSVFormat.DEFAULT.withAllowMissingColumnNames(false).withTrim().withTrailingDelimiter());
+    //   LOGGER.debug("linked");
+    // } catch (IOException e) {
+    //   LOGGER.debug(e.getStackTrace());
+    //   e.printStackTrace();
+    // }
+    // Runtime.getRuntime().addShutdownHook(new Thread() {
 
-      @Override
-      public void run() {
-        close();
-      }
+    //   @Override
+    //   public void run() {
+    //     close();
+    //   }
 
-    });
+    // });
     
   }
 

@@ -2,6 +2,8 @@ package frc.robot.gamepieces;
 
 import static org.apache.logging.log4j.util.Unbox.box;
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+
 import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
 import frc.robot.RobotMap;
@@ -51,6 +53,8 @@ public class CargoMech extends GamePieceBase implements GamePiece {
         talon.setName("Telemetry", "Cargo Wrist Motor");
         talon.setInverted(RobotMap.CARGO_MECH_WRIST_MOTOR_INVERTED);
         talon.setSensorPhase(RobotMap.CARGO_MECH_WRIST_SENSOR_INVERTED);
+        talon.configSelectedFeedbackSensor(FeedbackDevice.Analog, TALON_PID_SLOT_ID, 
+        RobotMap.TALON_TIMEOUT);
         talon.selectProfileSlot(TALON_PID_SLOT_ID, TALON_SENSOR_ID);
         talon.config_kP(TALON_PID_SLOT_ID, RobotMap.CARGO_MECH_WRIST_P, RobotMap.TALON_TIMEOUT);
         talon.config_kI(TALON_PID_SLOT_ID, RobotMap.CARGO_MECH_WRIST_I, RobotMap.TALON_TIMEOUT);
@@ -409,6 +413,14 @@ public class CargoMech extends GamePieceBase implements GamePiece {
 
   private void registerMetrics() {
     Telemetry telemetry = Telemetry.getInstance();
+    telemetry.addStringMetric("Cargo Claw Command", this::clawCommandString);
+    telemetry.addStringMetric("Cargo Wrist Command", this::wristCommandString);
+    if (RobotMap.HAS_CARGO_MECHANISM) {
+      telemetry.addDoubleMetric("Cargo Claw Lead Motor Output", this::clawLeaderMotorOutput);
+      telemetry.addDoubleMetric("Cargo Claw Follower Motor Output", this::clawFollowerMotorOutput);
+      telemetry.addStringMetric("Cargo Wrist State", this::wristStateString);
+      telemetry.addDoubleMetric("Cargo Wrist Height Proportion", this::heightProportion);
+    }
   }
 
   private double heightProportion() {

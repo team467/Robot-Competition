@@ -9,7 +9,6 @@ import frc.robot.drive.TalonProxy;
 import frc.robot.drive.WpiTalonSrxInterface;
 import frc.robot.logging.RobotLogManager;
 import frc.robot.logging.Telemetry;
-import frc.robot.logging.TelemetryBuilder;
 import org.apache.logging.log4j.Logger;
 
 public class Turret extends GamePieceBase implements GamePiece {
@@ -56,6 +55,8 @@ public class Turret extends GamePieceBase implements GamePiece {
       talon.setName("Telemetry", "TurretMotor");
       talon.setInverted(RobotMap.TURRET_MOTOR_INVERTED);
       talon.setSensorPhase(RobotMap.TURRET_SENSOR_INVERTED);
+      talon.configSelectedFeedbackSensor(FeedbackDevice.Analog, TALON_PID_SLOT_ID, 
+      RobotMap.TALON_TIMEOUT);
       talon.selectProfileSlot(TALON_PID_SLOT_ID, TALON_SENSOR_ID);
       talon.configSelectedFeedbackSensor(FeedbackDevice.Analog, 
           TALON_PID_SLOT_ID, RobotMap.TALON_TIMEOUT);
@@ -80,7 +81,6 @@ public class Turret extends GamePieceBase implements GamePiece {
         ((double) (RobotMap.TURRET_RIGHT_LIMIT_TICKS - RobotMap.TURRET_LEFT_LIMIT_TICKS))
         / (RobotMap.TURRET_RIGHT_LIMIT_DEGREES - RobotMap.TURRET_LEFT_LIMIT_DEGREES);
 
-    // initSendable(TelemetryBuilder.getInstance());
     registerMetrics();
   }
 
@@ -209,17 +209,6 @@ public class Turret extends GamePieceBase implements GamePiece {
   public void moveTurretToHome() {
     LOGGER.error("Moving turret to home.");
     instance.target(RobotMap.TURRET_HOME_TICKS);
-  }
-
-  @Override
-  public void initSendable(SendableBuilder builder) {
-    builder.addDoubleProperty("Turret Target", this::target, 
-        (targetInDegrees) -> target(targetInDegrees));
-    builder.addDoubleProperty("Turret Position", this::position, null);
-    if (RobotMap.HAS_TURRET) {
-      builder.addDoubleProperty("Turret Motor Output", talon::get, null);
-      builder.addDoubleProperty("Turret Sensor Position", this::turretSensorPosition, null);
-    }
   }
 
   private void registerMetrics() {

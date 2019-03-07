@@ -6,7 +6,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
 import frc.robot.RobotMap;
 import frc.robot.drive.DriveMode;
 import frc.robot.logging.Telemetry;
-import frc.robot.logging.TelemetryBuilder;
 import frc.robot.usercontrol.XBoxJoystick467.Button;
 
 public class DriverStation467 extends SendableBase implements Sendable {

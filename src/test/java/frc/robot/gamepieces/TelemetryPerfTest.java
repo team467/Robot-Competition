@@ -18,7 +18,6 @@ import frc.robot.gamepieces.HatchMechanism.HatchArm;
 import frc.robot.gamepieces.HatchMechanism.HatchLauncher;
 import frc.robot.logging.RobotLogManager;
 import frc.robot.logging.Telemetry;
-import frc.robot.logging.TelemetryBuilder;
 import frc.robot.utilities.PerfTimer;
 
 import org.apache.logging.log4j.Logger;

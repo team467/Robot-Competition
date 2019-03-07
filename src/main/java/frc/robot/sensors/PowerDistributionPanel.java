@@ -4,7 +4,6 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
 import frc.robot.logging.Telemetry;
-import frc.robot.logging.TelemetryBuilder;
 
 public class PowerDistributionPanel extends edu.wpi.first.wpilibj.PowerDistributionPanel {
 
@@ -19,7 +18,6 @@ public class PowerDistributionPanel extends edu.wpi.first.wpilibj.PowerDistribut
     if (instance == null) {
       instance = new PowerDistributionPanel();
     }
-    // instance.initSendable(TelemetryBuilder.getInstance());
     instance.registerMetrics();
 
     return instance;

@@ -6,7 +6,6 @@ import edu.wpi.first.wpilibj.Spark;
 import frc.robot.RobotMap;
 import frc.robot.logging.RobotLogManager;
 import frc.robot.logging.Telemetry;
-import frc.robot.logging.TelemetryBuilder;
 import org.apache.logging.log4j.Logger;
 
 public class CargoIntake extends GamePieceBase implements GamePiece {
@@ -139,7 +138,6 @@ public class CargoIntake extends GamePieceBase implements GamePiece {
     arm = CargoIntakeArm.UP;
 
     registerMetrics();
-    // initSendable(TelemetryBuilder.getInstance());
     LOGGER.trace("Created roller arm game piece.");
   }
 
