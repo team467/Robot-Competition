@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
 
 import frc.robot.RobotMap;
 import frc.robot.logging.RobotLogManager;
+import frc.robot.logging.Telemetry;
 import frc.robot.logging.TelemetryBuilder;
 
 import java.text.DecimalFormat;
@@ -62,7 +63,8 @@ public class TalonSpeedControllerGroup implements SpeedController, Sendable {
     leader.setSensorPhase(sensorIsInverted);
     leader.setInverted(motorIsInverted);
 
-    initSendable(TelemetryBuilder.getInstance());
+    // initSendable(TelemetryBuilder.getInstance());
+    registerMetrics();
 
     zero();
   }
@@ -329,6 +331,12 @@ public class TalonSpeedControllerGroup implements SpeedController, Sendable {
   public void initSendable(SendableBuilder builder) {
     builder.addDoubleProperty(name + "_Position", this::position, null);
     builder.addDoubleProperty(name + "_Velocity", this::velocity, null);
+  }
+
+  public void registerMetrics() {
+    Telemetry telemetry = Telemetry.getInstance();
+    telemetry.addDoubleMetric(name + "_Position", this::position);
+    telemetry.addDoubleMetric(name + "_Velocity", this::velocity);
   }
 
 }

@@ -3,6 +3,7 @@ package frc.robot.sensors;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
+import frc.robot.logging.Telemetry;
 import frc.robot.logging.TelemetryBuilder;
 
 public class PowerDistributionPanel extends edu.wpi.first.wpilibj.PowerDistributionPanel {
@@ -18,7 +19,8 @@ public class PowerDistributionPanel extends edu.wpi.first.wpilibj.PowerDistribut
     if (instance == null) {
       instance = new PowerDistributionPanel();
     }
-    instance.initSendable(TelemetryBuilder.getInstance());
+    // instance.initSendable(TelemetryBuilder.getInstance());
+    instance.registerMetrics();
 
     return instance;
   }
@@ -61,6 +63,31 @@ public class PowerDistributionPanel extends edu.wpi.first.wpilibj.PowerDistribut
     builder.addDoubleProperty("PDP Current (13)", this::current13, null);
     builder.addDoubleProperty("PDP Current (14)", this::current14, null);
     builder.addDoubleProperty("PDP Current (15)", this::current15, null);
+  }
+
+  public void registerMetrics() {
+    Telemetry telemetry = Telemetry.getInstance();
+    telemetry.addDoubleMetric("PDP Input Voltage", this::getVoltage);
+    telemetry.addDoubleMetric("PDP Temperature", this::getTemperature);
+    telemetry.addDoubleMetric("PDP Total Current", this::getTotalCurrent);
+    telemetry.addDoubleMetric("PDP Total Energy", this::getTotalEnergy);
+    telemetry.addDoubleMetric("PDP Total Power", this::getVoltage);
+    telemetry.addDoubleMetric("PDP Current (0)", this::current0);
+    telemetry.addDoubleMetric("PDP Current (1)", this::current1);
+    telemetry.addDoubleMetric("PDP Current (2)", this::current2);
+    telemetry.addDoubleMetric("PDP Current (3)", this::current3);
+    telemetry.addDoubleMetric("PDP Current (4)", this::current4);
+    telemetry.addDoubleMetric("PDP Current (5)", this::current5);
+    telemetry.addDoubleMetric("PDP Current (6)", this::current6);
+    telemetry.addDoubleMetric("PDP Current (7)", this::current7);
+    telemetry.addDoubleMetric("PDP Current (8)", this::current8);
+    telemetry.addDoubleMetric("PDP Current (9)", this::current9);
+    telemetry.addDoubleMetric("PDP Current (10)", this::current10);
+    telemetry.addDoubleMetric("PDP Current (11)", this::current11);
+    telemetry.addDoubleMetric("PDP Current (12)", this::current12);
+    telemetry.addDoubleMetric("PDP Current (13)", this::current13);
+    telemetry.addDoubleMetric("PDP Current (14)", this::current14);
+    telemetry.addDoubleMetric("PDP Current (15)", this::current15);
   }
 
   private double current0() {

@@ -13,16 +13,46 @@ Configuration:
       target: SYSTEM_OUT
       PatternLayout:
         pattern: "[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n"
- 
-    File:
-      name: File_Appender
-      fileName: ${log-path}/logfile.log
-      PatternLayout:
-        pattern: "[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n"
- 
+
+    RollingRandomAccessFile:
+      - name: Async_File_Appender
+        fileName: ${log-path}/app.log
+        filePattern: ${log-path}/app-%d{date:yy-MM-dd}-%i.log
+        immediateFlush: false
+        append: true
+        PatternLayout:
+          pattern: "[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n"
+        Policies:
+          OnStartupTriggeringPolicy: {}
+        
+      - name: CSV
+        fileName: ${log-path}/telemetry.csv
+        filePattern: ${log-path}/telemetry-%d{date:yy-MM-dd}-%i.log
+        immediateFlush: false
+        append: false
+        Policies:
+          OnStartupTriggeringPolicy: {}
+        CsvParameterLayout:
+          delimiter: ","
+      
   Loggers:
  
       Root:
-        level: error
-      AppenderRef:
-        - ref: Console_Appender
+        level: debug
+        AppenderRef:
+          - ref: Console_Appender
+            level: info
+          - ref: Async_File_Appender
+            level: debug
+            
+      Logger:
+        - name: TELEMETRY
+          level: info
+          AppenderRef:
+            -ref: CSV
+        - name: frc.robot.gamepieces.TelemetryPerfTest
+          level: info
+          AppenderRef:
+            - ref: Console_Appender
+
+ 

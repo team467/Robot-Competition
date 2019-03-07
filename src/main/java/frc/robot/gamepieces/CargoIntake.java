@@ -1,13 +1,12 @@
 package frc.robot.gamepieces;
 
+import static org.apache.logging.log4j.util.Unbox.box;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Spark;
-import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
-
 import frc.robot.RobotMap;
 import frc.robot.logging.RobotLogManager;
+import frc.robot.logging.Telemetry;
 import frc.robot.logging.TelemetryBuilder;
-
 import org.apache.logging.log4j.Logger;
 
 public class CargoIntake extends GamePieceBase implements GamePiece {
@@ -139,7 +138,8 @@ public class CargoIntake extends GamePieceBase implements GamePiece {
     roller = CargoIntakeRoller.STOP;
     arm = CargoIntakeArm.UP;
 
-    initSendable(TelemetryBuilder.getInstance());
+    registerMetrics();
+    // initSendable(TelemetryBuilder.getInstance());
     LOGGER.trace("Created roller arm game piece.");
   }
 
@@ -153,7 +153,7 @@ public class CargoIntake extends GamePieceBase implements GamePiece {
       LOGGER.debug("Forcing intake to remain up!");
       arm = CargoIntakeArm.UP;
       } else {
-      LOGGER.error("Setting intake arm position to {}.", command);
+      LOGGER.debug("Setting intake arm position to {}.", command);
       arm = command;
       }
   }
@@ -165,7 +165,7 @@ public class CargoIntake extends GamePieceBase implements GamePiece {
    * @param command which way to move the arm.
    */
   private void arm(String command) {
-    LOGGER.error("Setting intake arm position to {} using string interface.", command);
+    LOGGER.debug("Setting intake arm position to {} using string interface.", command);
     arm(CargoIntakeArm.valueOf(command));
   }
 
@@ -221,19 +221,14 @@ public class CargoIntake extends GamePieceBase implements GamePiece {
     }
   }
 
-  @Override
-  public void initSendable(SendableBuilder builder) {
-    builder.addStringProperty("Intake Roller Command", 
-        this::rollerCommandString, (command) -> roller(command));
-    builder.addStringProperty("Intake Arm Command",
-        this::armCommandString, (command) -> arm(command));
+  private void registerMetrics() {
+    Telemetry telemetry = Telemetry.getInstance();
+    telemetry.addStringMetric("Intake Roller Command", this::rollerCommandString);
+        telemetry.addStringMetric("Intake Arm Command", this::armCommandString);
     if (RobotMap.HAS_ROLLER_INTAKE) {
-      builder.addStringProperty("Intake Left Arm Solenoid",
-          this::armLeftSolinoidString, null);
-      builder.addStringProperty("Intake Right Arm Solenoid",
-          this::armRightSolinoidString, null);
-      builder.addDoubleProperty("Intake Roller Motor Output",
-          this::rollerMotorOutput, null);
+      telemetry.addStringMetric("Intake Left Arm Solenoid", this::armLeftSolinoidString);
+      telemetry.addStringMetric("Intake Right Arm Solenoid", this::armRightSolinoidString);
+      telemetry.addDoubleMetric("Intake Roller Motor Output", this::rollerMotorOutput);
     }
   }
 

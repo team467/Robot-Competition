@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj.Sendable;
 import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
 import frc.robot.RobotMap;
 import frc.robot.logging.RobotLogManager;
+import frc.robot.logging.Telemetry;
 import frc.robot.logging.TelemetryBuilder;
 import frc.robot.usercontrol.DriverStation467;
 import frc.robot.sensors.LedI2C;
@@ -46,7 +47,8 @@ public class VisionController implements Sendable {
   private VisionController() {
     vision = NetworkTableInstance.getDefault().getTable("vision");
     driverStation = DriverStation467.getInstance();
-    initSendable(TelemetryBuilder.getInstance());
+    registerMetrics();
+    // initSendable(TelemetryBuilder.getInstance());
   }
 
   public double angle() {
@@ -137,6 +139,12 @@ public boolean hasAngle(){
   public void initSendable(SendableBuilder builder) {
     builder.addDoubleProperty("Vision Angle", this::getAngle, (angle)->setAngle(angle));
     builder.addBooleanProperty("Vision Has Angle", this::hasAngle, null);
+  }
+
+  public void registerMetrics() {
+    Telemetry telemetry = Telemetry.getInstance();
+    telemetry.addDoubleMetric("Vision Angle", this::getAngle);
+    telemetry.addBooleanMetric("Vision Has Angle", this::hasAngle);
   }
 
 }

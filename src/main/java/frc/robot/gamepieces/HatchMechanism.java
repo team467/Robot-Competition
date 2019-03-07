@@ -1,11 +1,12 @@
 package frc.robot.gamepieces;
 
+import static org.apache.logging.log4j.util.Unbox.box;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
 import frc.robot.RobotMap;
 import frc.robot.logging.RobotLogManager;
+import frc.robot.logging.Telemetry;
 import frc.robot.logging.TelemetryBuilder;
-
 import org.apache.logging.log4j.Logger;
 
 public class HatchMechanism extends GamePieceBase implements GamePiece {
@@ -32,8 +33,8 @@ public class HatchMechanism extends GamePieceBase implements GamePiece {
           RobotMap.HATCH_MECH_ARM_FORWARD_CHANNEL, 
           RobotMap.HATCH_MECH_ARM_REVERSE_CHANNEL);
       LOGGER.debug("Hatch channels forward: {} Hatch Reverse: {}",
-          RobotMap.HATCH_MECH_ARM_FORWARD_CHANNEL, 
-          RobotMap.HATCH_MECH_ARM_REVERSE_CHANNEL);
+          box(RobotMap.HATCH_MECH_ARM_FORWARD_CHANNEL), 
+          box(RobotMap.HATCH_MECH_ARM_REVERSE_CHANNEL));
       }
     }
 
@@ -101,7 +102,7 @@ public class HatchMechanism extends GamePieceBase implements GamePiece {
           reset();
           break;
         default:
-          LOGGER.info("No movement was done with the Hatch Mechanism");
+          LOGGER.debug("No movement was done with the Hatch Mechanism");
           break;
       }
     }
@@ -130,7 +131,8 @@ public class HatchMechanism extends GamePieceBase implements GamePiece {
     arm = HatchArm.IN;
     launcher = HatchLauncher.RESET;
 
-    initSendable(TelemetryBuilder.getInstance());
+    // initSendable(TelemetryBuilder.getInstance());
+    registerMetrics();
   }
 
   /**
@@ -210,6 +212,16 @@ public class HatchMechanism extends GamePieceBase implements GamePiece {
         this::launcherSolinoidString, null);
       builder.addStringProperty("Hatch Arm Solinoid", 
           this::armSolinoidString, null);
+    } 
+  }
+
+  private void registerMetrics() {
+    Telemetry telemetry = Telemetry.getInstance();
+    telemetry.addStringMetric("Hatch Launcher Command", this::launcherCommandString);
+    telemetry.addStringMetric("Hatch Arm Command", this::armCommandString);
+    if (RobotMap.HAS_HATCH_MECHANISM){
+      telemetry.addStringMetric("Hatch Launcher Solinoid", this::launcherSolinoidString);
+      telemetry.addStringMetric("Hatch Arm Solinoid", this::armSolinoidString);
     } 
   }
 

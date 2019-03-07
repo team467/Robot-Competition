@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj.SendableBase;
 import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
 import frc.robot.RobotMap;
 import frc.robot.drive.DriveMode;
+import frc.robot.logging.Telemetry;
 import frc.robot.logging.TelemetryBuilder;
 import frc.robot.usercontrol.XBoxJoystick467.Button;
 
@@ -28,7 +29,6 @@ public class DriverStation467 extends SendableBase implements Sendable {
   public static DriverStation467 getInstance() {
     if (station == null) {
       station = new DriverStation467();
-      station.initSendable(TelemetryBuilder.getInstance());
     }
     return station;
   }
@@ -45,6 +45,8 @@ public class DriverStation467 extends SendableBase implements Sendable {
 
     setSubsystem("Telemetry");
     setName("Driver Station");
+
+    registerMetrics();
   }
 
   /**
@@ -290,6 +292,39 @@ public class DriverStation467 extends SendableBase implements Sendable {
       builder.addDoubleProperty("Input Manual Turret", this::getManualTurretMove, null);
       builder.addDoubleProperty("Input Arcade Speed", this::getArcadeSpeed, null);
       builder.addDoubleProperty("Input Arcade Turn", this::getArcadeTurn, null);
+    }
+  }
+
+  public void registerMetrics() {
+    Telemetry telemetry = Telemetry.getInstance(); 
+    if (RobotMap.ENABLE_DRIVER_STATION_TELEMETRY && !RobotMap.useSimulator) {
+      telemetry.addBooleanMetric("Input Restart Camera", this::restartCamera);
+      telemetry.addBooleanMetric("Input Drive Camera Front", this::getDriveCameraFront);
+      telemetry.addBooleanMetric("Input Drive Camera Back", this::getDriveCameraBack);
+      telemetry.addBooleanMetric("Input Disable Safety", this::getDisableSafety);
+      telemetry.addBooleanMetric("Input Defense Mode", this::getDefenseMode);
+      telemetry.addBooleanMetric("Input Hatch Mode", this::getHatchMode);
+      telemetry.addBooleanMetric("Input Cargo Mode", this::getCargoMode);
+      telemetry.addBooleanMetric("Input Intake Up", this::getIntakeUp);
+      telemetry.addBooleanMetric("Input Intake Down", this::getIntakeDown);
+      telemetry.addBooleanMetric("Input Acquire Ball", this::getAcquireBall);
+      telemetry.addBooleanMetric("Input Fire Cargo", this::getFireCall);
+      telemetry.addBooleanMetric("Input Wrist - Cargo Ship", 
+          this::getCargoWristCargoShipPosition);
+      telemetry.addBooleanMetric("Input Wrist - Low Rocket", 
+          this::getCargoWristLowRocketPosition);
+      telemetry.addBooleanMetric("Input Acquire Hatch", this::getAcquireHatch);
+      telemetry.addBooleanMetric("Input Fire Hatch", this::getFireHatch);
+      telemetry.addBooleanMetric("Input Reject Ball", this::getRejectBall);
+      telemetry.addBooleanMetric("Input Intake Ball", this::getIntakeBall);
+      telemetry.addBooleanMetric("Input Turret Home", this::getTurretHome);
+      telemetry.addBooleanMetric("Input Turret Left", this::getTurretLeft);
+      telemetry.addBooleanMetric("Input Turret Right", this::getTurretRight);
+      telemetry.addBooleanMetric("Input Target Lock", this::getAutoTargetButtonPressed);
+      telemetry.addDoubleMetric("Input Manual Wrist", this::getManualWristMove);
+      telemetry.addDoubleMetric("Input Manual Turret", this::getManualTurretMove);
+      telemetry.addDoubleMetric("Input Arcade Speed", this::getArcadeSpeed);
+      telemetry.addDoubleMetric("Input Arcade Turn", this::getArcadeTurn);
     }
   }
 

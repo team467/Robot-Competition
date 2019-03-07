@@ -16,6 +16,7 @@ import frc.robot.gamepieces.GamePieceController.GamePieceMode;
 import frc.robot.gamepieces.HatchMechanism.HatchArm;
 import frc.robot.gamepieces.HatchMechanism.HatchLauncher;
 import frc.robot.logging.RobotLogManager;
+import frc.robot.logging.Telemetry;
 import frc.robot.logging.TelemetryBuilder;
 
 import org.apache.logging.log4j.Logger;
@@ -26,7 +27,7 @@ import org.junit.Test;
 
 public class GamePieceControllerTest {
 
-  private static TelemetryBuilder telemetry;
+  private static Telemetry telemetry;
   private static final Logger LOGGER 
       = RobotLogManager.getMainLogger(GamePieceControllerTest.class.getName());
 
@@ -98,7 +99,7 @@ public class GamePieceControllerTest {
     cargo.enabled(true);
     turret.enabled(true);
 
-    telemetry = TelemetryBuilder.getInstance();
+    telemetry = Telemetry.getInstance();
     telemetry.robotMode(RobotMode.EXTERNAL_TEST);
   }
 

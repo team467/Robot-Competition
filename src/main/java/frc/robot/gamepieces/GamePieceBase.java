@@ -1,9 +1,9 @@
 package frc.robot.gamepieces;
 
+import static org.apache.logging.log4j.util.Unbox.box;
 import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
-
 import frc.robot.logging.RobotLogManager;
-import frc.robot.logging.TelemetryBuilder;
+import frc.robot.logging.Telemetry;
 
 import org.apache.logging.log4j.Logger;
 
@@ -19,7 +19,7 @@ abstract class GamePieceBase implements GamePiece {
   protected GamePieceBase(String subsystem, String name) {
     this.subsystem = subsystem;
     this.name = name;
-    
+    registerMetrics();
     LOGGER.trace("Created base game piece");
   }
 
@@ -63,6 +63,11 @@ abstract class GamePieceBase implements GamePiece {
         name + "Enabled", 
         this::enabled, // Lambda called when updating network table
         (enabled) -> enabled(enabled)); // Lambda calls set enabled if changed in Network table
+  }
+
+  private void registerMetrics() {
+    Telemetry telemetry = Telemetry.getInstance();
+    telemetry.addBooleanMetric(name + "Enabled", this::enabled);
   }
 
 }

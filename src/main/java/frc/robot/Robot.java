@@ -15,7 +15,7 @@ import frc.robot.RobotMap.RobotId;
 import frc.robot.drive.Drive;
 import frc.robot.gamepieces.GamePieceController;
 import frc.robot.logging.RobotLogManager;
-import frc.robot.logging.TelemetryBuilder;
+import frc.robot.logging.Telemetry;
 import frc.robot.sensors.LedI2C;
 import frc.robot.sensors.PowerDistributionPanel;
 import frc.robot.tuning.TuneController;
@@ -43,7 +43,7 @@ public class Robot extends TimedRobot {
   NetworkTable table;
   private DriverStation467 driverstation;
   private Drive drive;
-  private TelemetryBuilder telemetry;
+  private Telemetry telemetry;
   private CameraSwitcher camera;
   private GamePieceController gamePieceController;
   private LedI2C leds;
@@ -105,7 +105,7 @@ public class Robot extends TimedRobot {
     }
 
     // Make robot objects
-    telemetry = TelemetryBuilder.getInstance();
+    telemetry = Telemetry.getInstance();
     driverstation = DriverStation467.getInstance();
     drive = Drive.getInstance();
     camera = CameraSwitcher.getInstance();

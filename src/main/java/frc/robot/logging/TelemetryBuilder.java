@@ -44,18 +44,18 @@ public class TelemetryBuilder extends SendableBuilderImpl implements SendableBui
 
   private Timer timer;
 
-  /**
-   * Returns a singleton instance of the telemery builder.
-   * 
-   * @return TelemetryBuilder the telemetry builder instance
-   */
-  public static TelemetryBuilder getInstance() {
-    if (instance == null) {
-      instance = new TelemetryBuilder();
-    }
+  // /**
+  //  * Returns a singleton instance of the telemery builder.
+  //  * 
+  //  * @return TelemetryBuilder the telemetry builder instance
+  //  */
+  // public static TelemetryBuilder getInstance() {
+  //   if (instance == null) {
+  //     instance = new TelemetryBuilder();
+  //   }
 
-    return instance;
-  }
+  //   return instance;
+  // }
 
   /**
    * Creates the telemtry builder instance with the correct location for the CSV
@@ -99,7 +99,7 @@ public class TelemetryBuilder extends SendableBuilderImpl implements SendableBui
     private TelemetryBuilder telemetry;
 
     private PrintTimer() {
-      telemetry = TelemetryBuilder.getInstance();
+      // telemetry = TelemetryBuilder.getInstance();
     }
 
     @Override
@@ -117,9 +117,10 @@ public class TelemetryBuilder extends SendableBuilderImpl implements SendableBui
     super.updateTable();
     if (RobotMap.ENABLE_TELEMETRY && !printedHeaders) {
       printHeaders();
-      timer = new Timer("Telemetry Timer", true);
-      timer.scheduleAtFixedRate(new PrintTimer(), 0, RobotMap.TELEMETRY_TIMER_MS);
+      // timer = new Timer("Telemetry Timer", true);
+      // timer.scheduleAtFixedRate(new PrintTimer(), 0, RobotMap.TELEMETRY_TIMER_MS);
     }
+    printCsvLine(); // Temp for timing
   }
 
   private void printHeaders() {

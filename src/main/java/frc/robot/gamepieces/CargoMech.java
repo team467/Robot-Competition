@@ -1,16 +1,14 @@
 package frc.robot.gamepieces;
 
+import static org.apache.logging.log4j.util.Unbox.box;
 import com.ctre.phoenix.motorcontrol.ControlMode;
-
 import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
-
 import frc.robot.RobotMap;
 import frc.robot.drive.TalonProxy;
 import frc.robot.drive.WpiTalonSrxInterface;
 import frc.robot.logging.RobotLogManager;
-import frc.robot.logging.TelemetryBuilder;
-
+import frc.robot.logging.Telemetry;
 import org.apache.logging.log4j.Logger;
 
 public class CargoMech extends GamePieceBase implements GamePiece {
@@ -44,7 +42,7 @@ public class CargoMech extends GamePieceBase implements GamePiece {
 
     private CargoMechWrist(double heightProportion) {
       height = heightTicksFromProportion(heightProportion);
-      LOGGER.debug("Setting wrist height for {} to {} ticks", this, height);
+      LOGGER.debug("Setting wrist height for {} to {} ticks", this, box(height));
     }
 
     private static void initialize() {
@@ -83,7 +81,7 @@ public class CargoMech extends GamePieceBase implements GamePiece {
         onManualControl = true;
         talon.set(ControlMode.PercentOutput, speed);
         LOGGER.debug("Manual override cargo mech wrist Speed: {}, Channel: {}, talon speed = {}, Control mode: {}",
-            speed, talon.getDeviceID(), talon.getMotorOutputPercent(), talon.getControlMode());
+            box(speed), box(talon.getDeviceID()), box(talon.getMotorOutputPercent()), talon.getControlMode());
       }
     }
 
@@ -110,8 +108,8 @@ public class CargoMech extends GamePieceBase implements GamePiece {
       talon.set(ControlMode.Position, heightTicksFromProportion(heightProportion));
 
       LOGGER.debug(" Height proportion: {}, Height set on wrist: {}, Sensor: {}, Error: {}",
-          heightProportion, heightTicksFromProportion(heightProportion), 
-          talon.getSensorCollection().getAnalogIn(), talon.getClosedLoopError(0));
+          box(heightProportion), box(heightTicksFromProportion(heightProportion)), 
+          box(talon.getSensorCollection().getAnalogIn()), box(talon.getClosedLoopError(0)));
     }
 
     /**
@@ -124,7 +122,7 @@ public class CargoMech extends GamePieceBase implements GamePiece {
           talon.set(ControlMode.Position, height);
           if (!RobotMap.useSimulator) { // No sensor collection capability in the talon simulator
             LOGGER.debug("Height set on wrist: {}, Sensor: {}, Error: {}",
-                height, talon.getSensorCollection().getAnalogIn(), talon.getClosedLoopError(0));
+                box(height), box(talon.getSensorCollection().getAnalogIn()), box(talon.getClosedLoopError(0)));
           }
         }
       } 
@@ -152,7 +150,7 @@ public class CargoMech extends GamePieceBase implements GamePiece {
         height = CargoMechWrist.talon.getSensorCollection().getAnalogInRaw();
       }
       height *= (RobotMap.CARGO_MECH_WRIST_SENSOR_INVERTED) ? -1.0 : 1.0;
-      LOGGER.debug("Read cargo wrist height as {}.", height);
+      LOGGER.debug("Read cargo wrist height as {}.", box(height));
 
       CargoMechWristState state;
 
@@ -187,7 +185,7 @@ public class CargoMech extends GamePieceBase implements GamePiece {
       } else {
         state = UNKNOWN;
       }
-      LOGGER.debug("Current state: {} at height in ticks {}", state.name(), height);
+      LOGGER.debug("Current state: {} at height in ticks {}", state.name(), box(height));
       previousState = state;
       return state;
     }
@@ -215,7 +213,7 @@ public class CargoMech extends GamePieceBase implements GamePiece {
         motorFollower = new Spark(RobotMap.CARGO_MECH_CLAW_RIGHT_MOTOR_CHANNEL);
         motorFollower.setInverted(RobotMap.CARGO_MECH_CLAW_RIGHT_MOTOR_INVERTED);
         LOGGER.debug("Spark channels: {}, {}", 
-            motorLeader.getChannel(), motorFollower.getChannel());
+            box(motorLeader.getChannel()), box(motorFollower.getChannel()));
       }
 
     }
@@ -275,7 +273,8 @@ public class CargoMech extends GamePieceBase implements GamePiece {
     wrist = CargoMechWrist.CARGO_BIN;
     wristState = CargoMechWristState.read();
 
-    initSendable(TelemetryBuilder.getInstance());
+    // initSendable(TelemetryBuilder.getInstance());
+    registerMetrics();
     LOGGER.trace("Created Ball Mech game piece.");
   }
 
@@ -287,7 +286,7 @@ public class CargoMech extends GamePieceBase implements GamePiece {
    */
   public boolean isSafeToMoveTurret() {
     LOGGER.debug("Wrist is at {}, vs safe turret height of {}",
-        CargoMechWristState.height, CargoMechWrist.SAFE_TURRET.height);
+        box(CargoMechWristState.height), box(CargoMechWrist.SAFE_TURRET.height));
     if (CargoMechWristState.height >= CargoMechWrist.SAFE_TURRET.height) {
       LOGGER.debug("Wrist in safe location to move turret.");
       return true;
@@ -406,6 +405,10 @@ public class CargoMech extends GamePieceBase implements GamePiece {
       builder.addStringProperty("Cargo Wrist State", this::wristStateString, null);
       builder.addDoubleProperty("Cargo Wrist Height Proportion", this::heightProportion, null);
     }
+  }
+
+  private void registerMetrics() {
+    Telemetry telemetry = Telemetry.getInstance();
   }
 
   private double heightProportion() {

@@ -1,5 +1,6 @@
 package frc.robot.gamepieces;
 
+import static org.apache.logging.log4j.util.Unbox.box;
 import edu.wpi.first.wpilibj.Sendable;
 import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
 import frc.robot.RobotMap;
@@ -11,11 +12,11 @@ import frc.robot.gamepieces.CargoMech.CargoMechWristState;
 import frc.robot.gamepieces.HatchMechanism.HatchArm;
 import frc.robot.gamepieces.HatchMechanism.HatchLauncher;
 import frc.robot.logging.RobotLogManager;
+import frc.robot.logging.Telemetry;
 import frc.robot.sensors.LedI2C;
 import frc.robot.usercontrol.DriverStation467;
 import frc.robot.vision.CameraSwitcher;
 import frc.robot.vision.VisionController;
-
 import org.apache.logging.log4j.Logger;
 
 public class GamePieceController implements Sendable {
@@ -116,6 +117,8 @@ public class GamePieceController implements Sendable {
     LOGGER.debug("Starting in DEFENSE mode.");
 
     mode = GamePieceMode.DEFENSE;
+
+    registerMetrics();
   }
 
   /**
@@ -356,7 +359,7 @@ public class GamePieceController implements Sendable {
       cargoMech.claw(CargoMechClaw.STOP);
       cargoIntake.roller(CargoIntakeRoller.STOP);
       if (ensureSafeToMoveWrist(disableSafety)) {
-        LOGGER.info("CARGO: Move Cargo Mech wrist to the Low Rocket height.");
+        LOGGER.debug("CARGO: Move Cargo Mech wrist to the Low Rocket height.");
         cargoMech.wrist(CargoMechWrist.LOW_ROCKET);
       }
     } else if (fireCargo) {
@@ -388,7 +391,7 @@ public class GamePieceController implements Sendable {
      */
     if (manualWristMove != 0.0) {
       if (ensureSafeToMoveWrist(disableSafety)) {
-        LOGGER.debug("CARGO: Setting wrist speed to {} manually.", manualWristMove);
+        LOGGER.debug("CARGO: Setting wrist speed to {} manually.", box(manualWristMove));
         cargoMech.manualWristMove(manualWristMove);
       }
     } else {
@@ -411,7 +414,7 @@ public class GamePieceController implements Sendable {
     if (manualTurretMove != 0.0) {
       LOGGER.debug("CARGO: Manually move the turret.");
       if (true) { //ensureTurretSafeToMove()
-        LOGGER.warn("turret is safe to move, manualTurret move: {}", manualTurretMove);
+        LOGGER.warn("turret is safe to move, manualTurret move: {}", box(manualTurretMove));
         turret.manual(manualTurretMove);
       }
     } else if (turret.isOveride()) {
@@ -451,10 +454,10 @@ public class GamePieceController implements Sendable {
     }
 
     if (fireHatch) {
-      LOGGER.info("HATCH: Fire hatch!");
+      LOGGER.debug("HATCH: Fire hatch!");
       hatchMech.launcher(HatchLauncher.FIRE);
     } else {
-      LOGGER.info("HATCH: Reset hatch launcher.");
+      LOGGER.debug("HATCH: Reset hatch launcher.");
       hatchMech.launcher(HatchLauncher.RESET);
 
       if (moveTurretRight) {
@@ -471,7 +474,7 @@ public class GamePieceController implements Sendable {
       if (manualTurretMove != 0.0) {
         LOGGER.debug("HATCH: Manually move the turret.");
         if (true) { //ensureTurretSafeToMove()
-          LOGGER.warn("turret is safe to move, manualTurret move: {}", manualTurretMove);
+          LOGGER.warn("turret is safe to move, manualTurret move: {}", box(manualTurretMove));
           turret.manual(RobotMap.INVERT_TURRET_FOR_HATCHMODE * manualTurretMove);
         }
       } else {
@@ -528,13 +531,13 @@ public class GamePieceController implements Sendable {
       boolean cargoMode) {
 
     if (defenseMode) { // gets action from driver input
-      LOGGER.info("Changing game mode to DEFENSE");
+      LOGGER.debug("Changing game mode to DEFENSE");
       cargoIntake.arm(CargoIntakeArm.UP);
       mode = GamePieceMode.DEFENSE;
       camera.unlock();
       led.defensiveMode();
     } else if (hatchMode) {
-      LOGGER.info("Changing game mode to HATCH");
+      LOGGER.debug("Changing game mode to HATCH");
       cargoIntake.arm(CargoIntakeArm.DOWN);
       mode = GamePieceMode.HATCH;
       if (camera.totalCameras() >= 4) {
@@ -543,7 +546,7 @@ public class GamePieceController implements Sendable {
       }
       led.hatchMode();
     } else if (cargoMode) {
-      LOGGER.info("Changing game mode to CARGO");
+      LOGGER.debug("Changing game mode to CARGO");
       cargoIntake.arm(CargoIntakeArm.DOWN);
       mode = GamePieceMode.CARGO;
       if (camera.totalCameras() >= 4) {
@@ -570,6 +573,11 @@ public class GamePieceController implements Sendable {
     builder.addStringProperty(name + "Mode", mode::name,
         // Lambda calls set enabled if changed in Network table
         (gamePieceMode) -> testMode(gamePieceMode));
+  }
+
+  private void registerMetrics() {
+    Telemetry telemetry = Telemetry.getInstance();
+    telemetry.addStringMetric(name + " Mode", mode::name);
   }
 
   public void runOnTeleopInit(){
