@@ -31,15 +31,15 @@ Configuration:
           OnStartupTriggeringPolicy: {}
   Loggers:
       Root:
-        level: debug
+        level: info
         AppenderRef:
           - ref: Console_Appender
             level: warn
           - ref: Async_File_Appender
-            level: debug
+            level: info
       Logger:
         - name: TELEMETRY
-          level: debug
+          level: info
           AppenderRef:
             - ref: CSV
         - name: frc.robot.gamepieces.LoggingPerfTest

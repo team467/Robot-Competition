@@ -24,7 +24,7 @@ public class IntakeTuner implements Tuner {
 
   public void periodic() {
     String tuningValue = SmartDashboard.getString("DB/String 5", "OFF");
-    LOGGER.info("Tuning Value: {}", box(tuningValue));
+    LOGGER.info("Tuning Value: {}", tuningValue);
     try {
       CargoIntakeArm command = CargoIntakeArm.valueOf(tuningValue.toUpperCase());
       //intake.arm(command);
