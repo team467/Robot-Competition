@@ -26,15 +26,14 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-public class TelemetryPerfTest {
+public class LoggingPerfTest {
 
   private static Telemetry telemetry;
   private static final Logger LOGGER 
-      = RobotLogManager.getMainLogger(TelemetryPerfTest.class.getName());
+      = RobotLogManager.getMainLogger(LoggingPerfTest.class.getName());
 
   private PerfTimer gamepieceTimer;
-  private PerfTimer telemetryTimer;
-
+ 
   private static Robot robot;
   private static GamePieceController controller;
   private static HatchMechanism hatch;
@@ -113,7 +112,6 @@ public class TelemetryPerfTest {
   @Before
   public void init() {
     
-    telemetryTimer = new PerfTimer();
     gamepieceTimer = new PerfTimer();
 
     // Set input defaults
@@ -166,7 +164,7 @@ public class TelemetryPerfTest {
     assertTrue(hatch.launcher() == HatchLauncher.RESET);
     assertEquals(0.0, turret.position(), 1.0);
     
-    telemetry.updateTable();
+    telemetry.start();
   }
   
   @AfterClass
@@ -176,14 +174,14 @@ public class TelemetryPerfTest {
 
   @Test
   public void timeNetworkTableVersionTest() {
-    int count = 100000;
+    int count = 100;
     for (int i = 0; i < count; i++) {
-      // try {
-      //   Thread.sleep(RobotMap.ITERATION_TIME_MS);
-      // } catch (InterruptedException e) {
-      //   fail(e.toString());
-      //   LOGGER.trace(e);
-      // }
+      try {
+        Thread.sleep(RobotMap.ITERATION_TIME_MS);
+      } catch (InterruptedException e) {
+        fail(e.toString());
+        LOGGER.trace(e);
+      }
       switch (count % 6) {
         case 0:
           defenseMode = true;
@@ -201,14 +199,11 @@ public class TelemetryPerfTest {
       gamepieceTimer.startIteration();
       callProcessState();
       gamepieceTimer.endIteration();
-      telemetryTimer.startIteration();
-      telemetry.updateTable();
-      telemetryTimer.endIteration();
     }
 
-    LOGGER.info("Execution times Process: sum={} mean={} jitter={}; Telemetry sum={} mean={} jitter={}", 
+    LOGGER.info("Execution times Process: sum={} mean={} jitter={} telemetry mean={}", 
         box(gamepieceTimer.sum()), box(gamepieceTimer.mean()), box(gamepieceTimer.standardDeviation()),
-        box(telemetryTimer.sum()), box(telemetryTimer.mean()), box(telemetryTimer.standardDeviation()));
+        telemetry.checkTelemetryExecutionPerformance());
 
     assert(true);
   }

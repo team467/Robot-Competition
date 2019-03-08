@@ -13,7 +13,7 @@ Configuration:
     RollingRandomAccessFile:
       - name: Async_File_Appender
         fileName: ${log-path}/app.log
-        filePattern: ${log-path}/app-%d{yyyy-MM-dd}-%i.log
+        filePattern: ${log-path}/app-%d{yyyy-MM-dd-HH-mm-ss-SSS}.log
         immediateFlush: false
         append: true
         PatternLayout:
@@ -22,27 +22,27 @@ Configuration:
           OnStartupTriggeringPolicy: {} 
       - name: CSV
         fileName: ${log-path}/telemetry.csv
-        filePattern: ${log-path}/telemetry-%d{yyyy-MM-dd}-%i.log
+        filePattern: ${log-path}/telemetry-%d{yyyy-MM-dd-HH-mm-ss-SSS}.csv
         immediateFlush: false
-        append: false
-        Policies:
-          OnStartupTriggeringPolicy: {}
+        append: true
         CsvParameterLayout:
           delimiter: ","   
+        Policies:
+          OnStartupTriggeringPolicy: {}
   Loggers:
       Root:
-        level: info
+        level: debug
         AppenderRef:
           - ref: Console_Appender
             level: warn
           - ref: Async_File_Appender
-            level: info
+            level: debug
       Logger:
         - name: TELEMETRY
-          level: info
+          level: debug
           AppenderRef:
             - ref: CSV
-        - name: frc.robot.gamepieces.TelemetryPerfTest
+        - name: frc.robot.gamepieces.LoggingPerfTest
           level: info
           AppenderRef:
             - ref: Console_Appender

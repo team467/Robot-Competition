@@ -105,7 +105,6 @@ public class Robot extends TimedRobot {
     }
 
     // Make robot objects
-    telemetry = Telemetry.getInstance();
     driverstation = DriverStation467.getInstance();
     drive = Drive.getInstance();
     camera = CameraSwitcher.getInstance();
@@ -116,6 +115,9 @@ public class Robot extends TimedRobot {
     drive.setPidsFromRobotMap();
     PowerDistributionPanel.registerPowerDistributionWithTelemetry();
 
+    telemetry = Telemetry.getInstance();
+    telemetry.robotMode(mode);
+    telemetry.start();
   }
 
   /**
@@ -129,13 +131,12 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotPeriodic() {
-    telemetry.robotMode(mode);
-    telemetry.updateTable();
   }
 
   @Override
   public void autonomousInit() {
     mode = RobotMode.AUTONOMOUS;
+    telemetry.robotMode(mode);
     LOGGER.info("No Autonomous");
     gamePieceController.runOnTeleopInit();
   }
@@ -151,6 +152,7 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopInit() {
     mode = RobotMode.TELEOP;
+    telemetry.robotMode(mode);
     LOGGER.info("Init Teleop");
     LOGGER.debug("Match time {}", DriverStation.getInstance().getMatchTime());
   }
@@ -216,6 +218,7 @@ public class Robot extends TimedRobot {
   @Override
   public void testInit() {
     mode = RobotMode.TEST;
+    telemetry.robotMode(mode);
     TuneController.init();
   }
 
@@ -231,9 +234,10 @@ public class Robot extends TimedRobot {
 
   @Override
   public void disabledInit() {
+    mode = RobotMode.DISABLED;
+    telemetry.robotMode(mode);
     leds.whenDisabled();
     LOGGER.info("Init Disabled");
-    telemetry.flush();
   }
 
 

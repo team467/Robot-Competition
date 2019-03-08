@@ -455,7 +455,7 @@ public class GamePieceControllerTest {
         enableTargetLock, 
         manualWristMove, 
         manualTurretMove);
-    telemetry.updateTable();
+    telemetry.start();
   }
 
   @AfterClass

@@ -1,41 +1,40 @@
 package frc.robot.logging;
 
+import static org.apache.logging.log4j.util.Unbox.box;
 import frc.robot.RobotMap;
 import frc.robot.Robot.RobotMode;
-
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import frc.robot.utilities.PerfTimer;
+import java.util.ArrayList;
 import java.util.SortedMap;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.TreeMap;
-import java.util.TreeSet;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
-
-import org.apache.commons.csv.CSVFormat;
-import org.apache.commons.csv.CSVPrinter;
+import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.message.ObjectArrayMessage;
 
 public class Telemetry {
 
   private static final Logger LOGGER 
       = RobotLogManager.getMainLogger(Telemetry.class.getName());
 
+  private PerfTimer telemetryTimer;
+
+  private static final int BUFFER_SIZE = 60;
+  private final ArrayList<Object> buffer;
   private static final Logger CSV 
       = RobotLogManager.getMainLogger("TELEMETRY");
 
   private static Telemetry instance = null;
 
-  private SortedMap<String, Supplier<String>> stringMetrics;
-  private SortedMap<String, BooleanSupplier> booleanMetrics;
-  private SortedMap<String, DoubleSupplier> doubleMetrics;
+  private final SortedMap<String, Supplier<String>> stringMetrics;
+  private final SortedMap<String, BooleanSupplier> booleanMetrics;
+  private final SortedMap<String, DoubleSupplier> doubleMetrics;
 
   private boolean printedHeaders = false;
-
-  private CSVPrinter csvPrinter = null;
 
   private long startTime = -1;
   private long lastIterationTime = -1;
@@ -60,11 +59,13 @@ public class Telemetry {
   * Creates the telemtry builder instance with the correct location for the CSV
   * output files.
   */
-  public Telemetry() {
+  private Telemetry() {
     robotMode = RobotMode.STARTED;
     stringMetrics = new TreeMap<String, Supplier<String>>();
     booleanMetrics = new TreeMap<String, BooleanSupplier>();
     doubleMetrics = new TreeMap<String, DoubleSupplier>();
+    buffer = new ArrayList<Object>(BUFFER_SIZE);
+    telemetryTimer = new PerfTimer();
 
     // Metrics to figure out
     // addMetric("/startingLocation/x"); 
@@ -73,38 +74,25 @@ public class Telemetry {
     // addMetric("/leftDistance"); 
     // addMetric("/isZeroed");
     // addMetric("/headingAngle");
-
-    try {
-      String csvFileName = "telemetry_" + System.currentTimeMillis() + ".csv";
-      File csvFile = new File(RobotLogManager.getDirectory(), csvFileName);
-      csvPrinter = new CSVPrinter(new FileWriter(csvFile),
-          CSVFormat.DEFAULT.withAllowMissingColumnNames(false).withTrim().withTrailingDelimiter());
-      LOGGER.debug("linked");
-    } catch (IOException e) {
-      LOGGER.debug(e.getStackTrace());
-      e.printStackTrace();
-    }
-    
-    Runtime.getRuntime().addShutdownHook(new Thread() {
-      @Override
-      public void run() {
-        close();
-      }
-    });
   }
 
   private class PrintTimer extends TimerTask {
-  private Telemetry telemetry;
+    private Telemetry telemetry;
 
-  private PrintTimer() {
-    telemetry = Telemetry.getInstance();
-  }
+    private PrintTimer() {
+      telemetry = Telemetry.getInstance();
+    }
 
-  @Override
-  public void run() {
-    telemetry.printCsvLine();
-  }
-
+    @Override
+    public void run() {
+      if (Level.DEBUG.isMoreSpecificThan(CSV.getLevel())) {
+        telemetryTimer.startIteration();
+        telemetry.printCsvLine();
+        telemetryTimer.endIteration();
+      } else {
+        telemetry.printCsvLine();
+      }
+    }
   }
 
   /**
@@ -143,77 +131,51 @@ public class Telemetry {
   * After WPILib updates the Sendables on the network tables, this grabs the 
   * values and puts them into a row in a CSV telemetry file.
   */
-  public void updateTable() {
-    if (RobotMap.ENABLE_TELEMETRY && !printedHeaders) {
+  public void start() {
+    if (!printedHeaders && RobotMap.ENABLE_TELEMETRY 
+        && Level.INFO.isMoreSpecificThan(CSV.getLevel())) {
       printHeaders();
-      // timer = new Timer("Telemetry Timer", true);
-      // timer.scheduleAtFixedRate(new PrintTimer(), 0, RobotMap.TELEMETRY_TIMER_MS);
+      timer = new Timer("Telemetry Timer", true);
+      timer.scheduleAtFixedRate(new PrintTimer(), 0, RobotMap.TELEMETRY_TIMER_MS);
     }
-    printCsvLine(); // Temp for timing
   }
 
   private void printHeaders() {
-  if (csvPrinter != null) {
-    try {
-      csvPrinter.print("Time (ms)");
-      csvPrinter.print("Iteration Time (ms)");
-      csvPrinter.print("Robot Mode");
-      for (String metricKey :  stringMetrics.keySet()) {
-        csvPrinter.print(metricKey);
-      }
-      for (String metricKey :  booleanMetrics.keySet()) {
-        csvPrinter.print(metricKey);
-      }
-      for (String metricKey :  doubleMetrics.keySet()) {
-        csvPrinter.print(metricKey);
-      }
-      csvPrinter.println();
-      startTime = System.currentTimeMillis();
-      lastIterationTime = 0;
-    } catch (IOException e) {
-      LOGGER.debug(e.getStackTrace());
-      e.printStackTrace();
+    buffer.add("Time (ms)");
+    buffer.add("Iteration Time (ms)");
+    buffer.add("Robot Mode");
+    for (String metricKey :  stringMetrics.keySet()) {
+      buffer.add(metricKey);
     }
-  }
-  printedHeaders = true;
+    for (String metricKey :  booleanMetrics.keySet()) {
+      buffer.add(metricKey);
+    }
+    for (String metricKey :  doubleMetrics.keySet()) {
+      buffer.add(metricKey);
+    }
+    CSV.info("Ignored", new ObjectArrayMessage(buffer.toArray()).getParameters());
+    startTime = System.currentTimeMillis();
+    printedHeaders = true;
   }
 
-  void printCsvLine() {
-    if (csvPrinter != null) {
-      try {
-        long currentTime = System.currentTimeMillis() - startTime;
-        csvPrinter.print(currentTime);
-        csvPrinter.print(currentTime - lastIterationTime);
-        lastIterationTime = currentTime;
-        csvPrinter.print(robotMode);
-        for (Supplier<String> metricSupplier :  stringMetrics.values()) {
-          csvPrinter.print(metricSupplier.get());
-        }
-        for (BooleanSupplier metricSupplier :  booleanMetrics.values()) {
-          csvPrinter.print(metricSupplier.getAsBoolean());
-        }
-        for (DoubleSupplier metricSupplier :  doubleMetrics.values()) {
-          csvPrinter.print(metricSupplier.getAsDouble());
-        }
-        csvPrinter.println();
-      } catch (IOException e) {
-        LOGGER.error(e.getStackTrace());
-        e.printStackTrace();
+  private void printCsvLine() {
+    if (Level.INFO.isMoreSpecificThan(CSV.getLevel())) {
+      long currentTime = System.currentTimeMillis() - startTime;
+      buffer.clear();
+      buffer.add(currentTime);
+      buffer.add(currentTime - lastIterationTime);
+      buffer.add(robotMode);
+      for (Supplier<String> metricSupplier :  stringMetrics.values()) {
+        buffer.add(metricSupplier.get());
       }
-    }
-  }
-
-  /**
-  * For making sure data is written to csv. Call from robot init disabled.
-  */
-  public void flush() {
-    if (csvPrinter != null) {
-      try {
-        csvPrinter.flush();
-      } catch (IOException e) {
-        LOGGER.debug(e.getStackTrace());
-        e.printStackTrace();
+      for (BooleanSupplier metricSupplier :  booleanMetrics.values()) {
+        buffer.add(metricSupplier.getAsBoolean());
       }
+      for (DoubleSupplier metricSupplier :  doubleMetrics.values()) {
+        buffer.add(metricSupplier.getAsDouble());
+      }
+      CSV.info("Ignored", new ObjectArrayMessage(buffer.toArray()).getParameters());
+      lastIterationTime = currentTime;
     }
   }
 
@@ -221,16 +183,10 @@ public class Telemetry {
     this.robotMode = robotMode;
   }
 
-  private void close() {
-    try {
-      if (csvPrinter != null) {
-        boolean finalFlush = true;
-        csvPrinter.close(finalFlush);
-      }
-      instance = null;
-    } catch (IOException e) {
-      LOGGER.debug(e.getMessage());
-    }
+  public double checkTelemetryExecutionPerformance() {
+    LOGGER.debug("Telemetry execution times sum={} mean={} jitter={}", 
+        box(telemetryTimer.sum()), box(telemetryTimer.mean()), box(telemetryTimer.standardDeviation()));
+    return telemetryTimer.mean();
   }
 
 }
