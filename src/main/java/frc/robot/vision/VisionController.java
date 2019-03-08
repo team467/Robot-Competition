@@ -1,5 +1,6 @@
 package frc.robot.vision;
 
+import static org.apache.logging.log4j.util.Unbox.box;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Sendable;
@@ -12,7 +13,6 @@ import frc.robot.sensors.LedI2C;
 import frc.robot.sensors.LedI2C.LedBlink;
 import frc.robot.sensors.LedI2C.LedColor;
 import frc.robot.sensors.LedI2C.LedMode;
-
 import org.apache.logging.log4j.Logger;
 
 public class VisionController implements Sendable {
@@ -51,7 +51,7 @@ public class VisionController implements Sendable {
 
   public double angle() {
     double angle = vision.getEntry("angle").getDouble(-1000);
-    LOGGER.debug("Angle from network table is {}", angle);
+    LOGGER.debug("Angle from network table is {}", box(angle));
     return angle;
   }
 

@@ -6,17 +6,15 @@
 
 package frc.robot.usercontrol;
 
+import static org.apache.logging.log4j.util.Unbox.box;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.XboxController;
-
 import frc.robot.RobotMap;
 import frc.robot.logging.RobotLogManager;
 import frc.robot.utilities.LookUpTable;
 import frc.robot.utilities.MathUtils;
-
 import java.lang.Math;
 import java.util.EnumMap;
-
 import org.apache.logging.log4j.Logger;
 
 public class XBoxJoystick467 {
@@ -55,7 +53,7 @@ public class XBoxJoystick467 {
    */
   public boolean down(Button b) {
     boolean result = buttonDown.get(b);
-    LOGGER.debug("Button: {} = {}", b.name(), result);
+    LOGGER.debug("Button: {} = {}", b.name(), box(result));
     return result;
   }
 
@@ -66,7 +64,7 @@ public class XBoxJoystick467 {
    */
   public boolean pressed(Button b) {
     boolean result = buttonDown.get(b) && !previousButtonDown.get(b);
-    LOGGER.debug("Button: {} = {} ", b.name(), result);
+    LOGGER.debug("Button: {} = {} ", b.name(), box(result));
     return result;
   }
 
@@ -155,7 +153,7 @@ public class XBoxJoystick467 {
   }
 
   public void logIdentity() {
-    LOGGER.debug("{} Port: {}", name, xbox.getPort());
+    LOGGER.debug("{} Port: {}", name, box(xbox.getPort()));
   }
 
   /**

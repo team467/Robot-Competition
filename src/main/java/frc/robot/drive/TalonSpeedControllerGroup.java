@@ -1,26 +1,20 @@
 package frc.robot.drive;
 
+import static org.apache.logging.log4j.util.Unbox.box;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
-import com.ctre.phoenix.motorcontrol.VelocityMeasPeriod;
-
 import edu.wpi.first.wpilibj.Sendable;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
-
 import frc.robot.RobotMap;
 import frc.robot.logging.RobotLogManager;
 import frc.robot.logging.Telemetry;
-
-import java.text.DecimalFormat;
-
 import org.apache.logging.log4j.Logger;
 
 //TalonSpeedControllerGroup
 public class TalonSpeedControllerGroup implements SpeedController, Sendable {
 
   private static final Logger LOGGER = RobotLogManager.getMainLogger(TalonSpeedControllerGroup.class.getName());
-  private static final DecimalFormat df = new DecimalFormat("####0.00");
 
   private String subsystem = "Telemetry";
   private String name = "Generic Talon Group";
@@ -102,8 +96,8 @@ public class TalonSpeedControllerGroup implements SpeedController, Sendable {
       LOGGER.debug("No CLosed Loop errors");
       return;
     }
-    LOGGER.debug("side: {} Vel = {} Pos = {} Err = {}", name, leader.getSelectedSensorVelocity(0),
-        leader.getSelectedSensorPosition(0), leader.getClosedLoopError(0));
+    LOGGER.debug("side: {} Vel = {} Pos = {} Err = {}", name, box(leader.getSelectedSensorVelocity(0)),
+        box(leader.getSelectedSensorPosition(0)), box(leader.getClosedLoopError(0)));
   }
 
   public void pidf(int slotId, double p, double i, double d, double f, double maxVelocity) {
@@ -177,7 +171,7 @@ public class TalonSpeedControllerGroup implements SpeedController, Sendable {
       return;
     }
 
-    LOGGER.debug("Output to {} drive is {} in mode: {}", name, outputValue, controlMode);
+    LOGGER.debug("Output to {} drive is {} in mode: {}", name, box(outputValue), controlMode);
 
     if (controlMode == ControlMode.Velocity) {
       outputValue *= maxVelocity;
@@ -188,8 +182,12 @@ public class TalonSpeedControllerGroup implements SpeedController, Sendable {
       follower1.follow(leader);
     }
 
-    LOGGER.debug("name: {} Requested Velocity: {} Velocity = {} Error: {}", leader.getName(), outputValue, leader.getSelectedSensorVelocity(0), leader.getClosedLoopError(0));
-    LOGGER.debug("Name: {}, Error: {}, Output Voltage: {}, Output Percent; {}", name, leader.getClosedLoopError(0), leader.getMotorOutputVoltage(), leader.getMotorOutputPercent());
+    LOGGER.debug("name: {} Requested Velocity: {} Velocity = {} Error: {}", 
+        leader.getName(), box(outputValue), 
+        box(leader.getSelectedSensorVelocity(0)), box(leader.getClosedLoopError(0)));
+    LOGGER.debug("Name: {}, Error: {}, Output Voltage: {}, Output Percent; {}", 
+        name, box(leader.getClosedLoopError(0)), box(leader.getMotorOutputVoltage()), 
+        box(leader.getMotorOutputPercent()));
   }
 
   public void configPeakOutput(double percentOut) {
@@ -314,14 +312,14 @@ public class TalonSpeedControllerGroup implements SpeedController, Sendable {
   private double feetToTicks(double feet) {
     double ticks = (feet / (RobotMap.WHEEL_CIRCUMFERENCE / 12.0)) 
         * RobotMap.WHEEL_ENCODER_CODES_PER_REVOLUTION;
-    LOGGER.trace("Feet = {} ticks = {}", df.format(feet), df.format(ticks));
+    LOGGER.trace("Feet = {} ticks = {}", box(feet), box(ticks));
     return ticks;
   }
 
   private double ticksToFeet(double ticks) {
     double feet = (ticks / RobotMap.WHEEL_ENCODER_CODES_PER_REVOLUTION) 
         * (RobotMap.WHEEL_CIRCUMFERENCE / 12);
-    LOGGER.trace("Ticks = {} feet = {}", df.format(ticks), df.format(feet));
+    LOGGER.trace("Ticks = {} feet = {}", box(ticks), box(feet));
     return feet;
   }
   

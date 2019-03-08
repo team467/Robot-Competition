@@ -1,10 +1,9 @@
 package frc.robot.tuning;
 
+import static org.apache.logging.log4j.util.Unbox.box;
 import frc.robot.gamepieces.CargoMech;
 import frc.robot.logging.RobotLogManager;
-
 import org.apache.logging.log4j.Logger;
-
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class WristTuner implements Tuner {
@@ -28,7 +27,7 @@ public class WristTuner implements Tuner {
 
   public void periodic() {
     double tuningValue = Double.parseDouble(SmartDashboard.getString("DB/String 5", "0.0"));
-    LOGGER.info("Tuning Value: {}", tuningValue);
+    LOGGER.info("Tuning Value: {}", box(tuningValue));
     cargoMech.tuneMove(tuningValue);
     LOGGER.debug("Wrist state: {}", cargoMech.wrist().toString());
   }

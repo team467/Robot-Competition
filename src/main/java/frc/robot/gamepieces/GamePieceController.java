@@ -242,7 +242,7 @@ public class GamePieceController implements Sendable {
       return true;
     }
     boolean isSafe = (cargoIntake.arm() == CargoIntakeArm.DOWN) ? true : false;
-    LOGGER.debug("Safe to move wrist? {}", isSafe);
+    LOGGER.debug("Safe to move wrist? {}", box(isSafe));
     if (!isSafe) {
       LOGGER.debug("Moving cargo intake arm down so wrist can move.");
       cargoIntake.arm(CargoIntakeArm.DOWN);
@@ -256,7 +256,7 @@ public class GamePieceController implements Sendable {
     }
     boolean isSafe = (cargoMech.isSafeToMoveTurret() 
         && cargoIntake.arm() == CargoIntakeArm.DOWN) ? true : false;
-    LOGGER.debug("Safe to move turret? {}", isSafe);
+    LOGGER.debug("Safe to move turret? {}", box(isSafe));
     if (!isSafe) {
       if (ensureSafeToMoveWrist(disableSafety)) {
         LOGGER.debug("Moving wrist to safe position.");

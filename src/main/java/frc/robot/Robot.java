@@ -7,10 +7,10 @@
 
 package frc.robot;
 
+import static org.apache.logging.log4j.util.Unbox.box;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
-
 import frc.robot.RobotMap.RobotId;
 import frc.robot.drive.Drive;
 import frc.robot.gamepieces.GamePieceController;
@@ -21,9 +21,7 @@ import frc.robot.sensors.PowerDistributionPanel;
 import frc.robot.tuning.TuneController;
 import frc.robot.usercontrol.DriverStation467;
 import frc.robot.vision.CameraSwitcher;
-
 import java.io.IOException;
-
 import org.apache.logging.log4j.Logger;
 
 /**
@@ -154,7 +152,7 @@ public class Robot extends TimedRobot {
     mode = RobotMode.TELEOP;
     telemetry.robotMode(mode);
     LOGGER.info("Init Teleop");
-    LOGGER.debug("Match time {}", DriverStation.getInstance().getMatchTime());
+    LOGGER.debug("Match time {}", box(DriverStation.getInstance().getMatchTime()));
   }
 
   /**
@@ -183,7 +181,7 @@ public class Robot extends TimedRobot {
     }
 
     LOGGER.debug("Driver Station Inputs mode: {} speed: {} turn: {}", 
-        driverstation.getDriveMode(), speed, turn);
+        driverstation.getDriveMode(), box(speed), box(turn));
 
     switch (driverstation.getDriveMode()) {
 

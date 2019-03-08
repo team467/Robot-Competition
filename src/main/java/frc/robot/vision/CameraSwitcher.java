@@ -1,11 +1,11 @@
 package frc.robot.vision;
 
+import static org.apache.logging.log4j.util.Unbox.box;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import frc.robot.RobotMap;
 import frc.robot.logging.RobotLogManager;
-
 import org.apache.logging.log4j.Logger;
 
 public class CameraSwitcher {
@@ -51,28 +51,28 @@ public class CameraSwitcher {
   }
 
   public void forward() {
-    LOGGER.debug("Setting camera forward at index {}", RobotMap.FORWARD_CAMERA_INDEX);
+    LOGGER.debug("Setting camera forward at index {}", box(RobotMap.FORWARD_CAMERA_INDEX));
     cameraNetworkTableEntry.setDouble(RobotMap.FORWARD_CAMERA_INDEX);
     prevState = currentState;
     currentState = cameraState.FORWARDS;
   }
 
   public void backward() {
-    LOGGER.debug("Setting camera backward at index {}", RobotMap.BACKWARD_CAMERA_INDEX);
+    LOGGER.debug("Setting camera backward at index {}", box(RobotMap.BACKWARD_CAMERA_INDEX));
     cameraNetworkTableEntry.setDouble(RobotMap.BACKWARD_CAMERA_INDEX);
     prevState = currentState;
     currentState = cameraState.BACKWARDS;
   }
 
   public void cargo() {
-    LOGGER.debug("Setting to cargo camera at index {}", RobotMap.CARGO_CAMERA_INDEX);
+    LOGGER.debug("Setting to cargo camera at index {}", box(RobotMap.CARGO_CAMERA_INDEX));
     cameraNetworkTableEntry.setDouble(RobotMap.CARGO_CAMERA_INDEX);
     prevState = currentState;
     currentState = cameraState.CARGO;
   }
 
   public void hatch() {
-    LOGGER.debug("Setting to hatch camera at index {}", RobotMap.HATCH_CAMERA_INDEX);
+    LOGGER.debug("Setting to hatch camera at index {}", box(RobotMap.HATCH_CAMERA_INDEX));
     cameraNetworkTableEntry.setDouble(RobotMap.HATCH_CAMERA_INDEX);
     prevState = currentState;
     currentState = cameraState.HATCH;

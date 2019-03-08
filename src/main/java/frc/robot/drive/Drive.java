@@ -1,16 +1,12 @@
 package frc.robot.drive;
 
+import static org.apache.logging.log4j.util.Unbox.box;
 import com.ctre.phoenix.motorcontrol.ControlMode;
-
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
 import frc.robot.RobotMap;
 import frc.robot.logging.RobotLogManager;
 import frc.robot.simulator.communications.RobotData;
-
-import java.text.DecimalFormat;
-
 import org.apache.logging.log4j.Logger;
 
 public class Drive extends DifferentialDrive implements AutoDrive {
@@ -18,7 +14,6 @@ public class Drive extends DifferentialDrive implements AutoDrive {
   private ControlMode controlMode;
 
   private static final Logger LOGGER = RobotLogManager.getMainLogger(Drive.class.getName());
-  private static final DecimalFormat df = new DecimalFormat("####0.00");
 
   // Single instance of this class
   private static Drive instance = null;
@@ -40,7 +35,7 @@ public class Drive extends DifferentialDrive implements AutoDrive {
       TalonSpeedControllerGroup left;
       TalonSpeedControllerGroup right;
 
-      LOGGER.info("Number of Motors: {}", RobotMap.DRIVEMOTOR_NUM);
+      LOGGER.info("Number of Motors: {}", box(RobotMap.DRIVEMOTOR_NUM));
       if (RobotMap.HAS_WHEELS && RobotMap.DRIVEMOTOR_NUM > 0) {
         LOGGER.info("Creating  Lead Motors");
 
@@ -210,8 +205,9 @@ public class Drive extends DifferentialDrive implements AutoDrive {
   public void tuneMove(double leftDistance, double rightDistance, int pidSlot) {
     left.selectPidSlot(pidSlot);
     right.selectPidSlot(pidSlot);
-    LOGGER.debug("Target: L: {} R: {} Current L: {} R: {}", df.format(leftDistance), df.format(rightDistance),
-        df.format(getLeftDistance()), df.format(getRightDistance()));
+    LOGGER.debug("Target: L: {} R: {} Current L: {} R: {}", 
+        box(leftDistance), box(rightDistance),
+        box(getLeftDistance()), box(getRightDistance()));
     left.set(ControlMode.Position, feetToTicks(leftDistance));
     // The right motor is reversed
     right.set(ControlMode.Position, feetToTicks(rightDistance));
@@ -237,13 +233,15 @@ public class Drive extends DifferentialDrive implements AutoDrive {
     left.selectPidSlot(RobotMap.PID_SLOT_DRIVE);
     right.selectPidSlot(RobotMap.PID_SLOT_DRIVE);
 
-    LOGGER.trace("Automated move of {} with {} degree turn.", df.format(distanceInFeet), df.format(degrees));
+    LOGGER.trace("Automated move of {} with {} degree turn.", 
+        box(distanceInFeet), box(degrees));
 
     double turnDistanceInFeet = degreesToFeet(degrees);
     // Temp change to tune move to test motor control.
     // moveFeet((distanceInFeet - turnDistanceInFeet), (distanceInFeet +
     // turnDistanceInFeet));
-    tuneMove((distanceInFeet - turnDistanceInFeet), (distanceInFeet + turnDistanceInFeet), RobotMap.PID_SLOT_DRIVE);
+    tuneMove((distanceInFeet - turnDistanceInFeet), 
+        (distanceInFeet + turnDistanceInFeet), RobotMap.PID_SLOT_DRIVE);
   }
 
   /**
@@ -256,7 +254,7 @@ public class Drive extends DifferentialDrive implements AutoDrive {
     left.selectPidSlot(RobotMap.PID_SLOT_TURN);
     right.selectPidSlot(RobotMap.PID_SLOT_TURN);
 
-    LOGGER.debug("Automated move of {} degree turn.", df.format(rotationInDegrees));
+    LOGGER.debug("Automated move of {} degree turn.", box(rotationInDegrees));
 
     double turnDistanceInFeet = degreesToFeet(rotationInDegrees);
     moveFeet(turnDistanceInFeet, -turnDistanceInFeet);
@@ -278,8 +276,8 @@ public class Drive extends DifferentialDrive implements AutoDrive {
 
   public void moveFeet(double targetLeftDistance, double targetRightDistance) {
 
-    LOGGER.debug("Automated move of right: {} left: {} feet ", df.format(targetRightDistance),
-        df.format(targetLeftDistance));
+    LOGGER.debug("Automated move of right: {} left: {} feet ", 
+        box(targetRightDistance), box(targetLeftDistance));
 
     left.set(ControlMode.Position, targetLeftDistance);
     // The right motor is reversed
@@ -319,20 +317,20 @@ public class Drive extends DifferentialDrive implements AutoDrive {
     double leftLeadSensorPos = Math.abs(getLeftDistance());
     double rightLeadSensorPos = Math.abs(getRightDistance());
     double lowestAbsDist = Math.min(leftLeadSensorPos, rightLeadSensorPos);
-    LOGGER.debug("The absolute distance moved: {}", df.format(lowestAbsDist));
+    LOGGER.debug("The absolute distance moved: {}", box(lowestAbsDist));
     return lowestAbsDist;
   }
 
   private double feetToTicks(double feet) {
     double ticks = (feet / (RobotMap.WHEEL_CIRCUMFERENCE / 12.0)) * RobotMap.WHEEL_ENCODER_CODES_PER_REVOLUTION;
-    LOGGER.trace("Feet = {} ticks = {}", df.format(feet), df.format(ticks));
+    LOGGER.trace("Feet = {} ticks = {}", box(feet), box(ticks));
     // what do i do here
     return ticks;
   }
 
   private double ticksToFeet(double ticks) {
     double feet = (ticks / RobotMap.WHEEL_ENCODER_CODES_PER_REVOLUTION) * (RobotMap.WHEEL_CIRCUMFERENCE / 12);
-    LOGGER.trace("Ticks = {} feet = {}", df.format(ticks), df.format(feet));
+    LOGGER.trace("Ticks = {} feet = {}", box(ticks), box(feet));
     return feet;
   }
 
@@ -345,7 +343,7 @@ public class Drive extends DifferentialDrive implements AutoDrive {
 
   public void arcadeDrive(double speed, double rotation, boolean squaredInputs) {
     super.arcadeDrive(speed, rotation, squaredInputs);
-    LOGGER.debug("Expected Output: {}", speed);
+    LOGGER.debug("Expected Output: {}", box(speed));
     data.updateDrivePosition(getLeftDistance(), getRightDistance());
   }
 
@@ -354,7 +352,7 @@ public class Drive extends DifferentialDrive implements AutoDrive {
   }
 
   public void tankDrive(double leftSpeed, double rightSpeed, boolean squaredInputs) {
-    LOGGER.debug("expected left: {}, expected right: {} ", leftSpeed, rightSpeed);
+    LOGGER.debug("expected left: {}, expected right: {} ", box(leftSpeed), box(rightSpeed));
     super.tankDrive(leftSpeed, rightSpeed, squaredInputs);
     data.updateDrivePosition(getLeftDistance(), getRightDistance());
   }
