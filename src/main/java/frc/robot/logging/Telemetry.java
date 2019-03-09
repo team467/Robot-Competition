@@ -125,12 +125,6 @@ public class Telemetry {
     stringMetrics.put(key, getter);
   }
 
-
-
-  /**
-  * After WPILib updates the Sendables on the network tables, this grabs the 
-  * values and puts them into a row in a CSV telemetry file.
-  */
   public void start() {
     if (!printedHeaders && RobotMap.ENABLE_TELEMETRY 
         && Level.INFO.isMoreSpecificThan(CSV.getLevel())) {

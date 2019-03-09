@@ -1,7 +1,6 @@
 package frc.robot.gamepieces;
 
 import static org.apache.logging.log4j.util.Unbox.box;
-import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
 import frc.robot.logging.RobotLogManager;
 import frc.robot.logging.Telemetry;
 
@@ -35,36 +34,6 @@ abstract class GamePieceBase implements GamePiece {
 
   @Override
   public abstract void periodic();
-
-  // Sendable interface methods for updated the SmartDashboard
-  @Override
-  public String getName() {
-    return name;
-  }
-
-  @Override
-  public void setName(String name) {
-    this.name = name;
-  }
-
-  @Override
-  public String getSubsystem() {
-    return subsystem;
-  }
-
-  @Override
-  public void setSubsystem(String subsystem) {
-    this.subsystem = subsystem;
-  }
-
-  @Override
-  public void initSendable(SendableBuilder builder) {
-    builder.addBooleanProperty(
-        name + "Enabled", 
-        this::enabled, // Lambda called when updating network table
-        (enabled) -> enabled(enabled)); // Lambda calls set enabled if changed in Network table
-  }
-
   private void registerMetrics() {
     Telemetry telemetry = Telemetry.getInstance();
     telemetry.addBooleanMetric(name + "Enabled", this::enabled);

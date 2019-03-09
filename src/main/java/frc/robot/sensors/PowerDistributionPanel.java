@@ -2,7 +2,6 @@ package frc.robot.sensors;
 
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
 import frc.robot.logging.Telemetry;
 
 public class PowerDistributionPanel extends edu.wpi.first.wpilibj.PowerDistributionPanel {
@@ -36,31 +35,6 @@ public class PowerDistributionPanel extends edu.wpi.first.wpilibj.PowerDistribut
 
   private PowerDistributionPanel() {
     setName("Telemetry", "Power Distribution Panel");
-  }
-
-  @Override
-  public void initSendable(SendableBuilder builder) {
-    builder.addDoubleProperty("PDP Input Voltage", this::getVoltage, null);
-    builder.addDoubleProperty("PDP Temperature", this::getTemperature, null);
-    builder.addDoubleProperty("PDP Total Current", this::getTotalCurrent, null);
-    builder.addDoubleProperty("PDP Total Energy", this::getTotalEnergy, null);
-    builder.addDoubleProperty("PDP Total Power", this::getVoltage, null);
-    builder.addDoubleProperty("PDP Current (0)", this::current0, null);
-    builder.addDoubleProperty("PDP Current (1)", this::current1, null);
-    builder.addDoubleProperty("PDP Current (2)", this::current2, null);
-    builder.addDoubleProperty("PDP Current (3)", this::current3, null);
-    builder.addDoubleProperty("PDP Current (4)", this::current4, null);
-    builder.addDoubleProperty("PDP Current (5)", this::current5, null);
-    builder.addDoubleProperty("PDP Current (6)", this::current6, null);
-    builder.addDoubleProperty("PDP Current (7)", this::current7, null);
-    builder.addDoubleProperty("PDP Current (8)", this::current8, null);
-    builder.addDoubleProperty("PDP Current (9)", this::current9, null);
-    builder.addDoubleProperty("PDP Current (10)", this::current10, null);
-    builder.addDoubleProperty("PDP Current (11)", this::current11, null);
-    builder.addDoubleProperty("PDP Current (12)", this::current12, null);
-    builder.addDoubleProperty("PDP Current (13)", this::current13, null);
-    builder.addDoubleProperty("PDP Current (14)", this::current14, null);
-    builder.addDoubleProperty("PDP Current (15)", this::current15, null);
   }
 
   public void registerMetrics() {

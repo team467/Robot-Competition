@@ -3,8 +3,6 @@ package frc.robot.vision;
 import static org.apache.logging.log4j.util.Unbox.box;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.wpilibj.Sendable;
-import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
 import frc.robot.RobotMap;
 import frc.robot.logging.RobotLogManager;
 import frc.robot.logging.Telemetry;
@@ -15,7 +13,7 @@ import frc.robot.sensors.LedI2C.LedColor;
 import frc.robot.sensors.LedI2C.LedMode;
 import org.apache.logging.log4j.Logger;
 
-public class VisionController implements Sendable {
+public class VisionController {
 
   private static VisionController instance = null;
 
@@ -132,11 +130,6 @@ public boolean hasAngle(){
 
   public void setSubsystem(String subsystem) {
     this.subsystem = subsystem;
-  }
-
-  public void initSendable(SendableBuilder builder) {
-    builder.addDoubleProperty("Vision Angle", this::getAngle, (angle)->setAngle(angle));
-    builder.addBooleanProperty("Vision Has Angle", this::hasAngle, null);
   }
 
   public void registerMetrics() {

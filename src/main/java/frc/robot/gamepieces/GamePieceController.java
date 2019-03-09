@@ -1,8 +1,6 @@
 package frc.robot.gamepieces;
 
 import static org.apache.logging.log4j.util.Unbox.box;
-import edu.wpi.first.wpilibj.Sendable;
-import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
 import frc.robot.RobotMap;
 import frc.robot.gamepieces.CargoIntake.CargoIntakeArm;
 import frc.robot.gamepieces.CargoIntake.CargoIntakeRoller;
@@ -19,7 +17,7 @@ import frc.robot.vision.CameraSwitcher;
 import frc.robot.vision.VisionController;
 import org.apache.logging.log4j.Logger;
 
-public class GamePieceController implements Sendable {
+public class GamePieceController {
 
   private static GamePieceController instance = null;
 
@@ -52,28 +50,6 @@ public class GamePieceController implements Sendable {
       instance = new GamePieceController();
     }
     return instance;
-  }
-
-  // This methods are required for the Sendable interface
-
-  @Override
-  public String getName() {
-    return name;
-  }
-
-  @Override
-  public void setName(String name) {
-    this.name = name;
-  }
-
-  @Override
-  public String getSubsystem() {
-    return subsystem;
-  }
-
-  @Override
-  public void setSubsystem(String subsystem) {
-    this.subsystem = subsystem;
   }
 
   /**
@@ -563,14 +539,6 @@ public class GamePieceController implements Sendable {
     cargoMech.periodic();
     hatchMech.periodic();
     turret.periodic();
-  }
-
-  @Override
-  public void initSendable(SendableBuilder builder) {
-    // Lambda called when updating network table
-    builder.addStringProperty(name + "Mode", mode::name,
-        // Lambda calls set enabled if changed in Network table
-        (gamePieceMode) -> testMode(gamePieceMode));
   }
 
   private void registerMetrics() {

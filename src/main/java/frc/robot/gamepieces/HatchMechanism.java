@@ -2,7 +2,6 @@ package frc.robot.gamepieces;
 
 import static org.apache.logging.log4j.util.Unbox.box;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
-import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
 import frc.robot.RobotMap;
 import frc.robot.logging.RobotLogManager;
 import frc.robot.logging.Telemetry;
@@ -197,20 +196,6 @@ public class HatchMechanism extends GamePieceBase implements GamePiece {
     } else {
       LOGGER.debug("Hatch mechanism is disabled.");
     }
-  }
-
-  @Override
-  public void initSendable(SendableBuilder builder) {
-    builder.addStringProperty("Hatch Launcher Command", 
-        this::launcherCommandString, (command) -> this.launcher(command));
-    builder.addStringProperty("Hatch Arm Command", 
-        this::armCommandString, (command) -> this.arm(command));
-    if (RobotMap.HAS_HATCH_MECHANISM){
-      builder.addStringProperty("Hatch Launcher Solinoid", 
-        this::launcherSolinoidString, null);
-      builder.addStringProperty("Hatch Arm Solinoid", 
-          this::armSolinoidString, null);
-    } 
   }
 
   private void registerMetrics() {

@@ -1,8 +1,6 @@
 package frc.robot.gamepieces;
 
-import edu.wpi.first.wpilibj.Sendable;
-
-public interface GamePiece extends Sendable {
+public interface GamePiece {
 
   /**
    * Enables or disables the game piece. The game peice must be enabled to move. 

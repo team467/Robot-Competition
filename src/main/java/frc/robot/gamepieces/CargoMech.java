@@ -5,7 +5,6 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 
 import edu.wpi.first.wpilibj.Spark;
-import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
 import frc.robot.RobotMap;
 import frc.robot.drive.TalonProxy;
 import frc.robot.drive.WpiTalonSrxInterface;
@@ -277,7 +276,6 @@ public class CargoMech extends GamePieceBase implements GamePiece {
     wrist = CargoMechWrist.CARGO_BIN;
     wristState = CargoMechWristState.read();
 
-    // initSendable(TelemetryBuilder.getInstance());
     registerMetrics();
     LOGGER.trace("Created Ball Mech game piece.");
   }
@@ -394,21 +392,6 @@ public class CargoMech extends GamePieceBase implements GamePiece {
 
   static void simulatedSensorData(double reading) {
     CargoMechWristState.simulatedReading = reading;
-  }
-
-  @Override
-  public void initSendable(SendableBuilder builder) {
-    builder.addStringProperty("Cargo Claw Command", 
-        this::clawCommandString, (command) -> claw(command));
-    builder.addStringProperty("Cargo Wrist Command", 
-        this::wristCommandString, (command) -> wrist(command));
-    if (RobotMap.HAS_CARGO_MECHANISM) {
-      builder.addDoubleProperty("Cargo Claw Lead Motor Output", this::clawLeaderMotorOutput, null);
-      builder.addDoubleProperty("Cargo Claw Follower Motor Output", 
-          this::clawFollowerMotorOutput, null);
-      builder.addStringProperty("Cargo Wrist State", this::wristStateString, null);
-      builder.addDoubleProperty("Cargo Wrist Height Proportion", this::heightProportion, null);
-    }
   }
 
   private void registerMetrics() {

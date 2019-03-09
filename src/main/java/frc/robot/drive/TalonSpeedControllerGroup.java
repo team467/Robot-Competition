@@ -3,16 +3,13 @@ package frc.robot.drive;
 import static org.apache.logging.log4j.util.Unbox.box;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
-import edu.wpi.first.wpilibj.Sendable;
 import edu.wpi.first.wpilibj.SpeedController;
-import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
 import frc.robot.RobotMap;
 import frc.robot.logging.RobotLogManager;
 import frc.robot.logging.Telemetry;
 import org.apache.logging.log4j.Logger;
 
-//TalonSpeedControllerGroup
-public class TalonSpeedControllerGroup implements SpeedController, Sendable {
+public class TalonSpeedControllerGroup implements SpeedController {
 
   private static final Logger LOGGER = RobotLogManager.getMainLogger(TalonSpeedControllerGroup.class.getName());
 
@@ -289,26 +286,6 @@ public class TalonSpeedControllerGroup implements SpeedController, Sendable {
     set(ControlMode.Position, feetToTicks(targetDistance));
   }
 
-  @Override
-  public String getName() {
-    return name;
-  }
-
-  @Override
-  public void setName(String name) {
-    this.name = name;
-  }
-
-  @Override
-  public String getSubsystem() {
-    return subsystem;
-  }
-
-  @Override
-  public void setSubsystem(String subsystem) {
-    this.subsystem = subsystem;
-  }
-
   private double feetToTicks(double feet) {
     double ticks = (feet / (RobotMap.WHEEL_CIRCUMFERENCE / 12.0)) 
         * RobotMap.WHEEL_ENCODER_CODES_PER_REVOLUTION;
@@ -323,12 +300,6 @@ public class TalonSpeedControllerGroup implements SpeedController, Sendable {
     return feet;
   }
   
-  @Override
-  public void initSendable(SendableBuilder builder) {
-    builder.addDoubleProperty(name + "_Position", this::position, null);
-    builder.addDoubleProperty(name + "_Velocity", this::velocity, null);
-  }
-
   public void registerMetrics() {
     Telemetry telemetry = Telemetry.getInstance();
     telemetry.addDoubleMetric(name + "_Position", this::position);

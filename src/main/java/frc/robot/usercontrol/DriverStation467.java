@@ -1,14 +1,11 @@
 package frc.robot.usercontrol;
 
-import edu.wpi.first.wpilibj.Sendable;
-import edu.wpi.first.wpilibj.SendableBase;
-import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
 import frc.robot.RobotMap;
 import frc.robot.drive.DriveMode;
 import frc.robot.logging.Telemetry;
 import frc.robot.usercontrol.XBoxJoystick467.Button;
 
-public class DriverStation467 extends SendableBase implements Sendable {
+public class DriverStation467 {
 
   private XBoxJoystick467 driverJoy;
   private XBoxJoystick467 navJoy;
@@ -41,9 +38,6 @@ public class DriverStation467 extends SendableBase implements Sendable {
 
     driverRumbler = new Rumbler(driverJoy);
     navRumbler = new Rumbler(navJoy);
-
-    setSubsystem("Telemetry");
-    setName("Driver Station");
 
     registerMetrics();
   }
@@ -259,39 +253,6 @@ public class DriverStation467 extends SendableBase implements Sendable {
 
   public boolean getIntakeDown() {
     return driverJoy.down(Button.a);
-  }
-
-  @Override
-  public void initSendable(SendableBuilder builder) {
-    if (RobotMap.ENABLE_DRIVER_STATION_TELEMETRY && !RobotMap.useSimulator) {
-      builder.addBooleanProperty("Input Restart Camera", this::restartCamera, null);
-      builder.addBooleanProperty("Input Drive Camera Front", this::getDriveCameraFront, null);
-      builder.addBooleanProperty("Input Drive Camera Back", this::getDriveCameraBack, null);
-      builder.addBooleanProperty("Input Disable Safety", this::getDisableSafety, null);
-      builder.addBooleanProperty("Input Defense Mode", this::getDefenseMode, null);
-      builder.addBooleanProperty("Input Hatch Mode", this::getHatchMode, null);
-      builder.addBooleanProperty("Input Cargo Mode", this::getCargoMode, null);
-      builder.addBooleanProperty("Input Intake Up", this::getIntakeUp, null);
-      builder.addBooleanProperty("Input Intake Down", this::getIntakeDown, null);
-      builder.addBooleanProperty("Input Acquire Ball", this::getAcquireBall, null);
-      builder.addBooleanProperty("Input Fire Cargo", this::getFireCall, null);
-      builder.addBooleanProperty("Input Wrist - Cargo Ship", 
-          this::getCargoWristCargoShipPosition, null);
-      builder.addBooleanProperty("Input Wrist - Low Rocket", 
-          this::getCargoWristLowRocketPosition, null);
-      builder.addBooleanProperty("Input Acquire Hatch", this::getAcquireHatch, null);
-      builder.addBooleanProperty("Input Fire Hatch", this::getFireHatch, null);
-      builder.addBooleanProperty("Input Reject Ball", this::getRejectBall, null);
-      builder.addBooleanProperty("Input Intake Ball", this::getIntakeBall, null);
-      builder.addBooleanProperty("Input Turret Home", this::getTurretHome, null);
-      builder.addBooleanProperty("Input Turret Left", this::getTurretLeft, null);
-      builder.addBooleanProperty("Input Turret Right", this::getTurretRight, null);
-      builder.addBooleanProperty("Input Target Lock", this::getAutoTargetButtonPressed, null);
-      builder.addDoubleProperty("Input Manual Wrist", this::getManualWristMove, null);
-      builder.addDoubleProperty("Input Manual Turret", this::getManualTurretMove, null);
-      builder.addDoubleProperty("Input Arcade Speed", this::getArcadeSpeed, null);
-      builder.addDoubleProperty("Input Arcade Turn", this::getArcadeTurn, null);
-    }
   }
 
   public void registerMetrics() {
