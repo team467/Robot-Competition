@@ -1,8 +1,22 @@
 package frc.robot.utilities;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.TreeMap;
+
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.Logger;
+
+import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.Timer;
+import frc.robot.logging.RobotLogManager;
 
 public class PerfTimer {
+
+  private static final TreeMap<String, PerfTimer> timers = new TreeMap<String, PerfTimer>();
+  private static final Logger PERF_CSV = RobotLogManager.getMainLogger("PERF_TIMERS");
+  private static boolean printedHeaders = false;
+  private static final double ROBOT_START_TIME = Timer.getFPGATimestamp(); 
 
   private long startTime;
   private ArrayList<Long> times;
@@ -11,8 +25,19 @@ public class PerfTimer {
   private long sum;
   private double mean;
   private double standardDeviation;
+  private double median;
+  private double percentile75;
+  private double percentile99;
+  private double percentile95;
 
-  public PerfTimer() {
+  public static PerfTimer timer(String name) {
+    if (!timers.containsKey(name)) {
+      timers.put(name, new PerfTimer());
+    } 
+    return timers.get(name);
+  }
+
+  private PerfTimer() {
     count = 0;
     sum = 0;
     mean = 0.0;
@@ -20,17 +45,24 @@ public class PerfTimer {
     times = new ArrayList<Long>();
   }
 
-  public void startIteration() {
-    startTime = System.currentTimeMillis();
+  public void start() {
+    if (Level.DEBUG.isMoreSpecificThan(PERF_CSV.getLevel())) {
+      startTime = RobotController.getFPGATime();
+      // startTime = System.currentTimeMillis();
+    }
   }
 
-  public void endIteration() {
-    times.add(System.currentTimeMillis() - startTime);
+  public void end() {
+    if (Level.DEBUG.isMoreSpecificThan(PERF_CSV.getLevel())) {
+      times.add(RobotController.getFPGATime() - startTime);
+      // times.add(System.currentTimeMillis() - startTime);
+    }
   }
 
   private void process() {
     if (times.size() > count) {
       count = times.size();
+      Collections.sort(times);
       sum = 0;
       for(long time : times) {
           sum += time;
@@ -40,31 +72,32 @@ public class PerfTimer {
       for(long time : times) {
           standardDeviation += Math.pow((double) time - mean, 2);
       }
-      standardDeviation = Math.sqrt(standardDeviation / (double) count) / 1;
-      mean /= 1;
-      sum /= 1;
+      standardDeviation = Math.sqrt(standardDeviation / (double) count) / 1000.0;
+      mean /= 1000.0;
+      sum /= 1000.0;
+    }
+    median = times.get((int) Math.round(((double) count) * 0.5)) / 1000.0;
+    percentile75 = times.get((int) Math.round(((double) count) * 0.75)) / 1000.0;
+    percentile95 = times.get((int) Math.round(((double) count) * 0.95)) / 1000.0;
+    percentile99 = times.get((int) Math.round(((double) count) * 0.99)) / 1000.0;
+  }
+
+  public static void print() {
+    if (Level.DEBUG.isMoreSpecificThan(PERF_CSV.getLevel())) {
+      if (!printedHeaders) {
+        PERF_CSV.info("Ignored", "Time", "Name", "Count", "Mean", "Std Dev", "Total Time",
+            "Median", "75th Percentile", "95th Percentile", "99th Percentile");
+        printedHeaders = true;
+      }
+      for (String name : timers.keySet()) {
+        PerfTimer timer = timers.get(name);
+        timer.process();
+        PERF_CSV.info("Ignored", Math.round(Timer.getFPGATimestamp() - ROBOT_START_TIME),
+            name, timer.count, timer.mean, 
+            timer.standardDeviation, timer.sum, timer.median, 
+            timer.percentile75, timer.percentile95, timer.percentile99);
+      }
     }
   }
-
-  public int count() {
-    process();
-    return count;
-  }
-
-  public long sum() {
-    process();
-    return sum;
-  }
-
-  public double mean() {
-    process();
-    return mean;
-  }
-
-  public double standardDeviation() {
-    process();
-    return standardDeviation;
-  }
-
 
 }

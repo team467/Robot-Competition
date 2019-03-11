@@ -65,7 +65,7 @@ public class Telemetry {
     booleanMetrics = new TreeMap<String, BooleanSupplier>();
     doubleMetrics = new TreeMap<String, DoubleSupplier>();
     buffer = new ArrayList<Object>(BUFFER_SIZE);
-    telemetryTimer = new PerfTimer();
+    telemetryTimer = PerfTimer.timer("Telemetry");
 
     // Metrics to figure out
     // addMetric("/startingLocation/x"); 
@@ -86,9 +86,9 @@ public class Telemetry {
     @Override
     public void run() {
       if (Level.DEBUG.isMoreSpecificThan(CSV.getLevel())) {
-        telemetryTimer.startIteration();
+        telemetryTimer.start();
         telemetry.printCsvLine();
-        telemetryTimer.endIteration();
+        telemetryTimer.end();
       } else {
         telemetry.printCsvLine();
       }
@@ -175,12 +175,6 @@ public class Telemetry {
 
   public void robotMode(RobotMode robotMode) {
     this.robotMode = robotMode;
-  }
-
-  public double checkTelemetryExecutionPerformance() {
-    LOGGER.debug("Telemetry execution times sum={} mean={} jitter={}", 
-        box(telemetryTimer.sum()), box(telemetryTimer.mean()), box(telemetryTimer.standardDeviation()));
-    return telemetryTimer.mean();
   }
 
 }

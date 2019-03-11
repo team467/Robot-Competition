@@ -11,6 +11,7 @@ import static org.apache.logging.log4j.util.Unbox.box;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.Timer;
 import frc.robot.RobotMap.RobotId;
 import frc.robot.drive.Drive;
 import frc.robot.gamepieces.GamePieceController;
@@ -20,6 +21,7 @@ import frc.robot.sensors.LedI2C;
 import frc.robot.sensors.PowerDistributionPanel;
 import frc.robot.tuning.TuneController;
 import frc.robot.usercontrol.DriverStation467;
+import frc.robot.utilities.PerfTimer;
 import frc.robot.vision.CameraSwitcher;
 import java.io.IOException;
 import org.apache.logging.log4j.Logger;
@@ -50,15 +52,6 @@ public class Robot extends TimedRobot {
   public static long previousTime = time;
   public static int dt = 0;
 
-  /**
-   * Used for timing.
-   */
-  public static void tick() {
-    dt = (int) (time - previousTime);
-    previousTime = time;
-    time = System.nanoTime();
-  }
-
   public static void enableSimulator() {
     Robot.enableSimulator = true;
   }
@@ -84,7 +77,7 @@ public class Robot extends TimedRobot {
     // Initialize RobotMap
     RobotMap.init(RobotId.ROBOT_2019);
     mode = RobotMode.STARTED;
-
+Timer.getFPGATimestamp();
     // Used after init, should be set only by the Simulator GUI
     // this ensures that the simulator is off otherwise.
     if (enableSimulator) {
@@ -235,6 +228,7 @@ public class Robot extends TimedRobot {
     mode = RobotMode.DISABLED;
     telemetry.robotMode(mode);
     leds.whenDisabled();
+    PerfTimer.print();
     LOGGER.info("Init Disabled");
   }
 

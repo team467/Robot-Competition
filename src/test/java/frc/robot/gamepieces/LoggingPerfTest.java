@@ -112,7 +112,7 @@ public class LoggingPerfTest {
   @Before
   public void init() {
     
-    gamepieceTimer = new PerfTimer();
+    gamepieceTimer = PerfTimer.timer("Gamepieces");
 
     // Set input defaults
     // override in individual tests
@@ -169,6 +169,7 @@ public class LoggingPerfTest {
   
   @AfterClass
   public static void closeAll() {
+    PerfTimer.print();
     robot.close();
   }
 
@@ -196,14 +197,10 @@ public class LoggingPerfTest {
           cargoMode = false;
       }
   
-      gamepieceTimer.startIteration();
+      gamepieceTimer.start();
       callProcessState();
-      gamepieceTimer.endIteration();
+      gamepieceTimer.end();
     }
-
-    LOGGER.info("Execution times Process: sum={} mean={} jitter={} telemetry mean={}", 
-        box(gamepieceTimer.sum()), box(gamepieceTimer.mean()), box(gamepieceTimer.standardDeviation()),
-        telemetry.checkTelemetryExecutionPerformance());
 
     assert(true);
   }

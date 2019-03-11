@@ -29,6 +29,15 @@ Configuration:
           delimiter: ","   
         Policies:
           OnStartupTriggeringPolicy: {}
+      - name: PERF_TIMER_LOG
+        fileName: ${log-path}/perftimes.csv
+        filePattern: ${log-path}/perftimes-%d{yyyy-MM-dd-HH-mm-ss-SSS}.csv
+        immediateFlush: false
+        append: true
+        CsvParameterLayout:
+          delimiter: ","   
+        Policies:
+          OnStartupTriggeringPolicy: {}
   Loggers:
       Root:
         level: info
@@ -39,9 +48,13 @@ Configuration:
             level: info
       Logger:
         - name: TELEMETRY
-          level: info
+          level: debug
           AppenderRef:
             - ref: CSV
+        - name: PERF_TIMERS
+          level: debug
+          AppenderRef:
+            - ref: PERF_TIMER_LOG
         - name: frc.robot.gamepieces.LoggingPerfTest
           level: info
           AppenderRef:
