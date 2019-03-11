@@ -11,7 +11,6 @@ import static org.apache.logging.log4j.util.Unbox.box;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.Timer;
 import frc.robot.RobotMap.RobotId;
 import frc.robot.drive.Drive;
 import frc.robot.gamepieces.GamePieceController;
@@ -47,6 +46,7 @@ public class Robot extends TimedRobot {
   private CameraSwitcher camera;
   private GamePieceController gamePieceController;
   private LedI2C leds;
+  private PerfTimer perfTimer;
 
   public static long time = System.nanoTime();
   public static long previousTime = time;
@@ -77,7 +77,7 @@ public class Robot extends TimedRobot {
     // Initialize RobotMap
     RobotMap.init(RobotId.ROBOT_2019);
     mode = RobotMode.STARTED;
-Timer.getFPGATimestamp();
+
     // Used after init, should be set only by the Simulator GUI
     // this ensures that the simulator is off otherwise.
     if (enableSimulator) {
@@ -129,6 +129,7 @@ Timer.getFPGATimestamp();
     mode = RobotMode.AUTONOMOUS;
     telemetry.robotMode(mode);
     LOGGER.info("No Autonomous");
+    perfTimer = PerfTimer.timer("Autonomous");
     gamePieceController.runOnTeleopInit();
   }
   
@@ -145,6 +146,7 @@ Timer.getFPGATimestamp();
     mode = RobotMode.TELEOP;
     telemetry.robotMode(mode);
     LOGGER.info("Init Teleop");
+    perfTimer = PerfTimer.timer("Teleoperated");
     LOGGER.debug("Match time {}", box(DriverStation.getInstance().getMatchTime()));
   }
 
@@ -153,6 +155,8 @@ Timer.getFPGATimestamp();
    */
   @Override
   public void teleopPeriodic() {
+
+    perfTimer.start();
     driverstation.readInputs();
 
     double speed = driverstation.getArcadeSpeed();
@@ -204,6 +208,7 @@ Timer.getFPGATimestamp();
       camera.restart();
     }
 
+    perfTimer.end();
   }
 
   @Override
@@ -211,6 +216,7 @@ Timer.getFPGATimestamp();
     mode = RobotMode.TEST;
     telemetry.robotMode(mode);
     TuneController.init();
+    perfTimer = PerfTimer.timer("Test Periodic");
   }
 
 
@@ -220,7 +226,9 @@ Timer.getFPGATimestamp();
    */
   @Override
   public void testPeriodic() {
+    perfTimer.start();
     TuneController.periodic();
+    perfTimer.end();
   }
 
   @Override
