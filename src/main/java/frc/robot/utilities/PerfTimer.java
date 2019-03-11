@@ -1,7 +1,10 @@
 package frc.robot.utilities;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.TreeMap;
 
 import org.apache.logging.log4j.Level;
@@ -15,8 +18,9 @@ public class PerfTimer {
 
   private static final TreeMap<String, PerfTimer> timers = new TreeMap<String, PerfTimer>();
   private static final Logger PERF_CSV = RobotLogManager.getMainLogger("PERF_TIMERS");
-  private static boolean printedHeaders = false;
   private static final double ROBOT_START_TIME = Timer.getFPGATimestamp(); 
+  private static final DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+  private static final Date date = new Date();
 
   private long startTime;
   private ArrayList<Long> times;
@@ -84,15 +88,12 @@ public class PerfTimer {
 
   public static void print() {
     if (Level.DEBUG.isMoreSpecificThan(PERF_CSV.getLevel())) {
-      if (!printedHeaders) {
-        PERF_CSV.info("Ignored", "Time", "Name", "Count", "Mean", "Std Dev", "Total Time",
-            "Median", "75th Percentile", "95th Percentile", "99th Percentile");
-        printedHeaders = true;
-      }
       for (String name : timers.keySet()) {
         PerfTimer timer = timers.get(name);
         timer.process();
-        PERF_CSV.info("Ignored", Math.round(Timer.getFPGATimestamp() - ROBOT_START_TIME),
+        PERF_CSV.info("Ignored",
+            dateFormat.format(date), 
+            Math.round(Timer.getFPGATimestamp() - ROBOT_START_TIME),
             name, timer.count, timer.mean, 
             timer.standardDeviation, timer.sum, timer.median, 
             timer.percentile75, timer.percentile95, timer.percentile99);

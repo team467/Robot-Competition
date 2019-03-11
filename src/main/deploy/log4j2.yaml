@@ -20,6 +20,10 @@ Configuration:
           pattern: "[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n"
         Policies:
           OnStartupTriggeringPolicy: {} 
+          SizeBasedTriggeringPolicy:
+            size: 10 MB
+        DefaultRollOverStrategy:
+          max: 50
       - name: CSV
         fileName: ${log-path}/telemetry.csv
         filePattern: ${log-path}/telemetry-%d{yyyy-MM-dd-HH-mm-ss-SSS}.csv
@@ -29,15 +33,23 @@ Configuration:
           delimiter: ","   
         Policies:
           OnStartupTriggeringPolicy: {}
+          SizeBasedTriggeringPolicy:
+            size: 10 MB
+        DefaultRollOverStrategy:
+          max: 50
       - name: PERF_TIMER_LOG
         fileName: ${log-path}/perftimes.csv
         filePattern: ${log-path}/perftimes-%d{yyyy-MM-dd-HH-mm-ss-SSS}.csv
         immediateFlush: false
         append: true
         CsvParameterLayout:
-          delimiter: ","   
+          delimiter: ","
+          header: "Robot Start, Offset Time, Name, Count, Mean, Std Dev, Total Time, Median, 75th Percentile, 95 Percentile, 99th Percentile\n"
         Policies:
-          OnStartupTriggeringPolicy: {}
+          SizeBasedTriggeringPolicy:
+            size: 1 MB
+        DefaultRollOverStrategy:
+          max: 50
   Loggers:
       Root:
         level: info
