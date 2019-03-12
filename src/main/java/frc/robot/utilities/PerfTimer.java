@@ -79,11 +79,11 @@ public class PerfTimer {
       standardDeviation = Math.sqrt(standardDeviation / (double) count) / 1000.0;
       mean /= 1000.0;
       sum /= 1000.0;
+      median = times.get((int) Math.round(((double) count) * 0.5)) / 1000.0;
+      percentile75 = times.get((int) Math.round(((double) count) * 0.75)) / 1000.0;
+      percentile95 = times.get((int) Math.round(((double) count) * 0.95)) / 1000.0;
+      percentile99 = times.get((int) Math.round(((double) count) * 0.99)) / 1000.0;
     }
-    median = times.get((int) Math.round(((double) count) * 0.5)) / 1000.0;
-    percentile75 = times.get((int) Math.round(((double) count) * 0.75)) / 1000.0;
-    percentile95 = times.get((int) Math.round(((double) count) * 0.95)) / 1000.0;
-    percentile99 = times.get((int) Math.round(((double) count) * 0.99)) / 1000.0;
   }
 
   public static void print() {
