@@ -458,11 +458,6 @@ public class GamePieceControllerTest {
     telemetry.start();
   }
 
-  @AfterClass
-  public static void closeAll() {
-    robot.close();
-  }
-
   private int turretAngleToTicks(double angle) {
     double ticksPerDegree = ((double) 
         (RobotMap.TURRET_RIGHT_LIMIT_TICKS - RobotMap.TURRET_LEFT_LIMIT_TICKS))

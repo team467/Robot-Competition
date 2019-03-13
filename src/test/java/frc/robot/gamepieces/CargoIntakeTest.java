@@ -128,9 +128,4 @@ public class CargoIntakeTest {
     assertTrue(rollerState);
   }
 
-  @AfterClass
-  public static void closeAll() {
-    robot.close();
-  }
-
 }

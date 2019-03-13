@@ -106,9 +106,4 @@ public class HatchMechanismTest {
     assertTrue(launcherState);
   }
 
-  @AfterClass
-  public static void closeAll() {
-    robot.close();
-  }
-
 }

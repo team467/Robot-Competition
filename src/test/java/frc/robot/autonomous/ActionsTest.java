@@ -25,7 +25,7 @@ import org.junit.Test;
 
 public class ActionsTest {
 
-  private static Logger LOGGER = RobotLogManager.getTestLogger(ActionsTest.class.getName());
+  private static Logger LOGGER = RobotLogManager.getMainLogger(ActionsTest.class.getName());
 
   private static final DecimalFormat df = new DecimalFormat("####0.00");
 
@@ -62,12 +62,6 @@ public class ActionsTest {
     drive.readPidsFromSmartDashboard(RobotMap.PID_SLOT_TURN);
     drive.zero();
   }
-
-  @After
-  public void tearDown() {
-    robot.close();
-  }
-
 
   /**
    * Tests a basic cross the autonomous line. This is a standard requirement most years.

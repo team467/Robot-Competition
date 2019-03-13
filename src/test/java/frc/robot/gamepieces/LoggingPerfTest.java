@@ -21,6 +21,7 @@ import frc.robot.logging.Telemetry;
 import frc.robot.utilities.PerfTimer;
 
 import org.apache.logging.log4j.Logger;
+import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -166,11 +167,10 @@ public class LoggingPerfTest {
     
     telemetry.start();
   }
-  
+
   @AfterClass
   public static void closeAll() {
     PerfTimer.print();
-    robot.close();
   }
 
   @Test
