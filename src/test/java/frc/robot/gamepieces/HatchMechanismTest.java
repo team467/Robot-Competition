@@ -20,7 +20,7 @@ public class HatchMechanismTest {
   private static int TEST_PERIODIC_ITERATIONS = 1;
 
   private static final Logger LOGGER 
-      = RobotLogManager.getLogger(HatchMechanismTest.class.getName());
+      = RobotLogManager.getMainLogger(HatchMechanismTest.class.getName());
 
   private static Robot robot;
   private static HatchMechanism hatch;

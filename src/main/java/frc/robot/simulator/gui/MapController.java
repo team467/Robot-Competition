@@ -159,7 +159,7 @@ public class MapController {
   private ArrayList<Shape> collisions = new ArrayList<Shape>();
   ObservableList<Node> stuffOnField = null;
 
-  private static final Logger LOGGER = RobotLogManager.getLogger(MapController.class.getName());
+  private static final Logger LOGGER = RobotLogManager.getMainLogger(MapController.class.getName());
   private DecimalFormat df = new DecimalFormat("####0.00");
 
   private RobotData data = RobotData.getInstance();

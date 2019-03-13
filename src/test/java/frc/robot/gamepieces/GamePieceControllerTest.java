@@ -28,7 +28,7 @@ public class GamePieceControllerTest {
 
   private static Telemetry telemetry;
   private static final Logger LOGGER 
-      = RobotLogManager.getLogger(GamePieceControllerTest.class.getName());
+      = RobotLogManager.getMainLogger(GamePieceControllerTest.class.getName());
 
   private static Robot robot;
   private static GamePieceController controller;

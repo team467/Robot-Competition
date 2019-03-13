@@ -11,7 +11,7 @@ public class Configs {
   private static String config = "";
   // possible locations for the config
   public static String[] configLocations = { "./csv.txt", "./csv.txt" };
-  private static final Logger LOGGER = RobotLogManager.getLogger(Configs.class.getName());
+  private static final Logger LOGGER = RobotLogManager.getMainLogger(Configs.class.getName());
 
   public static void init(){
     StringBuilder contentBuilder = new StringBuilder();

@@ -19,14 +19,14 @@ import org.apache.logging.log4j.message.ObjectArrayMessage;
 public class Telemetry {
 
   private static final Logger LOGGER 
-      = RobotLogManager.getLogger(Telemetry.class.getName());
+      = RobotLogManager.getMainLogger(Telemetry.class.getName());
 
   private PerfTimer perfTimer;
 
   private static final int BUFFER_SIZE = 60;
   private final ArrayList<Object> buffer;
   private static final Logger CSV 
-      = RobotLogManager.getLogger("TELEMETRY");
+      = RobotLogManager.getMainLogger("TELEMETRY");
 
   private static Telemetry instance = null;
 

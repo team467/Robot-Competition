@@ -16,7 +16,7 @@ public class TuneController {
   }
 
   private static final Logger LOGGER
-      = RobotLogManager.getLogger(TuneController.class.getName());
+      = RobotLogManager.getMainLogger(TuneController.class.getName());
 
   private static Tuner tuner;
 

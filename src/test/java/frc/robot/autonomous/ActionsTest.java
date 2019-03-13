@@ -25,7 +25,7 @@ import org.junit.Test;
 
 public class ActionsTest {
 
-  private static Logger LOGGER = RobotLogManager.getLogger(ActionsTest.class.getName());
+  private static Logger LOGGER = RobotLogManager.getMainLogger(ActionsTest.class.getName());
 
   private static final DecimalFormat df = new DecimalFormat("####0.00");
 

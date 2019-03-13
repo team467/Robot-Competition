@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class TurretTuner implements Tuner {
 
   private static final Logger LOGGER
-      = RobotLogManager.getLogger(TuneController.class.getName());
+      = RobotLogManager.getMainLogger(TuneController.class.getName());
 
   Turret turret;
 

@@ -34,7 +34,7 @@ import org.apache.logging.log4j.Logger;
  */
 public class Robot extends TimedRobot {
 
-  private static final Logger LOGGER = RobotLogManager.getLogger(Robot.class.getName());
+  private static final Logger LOGGER = RobotLogManager.getMainLogger(Robot.class.getName());
 
   private static boolean enableSimulator = false;
 

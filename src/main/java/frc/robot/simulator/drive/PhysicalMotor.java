@@ -24,7 +24,7 @@ import org.apache.logging.log4j.Logger;
 
 public class PhysicalMotor implements Runnable, PIDOutput, PIDSource {
 
-  private static final Logger LOGGER = RobotLogManager.getLogger(PhysicalMotor.class.getName());
+  private static final Logger LOGGER = RobotLogManager.getMainLogger(PhysicalMotor.class.getName());
   
   private static final DecimalFormat df = new DecimalFormat("#0.0000");
 

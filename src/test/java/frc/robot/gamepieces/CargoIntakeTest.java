@@ -20,7 +20,7 @@ public class CargoIntakeTest {
   private static int TEST_PERIODIC_ITERATIONS = 1;
 
   private static final Logger LOGGER 
-      = RobotLogManager.getLogger(CargoIntakeTest.class.getName());
+      = RobotLogManager.getMainLogger(CargoIntakeTest.class.getName());
 
   private static Robot robot;
   private static CargoIntake cargoIntake;

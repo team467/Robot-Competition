@@ -11,7 +11,7 @@ import org.apache.logging.log4j.Logger;
 
 public class TalonSpeedControllerGroup implements SpeedController {
 
-  private static final Logger LOGGER = RobotLogManager.getLogger(TalonSpeedControllerGroup.class.getName());
+  private static final Logger LOGGER = RobotLogManager.getMainLogger(TalonSpeedControllerGroup.class.getName());
 
   private String subsystem = "Telemetry";
   private String name = "Generic Talon Group";

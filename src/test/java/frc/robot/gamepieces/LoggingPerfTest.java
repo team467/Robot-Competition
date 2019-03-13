@@ -31,7 +31,7 @@ public class LoggingPerfTest {
 
   private static Telemetry telemetry;
   private static final Logger LOGGER 
-      = RobotLogManager.getLogger(LoggingPerfTest.class.getName());
+      = RobotLogManager.getMainLogger(LoggingPerfTest.class.getName());
 
   private PerfTimer gamepieceTimer;
  

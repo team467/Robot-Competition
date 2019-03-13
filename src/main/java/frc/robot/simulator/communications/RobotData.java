@@ -27,7 +27,7 @@ public class RobotData {
   // Temp, should move to separate transmit function
   AutonomousPlan course = null;
   
-  private static final Logger LOGGER = RobotLogManager.getLogger(RobotData.class.getName()); 
+  private static final Logger LOGGER = RobotLogManager.getMainLogger(RobotData.class.getName()); 
   
   private static RobotData instance = null;
   

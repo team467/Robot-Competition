@@ -35,7 +35,7 @@ public class RobotShape {
 
 
 
-  private static final Logger LOGGER = RobotLogManager.getLogger(RobotShape.class.getName());
+  private static final Logger LOGGER = RobotLogManager.getMainLogger(RobotShape.class.getName());
   private DecimalFormat df = new DecimalFormat("####0.00");
 
   // Robot Shapes

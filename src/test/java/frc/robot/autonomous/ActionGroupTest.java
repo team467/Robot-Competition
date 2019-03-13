@@ -20,7 +20,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 public class ActionGroupTest {
-  private static Logger LOGGER = RobotLogManager.getLogger(ActionGroupTest.class.getName());
+  private static Logger LOGGER = RobotLogManager.getMainLogger(ActionGroupTest.class.getName());
 
   private static final DecimalFormat df = new DecimalFormat("####0.00");
 

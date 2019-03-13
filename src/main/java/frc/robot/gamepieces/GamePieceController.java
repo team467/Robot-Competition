@@ -22,7 +22,7 @@ public class GamePieceController {
   private static GamePieceController instance = null;
 
   private static final Logger LOGGER 
-      = RobotLogManager.getLogger(GamePieceController.class.getName());
+      = RobotLogManager.getMainLogger(GamePieceController.class.getName());
 
   protected String name = "Game Piece Controller";
   protected String subsystem = "Gamepieces";

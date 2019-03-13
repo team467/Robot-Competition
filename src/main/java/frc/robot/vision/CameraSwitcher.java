@@ -17,7 +17,7 @@ public class CameraSwitcher {
   private NetworkTableEntry totalNetworkTableEntry;
 
   private static final Logger LOGGER 
-      = RobotLogManager.getLogger(CameraSwitcher.class.getName());
+      = RobotLogManager.getMainLogger(CameraSwitcher.class.getName());
 
   enum cameraState {
     FORWARDS, BACKWARDS, CARGO, HATCH;

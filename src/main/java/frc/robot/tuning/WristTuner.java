@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class WristTuner implements Tuner {
 
   private static final Logger LOGGER
-      = RobotLogManager.getLogger(WristTuner.class.getName());
+      = RobotLogManager.getMainLogger(WristTuner.class.getName());
 
   CargoMech cargoMech;
 

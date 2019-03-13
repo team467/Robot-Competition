@@ -11,7 +11,7 @@ import org.junit.Test;
 public class RobotLogManagerTest {
   private static String testDirectoryFile = "/media/sda1/logging/log4j2.yaml";
   private static Logger LOGGER 
-      = RobotLogManager.getLogger(RobotLogManagerTest.class.getName());
+      = RobotLogManager.getMainLogger(RobotLogManagerTest.class.getName());
   
   @Test
   public void directoryTest() {

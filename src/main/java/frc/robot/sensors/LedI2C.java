@@ -32,7 +32,7 @@ public class LedI2C {
 
 
   byte[] previousMessage;
-  private static final Logger LOGGER = RobotLogManager.getLogger(LedI2C.class.getName());
+  private static final Logger LOGGER = RobotLogManager.getMainLogger(LedI2C.class.getName());
 
   private static I2C wire = new I2C(Port.kOnboard, 8);
 

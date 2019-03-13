@@ -21,7 +21,7 @@ public class WpiTalonSrxTest {
   private static int TEST_DEVICE_NUMBER = 1;
 
   private static final Logger LOGGER 
-      = RobotLogManager.getLogger(WpiTalonSrxTest.class.getName());
+      = RobotLogManager.getMainLogger(WpiTalonSrxTest.class.getName());
   
   private static WpiTalonSrx motor;
 

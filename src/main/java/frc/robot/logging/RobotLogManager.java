@@ -77,7 +77,7 @@ public class RobotLogManager {
    * @param className the class for subsetting the logger
    * @return the logger
    */
-  public static Logger getLogger(String className) {
+  public static Logger getMainLogger(String className) {
     if (!initialized) {
       init();
     }
@@ -92,11 +92,11 @@ public class RobotLogManager {
    * @param className the class for subsetting the logger
    * @return the logger
    */
-  public static Logger getLogger(String customLogConfig, String className) {
+  public static Logger getMainLogger(String customLogConfig, String className) {
     if (!initialized) {
       init(customLogConfig);
     }
     return LogManager.getLogger(className);
   }
-  
+
 }

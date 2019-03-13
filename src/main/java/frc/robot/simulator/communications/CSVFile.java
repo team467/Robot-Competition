@@ -14,7 +14,7 @@ import org.apache.logging.log4j.Logger;
 
 public class CSVFile {
 
-  private static final Logger LOGGER = RobotLogManager.getLogger(CSVFile.class.getName());
+  private static final Logger LOGGER = RobotLogManager.getMainLogger(CSVFile.class.getName());
   public int currentRow;
   public int lastRowThatWasCreated;
   public List<List<Object>> data = new ArrayList<>();

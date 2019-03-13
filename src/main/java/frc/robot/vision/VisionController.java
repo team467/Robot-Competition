@@ -17,7 +17,7 @@ public class VisionController {
 
   private static VisionController instance = null;
 
-  private static final Logger LOGGER = RobotLogManager.getLogger(VisionController.class.getName());
+  private static final Logger LOGGER = RobotLogManager.getMainLogger(VisionController.class.getName());
 
   private NetworkTable vision;
   private DriverStation467 driverStation;
