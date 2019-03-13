@@ -25,8 +25,7 @@ public class Telemetry {
 
   private static final int BUFFER_SIZE = 60;
   private final ArrayList<Object> buffer;
-  private static final Logger CSV 
-      = RobotLogManager.getMainLogger("TELEMETRY");
+  private static final Logger CSV = RobotLogManager.getTelemetryLogger();
 
   private static Telemetry instance = null;
 

@@ -47,28 +47,54 @@ public class RobotLogManager {
   }
 
   private static void init(String pathToConfig) {
-    try {
-      File configSourceFile = new File(pathToConfig);
-      ConfigurationSource source = new ConfigurationSource(
-            new FileInputStream(configSourceFile), configSourceFile);
-      ConfigurationFactory configurationFactory = YamlConfigurationFactory.getInstance();
-      ConfigurationFactory.setConfigurationFactory(configurationFactory);
-      Configuration configuration = configurationFactory.getConfiguration(null, source);
-      Configurator.initialize(configuration);
-    } catch (IOException e) {
-      e.printStackTrace();
+    if (!initialized) {
+      try {
+        File configSourceFile = new File(pathToConfig);
+        ConfigurationSource source = new ConfigurationSource(
+              new FileInputStream(configSourceFile), configSourceFile);
+        ConfigurationFactory configurationFactory = YamlConfigurationFactory.getInstance();
+        ConfigurationFactory.setConfigurationFactory(configurationFactory);
+        Configuration configuration = configurationFactory.getConfiguration(null, source);
+        Configurator.initialize(configuration);
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+      initialized = true;
     }
-    initialized = true;
   }
 
   private static boolean init() {
-    for (String path : filepaths) {
-      if (doesFileExist(path)) {
-        init(path);
-        break;
+    if (!initialized) {
+      for (String path : filepaths) {
+        if (doesFileExist(path)) {
+          init(path);
+          break;
+        }
       }
     }
     return initialized;
+  }
+
+  /**
+   * Initializes the log system if required, then returns the telemetry logger.
+   * 
+   * @param className the class for subsetting the logger
+   * @return the logger
+   */
+  public static Logger getTelemetryLogger() {
+    init();
+    return LogManager.getLogger("TELEMETRY");
+  }
+
+  /**
+   * Initializes the log system if required, then returns the appropriate class logger.
+   * 
+   * @param className the class for subsetting the logger
+   * @return the logger
+   */
+  public static Logger getPerfLogger() {
+    init();
+    return LogManager.getLogger("PERF_TIMERS");
   }
 
   /**
@@ -78,9 +104,7 @@ public class RobotLogManager {
    * @return the logger
    */
   public static Logger getMainLogger(String className) {
-    if (!initialized) {
-      init();
-    }
+    init();
     return LogManager.getLogger(className);
   }
 
@@ -93,9 +117,7 @@ public class RobotLogManager {
    * @return the logger
    */
   public static Logger getMainLogger(String customLogConfig, String className) {
-    if (!initialized) {
-      init(customLogConfig);
-    }
+    init(customLogConfig);
     return LogManager.getLogger(className);
   }
 

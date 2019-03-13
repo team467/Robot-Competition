@@ -17,7 +17,7 @@ import frc.robot.logging.RobotLogManager;
 public class PerfTimer {
 
   private static final TreeMap<String, PerfTimer> timers = new TreeMap<String, PerfTimer>();
-  private static final Logger PERF_CSV = RobotLogManager.getMainLogger("PERF_TIMERS");
+  private static final Logger PERF_CSV = RobotLogManager.getPerfLogger();
   private static final double ROBOT_START_TIME = Timer.getFPGATimestamp(); 
   private static final DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
   private static final Date date = new Date();
