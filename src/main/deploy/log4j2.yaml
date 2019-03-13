@@ -40,7 +40,7 @@ Configuration:
       - name: PERF_TIMER_LOG
         fileName: ${log-path}/perftimes.csv
         filePattern: ${log-path}/perftimes-%d{yyyy-MM-dd-HH-mm-ss-SSS}.csv
-        immediateFlush: false
+        immediateFlush: true
         append: true
         CsvParameterLayout:
           delimiter: ","
@@ -52,7 +52,7 @@ Configuration:
           max: 50
   Loggers:
       Root:
-        level: info
+        level: warn
         AppenderRef:
           - ref: Console_Appender
             level: warn
@@ -64,7 +64,7 @@ Configuration:
           AppenderRef:
             - ref: CSV
         - name: PERF_TIMERS
-          level: debug
+          level: trace
           AppenderRef:
             - ref: PERF_TIMER_LOG
         - name: frc.robot.gamepieces.LoggingPerfTest
