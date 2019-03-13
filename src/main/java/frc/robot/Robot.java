@@ -75,7 +75,7 @@ public class Robot extends TimedRobot {
     // table once.
 
     // Initialize RobotMap
-    RobotMap.init(RobotId.ROBOT_2019);
+    RobotMap.init(RobotId.MINIBOT);
     mode = RobotMode.STARTED;
 
     // Used after init, should be set only by the Simulator GUI
@@ -183,6 +183,7 @@ public class Robot extends TimedRobot {
     switch (driverstation.getDriveMode()) {
 
       case ArcadeDrive:
+      LOGGER.error(speed);
         drive.arcadeDrive(speed, turn, true);
         if (RobotMap.AUTO_CAMERA) {
           camera.autoSwitch(speed);

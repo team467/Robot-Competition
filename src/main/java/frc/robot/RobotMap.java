@@ -315,13 +315,16 @@ public class RobotMap {
         DRIVEMOTOR_NUM = 2;
         WHEEL_CIRCUMFERENCE = 18.50;
 
-        LEFT_LEAD_CHANNEL = 1;
+        LEFT_LEAD_CHANNEL = 6;
         LEFT_DRIVE_SENSOR_IS_INVERTED = false;
         LEFT_DRIVE_MOTOR_IS_INVERTED = false;
 
-        RIGHT_LEAD_CHANNEL = 4;
+        RIGHT_LEAD_CHANNEL = 1;
         RIGHT_DRIVE_SENSOR_IS_INVERTED = false;
         RIGHT_DRIVE_MOTOR_IS_INVERTED = false;
+
+        NORMAL_DRIVE_SPEED_MULTIPLIER = 0.8;
+        SLOW_DRIVE_SPEED_MULTIPLIER = 0.6;
 
         // Linear PIDS
         LEFT_DRIVE_PID_P = 1.0;
