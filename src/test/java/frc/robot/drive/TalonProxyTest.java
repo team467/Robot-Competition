@@ -17,7 +17,7 @@ public class TalonProxyTest {
   private static int TEST_DEVICE_NUMBER = 1;
 
   private static final Logger LOGGER 
-      = RobotLogManager.getMainLogger(TalonProxyTest.class.getName());
+      = RobotLogManager.getLogger(TalonProxyTest.class.getName());
   private static WpiTalonSrxInterface motor;
 
   @BeforeClass

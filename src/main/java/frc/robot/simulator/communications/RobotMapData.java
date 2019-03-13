@@ -24,7 +24,7 @@ public class RobotMapData implements Serializable, Cloneable {
    */
   Coordinate startingLocation = new Coordinate(0.0, 0.0);
 
-  private static final Logger LOGGER = RobotLogManager.getMainLogger(RobotMapData.class.getName());
+  private static final Logger LOGGER = RobotLogManager.getLogger(RobotMapData.class.getName());
   /**
    * The robot position of the left and right middle wheels.
    */

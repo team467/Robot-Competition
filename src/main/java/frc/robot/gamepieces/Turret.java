@@ -14,7 +14,7 @@ public class Turret extends GamePieceBase implements GamePiece {
 
   private static Turret instance = null;
 
-  private static final Logger LOGGER = RobotLogManager.getMainLogger(Turret.class.getName());
+  private static final Logger LOGGER = RobotLogManager.getLogger(Turret.class.getName());
 
   // Physical components
   private final WpiTalonSrxInterface talon;

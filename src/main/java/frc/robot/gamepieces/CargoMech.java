@@ -16,7 +16,7 @@ public class CargoMech extends GamePieceBase implements GamePiece {
 
   private static CargoMech instance = null; // set to null
 
-  private static final Logger LOGGER = RobotLogManager.getMainLogger(CargoMech.class.getName());
+  private static final Logger LOGGER = RobotLogManager.getLogger(CargoMech.class.getName());
 
   // Actuators
   private CargoMechClaw claw;

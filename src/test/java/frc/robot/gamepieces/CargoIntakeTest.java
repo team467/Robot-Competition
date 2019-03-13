@@ -20,7 +20,7 @@ public class CargoIntakeTest {
   private static int TEST_PERIODIC_ITERATIONS = 1;
 
   private static final Logger LOGGER 
-      = RobotLogManager.getMainLogger(CargoIntakeTest.class.getName());
+      = RobotLogManager.getLogger(CargoIntakeTest.class.getName());
 
   private static Robot robot;
   private static CargoIntake cargoIntake;
@@ -126,11 +126,6 @@ public class CargoIntakeTest {
       }
     }
     assertTrue(rollerState);
-  }
-
-  @AfterClass
-  public static void closeAll() {
-    robot.close();
   }
 
 }

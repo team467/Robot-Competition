@@ -18,7 +18,7 @@ import org.junit.Test;
 @Ignore("Drive tests are long.")
 public class DriveTest {
 
-  private static final Logger LOGGER = RobotLogManager.getMainLogger(DriveTest.class.getName());
+  private static final Logger LOGGER = RobotLogManager.getLogger(DriveTest.class.getName());
 
   private static Drive drive;
 

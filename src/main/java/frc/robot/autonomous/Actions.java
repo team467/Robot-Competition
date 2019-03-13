@@ -13,7 +13,7 @@ import org.apache.logging.log4j.Logger;
 
 public class Actions {
 
-  private static final Logger LOGGER = RobotLogManager.getMainLogger(Actions.class.getName());
+  private static final Logger LOGGER = RobotLogManager.getLogger(Actions.class.getName());
 
   private static final DecimalFormat df = new DecimalFormat("####0.00");
 

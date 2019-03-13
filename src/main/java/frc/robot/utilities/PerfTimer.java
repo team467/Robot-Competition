@@ -17,7 +17,7 @@ import frc.robot.logging.RobotLogManager;
 public class PerfTimer {
 
   private static final TreeMap<String, PerfTimer> timers = new TreeMap<String, PerfTimer>();
-  private static final Logger PERF_CSV = RobotLogManager.getMainLogger("PERF_TIMERS");
+  private static final Logger PERF_CSV = RobotLogManager.getLogger("PERF_TIMERS");
   private static final double ROBOT_START_TIME = Timer.getFPGATimestamp(); 
   private static final DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
   private static final Date date = new Date();
@@ -50,14 +50,14 @@ public class PerfTimer {
   }
 
   public void start() {
-    if (Level.DEBUG.isMoreSpecificThan(PERF_CSV.getLevel())) {
+    if (Level.TRACE.isMoreSpecificThan(PERF_CSV.getLevel())) {
       startTime = RobotController.getFPGATime();
       // startTime = System.currentTimeMillis();
     }
   }
 
   public void end() {
-    if (Level.DEBUG.isMoreSpecificThan(PERF_CSV.getLevel())) {
+    if (Level.TRACE.isMoreSpecificThan(PERF_CSV.getLevel())) {
       times.add(RobotController.getFPGATime() - startTime);
       // times.add(System.currentTimeMillis() - startTime);
     }
@@ -87,11 +87,11 @@ public class PerfTimer {
   }
 
   public static void print() {
-    if (Level.DEBUG.isMoreSpecificThan(PERF_CSV.getLevel())) {
+    if (Level.TRACE.isMoreSpecificThan(PERF_CSV.getLevel())) {
       for (String name : timers.keySet()) {
         PerfTimer timer = timers.get(name);
         timer.process();
-        PERF_CSV.info("Ignored",
+        PERF_CSV.trace("Ignored",
             dateFormat.format(date), 
             Math.round(Timer.getFPGATimestamp() - ROBOT_START_TIME),
             name, timer.count, timer.mean, 

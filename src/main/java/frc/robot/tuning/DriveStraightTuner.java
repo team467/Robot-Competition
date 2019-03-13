@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class DriveStraightTuner implements Tuner {
 
   private static final Logger LOGGER
-      = RobotLogManager.getMainLogger(TuneController.class.getName());
+      = RobotLogManager.getLogger(TuneController.class.getName());
 
   Drive drive;
 

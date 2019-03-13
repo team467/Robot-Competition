@@ -13,7 +13,7 @@ public class Drive extends DifferentialDrive implements AutoDrive {
 
   private ControlMode controlMode;
 
-  private static final Logger LOGGER = RobotLogManager.getMainLogger(Drive.class.getName());
+  private static final Logger LOGGER = RobotLogManager.getLogger(Drive.class.getName());
 
   // Single instance of this class
   private static Drive instance = null;

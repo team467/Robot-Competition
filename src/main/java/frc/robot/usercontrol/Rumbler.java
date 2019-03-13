@@ -6,7 +6,7 @@ import org.apache.logging.log4j.Logger;
 
 public class Rumbler {
 
-  private static final Logger LOGGER = RobotLogManager.getMainLogger(Rumbler.class.getName());
+  private static final Logger LOGGER = RobotLogManager.getLogger(Rumbler.class.getName());
   
   static final int ITERATION_TIME_MS = 20;
   

@@ -28,7 +28,7 @@ public class GamePieceControllerTest {
 
   private static Telemetry telemetry;
   private static final Logger LOGGER 
-      = RobotLogManager.getMainLogger(GamePieceControllerTest.class.getName());
+      = RobotLogManager.getLogger(GamePieceControllerTest.class.getName());
 
   private static Robot robot;
   private static GamePieceController controller;
@@ -456,11 +456,6 @@ public class GamePieceControllerTest {
         manualWristMove, 
         manualTurretMove);
     telemetry.start();
-  }
-
-  @AfterClass
-  public static void closeAll() {
-    robot.close();
   }
 
   private int turretAngleToTicks(double angle) {

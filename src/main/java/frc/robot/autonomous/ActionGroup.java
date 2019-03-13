@@ -20,7 +20,7 @@ import org.apache.logging.log4j.Logger;
  */
 public class ActionGroup {
 
-  private static final Logger LOGGER = RobotLogManager.getMainLogger(ActionGroup.class.getName());
+  private static final Logger LOGGER = RobotLogManager.getLogger(ActionGroup.class.getName());
   private static final DecimalFormat df = new DecimalFormat("####0.00");
 
   private static AutoDrive drive = Drive.getInstance();

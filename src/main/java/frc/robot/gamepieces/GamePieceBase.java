@@ -9,7 +9,7 @@ import org.apache.logging.log4j.Logger;
 abstract class GamePieceBase implements GamePiece {
 
   private static final Logger LOGGER 
-      = RobotLogManager.getMainLogger(GamePieceBase.class.getName());
+      = RobotLogManager.getLogger(GamePieceBase.class.getName());
 
   protected String name = "Generic Game Piece";
   protected String subsystem = "Gamepieces";

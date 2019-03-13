@@ -19,7 +19,7 @@ import org.apache.logging.log4j.Logger;
 
 public class XBoxJoystick467 {
 
-  private static final Logger LOGGER = RobotLogManager.getMainLogger(XBoxJoystick467.class.getName());
+  private static final Logger LOGGER = RobotLogManager.getLogger(XBoxJoystick467.class.getName());
   private XboxController xbox;
   private String name;
   private int pov = 0;

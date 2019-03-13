@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class IntakeTuner implements Tuner {
 
   private static final Logger LOGGER
-      = RobotLogManager.getMainLogger(IntakeTuner.class.getName());
+      = RobotLogManager.getLogger(IntakeTuner.class.getName());
 
   CargoIntake intake;
 

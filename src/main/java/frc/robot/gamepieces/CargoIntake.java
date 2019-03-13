@@ -11,7 +11,7 @@ import org.apache.logging.log4j.Logger;
 public class CargoIntake extends GamePieceBase implements GamePiece {
   
   private static final Logger LOGGER 
-      = RobotLogManager.getMainLogger(CargoIntake.class.getName());
+      = RobotLogManager.getLogger(CargoIntake.class.getName());
 
   private static CargoIntake instance = null;
 

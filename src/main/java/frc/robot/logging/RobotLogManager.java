@@ -77,7 +77,7 @@ public class RobotLogManager {
    * @param className the class for subsetting the logger
    * @return the logger
    */
-  public static Logger getMainLogger(String className) {
+  public static Logger getLogger(String className) {
     if (!initialized) {
       init();
     }
@@ -92,36 +92,11 @@ public class RobotLogManager {
    * @param className the class for subsetting the logger
    * @return the logger
    */
-  public static Logger getMainLogger(String customLogConfig, String className) {
+  public static Logger getLogger(String customLogConfig, String className) {
     if (!initialized) {
       init(customLogConfig);
     }
     return LogManager.getLogger(className);
   }
-
-  /**
-   * Initializes the log system if required, then returns the appropriate class logger.
-   * 
-   * @param className the class for subsetting the logger
-   * @return the test logger
-   */
-  public static Logger getTestLogger(String className) {
-    if (!initialized) {
-      init("./src/main/deploy/log4j2-test.yaml");
-    }
-    return LogManager.getLogger(className);
-  }
-
-  /**
-   * Initializes the log system if required, then returns the telemetry.
-   * 
-   * @return the telemetry logger
-   */
-  public static Logger telemetryLogger() {
-    if (!initialized) {
-      init();
-    }
-    return LogManager.getLogger("telemetry");
-  }
-
+  
 }

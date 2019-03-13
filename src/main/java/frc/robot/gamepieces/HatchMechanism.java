@@ -10,7 +10,7 @@ import org.apache.logging.log4j.Logger;
 public class HatchMechanism extends GamePieceBase implements GamePiece {
 
   private static final Logger LOGGER 
-      = RobotLogManager.getMainLogger(HatchMechanism.class.getName());
+      = RobotLogManager.getLogger(HatchMechanism.class.getName());
 
   private static HatchMechanism instance = null;
 

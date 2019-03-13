@@ -19,7 +19,7 @@ public class MatchConfiguration {
   private static MatchConfiguration instance;
 
   private static final Logger LOGGER 
-      = RobotLogManager.getMainLogger(MatchConfiguration.class.getName());
+      = RobotLogManager.getLogger(MatchConfiguration.class.getName());
 
   public enum TeamColor {
     UNKNOWN,

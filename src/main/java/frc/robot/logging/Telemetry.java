@@ -19,14 +19,14 @@ import org.apache.logging.log4j.message.ObjectArrayMessage;
 public class Telemetry {
 
   private static final Logger LOGGER 
-      = RobotLogManager.getMainLogger(Telemetry.class.getName());
+      = RobotLogManager.getLogger(Telemetry.class.getName());
 
-  private PerfTimer telemetryTimer;
+  private PerfTimer perfTimer;
 
   private static final int BUFFER_SIZE = 60;
   private final ArrayList<Object> buffer;
   private static final Logger CSV 
-      = RobotLogManager.getMainLogger("TELEMETRY");
+      = RobotLogManager.getLogger("TELEMETRY");
 
   private static Telemetry instance = null;
 
@@ -65,7 +65,7 @@ public class Telemetry {
     booleanMetrics = new TreeMap<String, BooleanSupplier>();
     doubleMetrics = new TreeMap<String, DoubleSupplier>();
     buffer = new ArrayList<Object>(BUFFER_SIZE);
-    telemetryTimer = PerfTimer.timer("Telemetry");
+    perfTimer = PerfTimer.timer("Telemetry");
 
     // Metrics to figure out
     // addMetric("/startingLocation/x"); 
@@ -85,13 +85,9 @@ public class Telemetry {
 
     @Override
     public void run() {
-      if (Level.DEBUG.isMoreSpecificThan(CSV.getLevel())) {
-        telemetryTimer.start();
-        telemetry.printCsvLine();
-        telemetryTimer.end();
-      } else {
-        telemetry.printCsvLine();
-      }
+      perfTimer.start();
+      telemetry.printCsvLine();
+      perfTimer.end();
     }
   }
 
@@ -127,7 +123,7 @@ public class Telemetry {
 
   public void start() {
     if (!printedHeaders && RobotMap.ENABLE_TELEMETRY 
-        && Level.INFO.isMoreSpecificThan(CSV.getLevel())) {
+        && Level.DEBUG.isMoreSpecificThan(CSV.getLevel())) {
       printHeaders();
       timer = new Timer("Telemetry Timer", true);
       timer.scheduleAtFixedRate(new PrintTimer(), 0, RobotMap.TELEMETRY_TIMER_MS);
@@ -147,13 +143,13 @@ public class Telemetry {
     for (String metricKey :  doubleMetrics.keySet()) {
       buffer.add(metricKey);
     }
-    CSV.info("Ignored", new ObjectArrayMessage(buffer.toArray()).getParameters());
+    CSV.debug("Ignored", new ObjectArrayMessage(buffer.toArray()).getParameters());
     startTime = System.currentTimeMillis();
     printedHeaders = true;
   }
 
   private void printCsvLine() {
-    if (Level.INFO.isMoreSpecificThan(CSV.getLevel())) {
+    if (Level.DEBUG.isMoreSpecificThan(CSV.getLevel())) {
       long currentTime = System.currentTimeMillis() - startTime;
       buffer.clear();
       buffer.add(currentTime);
@@ -168,7 +164,7 @@ public class Telemetry {
       for (DoubleSupplier metricSupplier :  doubleMetrics.values()) {
         buffer.add(metricSupplier.getAsDouble());
       }
-      CSV.info("Ignored", new ObjectArrayMessage(buffer.toArray()).getParameters());
+      CSV.debug("Ignored", new ObjectArrayMessage(buffer.toArray()).getParameters());
       lastIterationTime = currentTime;
     }
   }
