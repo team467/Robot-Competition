@@ -64,49 +64,29 @@ public class CargoWrist extends GamePieceBase implements GamePiece {
   public enum CargoWristControlStates {
 
     // height values measured empirically
-    CARGO_BIN(RobotMap.CARGO_MECH_CARGO_BIN_PROPORTION), 
-    LOW_ROCKET(RobotMap.CARGO_MECH_LOW_ROCKET_PROPORTION),
-    CARGO_SHIP(RobotMap.CARGO_MECH_CARGO_SHIP_PROPORTION), 
-    SAFE_TURRET(RobotMap.CARGO_MECH_SAFE_TURRET_PROPORTION);
+    CARGO_BIN, 
+    LOW_ROCKET,
+    CARGO_SHIP, 
+    SAFE_TURRET;
 
-    private static void manual(double speed) {
-      if (RobotMap.HAS_CARGO_MECHANISM) {
-        onManualControl = true;
-        talon.set(ControlMode.PercentOutput, speed);
-        LOGGER.debug("Manual override cargo mech wrist Speed: {}, Channel: {}, talon speed = {}, Control mode: {}",
-            box(speed), box(talon.getDeviceID()), box(talon.getMotorOutputPercent()), talon.getControlMode());
-      }
-    }
-
-
-    public static int cargoMechWristTickValueIn() {
-      return talon.getSensorCollection().getAnalogIn();
-    }
-
-    public static int cargoMechWristTickValueInRaw() {
-      return talon.getSensorCollection().getAnalogInRaw();
-    }
+  
 
     // 0.0 is the bottom, 1.0 is the top (proportion)
     // takes proportion and converts it to ticks
-    public static void tuneMove(double heightProportion) {
-      if (heightProportion > 1.0 || heightProportion < 0.0) {
-        LOGGER.warn("Tune move needs a number between 0.0 to 1.0");
-        return;
-      }
-
-      talon.set(ControlMode.Position, heightTicksFromProportion(heightProportion));
-
-      LOGGER.debug(" Height proportion: {}, Height set on wrist: {}, Sensor: {}, Error: {}",
-          box(heightProportion), box(heightTicksFromProportion(heightProportion)), 
-          box(talon.getSensorCollection().getAnalogIn()), box(talon.getClosedLoopError(0)));
-    }
 
     /**
      * Moves the wrist based on the requested command.
      */
   }
+  public static int cargoMechWristTickValueIn() {
+    return talon.getSensorCollection().getAnalogIn();
+  }
 
+  public static int cargoMechWristTickValueInRaw() {
+    return talon.getSensorCollection().getAnalogInRaw();
+  }
+  // 0.0 is the bottom, 1.0 is the top (proportion)
+    // takes proportion and converts it to ticks
   private double proportionalheight(double heightProportion) {
     double height;
     height =  ((heightProportion) * RobotMap.CARGO_MECH_WRIST_TOP_TICKS + (1.0 - heightProportion) * RobotMap.CARGO_MECH_WRIST_BOTTOM_TICKS);
@@ -127,6 +107,27 @@ public class CargoWrist extends GamePieceBase implements GamePiece {
     } 
   }
 
+  private static void manual(double speed) {
+    if (RobotMap.HAS_CARGO_MECHANISM) {
+      onManualControl = true;
+      talon.set(ControlMode.PercentOutput, speed);
+      LOGGER.debug("Manual override cargo mech wrist Speed: {}, Channel: {}, talon speed = {}, Control mode: {}",
+          box(speed), box(talon.getDeviceID()), box(talon.getMotorOutputPercent()), talon.getControlMode());
+    }
+  }
+
+  // public static void tuneMove(double heightProportion) {
+  //   if (heightProportion > 1.0 || heightProportion < 0.0) {
+  //     LOGGER.warn("Tune move needs a number between 0.0 to 1.0");
+  //     return;
+  //   }
+
+  //   talon.set(ControlMode.Position, heightTicksFromProportion(heightProportion));
+
+  //   LOGGER.debug(" Height proportion: {}, Height set on wrist: {}, Sensor: {}, Error: {}",
+  //       box(heightProportion), box(heightTicksFromProportion(heightProportion)), 
+  //       box(talon.getSensorCollection().getAnalogIn()), box(talon.getClosedLoopError(0)));
+  // }
   public enum CargoMechWristState {
     CARGO_BIN, 
     MOVING_DOWN_TO_CARGO_BIN, 
@@ -137,7 +138,6 @@ public class CargoWrist extends GamePieceBase implements GamePiece {
     CARGO_SHIP,
     ABOVE_CARGO_SHIP,
     UNKNOWN;
-
   }
 
   /**
@@ -146,71 +146,7 @@ public class CargoWrist extends GamePieceBase implements GamePiece {
    * 
    */
 
-  public enum CargoMechClaw {
-    FIRE, INTAKE, STOP;
-
-    private static Spark motorLeader;
-    private static Spark motorFollower;
-
-    private static void initialize() {
-      // Create the roller object. No sensors
-      LOGGER.trace("Initializing Claw");
-      if (RobotMap.HAS_CARGO_MECHANISM) {
-        motorLeader = new Spark(RobotMap.CARGO_MECH_CLAW_LEFT_MOTOR_CHANNEL);
-        motorLeader.setInverted(RobotMap.CARGO_MECH_CLAW_LEFT_MOTOR_INVERTED);
-        
-        motorFollower = new Spark(RobotMap.CARGO_MECH_CLAW_RIGHT_MOTOR_CHANNEL);
-        motorFollower.setInverted(RobotMap.CARGO_MECH_CLAW_RIGHT_MOTOR_INVERTED);
-        LOGGER.debug("Spark channels: {}, {}", 
-            box(motorLeader.getChannel()), box(motorFollower.getChannel()));
-      }
-
-    }
-
-    /**
-     * Moves the belts of the claw forward or backward based on the requested
-     * command.
-     */
-    private void actuate() {
-      LOGGER.debug("Actuating cargo mech claw");
-      
-      LOGGER.debug("Calling Claw Actuate state: {}", this);
-      if (RobotMap.HAS_CARGO_MECHANISM) {
-        switch (this) {
-          case FIRE:
-              motorLeader.set(1.0);
-              motorFollower.set(1.0);
-            LOGGER.debug("Claw going forward");
-            break;
-
-          case INTAKE:
-              motorLeader.set(-1.0);
-              motorFollower.set(-1.0);
-            LOGGER.debug("Claw going backward");
-            break;
-
-          case STOP:
-          default:
-              motorLeader.set(0.0);
-              motorFollower.set(0.0);
-            LOGGER.debug("Claw is stopping");
-        }
-      }
-    }
-
-  }
-
-  /**
-   * Returns a singleton instance of the telemery builder.
-   * 
-   * @return TelemetryBuilder the telemetry builder instance
-   */
-  public static CargoWrist getInstance() {
-    if (instance == null) {
-      instance = new CargoWrist();
-    }
-    return instance;
-  }
+  
 
   // private CargoWrist() {
   //   super("Telemetry", "CargoMech");

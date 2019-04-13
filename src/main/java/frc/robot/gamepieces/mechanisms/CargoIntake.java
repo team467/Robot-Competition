@@ -1,4 +1,4 @@
-package frc.robot.gamepieces;
+package frc.robot.gamepieces.mechanisms;
 
 import static org.apache.logging.log4j.util.Unbox.box;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
@@ -248,6 +248,11 @@ public class CargoIntake extends GamePieceBase implements GamePiece {
 
   private String armCommandString() {
     return arm.toString();
+  }
+
+  @Override
+  public boolean checksystem() {
+    return false;
   }
 
 

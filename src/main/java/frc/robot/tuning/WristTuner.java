@@ -11,10 +11,10 @@ public class WristTuner implements Tuner {
   private static final Logger LOGGER
       = RobotLogManager.getMainLogger(WristTuner.class.getName());
 
-  CargoMech cargoMech;
+  CargoWrist cargoMech;
 
   WristTuner() {
-    cargoMech = CargoMech.getInstance();
+    cargoMech = CargoWrist.getInstance();
   }
 
   public void init() {

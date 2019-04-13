@@ -1,4 +1,4 @@
-package frc.robot.gamepieces;
+package frc.robot.gamepieces.mechanisms;
 
 import static org.apache.logging.log4j.util.Unbox.box;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
@@ -222,6 +222,11 @@ public class HatchMechanism extends GamePieceBase implements GamePiece {
 
   private String launcherSolinoidString() {
     return HatchLauncher.launcher.get().toString();
+  }
+
+  @Override
+  public boolean checksystem() {
+    return false;
   }
 
 }

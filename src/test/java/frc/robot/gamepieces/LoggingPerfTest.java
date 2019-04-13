@@ -39,7 +39,7 @@ public class LoggingPerfTest {
   private static GamePieceController controller;
   private static HatchMechanism hatch;
   private static CargoIntake intake;
-  private static CargoMech cargo;
+  private static CargoWrist cargo;
   private static Turret turret;
 
   // Inputs normally from driver station
@@ -95,7 +95,7 @@ public class LoggingPerfTest {
     controller = GamePieceController.getInstance();
     hatch = HatchMechanism.getInstance();
     intake = CargoIntake.getInstance();
-    cargo = CargoMech.getInstance();
+    cargo = CargoWrist.getInstance();
     turret = Turret.getInstance();
 
     hatch.enabled(true);
@@ -141,12 +141,12 @@ public class LoggingPerfTest {
     manualTurretMove = 0.0;
 
     // reset the robot
-    CargoMech.simulatedSensorData(
-        CargoMechWrist.heightTicksFromProportion(RobotMap.CARGO_MECH_CARGO_BIN_PROPORTION));
+    CargoWrist.simulatedSensorData(
+        CargoWristControlStates.heightTicksFromProportion(RobotMap.CARGO_MECH_CARGO_BIN_PROPORTION));
     turret.simulatedSensorData(RobotMap.TURRET_HOME_TICKS);
     //intake.arm(CargoIntakeArm.UP); 
     intake.roller(CargoIntakeRoller.STOP);
-    cargo.wrist(CargoMechWrist.CARGO_BIN);
+    cargo.wrist(CargoWristControlStates.CARGO_BIN);
     cargo.claw(CargoMechClaw.STOP);
     hatch.arm(HatchArm.IN);
     hatch.launcher(HatchLauncher.RESET);

@@ -224,4 +224,9 @@ public class Turret extends GamePieceBase implements GamePiece {
     return talon.getSelectedSensorPosition(TALON_SENSOR_ID);
   }
 
+  @Override
+  public boolean checksystem() {
+    return false;
+  }
+
 }

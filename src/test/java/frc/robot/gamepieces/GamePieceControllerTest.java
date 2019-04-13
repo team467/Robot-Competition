@@ -34,7 +34,7 @@ public class GamePieceControllerTest {
   private static GamePieceController controller;
   private static HatchMechanism hatch;
   private static CargoIntake intake;
-  private static CargoMech cargo;
+  private static CargoWrist cargo;
   private static Turret turret;
 
   // Inputs normally from driver station
@@ -90,7 +90,7 @@ public class GamePieceControllerTest {
     controller = GamePieceController.getInstance();
     hatch = HatchMechanism.getInstance();
     intake = CargoIntake.getInstance();
-    cargo = CargoMech.getInstance();
+    cargo = CargoWrist.getInstance();
     turret = Turret.getInstance();
 
     hatch.enabled(true);
@@ -134,12 +134,12 @@ public class GamePieceControllerTest {
     manualTurretMove = 0.0;
 
     // reset the robot
-    CargoMech.simulatedSensorData(
-        CargoMechWrist.heightTicksFromProportion(RobotMap.CARGO_MECH_CARGO_BIN_PROPORTION));
+    CargoWrist.simulatedSensorData(
+        CargoWristControlStates.heightTicksFromProportion(RobotMap.CARGO_MECH_CARGO_BIN_PROPORTION));
     turret.simulatedSensorData(RobotMap.TURRET_HOME_TICKS);
     //intake.arm(CargoIntakeArm.UP); 
     intake.roller(CargoIntakeRoller.STOP);
-    cargo.wrist(CargoMechWrist.CARGO_BIN);
+    cargo.wrist(CargoWristControlStates.CARGO_BIN);
     cargo.claw(CargoMechClaw.STOP);
     hatch.arm(HatchArm.IN);
     hatch.launcher(HatchLauncher.RESET);
@@ -265,8 +265,8 @@ public class GamePieceControllerTest {
     // Iteration 1, Arm started down and turret started at home. 
     // Assumes we have a cargo ball.
     // Verify cargo wrist moves to the turret safe position
-    CargoMech.simulatedSensorData(
-        CargoMechWrist.heightTicksFromProportion(RobotMap.CARGO_MECH_SAFE_TURRET_PROPORTION));
+    CargoWrist.simulatedSensorData(
+        CargoWristControlStates.heightTicksFromProportion(RobotMap.CARGO_MECH_SAFE_TURRET_PROPORTION));
     // Sensor simulation should come before process state
     callProcessState();
     assertTrue(intake.arm() == CargoIntakeArm.DOWN);
@@ -290,8 +290,8 @@ public class GamePieceControllerTest {
     assertEquals(-90.0, turret.position(), 1.0);
 
     // Iteration 3, move the wrist to the right height.
-    CargoMech.simulatedSensorData(
-        CargoMechWrist.heightTicksFromProportion(RobotMap.CARGO_MECH_LOW_ROCKET_PROPORTION));
+    CargoWrist.simulatedSensorData(
+        CargoWristControlStates.heightTicksFromProportion(RobotMap.CARGO_MECH_LOW_ROCKET_PROPORTION));
     callProcessState();
     assertTrue(intake.arm() == CargoIntakeArm.DOWN);
     assertTrue(intake.roller() == CargoIntakeRoller.STOP);
@@ -354,16 +354,16 @@ public class GamePieceControllerTest {
     cargoMode = true;
     callProcessState();
     cargoMode = false;
-    CargoMech.simulatedSensorData(
-        CargoMechWrist.heightTicksFromProportion(RobotMap.CARGO_MECH_SAFE_TURRET_PROPORTION));
+    CargoWrist.simulatedSensorData(
+        CargoWristControlStates.heightTicksFromProportion(RobotMap.CARGO_MECH_SAFE_TURRET_PROPORTION));
     // Sensor simulation should come before process state
     callProcessState();
     moveTurretLeft = true;
     moveCargoWristToCargoShipPosition = true;
     turret.simulatedSensorData(turretAngleToTicks(90.0)); 
     callProcessState();
-    CargoMech.simulatedSensorData(
-        CargoMechWrist.heightTicksFromProportion(RobotMap.CARGO_MECH_CARGO_SHIP_PROPORTION));
+    CargoWrist.simulatedSensorData(
+        CargoWristControlStates.heightTicksFromProportion(RobotMap.CARGO_MECH_CARGO_SHIP_PROPORTION));
     callProcessState();
     moveTurretLeft = false;
     moveCargoWristToCargoShipPosition = false;
@@ -399,8 +399,8 @@ public class GamePieceControllerTest {
     defenseMode = false; // Conversion should continue   
     
     LOGGER.debug("Iteration 2: Moving wrist down into to bin.");
-    CargoMech.simulatedSensorData(
-        CargoMechWrist.heightTicksFromProportion(RobotMap.CARGO_MECH_CARGO_BIN_PROPORTION));
+    CargoWrist.simulatedSensorData(
+        CargoWristControlStates.heightTicksFromProportion(RobotMap.CARGO_MECH_CARGO_BIN_PROPORTION));
     callProcessState();
     assertTrue(intake.arm() == CargoIntakeArm.DOWN);
     assertTrue(intake.roller() == CargoIntakeRoller.STOP);
