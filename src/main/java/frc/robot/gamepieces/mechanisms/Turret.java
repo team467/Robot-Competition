@@ -1,4 +1,4 @@
-package frc.robot.gamepieces;
+package frc.robot.gamepieces.mechanisms;
 
 import static org.apache.logging.log4j.util.Unbox.box;
 import com.ctre.phoenix.motorcontrol.ControlMode;

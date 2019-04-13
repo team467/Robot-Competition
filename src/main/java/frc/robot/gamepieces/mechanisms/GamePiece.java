@@ -1,4 +1,4 @@
-package frc.robot.gamepieces;
+package frc.robot.gamepieces.mechanisms;
 
 public interface GamePiece {
 
@@ -20,5 +20,10 @@ public interface GamePiece {
    * and sends telemetry and state information in all cases.
    */
   public void periodic();
+
+  /**
+   * called when specific system should be checked
+   */
+  public boolean checksystem();
 
 }
