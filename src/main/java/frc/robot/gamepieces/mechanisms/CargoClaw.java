@@ -1,13 +1,9 @@
 package frc.robot.gamepieces.mechanisms;
 
 import static org.apache.logging.log4j.util.Unbox.box;
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 
 import edu.wpi.first.wpilibj.Spark;
 import frc.robot.RobotMap;
-import frc.robot.drive.TalonProxy;
-import frc.robot.drive.WpiTalonSrxInterface;
 import frc.robot.logging.RobotLogManager;
 import frc.robot.logging.Telemetry;
 import org.apache.logging.log4j.Logger;
@@ -22,6 +18,8 @@ public class CargoClaw extends GamePieceBase implements GamePiece {
     private static Spark motorLeader;
     private static Spark motorFollower;
 
+    public clawController clawcontroller = new clawController();
+
     private CargoClaw() {
         super("Telemetry", "CargoClaw");
       // Create the roller object. No sensors
@@ -35,45 +33,27 @@ public class CargoClaw extends GamePieceBase implements GamePiece {
         LOGGER.debug("Spark channels: {}, {}", 
             box(motorLeader.getChannel()), box(motorFollower.getChannel()));
       }
-
-    }
-    public enum clawCurrentStates{
-        FIRE, 
-        INTAKE, 
-        STOP;
     }
 
-    /**
-     * Moves the belts of the claw forward or backward based on the requested
-     * command.
-     */
-    private void actuate(clawCurrentStates state) {
-      LOGGER.debug("Actuating cargo mech claw");
-      
-      LOGGER.debug("Calling Claw Actuate state: {}", state);
-      if (RobotMap.HAS_CARGO_MECHANISM) {
+    public void setClawActuation(clawCurrentStates state){
         switch (state) {
-          case FIRE:
-              motorLeader.set(1.0);
-              motorFollower.set(1.0);
-            LOGGER.debug("Claw going forward");
-            break;
+            case FIRE:
+               clawcontroller.demand = 1.0;
+              LOGGER.debug("Claw going forward");
+              break;
+  
+            case INTAKE:
+                clawcontroller.demand = -1.0;
+              LOGGER.debug("Claw going backward");
+              break;
+  
+            case STOP:
+            default:
+            clawcontroller.demand = 0.0;
+              LOGGER.debug("Claw is stopping");
 
-          case INTAKE:
-              motorLeader.set(-1.0);
-              motorFollower.set(-1.0);
-            LOGGER.debug("Claw going backward");
-            break;
-
-          case STOP:
-          default:
-              motorLeader.set(0.0);
-              motorFollower.set(0.0);
-            LOGGER.debug("Claw is stopping");
         }
-      }
     }
-
 
   /**
    * Returns a singleton instance of the telemery builder.
@@ -88,12 +68,40 @@ public class CargoClaw extends GamePieceBase implements GamePiece {
   }
 
     @Override
-    public boolean checksystem() {
-        return false;
+    public boolean systemCheck() {
+        motorLeader.checkMotors();
+        return true;
     }
 
     @Override
     public void periodic() {
+        actuate();
+
+    }
+
+    @Override
+    public void read() {
+        //no sensors nothing to read
+    }
+
+    public enum clawCurrentStates {
+        FIRE, 
+        INTAKE, 
+        STOP;
+    }
+
+    public enum controlStates{
+        //uneeded only 1 control state
+    }
+
+    public class clawController{
+        public double demand;
+    }
+
+    @Override
+    public void actuate() {
+        motorLeader.set(clawcontroller.demand);
+        motorFollower.set(clawcontroller.demand);
 
     }
 }

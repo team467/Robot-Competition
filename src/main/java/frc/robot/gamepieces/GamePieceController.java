@@ -9,8 +9,8 @@ import frc.robot.gamepieces.mechanisms.Turret;
 import frc.robot.gamepieces.mechanisms.CargoIntake.CargoIntakeArm;
 import frc.robot.gamepieces.mechanisms.CargoIntake.CargoIntakeRoller;
 import frc.robot.gamepieces.mechanisms.CargoWrist.CargoMechClaw;
-import frc.robot.gamepieces.mechanisms.CargoWrist.CargoWristControlStates;
-import frc.robot.gamepieces.mechanisms.CargoWrist.CargoMechWristState;
+import frc.robot.gamepieces.mechanisms.CargoWrist.CargoWristWantedStates;
+import frc.robot.gamepieces.mechanisms.CargoWrist.CargoMechWristCurrentState;
 import frc.robot.gamepieces.mechanisms.HatchMechanism.HatchArm;
 import frc.robot.gamepieces.mechanisms.HatchMechanism.HatchLauncher;
 import frc.robot.logging.RobotLogManager;
@@ -240,7 +240,7 @@ public class GamePieceController {
     if (!isSafe) {
       if (ensureSafeToMoveWrist(disableSafety)) {
         LOGGER.debug("Moving wrist to safe position.");
-        cargoMech.wrist(CargoWristControlStates.LOW_ROCKET);
+        cargoMech.wrist(CargoWristWantedStates.LOW_ROCKET);
       }
       LOGGER.debug("Making sure hatch mechanism arm is in so turret can move.");
       hatchMech.arm(HatchArm.IN);
@@ -268,10 +268,10 @@ public class GamePieceController {
         LOGGER.debug("DEFENSE: Move hatch in.");
         hatchMech.arm(HatchArm.IN);
       }
-      if (cargoMech.wrist() != CargoMechWristState.CARGO_BIN) {
+      if (cargoMech.wrist() != CargoMechWristCurrentState.CARGO_BIN) {
         if (ensureSafeToMoveWrist(disableSafety)) {
           LOGGER.debug("DEFENSE: Move cargo wrist to bin.");
-          cargoMech.wrist(CargoWristControlStates.CARGO_BIN);
+          cargoMech.wrist(CargoWristWantedStates.CARGO_BIN);
         }
       } else if (cargoIntake.arm() == CargoIntakeArm.DOWN) {
         LOGGER.debug("DEFENSE: Moving cargo intake arm up, final step.");
@@ -302,7 +302,7 @@ public class GamePieceController {
         moveTurretHome(disableSafety);
         cargoIntake.arm(CargoIntakeArm.DOWN);
         cargoIntake.roller(CargoIntakeRoller.INTAKE); // Suck ball into cargo intake mech
-        cargoMech.wrist(CargoWristControlStates.CARGO_BIN);
+        cargoMech.wrist(CargoWristWantedStates.CARGO_BIN);
         cargoMech.claw(CargoMechClaw.INTAKE);
         intakeCargo = true; // Set to true so that it isn't stopped
       } else {
@@ -310,10 +310,10 @@ public class GamePieceController {
         if (cargoIntake.arm() == CargoIntakeArm.DOWN) {
           LOGGER.debug("CARGO: Cargo intake arm is down");
           if (moveTurretHome(disableSafety)) { // Overrides move turret right or left
-            if (cargoMech.wrist() != CargoMechWristState.CARGO_BIN) {
+            if (cargoMech.wrist() != CargoMechWristCurrentState.CARGO_BIN) {
               if (ensureSafeToMoveWrist(disableSafety)) {
                 LOGGER.debug("CARGO: Moving wrist to bin");
-                cargoMech.wrist(CargoWristControlStates.CARGO_BIN);
+                cargoMech.wrist(CargoWristWantedStates.CARGO_BIN);
               }
             } else {
               LOGGER.debug("CARGO: Putting rollers in reverse");
@@ -331,16 +331,16 @@ public class GamePieceController {
       cargoMech.claw(CargoMechClaw.STOP);
       cargoIntake.roller(CargoIntakeRoller.STOP);
       LOGGER.debug("CARGO: Move Cargo Mech wrist to the Cargo Ship height.");
-      if (cargoMech.wrist() != CargoMechWristState.CARGO_SHIP && ensureSafeToMoveWrist(disableSafety)) {
-        cargoMech.wrist(CargoWristControlStates.CARGO_SHIP);
+      if (cargoMech.wrist() != CargoMechWristCurrentState.CARGO_SHIP && ensureSafeToMoveWrist(disableSafety)) {
+        cargoMech.wrist(CargoWristWantedStates.CARGO_SHIP);
       }
     } else if (moveCargoWristToLowRocketPosition) {
       LOGGER.debug("CARGO: Stopping cargo roller and claw");
       cargoMech.claw(CargoMechClaw.STOP);
       cargoIntake.roller(CargoIntakeRoller.STOP);
-      if (cargoMech.wrist() != CargoMechWristState.LOW_ROCKET && ensureSafeToMoveWrist(disableSafety)) {
+      if (cargoMech.wrist() != CargoMechWristCurrentState.LOW_ROCKET && ensureSafeToMoveWrist(disableSafety)) {
         LOGGER.debug("CARGO: Move Cargo Mech wrist to the Low Rocket height.");
-        cargoMech.wrist(CargoWristControlStates.LOW_ROCKET);
+        cargoMech.wrist(CargoWristWantedStates.LOW_ROCKET);
       }
     } else if (fireCargo) {
       LOGGER.debug("CARGO: FIRING BALL!");
@@ -357,11 +357,11 @@ public class GamePieceController {
     } // Reject and stop are handled in the eitherHatchOrCargoMode method.
 
     if (intakeUp) {
-      if (cargoMech.wrist() == CargoMechWristState.CARGO_BIN || disableSafety) {
+      if (cargoMech.wrist() == CargoMechWristCurrentState.CARGO_BIN || disableSafety) {
         cargoIntake.arm(CargoIntakeArm.UP);
       }
     } else if (intakeDown) {
-      if (cargoMech.wrist() == CargoMechWristState.CARGO_BIN || disableSafety) {
+      if (cargoMech.wrist() == CargoMechWristCurrentState.CARGO_BIN || disableSafety) {
         cargoIntake.arm(CargoIntakeArm.DOWN);
       }
     }
@@ -540,7 +540,7 @@ public class GamePieceController {
   void updateGamePieces() {
     // Update all systems
     cargoIntake.periodic();
-    cargoMech.periodic();
+    //cargoMech.periodic();
     hatchMech.periodic();
     turret.periodic();
   }

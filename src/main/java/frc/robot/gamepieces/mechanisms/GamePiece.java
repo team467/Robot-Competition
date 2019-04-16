@@ -22,8 +22,13 @@ public interface GamePiece {
   public void periodic();
 
   /**
+   * read values and actuate
+   */
+  public void read();
+  public void actuate();
+  /**
    * called when specific system should be checked
    */
-  public boolean checksystem();
+  public boolean systemCheck();
 
 }

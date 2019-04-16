@@ -19,18 +19,23 @@ public class CargoWrist extends GamePieceBase implements GamePiece {
   private static final Logger LOGGER = RobotLogManager.getMainLogger(CargoWrist.class.getName());
 
   // Actuators
-  private CargoWristControlStates wrist; // stores desired height
+  private CargoWristWantedStates wrist; // stores desired height
 
   // State
-  private CargoMechWristState wristState;
-  private static boolean onManualControl = true;
+  private CargoMechWristCurrentState wristState;
+  private controlStates wristControlState = controlStates.Position;
 
+  //init vals
   private static final int TALON_SENSOR_ID = 0;
   private static final int TALON_PID_SLOT_ID = 0;
-  private static CargoMechWristState previousState;
+  private static CargoMechWristCurrentState previousState;
   private static double simulatedReading = 0.0;
-  private static double height = 0.0;
   private static WpiTalonSrxInterface talon;
+
+  //controller instance
+  private wristController wristcontroller = new wristController();
+
+  boolean sensorsZeroed;
   
   private CargoWrist() {
     super("Telemetry","CargoWrist");
@@ -46,38 +51,16 @@ public class CargoWrist extends GamePieceBase implements GamePiece {
       talon.config_kI(TALON_PID_SLOT_ID, RobotMap.CARGO_MECH_WRIST_I, RobotMap.TALON_TIMEOUT);
       talon.config_kD(TALON_PID_SLOT_ID, RobotMap.CARGO_MECH_WRIST_D, RobotMap.TALON_TIMEOUT);
       talon.config_kF(TALON_PID_SLOT_ID, RobotMap.CARGO_MECH_WRIST_F, RobotMap.TALON_TIMEOUT);
-      // talon.configForwardSoftLimitThreshold(
-      //     RobotMap.CARGO_WRIST_UP_LIMIT_TICKS, RobotMap.TALON_TIMEOUT);
-      // talon.configReverseSoftLimitThreshold(
-      //     RobotMap.CARGO_WRIST_DOWN_LIMIT_TICKS, RobotMap.TALON_TIMEOUT);
+      talon.configForwardSoftLimitThreshold(RobotMap.CARGO_WRIST_UP_LIMIT_TICKS, RobotMap.TALON_TIMEOUT);
+      talon.configReverseSoftLimitThreshold(RobotMap.CARGO_WRIST_DOWN_LIMIT_TICKS, RobotMap.TALON_TIMEOUT);
       talon.configForwardSoftLimitEnable(false, RobotMap.TALON_TIMEOUT);
       talon.configReverseSoftLimitEnable(false, RobotMap.TALON_TIMEOUT);
       talon.configAllowableClosedloopError(TALON_PID_SLOT_ID, RobotMap.CARGO_MECH_WRIST_ALLOWABLE_ERROR_TICKS, RobotMap.TALON_TIMEOUT);
-      talon.config_kP(TALON_PID_SLOT_ID, kP, RobotMap.TALON_TIMEOUT);
-      talon.config_kI(TALON_PID_SLOT_ID, kI, RobotMap.TALON_TIMEOUT);
-      talon.config_kD(TALON_PID_SLOT_ID, kD, RobotMap.TALON_TIMEOUT);
     } else {
       talon = null;
     }
   }
 
-  public enum CargoWristControlStates {
-
-    // height values measured empirically
-    CARGO_BIN, 
-    LOW_ROCKET,
-    CARGO_SHIP, 
-    SAFE_TURRET;
-
-  
-
-    // 0.0 is the bottom, 1.0 is the top (proportion)
-    // takes proportion and converts it to ticks
-
-    /**
-     * Moves the wrist based on the requested command.
-     */
-  }
   public static int cargoMechWristTickValueIn() {
     return talon.getSensorCollection().getAnalogIn();
   }
@@ -85,50 +68,87 @@ public class CargoWrist extends GamePieceBase implements GamePiece {
   public static int cargoMechWristTickValueInRaw() {
     return talon.getSensorCollection().getAnalogInRaw();
   }
-  // 0.0 is the bottom, 1.0 is the top (proportion)
-    // takes proportion and converts it to ticks
-  private double proportionalheight(double heightProportion) {
-    double height;
-    height =  ((heightProportion) * RobotMap.CARGO_MECH_WRIST_TOP_TICKS + (1.0 - heightProportion) * RobotMap.CARGO_MECH_WRIST_BOTTOM_TICKS);
-    LOGGER.debug("Setting wrist height for {} to {} ticks", this, box(height));
-    return height;
+
+
+  /**
+   * configs PIDs for the wrist talons, should be configured upon initialization from robotmap; however, if manually tuning us this.
+   *@param kP The P value
+   *@param kI The I value
+   *@param kD The D value
+   */
+  public void configPIDs(double kP, double kI, double kD){
+    talon.config_kP(TALON_PID_SLOT_ID, kP, RobotMap.TALON_TIMEOUT);
+    talon.config_kI(TALON_PID_SLOT_ID, kI, RobotMap.TALON_TIMEOUT);
+    talon.config_kD(TALON_PID_SLOT_ID, kD, RobotMap.TALON_TIMEOUT);
   }
 
-  private void actuate() {
-    LOGGER.debug("Actuating cargo mechanism wrist: {}", this);
-    if (RobotMap.HAS_CARGO_MECHANISM) {
-      if (!onManualControl) {
-        talon.set(ControlMode.Position, height);
-        if (!RobotMap.useSimulator) { // No sensor collection capability in the talon simulator
-          LOGGER.debug("Height set on wrist: {}, Sensor: {}, Error: {}",
-              box(height), box(talon.getSensorCollection().getAnalogIn()), box(talon.getClosedLoopError(0)));
-        }
-      }
-    } 
+  public synchronized void zeroSensors(){
+    //unused
+    talon.setSelectedSensorPosition(0, 0, RobotMap.TALON_TIMEOUT);
+    sensorsZeroed = true;
   }
 
-  private static void manual(double speed) {
+  private synchronized void manual(double speed) {
     if (RobotMap.HAS_CARGO_MECHANISM) {
-      onManualControl = true;
-      talon.set(ControlMode.PercentOutput, speed);
+      wristControlState = controlStates.PercentOutput;
+      wristcontroller.demand = speed;
       LOGGER.debug("Manual override cargo mech wrist Speed: {}, Channel: {}, talon speed = {}, Control mode: {}",
           box(speed), box(talon.getDeviceID()), box(talon.getMotorOutputPercent()), talon.getControlMode());
     }
   }
 
-  // public static void tuneMove(double heightProportion) {
-  //   if (heightProportion > 1.0 || heightProportion < 0.0) {
-  //     LOGGER.warn("Tune move needs a number between 0.0 to 1.0");
-  //     return;
-  //   }
+  public synchronized void read(){
+    wristcontroller.wristPositionTicks = cargoMechWristTickValueIn();
+    wristcontroller.output = talon.getMotorOutputPercent();
+  }
 
-  //   talon.set(ControlMode.Position, heightTicksFromProportion(heightProportion));
+  public synchronized void setPosSetpoint(CargoWristWantedStates state){
+    double neededPos;
+    switch(state){
+      case CARGO_BIN:
+        neededPos = proportionalheight(RobotMap.CARGO_MECH_CARGO_BIN_PROPORTION);
+      case CARGO_SHIP:
+        neededPos = proportionalheight(RobotMap.CARGO_MECH_CARGO_SHIP_PROPORTION);
+      case LOW_ROCKET:
+        neededPos = proportionalheight(RobotMap.CARGO_MECH_LOW_ROCKET_PROPORTION);
+      default:
+        neededPos = proportionalheight(RobotMap.CARGO_MECH_CARGO_BIN_PROPORTION);
+    }
+    
+    if(wristControlState != controlStates.Position){
+      wristControlState = controlStates.Position;
+    }
+    wristcontroller.wristPositionTicks = neededPos;
+  }
 
-  //   LOGGER.debug(" Height proportion: {}, Height set on wrist: {}, Sensor: {}, Error: {}",
-  //       box(heightProportion), box(heightTicksFromProportion(heightProportion)), 
-  //       box(talon.getSensorCollection().getAnalogIn()), box(talon.getClosedLoopError(0)));
-  // }
-  public enum CargoMechWristState {
+  
+  public synchronized void actuate() {
+    LOGGER.debug("Actuating cargo mechanism wrist: {}", this);
+    if (RobotMap.HAS_CARGO_MECHANISM) {
+      if (wristControlState == controlStates.Position) {
+        talon.set(ControlMode.Position, wristcontroller.wristPositionTicks);
+        if (!RobotMap.useSimulator) { // No sensor collection capability in the talon simulator
+          LOGGER.debug("Height set on wrist: {}, Sensor: {}, Error: {}",
+              box(wristcontroller.wristPositionTicks), box(talon.getSensorCollection().getAnalogIn()), box(talon.getClosedLoopError(0)));
+        }
+      }
+    } 
+  }
+
+  public void tuneMove(double heightProportion) {
+    if (heightProportion > 1.0 || heightProportion < 0.0) {
+      LOGGER.warn("Tune move needs a number between 0.0 to 1.0");
+      return;
+    }
+
+    talon.set(ControlMode.Position, proportionalheight(heightProportion));
+
+    LOGGER.debug(" Height proportion: {}, Height set on wrist: {}, Sensor: {}, Error: {}",
+        box(heightProportion), box(proportionalheight(heightProportion)), 
+        box(talon.getSensorCollection().getAnalogIn()), box(talon.getClosedLoopError(0)));
+  }
+
+  public enum CargoMechWristCurrentState {
     CARGO_BIN, 
     MOVING_DOWN_TO_CARGO_BIN, 
     MOVING_UP_TO_LOW_ROCKET, 
@@ -140,67 +160,18 @@ public class CargoWrist extends GamePieceBase implements GamePiece {
     UNKNOWN;
   }
 
-  /**
-   * Forward means the roller is spinning inwards, essentially pulling balls in.
-   * Reverse means the roller is spinning outwards not letting the ball in.
-   * 
-   */
-
-  
-
-  // private CargoWrist() {
-  //   super("Telemetry", "CargoMech");
-  //   // Initialize the sensors and actuators
-  //   CargoMechWrist.initialize();
-  //   CargoMechClaw.initialize();
-
-  //   claw = CargoMechClaw.STOP;
-  //   wrist = CargoMechWrist.CARGO_BIN;
-  //   wristState = CargoMechWristState.read();
-
-  //   registerMetrics();
-  //   LOGGER.trace("Created Ball Mech game piece.");
-  // }
-
-  /**
-   * Checks to see if the cargo mechanism wrist at or above a safe distance to turn
-   * the turret.
-   * 
-   * @return boolean true if safe to turn.
-   */
-  public boolean isSafeToMoveTurret() {
-    LOGGER.debug("Wrist is at {}, vs safe turret height of {}",
-        box(CargoMechWristState.height), box(CargoWristControlStates.SAFE_TURRET.height));
-    if (CargoMechWristState.height >= CargoWristControlStates.SAFE_TURRET.height) {
-      LOGGER.debug("Wrist in safe location to move turret.");
-      return true;
-    } else {
-      LOGGER.debug("Wrist NOT in safe location to move turret.");
-      return false;
-    }
+  public enum CargoWristWantedStates {
+    CARGO_BIN, 
+    LOW_ROCKET,
+    CARGO_SHIP, 
+    SAFE_TURRET;
   }
 
-  /**
-   * Moves the claw wrist up or down.
-   * 
-   * @param command which way to move the wrist.
-   */
-  public void wrist(CargoWristControlStates command) {
-    LOGGER.debug("Moving cargo mechanism wrist to {}", command);
-    onManualControl = false;
-    wrist = command;
-  }
-
-  /**
-   * Moves the claw wrist up or down. The String version sets the command from the
-   * Smart Dashboard.
-   * 
-   * @param command which way to move the wrist.
-   */
-  private void wrist(String command) {
-    LOGGER.debug("Moving cargo mechanism wrist to {} using string interface.", command);
-    onManualControl = false;
-    wrist = CargoWristControlStates.valueOf(command);
+  public enum controlStates{
+    PercentOutput,
+    Velocity,
+    Position,
+    MotionMagic;
   }
 
   /**
@@ -208,113 +179,51 @@ public class CargoWrist extends GamePieceBase implements GamePiece {
    * 
    * @return the state of the wrist, including if unknown or moving.
    */
-  public CargoMechWristState wrist() {
+  public CargoMechWristCurrentState wrist() {
     LOGGER.debug("Cargo wrist state is {}", wristState);
     return wristState;
   }
 
-  /**
-   * Sets the belt based on the given command.
-   * 
-   * @param command the belt command
-   */
-  public void claw(CargoMechClaw command) {
-    LOGGER.debug("Cargo mechanism claw command is {}", command);
-    claw = command;
-  }
 
-  /**
-   * Sets the belt based on the given command. The String version is used for
-   * setting the command from the SmartDashboard.
-   * 
-   * @param command the belt command
-   */
-  private void claw(String command) {
-    LOGGER.debug("Cargo mechanism claw command is {} using string interface", command);
-    claw = CargoMechClaw.valueOf(command);
-  }
-
-  /**
-   * Returns the current belt command. There is no external sensor on this motor.
-   */
-  public CargoMechClaw claw() {
-    LOGGER.debug("Current cargo mechanism claw command is {}", claw);
-    return claw;
-  }
 
   public void manualWristMove(double speed) {
-    onManualControl = true;
-    CargoWristControlStates.manual(speed);
+    manual(speed);
   }
 
-  public void configWristPid(double kP, double kI, double kD) {
-     CargoWristControlStates.configPid(kP, kI, kD);
-  }
-
-  public void tuneMove(double heightProportion) {
-    CargoWristControlStates.tuneMove(heightProportion);
-  }
-  /**
-   * Tries to handle commands and update state.
-   */
-  public void periodic() { // In progress
-    // Take Actions
-    if (enabled) {
-      claw.actuate();
-      if (!onManualControl) {
-        wrist.actuate();
-      }
-    } else {
-      LOGGER.debug("Hatch mechanism is disabled.");
-    }
-
-    // Update state
-    wristState = CargoMechWristState.read();
+  public void periodic() {
+    //will fix
+    read();
+    actuate();
   }
 
   static void simulatedSensorData(double reading) {
-    CargoMechWristState.simulatedReading = reading;
+    simulatedReading = reading;
   }
 
   private void registerMetrics() {
     Telemetry telemetry = Telemetry.getInstance();
-    telemetry.addStringMetric("Cargo Claw Command", this::clawCommandString);
-    telemetry.addStringMetric("Cargo Wrist Command", this::wristCommandString);
     if (RobotMap.HAS_CARGO_MECHANISM) {
-      telemetry.addDoubleMetric("Cargo Claw Lead Motor Output", this::clawLeaderMotorOutput);
-      telemetry.addDoubleMetric("Cargo Claw Follower Motor Output", this::clawFollowerMotorOutput);
-      telemetry.addStringMetric("Cargo Wrist State", this::wristStateString);
-      telemetry.addDoubleMetric("Cargo Wrist Height Proportion", this::heightProportion);
     }
   }
 
-  private double heightProportion() {
-    return (wrist.height - RobotMap.CARGO_MECH_WRIST_BOTTOM_TICKS)
-        / (RobotMap.CARGO_MECH_WRIST_TOP_TICKS - RobotMap.CARGO_MECH_WRIST_BOTTOM_TICKS);
+  private double proportionalheight(double heightProportion) {
+    double height;
+    height =  ((heightProportion) * RobotMap.CARGO_MECH_WRIST_TOP_TICKS + (1.0 - heightProportion) * RobotMap.CARGO_MECH_WRIST_BOTTOM_TICKS);
+    LOGGER.debug("Setting wrist height for {} to {} ticks", this, box(height));
+    return height;
   }
 
-  private String wristStateString() {
-    return wristState.toString();
-  }
+  //add vars as needed
+  public static class wristController{
 
-  private String wristCommandString() {
-    return wrist.toString();
-  }
+    public double wristPositionTicks;
+    public double output;
 
-  private String clawCommandString() {
-    return claw.toString();
-  }
-
-  private double clawLeaderMotorOutput() {
-    return CargoMechClaw.motorLeader.get();
-  }
-
-  private double clawFollowerMotorOutput() {
-    return CargoMechClaw.motorFollower.get();
+    public double demand;
   }
 
   @Override
-  public boolean checksystem() {
+  public boolean systemCheck() {
     return false;
   }
 
