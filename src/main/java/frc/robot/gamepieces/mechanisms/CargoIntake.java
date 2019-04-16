@@ -247,8 +247,18 @@ public class CargoIntake extends GamePieceBase implements GamePiece {
   }
 
   @Override
-  public boolean checksystem() {
+  public boolean systemCheck() {
     return false;
+  }
+
+  @Override
+  public void read() {
+
+  }
+
+  @Override
+  public void actuate() {
+
   }
 
 

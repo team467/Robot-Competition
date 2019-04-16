@@ -135,11 +135,11 @@ public class GamePieceControllerTest {
 
     // reset the robot
     CargoWrist.simulatedSensorData(
-        CargoWristControlStates.heightTicksFromProportion(RobotMap.CARGO_MECH_CARGO_BIN_PROPORTION));
+        CargoWristWantedStates.heightTicksFromProportion(RobotMap.CARGO_MECH_CARGO_BIN_PROPORTION));
     turret.simulatedSensorData(RobotMap.TURRET_HOME_TICKS);
     //intake.arm(CargoIntakeArm.UP); 
     intake.roller(CargoIntakeRoller.STOP);
-    cargo.wrist(CargoWristControlStates.CARGO_BIN);
+    cargo.wrist(CargoWristWantedStates.CARGO_BIN);
     cargo.claw(CargoMechClaw.STOP);
     hatch.arm(HatchArm.IN);
     hatch.launcher(HatchLauncher.RESET);
@@ -152,7 +152,7 @@ public class GamePieceControllerTest {
     // Verify initial state
     assertTrue(intake.arm() == CargoIntakeArm.UP); 
     assertTrue(intake.roller() == CargoIntakeRoller.STOP);
-    assertTrue(cargo.wrist() == CargoMechWristState.CARGO_BIN);
+    assertTrue(cargo.wrist() == CargoMechWristCurrentState.CARGO_BIN);
     assertTrue(cargo.claw() == CargoMechClaw.STOP);
     assertTrue(hatch.arm() == HatchArm.IN);
     assertTrue(hatch.launcher() == HatchLauncher.RESET);
@@ -180,7 +180,7 @@ public class GamePieceControllerTest {
     callProcessState();
     assertTrue(intake.arm() == CargoIntakeArm.UP);
     assertTrue(intake.roller() == CargoIntakeRoller.STOP);
-    assertTrue(cargo.wrist() == CargoMechWristState.CARGO_BIN);
+    assertTrue(cargo.wrist() == CargoMechWristCurrentState.CARGO_BIN);
     assertTrue(cargo.claw() == CargoMechClaw.STOP);
     assertTrue(hatch.arm() == HatchArm.IN);
     assertTrue(hatch.launcher() == HatchLauncher.RESET);
@@ -196,7 +196,7 @@ public class GamePieceControllerTest {
     callProcessState();
     assertTrue(intake.arm() == CargoIntakeArm.DOWN);
     assertTrue(intake.roller() == CargoIntakeRoller.STOP);
-    assertTrue(cargo.wrist() == CargoMechWristState.CARGO_BIN);
+    assertTrue(cargo.wrist() == CargoMechWristCurrentState.CARGO_BIN);
     assertTrue(cargo.claw() == CargoMechClaw.STOP);
     assertTrue(hatch.arm() == HatchArm.IN);
     assertTrue(hatch.launcher() == HatchLauncher.RESET);
@@ -206,7 +206,7 @@ public class GamePieceControllerTest {
     callProcessState();
     //assertTrue(intake.arm() == CargoIntakeArm.DOWN);
     assertTrue(intake.roller() == CargoIntakeRoller.INTAKE);
-    assertTrue(cargo.wrist() == CargoMechWristState.CARGO_BIN);
+    assertTrue(cargo.wrist() == CargoMechWristCurrentState.CARGO_BIN);
     assertTrue(cargo.claw() == CargoMechClaw.INTAKE);
     assertTrue(hatch.arm() == HatchArm.IN);
     assertTrue(hatch.launcher() == HatchLauncher.RESET);
@@ -221,7 +221,7 @@ public class GamePieceControllerTest {
     callProcessState();
     //assertTrue(intake.arm() == CargoIntakeArm.DOWN);
     assertTrue(intake.roller() == CargoIntakeRoller.STOP);
-    assertTrue(cargo.wrist() == CargoMechWristState.CARGO_BIN);
+    assertTrue(cargo.wrist() == CargoMechWristCurrentState.CARGO_BIN);
     assertTrue(cargo.claw() == CargoMechClaw.STOP);
     assertTrue(hatch.arm() == HatchArm.IN);
     assertTrue(hatch.launcher() == HatchLauncher.RESET);
@@ -239,7 +239,7 @@ public class GamePieceControllerTest {
     callProcessState();
     assertTrue(intake.arm() == CargoIntakeArm.UP);
     assertTrue(intake.roller() == CargoIntakeRoller.STOP);
-    assertTrue(cargo.wrist() == CargoMechWristState.CARGO_BIN);
+    assertTrue(cargo.wrist() == CargoMechWristCurrentState.CARGO_BIN);
     assertTrue(cargo.claw() == CargoMechClaw.STOP);
     assertTrue(hatch.arm() == HatchArm.IN);
     assertTrue(hatch.launcher() == HatchLauncher.RESET);
@@ -256,7 +256,7 @@ public class GamePieceControllerTest {
     callProcessState();
     assertTrue(intake.arm() == CargoIntakeArm.DOWN);
     assertTrue(intake.roller() == CargoIntakeRoller.STOP);
-    assertTrue(cargo.wrist() == CargoMechWristState.CARGO_BIN);
+    assertTrue(cargo.wrist() == CargoMechWristCurrentState.CARGO_BIN);
     assertTrue(cargo.claw() == CargoMechClaw.STOP);
     assertTrue(hatch.arm() == HatchArm.IN);
     assertTrue(hatch.launcher() == HatchLauncher.RESET);
@@ -266,7 +266,7 @@ public class GamePieceControllerTest {
     // Assumes we have a cargo ball.
     // Verify cargo wrist moves to the turret safe position
     CargoWrist.simulatedSensorData(
-        CargoWristControlStates.heightTicksFromProportion(RobotMap.CARGO_MECH_SAFE_TURRET_PROPORTION));
+        CargoWristWantedStates.heightTicksFromProportion(RobotMap.CARGO_MECH_SAFE_TURRET_PROPORTION));
     // Sensor simulation should come before process state
     callProcessState();
     assertTrue(intake.arm() == CargoIntakeArm.DOWN);
@@ -291,11 +291,11 @@ public class GamePieceControllerTest {
 
     // Iteration 3, move the wrist to the right height.
     CargoWrist.simulatedSensorData(
-        CargoWristControlStates.heightTicksFromProportion(RobotMap.CARGO_MECH_LOW_ROCKET_PROPORTION));
+        CargoWristWantedStates.heightTicksFromProportion(RobotMap.CARGO_MECH_LOW_ROCKET_PROPORTION));
     callProcessState();
     assertTrue(intake.arm() == CargoIntakeArm.DOWN);
     assertTrue(intake.roller() == CargoIntakeRoller.STOP);
-    assertTrue(cargo.wrist() == CargoMechWristState.LOW_ROCKET);
+    assertTrue(cargo.wrist() == CargoMechWristCurrentState.LOW_ROCKET);
     assertTrue(cargo.claw() == CargoMechClaw.STOP);
     assertTrue(hatch.arm() == HatchArm.IN);
     assertTrue(hatch.launcher() == HatchLauncher.RESET);
@@ -311,7 +311,7 @@ public class GamePieceControllerTest {
     callProcessState();
     assertTrue(intake.arm() == CargoIntakeArm.DOWN);
     assertTrue(intake.roller() == CargoIntakeRoller.STOP);
-    assertTrue(cargo.wrist() == CargoMechWristState.LOW_ROCKET);
+    assertTrue(cargo.wrist() == CargoMechWristCurrentState.LOW_ROCKET);
     assertTrue(cargo.claw() == CargoMechClaw.STOP);
     assertTrue(hatch.arm() == HatchArm.IN);
     assertTrue(hatch.launcher() == HatchLauncher.RESET);
@@ -325,7 +325,7 @@ public class GamePieceControllerTest {
     callProcessState();
     assertTrue(intake.arm() == CargoIntakeArm.DOWN);
     assertTrue(intake.roller() == CargoIntakeRoller.STOP);
-    assertTrue(cargo.wrist() == CargoMechWristState.LOW_ROCKET);
+    assertTrue(cargo.wrist() == CargoMechWristCurrentState.LOW_ROCKET);
     assertTrue(cargo.claw() == CargoMechClaw.FIRE);
     assertTrue(hatch.arm() == HatchArm.IN);
     assertTrue(hatch.launcher() == HatchLauncher.RESET);
@@ -339,7 +339,7 @@ public class GamePieceControllerTest {
     callProcessState();
     assertTrue(intake.arm() == CargoIntakeArm.DOWN);
     assertTrue(intake.roller() == CargoIntakeRoller.STOP);
-    assertTrue(cargo.wrist() == CargoMechWristState.LOW_ROCKET);
+    assertTrue(cargo.wrist() == CargoMechWristCurrentState.LOW_ROCKET);
     assertTrue(cargo.claw() == CargoMechClaw.STOP);
     assertTrue(hatch.arm() == HatchArm.IN);
     assertTrue(hatch.launcher() == HatchLauncher.RESET);
@@ -355,7 +355,7 @@ public class GamePieceControllerTest {
     callProcessState();
     cargoMode = false;
     CargoWrist.simulatedSensorData(
-        CargoWristControlStates.heightTicksFromProportion(RobotMap.CARGO_MECH_SAFE_TURRET_PROPORTION));
+        CargoWristWantedStates.heightTicksFromProportion(RobotMap.CARGO_MECH_SAFE_TURRET_PROPORTION));
     // Sensor simulation should come before process state
     callProcessState();
     moveTurretLeft = true;
@@ -363,7 +363,7 @@ public class GamePieceControllerTest {
     turret.simulatedSensorData(turretAngleToTicks(90.0)); 
     callProcessState();
     CargoWrist.simulatedSensorData(
-        CargoWristControlStates.heightTicksFromProportion(RobotMap.CARGO_MECH_CARGO_SHIP_PROPORTION));
+        CargoWristWantedStates.heightTicksFromProportion(RobotMap.CARGO_MECH_CARGO_SHIP_PROPORTION));
     callProcessState();
     moveTurretLeft = false;
     moveCargoWristToCargoShipPosition = false;
@@ -373,7 +373,7 @@ public class GamePieceControllerTest {
     LOGGER.debug("Verify initial state with turret turned 90 and wrist up at cargo ship.");
     assertTrue(intake.arm() == CargoIntakeArm.DOWN);
     assertTrue(intake.roller() == CargoIntakeRoller.STOP);
-    assertTrue(cargo.wrist() == CargoMechWristState.CARGO_SHIP);
+    assertTrue(cargo.wrist() == CargoMechWristCurrentState.CARGO_SHIP);
     assertTrue(cargo.claw() == CargoMechClaw.STOP);
     assertTrue(hatch.arm() == HatchArm.IN);
     assertTrue(hatch.launcher() == HatchLauncher.RESET);
@@ -400,11 +400,11 @@ public class GamePieceControllerTest {
     
     LOGGER.debug("Iteration 2: Moving wrist down into to bin.");
     CargoWrist.simulatedSensorData(
-        CargoWristControlStates.heightTicksFromProportion(RobotMap.CARGO_MECH_CARGO_BIN_PROPORTION));
+        CargoWristWantedStates.heightTicksFromProportion(RobotMap.CARGO_MECH_CARGO_BIN_PROPORTION));
     callProcessState();
     assertTrue(intake.arm() == CargoIntakeArm.DOWN);
     assertTrue(intake.roller() == CargoIntakeRoller.STOP);
-    assertTrue(cargo.wrist() == CargoMechWristState.CARGO_BIN);
+    assertTrue(cargo.wrist() == CargoMechWristCurrentState.CARGO_BIN);
     assertTrue(cargo.claw() == CargoMechClaw.STOP);
     assertTrue(hatch.arm() == HatchArm.IN);
     assertTrue(hatch.launcher() == HatchLauncher.RESET);
@@ -414,7 +414,7 @@ public class GamePieceControllerTest {
     callProcessState();
     assertTrue(intake.arm() == CargoIntakeArm.UP);
     assertTrue(intake.roller() == CargoIntakeRoller.STOP);
-    assertTrue(cargo.wrist() == CargoMechWristState.CARGO_BIN);
+    assertTrue(cargo.wrist() == CargoMechWristCurrentState.CARGO_BIN);
     assertTrue(cargo.claw() == CargoMechClaw.STOP);
     assertTrue(hatch.arm() == HatchArm.IN);
     assertTrue(hatch.launcher() == HatchLauncher.RESET);
@@ -424,7 +424,7 @@ public class GamePieceControllerTest {
     callProcessState();
     assertTrue(intake.arm() == CargoIntakeArm.UP);
     assertTrue(intake.roller() == CargoIntakeRoller.STOP);
-    assertTrue(cargo.wrist() == CargoMechWristState.CARGO_BIN);
+    assertTrue(cargo.wrist() == CargoMechWristCurrentState.CARGO_BIN);
     assertTrue(cargo.claw() == CargoMechClaw.STOP);
     assertTrue(hatch.arm() == HatchArm.IN);
     assertTrue(hatch.launcher() == HatchLauncher.RESET);

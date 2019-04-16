@@ -142,11 +142,11 @@ public class LoggingPerfTest {
 
     // reset the robot
     CargoWrist.simulatedSensorData(
-        CargoWristControlStates.heightTicksFromProportion(RobotMap.CARGO_MECH_CARGO_BIN_PROPORTION));
+        CargoWristWantedStates.heightTicksFromProportion(RobotMap.CARGO_MECH_CARGO_BIN_PROPORTION));
     turret.simulatedSensorData(RobotMap.TURRET_HOME_TICKS);
     //intake.arm(CargoIntakeArm.UP); 
     intake.roller(CargoIntakeRoller.STOP);
-    cargo.wrist(CargoWristControlStates.CARGO_BIN);
+    cargo.wrist(CargoWristWantedStates.CARGO_BIN);
     cargo.claw(CargoMechClaw.STOP);
     hatch.arm(HatchArm.IN);
     hatch.launcher(HatchLauncher.RESET);
@@ -159,7 +159,7 @@ public class LoggingPerfTest {
     // Verify initial state
     assertTrue(intake.arm() == CargoIntakeArm.UP); 
     assertTrue(intake.roller() == CargoIntakeRoller.STOP);
-    assertTrue(cargo.wrist() == CargoMechWristState.CARGO_BIN);
+    assertTrue(cargo.wrist() == CargoMechWristCurrentState.CARGO_BIN);
     assertTrue(cargo.claw() == CargoMechClaw.STOP);
     assertTrue(hatch.arm() == HatchArm.IN);
     assertTrue(hatch.launcher() == HatchLauncher.RESET);
