@@ -24,11 +24,8 @@ public interface GamePiece {
   /**
    * read values and actuate
    */
-  public void read();
-  public void actuate();
   /**
    * called when specific system should be checked
    */
-  public boolean systemCheck();
 
 }

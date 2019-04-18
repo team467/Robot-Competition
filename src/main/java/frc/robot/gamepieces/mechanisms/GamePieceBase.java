@@ -39,4 +39,13 @@ abstract class GamePieceBase implements GamePiece {
     telemetry.addBooleanMetric(name + "Enabled", this::enabled);
   }
 
+  public void read(){
+  }
+
+  public void actuate(){
+
+  };
+
+  public abstract boolean systemCheck();
+
 }

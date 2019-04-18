@@ -34,38 +34,18 @@ public class CargoClaw extends GamePieceBase implements GamePiece {
             box(motorLeader.getChannel()), box(motorFollower.getChannel()));
       }
     }
-
-    public void setClawActuation(clawCurrentStates state){
-        switch (state) {
-            case FIRE:
-               clawcontroller.demand = 1.0;
-              LOGGER.debug("Claw going forward");
-              break;
-  
-            case INTAKE:
-                clawcontroller.demand = -1.0;
-              LOGGER.debug("Claw going backward");
-              break;
-  
-            case STOP:
-            default:
-            clawcontroller.demand = 0.0;
-              LOGGER.debug("Claw is stopping");
-
+        
+    /**
+     * Returns a singleton instance of the telemery builder.
+     * 
+     * @return TelemetryBuilder the telemetry builder instance
+     */
+    public static CargoClaw getInstance() {
+        if (instance == null) {
+        instance = new CargoClaw();
         }
+        return instance;
     }
-
-  /**
-   * Returns a singleton instance of the telemery builder.
-   * 
-   * @return TelemetryBuilder the telemetry builder instance
-   */
-  public static CargoClaw getInstance() {
-    if (instance == null) {
-      instance = new CargoClaw();
-    }
-    return instance;
-  }
 
     @Override
     public boolean systemCheck() {
@@ -75,19 +55,15 @@ public class CargoClaw extends GamePieceBase implements GamePiece {
 
     @Override
     public void periodic() {
+        read();
         actuate();
 
     }
 
     @Override
     public void read() {
+        return;
         //no sensors nothing to read
-    }
-
-    public enum clawCurrentStates {
-        FIRE, 
-        INTAKE, 
-        STOP;
     }
 
     public enum controlStates{
@@ -103,5 +79,14 @@ public class CargoClaw extends GamePieceBase implements GamePiece {
         motorLeader.set(clawcontroller.demand);
         motorFollower.set(clawcontroller.demand);
 
+    }
+    
+    /**
+     * @param percent takes a number from 1 to 100
+     */
+    public void set(double percent) {
+        percent = percent / 100;
+       clawcontroller.demand = percent;   
+       LOGGER.warn("Claw Power Percent set");
     }
 }
