@@ -37,7 +37,7 @@ public class LoggingPerfTest {
  
   private static Robot robot;
   private static GamePieceController controller;
-  private static HatchMechanism hatch;
+  private static HatchLauncher hatch;
   private static CargoIntake intake;
   private static CargoWrist cargo;
   private static Turret turret;
@@ -93,7 +93,7 @@ public class LoggingPerfTest {
     robot.robotInit();
 
     controller = GamePieceController.getInstance();
-    hatch = HatchMechanism.getInstance();
+    hatch = HatchLauncher.getInstance();
     intake = CargoIntake.getInstance();
     cargo = CargoWrist.getInstance();
     turret = Turret.getInstance();
@@ -163,7 +163,7 @@ public class LoggingPerfTest {
     assertTrue(cargo.claw() == CargoMechClaw.STOP);
     assertTrue(hatch.arm() == HatchArm.IN);
     assertTrue(hatch.launcher() == HatchLauncher.RESET);
-    assertEquals(0.0, turret.position(), 1.0);
+    assertEquals(0.0, turret.currentPosition(), 1.0);
     
     telemetry.start();
   }

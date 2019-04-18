@@ -2,7 +2,7 @@ package frc.robot.gamepieces.states;
 
 import frc.robot.RobotMap;
 
-public class IntakeHQ {
+public class IntakeStates {
     public enum CargoIntakeArmStates  {
         UP,
         DOWN,

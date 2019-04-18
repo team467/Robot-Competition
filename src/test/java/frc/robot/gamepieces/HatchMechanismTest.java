@@ -23,7 +23,7 @@ public class HatchMechanismTest {
       = RobotLogManager.getMainLogger(HatchMechanismTest.class.getName());
 
   private static Robot robot;
-  private static HatchMechanism hatch;
+  private static HatchLauncher hatch;
 
   /**
    * Sets up robot in simulation mode and gets the test object.
@@ -34,7 +34,7 @@ public class HatchMechanismTest {
     Robot.enableSimulator();
     robot = new Robot();
     robot.robotInit();
-    hatch = HatchMechanism.getInstance();
+    hatch = HatchLauncher.getInstance();
     hatch.enabled(true);
   }
 

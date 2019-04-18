@@ -47,24 +47,24 @@ public class HatchArm extends GamePieceBase implements GamePiece {
     @Override
     public void actuate() {
         LOGGER.debug("Calling Actuate state: {}", this);
-        // if (RobotMap.HAS_HATCH_MECHANISM) {
-        //   switch (this) {
-        //     case IN:
-        //       if (RobotMap.HAS_HATCH_MECHANISM) {
-        //         arm.set(DoubleSolenoid.Value.kReverse);
-        //       }
-        //       break;
-        //     case OUT:
-        //       if (RobotMap.HAS_HATCH_MECHANISM) {
-        //         arm.set(DoubleSolenoid.Value.kForward);
-        //       }
-        //       break;
-        //     default:
-        //       if (RobotMap.HAS_HATCH_MECHANISM) {
-        //         arm.set(DoubleSolenoid.Value.kOff);
-        //       }
-        //   }
-        // }
+        if (RobotMap.HAS_HATCH_MECHANISM) {
+          switch (hatchArmState) {
+            case IN:
+              if (RobotMap.HAS_HATCH_MECHANISM) {
+                arm.set(DoubleSolenoid.Value.kReverse);
+              }
+              break;
+            case OUT:
+              if (RobotMap.HAS_HATCH_MECHANISM) {
+                arm.set(DoubleSolenoid.Value.kForward);
+              }
+              break;
+            default:
+              if (RobotMap.HAS_HATCH_MECHANISM) {
+                arm.set(DoubleSolenoid.Value.kOff);
+              }
+          }
+        }
 
     }
 

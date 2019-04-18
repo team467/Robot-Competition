@@ -4,15 +4,15 @@ import static org.apache.logging.log4j.util.Unbox.box;
 import frc.robot.RobotMap;
 import frc.robot.gamepieces.mechanisms.CargoIntake;
 import frc.robot.gamepieces.mechanisms.CargoWrist;
-import frc.robot.gamepieces.mechanisms.HatchMechanism;
+import frc.robot.gamepieces.mechanisms.HatchLauncher;
 import frc.robot.gamepieces.mechanisms.Turret;
 import frc.robot.gamepieces.mechanisms.CargoIntake.CargoIntakeArm;
 import frc.robot.gamepieces.mechanisms.CargoIntake.CargoIntakeRoller;
 import frc.robot.gamepieces.mechanisms.CargoWrist.CargoMechClaw;
 import frc.robot.gamepieces.mechanisms.CargoWrist.CargoWristWantedStates;
 import frc.robot.gamepieces.mechanisms.CargoWrist.CargoMechWristCurrentState;
-import frc.robot.gamepieces.mechanisms.HatchMechanism.HatchArm;
-import frc.robot.gamepieces.mechanisms.HatchMechanism.HatchLauncher;
+import frc.robot.gamepieces.mechanisms.HatchLauncher.HatchArm;
+import frc.robot.gamepieces.mechanisms.HatchLauncher.HatchLauncher;
 import frc.robot.logging.RobotLogManager;
 import frc.robot.logging.Telemetry;
 import frc.robot.sensors.LedI2C;
@@ -34,7 +34,7 @@ public class GamePieceController {
   // Game Pieces
   private CargoIntake cargoIntake;
   private CargoWrist cargoMech;
-  private HatchMechanism hatchMech;
+  private HatchLauncher hatchMech;
   private Turret turret;
   private CameraSwitcher camera;
 
@@ -77,7 +77,7 @@ public class GamePieceController {
     LOGGER.debug("Initializing cargoIntake");
     cargoMech = CargoWrist.getInstance();
     LOGGER.debug("Initializing cargoMech");
-    hatchMech = HatchMechanism.getInstance();
+    hatchMech = HatchLauncher.getInstance();
     LOGGER.debug("Initializing hatch mechanism");
     turret = Turret.getInstance();
     LOGGER.debug("Initializing turret");
@@ -382,12 +382,12 @@ public class GamePieceController {
     if (moveTurretRight) {
       if (ensureTurretSafeToMove(disableSafety)) {
         LOGGER.debug("CARGO: Moving turret to right of cargo side.");
-        turret.target(-90.0);
+        turret.setPosition(-90.0);
       }
     } else if (moveTurretLeft) {
       if (ensureTurretSafeToMove(disableSafety)) {
         LOGGER.debug("CARGO: Moving turret to left of cargo side.");
-        turret.target(90.0);
+        turret.setPosition(90.0);
       }
     }
 
@@ -443,12 +443,12 @@ public class GamePieceController {
       if (moveTurretRight) {
         LOGGER.debug("HATCH: Moving turret to right of hatch side.");
         if (ensureTurretSafeToMove(disableSafety)) {
-          turret.target(90.0);
+          turret.setPosition(90.0);
         }
       } else if (moveTurretLeft) {
         LOGGER.debug("HATCH: Moving turret to left of hatch side.");
         if (ensureTurretSafeToMove(disableSafety)) {
-          turret.target(-90.0);
+          turret.setPosition(-90.0);
         }
       } 
       if (manualTurretMove != 0.0) {

@@ -32,7 +32,7 @@ public class GamePieceControllerTest {
 
   private static Robot robot;
   private static GamePieceController controller;
-  private static HatchMechanism hatch;
+  private static HatchLauncher hatch;
   private static CargoIntake intake;
   private static CargoWrist cargo;
   private static Turret turret;
@@ -88,7 +88,7 @@ public class GamePieceControllerTest {
     robot.robotInit();
 
     controller = GamePieceController.getInstance();
-    hatch = HatchMechanism.getInstance();
+    hatch = HatchLauncher.getInstance();
     intake = CargoIntake.getInstance();
     cargo = CargoWrist.getInstance();
     turret = Turret.getInstance();
@@ -156,7 +156,7 @@ public class GamePieceControllerTest {
     assertTrue(cargo.claw() == CargoMechClaw.STOP);
     assertTrue(hatch.arm() == HatchArm.IN);
     assertTrue(hatch.launcher() == HatchLauncher.RESET);
-    assertEquals(0.0, turret.position(), 1.0);
+    assertEquals(0.0, turret.currentPosition(), 1.0);
     
   }
 
@@ -184,7 +184,7 @@ public class GamePieceControllerTest {
     assertTrue(cargo.claw() == CargoMechClaw.STOP);
     assertTrue(hatch.arm() == HatchArm.IN);
     assertTrue(hatch.launcher() == HatchLauncher.RESET);
-    assertEquals(0.0, turret.position(), 1.0);
+    assertEquals(0.0, turret.currentPosition(), 1.0);
 
     // Set pilot/specialist input
     cargoMode = false; // Don't need to press the mode switch button anymore.
@@ -200,7 +200,7 @@ public class GamePieceControllerTest {
     assertTrue(cargo.claw() == CargoMechClaw.STOP);
     assertTrue(hatch.arm() == HatchArm.IN);
     assertTrue(hatch.launcher() == HatchLauncher.RESET);
-    assertEquals(0.0, turret.position(), 1.0);
+    assertEquals(0.0, turret.currentPosition(), 1.0);
 
     LOGGER.debug("Iteration 2: Arm is down, turn rollers on.");
     callProcessState();
@@ -210,7 +210,7 @@ public class GamePieceControllerTest {
     assertTrue(cargo.claw() == CargoMechClaw.INTAKE);
     assertTrue(hatch.arm() == HatchArm.IN);
     assertTrue(hatch.launcher() == HatchLauncher.RESET);
-    assertEquals(0.0, turret.position(), 1.0);
+    assertEquals(0.0, turret.currentPosition(), 1.0);
 
     // Release pilot/specialist input
     acquireCargo = false;
@@ -225,7 +225,7 @@ public class GamePieceControllerTest {
     assertTrue(cargo.claw() == CargoMechClaw.STOP);
     assertTrue(hatch.arm() == HatchArm.IN);
     assertTrue(hatch.launcher() == HatchLauncher.RESET);
-    assertEquals(0.0, turret.position(), 1.0);
+    assertEquals(0.0, turret.currentPosition(), 1.0);
   }
 
   @Test
@@ -243,7 +243,7 @@ public class GamePieceControllerTest {
     assertTrue(cargo.claw() == CargoMechClaw.STOP);
     assertTrue(hatch.arm() == HatchArm.IN);
     assertTrue(hatch.launcher() == HatchLauncher.RESET);
-    assertEquals(0.0, turret.position(), 1.0);
+    assertEquals(0.0, turret.currentPosition(), 1.0);
 
     // Set pilot/specialist input
     cargoMode = false;
@@ -260,7 +260,7 @@ public class GamePieceControllerTest {
     assertTrue(cargo.claw() == CargoMechClaw.STOP);
     assertTrue(hatch.arm() == HatchArm.IN);
     assertTrue(hatch.launcher() == HatchLauncher.RESET);
-    assertEquals(0.0, turret.position(), 1.0);
+    assertEquals(0.0, turret.currentPosition(), 1.0);
 
     // Iteration 1, Arm started down and turret started at home. 
     // Assumes we have a cargo ball.
@@ -275,7 +275,7 @@ public class GamePieceControllerTest {
     assertTrue(cargo.claw() == CargoMechClaw.STOP);
     assertTrue(hatch.arm() == HatchArm.IN);
     assertTrue(hatch.launcher() == HatchLauncher.RESET);
-    assertEquals(0.0, turret.position(), 1.0);
+    assertEquals(0.0, turret.currentPosition(), 1.0);
 
     // Iteration 2, move the turret to the right
     turret.simulatedSensorData(turretAngleToTicks(-90.0)); 
@@ -287,7 +287,7 @@ public class GamePieceControllerTest {
     assertTrue(cargo.claw() == CargoMechClaw.STOP);
     assertTrue(hatch.arm() == HatchArm.IN);
     assertTrue(hatch.launcher() == HatchLauncher.RESET);
-    assertEquals(-90.0, turret.position(), 1.0);
+    assertEquals(-90.0, turret.currentPosition(), 1.0);
 
     // Iteration 3, move the wrist to the right height.
     CargoWrist.simulatedSensorData(
@@ -299,7 +299,7 @@ public class GamePieceControllerTest {
     assertTrue(cargo.claw() == CargoMechClaw.STOP);
     assertTrue(hatch.arm() == HatchArm.IN);
     assertTrue(hatch.launcher() == HatchLauncher.RESET);
-    assertEquals(-90.0, turret.position(), 1.0);
+    assertEquals(-90.0, turret.currentPosition(), 1.0);
 
     // Release pilot/specialist input
     moveTurretRight = false;
@@ -315,7 +315,7 @@ public class GamePieceControllerTest {
     assertTrue(cargo.claw() == CargoMechClaw.STOP);
     assertTrue(hatch.arm() == HatchArm.IN);
     assertTrue(hatch.launcher() == HatchLauncher.RESET);
-    assertEquals(-90.0, turret.position(), 1.0);
+    assertEquals(-90.0, turret.currentPosition(), 1.0);
 
     // Release pilot/specialist input
     fireCargo = true;
@@ -329,7 +329,7 @@ public class GamePieceControllerTest {
     assertTrue(cargo.claw() == CargoMechClaw.FIRE);
     assertTrue(hatch.arm() == HatchArm.IN);
     assertTrue(hatch.launcher() == HatchLauncher.RESET);
-    assertEquals(-90.0, turret.position(), 1.0);
+    assertEquals(-90.0, turret.currentPosition(), 1.0);
 
     // Release pilot/specialist input
     fireCargo = false;
@@ -343,7 +343,7 @@ public class GamePieceControllerTest {
     assertTrue(cargo.claw() == CargoMechClaw.STOP);
     assertTrue(hatch.arm() == HatchArm.IN);
     assertTrue(hatch.launcher() == HatchLauncher.RESET);
-    assertEquals(-90.0, turret.position(), 1.0);
+    assertEquals(-90.0, turret.currentPosition(), 1.0);
   }
 
   @Test
@@ -377,7 +377,7 @@ public class GamePieceControllerTest {
     assertTrue(cargo.claw() == CargoMechClaw.STOP);
     assertTrue(hatch.arm() == HatchArm.IN);
     assertTrue(hatch.launcher() == HatchLauncher.RESET);
-    assertEquals(90.0, turret.position(), 1.0);
+    assertEquals(90.0, turret.currentPosition(), 1.0);
 
     // Set pilot/specialist input
     LOGGER.debug("Press the activate DEFENSE mode button");
@@ -392,7 +392,7 @@ public class GamePieceControllerTest {
     assertTrue(cargo.claw() == CargoMechClaw.STOP);
     assertTrue(hatch.arm() == HatchArm.IN);
     assertTrue(hatch.launcher() == HatchLauncher.RESET);
-    assertEquals(0.0, turret.position(), 1.0);
+    assertEquals(0.0, turret.currentPosition(), 1.0);
 
     // Release pilot/specialist input
     LOGGER.debug("Release the DEFENSE mode button.");
@@ -408,7 +408,7 @@ public class GamePieceControllerTest {
     assertTrue(cargo.claw() == CargoMechClaw.STOP);
     assertTrue(hatch.arm() == HatchArm.IN);
     assertTrue(hatch.launcher() == HatchLauncher.RESET);
-    assertEquals(0.0, turret.position(), 1.0);
+    assertEquals(0.0, turret.currentPosition(), 1.0);
 
     LOGGER.debug("Iteration 3: Moving intake arm up.");
     callProcessState();
@@ -418,7 +418,7 @@ public class GamePieceControllerTest {
     assertTrue(cargo.claw() == CargoMechClaw.STOP);
     assertTrue(hatch.arm() == HatchArm.IN);
     assertTrue(hatch.launcher() == HatchLauncher.RESET);
-    assertEquals(0.0, turret.position(), 1.0);
+    assertEquals(0.0, turret.currentPosition(), 1.0);
 
     LOGGER.debug("Final verify in DEFENSE state");
     callProcessState();
@@ -428,7 +428,7 @@ public class GamePieceControllerTest {
     assertTrue(cargo.claw() == CargoMechClaw.STOP);
     assertTrue(hatch.arm() == HatchArm.IN);
     assertTrue(hatch.launcher() == HatchLauncher.RESET);
-    assertEquals(0.0, turret.position(), 1.0);
+    assertEquals(0.0, turret.currentPosition(), 1.0);
   }
 
   private void callProcessState() {
