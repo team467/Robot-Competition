@@ -14,6 +14,7 @@ import frc.robot.logging.RobotLogManager;
 public class IntakeSM {
     private static final Logger LOGGER 
       = RobotLogManager.getMainLogger(SuperStructSM.class.getName());
+      
     public enum NeededAction {
         NEED_OBJ,
         NEED_MANUAL,
