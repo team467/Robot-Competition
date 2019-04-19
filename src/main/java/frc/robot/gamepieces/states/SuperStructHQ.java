@@ -10,5 +10,9 @@ public class SuperStructHQ {
     public boolean turretManual = false;
     public double turretPO = 0.0;
 
+    public boolean wristManual = false;
+    public double wristP = 0;
+    public double wristHeight = 0;
+
 
 }

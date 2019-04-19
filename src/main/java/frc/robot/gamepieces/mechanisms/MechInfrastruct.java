@@ -21,6 +21,14 @@ public class MechInfrastruct extends GamePieceBase implements GamePiece {
         } 
         return instance;
     }
+
+    public void stopCompressor() {
+        compressor.stop();
+    }
+
+    public void startCompressor() {
+        compressor.start();
+    }
     
     @Override
     public boolean systemCheck() {

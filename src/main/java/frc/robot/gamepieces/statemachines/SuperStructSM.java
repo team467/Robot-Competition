@@ -35,32 +35,25 @@ public class SuperStructSM {
     //TODO: update functionality of gamepiece controller
  //   private GamePieceController gamePieceController = new GamePieceController();
 
-    private double manualPower = 0.0;
+    private double turretManualPower = 0.0;
+    private double wristManualPower = 0.0;
     
     private double wristScoringHeight = RobotMap.CARGO_MECH_WRIST_BOTTOM_TICKS;
     private double turretTurnTicks = RobotMap.TURRET_HOME_TICKS;
 
-    //in ticks
-    private double turretMaxTurnL = RobotMap.TURRET_LEFT_LIMIT_TICKS;
-    private double turretMaxTurnR = RobotMap.TURRET_RIGHT_LIMIT_TICKS;
-    private double maxWristHeight = RobotMap.CARGO_WRIST_UP_LIMIT_TICKS;
+
 
     //sets
     public void resetManual() {
-        manualPower = 0.0;
+        turretManualPower = 0.0;
     }
 
-    public void setMaxTurretTurn(double ticksR, double ticksL) {
-        turretMaxTurnL = ticksL;
-        turretMaxTurnR = ticksL;
+    public void setTurretManualPower(double power) {
+        turretManualPower = power;
     }
 
-    public void setMaxWristHeight(double ticksH) {
-        maxWristHeight = ticksH;
-    }
-
-    public void setManualPower(double power) {
-        manualPower = power;
+    public void setWristManualPower(double power) {
+        wristManualPower = power;
     }
 
     public void setWristHeight(double height) {
@@ -86,16 +79,16 @@ public class SuperStructSM {
 
     //wrist is comparing proportion to ticks TODO: need to fix
     public boolean scoringChange(){
-        return (neededState.turnAngle != turretTurnTicks) || (neededState.wristProportion != wristScoringHeight);
+        return (neededState.turnTicks != turretTurnTicks) || (neededState.wristProportion != wristScoringHeight);
     }
 
     public void updatePlanDesired(SuperStructStates currentState){
-        neededState.turnAngle = turretTurnTicks;
+        neededState.turnTicks = turretTurnTicks;
         neededState.wristProportion = wristScoringHeight;
 
     }
 
-    public SuperSystemState update(NeededAction neededAction, SuperStructStates currentState) {
+    public SuperStructHQ update(NeededAction neededAction, SuperStructStates currentState) {
         SuperSystemState newState;
         switch(systemState) {
             case STOPPING:
@@ -115,9 +108,26 @@ public class SuperStructSM {
             systemState = newState;
         }
 
-        if(SuperStructCommand.turretManual ) {
+        if(!SuperStructCommand.turretManual ) {
+            //update GPcontroller
+            SuperStructCommand.turnAngle = commandedState.turnTicks;
 
         }
+
+        switch(systemState){
+            case STOPPING:
+            getStopTransitionCommandState();
+        case MOVING:
+            getMoveTransitionCommandState();
+        case MANUAL:
+            getManualCommandState();
+        break;
+        default:
+            LOGGER.error("INVALID SUPER STRUCTURE STATE!" + systemState);
+        break;
+        }
+       
+        return SuperStructCommand;
     }
 
     private SuperSystemState handleTransition(NeededAction neededAction, SuperStructStates currentState){
@@ -148,6 +158,7 @@ public class SuperStructSM {
 
     private void getStopTransitionCommandState() {
         SuperStructCommand.turretManual = false;
+        SuperStructCommand.wristManual = false;
     }
 
     private SuperSystemState moveTransition(NeededAction neededAction, SuperStructStates currentState) {        
@@ -156,12 +167,13 @@ public class SuperStructSM {
 
     private void getMoveTransitionCommandState() {
         SuperStructCommand.turretManual = false;
+        SuperStructCommand.wristManual = false;
     }
 
     private SuperSystemState manualTansition(NeededAction neededAction, SuperStructStates currentState) {
         if(neededAction != NeededAction.NEED_MANUAL) {
             wristScoringHeight = currentState.wristProportion;
-            turretTurnTicks = currentState.turnAngle;
+            turretTurnTicks = currentState.turnTicks;
             return handleTransition(NeededAction.NEED_POS, currentState);
         }
         return handleTransition(neededAction, currentState);
@@ -169,7 +181,10 @@ public class SuperStructSM {
 
     private void getManualCommandState() {
         SuperStructCommand.turretManual = true;
-        SuperStructCommand.turretPO = manualPower;
+        SuperStructCommand.turretPO = turretManualPower;
+        SuperStructCommand.wristManual = true;
+        SuperStructCommand.wristHeight = wristManualPower;
+        
     }
 
 }

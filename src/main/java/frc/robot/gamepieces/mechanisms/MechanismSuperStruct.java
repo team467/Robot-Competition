@@ -1,19 +1,34 @@
 package frc.robot.gamepieces.mechanisms;
 
-//Controls all the mechanisms
+import frc.robot.gamepieces.statemachines.SuperStructSM;
+import frc.robot.gamepieces.states.SuperStructStates;
+
+//Controls turret and wrist
 public class MechanismSuperStruct extends GamePieceBase{
 
-    private CargoClaw cargoClaw = CargoClaw.getInstance();
-    private CargoIntakeArm cargoIntakeArm = CargoIntakeArm.getInstance();
-    private CargoIntakeRoller cargoIntakeRoller = CargoIntakeRoller.getInstance();
+    private static MechanismSuperStruct instance = null;
+
+  
     private CargoWrist cargoWrist = CargoWrist.getInstance();
-    private HatchArm hatchArm = HatchArm.getInstance();
-    private HatchLauncher hatchLauncher = HatchLauncher.getInstance();
     private Turret turret = Turret.getInstance();
+
+    private SuperStructSM stateMachine = new SuperStructSM();
+    private SuperStructSM.NeededAction neededAction = SuperStructSM.NeededAction.STAY;
+
+    private SuperStructStates state = new SuperStructStates();
 
     private MechanismSuperStruct(){
         super("Telemetry","SuperStructure");
     }
+
+    //Singleton
+    public MechanismSuperStruct getInstance() {
+        if(instance == null) {
+            instance = new MechanismSuperStruct();
+        }
+        return instance;
+    }
+
     @Override
     public void periodic() {
 
