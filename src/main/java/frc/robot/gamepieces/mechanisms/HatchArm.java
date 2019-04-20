@@ -68,6 +68,10 @@ public class HatchArm extends GamePieceBase implements GamePiece {
 
     }
 
+    public void stop() {
+        arm.set(DoubleSolenoid.Value.kOff);
+    }
+
     @Override
     public boolean systemCheck() {
         return false;

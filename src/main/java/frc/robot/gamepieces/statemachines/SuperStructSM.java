@@ -79,12 +79,12 @@ public class SuperStructSM {
 
     //wrist is comparing proportion to ticks TODO: need to fix
     public boolean scoringChange(){
-        return (neededState.turnTicks != turretTurnTicks) || (neededState.wristProportion != wristScoringHeight);
+        return (neededState.turnTicks != turretTurnTicks) || (neededState.wristTicks != wristScoringHeight);
     }
 
     public void updatePlanDesired(SuperStructStates currentState){
         neededState.turnTicks = turretTurnTicks;
-        neededState.wristProportion = wristScoringHeight;
+        neededState.wristTicks = wristScoringHeight;
 
     }
 
@@ -172,7 +172,7 @@ public class SuperStructSM {
 
     private SuperSystemState manualTansition(NeededAction neededAction, SuperStructStates currentState) {
         if(neededAction != NeededAction.NEED_MANUAL) {
-            wristScoringHeight = currentState.wristProportion;
+            wristScoringHeight = currentState.wristTicks;
             turretTurnTicks = currentState.turnTicks;
             return handleTransition(NeededAction.NEED_POS, currentState);
         }

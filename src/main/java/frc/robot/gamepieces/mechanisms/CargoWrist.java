@@ -167,6 +167,12 @@ public class CargoWrist extends GamePieceBase implements GamePiece {
     }
   }
 
+  public double getTickPos(){
+    return wristcontroller.wristPositionTicks;
+  }
+
+  //TODO: write more gets
+
   private double proportionalheight(double heightProportion) {
     double height;
     height =  ((heightProportion) * RobotMap.CARGO_MECH_WRIST_TOP_TICKS + (1.0 - heightProportion) * RobotMap.CARGO_MECH_WRIST_BOTTOM_TICKS);

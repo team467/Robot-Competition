@@ -7,11 +7,11 @@ import org.apache.logging.log4j.Logger;
 public class SuperStructStates {
     private static final Logger LOGGER = RobotLogManager.getMainLogger(SuperStructStates.class.getName());
     public double turnTicks = RobotMap.TURRET_HOME_TICKS;
-    public double wristProportion = RobotMap.CARGO_MECH_CARGO_BIN_PROPORTION;
+    public double wristTicks = RobotMap.CARGO_MECH_WRIST_BOTTOM_TICKS;
 
     public SuperStructStates(double turretAngle, double wristHeight){
         this.turnTicks = turretAngle;
-        this.wristProportion = wristHeight;
+        this.wristTicks = wristHeight;
     }
 
     public SuperStructStates(){
@@ -37,6 +37,12 @@ public class SuperStructStates {
     public boolean fubarTurretState() {
         //Figure out which way the logic goes
         return (turnTicks - RobotMap.TURRET_ALLOWABLE_ERROR_TICKS) > RobotMap.TURRET_LEFT_LIMIT_TICKS || (turnTicks + RobotMap.TURRET_ALLOWABLE_ERROR_TICKS) < RobotMap.TURRET_RIGHT_LIMIT_TICKS;
+    }
+
+    public void fatalReset() {
+        turnTicks = RobotMap.TURRET_HOME_TICKS;
+        wristTicks = RobotMap.CARGO_MECH_WRIST_BOTTOM_TICKS;
+        LOGGER.error("Robot has encountered fatal state going to neutral state");
     }
 
     public String stateSitRep() {

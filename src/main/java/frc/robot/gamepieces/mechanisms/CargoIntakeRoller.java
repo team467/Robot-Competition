@@ -18,7 +18,6 @@ public class CargoIntakeRoller extends GamePieceBase implements GamePiece{
     private static CargoIntakeRoller instance = null;
     public RollerController rollerController; 
 
-    private static CargoIntakeRollerStates cargoIntakeRollerStates;
 
     private CargoIntakeRoller() {
         super("Telemetry", "CargoIntakeRoller");
@@ -45,34 +44,10 @@ public class CargoIntakeRoller extends GamePieceBase implements GamePiece{
         LOGGER.debug("Actuate cargo intake roller: {}", this);
     }
 
-    //make new states for this
-  public enum CargoIntakeRollerStates {
-    REJECT,
-    STOP,
-    INTAKE;
-  }
+  
 
-    private void setRollerPos(CargoIntakeRollerStates state){
-        switch (state) {
-
-            case REJECT:
-              if (RobotMap.HAS_ROLLER_INTAKE && !RobotMap.useSimulator) {
-                rollerController.motorDemand = 1.0;
-              }
-              break;
-            
-            case INTAKE:
-              if (RobotMap.HAS_ROLLER_INTAKE && !RobotMap.useSimulator) {
-                rollerController.motorDemand = -1.0;
-              }
-              break;
-    
-            case STOP:
-            default:
-              if (RobotMap.HAS_ROLLER_INTAKE && !RobotMap.useSimulator) {
-                rollerController.motorDemand = 0.0;
-              }
-          }
+    public void set(double power){
+        rollerController.motorDemand = power; 
     }
 
     @Override
