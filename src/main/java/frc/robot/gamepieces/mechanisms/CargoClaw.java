@@ -85,7 +85,7 @@ public class CargoClaw extends GamePieceBase implements GamePiece {
      * @param percent takes a number from 1 to 100
      */
     public void set(double percent) {
-        percent = percent / 100;
+        //percent = percent / 100;
        clawcontroller.demand = percent;   
        LOGGER.warn("Claw Power Percent set");
     }
