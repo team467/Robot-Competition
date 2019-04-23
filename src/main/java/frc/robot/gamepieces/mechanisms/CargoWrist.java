@@ -103,8 +103,8 @@ public class CargoWrist extends GamePieceBase implements GamePiece {
     wristcontroller.output = talon.getMotorOutputPercent();
   }
 
-  public synchronized void setPosition(double proportion) {
-    double neededPos = proportionalheight(proportion);
+  public synchronized void setPosition(double ticks) {
+    double neededPos = proportionalheight(ticks);
 
     if(wristControlState != controlStates.Position) {
       wristControlState = controlStates.Position;

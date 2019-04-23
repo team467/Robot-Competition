@@ -10,7 +10,7 @@ import frc.robot.gamepieces.states.IntakeStates.HatchLauncherStates;
 
 public class IntakeStructure extends GamePieceBase {
 
-    private IntakeStructure instance = null;
+    private static IntakeStructure instance = null;
 
     private CargoClaw cargoClaw = CargoClaw.getInstance();
     private CargoIntakeArm cargoIntakeArm = CargoIntakeArm.getInstance();
@@ -32,7 +32,7 @@ public class IntakeStructure extends GamePieceBase {
     }
 
     //singleton
-    public IntakeStructure getInstance(){
+    public static IntakeStructure getInstance(){
         if(instance == null){
             instance = new IntakeStructure();
         }
@@ -110,7 +110,8 @@ public class IntakeStructure extends GamePieceBase {
  
     @Override
     public void periodic() {
-
+        IntakeStates playState = stateMachine.update(neededAction, getCurrentState());
+        updatefromState(playState);
     }
 
     @Override

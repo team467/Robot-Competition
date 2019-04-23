@@ -228,6 +228,10 @@ public class Turret extends GamePieceBase implements GamePiece {
     return false;
   }
 
+  public double getTickPosition() {
+    return vars.tickPosition;
+  }
+
   @Override
   public void read() {
     vars.outputPercent = talon.getMotorOutputPercent();

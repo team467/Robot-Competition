@@ -89,6 +89,7 @@ public class SuperStructSM {
     }
 
     public SuperStructHQ update(NeededAction neededAction, SuperStructStates currentState) {
+        //entry actions
         SuperSystemState newState;
         switch(systemState) {
             case STOPPING:
@@ -104,7 +105,7 @@ public class SuperStructSM {
         }
 
         if(newState != systemState) {
-            LOGGER.info("Robot Super Structure Changed State from {} -> {}", systemState, newState);
+            LOGGER.info("Robot Super Structure transitioned from {} -> {}", systemState, newState);
             systemState = newState;
         }
 

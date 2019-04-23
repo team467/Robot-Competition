@@ -100,7 +100,7 @@ public class IntakeSM {
         }
 
         if(newState != systemState) {
-            LOGGER.info("Robot Super Structure Changed State from {} -> {}", systemState, newState);
+            LOGGER.info("Robot Super Structure transitioned from {} -> {}", systemState, newState);
             systemState = newState;
         }
 
