@@ -39,4 +39,9 @@ public class MechInfrastruct extends GamePieceBase implements GamePiece {
     public void periodic() {
 
     }
+
+    @Override
+    public void stop() {
+
+    }
 }
