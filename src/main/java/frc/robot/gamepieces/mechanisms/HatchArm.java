@@ -79,6 +79,7 @@ public class HatchArm extends GamePieceBase implements GamePiece {
 
     @Override
     public void periodic() {
-
+        read();
+        actuate();
     }
 }

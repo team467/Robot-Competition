@@ -51,12 +51,8 @@ public class CargoIntakeArm extends GamePieceBase implements GamePiece {
 
  //Soon to be Ploop
   public void periodic() {
-    // Take Actions
-    if (enabled) {
-      actuate();
-    } else {
-      LOGGER.debug("Cargo intake mechanism is disabled.");
-    }
+    read();
+    actuate();
   }
 
   //Telem TODO: figure out how this works

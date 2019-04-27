@@ -46,6 +46,8 @@ public abstract class GamePieceBase implements GamePiece {
 
   };
 
+  public abstract void stop();
+
   public abstract boolean systemCheck();
 
 }

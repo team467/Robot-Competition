@@ -45,6 +45,13 @@ public class SuperStructStates {
         LOGGER.error("Robot has encountered fatal state going to neutral state");
     }
 
+    public boolean isInRange(SuperStructStates state, double turretThreshold, double wristThreshold) {
+        boolean turretInRange = (state.turnTicks + turretThreshold) >= turnTicks && (state.turnTicks - turretThreshold) <= turnTicks;
+        boolean wristInRange = (state.wristTicks + wristThreshold) >= wristThreshold && (state.wristTicks + wristThreshold) <= wristTicks;
+        return turretInRange && wristInRange;
+
+    }
+
     public String stateSitRep() {
         return "turnticks: " + turnTicks;
     }

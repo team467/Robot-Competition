@@ -2,17 +2,10 @@ package frc.robot.gamepieces;
 
 import static org.apache.logging.log4j.util.Unbox.box;
 import frc.robot.RobotMap;
-import frc.robot.gamepieces.mechanisms.CargoIntake;
+
 import frc.robot.gamepieces.mechanisms.CargoWrist;
 import frc.robot.gamepieces.mechanisms.HatchLauncher;
 import frc.robot.gamepieces.mechanisms.Turret;
-import frc.robot.gamepieces.mechanisms.CargoIntake.CargoIntakeArm;
-import frc.robot.gamepieces.mechanisms.CargoIntake.CargoIntakeRoller;
-import frc.robot.gamepieces.mechanisms.CargoWrist.CargoMechClaw;
-import frc.robot.gamepieces.mechanisms.CargoWrist.CargoWristWantedStates;
-import frc.robot.gamepieces.mechanisms.CargoWrist.CargoMechWristCurrentState;
-import frc.robot.gamepieces.mechanisms.HatchLauncher.HatchArm;
-import frc.robot.gamepieces.mechanisms.HatchLauncher.HatchLauncher;
 import frc.robot.logging.RobotLogManager;
 import frc.robot.logging.Telemetry;
 import frc.robot.sensors.LedI2C;
@@ -32,7 +25,6 @@ public class GamePieceController {
   protected String subsystem = "Gamepieces";
 
   // Game Pieces
-  private CargoIntake cargoIntake;
   private CargoWrist cargoMech;
   private HatchLauncher hatchMech;
   private Turret turret;
@@ -73,7 +65,7 @@ public class GamePieceController {
   private GamePieceController() {
     driverStation = DriverStation467.getInstance();
     LOGGER.debug("Initializing driverstation");
-    cargoIntake = CargoIntake.getInstance();
+
     LOGGER.debug("Initializing cargoIntake");
     cargoMech = CargoWrist.getInstance();
     LOGGER.debug("Initializing cargoMech");
@@ -89,7 +81,6 @@ public class GamePieceController {
 
     // Enabling game pieces
     LOGGER.debug("Enabling the game pieces.");
-    cargoIntake.enabled(true);
     cargoMech.enabled(true);
     hatchMech.enabled(true);
     turret.enabled(true);

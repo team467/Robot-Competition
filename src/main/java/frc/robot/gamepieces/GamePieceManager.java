@@ -16,6 +16,15 @@ public class GamePieceManager {
     }
 
     public void stop() {
-        RobotMechs.forEach((s) -> s.stop());
+        RobotMechs.forEach((m) -> m.stop());
+    }
+
+    public class PeriodicLooper {
+
+        public void startPeriodics() {
+            for(GamePieceBase m : RobotMechs) {
+                m.periodic();
+            }
+        }
     }
 }

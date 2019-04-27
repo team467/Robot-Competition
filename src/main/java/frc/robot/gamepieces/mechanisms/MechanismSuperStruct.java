@@ -75,4 +75,9 @@ public class MechanismSuperStruct extends GamePieceBase{
         return true;
     }
 
+    @Override
+    public void stop() {
+
+    }
+
 }

@@ -119,4 +119,9 @@ public class IntakeStructure extends GamePieceBase {
         return false;
     }
 
+    @Override
+    public void stop() {
+        
+    }
+
 }

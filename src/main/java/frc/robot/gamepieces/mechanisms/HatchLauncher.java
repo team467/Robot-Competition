@@ -74,7 +74,8 @@ public class HatchLauncher extends GamePieceBase implements GamePiece {
    */
   @Override
   public void periodic() {
-
+    read();
+    actuate();
   }
 
   private void registerMetrics() {
