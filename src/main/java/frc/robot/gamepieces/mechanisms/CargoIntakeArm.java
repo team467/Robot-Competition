@@ -99,4 +99,10 @@ public class CargoIntakeArm extends GamePieceBase implements GamePiece {
     
   }
 
+  @Override
+  public void stop() {
+    leftSolenoid.set(DoubleSolenoid.Value.kOff);
+    rightSolenoid.set(DoubleSolenoid.Value.kOff);
+  }
+
 }

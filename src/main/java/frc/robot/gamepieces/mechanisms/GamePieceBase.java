@@ -6,7 +6,7 @@ import frc.robot.logging.Telemetry;
 
 import org.apache.logging.log4j.Logger;
 
-abstract class GamePieceBase implements GamePiece {
+public abstract class GamePieceBase implements GamePiece {
 
   private static final Logger LOGGER 
       = RobotLogManager.getMainLogger(GamePieceBase.class.getName());

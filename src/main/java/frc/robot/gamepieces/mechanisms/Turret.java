@@ -265,4 +265,9 @@ public class Turret extends GamePieceBase implements GamePiece {
 
   }
 
+  @Override
+  public void stop() {
+    manual(0.0);
+  }
+
 }

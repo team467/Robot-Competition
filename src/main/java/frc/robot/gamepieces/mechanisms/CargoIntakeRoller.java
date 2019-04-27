@@ -66,4 +66,9 @@ public class CargoIntakeRoller extends GamePieceBase implements GamePiece{
         public double motorDemand;
 
     }
+
+    @Override
+    public void stop() {
+        set(0.0);
+    }
 }

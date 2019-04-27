@@ -194,4 +194,9 @@ public class CargoWrist extends GamePieceBase implements GamePiece {
     return true;
   }
 
+  @Override
+  public void stop() {
+    manualWristMove(0.0);
+  }
+
 }

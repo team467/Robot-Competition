@@ -89,4 +89,9 @@ public class CargoClaw extends GamePieceBase implements GamePiece {
        clawcontroller.demand = percent;   
        LOGGER.warn("Claw Power Percent set");
     }
+
+    @Override
+    public void stop() {
+        set(0.0);
+    }
 }
