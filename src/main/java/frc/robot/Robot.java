@@ -75,7 +75,7 @@ public class Robot extends TimedRobot {
     // table once.
 
     // Initialize RobotMap
-    RobotMap.init(RobotId.ROBOT_2019);
+    RobotMap.init(RobotId.KITBOT2019);
     mode = RobotMode.STARTED;
 
     // Used after init, should be set only by the Simulator GUI
@@ -157,7 +157,7 @@ public class Robot extends TimedRobot {
   public void teleopPeriodic() {
 
     perfTimer.start();
-    driverstation.readInputs();
+    driverstation.readInputs(); 
 
     double speed = driverstation.getArcadeSpeed();
     double turn = driverstation.getArcadeTurn();
