@@ -13,7 +13,6 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import frc.robot.RobotMap.RobotId;
 import frc.robot.drive.Drive;
-import frc.robot.gamepieces.GamePieceController;
 import frc.robot.logging.RobotLogManager;
 import frc.robot.logging.Telemetry;
 import frc.robot.sensors.LedI2C;
@@ -44,7 +43,6 @@ public class Robot extends TimedRobot {
   private Drive drive;
   private Telemetry telemetry;
   private CameraSwitcher camera;
-  private GamePieceController gamePieceController;
   private LedI2C leds;
   private PerfTimer perfTimer;
 
@@ -99,7 +97,6 @@ public class Robot extends TimedRobot {
     driverstation = DriverStation467.getInstance();
     drive = Drive.getInstance();
     camera = CameraSwitcher.getInstance();
-    gamePieceController = GamePieceController.getInstance();
     leds = LedI2C.getInstance();
 
     TuneController.loadTuners();
@@ -130,7 +127,6 @@ public class Robot extends TimedRobot {
     telemetry.robotMode(mode);
     LOGGER.info("No Autonomous");
     perfTimer = PerfTimer.timer("Autonomous");
-    gamePieceController.runOnTeleopInit();
   }
   
   /**
@@ -202,7 +198,6 @@ public class Robot extends TimedRobot {
       default:
     }
 
-    gamePieceController.periodic();
 
     if (driverstation.restartCamera()) {
       camera.restart();
