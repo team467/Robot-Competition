@@ -23,6 +23,8 @@ import frc.robot.utilities.PerfTimer;
 import frc.robot.vision.CameraSwitcher;
 import java.io.IOException;
 import org.apache.logging.log4j.Logger;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -49,6 +51,8 @@ public class Robot extends TimedRobot {
   public static long time = System.nanoTime();
   public static long previousTime = time;
   public static int dt = 0;
+  
+  private CANSparkMax smMotor;
 
   public static void enableSimulator() {
     Robot.enableSimulator = true;
@@ -144,6 +148,9 @@ public class Robot extends TimedRobot {
     LOGGER.info("Init Teleop");
     perfTimer = PerfTimer.timer("Teleoperated");
     LOGGER.debug("Match time {}", box(DriverStation.getInstance().getMatchTime()));
+    LOGGER.debug("Match time {}", box(DriverStation.getInstance().getMatchTime()));
+    smMotor = new CANSparkMax(11, MotorType.kBrushless);
+    //smMotor.follow(leader, 1, true);
   }
 
   /**
@@ -183,6 +190,8 @@ public class Robot extends TimedRobot {
         if (RobotMap.AUTO_CAMERA) {
           camera.autoSwitch(speed);
         }
+        
+        smMotor.set(speed);
         break;
 
       case CurvatureDrive:
