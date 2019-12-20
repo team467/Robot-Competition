@@ -23,6 +23,8 @@ import frc.robot.utilities.PerfTimer;
 import frc.robot.vision.CameraSwitcher;
 import java.io.IOException;
 import org.apache.logging.log4j.Logger;
+
+import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
@@ -53,6 +55,7 @@ public class Robot extends TimedRobot {
   public static int dt = 0;
   
   private CANSparkMax smMotor;
+  private CANEncoder smEncoder;
 
   public static void enableSimulator() {
     Robot.enableSimulator = true;
@@ -150,7 +153,7 @@ public class Robot extends TimedRobot {
     LOGGER.debug("Match time {}", box(DriverStation.getInstance().getMatchTime()));
     LOGGER.debug("Match time {}", box(DriverStation.getInstance().getMatchTime()));
     smMotor = new CANSparkMax(11, MotorType.kBrushless);
-    //smMotor.follow(leader, 1, true);
+    smEncoder = smMotor.getEncoder();
   }
 
   /**
@@ -192,6 +195,7 @@ public class Robot extends TimedRobot {
         }
         
         smMotor.set(speed);
+        LOGGER.warn(smEncoder.getPosition());
         break;
 
       case CurvatureDrive:
