@@ -10,7 +10,9 @@ package frc.robot;
 import static org.apache.logging.log4j.util.Unbox.box;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import frc.robot.RobotMap.RobotId;
 import frc.robot.drive.Drive;
 import frc.robot.logging.RobotLogManager;
@@ -57,6 +59,23 @@ public class Robot extends TimedRobot {
   private CANSparkMax smMotor;
   private CANEncoder smEncoder;
 
+  private DifferentialDrive m_myRobot;
+
+  private Joystick m_leftStick;
+  private Joystick m_rightStick;
+
+  private static final int leftLeadDeviceID = 1; 
+  private static final int leftFollowerDeviceID = 2;
+
+  private static final int rightLeadDeviceID = 3; 
+  private static final int rightFollowerDeviceID = 4;
+
+  private CANSparkMax m_leftLeadMotor;
+  private CANSparkMax m_leftFollowerMotor;
+
+  private CANSparkMax m_rightLeadMotor;
+  private CANSparkMax m_rightFollwerMotor;
+
   public static void enableSimulator() {
     Robot.enableSimulator = true;
   }
@@ -83,6 +102,19 @@ public class Robot extends TimedRobot {
     RobotMap.init(RobotId.KITBOT2019);
     mode = RobotMode.STARTED;
 
+    m_leftLeadMotor = new CANSparkMax(leftLeadDeviceID, MotorType.kBrushless);
+    m_leftFollowerMotor = new CANSparkMax(leftFollowerDeviceID, MotorType.kBrushless);
+
+    m_rightLeadMotor = new CANSparkMax(rightLeadDeviceID, MotorType.kBrushless);
+    m_rightFollwerMotor = new CANSparkMax(rightFollowerDeviceID, MotorType.kBrushless);
+   
+    m_leftFollowerMotor.follow(m_leftLeadMotor);
+    m_rightFollwerMotor.follow(m_rightLeadMotor);
+    
+    m_myRobot = new DifferentialDrive(m_leftLeadMotor, m_rightLeadMotor);
+
+    m_leftStick = new Joystick(0);
+    m_rightStick = new Joystick(1);
     // Used after init, should be set only by the Simulator GUI
     // this ensures that the simulator is off otherwise.
     if (enableSimulator) {
@@ -203,9 +235,11 @@ public class Robot extends TimedRobot {
         break;
 
       case TankDrive:
-        double leftTank = driverstation.getDriveJoystick().getLeftStickY();
-        double rightTank = driverstation.getDriveJoystick().getRightStickY();
-        drive.tankDrive(leftTank, rightTank, true);
+        m_myRobot.tankDrive(m_leftStick.getY(), m_rightStick.getY());
+
+        // double leftTank = driverstation.getDriveJoystick().getLeftStickY();
+        // double rightTank = driverstation.getDriveJoystick().getRightStickY();
+        // drive.tankDrive(leftTank, rightTank, true);
         break;
 
       default:
