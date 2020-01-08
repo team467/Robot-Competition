@@ -193,4 +193,10 @@ public class Adis16448Imu extends ImuBase implements Imu {
     }
   }
 
+  @Override
+  public void close() throws Exception {
+    // TODO Auto-generated method stub
+
+  }
+
 }

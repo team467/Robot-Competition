@@ -4,14 +4,11 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 
-import org.apache.logging.log4j.Logger;
 import org.junit.Ignore;
 import org.junit.Test;
 
 public class RobotLogManagerTest {
   private static String testDirectoryFile = "/media/sda1/logging/log4j2.yaml";
-  private static Logger LOGGER 
-      = RobotLogManager.getMainLogger(RobotLogManagerTest.class.getName());
   
   @Test
   public void directoryTest() {

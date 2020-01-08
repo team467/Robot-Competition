@@ -7,9 +7,6 @@
 
 package frc.robot.sensors.imu;
 
-import org.apache.commons.math3.ml.neuralnet.Network;
-
-import edu.wpi.first.networktables.EntryListenerFlags;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -122,6 +119,12 @@ public class Lsm9ds1Imu extends ImuBase implements Imu {
       }
 
     }
+  }
+
+  @Override
+  public void close() throws Exception {
+    // TODO Auto-generated method stub
+
   }
 
 }

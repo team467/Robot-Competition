@@ -7,8 +7,25 @@
     "**/CVS": true,
     "**/.DS_Store": true,
     "bin/": true,
-    ".classpath": true,
-    ".project": true
+    "**/.classpath": true,
+    "**/.project": true,
+    "**/.settings": true,
+    "**/.factorypath": true
   },
-  "wpilib.online": true
+  "cSpell.ignoreWords": [
+  ],
+  "cSpell.words": [
+    "adis",
+    "controller",
+    "deadzone",
+    "driverstation",
+    "gamepiece",
+    "gamepieces",
+    "gyrometer",
+    "imu",
+    "pidf",
+    "pids",
+    "teleop",
+    "xbox"
+  ]
 }

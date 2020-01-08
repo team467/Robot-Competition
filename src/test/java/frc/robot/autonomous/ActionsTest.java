@@ -12,12 +12,10 @@ import frc.robot.autonomous.Actions;
 import frc.robot.RobotMap.RobotId;
 import frc.robot.drive.Drive;
 import frc.robot.logging.RobotLogManager;
-import frc.robot.simulator.gui.SimulatedData;
 
 import java.text.DecimalFormat;
 
 import org.apache.logging.log4j.Logger;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
@@ -72,7 +70,6 @@ public class ActionsTest {
     Actions.startOnLeft();
     ActionGroup autonomous = Actions.crossAutoLine();
     boolean actionCompleted = periodic(autonomous);
-    // TODO: Tune simulation PIDs then reduce tolerance
     double tolerance = 1.0; // Allow high tolerance now.
     double distanceMoved = drive.absoluteDistanceMoved();
     LOGGER.info("Target 10 ft, distance moved: {} ft", df.format(distanceMoved));
