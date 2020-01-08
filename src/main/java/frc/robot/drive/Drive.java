@@ -6,7 +6,6 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.RobotMap;
 import frc.robot.logging.RobotLogManager;
-import frc.robot.simulator.communications.RobotData;
 import org.apache.logging.log4j.Logger;
 
 public class Drive extends DifferentialDrive implements AutoDrive {
@@ -21,7 +20,7 @@ public class Drive extends DifferentialDrive implements AutoDrive {
   private final TalonSpeedControllerGroup left;
   private final TalonSpeedControllerGroup right;
 
-  private RobotData data = RobotData.getInstance();
+
 
   // Private constructor
 
@@ -164,11 +163,6 @@ public class Drive extends DifferentialDrive implements AutoDrive {
     LOGGER.debug("Zeroed the motor sensors.");
     left.zero();
     right.zero();
-    data.zero();
-  }
-
-  public void sendData() {
-    RobotData.getInstance().updateDrivePosition(getLeftDistance(), getRightDistance());
   }
 
   /**
@@ -211,7 +205,6 @@ public class Drive extends DifferentialDrive implements AutoDrive {
     left.set(ControlMode.Position, feetToTicks(leftDistance));
     // The right motor is reversed
     right.set(ControlMode.Position, feetToTicks(rightDistance));
-    data.updateDrivePosition(getLeftDistance(), getRightDistance());
   }
 
   @Override
@@ -282,8 +275,6 @@ public class Drive extends DifferentialDrive implements AutoDrive {
     left.set(ControlMode.Position, targetLeftDistance);
     // The right motor is reversed
     right.set(ControlMode.Position, targetRightDistance);
-
-    data.updateDrivePosition(getLeftDistance(), getRightDistance());
   }
 
   public void moveVelMode(double leftOut, double rightOut) {
@@ -294,8 +285,6 @@ public class Drive extends DifferentialDrive implements AutoDrive {
     left.set(ControlMode.PercentOutput, leftOut);
     // The right motor is reversed
     right.set(ControlMode.PercentOutput, rightOut);
-
-    data.updateDrivePosition(getLeftDistance(), getRightDistance());
   }
 
   public double getLeftDistance() {
@@ -344,7 +333,6 @@ public class Drive extends DifferentialDrive implements AutoDrive {
   public void arcadeDrive(double speed, double rotation, boolean squaredInputs) {
     super.arcadeDrive(speed, rotation, squaredInputs);
     LOGGER.debug("Expected Output: {}", box(speed));
-    data.updateDrivePosition(getLeftDistance(), getRightDistance());
   }
 
   public void tankDrive(double leftSpeed, double rightSpeed) {
@@ -354,12 +342,10 @@ public class Drive extends DifferentialDrive implements AutoDrive {
   public void tankDrive(double leftSpeed, double rightSpeed, boolean squaredInputs) {
     LOGGER.debug("expected left: {}, expected right: {} ", box(leftSpeed), box(rightSpeed));
     super.tankDrive(leftSpeed, rightSpeed, squaredInputs);
-    data.updateDrivePosition(getLeftDistance(), getRightDistance());
   }
 
   public void curvatureDrive(double speed, double rotation, boolean isQuickTurn) {
     super.curvatureDrive(speed, rotation, isQuickTurn);
-    data.updateDrivePosition(getLeftDistance(), getRightDistance());
   }
 
 }

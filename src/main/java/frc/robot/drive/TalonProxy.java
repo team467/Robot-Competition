@@ -11,11 +11,6 @@ public class TalonProxy {
    * @param deviceNumber the CAN channel ID
    */
   public static WpiTalonSrxInterface create(int deviceNumber) {
-    if (RobotMap.useSimulator) {
-      return new frc.robot.simulator.drive.WpiTalonSrx(deviceNumber);
-    } else {
       return new frc.robot.drive.WpiTalonSrx(deviceNumber);
     }
   }
-
-}
