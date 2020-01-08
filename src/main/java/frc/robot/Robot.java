@@ -27,8 +27,8 @@ import org.apache.logging.log4j.Logger;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel;
-import com.revrobotics.SparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.CANEncoder;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -39,7 +39,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
  * 
  * @param <CANSparkMax>
  */
-public class Robot<CANSparkMax> extends TimedRobot {
+public class Robot extends TimedRobot {
 
   private static final Logger LOGGER = RobotLogManager.getMainLogger(Robot.class.getName());
 
@@ -100,13 +100,13 @@ public class Robot<CANSparkMax> extends TimedRobot {
     RobotMap.init(RobotId.ROBOT_2019);
     mode = RobotMode.STARTED;
     
-    mLeftLeadMotor = new CANSparkMax(1, MotorType.kBrushless);
-    
-    mRightLeadMotor = new CANSparkMax(2, MotorType.kBrushless);
-
 
     m_leftStick = new Joystick(0);
     m_rightStick = new Joystick(1);
+
+    mLeftLeadMotor = new CANSparkMax(1,  MotorType.kBrushless);
+    mRightLeadMotor = new CANSparkMax(2, MotorType.kBrushless);
+
     // Used after init, should be set only by the Simulator GUI
     // this ensures that the simulator is off otherwise.
     if (enableSimulator) {
