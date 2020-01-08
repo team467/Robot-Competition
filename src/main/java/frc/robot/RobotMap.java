@@ -27,6 +27,7 @@ public class RobotMap {
   // Steering motor ids
   public static boolean HAS_WHEELS;
   public static int DRIVEMOTOR_NUM;
+  public static boolean HAS_SPARKMAX;
   public static int AUTONOMOUS_DRIVE_TIMEOUT_MS = 200;
   public static int AUTONOMOUS_TURN_TIMEOUT_MS = 300;
 
@@ -111,7 +112,7 @@ public class RobotMap {
   public static final boolean useRemoteImu = false;
 
   public enum RobotId {
-    MINIBOT, ROBOT_2018, ROBOT_2019
+    MINIBOT, ROBOT_2018, ROBOT_2019, KITBOT2019
   }
 
   /**
@@ -125,6 +126,135 @@ public class RobotMap {
     useSimulator = false;
 
     switch (id) {
+
+      case KITBOT2019:
+      default:
+        
+        HAS_WHEELS = true;
+        DRIVEMOTOR_NUM = 4;
+        WHEEL_CIRCUMFERENCE = 18.50;
+        HAS_SPARKMAX = true;
+        CONTROLS_INVERTED_FB = false;
+        CONTROLS_INVERTED_TURN = false;
+
+        USE_VELOCITY_SPEED_CONTROL_FOR_TELOP = true;
+        VELOCITY_MULTIPLIER_RIGHT = 1300;
+        VELOCITY_MULTIPLIER_LEFT = 1300;
+        NORMAL_DRIVE_SPEED_MULTIPLIER = 0.8;
+        SLOW_DRIVE_SPEED_MULTIPLIER = 0.6;
+
+        LEFT_LEAD_CHANNEL = 1;
+        LEFT_FOLLOWER_1_CHANNEL = 2;
+        LEFT_DRIVE_SENSOR_IS_INVERTED = true;
+        LEFT_DRIVE_MOTOR_IS_INVERTED = false;
+
+        RIGHT_LEAD_CHANNEL = 3;
+        RIGHT_FOLLOWER_1_CHANNEL = 4;
+        RIGHT_DRIVE_SENSOR_IS_INVERTED = true;
+        RIGHT_DRIVE_MOTOR_IS_INVERTED = false;
+
+        // Linear PIDS
+        LEFT_DRIVE_PID_P = 0.5;
+        LEFT_DRIVE_PID_I = 0.0;
+        LEFT_DRIVE_PID_D = 0.0;
+        LEFT_DRIVE_PID_F = 0.682;
+
+        RIGHT_DRIVE_PID_P = 0.5;
+        RIGHT_DRIVE_PID_I = 0.0;
+        RIGHT_DRIVE_PID_D = 0.0;
+        RIGHT_DRIVE_PID_F = 0.781;
+
+        // Turn PIDs
+        LEFT_TURN_PID_P = 0.5;
+        LEFT_TURN_PID_I = 0.0;
+        LEFT_TURN_PID_D = 450.0;
+        LEFT_TURN_PID_F = 0.0;
+
+        RIGHT_TURN_PID_P = 0.5;
+        RIGHT_TURN_PID_I = 0.0;
+        RIGHT_TURN_PID_D = 450.0;
+        RIGHT_TURN_PID_F = 0.0;
+
+        // Cameras
+        FORWARD_CAMERA_INDEX = 0;
+        BACKWARD_CAMERA_INDEX = 1;
+        HAS_CAMERA = false;
+        AUTO_CAMERA = false;
+
+        // Game Pieces
+        HAS_TURRET = false;
+        HAS_ROLLER_INTAKE = false;
+        HAS_HATCH_MECHANISM = false;
+        HAS_ROLLER_INTAKE = false;
+        HAS_CARGO_MECHANISM = false;
+
+        // Turret
+        TURRET_MOTOR_CHANNEL = 5;
+        TURRET_MOTOR_INVERTED = false;
+        TURRET_SENSOR_INVERTED = false;
+        TURRET_RIGHT_LIMIT_TICKS = 462;
+        TURRET_LEFT_LIMIT_TICKS = 546;
+        TURRET_RIGHT_LIMIT_DEGREES = -95.0;
+        TURRET_LEFT_LIMIT_DEGREES = 95.0;
+        TURRET_ALLOWABLE_ERROR_TICKS = 1;
+        TURRET_HOME_TICKS = 504;
+        INVERT_TURRET_FOR_HATCHMODE = -1;
+        TURRET_SQR_INP = true;
+
+        TURRET_P = 1.0; // TODO
+        TURRET_I = 0.0; // TODO
+        TURRET_D = 0.0; // TODO
+
+        // Hatch Mechanism
+        HATCH_LAUNCHER_PCM_CHANNEL = 8;
+        HATCH_LAUNCHER_SOL_FORWARD_CHANNEL = 0;
+        HATCH_LAUNCHER_SOL_REVERSE_CHANNEL = 1;
+        HATCH_MECH_ARM_PCM_CHANNEL = 9;
+        HATCH_MECH_ARM_FORWARD_CHANNEL = 4;
+        HATCH_MECH_ARM_REVERSE_CHANNEL = 5;
+        HATCH_CAMERA_INDEX = 3;
+
+        // Cargo Intake
+        ROLLER_PCM_CHANNEL = 9;
+        FORCE_INTAKE_REMAIN_UP = false;
+        ROLLER_RIGHT_ARM_UP_SOLINOID_CHANNEL = 1;
+        ROLLER_RIGHT_ARM_DOWN_SOLINOID_CHANNEL = 0;
+        ROLLER_LEFT_ARM_UP_SOLINOID_CHANNEL = 3;
+        ROLLER_LEFT_ARM_DOWN_SOLINOID_CHANNEL = 2;
+        ROLLER_MOTOR_CHANNEL = 1;
+        ROLLER_MOTOR_INVERTED = false;
+
+        // Cargo Mechanism
+        CARGO_MECH_WRIST_MOTOR_CHANNEL = 6; // TODO
+        CARGO_MECH_WRIST_MOTOR_INVERTED = false;
+        CARGO_MECH_WRIST_P = 1.0; // TODO
+        CARGO_MECH_WRIST_I = 0.0; // TODO
+        CARGO_MECH_WRIST_D = 0.0; // TODO
+        CARGO_MECH_WRIST_F = 0.0; // TODO
+        CARGO_MECH_SQUARE_WRIST_INPUT = true;
+        CARGO_CAMERA_INDEX = 2;
+
+        CARGO_MECH_WRIST_TOP_TICKS = 806; 
+        CARGO_MECH_WRIST_BOTTOM_TICKS = 785;
+        CARGO_MECH_WRIST_ALLOWABLE_ERROR_TICKS = 1; // TODO
+        CARGO_MECH_WRIST_SENSOR_INVERTED = false;
+
+        CARGO_WRIST_UP_LIMIT_TICKS = 0; // TODO
+        CARGO_WRIST_DOWN_LIMIT_TICKS = 0; // TODO
+
+        // Ticks
+        CARGO_MECH_CARGO_BIN_PROPORTION = 0.02; // TODO
+        CARGO_MECH_LOW_ROCKET_PROPORTION = 0.55; // TODO
+        CARGO_MECH_CARGO_SHIP_PROPORTION = 0.67; // TODO
+        CARGO_MECH_SAFE_TURRET_PROPORTION = 0.55; // TODO
+
+        CARGO_MECH_CLAW_LEFT_MOTOR_CHANNEL = 2;
+        CARGO_MECH_CLAW_LEFT_MOTOR_INVERTED = true;
+        CARGO_MECH_CLAW_RIGHT_MOTOR_CHANNEL = 3;
+        CARGO_MECH_CLAW_RIGHT_MOTOR_INVERTED = true;
+
+        break;
+
 
       case ROBOT_2018:
         NORMAL_DRIVE_SPEED_MULTIPLIER = 0.8;
@@ -183,7 +313,6 @@ public class RobotMap {
         break;
 
       case ROBOT_2019:
-      default:
         
         HAS_WHEELS = true;
         DRIVEMOTOR_NUM = 4;

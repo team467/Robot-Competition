@@ -10,10 +10,11 @@ package frc.robot;
 import static org.apache.logging.log4j.util.Unbox.box;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import frc.robot.RobotMap.RobotId;
 import frc.robot.drive.Drive;
-import frc.robot.gamepieces.GamePieceController;
 import frc.robot.logging.RobotLogManager;
 import frc.robot.logging.Telemetry;
 import frc.robot.sensors.LedI2C;
@@ -24,6 +25,10 @@ import frc.robot.utilities.PerfTimer;
 import frc.robot.vision.CameraSwitcher;
 import java.io.IOException;
 import org.apache.logging.log4j.Logger;
+
+import com.revrobotics.CANEncoder;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -44,13 +49,32 @@ public class Robot extends TimedRobot {
   private Drive drive;
   private Telemetry telemetry;
   private CameraSwitcher camera;
-  private GamePieceController gamePieceController;
   private LedI2C leds;
   private PerfTimer perfTimer;
 
   public static long time = System.nanoTime();
   public static long previousTime = time;
   public static int dt = 0;
+  
+  private CANSparkMax smMotor;
+  private CANEncoder smEncoder;
+
+  private DifferentialDrive m_myRobot;
+
+  private Joystick m_leftStick;
+  private Joystick m_rightStick;
+
+  private static final int leftLeadDeviceID = 1; 
+  private static final int leftFollowerDeviceID = 2;
+
+  private static final int rightLeadDeviceID = 3; 
+  private static final int rightFollowerDeviceID = 4;
+
+  private CANSparkMax m_leftLeadMotor;
+  private CANSparkMax m_leftFollowerMotor;
+
+  private CANSparkMax m_rightLeadMotor;
+  private CANSparkMax m_rightFollwerMotor;
 
   public static void enableSimulator() {
     Robot.enableSimulator = true;
@@ -75,9 +99,22 @@ public class Robot extends TimedRobot {
     // table once.
 
     // Initialize RobotMap
-    RobotMap.init(RobotId.ROBOT_2019);
+    RobotMap.init(RobotId.KITBOT2019);
     mode = RobotMode.STARTED;
 
+    m_leftLeadMotor = new CANSparkMax(leftLeadDeviceID, MotorType.kBrushless);
+    m_leftFollowerMotor = new CANSparkMax(leftFollowerDeviceID, MotorType.kBrushless);
+
+    m_rightLeadMotor = new CANSparkMax(rightLeadDeviceID, MotorType.kBrushless);
+    m_rightFollwerMotor = new CANSparkMax(rightFollowerDeviceID, MotorType.kBrushless);
+   
+    m_leftFollowerMotor.follow(m_leftLeadMotor);
+    m_rightFollwerMotor.follow(m_rightLeadMotor);
+    
+    m_myRobot = new DifferentialDrive(m_leftLeadMotor, m_rightLeadMotor);
+
+    m_leftStick = new Joystick(0);
+    m_rightStick = new Joystick(1);
     // Used after init, should be set only by the Simulator GUI
     // this ensures that the simulator is off otherwise.
     if (enableSimulator) {
@@ -99,7 +136,6 @@ public class Robot extends TimedRobot {
     driverstation = DriverStation467.getInstance();
     drive = Drive.getInstance();
     camera = CameraSwitcher.getInstance();
-    gamePieceController = GamePieceController.getInstance();
     leds = LedI2C.getInstance();
 
     TuneController.loadTuners();
@@ -130,7 +166,6 @@ public class Robot extends TimedRobot {
     telemetry.robotMode(mode);
     LOGGER.info("No Autonomous");
     perfTimer = PerfTimer.timer("Autonomous");
-    gamePieceController.runOnTeleopInit();
   }
   
   /**
@@ -148,6 +183,9 @@ public class Robot extends TimedRobot {
     LOGGER.info("Init Teleop");
     perfTimer = PerfTimer.timer("Teleoperated");
     LOGGER.debug("Match time {}", box(DriverStation.getInstance().getMatchTime()));
+    LOGGER.debug("Match time {}", box(DriverStation.getInstance().getMatchTime()));
+    smMotor = new CANSparkMax(11, MotorType.kBrushless);
+    smEncoder = smMotor.getEncoder();
   }
 
   /**
@@ -157,7 +195,7 @@ public class Robot extends TimedRobot {
   public void teleopPeriodic() {
 
     perfTimer.start();
-    driverstation.readInputs();
+    driverstation.readInputs(); 
 
     double speed = driverstation.getArcadeSpeed();
     double turn = driverstation.getArcadeTurn();
@@ -187,6 +225,9 @@ public class Robot extends TimedRobot {
         if (RobotMap.AUTO_CAMERA) {
           camera.autoSwitch(speed);
         }
+        
+        smMotor.set(speed);
+        LOGGER.warn(smEncoder.getPosition());
         break;
 
       case CurvatureDrive:
@@ -194,15 +235,16 @@ public class Robot extends TimedRobot {
         break;
 
       case TankDrive:
-        double leftTank = driverstation.getDriveJoystick().getLeftStickY();
-        double rightTank = driverstation.getDriveJoystick().getRightStickY();
-        drive.tankDrive(leftTank, rightTank, true);
+        m_myRobot.tankDrive(m_leftStick.getY(), m_rightStick.getY());
+
+        // double leftTank = driverstation.getDriveJoystick().getLeftStickY();
+        // double rightTank = driverstation.getDriveJoystick().getRightStickY();
+        // drive.tankDrive(leftTank, rightTank, true);
         break;
 
       default:
     }
 
-    gamePieceController.periodic();
 
     if (driverstation.restartCamera()) {
       camera.restart();
