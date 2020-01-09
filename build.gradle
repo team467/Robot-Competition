@@ -10,7 +10,7 @@ buildscript {
 
 plugins {
     id "java"
-    id "edu.wpi.first.GradleRIO" version "2019.4.1"
+    id "edu.wpi.first.GradleRIO" version "2020.1.2"
 }
 
 apply plugin: 'com.google.osdetector'

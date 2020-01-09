@@ -258,7 +258,7 @@ public class PreferencesStorage {
   public void clear() {
     String key = "";
     for (int i = 0; i < data.getKeys().size(); i++) {
-      key = (String) data.getKeys().elementAt(i);
+     // key = (String) data.getKeys().elementAt(i);
       data.remove(key);
     }
   }

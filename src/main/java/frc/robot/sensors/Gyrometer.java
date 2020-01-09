@@ -3,7 +3,7 @@ package frc.robot.sensors;
 import edu.wpi.first.wpilibj.GyroBase;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
 import frc.robot.RobotMap;
-import frc.robot.sensors.imu.Adis16448Imu;
+
 import frc.robot.sensors.imu.Imu;
 
 /*
@@ -19,7 +19,7 @@ public class Gyrometer extends GyroBase implements Gyro {
    * private constructor (singleton pattern)
    */
   private Gyrometer() {
-    imu = new Adis16448Imu();
+    imu = null;
   }
 
   /**
@@ -126,5 +126,11 @@ public class Gyrometer extends GyroBase implements Gyro {
   public double getRate() {
     // TODO Auto-generated method stub
     return 0;
+  }
+
+  @Override
+  public void close() throws Exception {
+    // TODO Auto-generated method stub
+
   }
 }

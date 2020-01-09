@@ -180,7 +180,7 @@ public class TalonSpeedControllerGroup implements SpeedController {
     }
 
     LOGGER.debug("name: {} Requested Velocity: {} Velocity = {} Error: {}", 
-        leader.getName(), box(outputValue), 
+        //leader.getName(), box(outputValue), 
         box(leader.getSelectedSensorVelocity(0)), box(leader.getClosedLoopError(0)));
     LOGGER.debug("Name: {}, Error: {}, Output Voltage: {}, Output Percent; {}", 
         name, box(leader.getClosedLoopError(0)), box(leader.getMotorOutputVoltage()), 

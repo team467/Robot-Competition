@@ -34,7 +34,7 @@ public class PowerDistributionPanel extends edu.wpi.first.wpilibj.PowerDistribut
   }
 
   private PowerDistributionPanel() {
-    setName("Telemetry", "Power Distribution Panel");
+    //setName("Telemetry", "Power Distribution Panel");
   }
 
   public void registerMetrics() {
