@@ -22,6 +22,7 @@ import frc.robot.sensors.PowerDistributionPanel;
 import frc.robot.usercontrol.DriverStation467;
 import frc.robot.utilities.PerfTimer;
 import frc.robot.vision.CameraSwitcher;
+import frc.robot.drive.SparkMaxSpeedControllerGroup;
 import java.io.IOException;
 import org.apache.logging.log4j.Logger;
 
@@ -37,7 +38,7 @@ import com.revrobotics.CANEncoder;
  * creating this project, you must also update the build.gradle file in the
  * project.
  * 
- * @param <CANSparkMax>
+ * 
  */
 public class Robot extends TimedRobot {
 
@@ -104,8 +105,6 @@ public class Robot extends TimedRobot {
     m_leftStick = new Joystick(0);
     m_rightStick = new Joystick(1);
 
-    mLeftLeadMotor = new CANSparkMax(1,  MotorType.kBrushless);
-    mRightLeadMotor = new CANSparkMax(2, MotorType.kBrushless);
 
     // Used after init, should be set only by the Simulator GUI
     // this ensures that the simulator is off otherwise.

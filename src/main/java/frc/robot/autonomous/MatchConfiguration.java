@@ -6,7 +6,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import frc.robot.RobotMap;
 import frc.robot.logging.RobotLogManager;
-import frc.robot.simulator.gui.SimulatedData;
 
 import org.apache.logging.log4j.Logger;
 
@@ -54,31 +53,31 @@ public class MatchConfiguration {
     Alliance color; 
 
     if (RobotMap.useSimulator) {
-      color = SimulatedData.teamColor;
+      //color = SimulatedData.teamColor;
     } else {
       color = DriverStation.getInstance().getAlliance();
     }
 
-    if (color == DriverStation.Alliance.Blue) {
-      LOGGER.info("Alliance is blue");
-      teamColor = TeamColor.BLUE;
-    } else if (color == DriverStation.Alliance.Red) {
-      LOGGER.info("Alliance is red");
-      teamColor = TeamColor.RED;
-    } else {
-      LOGGER.info("Alliance not found");
-      teamColor = TeamColor.UNKNOWN;
-    } 
+    // if (color == DriverStation.Alliance.Blue) {
+    //   LOGGER.info("Alliance is blue");
+    //   teamColor = TeamColor.BLUE;
+    // } else if (color == DriverStation.Alliance.Red) {
+    //   LOGGER.info("Alliance is red");
+    //   teamColor = TeamColor.RED;
+    // } else {
+    //   LOGGER.info("Alliance not found");
+    //   teamColor = TeamColor.UNKNOWN;
+    // } 
   }
 
   public void setAutoModeAndStartPosition() {
 
     if (RobotMap.useSimulator) {
-      if (SimulatedData.autoMode != null) {
-        autoMode = SimulatedData.autoMode;
-      } else {
-        autoMode = "None";
-      }
+      // if (SimulatedData.autoMode != null) {
+      //   autoMode = SimulatedData.autoMode;
+      // } else {
+      //   autoMode = "None";
+      // }
     } else {
       autoMode = SmartDashboard.getString("Auto Selector", "None");
     }

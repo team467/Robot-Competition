@@ -1,7 +1,15 @@
 package frc.robot.drive;
 
 import static org.apache.logging.log4j.util.Unbox.box;
-import com.ctre.phoenix.motorcontrol.ControlMode;
+//import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel;
+import com.revrobotics.CANSparkMax.IdleMode;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.CANEncoder;
+import com.revrobotics.CANPIDController;
+import com.revrobotics.ControlType;
+
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.RobotMap;
@@ -10,15 +18,19 @@ import org.apache.logging.log4j.Logger;
 
 public class Drive extends DifferentialDrive implements AutoDrive {
 
-  private ControlMode controlMode;
+  private ControlType controlType;
 
   private static final Logger LOGGER = RobotLogManager.getMainLogger(Drive.class.getName());
 
   // Single instance of this class
   private static Drive instance = null;
 
-  private final TalonSpeedControllerGroup left;
-  private final TalonSpeedControllerGroup right;
+  //private final TalonSpeedControllerGroup leftTalons;
+  //private final TalonSpeedControllerGroup rightTalons;
+  
+  //sparkMax
+  private final SparkMaxSpeedControllerGroup leftSM;
+  private final SparkMaxSpeedControllerGroup rightSM;
 
 
 
@@ -31,57 +43,60 @@ public class Drive extends DifferentialDrive implements AutoDrive {
    */
   public static Drive getInstance() {
     if (instance == null) {
-      TalonSpeedControllerGroup left;
-      TalonSpeedControllerGroup right;
+      TalonSpeedControllerGroup leftTalons;
+      TalonSpeedControllerGroup rightTalons;
+
+      SparkMaxSpeedControllerGroup leftSM;
+      SparkMaxSpeedControllerGroup rightSM;
 
       LOGGER.info("Number of Motors: {}", box(RobotMap.DRIVEMOTOR_NUM));
       if (RobotMap.HAS_WHEELS && RobotMap.DRIVEMOTOR_NUM > 0) {
         LOGGER.info("Creating  Lead Motors");
 
-        final WpiTalonSrxInterface leftLead = TalonProxy.create(RobotMap.LEFT_LEAD_CHANNEL);
-        final WpiTalonSrxInterface rightLead = TalonProxy.create(RobotMap.RIGHT_LEAD_CHANNEL);
-        WpiTalonSrxInterface leftFollower1 = null;
-        WpiTalonSrxInterface rightFollower1 = null;
-        WpiTalonSrxInterface leftFollower2 = null;
-        WpiTalonSrxInterface rightFollower2 = null;
+        final CANSparkMax leftLead = new CANSparkMax(RobotMap.LEFT_LEAD_CHANNEL, CANSparkMaxLowLevel.MotorType.kBrushless);
+        final CANSparkMax rightLead = new CANSparkMax(RobotMap.RIGHT_LEAD_CHANNEL, CANSparkMaxLowLevel.MotorType.kBrushless);
+        CANSparkMax leftFollower1 = null;
+        CANSparkMax rightFollower1 = null;
+        CANSparkMax leftFollower2 = null;
+        CANSparkMax rightFollower2 = null;
 
         if (RobotMap.DRIVEMOTOR_NUM > 2) {
           LOGGER.info("Creating first set of follower motors");
-          leftFollower1 = TalonProxy.create(RobotMap.LEFT_FOLLOWER_1_CHANNEL);
-          rightFollower1 = TalonProxy.create(RobotMap.RIGHT_FOLLOWER_1_CHANNEL);
+          leftFollower1 = new CANSparkMax(RobotMap.LEFT_FOLLOWER_1_CHANNEL, CANSparkMaxLowLevel.MotorType.kBrushless);
+          rightFollower1 = new CANSparkMax(RobotMap.RIGHT_FOLLOWER_1_CHANNEL, CANSparkMaxLowLevel.MotorType.kBrushless);
         }
 
         if (RobotMap.DRIVEMOTOR_NUM > 4) {
           LOGGER.info("Creating second set of follower motors");
-          leftFollower2 = TalonProxy.create(RobotMap.LEFT_FOLLOWER_2_CHANNEL);
-          rightFollower2 = TalonProxy.create(RobotMap.RIGHT_FOLLOWER_2_CHANNEL);
+          leftFollower2 = new CANSparkMax(RobotMap.LEFT_FOLLOWER_2_CHANNEL, CANSparkMaxLowLevel.MotorType.kBrushless);
+          rightFollower2 = new CANSparkMax(RobotMap.RIGHT_FOLLOWER_2_CHANNEL, CANSparkMaxLowLevel.MotorType.kBrushless);
         }
 
-        ControlMode teleopControlMode = ControlMode.PercentOutput;
+        ControlType teleopControlMode = ControlType.kVoltage;
         if (RobotMap.USE_VELOCITY_SPEED_CONTROL_FOR_TELOP) {
-          teleopControlMode = ControlMode.Velocity;
+          teleopControlMode = ControlType.kVelocity;
         }
 
-        left = new TalonSpeedControllerGroup("Left_Drive", teleopControlMode, RobotMap.LEFT_DRIVE_SENSOR_IS_INVERTED,
+        leftSM = new SparkMaxSpeedControllerGroup("Left_Drive", teleopControlMode, RobotMap.LEFT_DRIVE_SENSOR_IS_INVERTED,
             RobotMap.LEFT_DRIVE_MOTOR_IS_INVERTED, leftLead, leftFollower1, leftFollower2);
-        right = new TalonSpeedControllerGroup("Right_Drive", teleopControlMode,
+        rightSM = new SparkMaxSpeedControllerGroup("Right_Drive", teleopControlMode,
             RobotMap.RIGHT_DRIVE_SENSOR_IS_INVERTED, RobotMap.RIGHT_DRIVE_MOTOR_IS_INVERTED, rightLead, rightFollower1,
             rightFollower2);
       } else {
-        left = new TalonSpeedControllerGroup();
-        right = new TalonSpeedControllerGroup();
+        leftSM = new SparkMaxSpeedControllerGroup();
+        rightSM = new SparkMaxSpeedControllerGroup();
       }
-      instance = new Drive(left, right);
+      instance = new Drive(leftSM, rightSM);
       instance.zero();
 
     }
     return instance;
   }
 
-  private Drive(TalonSpeedControllerGroup left, TalonSpeedControllerGroup right) {
+  private Drive(SparkMaxSpeedControllerGroup left, SparkMaxSpeedControllerGroup right) {
     super(left, right);
-    this.left = left;
-    this.right = right;
+    this.leftSM = left;
+    this.rightSM = right;
 
     setPidsFromRobotMap();
   }
@@ -100,9 +115,9 @@ public class Drive extends DifferentialDrive implements AutoDrive {
     double coefficientFLeft = Double.parseDouble(SmartDashboard.getString("DB/String 4", "1.1168")); // 0.0
     double coefficientFRight = Double.parseDouble(SmartDashboard.getString("DB/String 9", "1.2208")); // 0.0
 
-    left.pidf(pidSlot, coefficientPLeft, coefficientILeft, coefficientDLeft, coefficientFLeft,
+    leftSM.pidf(pidSlot, coefficientPLeft, coefficientILeft, coefficientDLeft, coefficientFLeft,
         RobotMap.VELOCITY_MULTIPLIER_LEFT);
-    right.pidf(pidSlot, coefficientPRight, coefficientIRight, coefficientDRight, coefficientFRight,
+    rightSM.pidf(pidSlot, coefficientPRight, coefficientIRight, coefficientDRight, coefficientFRight,
         RobotMap.VELOCITY_MULTIPLIER_RIGHT);
   }
 
@@ -120,9 +135,9 @@ public class Drive extends DifferentialDrive implements AutoDrive {
     double coefficientDRight = RobotMap.RIGHT_DRIVE_PID_D;
     double coefficientDLeft = RobotMap.LEFT_DRIVE_PID_D;
 
-    left.pidf(RobotMap.PID_SLOT_DRIVE, coefficientPLeft, coefficientILeft, coefficientDLeft, coefficientFLeft,
+    leftSM.pidf(RobotMap.PID_SLOT_DRIVE, coefficientPLeft, coefficientILeft, coefficientDLeft, coefficientFLeft,
         RobotMap.VELOCITY_MULTIPLIER_LEFT);
-    right.pidf(RobotMap.PID_SLOT_DRIVE, coefficientPRight, coefficientIRight, coefficientDRight, coefficientFRight,
+    rightSM.pidf(RobotMap.PID_SLOT_DRIVE, coefficientPRight, coefficientIRight, coefficientDRight, coefficientFRight,
         RobotMap.VELOCITY_MULTIPLIER_RIGHT);
 
     // Set turn PIDs
@@ -138,44 +153,44 @@ public class Drive extends DifferentialDrive implements AutoDrive {
     coefficientDRight = RobotMap.RIGHT_TURN_PID_D;
     coefficientDLeft = RobotMap.LEFT_TURN_PID_D;
 
-    left.pidf(RobotMap.PID_SLOT_TURN, coefficientPLeft, coefficientILeft, coefficientDLeft, coefficientFLeft,
+    leftSM.pidf(RobotMap.PID_SLOT_TURN, coefficientPLeft, coefficientILeft, coefficientDLeft, coefficientFLeft,
         RobotMap.VELOCITY_MULTIPLIER_LEFT);
-    right.pidf(RobotMap.PID_SLOT_TURN, coefficientPRight, coefficientIRight, coefficientDRight, coefficientFRight,
+    rightSM.pidf(RobotMap.PID_SLOT_TURN, coefficientPRight, coefficientIRight, coefficientDRight, coefficientFRight,
         RobotMap.VELOCITY_MULTIPLIER_RIGHT);
   }
 
   public void configPeakOutput(double percentOut) {
-    left.configPeakOutput(percentOut);
-    right.configPeakOutput(percentOut);
+    leftSM.configPeakOutput(percentOut);
+    rightSM.configPeakOutput(percentOut);
   }
 
   public void logClosedLoopErrors() {
-    left.logClosedLoopErrors();
-    right.logClosedLoopErrors();
+    leftSM.logClosedLoopErrors();
+    rightSM.logClosedLoopErrors();
   }
 
-  public ControlMode getControlMode() {
-    return controlMode;
+  public ControlType getControlMode() {
+    return controlType;
   }
 
   @Override
   public void zero() {
     LOGGER.debug("Zeroed the motor sensors.");
-    left.zero();
-    right.zero();
+    leftSM.zero();
+    rightSM.zero();
   }
 
   /**
    * Does not drive drive motors and keeps steering angle at previous position.
    */
   public void stop() {
-    right.stopMotor();
-    left.stopMotor();
+    rightSM.stopMotor();
+    leftSM.stopMotor();
   }
 
   @Override
   public boolean isStopped() {
-    return left.isStopped() && right.isStopped();
+    return leftSM.isStopped() && rightSM.isStopped();
   }
 
   /**
@@ -197,20 +212,20 @@ public class Drive extends DifferentialDrive implements AutoDrive {
    * Used for tuning PIDs only, does not use carrot drive or left right balancing.
    */
   public void tuneMove(double leftDistance, double rightDistance, int pidSlot) {
-    left.selectPidSlot(pidSlot);
-    right.selectPidSlot(pidSlot);
+    leftSM.selectPidSlot(pidSlot); //currently pidSlot does nothing
+    rightSM.selectPidSlot(pidSlot);
     LOGGER.debug("Target: L: {} R: {} Current L: {} R: {}", 
         box(leftDistance), box(rightDistance),
         box(getLeftDistance()), box(getRightDistance()));
-    left.set(ControlMode.Position, feetToTicks(leftDistance));
+    leftSM.set(ControlType.kPosition, feetToTicks(leftDistance));
     // The right motor is reversed
-    right.set(ControlMode.Position, feetToTicks(rightDistance));
+    rightSM.set(ControlType.kPosition, feetToTicks(rightDistance));
   }
 
   @Override
   public void moveLinearFeet(double distanceInFeet) {
-    left.selectPidSlot(RobotMap.PID_SLOT_DRIVE);
-    right.selectPidSlot(RobotMap.PID_SLOT_DRIVE);
+    leftSM.selectPidSlot(RobotMap.PID_SLOT_DRIVE);
+    rightSM.selectPidSlot(RobotMap.PID_SLOT_DRIVE);
     moveFeet(distanceInFeet, distanceInFeet);
   }
 
@@ -223,8 +238,8 @@ public class Drive extends DifferentialDrive implements AutoDrive {
    *                       hand turns as positive
    */
   public void moveWithTurn(double distanceInFeet, double degrees) {
-    left.selectPidSlot(RobotMap.PID_SLOT_DRIVE);
-    right.selectPidSlot(RobotMap.PID_SLOT_DRIVE);
+    leftSM.selectPidSlot(RobotMap.PID_SLOT_DRIVE);
+    rightSM.selectPidSlot(RobotMap.PID_SLOT_DRIVE);
 
     LOGGER.trace("Automated move of {} with {} degree turn.", 
         box(distanceInFeet), box(degrees));
@@ -244,8 +259,8 @@ public class Drive extends DifferentialDrive implements AutoDrive {
    */
 
   public void rotateByAngle(double rotationInDegrees) {
-    left.selectPidSlot(RobotMap.PID_SLOT_TURN);
-    right.selectPidSlot(RobotMap.PID_SLOT_TURN);
+    leftSM.selectPidSlot(RobotMap.PID_SLOT_TURN);
+    rightSM.selectPidSlot(RobotMap.PID_SLOT_TURN);
 
     LOGGER.debug("Automated move of {} degree turn.", box(rotationInDegrees));
 
@@ -272,9 +287,9 @@ public class Drive extends DifferentialDrive implements AutoDrive {
     LOGGER.debug("Automated move of right: {} left: {} feet ", 
         box(targetRightDistance), box(targetLeftDistance));
 
-    left.set(ControlMode.Position, targetLeftDistance);
+    leftSM.set(ControlType.kPosition, targetLeftDistance);
     // The right motor is reversed
-    right.set(ControlMode.Position, targetRightDistance);
+    rightSM.set(ControlType.kPosition, targetRightDistance);
   }
 
   public void moveVelMode(double leftOut, double rightOut) {
@@ -282,18 +297,18 @@ public class Drive extends DifferentialDrive implements AutoDrive {
     // LOGGER.debug("Automated move of right: {} left: {} feet ",
     // df.format(targetRightDistance), df.format(targetLeftDistance));
 
-    left.set(ControlMode.PercentOutput, leftOut);
+    leftSM.set(ControlType.kVoltage, leftOut);
     // The right motor is reversed
-    right.set(ControlMode.PercentOutput, rightOut);
+    rightSM.set(ControlType.kVoltage, rightOut);
   }
 
   public double getLeftDistance() {
-    double leftLeadSensorPos = left.position();
+    double leftLeadSensorPos = leftSM.position();
     return leftLeadSensorPos;
   }
 
   public double getRightDistance() {
-    double rightLeadSensorPos = right.position();
+    double rightLeadSensorPos = rightSM.position();
     return rightLeadSensorPos;
   }
 
