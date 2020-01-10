@@ -10,6 +10,7 @@ public class TuneController {
   public static void loadTuners() {
     register("Drive Straight", new DriveStraightTuner());
     register("Drive Turn", new DriveTurnTuner());
+    register("LED Strip", new LEDStripTuner());
   }
 
   private static final Logger LOGGER
