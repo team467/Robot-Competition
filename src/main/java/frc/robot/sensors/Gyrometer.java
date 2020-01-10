@@ -127,4 +127,10 @@ public class Gyrometer extends GyroBase implements Gyro {
     // TODO Auto-generated method stub
     return 0;
   }
+
+  @Override
+  public void close() throws Exception {
+    // TODO Auto-generated method stub
+
+  }
 }

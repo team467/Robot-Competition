@@ -1,11 +1,8 @@
 package frc.robot.autonomous;
 
 import frc.robot.RobotMap;
-import frc.robot.autonomous.ActionGroup.ConcurrentActions;
-import frc.robot.autonomous.ActionGroup.MultiCondition;
 import frc.robot.drive.Drive;
 import frc.robot.logging.RobotLogManager;
-import frc.robot.simulator.communications.RobotData;
 
 import java.text.DecimalFormat;
 
@@ -19,23 +16,18 @@ public class Actions {
 
   private static Drive drive = Drive.getInstance();
 
-  private static RobotData data = RobotData.getInstance();
-
   private static double mirrorTurns = 1.0;
   
   public static void startOnLeft() {
     mirrorTurns = -1.0;
-    data.startingLocation(2.5, 0);
   }
   
   public static void startOnRight() {
     mirrorTurns = 1.0;
-    data.startingLocation(21.58, 0);
   }
   
   public static void startInCenter() {
     mirrorTurns = 1.0;
-    data.startingLocation(12.5, 0);
   }
   
   public static final Action nothing() {

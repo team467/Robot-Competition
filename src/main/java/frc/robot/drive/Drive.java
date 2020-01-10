@@ -2,11 +2,12 @@ package frc.robot.drive;
 
 import static org.apache.logging.log4j.util.Unbox.box;
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.RobotMap;
 import frc.robot.logging.RobotLogManager;
-import frc.robot.simulator.communications.RobotData;
 import org.apache.logging.log4j.Logger;
 
 public class Drive extends DifferentialDrive implements AutoDrive {
@@ -20,8 +21,6 @@ public class Drive extends DifferentialDrive implements AutoDrive {
 
   private final TalonSpeedControllerGroup left;
   private final TalonSpeedControllerGroup right;
-
-  private RobotData data = RobotData.getInstance();
 
   // Private constructor
 
@@ -39,23 +38,23 @@ public class Drive extends DifferentialDrive implements AutoDrive {
       if (RobotMap.HAS_WHEELS && RobotMap.DRIVEMOTOR_NUM > 0) {
         LOGGER.info("Creating  Lead Motors");
 
-        final WpiTalonSrxInterface leftLead = TalonProxy.create(RobotMap.LEFT_LEAD_CHANNEL);
-        final WpiTalonSrxInterface rightLead = TalonProxy.create(RobotMap.RIGHT_LEAD_CHANNEL);
-        WpiTalonSrxInterface leftFollower1 = null;
-        WpiTalonSrxInterface rightFollower1 = null;
-        WpiTalonSrxInterface leftFollower2 = null;
-        WpiTalonSrxInterface rightFollower2 = null;
+        final WPI_TalonSRX leftLead = new WPI_TalonSRX(RobotMap.LEFT_LEAD_CHANNEL);
+        final WPI_TalonSRX rightLead = new WPI_TalonSRX(RobotMap.RIGHT_LEAD_CHANNEL);
+        WPI_TalonSRX leftFollower1 = null;
+        WPI_TalonSRX rightFollower1 = null;
+        WPI_TalonSRX leftFollower2 = null;
+        WPI_TalonSRX rightFollower2 = null;
 
         if (RobotMap.DRIVEMOTOR_NUM > 2) {
           LOGGER.info("Creating first set of follower motors");
-          leftFollower1 = TalonProxy.create(RobotMap.LEFT_FOLLOWER_1_CHANNEL);
-          rightFollower1 = TalonProxy.create(RobotMap.RIGHT_FOLLOWER_1_CHANNEL);
+          leftFollower1 = new WPI_TalonSRX(RobotMap.LEFT_FOLLOWER_1_CHANNEL);
+          rightFollower1 = new WPI_TalonSRX(RobotMap.RIGHT_FOLLOWER_1_CHANNEL);
         }
 
         if (RobotMap.DRIVEMOTOR_NUM > 4) {
           LOGGER.info("Creating second set of follower motors");
-          leftFollower2 = TalonProxy.create(RobotMap.LEFT_FOLLOWER_2_CHANNEL);
-          rightFollower2 = TalonProxy.create(RobotMap.RIGHT_FOLLOWER_2_CHANNEL);
+          leftFollower2 = new WPI_TalonSRX(RobotMap.LEFT_FOLLOWER_2_CHANNEL);
+          rightFollower2 = new WPI_TalonSRX(RobotMap.RIGHT_FOLLOWER_2_CHANNEL);
         }
 
         ControlMode teleopControlMode = ControlMode.PercentOutput;
@@ -79,7 +78,7 @@ public class Drive extends DifferentialDrive implements AutoDrive {
     return instance;
   }
 
-  private Drive(TalonSpeedControllerGroup left, TalonSpeedControllerGroup right) {
+  private Drive(final TalonSpeedControllerGroup left, final TalonSpeedControllerGroup right) {
     super(left, right);
     this.left = left;
     this.right = right;
@@ -87,19 +86,19 @@ public class Drive extends DifferentialDrive implements AutoDrive {
     setPidsFromRobotMap();
   }
 
-  public void readPidsFromSmartDashboard(int pidSlot) {
+  public void readPidsFromSmartDashboard(final int pidSlot) {
 
-    double coefficientPLeft = Double.parseDouble(SmartDashboard.getString("DB/String 1", "1.6")); // 1.6
-    double coefficientPRight = Double.parseDouble(SmartDashboard.getString("DB/String 6", "1.4")); // 1.4
+    final double coefficientPLeft = Double.parseDouble(SmartDashboard.getString("DB/String 1", "1.6")); // 1.6
+    final double coefficientPRight = Double.parseDouble(SmartDashboard.getString("DB/String 6", "1.4")); // 1.4
 
-    double coefficientIRight = Double.parseDouble(SmartDashboard.getString("DB/String 2", "0.0")); // 0.0
-    double coefficientILeft = Double.parseDouble(SmartDashboard.getString("DB/String 7", "0.0")); // 0.0
+    final double coefficientIRight = Double.parseDouble(SmartDashboard.getString("DB/String 2", "0.0")); // 0.0
+    final double coefficientILeft = Double.parseDouble(SmartDashboard.getString("DB/String 7", "0.0")); // 0.0
 
-    double coefficientDLeft = Double.parseDouble(SmartDashboard.getString("DB/String 3", "198")); // 198
-    double coefficientDRight = Double.parseDouble(SmartDashboard.getString("DB/String 8", "165")); // 165
+    final double coefficientDLeft = Double.parseDouble(SmartDashboard.getString("DB/String 3", "198")); // 198
+    final double coefficientDRight = Double.parseDouble(SmartDashboard.getString("DB/String 8", "165")); // 165
 
-    double coefficientFLeft = Double.parseDouble(SmartDashboard.getString("DB/String 4", "1.1168")); // 0.0
-    double coefficientFRight = Double.parseDouble(SmartDashboard.getString("DB/String 9", "1.2208")); // 0.0
+    final double coefficientFLeft = Double.parseDouble(SmartDashboard.getString("DB/String 4", "1.1168")); // 0.0
+    final double coefficientFRight = Double.parseDouble(SmartDashboard.getString("DB/String 9", "1.2208")); // 0.0
 
     left.pidf(pidSlot, coefficientPLeft, coefficientILeft, coefficientDLeft, coefficientFLeft,
         RobotMap.VELOCITY_MULTIPLIER_LEFT);
@@ -145,7 +144,7 @@ public class Drive extends DifferentialDrive implements AutoDrive {
         RobotMap.VELOCITY_MULTIPLIER_RIGHT);
   }
 
-  public void configPeakOutput(double percentOut) {
+  public void configPeakOutput(final double percentOut) {
     left.configPeakOutput(percentOut);
     right.configPeakOutput(percentOut);
   }
@@ -164,11 +163,6 @@ public class Drive extends DifferentialDrive implements AutoDrive {
     LOGGER.debug("Zeroed the motor sensors.");
     left.zero();
     right.zero();
-    data.zero();
-  }
-
-  public void sendData() {
-    RobotData.getInstance().updateDrivePosition(getLeftDistance(), getRightDistance());
   }
 
   /**
@@ -187,35 +181,33 @@ public class Drive extends DifferentialDrive implements AutoDrive {
   /**
    * Used for tuning PIDs only, does not use carrot drive or left right balancing.
    */
-  public void tuneForward(double distanceInFeet, int pidSlot) {
+  public void tuneForward(final double distanceInFeet, final int pidSlot) {
     tuneMove(distanceInFeet, distanceInFeet, pidSlot);
   }
 
   /**
    * Used for tuning PIDs only, does not use carrot drive or left right balancing.
    */
-  public void tuneTurn(double rotationInDegrees, int pidSlot) {
-    double turnDistanceInFeet = degreesToFeet(rotationInDegrees);
+  public void tuneTurn(final double rotationInDegrees, final int pidSlot) {
+    final double turnDistanceInFeet = degreesToFeet(rotationInDegrees);
     tuneMove(turnDistanceInFeet, -turnDistanceInFeet, pidSlot);
   }
 
   /**
    * Used for tuning PIDs only, does not use carrot drive or left right balancing.
    */
-  public void tuneMove(double leftDistance, double rightDistance, int pidSlot) {
+  public void tuneMove(final double leftDistance, final double rightDistance, final int pidSlot) {
     left.selectPidSlot(pidSlot);
     right.selectPidSlot(pidSlot);
-    LOGGER.debug("Target: L: {} R: {} Current L: {} R: {}", 
-        box(leftDistance), box(rightDistance),
+    LOGGER.debug("Target: L: {} R: {} Current L: {} R: {}", box(leftDistance), box(rightDistance),
         box(getLeftDistance()), box(getRightDistance()));
     left.set(ControlMode.Position, feetToTicks(leftDistance));
     // The right motor is reversed
     right.set(ControlMode.Position, feetToTicks(rightDistance));
-    data.updateDrivePosition(getLeftDistance(), getRightDistance());
   }
 
   @Override
-  public void moveLinearFeet(double distanceInFeet) {
+  public void moveLinearFeet(final double distanceInFeet) {
     left.selectPidSlot(RobotMap.PID_SLOT_DRIVE);
     right.selectPidSlot(RobotMap.PID_SLOT_DRIVE);
     moveFeet(distanceInFeet, distanceInFeet);
@@ -229,19 +221,17 @@ public class Drive extends DifferentialDrive implements AutoDrive {
    * @param degrees        the turn distance in degrees, with counter clockwise
    *                       hand turns as positive
    */
-  public void moveWithTurn(double distanceInFeet, double degrees) {
+  public void moveWithTurn(final double distanceInFeet, final double degrees) {
     left.selectPidSlot(RobotMap.PID_SLOT_DRIVE);
     right.selectPidSlot(RobotMap.PID_SLOT_DRIVE);
 
-    LOGGER.trace("Automated move of {} with {} degree turn.", 
-        box(distanceInFeet), box(degrees));
+    LOGGER.trace("Automated move of {} with {} degree turn.", box(distanceInFeet), box(degrees));
 
-    double turnDistanceInFeet = degreesToFeet(degrees);
+    final double turnDistanceInFeet = degreesToFeet(degrees);
     // Temp change to tune move to test motor control.
     // moveFeet((distanceInFeet - turnDistanceInFeet), (distanceInFeet +
     // turnDistanceInFeet));
-    tuneMove((distanceInFeet - turnDistanceInFeet), 
-        (distanceInFeet + turnDistanceInFeet), RobotMap.PID_SLOT_DRIVE);
+    tuneMove((distanceInFeet - turnDistanceInFeet), (distanceInFeet + turnDistanceInFeet), RobotMap.PID_SLOT_DRIVE);
   }
 
   /**
@@ -250,43 +240,40 @@ public class Drive extends DifferentialDrive implements AutoDrive {
    *                          negative degrees for right turn.
    */
 
-  public void rotateByAngle(double rotationInDegrees) {
+  public void rotateByAngle(final double rotationInDegrees) {
     left.selectPidSlot(RobotMap.PID_SLOT_TURN);
     right.selectPidSlot(RobotMap.PID_SLOT_TURN);
 
     LOGGER.debug("Automated move of {} degree turn.", box(rotationInDegrees));
 
-    double turnDistanceInFeet = degreesToFeet(rotationInDegrees);
+    final double turnDistanceInFeet = degreesToFeet(rotationInDegrees);
     moveFeet(turnDistanceInFeet, -turnDistanceInFeet);
   }
 
   /**
    * Convert angle in degrees to wheel distance in feet (arc length).
    */
-  public static double degreesToFeet(double degrees) {
+  public static double degreesToFeet(final double degrees) {
 
     // Convert the turn to a distance based on the circumference of the robot wheel
     // base.
-    double radius = RobotMap.WHEEL_BASE_WIDTH / 2;
-    double angleInRadians = Math.toRadians(degrees);
-    double distanceInFeet = radius * angleInRadians; // This is the distance we want to turn.
+    final double radius = RobotMap.WHEEL_BASE_WIDTH / 2;
+    final double angleInRadians = Math.toRadians(degrees);
+    final double distanceInFeet = radius * angleInRadians; // This is the distance we want to turn.
 
     return distanceInFeet;
   }
 
-  public void moveFeet(double targetLeftDistance, double targetRightDistance) {
+  public void moveFeet(final double targetLeftDistance, final double targetRightDistance) {
 
-    LOGGER.debug("Automated move of right: {} left: {} feet ", 
-        box(targetRightDistance), box(targetLeftDistance));
+    LOGGER.debug("Automated move of right: {} left: {} feet ", box(targetRightDistance), box(targetLeftDistance));
 
     left.set(ControlMode.Position, targetLeftDistance);
     // The right motor is reversed
     right.set(ControlMode.Position, targetRightDistance);
-
-    data.updateDrivePosition(getLeftDistance(), getRightDistance());
   }
 
-  public void moveVelMode(double leftOut, double rightOut) {
+  public void moveVelMode(final double leftOut, final double rightOut) {
 
     // LOGGER.debug("Automated move of right: {} left: {} feet ",
     // df.format(targetRightDistance), df.format(targetLeftDistance));
@@ -294,17 +281,15 @@ public class Drive extends DifferentialDrive implements AutoDrive {
     left.set(ControlMode.PercentOutput, leftOut);
     // The right motor is reversed
     right.set(ControlMode.PercentOutput, rightOut);
-
-    data.updateDrivePosition(getLeftDistance(), getRightDistance());
   }
 
   public double getLeftDistance() {
-    double leftLeadSensorPos = left.position();
+    final double leftLeadSensorPos = left.position();
     return leftLeadSensorPos;
   }
 
   public double getRightDistance() {
-    double rightLeadSensorPos = right.position();
+    final double rightLeadSensorPos = right.position();
     return rightLeadSensorPos;
   }
 
@@ -314,52 +299,43 @@ public class Drive extends DifferentialDrive implements AutoDrive {
    * @return the absolute distance moved in feet
    */
   public double absoluteDistanceMoved() {
-    double leftLeadSensorPos = Math.abs(getLeftDistance());
-    double rightLeadSensorPos = Math.abs(getRightDistance());
-    double lowestAbsDist = Math.min(leftLeadSensorPos, rightLeadSensorPos);
+    final double leftLeadSensorPos = Math.abs(getLeftDistance());
+    final double rightLeadSensorPos = Math.abs(getRightDistance());
+    final double lowestAbsDist = Math.min(leftLeadSensorPos, rightLeadSensorPos);
     LOGGER.debug("The absolute distance moved: {}", box(lowestAbsDist));
     return lowestAbsDist;
   }
 
-  private double feetToTicks(double feet) {
-    double ticks = (feet / (RobotMap.WHEEL_CIRCUMFERENCE / 12.0)) * RobotMap.WHEEL_ENCODER_CODES_PER_REVOLUTION;
+  private double feetToTicks(final double feet) {
+    final double ticks = (feet / (RobotMap.WHEEL_CIRCUMFERENCE / 12.0)) * RobotMap.WHEEL_ENCODER_CODES_PER_REVOLUTION;
     LOGGER.trace("Feet = {} ticks = {}", box(feet), box(ticks));
     // what do i do here
     return ticks;
   }
 
-  private double ticksToFeet(double ticks) {
-    double feet = (ticks / RobotMap.WHEEL_ENCODER_CODES_PER_REVOLUTION) * (RobotMap.WHEEL_CIRCUMFERENCE / 12);
-    LOGGER.trace("Ticks = {} feet = {}", box(ticks), box(feet));
-    return feet;
-  }
-
   // This section overrides the standard Differential Drive
   // class functions to capture the move state
 
-  public void arcadeDrive(double speed, double rotation) {
+  public void arcadeDrive(final double speed, final double rotation) {
     this.arcadeDrive(speed, rotation, true);
   }
 
-  public void arcadeDrive(double speed, double rotation, boolean squaredInputs) {
+  public void arcadeDrive(final double speed, final double rotation, final boolean squaredInputs) {
     super.arcadeDrive(speed, rotation, squaredInputs);
     LOGGER.debug("Expected Output: {}", box(speed));
-    data.updateDrivePosition(getLeftDistance(), getRightDistance());
   }
 
-  public void tankDrive(double leftSpeed, double rightSpeed) {
+  public void tankDrive(final double leftSpeed, final double rightSpeed) {
     this.tankDrive(leftSpeed, rightSpeed, true);
   }
 
-  public void tankDrive(double leftSpeed, double rightSpeed, boolean squaredInputs) {
+  public void tankDrive(final double leftSpeed, final double rightSpeed, final boolean squaredInputs) {
     LOGGER.debug("expected left: {}, expected right: {} ", box(leftSpeed), box(rightSpeed));
     super.tankDrive(leftSpeed, rightSpeed, squaredInputs);
-    data.updateDrivePosition(getLeftDistance(), getRightDistance());
   }
 
-  public void curvatureDrive(double speed, double rotation, boolean isQuickTurn) {
+  public void curvatureDrive(final double speed, final double rotation, final boolean isQuickTurn) {
     super.curvatureDrive(speed, rotation, isQuickTurn);
-    data.updateDrivePosition(getLeftDistance(), getRightDistance());
   }
 
 }
