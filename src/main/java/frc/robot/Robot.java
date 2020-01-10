@@ -13,6 +13,8 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.AddressableLED;
+import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import frc.robot.RobotMap.RobotId;
 import frc.robot.drive.Drive;
 import frc.robot.logging.RobotLogManager;
@@ -51,6 +53,9 @@ public class Robot extends TimedRobot {
   private CameraSwitcher camera;
   private LedI2C leds;
   private PerfTimer perfTimer;
+  //objects for the LED strip
+  private AddressableLED LEDStrip;
+  private AddressableLEDBuffer LEDBuffer;
 
   public static long time = System.nanoTime();
   public static long previousTime = time;
@@ -145,6 +150,15 @@ public class Robot extends TimedRobot {
     telemetry = Telemetry.getInstance();
     telemetry.robotMode(mode);
     telemetry.start();
+    //creating LED Strip
+    //leds on PWM 9
+    LEDStrip = new AddressableLED(9);
+    //led buffer with 12 leds: the length of the neopixel ring
+    LEDBuffer = new AddressableLEDBuffer(12);
+    LEDStrip.setLength(LEDBuffer.getLength());
+    //sets data
+    LEDStrip.setData(LEDBuffer);
+    LEDStrip.start();
   }
 
   /**
@@ -158,6 +172,14 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotPeriodic() {
+    //--LED stuff--
+    
+    //writes to LEDs
+    for(int i = 0; i < LEDBuffer.getLength(); i++) {
+      LEDBuffer.setRGB(i, 128,128,128);
+    }
+    //copies stuff to LEDS
+    LEDStrip.setData(LEDBuffer);
   }
 
   @Override
