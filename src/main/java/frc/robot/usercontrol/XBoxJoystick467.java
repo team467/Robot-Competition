@@ -20,8 +20,8 @@ import org.apache.logging.log4j.Logger;
 public class XBoxJoystick467 {
 
   private static final Logger LOGGER = RobotLogManager.getMainLogger(XBoxJoystick467.class.getName());
-  private XboxController xbox;
-  private String name;
+  private final XboxController xbox;
+  private final String name;
   private int pov = 0;
   private boolean wasPovLeft;
   private boolean wasPovRight;
@@ -40,7 +40,7 @@ public class XBoxJoystick467 {
 
     public final int channel;
 
-    Button(int channel) {
+    Button(final int channel) {
       this.channel = channel;
     }
   }
@@ -51,8 +51,8 @@ public class XBoxJoystick467 {
    *
    * @return
    */
-  public boolean down(Button b) {
-    boolean result = buttonDown.get(b);
+  public boolean down(final Button b) {
+    final boolean result = buttonDown.get(b);
     LOGGER.debug("Button: {} = {}", b.name(), box(result));
     return result;
   }
@@ -62,8 +62,8 @@ public class XBoxJoystick467 {
    *
    * @return
    */
-  public boolean pressed(Button b) {
-    boolean result = buttonDown.get(b) && !previousButtonDown.get(b);
+  public boolean pressed(final Button b) {
+    final boolean result = buttonDown.get(b) && !previousButtonDown.get(b);
     LOGGER.debug("Button: {} = {} ", b.name(), box(result));
     return result;
   }
@@ -73,7 +73,7 @@ public class XBoxJoystick467 {
    *
    * @return
    */
-  public boolean buttonReleased(Button b) {
+  public boolean buttonReleased(final Button b) {
     return !buttonDown.get(b) && !previousButtonDown.get(b);
   }
 
@@ -82,7 +82,7 @@ public class XBoxJoystick467 {
 
     public final int channel;
 
-    Axis(int channel) {
+    Axis(final int channel) {
       this.channel = channel;
     }
 
@@ -95,7 +95,7 @@ public class XBoxJoystick467 {
    * @param input
    * @return processed input
    */
-  private static double accelerateJoystickInput(double input) {
+  private static double accelerateJoystickInput(final double input) {
     // Ensure that there is a dead zone around zero
     if (Math.abs(input) < DEADZONE) {
       return 0.0;
@@ -105,7 +105,7 @@ public class XBoxJoystick467 {
     return (input * Math.abs(input));
   }
 
-  private static double limitSensitivity(double input) {
+  private static double limitSensitivity(final double input) {
     return input * SENSITIVITY_MODIFIER;
   }
 
@@ -114,7 +114,7 @@ public class XBoxJoystick467 {
    *
    * @param stick
    */
-  public XBoxJoystick467(int stick, String name) {
+  public XBoxJoystick467(final int stick, final String name) {
     // TODO: Set a new joystick on the given channel
     xbox = new XboxController(stick);
     this.name = name;
@@ -131,14 +131,14 @@ public class XBoxJoystick467 {
   }
 
   private void readButtons() {
-    for (Button b : Button.values()) {
+    for (final Button b : Button.values()) {
       previousButtonDown.put(b, buttonDown.get(b));
       buttonDown.put(b, xbox.getRawButton(b.channel));
     }
   }
 
   private void readAxes() {
-    for (Axis axis : Axis.values()) {
+    for (final Axis axis : Axis.values()) {
       axes.put(axis, xbox.getRawAxis(axis.channel));
     }
   }
@@ -159,7 +159,7 @@ public class XBoxJoystick467 {
   /**
    * Returns the drive speed, taking the turbo and slow triggers into account.
    */
-  public double getAdjustedSpeed(double speed) {
+  public double getAdjustedSpeed(final double speed) {
     if (getLeftTrigger() > 0.0) {
       // For some reason, up stick is negative, so we flip it
       return turboFastSpeed(speed);
@@ -168,12 +168,12 @@ public class XBoxJoystick467 {
     }
   }
 
-  public double turboFastSpeed(double speed) {
+  public double turboFastSpeed(final double speed) {
     // Speed multiplied by acceleration determined by left trigger
     return speed * MathUtils.weightedAverage(RobotMap.NORMAL_MAX_SPEED, RobotMap.FAST_MAX_SPEED, getLeftTrigger());
   }
 
-  public double turboSlowSpeed(double speed) {
+  public double turboSlowSpeed(final double speed) {
     // Speed multiplied by deceleration determined by right trigger
     return speed * MathUtils.weightedAverage(RobotMap.NORMAL_MAX_SPEED, RobotMap.SLOW_MAX_SPEED, getRightTrigger());
   }
@@ -195,8 +195,8 @@ public class XBoxJoystick467 {
   }
 
   public boolean povLeftPressed() {
-    boolean isLeft = povLeft();
-    boolean isPressed = isLeft && !wasPovLeft;
+    final boolean isLeft = povLeft();
+    final boolean isPressed = isLeft && !wasPovLeft;
     wasPovLeft = isLeft;
 
     return isPressed;
@@ -207,8 +207,8 @@ public class XBoxJoystick467 {
   }
 
   public boolean povRightPressed() {
-    boolean isRight = povRight();
-    boolean isPressed = isRight && !wasPovRight;
+    final boolean isRight = povRight();
+    final boolean isPressed = isRight && !wasPovRight;
     wasPovRight = isRight;
 
     return isPressed;
@@ -227,7 +227,7 @@ public class XBoxJoystick467 {
     return Math.sqrt((getRightStickX() * getRightStickX()) + (getRightStickY() * getRightStickY()));
   }
 
-  private double calculateStickAngle(double stickX, double stickY) {
+  private double calculateStickAngle(final double stickX, final double stickY) {
     if (stickY == 0.0) {
       // In Y deadzone avoid divide by zero error
       return (stickX > 0.0) ? Math.PI / 2 : (-Math.PI) / 2;
@@ -281,15 +281,15 @@ public class XBoxJoystick467 {
     return calculateStickAngle(getRightStickX(), getRightStickY());
   }
 
-  public void leftRumble(double value) {
+  public void leftRumble(final double value) {
     xbox.setRumble(RumbleType.kLeftRumble, value);
   }
 
-  public void rightRumble(double value) {
+  public void rightRumble(final double value) {
     xbox.setRumble(RumbleType.kRightRumble, value);
   }
 
-  public void setRumble(double value) {
+  public void setRumble(final double value) {
     xbox.setRumble(RumbleType.kLeftRumble, value);
     xbox.setRumble(RumbleType.kRightRumble, value);
   }
