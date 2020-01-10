@@ -26,8 +26,8 @@ public class SparkMaxSpeedControllerGroup implements SpeedController {
   private CANSparkMax follower1;
   private CANSparkMax follower2;
 
-  private CANEncoder mEncoder;
-  private CANPIDController mPidController;
+  private CANEncoder leadEncoder;
+  private CANPIDController leadPidController;
   private ControlType controlType = ControlType.kVoltage;
 
   private int pidControlSlot;
@@ -53,21 +53,22 @@ public class SparkMaxSpeedControllerGroup implements SpeedController {
     }
     this.leader = leader;
     this.follower1 = follower1;
-    this.follower2 = follower2;
+    //this.follower2 = follower2;
     this.controlType = controlType;
 
+
+    this.leadPidController = new CANPIDController(leader);
+    this.leadEncoder = new CANEncoder(leader);
+    // only have sensor on leader
     initMotor(this.leader);
     if (follower1 != null) {
       initMotor(this.follower1);
-      initMotor(this.follower2);
+      //initMotor(this.follower2);
     }
 
-    // only have sensor on leader
-    this.mEncoder = leader.getEncoder();
-    this.mPidController = leader.getPIDController();
 
     
-    mEncoder.setInverted(sensorIsInverted);
+    //leadEncoder.setInverted(sensorIsInverted);
     leader.setInverted(motorIsInverted);
 
     registerMetrics();
@@ -88,21 +89,14 @@ public class SparkMaxSpeedControllerGroup implements SpeedController {
     sparkMax.setIdleMode(IdleMode.kBrake);
 
     sparkMax.set(0);
-    mPidController.setReference(0, controlType.kVoltage);
-    //talon.selectProfileSlot(0, 0);
-    //talon.configAllowableClosedloopError(0, RobotMap.POSITION_ALLOWABLE_CLOSED_LOOP_ERROR, 0);
-
+    leadPidController.setReference(1, controlType.kVoltage);
     // Note: -1 and 1 are the max outputs
 //    sparkMax.setSmartCurrentLimit(0, 0);
     
 
     sparkMax.setOpenLoopRampRate(0.2);
     sparkMax.setCANTimeout(RobotMap.TALON_TIMEOUT);
-    mPidController.setOutputRange(-1,1);
-    // talon.configClosedloopRamp(1.0, RobotMap.TALON_TIMEOUT);
-
-    // talon.configVelocityMeasurementPeriod(VelocityMeasPeriod.Period_10Ms, 0);
-    // talon.configVelocityMeasurementWindow(2, 0);
+    leadPidController.setOutputRange(-1,1);
   }
 
   public void logClosedLoopErrors() {
@@ -119,10 +113,10 @@ public class SparkMaxSpeedControllerGroup implements SpeedController {
       LOGGER.debug("No PIDF");
       return;
     }
-    mPidController.setP(p, slotId);
-    mPidController.setI(i, slotId);
-    mPidController.setD(d, slotId);
-    mPidController.setFF(f, slotId);
+    leadPidController.setP(p, slotId);
+    leadPidController.setI(i, slotId);
+    leadPidController.setD(d, slotId);
+    leadPidController.setFF(f, slotId);
 
     this.maxVelocity = maxVelocity;
     //leader.configNeutralDeadband(0.04, RobotMap.TALON_TIMEOUT); TODO: figure out if deadband exists
@@ -138,7 +132,7 @@ public class SparkMaxSpeedControllerGroup implements SpeedController {
       return;
     }
     previousSensorPosition = 0;
-    mEncoder.setPosition(0);
+    leadEncoder.setPosition(0);
   }
 
   @Override
@@ -176,7 +170,7 @@ public class SparkMaxSpeedControllerGroup implements SpeedController {
 
   @Override
   public void set(double speed) {
-    set(speed);
+    set(ControlType.kVoltage, speed);
   }
 
   public void set(ControlType controlType, double outputValue) {
@@ -191,7 +185,7 @@ public class SparkMaxSpeedControllerGroup implements SpeedController {
       outputValue *= maxVelocity;
     }
 
-    mPidController.setReference(0, controlType);
+    leadPidController.setReference(1, controlType);
     leader.set(outputValue);
     if (follower1 != null) {
       follower1.follow(leader);
@@ -211,7 +205,7 @@ public class SparkMaxSpeedControllerGroup implements SpeedController {
       return;
     }
 
-    //TODO: not sure if this stilll is relevant
+    //TODO: not sure if this stil is relevant
     // leader.configPeakOutputForward(percentOut, RobotMap.TALON_TIMEOUT);
     // leader.configPeakOutputReverse(-percentOut, RobotMap.TALON_TIMEOUT);
   }
@@ -257,7 +251,7 @@ public class SparkMaxSpeedControllerGroup implements SpeedController {
       return true;
     }
 
-    double leaderSensorPosition = mEncoder.getPosition();
+    double leaderSensorPosition = leadEncoder.getPosition();
     boolean isStopped = false;
 
     if (leader.get() == 0) {
@@ -276,7 +270,7 @@ public class SparkMaxSpeedControllerGroup implements SpeedController {
       return 0;
     }
 
-    return ticksToFeet(mEncoder.getPosition());
+    return ticksToFeet(leadEncoder.getPosition());
   }
 
   public double velocity() {
@@ -285,7 +279,7 @@ public class SparkMaxSpeedControllerGroup implements SpeedController {
       return 0;
     }
 
-    return mEncoder.getVelocity();
+    return leadEncoder.getVelocity();
   }
 
   public void setOpenLoopRamp(double ramp) {

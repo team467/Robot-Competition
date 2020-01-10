@@ -130,7 +130,7 @@ public class Robot extends TimedRobot {
     leds = LedI2C.getInstance();
 
     drive.setPidsFromRobotMap();
-    PowerDistributionPanel.registerPowerDistributionWithTelemetry();
+    //PowerDistributionPanel.registerPowerDistributionWithTelemetry();
 
     telemetry = Telemetry.getInstance();
     telemetry.robotMode(mode);
