@@ -84,7 +84,7 @@ public class Robot extends TimedRobot {
     // table once.
 
     // Initialize RobotMap
-    RobotMap.init(RobotId.COMPETITION_1_2020);
+    RobotMap.init(RobotId.KITBOT);
     mode = RobotMode.STARTED;
     
 

@@ -111,7 +111,7 @@ public class RobotMap {
   public static final boolean useRemoteImu = false;
 
   public enum RobotId {
-    MINIBOT, COMPETITION_2_2020, COMPETITION_1_2020
+    ROBOT_2020, KITBOT
 
   }
 
@@ -127,7 +127,7 @@ public class RobotMap {
 
     switch (id) {
 
-      case COMPETITION_2_2020:
+      case ROBOT_2020:
         NORMAL_DRIVE_SPEED_MULTIPLIER = 0.8;
         SLOW_DRIVE_SPEED_MULTIPLIER = 0.6;
 
@@ -181,7 +181,7 @@ public class RobotMap {
 
         break;
 
-      case COMPETITION_1_2020:
+      case KITBOT:
       default:
         
         HAS_WHEELS = true;
@@ -238,44 +238,6 @@ public class RobotMap {
         // Game Pieces
 
         break;
-
-      case MINIBOT:
-        HAS_WHEELS = true;
-        DRIVEMOTOR_NUM = 2;
-        WHEEL_CIRCUMFERENCE = 18.50;
-
-        LEFT_LEAD_CHANNEL = 1;
-        LEFT_DRIVE_SENSOR_IS_INVERTED = false;
-        LEFT_DRIVE_MOTOR_IS_INVERTED = false;
-
-        RIGHT_LEAD_CHANNEL = 4;
-        RIGHT_DRIVE_SENSOR_IS_INVERTED = false;
-        RIGHT_DRIVE_MOTOR_IS_INVERTED = false;
-
-        // Linear PIDS
-        LEFT_DRIVE_PID_P = 1.0;
-        LEFT_DRIVE_PID_I = 0.0;
-        LEFT_DRIVE_PID_D = 450.0;
-        LEFT_DRIVE_PID_F = 0.0;
-
-        RIGHT_DRIVE_PID_P = 1.0;
-        RIGHT_DRIVE_PID_I = 0.0;
-        RIGHT_DRIVE_PID_D = 450.0;
-        RIGHT_DRIVE_PID_F = 0.0;
-
-        // Turn PIDs
-        LEFT_TURN_PID_P = 1.0;
-        LEFT_TURN_PID_I = 0.0;
-        LEFT_TURN_PID_D = 450.0;
-        LEFT_TURN_PID_F = 0.0;
-
-        RIGHT_TURN_PID_P = 1.0;
-        RIGHT_TURN_PID_I = 0.0;
-        RIGHT_TURN_PID_D = 450.0;
-        RIGHT_TURN_PID_F = 0.0;
-
-        break;
-
     }
 
     // These calculations can be made after the robot-specific constants are set.
