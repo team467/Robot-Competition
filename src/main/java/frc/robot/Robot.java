@@ -23,6 +23,7 @@ import frc.robot.usercontrol.DriverStation467;
 import frc.robot.utilities.PerfTimer;
 import frc.robot.vision.CameraSwitcher;
 import frc.robot.drive.SparkMaxSpeedControllerGroup;
+import frc.robot.tuning.TuneController;
 import java.io.IOException;
 import org.apache.logging.log4j.Logger;
 
@@ -129,6 +130,7 @@ public class Robot extends TimedRobot {
     camera = CameraSwitcher.getInstance();
     leds = LedI2C.getInstance();
 
+    TuneController.loadTuners();
     drive.setPidsFromRobotMap();
     //PowerDistributionPanel.registerPowerDistributionWithTelemetry();
 
@@ -239,6 +241,7 @@ public class Robot extends TimedRobot {
   public void testInit() {
     mode = RobotMode.TEST;
     telemetry.robotMode(mode);
+    TuneController.init();
     perfTimer = PerfTimer.timer("Test Periodic");
   }
 
@@ -250,7 +253,9 @@ public class Robot extends TimedRobot {
   @Override
   public void testPeriodic() {
     perfTimer.start();
+    TuneController.periodic();
     perfTimer.end();
+    
   }
 
   @Override
