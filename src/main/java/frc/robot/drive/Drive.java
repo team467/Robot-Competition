@@ -329,6 +329,7 @@ public class Drive extends DifferentialDrive implements AutoDrive {
     return ticks;
   }
 
+  private double TicksToFeet(final double ticks){
     final double feet = (ticks / RobotMap.WHEEL_ENCODER_CODES_PER_REVOLUTION) * (RobotMap.WHEEL_CIRCUMFERENCE / 12);
     LOGGER.trace("Ticks = {} feet = {}", box(ticks), box(feet));
     return feet;
