@@ -16,6 +16,9 @@ public class RobotMap {
   public static final int PID_SLOT_DRIVE = 0;
   public static final int PID_SLOT_TURN = 1;
 
+  //Sensors
+  public static boolean HAS_GYRO = false;
+
   // Turret angle offsets
   public static final double ON_TARGET = 1.0;
   public static final double ANGLE_OFFSET_LEVEL_ONE = 5.0;
@@ -179,6 +182,9 @@ public class RobotMap {
         HAS_CAMERA = true;
         AUTO_CAMERA = true;
 
+        //sensors
+        HAS_GYRO = false;
+
         break;
 
       case KITBOT:
@@ -237,6 +243,9 @@ public class RobotMap {
 
         // Game Pieces
 
+         //sensors
+         HAS_GYRO = false;
+         
         break;
     }
 
