@@ -51,16 +51,16 @@ public class MatchConfiguration {
 
     color = DriverStation.getInstance().getAlliance();
 
-    // if (color == DriverStation.Alliance.Blue) {
-    //   LOGGER.info("Alliance is blue");
-    //   teamColor = TeamColor.BLUE;
-    // } else if (color == DriverStation.Alliance.Red) {
-    //   LOGGER.info("Alliance is red");
-    //   teamColor = TeamColor.RED;
-    // } else {
-    //   LOGGER.info("Alliance not found");
-    //   teamColor = TeamColor.UNKNOWN;
-    // } 
+    if (color == DriverStation.Alliance.Blue) {
+      LOGGER.info("Alliance is blue");
+      teamColor = TeamColor.BLUE;
+    } else if (color == DriverStation.Alliance.Red) {
+      LOGGER.info("Alliance is red");
+      teamColor = TeamColor.RED;
+    } else {
+      LOGGER.info("Alliance not found");
+      teamColor = TeamColor.UNKNOWN;
+    } 
   }
 
   public void setAutoModeAndStartPosition() {
