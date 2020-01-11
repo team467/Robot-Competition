@@ -1,5 +1,6 @@
 package frc.robot.logging;
 
+import static org.apache.logging.log4j.util.Unbox.box;
 import frc.robot.RobotMap;
 import frc.robot.Robot.RobotMode;
 import frc.robot.utilities.PerfTimer;
@@ -16,6 +17,9 @@ import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.message.ObjectArrayMessage;
 
 public class Telemetry {
+
+  private static final Logger LOGGER 
+      = RobotLogManager.getMainLogger(Telemetry.class.getName());
 
   private PerfTimer perfTimer;
 
@@ -39,7 +43,7 @@ public class Telemetry {
   private Timer timer;
 
   /**
-  * Returns a singleton instance of the telemetry handler.
+  * Returns a singleton instance of the telemery handler.
   * 
   * @return TelemetryBuilder the telemetry instance
   */
@@ -51,7 +55,7 @@ public class Telemetry {
   }
 
   /**
-  * Creates the telemetry builder instance with the correct location for the CSV
+  * Creates the telemtry builder instance with the correct location for the CSV
   * output files.
   */
   private Telemetry() {

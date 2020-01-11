@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
+import frc.robot.RobotMap;
 import frc.robot.logging.RobotLogManager;
 
 import org.apache.logging.log4j.Logger;
@@ -35,6 +36,8 @@ public class MatchConfiguration {
 
   private String autoMode = "None"; 
 
+  private ActionGroup autonomous;
+
   private MatchConfiguration() {
     teamColor = TeamColor.UNKNOWN;
   }
@@ -49,7 +52,11 @@ public class MatchConfiguration {
   public void setAllianceColor() {
     Alliance color; 
 
-    color = DriverStation.getInstance().getAlliance();
+    if (RobotMap.useSimulator) {
+      //color = SimulatedData.teamColor;
+    } else {
+      color = DriverStation.getInstance().getAlliance();
+    }
 
     // if (color == DriverStation.Alliance.Blue) {
     //   LOGGER.info("Alliance is blue");
@@ -64,7 +71,17 @@ public class MatchConfiguration {
   }
 
   public void setAutoModeAndStartPosition() {
-    autoMode = SmartDashboard.getString("Auto Selector", "None");
+
+    if (RobotMap.useSimulator) {
+      // if (SimulatedData.autoMode != null) {
+      //   autoMode = SimulatedData.autoMode;
+      // } else {
+      //   autoMode = "None";
+      // }
+    } else {
+      autoMode = SmartDashboard.getString("Auto Selector", "None");
+    }
+
     LOGGER.info("AutoMode: {} '", autoMode);
   }
 

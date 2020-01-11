@@ -34,6 +34,7 @@ public class Drive extends DifferentialDrive implements AutoDrive {
   private final SparkMaxSpeedControllerGroup rightSM;
 
 
+
   // Private constructor
 
   /**
@@ -241,13 +242,15 @@ public class Drive extends DifferentialDrive implements AutoDrive {
     leftSM.selectPidSlot(RobotMap.PID_SLOT_DRIVE);
     rightSM.selectPidSlot(RobotMap.PID_SLOT_DRIVE);
 
-    LOGGER.trace("Automated move of {} with {} degree turn.", box(distanceInFeet), box(degrees));
+    LOGGER.trace("Automated move of {} with {} degree turn.", 
+        box(distanceInFeet), box(degrees));
 
     final double turnDistanceInFeet = degreesToFeet(degrees);
     // Temp change to tune move to test motor control.
     // moveFeet((distanceInFeet - turnDistanceInFeet), (distanceInFeet +
     // turnDistanceInFeet));
-    tuneMove((distanceInFeet - turnDistanceInFeet), (distanceInFeet + turnDistanceInFeet), RobotMap.PID_SLOT_DRIVE);
+    tuneMove((distanceInFeet - turnDistanceInFeet), 
+        (distanceInFeet + turnDistanceInFeet), RobotMap.PID_SLOT_DRIVE);
   }
 
   /**
@@ -282,7 +285,8 @@ public class Drive extends DifferentialDrive implements AutoDrive {
 
   public void moveFeet(final double targetLeftDistance, final double targetRightDistance) {
 
-    LOGGER.debug("Automated move of right: {} left: {} feet ", box(targetRightDistance), box(targetLeftDistance));
+    LOGGER.debug("Automated move of right: {} left: {} feet ", 
+        box(targetRightDistance), box(targetLeftDistance));
 
     leftSM.set(ControlType.kPosition, targetLeftDistance);
     // The right motor is reversed
@@ -329,12 +333,15 @@ public class Drive extends DifferentialDrive implements AutoDrive {
     return ticks;
   }
 
+  private double ticksToFeet(final double ticks) {
     final double feet = (ticks / RobotMap.WHEEL_ENCODER_CODES_PER_REVOLUTION) * (RobotMap.WHEEL_CIRCUMFERENCE / 12);
     LOGGER.trace("Ticks = {} feet = {}", box(ticks), box(feet));
     return feet;
   }
 
   // This section overrides the standard Differential Drive
+  // class functions to capture the move state
+
   public void arcadeDrive(final double speed, final double rotation) {
     this.arcadeDrive(speed, rotation, true);
   }
