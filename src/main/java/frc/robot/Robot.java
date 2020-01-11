@@ -22,15 +22,9 @@ import frc.robot.sensors.PowerDistributionPanel;
 import frc.robot.usercontrol.DriverStation467;
 import frc.robot.utilities.PerfTimer;
 import frc.robot.vision.CameraSwitcher;
-import frc.robot.drive.SparkMaxSpeedControllerGroup;
 import frc.robot.tuning.TuneController;
 import java.io.IOException;
 import org.apache.logging.log4j.Logger;
-
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMaxLowLevel;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import com.revrobotics.CANEncoder;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -64,18 +58,7 @@ public class Robot extends TimedRobot {
 
   private Joystick m_leftStick;
   private Joystick m_rightStick;
-  
-  private static final int leftLeadDeviceID = 1; 
-  private static final int leftFollowerDeviceID = 2;
-  
-  private static final int rightLeadDeviceID = 3; 
-  private static final int rightFollowerDeviceID = 4;
-  
-  private CANSparkMax mLeftLeadMotor;
-  private CANSparkMax mLeftFollowerMotor;
-  
-  private CANSparkMax mRightLeadMotor;
-  private CANSparkMax mRightFollowerMotor;
+
 
   public static void enableSimulator() {
     Robot.enableSimulator = true;
@@ -99,7 +82,7 @@ public class Robot extends TimedRobot {
     // table once.
 
     // Initialize RobotMap
-    RobotMap.init(RobotId.ROBOT_2019);
+    RobotMap.init(RobotId.COMPETITION_1_2020);
     mode = RobotMode.STARTED;
     
 
@@ -156,7 +139,7 @@ public class Robot extends TimedRobot {
   public void autonomousInit() {
     mode = RobotMode.AUTONOMOUS;
     telemetry.robotMode(mode);
-    LOGGER.info("No Autonomous");
+    LOGGER.info("Autonomous Initialized");
     perfTimer = PerfTimer.timer("Autonomous");
   }
   
@@ -165,6 +148,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousPeriodic() {
+    LOGGER.trace("Autonomous Periodic");
     teleopPeriodic();
   }
 
@@ -172,7 +156,7 @@ public class Robot extends TimedRobot {
   public void teleopInit() {
     mode = RobotMode.TELEOP;
     telemetry.robotMode(mode);
-    LOGGER.info("Init Teleop");
+    LOGGER.info("Teleop Initialized");
     perfTimer = PerfTimer.timer("Teleoperated");
     LOGGER.debug("Match time {}", box(DriverStation.getInstance().getMatchTime()));
   }
@@ -182,7 +166,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
-
+    LOGGER.trace("Teleop Periodic");
     perfTimer.start();
     driverstation.readInputs();
 
@@ -252,6 +236,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void testPeriodic() {
+    LOGGER.trace("Test Periodic");
     perfTimer.start();
     TuneController.periodic();
     perfTimer.end();
@@ -264,7 +249,7 @@ public class Robot extends TimedRobot {
     telemetry.robotMode(mode);
     leds.whenDisabled();
     PerfTimer.print();
-    LOGGER.info("Init Disabled");
+    LOGGER.info("Robot Disabled");
   }
 
 
