@@ -52,10 +52,10 @@ Configuration:
           max: 50
   Loggers:
       Root:
-        level: info
+        level: warn
         AppenderRef:
           - ref: Console_Appender
-            level: info
+            level: warn
           - ref: Async_File_Appender
             level: info
       Logger:
