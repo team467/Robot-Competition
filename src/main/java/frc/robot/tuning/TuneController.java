@@ -9,6 +9,7 @@ public class TuneController {
 
   public static void loadTuners() {
     register("Drive Straight", new DriveConstantTuner());
+    register("Advanced Tuner", new AdvancedTuner());
   }
 
   private static final Logger LOGGER
