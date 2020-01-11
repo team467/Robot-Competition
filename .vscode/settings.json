@@ -11,5 +11,21 @@
     "**/.project": true,
     "**/.settings": true,
     "**/.factorypath": true
-  }
+  },
+  "cSpell.ignoreWords": [
+  ],
+  "cSpell.words": [
+    "adis",
+    "controller",
+    "deadzone",
+    "driverstation",
+    "gamepiece",
+    "gamepieces",
+    "gyrometer",
+    "imu",
+    "pidf",
+    "pids",
+    "teleop",
+    "xbox"
+  ]
 }
