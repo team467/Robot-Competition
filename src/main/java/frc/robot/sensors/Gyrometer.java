@@ -19,7 +19,7 @@ public class Gyrometer extends GyroBase implements Gyro {
    * private constructor (singleton pattern)
    */
   private Gyrometer() {
-    imu = null;
+    imu = null; //TODO: gyro should not be null but we need to figure out the ADIS IMU before it goes into the code.
   }
 
   /**
@@ -56,7 +56,7 @@ public class Gyrometer extends GyroBase implements Gyro {
    * @return the gyro angle
    */
   public double getYawRadians() {
-    if (RobotMap.robotId == RobotMap.RobotId.ROBOT_2018) {
+    if (RobotMap.robotId == RobotMap.RobotId.COMPETITION_1_2020) {
       return Math.toRadians(-imu.getAngleX());
     } else {
       return 0;
@@ -79,7 +79,7 @@ public class Gyrometer extends GyroBase implements Gyro {
    * @return the gyro angle
    */
   public double getRollRadians() {
-    if (RobotMap.robotId == RobotMap.RobotId.ROBOT_2018) {
+    if (RobotMap.robotId == RobotMap.RobotId.COMPETITION_1_2020) {
       return Math.toRadians(-imu.getAngleY());
     } else {
       return 0;
@@ -101,7 +101,7 @@ public class Gyrometer extends GyroBase implements Gyro {
    * @return the gyro angle
    */
   public double getPitchRadians() {
-    if (RobotMap.robotId == RobotMap.RobotId.ROBOT_2018) {
+    if (RobotMap.robotId == RobotMap.RobotId.COMPETITION_1_2020) {
       return Math.toRadians(-imu.getAngleZ());
     } else {
       return 0;
