@@ -27,8 +27,7 @@ public class Drive extends DifferentialDrive implements AutoDrive {
   //sparkMax
   private final SparkMaxSpeedControllerGroup leftSM;
   private final SparkMaxSpeedControllerGroup rightSM;
-
-
+  
   // Private constructor
 
   /**
@@ -302,6 +301,30 @@ public class Drive extends DifferentialDrive implements AutoDrive {
   public double getRightDistance() {
     final double rightLeadSensorPos = rightSM.position();
     return rightLeadSensorPos;
+  }
+
+  public double getLeftVelocity() {
+    return leftSM.velocity();
+  }
+
+  public double getRightVelocity() {
+    return rightSM.velocity();
+  }
+
+  public double getLeftCurrent() {
+    return leftSM.current();
+  }
+
+  public double getRightCurrent() {
+    return rightSM.current();
+  }
+
+  public double getLeftTemperature() {
+    return leftSM.temperature();
+  }
+
+  public double getRightTemperature() {
+    return rightSM.temperature();
   }
 
   /**
