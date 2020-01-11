@@ -65,6 +65,9 @@ public class RobotMap {
   public static double RIGHT_DRIVE_PID_D;
   public static double RIGHT_DRIVE_PID_F;
 
+  public static boolean HAS_SPARKMAXS;
+  public static boolean HAS_TALONS;
+
   public static boolean useSpeedControllers;
 
   public static double ALLOWED_ERROR_INCHES = 0.5;
@@ -175,7 +178,10 @@ public class RobotMap {
         RIGHT_TURN_PID_P = 1.0;
         RIGHT_TURN_PID_I = 0.0;
         RIGHT_TURN_PID_D = 450.0;
-        RIGHT_TURN_PID_F = 0.0;
+        RIGHT_TURN_PID_F = 0.0;        
+
+        HAS_SPARKMAXS = true;
+        HAS_TALONS = false;
 
         FORWARD_CAMERA_INDEX = 0;
         BACKWARD_CAMERA_INDEX = 2;
@@ -240,6 +246,9 @@ public class RobotMap {
         BACKWARD_CAMERA_INDEX = 1;
         HAS_CAMERA = false;
         AUTO_CAMERA = false;
+
+        HAS_SPARKMAXS = true;
+        HAS_TALONS = false;
 
         // Game Pieces
 

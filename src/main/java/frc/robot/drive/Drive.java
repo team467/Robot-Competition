@@ -21,8 +21,8 @@ public class Drive extends DifferentialDrive implements AutoDrive {
   // Single instance of this class
   private static Drive instance = null;
 
-  //private final TalonSpeedControllerGroup leftTalons;
-  //private final TalonSpeedControllerGroup rightTalons;
+  // private final TalonSpeedControllerGroup leftTalons;
+  // private final TalonSpeedControllerGroup rightTalons;
   
   //sparkMax
   private final SparkMaxSpeedControllerGroup leftSM;
@@ -37,8 +37,8 @@ public class Drive extends DifferentialDrive implements AutoDrive {
    */
   public static Drive getInstance() {
     if (instance == null) {
-      // TalonSpeedControllerGroup leftTalons;
-      // TalonSpeedControllerGroup rightTalons;
+      TalonSpeedControllerGroup leftTalons;
+      TalonSpeedControllerGroup rightTalons;
 
       SparkMaxSpeedControllerGroup leftSM;
       SparkMaxSpeedControllerGroup rightSM;
