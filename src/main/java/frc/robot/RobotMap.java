@@ -141,7 +141,7 @@ public class RobotMap {
         DRIVEMOTOR_NUM = 4;
         WHEEL_CIRCUMFERENCE = 18.50;
 
-        CONTROLS_INVERTED_FB = false;
+        CONTROLS_INVERTED_FB = true;
         CONTROLS_INVERTED_TURN = false;
 
         USE_VELOCITY_SPEED_CONTROL_FOR_TELOP = true;
@@ -153,8 +153,8 @@ public class RobotMap {
         LEFT_DRIVE_SENSOR_IS_INVERTED = true;
         LEFT_DRIVE_MOTOR_IS_INVERTED = false;
 
-        RIGHT_LEAD_CHANNEL = 4;
-        RIGHT_FOLLOWER_1_CHANNEL = 5;
+        RIGHT_LEAD_CHANNEL = 3;
+        RIGHT_FOLLOWER_1_CHANNEL = 4;
         RIGHT_DRIVE_SENSOR_IS_INVERTED = true;
         RIGHT_DRIVE_MOTOR_IS_INVERTED = false;
 

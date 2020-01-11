@@ -94,7 +94,6 @@ compile group: 'org.apache.commons', name: 'commons-csv', version: '1.6'
   compile "org.openjfx:javafx-controls:11:$platform"
   compile "org.openjfx:javafx-fxml:11:$platform"
 
-  compile 'com.github.sh0nk:matplotlib4j:0.4.0'
 }
 
 // Setting up my Jar File. In this case, adding all libraries into the main jar ('fat jar')
