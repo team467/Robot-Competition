@@ -8,8 +8,8 @@ import frc.robot.logging.RobotLogManager;
 public class TuneController {
 
   public static void loadTuners() {
-    register("Drive Straight", new DriveStraightTuner());
-    register("Drive Turn", new DriveTurnTuner());
+    register("Drive Straight", new DriveConstantTuner());
+    register("Advanced Tuner", new AdvancedTuner());
   }
 
   private static final Logger LOGGER
@@ -27,12 +27,14 @@ public class TuneController {
 
   public static void init() {
     String key = SmartDashboard.getString("DB/String 0", "NO_TEST").toUpperCase();
+    LOGGER.error("Tuner initialized");
+  
     if (tuners.containsKey(key)) {
       tuner = tuners.get(key);
       tuner.init();
     } else {
       tuner = null;
-      LOGGER.warn("Invalid Tuner in DB/String 5");
+      LOGGER.warn("Invalid Tuner in DB/String 0");
       LOGGER.info("Tuning Modes are");
       for (String tunerName: tuners.keySet()) {
         LOGGER.info(" - {}", tunerName);

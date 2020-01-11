@@ -16,6 +16,9 @@ public class RobotMap {
   public static final int PID_SLOT_DRIVE = 0;
   public static final int PID_SLOT_TURN = 1;
 
+  //Sensors
+  public static boolean HAS_GYRO = false;
+
   // Turret angle offsets
   public static final double ON_TARGET = 1.0;
   public static final double ANGLE_OFFSET_LEVEL_ONE = 5.0;
@@ -111,7 +114,8 @@ public class RobotMap {
   public static final boolean useRemoteImu = false;
 
   public enum RobotId {
-    MINIBOT, ROBOT_2018, ROBOT_2019
+    ROBOT_2020, KITBOT
+
   }
 
   /**
@@ -126,7 +130,7 @@ public class RobotMap {
 
     switch (id) {
 
-      case ROBOT_2018:
+      case ROBOT_2020:
         NORMAL_DRIVE_SPEED_MULTIPLIER = 0.8;
         SLOW_DRIVE_SPEED_MULTIPLIER = 0.6;
 
@@ -175,14 +179,15 @@ public class RobotMap {
 
         FORWARD_CAMERA_INDEX = 0;
         BACKWARD_CAMERA_INDEX = 2;
-        HATCH_CAMERA_INDEX = 1;
-        CARGO_CAMERA_INDEX = 3;
         HAS_CAMERA = true;
         AUTO_CAMERA = true;
 
+        //sensors
+        HAS_GYRO = false;
+
         break;
 
-      case ROBOT_2019:
+      case KITBOT:
       default:
         
         HAS_WHEELS = true;
@@ -237,116 +242,11 @@ public class RobotMap {
         AUTO_CAMERA = false;
 
         // Game Pieces
-        HAS_TURRET = true;
-        HAS_ROLLER_INTAKE = true;
-        HAS_HATCH_MECHANISM = true;
-        HAS_ROLLER_INTAKE = true;
-        HAS_CARGO_MECHANISM = true;
 
-        // Turret
-        TURRET_MOTOR_CHANNEL = 5;
-        TURRET_MOTOR_INVERTED = false;
-        TURRET_SENSOR_INVERTED = false;
-        TURRET_RIGHT_LIMIT_TICKS = 462;
-        TURRET_LEFT_LIMIT_TICKS = 546;
-        TURRET_RIGHT_LIMIT_DEGREES = -95.0;
-        TURRET_LEFT_LIMIT_DEGREES = 95.0;
-        TURRET_ALLOWABLE_ERROR_TICKS = 1;
-        TURRET_HOME_TICKS = 504;
-        INVERT_TURRET_FOR_HATCHMODE = -1;
-        TURRET_SQR_INP = true;
-
-        TURRET_P = 1.0; // TODO
-        TURRET_I = 0.0; // TODO
-        TURRET_D = 0.0; // TODO
-
-        // Hatch Mechanism
-        HATCH_LAUNCHER_PCM_CHANNEL = 8;
-        HATCH_LAUNCHER_SOL_FORWARD_CHANNEL = 0;
-        HATCH_LAUNCHER_SOL_REVERSE_CHANNEL = 1;
-        HATCH_MECH_ARM_PCM_CHANNEL = 9;
-        HATCH_MECH_ARM_FORWARD_CHANNEL = 4;
-        HATCH_MECH_ARM_REVERSE_CHANNEL = 5;
-        HATCH_CAMERA_INDEX = 3;
-
-        // Cargo Intake
-        ROLLER_PCM_CHANNEL = 9;
-        FORCE_INTAKE_REMAIN_UP = false;
-        ROLLER_RIGHT_ARM_UP_SOLINOID_CHANNEL = 1;
-        ROLLER_RIGHT_ARM_DOWN_SOLINOID_CHANNEL = 0;
-        ROLLER_LEFT_ARM_UP_SOLINOID_CHANNEL = 3;
-        ROLLER_LEFT_ARM_DOWN_SOLINOID_CHANNEL = 2;
-        ROLLER_MOTOR_CHANNEL = 1;
-        ROLLER_MOTOR_INVERTED = false;
-
-        // Cargo Mechanism
-        CARGO_MECH_WRIST_MOTOR_CHANNEL = 6; // TODO
-        CARGO_MECH_WRIST_MOTOR_INVERTED = false;
-        CARGO_MECH_WRIST_P = 1.0; // TODO
-        CARGO_MECH_WRIST_I = 0.0; // TODO
-        CARGO_MECH_WRIST_D = 0.0; // TODO
-        CARGO_MECH_WRIST_F = 0.0; // TODO
-        CARGO_MECH_SQUARE_WRIST_INPUT = true;
-        CARGO_CAMERA_INDEX = 2;
-
-        CARGO_MECH_WRIST_TOP_TICKS = 806; 
-        CARGO_MECH_WRIST_BOTTOM_TICKS = 785;
-        CARGO_MECH_WRIST_ALLOWABLE_ERROR_TICKS = 1; // TODO
-        CARGO_MECH_WRIST_SENSOR_INVERTED = false;
-
-        CARGO_WRIST_UP_LIMIT_TICKS = 0; // TODO
-        CARGO_WRIST_DOWN_LIMIT_TICKS = 0; // TODO
-
-        // Ticks
-        CARGO_MECH_CARGO_BIN_PROPORTION = 0.02; // TODO
-        CARGO_MECH_LOW_ROCKET_PROPORTION = 0.55; // TODO
-        CARGO_MECH_CARGO_SHIP_PROPORTION = 0.67; // TODO
-        CARGO_MECH_SAFE_TURRET_PROPORTION = 0.55; // TODO
-
-        CARGO_MECH_CLAW_LEFT_MOTOR_CHANNEL = 2;
-        CARGO_MECH_CLAW_LEFT_MOTOR_INVERTED = true;
-        CARGO_MECH_CLAW_RIGHT_MOTOR_CHANNEL = 3;
-        CARGO_MECH_CLAW_RIGHT_MOTOR_INVERTED = true;
-
+         //sensors
+         HAS_GYRO = false;
+         
         break;
-
-      case MINIBOT:
-        HAS_WHEELS = true;
-        DRIVEMOTOR_NUM = 2;
-        WHEEL_CIRCUMFERENCE = 18.50;
-
-        LEFT_LEAD_CHANNEL = 1;
-        LEFT_DRIVE_SENSOR_IS_INVERTED = false;
-        LEFT_DRIVE_MOTOR_IS_INVERTED = false;
-
-        RIGHT_LEAD_CHANNEL = 4;
-        RIGHT_DRIVE_SENSOR_IS_INVERTED = false;
-        RIGHT_DRIVE_MOTOR_IS_INVERTED = false;
-
-        // Linear PIDS
-        LEFT_DRIVE_PID_P = 1.0;
-        LEFT_DRIVE_PID_I = 0.0;
-        LEFT_DRIVE_PID_D = 450.0;
-        LEFT_DRIVE_PID_F = 0.0;
-
-        RIGHT_DRIVE_PID_P = 1.0;
-        RIGHT_DRIVE_PID_I = 0.0;
-        RIGHT_DRIVE_PID_D = 450.0;
-        RIGHT_DRIVE_PID_F = 0.0;
-
-        // Turn PIDs
-        LEFT_TURN_PID_P = 1.0;
-        LEFT_TURN_PID_I = 0.0;
-        LEFT_TURN_PID_D = 450.0;
-        LEFT_TURN_PID_F = 0.0;
-
-        RIGHT_TURN_PID_P = 1.0;
-        RIGHT_TURN_PID_I = 0.0;
-        RIGHT_TURN_PID_D = 450.0;
-        RIGHT_TURN_PID_F = 0.0;
-
-        break;
-
     }
 
     // These calculations can be made after the robot-specific constants are set.
@@ -422,6 +322,10 @@ public class RobotMap {
   public static double NORMAL_DRIVE_SPEED_MULTIPLIER;
   public static double SLOW_DRIVE_SPEED_MULTIPLIER;
   public static boolean USE_VELOCITY_SPEED_CONTROL_FOR_TELOP = false;
+  public static double VELOCITY_MULTIPLIER_LEFT;
+  public static double VELOCITY_MULTIPLIER_RIGHT;
+  public static boolean CONTROLS_INVERTED_FB;
+  public static boolean CONTROLS_INVERTED_TURN;
 
   // Driver Cameras
   public static int FORWARD_CAMERA_INDEX;
@@ -435,84 +339,4 @@ public class RobotMap {
   public static int TELEMETRY_TIMER_MS = 20;
 
   // Game Pieces
-
-  // Turret
-  public static boolean HAS_TURRET = false;
-  public static int TURRET_MOTOR_CHANNEL;
-  public static boolean TURRET_MOTOR_INVERTED;
-  public static int TURRET_SENSOR_CHANNEL;
-  public static boolean TURRET_SENSOR_INVERTED;
-  public static int TURRET_RIGHT_LIMIT_TICKS;
-  public static int TURRET_LEFT_LIMIT_TICKS;
-  public static double TURRET_RIGHT_LIMIT_DEGREES;
-  public static double TURRET_LEFT_LIMIT_DEGREES;
-  public static int TURRET_ALLOWABLE_ERROR_TICKS = 10;
-  public static double TURRET_P;
-  public static double TURRET_I;
-  public static double TURRET_D;
-  public static double TURRET_F;
-  public static int TURRET_HOME_TICKS;
-  public static int TURRET_OFFSET;
-
-  // Hatch Mechanism
-  public static boolean HAS_HATCH_MECHANISM;
-  public static int HATCH_CAMERA_INDEX;
-  public static int HATCH_LAUNCHER_SOL_FORWARD_CHANNEL;
-  public static int HATCH_LAUNCHER_SOL_REVERSE_CHANNEL;
-  public static int HATCH_LAUNCHER_S2_FORWARD_CHANNEL;
-  public static int HATCH_LAUNCHER_S2_REVERSE_CHANNEL;
-  public static int HATCH_LAUNCHER_S3_FORWARD_CHANNEL;
-  public static int HATCH_LAUNCHER_S3_REVERSE_CHANNEL;
-  public static int HATCH_MECH_ARM_FORWARD_CHANNEL;
-  public static int HATCH_MECH_ARM_REVERSE_CHANNEL;
-  public static int HATCH_LAUNCHER_PCM_CHANNEL = 0;
-  public static int HATCH_MECH_ARM_PCM_CHANNEL = 0;
-
-  // Cargo Intake aka Roller
-  public static boolean HAS_ROLLER_INTAKE = false;
-  public static boolean FORCE_INTAKE_REMAIN_UP = false;
-  public static int ROLLER_RIGHT_ARM_UP_SOLINOID_CHANNEL;
-  public static int ROLLER_RIGHT_ARM_DOWN_SOLINOID_CHANNEL;
-  public static int ROLLER_LEFT_ARM_UP_SOLINOID_CHANNEL;
-  public static int ROLLER_LEFT_ARM_DOWN_SOLINOID_CHANNEL;
-  public static int ROLLER_MOTOR_CHANNEL;
-  public static boolean ROLLER_MOTOR_INVERTED;
-  public static int ROLLER_PCM_CHANNEL;
-
-  // Cargo Mechanism
-  public static boolean HAS_CARGO_MECHANISM = false;
-  public static int CARGO_CAMERA_INDEX;
-  public static int CARGO_MECH_WRIST_MOTOR_CHANNEL;
-  public static boolean CARGO_MECH_WRIST_MOTOR_INVERTED;
-  public static boolean CARGO_MECH_WRIST_SENSOR_INVERTED;
-  public static double CARGO_MECH_WRIST_P;
-  public static double CARGO_MECH_WRIST_I;
-  public static double CARGO_MECH_WRIST_D;
-  public static double CARGO_MECH_WRIST_F;
-
-  public static int CARGO_MECH_WRIST_TOP_TICKS;
-  public static int CARGO_MECH_WRIST_BOTTOM_TICKS;
-  public static int CARGO_MECH_WRIST_ALLOWABLE_ERROR_TICKS = 10;
-
-  public static int CARGO_WRIST_UP_LIMIT_TICKS;
-  public static int CARGO_WRIST_DOWN_LIMIT_TICKS;
-
-  // Relative heights
-  public static double CARGO_MECH_CARGO_BIN_PROPORTION;
-  public static double CARGO_MECH_LOW_ROCKET_PROPORTION;
-  public static double CARGO_MECH_CARGO_SHIP_PROPORTION;
-  public static double CARGO_MECH_SAFE_TURRET_PROPORTION;
-
-  public static int CARGO_MECH_CLAW_LEFT_MOTOR_CHANNEL;
-  public static boolean CARGO_MECH_CLAW_LEFT_MOTOR_INVERTED;
-  public static int CARGO_MECH_CLAW_RIGHT_MOTOR_CHANNEL;
-  public static boolean CARGO_MECH_CLAW_RIGHT_MOTOR_INVERTED;
-
-  public static boolean CONTROLS_INVERTED_FB;
-  public static boolean CONTROLS_INVERTED_TURN;
-  public static int INVERT_TURRET_FOR_HATCHMODE; //1 or -1
-  public static double VELOCITY_MULTIPLIER_RIGHT;
-  public static double VELOCITY_MULTIPLIER_LEFT;
-  public static boolean CARGO_MECH_SQUARE_WRIST_INPUT;
-  public static boolean TURRET_SQR_INP;
 }

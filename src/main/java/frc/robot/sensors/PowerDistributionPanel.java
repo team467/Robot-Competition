@@ -33,7 +33,9 @@ public class PowerDistributionPanel extends edu.wpi.first.wpilibj.PowerDistribut
     pdpTable.getKeys(); // Removes warning, need to get the table for creation.
   }
 
-  private PowerDistributionPanel() {}
+  private PowerDistributionPanel() {
+    //setName("Telemetry", "Power Distribution Panel");
+  }
 
   public void registerMetrics() {
     Telemetry telemetry = Telemetry.getInstance();
