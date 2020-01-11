@@ -327,6 +327,14 @@ public class Drive extends DifferentialDrive implements AutoDrive {
     return rightSM.temperature();
   }
 
+  public double getLeftCPR() {
+    return leftSM.cpr();
+  }
+
+  public double getRightCPR() {
+    return rightSM.cpr();
+  }
+
   /**
    * Gets the distance moved for checking drive modes.
    *

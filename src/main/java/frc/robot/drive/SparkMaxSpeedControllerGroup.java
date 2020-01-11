@@ -300,6 +300,15 @@ public class SparkMaxSpeedControllerGroup implements SpeedController {
     return leader.getMotorTemperature();
   }
 
+  public double cpr() {
+    if (leader == null) {
+      LOGGER.trace("No drive system");
+      return 0;
+    }
+
+    return leadEncoder.getCountsPerRevolution();
+  }
+
   public void setOpenLoopRamp(double ramp) {
     if (leader == null) {
       LOGGER.trace("No drive system");
