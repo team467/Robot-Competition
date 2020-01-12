@@ -60,7 +60,7 @@ Configuration:
             level: info
       Logger:
         - name: TELEMETRY
-          level: debug
+          level: fatal
           AppenderRef:
             - ref: CSV
         - name: PERF_TIMERS
