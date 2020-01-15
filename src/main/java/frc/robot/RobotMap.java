@@ -111,6 +111,11 @@ public class RobotMap {
   // Set to false to use the local ADIS16448 IMU on the Robo Rio
   public static final boolean useRemoteImu = false;
 
+  //the amount of LEDs on the strip
+  public static final int LEDCount = 12;
+  //the port the addresable LED strip is plugged into
+  public static final int LEDPort = 9;
+
   public enum RobotId {
     MINIBOT, ROBOT_2018, ROBOT_2019, KITBOT2019
   }

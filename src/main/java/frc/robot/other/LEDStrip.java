@@ -3,10 +3,13 @@ package frc.robot.other;
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 public class LEDStrip{
-    LEDStrip instance;
+    private static LEDStrip instance;
     private AddressableLED LEDStrip;
     private AddressableLEDBuffer LEDBuffer;
-    public LEDStrip getInstance(){
+    int r = 128;
+    int g = 128;
+    int b = 128;
+    public static LEDStrip getInstance(){
         if(instance == null){
             instance = new LEDStrip();
         }
@@ -23,7 +26,7 @@ public class LEDStrip{
         LEDStrip.setData(LEDBuffer);
         LEDStrip.start();
     }
-    public void update(int r, int g, int b){
+    public void update(){
     //--LED stuff--
     
     //writes to LEDs
@@ -32,5 +35,10 @@ public class LEDStrip{
       }
       //copies stuff to LEDS
       LEDStrip.setData(LEDBuffer);
+    }
+    public void setColor(int red, int green, int blue){
+        r = red;
+        g = green;
+        b = blue;
     }
 }

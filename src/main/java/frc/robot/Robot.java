@@ -17,6 +17,7 @@ import frc.robot.RobotMap.RobotId;
 import frc.robot.drive.Drive;
 import frc.robot.logging.RobotLogManager;
 import frc.robot.logging.Telemetry;
+import frc.robot.other.LEDStrip;
 import frc.robot.sensors.LedI2C;
 import frc.robot.sensors.PowerDistributionPanel;
 import frc.robot.tuning.TuneController;
@@ -51,6 +52,7 @@ public class Robot extends TimedRobot {
   private CameraSwitcher camera;
   private LedI2C leds;
   private PerfTimer perfTimer;
+  private LEDStrip strip;
 
   public static long time = System.nanoTime();
   public static long previousTime = time;
@@ -145,6 +147,8 @@ public class Robot extends TimedRobot {
     telemetry = Telemetry.getInstance();
     telemetry.robotMode(mode);
     telemetry.start();
+
+    strip = LEDStrip.getInstance();
   }
 
   /**
@@ -217,7 +221,6 @@ public class Robot extends TimedRobot {
 
     LOGGER.debug("Driver Station Inputs mode: {} speed: {} turn: {}", 
         driverstation.getDriveMode(), box(speed), box(turn));
-
     switch (driverstation.getDriveMode()) {
 
       case ArcadeDrive:
@@ -270,6 +273,7 @@ public class Robot extends TimedRobot {
   public void testPeriodic() {
     perfTimer.start();
     TuneController.periodic();
+    strip.update();
     perfTimer.end();
   }
 
