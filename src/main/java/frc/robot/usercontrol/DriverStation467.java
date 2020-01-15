@@ -110,12 +110,6 @@ public class DriverStation467 {
     return false;
   }
 
-  public double getManualTurretMove() {
-    double baseMode = (Math.abs(navJoy.getRightStickX()) < 0.2) ? 0 : navJoy.getRightStickX();
-    double squaredInputs = Math.signum(baseMode) * Math.pow(baseMode, 2);
-    return (RobotMap.TURRET_SQR_INP)? squaredInputs : baseMode;
-  }
-
   public boolean getAcquireHatch() {
     // Nav navJoy.getRightTrigger() > 0.9
     return navJoy.down(Button.BumperRight);
@@ -159,12 +153,6 @@ public class DriverStation467 {
 
   public boolean getCargoMode() {
     return navJoy.getRightTrigger() > 0.9;
-  }
-
-  public double getManualWristMove() {
-    double baseMode = (Math.abs(navJoy.getLeftStickY()) < 0.2) ? 0 : navJoy.getLeftStickY();
-    double squaredInputs = Math.signum(baseMode) * Math.pow(baseMode, 2);
-    return (RobotMap.CARGO_MECH_SQUARE_WRIST_INPUT)? squaredInputs : baseMode;
   }
 
   public boolean getFireCall() {
@@ -281,8 +269,6 @@ public class DriverStation467 {
       telemetry.addBooleanMetric("Input Turret Left", this::getTurretLeft);
       telemetry.addBooleanMetric("Input Turret Right", this::getTurretRight);
       telemetry.addBooleanMetric("Input Target Lock", this::getAutoTargetButtonPressed);
-      telemetry.addDoubleMetric("Input Manual Wrist", this::getManualWristMove);
-      telemetry.addDoubleMetric("Input Manual Turret", this::getManualTurretMove);
       telemetry.addDoubleMetric("Input Arcade Speed", this::getArcadeSpeed);
       telemetry.addDoubleMetric("Input Arcade Turn", this::getArcadeTurn);
     }
