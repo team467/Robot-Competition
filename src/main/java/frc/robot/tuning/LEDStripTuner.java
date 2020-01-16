@@ -19,7 +19,7 @@ public class LEDStripTuner implements Tuner{
     public void periodic(){
         //retrieves a string fron slot 0 on the DB. This is supposed to be i the form R G B
         //, with spaces inbetween
-        String tuningValue = SmartDashboard.getString("DB/String 0", "0.0");
+        String tuningValue = SmartDashboard.getString("DB/String 5", "0.0");
         //splits up string into tokens and cleans the array of blanks
         String[] tokens = tuningValue.split(" ");
 
