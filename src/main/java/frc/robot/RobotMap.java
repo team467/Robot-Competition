@@ -49,6 +49,8 @@ public class RobotMap {
   public static double LEFT_DRIVE_PID_D;
   public static double LEFT_DRIVE_PID_F;
 
+  public static double CLOSED_LOOP_RAMP_RATE;
+
   public static int RIGHT_LEAD_CHANNEL;
   public static int RIGHT_FOLLOWER_1_CHANNEL;
   public static int RIGHT_FOLLOWER_2_CHANNEL;
@@ -180,6 +182,8 @@ public class RobotMap {
         RIGHT_TURN_PID_D = 0.0;
         RIGHT_TURN_PID_F = 0.0;
 
+        CLOSED_LOOP_RAMP_RATE = 0.5;
+
         FORWARD_CAMERA_INDEX = 0;
         BACKWARD_CAMERA_INDEX = 2;
         HAS_CAMERA = true;
@@ -241,6 +245,8 @@ public class RobotMap {
         RIGHT_TURN_PID_I = 0.0;
         RIGHT_TURN_PID_D = 0.0;
         RIGHT_TURN_PID_F = 0.0;
+
+        CLOSED_LOOP_RAMP_RATE = 0.5;
 
         // Cameras
         FORWARD_CAMERA_INDEX = 0;

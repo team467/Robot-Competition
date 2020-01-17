@@ -31,29 +31,29 @@ public class PIDVelocityTuner implements Tuner {
         double leftI = SmartDashboard.getNumber("Left I", 0);
         double leftD = SmartDashboard.getNumber("Left D", 0);
         double leftF = SmartDashboard.getNumber("Left F", 0);
-
-        double maxVelocity = SmartDashboard.getNumber("Max Velocity", 0);
+        double leftMaxVelocity = SmartDashboard.getNumber("Left Max Velocity", 0);
 
         double rightP = SmartDashboard.getNumber("Right P", 0);
         double rightI = SmartDashboard.getNumber("Right I", 0);
         double rightD = SmartDashboard.getNumber("Right D", 0);
         double rightF = SmartDashboard.getNumber("Right F", 0);
+        double rightMaxVelocity = SmartDashboard.getNumber("Right Max Velocity", 0);
 
         SmartDashboard.putNumber("Left P", leftP);
         SmartDashboard.putNumber("Left I", leftI);
         SmartDashboard.putNumber("Left D", leftD);
         SmartDashboard.putNumber("Left F", leftF);
-
-        SmartDashboard.putNumber("Max Velocity", maxVelocity);
+        SmartDashboard.putNumber("Left Max Velocity", leftMaxVelocity);
 
         SmartDashboard.putNumber("Right P", rightP);
         SmartDashboard.putNumber("Right I", rightI);
         SmartDashboard.putNumber("Right D", rightD);
         SmartDashboard.putNumber("Right F", rightF);
+        SmartDashboard.putNumber("Right Max Velocity", rightMaxVelocity);
 
 
-        drive.setLeftPIDFs(leftP, leftI, leftD, leftF, maxVelocity);
-        drive.setRightPIDFs(rightP, rightI, rightD, rightF, maxVelocity);
+        drive.setLeftPIDFs(leftP, leftI, leftD, leftF, leftMaxVelocity);
+        drive.setRightPIDFs(rightP, rightI, rightD, rightF, rightMaxVelocity);
     }
 
     @Override

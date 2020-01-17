@@ -89,8 +89,8 @@ public class SparkMaxSpeedControllerGroup implements SpeedController {
     sparkMax.setIdleMode(IdleMode.kBrake);
 
     sparkMax.set(0);
-    sparkMax.setClosedLoopRampRate(0.5);
-    leadPidController.setReference(1, controlType.kVoltage);
+    sparkMax.setClosedLoopRampRate(RobotMap.CLOSED_LOOP_RAMP_RATE);
+    leadPidController.setReference(1, ControlType.kVoltage);
     // Note: -1 and 1 are the max outputs
 //    sparkMax.setSmartCurrentLimit(0, 0);
     

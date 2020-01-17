@@ -95,13 +95,14 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("Left I", RobotMap.LEFT_DRIVE_PID_I);
     SmartDashboard.putNumber("Left D", RobotMap.LEFT_DRIVE_PID_D);
     SmartDashboard.putNumber("Left F", RobotMap.LEFT_DRIVE_PID_F);
+    SmartDashboard.putNumber("Left Max Velocity", RobotMap.VELOCITY_MULTIPLIER_LEFT);
 
-    SmartDashboard.putNumber("Max Velocity", RobotMap.VELOCITY_MULTIPLIER_LEFT);
 
     SmartDashboard.putNumber("Right P", RobotMap.RIGHT_DRIVE_PID_P);
     SmartDashboard.putNumber("Right I", RobotMap.RIGHT_DRIVE_PID_I);
     SmartDashboard.putNumber("Right D", RobotMap.RIGHT_DRIVE_PID_D);
     SmartDashboard.putNumber("Right F", RobotMap.RIGHT_DRIVE_PID_F);
+    SmartDashboard.putNumber("Right Max Velocity", RobotMap.VELOCITY_MULTIPLIER_LEFT);
     
 
     m_leftStick = new Joystick(0);
