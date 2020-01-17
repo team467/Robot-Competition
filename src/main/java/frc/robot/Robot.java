@@ -200,11 +200,11 @@ public class Robot extends TimedRobot {
     }
 
     if (driverstation.getSlow()) {
-      double multiplier = (RobotMap.USE_VELOCITY_SPEED_CONTROL_FOR_TELOP ? RobotMap.SLOW_VELOCITY_SPEED_MULTIPLIER : RobotMap.SLOW_DRIVE_SPEED_MULTIPLIER)
+      double multiplier = (RobotMap.USE_VELOCITY_SPEED_CONTROL_FOR_TELOP ? RobotMap.SLOW_VELOCITY_SPEED_MULTIPLIER : RobotMap.SLOW_DRIVE_SPEED_MULTIPLIER);
       speed = speed * multiplier;
       turn = turn * multiplier;
     } else if (!driverstation.getTurbo() && !driverstation.getSlow()) {
-      double multiplier = (RobotMap.USE_VELOCITY_SPEED_CONTROL_FOR_TELOP ? RobotMap.NORMAL_VELOCITY_SPEED_MULTIPLIER : RobotMap.NORMAL_DRIVE_SPEED_MULTIPLIER)
+      double multiplier = (RobotMap.USE_VELOCITY_SPEED_CONTROL_FOR_TELOP ? RobotMap.NORMAL_VELOCITY_SPEED_MULTIPLIER : RobotMap.NORMAL_DRIVE_SPEED_MULTIPLIER);
       speed = speed * multiplier;
       turn = turn * multiplier;
     }
