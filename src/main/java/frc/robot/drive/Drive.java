@@ -11,6 +11,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.RobotMap;
 import frc.robot.logging.RobotLogManager;
 import org.apache.logging.log4j.Logger;
+import edu.wpi.first.wpiutil.math.MathUtil;
+
 
 public class Drive extends DifferentialDrive implements AutoDrive {
 
@@ -153,6 +155,16 @@ public class Drive extends DifferentialDrive implements AutoDrive {
         RobotMap.VELOCITY_MULTIPLIER_RIGHT);
   }
 
+  public void setLeftPIDFs(double P, double I, double D, double F, double maxVelocity) {
+    leftSM.pidf(0, P, I, D, F, maxVelocity);
+    leftSM.selectPidSlot(0);
+  }
+
+  public void setRightPIDFs(double P, double I, double D, double F, double maxVelocity) {
+    rightSM.pidf(0, P, I, D, F, maxVelocity);
+    rightSM.selectPidSlot(0);
+  }
+
   public void configPeakOutput(final double percentOut) {
     leftSM.configPeakOutput(percentOut);
     rightSM.configPeakOutput(percentOut);
@@ -293,6 +305,11 @@ public class Drive extends DifferentialDrive implements AutoDrive {
     rightSM.set(ControlType.kVoltage, rightOut);
   }
 
+  public void set(ControlType controlType, double outputValue) {
+    leftSM.set(controlType, -outputValue);
+    rightSM.set(controlType, outputValue);
+  }
+
   public double getLeftDistance() {
     final double leftLeadSensorPos = leftSM.position();
     return leftLeadSensorPos;
@@ -367,7 +384,53 @@ public class Drive extends DifferentialDrive implements AutoDrive {
   }
 
   public void arcadeDrive(final double speed, final double rotation, final boolean squaredInputs) {
-    super.arcadeDrive(speed, rotation, squaredInputs);
+    if (RobotMap.USE_VELOCITY_SPEED_CONTROL_FOR_TELOP) {
+      double xSpeed = speed;
+      double zRotation = rotation;
+      xSpeed = MathUtil.clamp(xSpeed, -1.0, 1.0);
+      xSpeed = applyDeadband(xSpeed, m_deadband);
+
+      zRotation = MathUtil.clamp(zRotation, -1.0, 1.0);
+      zRotation = applyDeadband(zRotation, m_deadband);
+
+      // Square the inputs (while preserving the sign) to increase fine control
+      // while permitting full power.
+      if (squaredInputs) {
+        xSpeed = Math.copySign(xSpeed * xSpeed, xSpeed);
+        zRotation = Math.copySign(zRotation * zRotation, zRotation);
+      }
+
+      double leftMotorOutput;
+      double rightMotorOutput;
+
+      double maxInput = Math.copySign(Math.max(Math.abs(xSpeed), Math.abs(zRotation)), xSpeed);
+
+      if (xSpeed >= 0.0) {
+        // First quadrant, else second quadrant
+        if (zRotation >= 0.0) {
+          leftMotorOutput = maxInput;
+          rightMotorOutput = xSpeed - zRotation;
+        } else {
+          leftMotorOutput = xSpeed + zRotation;
+          rightMotorOutput = maxInput;
+        }
+      } else {
+        // Third quadrant, else fourth quadrant
+        if (zRotation >= 0.0) {
+          leftMotorOutput = xSpeed + zRotation;
+          rightMotorOutput = maxInput;
+        } else {
+          leftMotorOutput = maxInput;
+          rightMotorOutput = xSpeed - zRotation;
+        }
+      }
+
+      leftSM.set(ControlType.kVelocity, MathUtil.clamp(leftMotorOutput, -1.0, 1.0) * m_maxOutput);
+      // set(ControlType.kVelocity, MathUtil.clamp(leftMotorOutput, -1.0, 1.0) * m_maxOutput);
+      rightSM.set(ControlType.kVelocity, MathUtil.clamp(-rightMotorOutput, -1.0, 1.0) * m_maxOutput);
+    } else {
+      super.arcadeDrive(speed, rotation, squaredInputs);
+    }
     LOGGER.debug("Expected Output: {}", box(speed));
   }
 

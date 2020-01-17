@@ -67,8 +67,8 @@ repositories {
 dependencies {
     compile wpi.deps.wpilib()
     compile wpi.deps.vendor.java()
-    nativeZip wpi.deps.vendor.jni(wpi.platforms.roborio)
-    nativeDesktopZip wpi.deps.vendor.jni(wpi.platforms.desktop)
+    nativeZip wpi.deps.wpilibJni(wpi.platforms.roborio)
+    nativeDesktopZip wpi.deps.wpilibJni(wpi.platforms.desktop)
     testCompile 'junit:junit:4.12'
 
   compile group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.11.1'
@@ -88,13 +88,13 @@ compile group: 'org.apache.commons', name: 'commons-csv', version: '1.6'
   // https://mvnrepository.com/artifact/org.apache.commons/commons-csv
   compile group: 'org.apache.commons', name: 'commons-csv', version: '1.6'
 
-  // https://mvnrepository.com/artifact/org.openjfx/javafx
-  compile "org.openjfx:javafx-base:11:$platform"
-  compile "org.openjfx:javafx-graphics:11:$platform"
-  compile "org.openjfx:javafx-controls:11:$platform"
-  compile "org.openjfx:javafx-fxml:11:$platform"
+  // // https://mvnrepository.com/artifact/org.openjfx/javafx
+  // compile "org.openjfx:javafx-base:11:$platform"
+  // compile "org.openjfx:javafx-graphics:11:$platform"
+  // compile "org.openjfx:javafx-controls:11:$platform"
+  // compile "org.openjfx:javafx-fxml:11:$platform"
 
-  compile 'com.github.sh0nk:matplotlib4j:0.4.0'
+  // compile 'com.github.sh0nk:matplotlib4j:0.4.0'
 }
 
 // Setting up my Jar File. In this case, adding all libraries into the main jar ('fat jar')

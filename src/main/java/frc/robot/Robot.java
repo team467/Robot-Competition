@@ -26,6 +26,8 @@ import frc.robot.vision.CameraSwitcher;
 import frc.robot.tuning.TuneController;
 import java.io.IOException;
 import org.apache.logging.log4j.Logger;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -84,8 +86,22 @@ public class Robot extends TimedRobot {
     // table once.
 
     // Initialize RobotMap
-    RobotMap.init(RobotId.KITBOT);
+    RobotMap.init(RobotId.ROBOT_2020);
     mode = RobotMode.STARTED;
+
+    SmartDashboard.putString("DB/String 0", "NO_TEST");
+
+    SmartDashboard.putNumber("Left P", RobotMap.LEFT_DRIVE_PID_P);
+    SmartDashboard.putNumber("Left I", RobotMap.LEFT_DRIVE_PID_I);
+    SmartDashboard.putNumber("Left D", RobotMap.LEFT_DRIVE_PID_D);
+    SmartDashboard.putNumber("Left F", RobotMap.LEFT_DRIVE_PID_F);
+
+    SmartDashboard.putNumber("Max Velocity", RobotMap.VELOCITY_MULTIPLIER_LEFT);
+
+    SmartDashboard.putNumber("Right P", RobotMap.RIGHT_DRIVE_PID_P);
+    SmartDashboard.putNumber("Right I", RobotMap.RIGHT_DRIVE_PID_I);
+    SmartDashboard.putNumber("Right D", RobotMap.RIGHT_DRIVE_PID_D);
+    SmartDashboard.putNumber("Right F", RobotMap.RIGHT_DRIVE_PID_F);
     
 
     m_leftStick = new Joystick(0);
@@ -184,11 +200,13 @@ public class Robot extends TimedRobot {
     }
 
     if (driverstation.getSlow()) {
-      speed = speed * RobotMap.SLOW_DRIVE_SPEED_MULTIPLIER;
-      turn = turn * RobotMap.SLOW_DRIVE_SPEED_MULTIPLIER;
+      double multiplier = (RobotMap.USE_VELOCITY_SPEED_CONTROL_FOR_TELOP ? RobotMap.SLOW_VELOCITY_SPEED_MULTIPLIER : RobotMap.SLOW_DRIVE_SPEED_MULTIPLIER)
+      speed = speed * multiplier;
+      turn = turn * multiplier;
     } else if (!driverstation.getTurbo() && !driverstation.getSlow()) {
-      speed = speed * RobotMap.NORMAL_DRIVE_SPEED_MULTIPLIER;
-      turn = turn * RobotMap.NORMAL_DRIVE_SPEED_MULTIPLIER;
+      double multiplier = (RobotMap.USE_VELOCITY_SPEED_CONTROL_FOR_TELOP ? RobotMap.NORMAL_VELOCITY_SPEED_MULTIPLIER : RobotMap.NORMAL_DRIVE_SPEED_MULTIPLIER)
+      speed = speed * multiplier;
+      turn = turn * multiplier;
     }
 
     LOGGER.debug("Driver Station Inputs mode: {} speed: {} turn: {}", 
@@ -251,7 +269,7 @@ public class Robot extends TimedRobot {
     mode = RobotMode.DISABLED;
     telemetry.robotMode(mode);
     leds.whenDisabled();
-    PerfTimer.print();
+    // PerfTimer.print();
     LOGGER.info("Robot Disabled");
   }
 
