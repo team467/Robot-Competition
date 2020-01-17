@@ -9,6 +9,9 @@ public class BallIntake extends GamePieceBase implements GamePiece
 {
     private static BallIntake instance;
     //motor
+    private BallIntake(){
+        super("subsystem","name");
+    }
     public enum MotorStatus {
         OFF,
         IN,
@@ -22,9 +25,12 @@ public class BallIntake extends GamePieceBase implements GamePiece
     }
     public static BallIntake getInstance() {
         if (instance == null) {
-            instance = new BallIntake;
+            instance = new BallIntake();
         }
         return instance;
+    }
+    public void periodic(){
+
     }
 
 
