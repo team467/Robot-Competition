@@ -159,7 +159,7 @@ public class Robot extends TimedRobot {
   public void teleopInit() {
     mode = RobotMode.TELEOP;
     telemetry.robotMode(mode);
-    LOGGER.info("Teleop Initialized");
+    LOGGER.debug("Teleop Initialized");
     perfTimer = PerfTimer.timer("Teleoperated");
     LOGGER.debug("Match time {}", box(DriverStation.getInstance().getMatchTime()));
   }

@@ -57,12 +57,15 @@ Configuration:
           - ref: Console_Appender
             level: info
           - ref: Async_File_Appender
-            level: info
+            level: debug
       Logger:
         - name: TELEMETRY
           level: debug
           AppenderRef:
             - ref: CSV
+              level: debug
+            - ref: Async_File_Appender
+              level: debug
         - name: PERF_TIMERS
           level: trace
           AppenderRef:
@@ -71,3 +74,7 @@ Configuration:
           level: info
           AppenderRef:
             - ref: Console_Appender
+        - name: frc.robot.drive.SparkMaxSpeedControllerGroup
+          level: info
+          AppenderRef:
+            - ref: Async_File_Appender

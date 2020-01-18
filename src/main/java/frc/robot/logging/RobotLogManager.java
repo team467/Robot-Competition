@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 
+import org.apache.log4j.Appender;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.config.Configuration;
@@ -21,6 +22,7 @@ public class RobotLogManager {
   private static String[] filepaths = { //File paths go in this array
     "/media/sda1/logging/log4j2.yaml",
     "/media/sda2/logging/log4j2.yaml",
+    "/media/sdb1/logging/log4j2.yaml",
     "/media/sda1/logging/log4j2-test.yaml",
     "/media/sda2/logging/log4j2-test.yaml",
     "./home/lvuser/deploy/log4j2.yaml",
@@ -55,7 +57,8 @@ public class RobotLogManager {
         ConfigurationFactory configurationFactory = YamlConfigurationFactory.getInstance();
         ConfigurationFactory.setConfigurationFactory(configurationFactory);
         Configuration configuration = configurationFactory.getConfiguration(null, source);
-        Configurator.initialize(configuration);
+        //TODO make it dynamically change output
+        
       } catch (IOException e) {
         e.printStackTrace();
       }
@@ -68,6 +71,7 @@ public class RobotLogManager {
       for (String path : filepaths) {
         if (doesFileExist(path)) {
           init(path);
+          System.out.println(path);
           break;
         }
       }
