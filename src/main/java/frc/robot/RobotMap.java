@@ -134,12 +134,12 @@ public class RobotMap {
         DRIVEMOTOR_NUM = 4;
         WHEEL_CIRCUMFERENCE = 18.50;
 
-        CONTROLS_INVERTED_FB = false;
-        CONTROLS_INVERTED_TURN = false;
+        // CONTROLS_INVERTED_FB = false;
+        // CONTROLS_INVERTED_TURN = false;
 
         USE_VELOCITY_SPEED_CONTROL_FOR_TELOP = true;
-        VELOCITY_MULTIPLIER_RIGHT = 1300;
-        VELOCITY_MULTIPLIER_LEFT = 1300;
+        // VELOCITY_MULTIPLIER_RIGHT = 1300;
+        // VELOCITY_MULTIPLIER_LEFT = 1300;
         NORMAL_DRIVE_SPEED_MULTIPLIER = 0.8;
         SLOW_DRIVE_SPEED_MULTIPLIER = 0.6;
 
@@ -314,6 +314,8 @@ public class RobotMap {
   public static double NORMAL_DRIVE_SPEED_MULTIPLIER;
   public static double SLOW_DRIVE_SPEED_MULTIPLIER;
   public static boolean USE_VELOCITY_SPEED_CONTROL_FOR_TELOP = false;
+  public static double VELOCITY_MULTIPLIER_LEFT;
+  public static double VELOCITY_MULTIPLIER_RIGHT;
 
   // Driver Cameras
   public static int FORWARD_CAMERA_INDEX;
@@ -346,66 +348,7 @@ public class RobotMap {
 
   //Intake 
   public static boolean HAS_INTAKE = false;
-
-  // Hatch Mechanism
-  public static boolean HAS_HATCH_MECHANISM;
-  public static int HATCH_CAMERA_INDEX;
-  public static int HATCH_LAUNCHER_SOL_FORWARD_CHANNEL;
-  public static int HATCH_LAUNCHER_SOL_REVERSE_CHANNEL;
-  public static int HATCH_LAUNCHER_S2_FORWARD_CHANNEL;
-  public static int HATCH_LAUNCHER_S2_REVERSE_CHANNEL;
-  public static int HATCH_LAUNCHER_S3_FORWARD_CHANNEL;
-  public static int HATCH_LAUNCHER_S3_REVERSE_CHANNEL;
-  public static int HATCH_MECH_ARM_FORWARD_CHANNEL;
-  public static int HATCH_MECH_ARM_REVERSE_CHANNEL;
-  public static int HATCH_LAUNCHER_PCM_CHANNEL = 0;
-  public static int HATCH_MECH_ARM_PCM_CHANNEL = 0;
-
-  // Cargo Intake aka Roller
-  public static boolean HAS_ROLLER_INTAKE = false;
-  public static boolean FORCE_INTAKE_REMAIN_UP = false;
-  public static int ROLLER_RIGHT_ARM_UP_SOLINOID_CHANNEL;
-  public static int ROLLER_RIGHT_ARM_DOWN_SOLINOID_CHANNEL;
-  public static int ROLLER_LEFT_ARM_UP_SOLINOID_CHANNEL;
-  public static int ROLLER_LEFT_ARM_DOWN_SOLINOID_CHANNEL;
+  public static int ARM_MOTOR;
   public static int ROLLER_MOTOR_CHANNEL;
   public static boolean ROLLER_MOTOR_INVERTED;
-  public static int ROLLER_PCM_CHANNEL;
-
-  // Cargo Mechanism
-  public static boolean HAS_CARGO_MECHANISM = false;
-  public static int CARGO_CAMERA_INDEX;
-  public static int CARGO_MECH_WRIST_MOTOR_CHANNEL;
-  public static boolean CARGO_MECH_WRIST_MOTOR_INVERTED;
-  public static boolean CARGO_MECH_WRIST_SENSOR_INVERTED;
-  public static double CARGO_MECH_WRIST_P;
-  public static double CARGO_MECH_WRIST_I;
-  public static double CARGO_MECH_WRIST_D;
-  public static double CARGO_MECH_WRIST_F;
-
-  public static int CARGO_MECH_WRIST_TOP_TICKS;
-  public static int CARGO_MECH_WRIST_BOTTOM_TICKS;
-  public static int CARGO_MECH_WRIST_ALLOWABLE_ERROR_TICKS = 10;
-
-  public static int CARGO_WRIST_UP_LIMIT_TICKS;
-  public static int CARGO_WRIST_DOWN_LIMIT_TICKS;
-
-  // Relative heights
-  public static double CARGO_MECH_CARGO_BIN_PROPORTION;
-  public static double CARGO_MECH_LOW_ROCKET_PROPORTION;
-  public static double CARGO_MECH_CARGO_SHIP_PROPORTION;
-  public static double CARGO_MECH_SAFE_TURRET_PROPORTION;
-
-  public static int CARGO_MECH_CLAW_LEFT_MOTOR_CHANNEL;
-  public static boolean CARGO_MECH_CLAW_LEFT_MOTOR_INVERTED;
-  public static int CARGO_MECH_CLAW_RIGHT_MOTOR_CHANNEL;
-  public static boolean CARGO_MECH_CLAW_RIGHT_MOTOR_INVERTED;
-
-  public static boolean CONTROLS_INVERTED_FB;
-  public static boolean CONTROLS_INVERTED_TURN;
-  public static int INVERT_TURRET_FOR_HATCHMODE; //1 or -1
-  public static double VELOCITY_MULTIPLIER_RIGHT;
-  public static double VELOCITY_MULTIPLIER_LEFT;
-  public static boolean CARGO_MECH_SQUARE_WRIST_INPUT;
-  public static boolean TURRET_SQR_INP;
 }

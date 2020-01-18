@@ -4,8 +4,9 @@ import java.util.Hashtable;
 import frc.robot.RobotMap;
 import frc.robot.drive.TalonSpeedControllerGroup;
 import frc.robot.logging.RobotLogManager;
-import org.apache.logging.log4j.Logger;
 import frc.robot.gamepieces.GamePiece;
+
+import org.apache.logging.log4j.Logger;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.ControlMode;
@@ -131,6 +132,11 @@ public class Shooter extends GamePieceBase implements GamePiece {
    * Called once per robot iteration. This conducts any movement if enabled, and
    * sends telemetry and state information in all cases.
    */
+  
+   public void stop() {
+    talon1.stopMotor();
+
+  }
   public void periodic() {
 
     if (RobotMap.HAS_SHOOTER) {
@@ -141,9 +147,6 @@ public class Shooter extends GamePieceBase implements GamePiece {
     }
   }
 
-  
-  public void stop() {
-    talon1.stopMotor();
 
-  }
+ 
 }
