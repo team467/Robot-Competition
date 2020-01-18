@@ -1,5 +1,7 @@
 package frc.robot;
 
+import com.fasterxml.jackson.databind.ser.std.StdKeySerializers.Default;
+
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class RobotMap {
@@ -111,7 +113,7 @@ public class RobotMap {
   public static final boolean useRemoteImu = false;
 
   public enum RobotId {
-    MINIBOT, ROBOT_2018, ROBOT_2019
+    ROBOT2020, MINIBOT, ROBOT_2018, ROBOT_2019
   }
 
   /**
@@ -126,65 +128,8 @@ public class RobotMap {
 
     switch (id) {
 
-      case ROBOT_2018:
-        NORMAL_DRIVE_SPEED_MULTIPLIER = 0.8;
-        SLOW_DRIVE_SPEED_MULTIPLIER = 0.6;
-
-        HAS_WHEELS = true;
-        DRIVEMOTOR_NUM = 4;
-        WHEEL_CIRCUMFERENCE = 18.50;
-
-        CONTROLS_INVERTED_FB = false;
-        CONTROLS_INVERTED_TURN = false;
-
-        USE_VELOCITY_SPEED_CONTROL_FOR_TELOP = true;
-        VELOCITY_MULTIPLIER_RIGHT = 900;
-        VELOCITY_MULTIPLIER_LEFT = 900;
-
-        LEFT_LEAD_CHANNEL = 1;
-        LEFT_FOLLOWER_1_CHANNEL = 2;
-        LEFT_DRIVE_SENSOR_IS_INVERTED = true;
-        LEFT_DRIVE_MOTOR_IS_INVERTED = false;
-
-        RIGHT_LEAD_CHANNEL = 4;
-        RIGHT_FOLLOWER_1_CHANNEL = 5;
-        RIGHT_DRIVE_SENSOR_IS_INVERTED = true;
-        RIGHT_DRIVE_MOTOR_IS_INVERTED = false;
-
-        // Linear PIDS
-        LEFT_DRIVE_PID_P = 0.5;
-        LEFT_DRIVE_PID_I = 0.0;
-        LEFT_DRIVE_PID_D = 0.0;
-        LEFT_DRIVE_PID_F = 1.137;
-
-        RIGHT_DRIVE_PID_P = 0.5;
-        RIGHT_DRIVE_PID_I = 0.0;
-        RIGHT_DRIVE_PID_D = 0.0;
-        RIGHT_DRIVE_PID_F = 1.088;
-
-        // Turn PIDs
-        LEFT_TURN_PID_P = 1.0;
-        LEFT_TURN_PID_I = 0.0;
-        LEFT_TURN_PID_D = 450.0;
-        LEFT_TURN_PID_F = 0.0;
-
-        RIGHT_TURN_PID_P = 1.0;
-        RIGHT_TURN_PID_I = 0.0;
-        RIGHT_TURN_PID_D = 450.0;
-        RIGHT_TURN_PID_F = 0.0;
-
-        FORWARD_CAMERA_INDEX = 0;
-        BACKWARD_CAMERA_INDEX = 2;
-        HATCH_CAMERA_INDEX = 1;
-        CARGO_CAMERA_INDEX = 3;
-        HAS_CAMERA = true;
-        AUTO_CAMERA = true;
-
-        break;
-
-      case ROBOT_2019:
+      case ROBOT2020:
       default:
-        
         HAS_WHEELS = true;
         DRIVEMOTOR_NUM = 4;
         WHEEL_CIRCUMFERENCE = 18.50;
@@ -237,76 +182,23 @@ public class RobotMap {
         AUTO_CAMERA = false;
 
         // Game Pieces
-        HAS_TURRET = true;
-        HAS_ROLLER_INTAKE = true;
-        HAS_HATCH_MECHANISM = true;
-        HAS_ROLLER_INTAKE = true;
-        HAS_CARGO_MECHANISM = true;
+        HAS_SHOOTER = true;
 
-        // Turret
-        TURRET_MOTOR_CHANNEL = 5;
-        TURRET_MOTOR_INVERTED = false;
-        TURRET_SENSOR_INVERTED = false;
-        TURRET_RIGHT_LIMIT_TICKS = 462;
-        TURRET_LEFT_LIMIT_TICKS = 546;
-        TURRET_RIGHT_LIMIT_DEGREES = -95.0;
-        TURRET_LEFT_LIMIT_DEGREES = 95.0;
-        TURRET_ALLOWABLE_ERROR_TICKS = 1;
-        TURRET_HOME_TICKS = 504;
-        INVERT_TURRET_FOR_HATCHMODE = -1;
-        TURRET_SQR_INP = true;
+        // Shooter 
 
-        TURRET_P = 1.0; // TODO
-        TURRET_I = 0.0; // TODO
-        TURRET_D = 0.0; // TODO
+        // TODO:change the values of these later
+        SHOOTERMOTOR = 2;
+        SHOOTER_MOTOR_CHANNEL = 5;
+        SHOOTER_MOTOR_INVERTED = false;
+        SHOOTER_MOTOR_FOLLOWER_CHANNEL = 6;
+        SHOOTER_MOTOR_FOLLOWER_INVERTED = false;
 
-        // Hatch Mechanism
-        HATCH_LAUNCHER_PCM_CHANNEL = 8;
-        HATCH_LAUNCHER_SOL_FORWARD_CHANNEL = 0;
-        HATCH_LAUNCHER_SOL_REVERSE_CHANNEL = 1;
-        HATCH_MECH_ARM_PCM_CHANNEL = 9;
-        HATCH_MECH_ARM_FORWARD_CHANNEL = 4;
-        HATCH_MECH_ARM_REVERSE_CHANNEL = 5;
-        HATCH_CAMERA_INDEX = 3;
+        SHOOTER_SENSOR_INVERTED = false;
 
-        // Cargo Intake
-        ROLLER_PCM_CHANNEL = 9;
-        FORCE_INTAKE_REMAIN_UP = false;
-        ROLLER_RIGHT_ARM_UP_SOLINOID_CHANNEL = 1;
-        ROLLER_RIGHT_ARM_DOWN_SOLINOID_CHANNEL = 0;
-        ROLLER_LEFT_ARM_UP_SOLINOID_CHANNEL = 3;
-        ROLLER_LEFT_ARM_DOWN_SOLINOID_CHANNEL = 2;
-        ROLLER_MOTOR_CHANNEL = 1;
-        ROLLER_MOTOR_INVERTED = false;
-
-        // Cargo Mechanism
-        CARGO_MECH_WRIST_MOTOR_CHANNEL = 6; // TODO
-        CARGO_MECH_WRIST_MOTOR_INVERTED = false;
-        CARGO_MECH_WRIST_P = 1.0; // TODO
-        CARGO_MECH_WRIST_I = 0.0; // TODO
-        CARGO_MECH_WRIST_D = 0.0; // TODO
-        CARGO_MECH_WRIST_F = 0.0; // TODO
-        CARGO_MECH_SQUARE_WRIST_INPUT = true;
-        CARGO_CAMERA_INDEX = 2;
-
-        CARGO_MECH_WRIST_TOP_TICKS = 806; 
-        CARGO_MECH_WRIST_BOTTOM_TICKS = 785;
-        CARGO_MECH_WRIST_ALLOWABLE_ERROR_TICKS = 1; // TODO
-        CARGO_MECH_WRIST_SENSOR_INVERTED = false;
-
-        CARGO_WRIST_UP_LIMIT_TICKS = 0; // TODO
-        CARGO_WRIST_DOWN_LIMIT_TICKS = 0; // TODO
-
-        // Ticks
-        CARGO_MECH_CARGO_BIN_PROPORTION = 0.02; // TODO
-        CARGO_MECH_LOW_ROCKET_PROPORTION = 0.55; // TODO
-        CARGO_MECH_CARGO_SHIP_PROPORTION = 0.67; // TODO
-        CARGO_MECH_SAFE_TURRET_PROPORTION = 0.55; // TODO
-
-        CARGO_MECH_CLAW_LEFT_MOTOR_CHANNEL = 2;
-        CARGO_MECH_CLAW_LEFT_MOTOR_INVERTED = true;
-        CARGO_MECH_CLAW_RIGHT_MOTOR_CHANNEL = 3;
-        CARGO_MECH_CLAW_RIGHT_MOTOR_INVERTED = true;
+        SHOOTER_P = 0.0;
+        SHOOTER_I = 0.0;
+        SHOOTER_D = 0.0;
+        SHOOTER_F = 0.0;
 
         break;
 
@@ -436,23 +328,24 @@ public class RobotMap {
 
   // Game Pieces
 
-  // Turret
-  public static boolean HAS_TURRET = false;
-  public static int TURRET_MOTOR_CHANNEL;
-  public static boolean TURRET_MOTOR_INVERTED;
-  public static int TURRET_SENSOR_CHANNEL;
-  public static boolean TURRET_SENSOR_INVERTED;
-  public static int TURRET_RIGHT_LIMIT_TICKS;
-  public static int TURRET_LEFT_LIMIT_TICKS;
-  public static double TURRET_RIGHT_LIMIT_DEGREES;
-  public static double TURRET_LEFT_LIMIT_DEGREES;
-  public static int TURRET_ALLOWABLE_ERROR_TICKS = 10;
-  public static double TURRET_P;
-  public static double TURRET_I;
-  public static double TURRET_D;
-  public static double TURRET_F;
-  public static int TURRET_HOME_TICKS;
-  public static int TURRET_OFFSET;
+  //Shooter 
+  public static boolean HAS_SHOOTER = false;
+  public static int SHOOTERMOTOR;
+  public static int SHOOTER_MOTOR_CHANNEL;
+  public static boolean SHOOTER_MOTOR_INVERTED;
+  public static int SHOOTER_MOTOR_FOLLOWER_CHANNEL;
+  public static boolean SHOOTER_MOTOR_FOLLOWER_INVERTED;
+
+  public static boolean SHOOTER_SENSOR_INVERTED;
+  public static double SHOOTER_P;
+  public static double SHOOTER_I;
+  public static double SHOOTER_D;
+  public static double SHOOTER_F;
+  public static double VELOCITY_MULTIPLIER_SHOOTER;
+  public static int SHOOTER_PID_SLOT_DRIVE;
+
+  //Intake 
+  public static boolean HAS_INTAKE = false;
 
   // Hatch Mechanism
   public static boolean HAS_HATCH_MECHANISM;
