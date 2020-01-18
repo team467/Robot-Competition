@@ -185,6 +185,11 @@ public class RobotMap {
         //sensors
         HAS_GYRO = false;
 
+        //gamePieces
+
+        INTAKE_MOTOR_INVERTED = false;
+
+
         break;
 
       case KITBOT:
@@ -339,4 +344,7 @@ public class RobotMap {
   public static int TELEMETRY_TIMER_MS = 20;
 
   // Game Pieces
+
+  //BallIntake
+  public static boolean INTAKE_MOTOR_INVERTED = false;
 }
