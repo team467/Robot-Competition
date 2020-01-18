@@ -90,6 +90,7 @@ public class SparkMaxSpeedControllerGroup implements SpeedController {
 
     sparkMax.set(0);
     sparkMax.setClosedLoopRampRate(RobotMap.CLOSED_LOOP_RAMP_RATE);
+    sparkMax.setOpenLoopRampRate(RobotMap.OPEN_LOOP_RAMP_RATE);
     leadPidController.setReference(1, ControlType.kVoltage);
     // Note: -1 and 1 are the max outputs
 //    sparkMax.setSmartCurrentLimit(0, 0);
@@ -318,6 +319,15 @@ public class SparkMaxSpeedControllerGroup implements SpeedController {
     }
 
     leader.setOpenLoopRampRate(ramp);
+  }
+
+  public void setClosedLoopRamp(double ramp) {
+    if (leader == null) {
+      LOGGER.trace("No drive system");
+      return;
+    }
+
+    leader.setClosedLoopRampRate(ramp);
   }
 
   public void movePosition(double targetDistance) {

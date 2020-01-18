@@ -86,7 +86,7 @@ public class Robot extends TimedRobot {
     // table once.
 
     // Initialize RobotMap
-    RobotMap.init(RobotId.ROBOT_2020);
+    RobotMap.init(RobotId.KITBOT);
     mode = RobotMode.STARTED;
 
     SmartDashboard.putString("DB/String 0", "NO_TEST");
@@ -97,6 +97,7 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("Left F", RobotMap.LEFT_DRIVE_PID_F);
     SmartDashboard.putNumber("Left Max Velocity", RobotMap.VELOCITY_MULTIPLIER_LEFT);
 
+    SmartDashboard.putNumber("Ramp Rate", RobotMap.CLOSED_LOOP_RAMP_RATE);
 
     SmartDashboard.putNumber("Right P", RobotMap.RIGHT_DRIVE_PID_P);
     SmartDashboard.putNumber("Right I", RobotMap.RIGHT_DRIVE_PID_I);

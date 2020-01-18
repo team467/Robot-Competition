@@ -50,6 +50,7 @@ public class RobotMap {
   public static double LEFT_DRIVE_PID_F;
 
   public static double CLOSED_LOOP_RAMP_RATE;
+  public static double OPEN_LOOP_RAMP_RATE;
 
   public static int RIGHT_LEAD_CHANNEL;
   public static int RIGHT_FOLLOWER_1_CHANNEL;
@@ -183,6 +184,7 @@ public class RobotMap {
         RIGHT_TURN_PID_F = 0.0;
 
         CLOSED_LOOP_RAMP_RATE = 0.5;
+        OPEN_LOOP_RAMP_RATE = 0.0;
 
         FORWARD_CAMERA_INDEX = 0;
         BACKWARD_CAMERA_INDEX = 2;
@@ -204,7 +206,7 @@ public class RobotMap {
         CONTROLS_INVERTED_FB = false;
         CONTROLS_INVERTED_TURN = false;
 
-        USE_VELOCITY_SPEED_CONTROL_FOR_TELOP = false;
+        USE_VELOCITY_SPEED_CONTROL_FOR_TELOP = true;
         VELOCITY_MULTIPLIER_RIGHT = 5700;
         VELOCITY_MULTIPLIER_LEFT = 5700;
         
@@ -247,6 +249,7 @@ public class RobotMap {
         RIGHT_TURN_PID_F = 0.0;
 
         CLOSED_LOOP_RAMP_RATE = 0.5;
+        OPEN_LOOP_RAMP_RATE = 0.0;
 
         // Cameras
         FORWARD_CAMERA_INDEX = 0;

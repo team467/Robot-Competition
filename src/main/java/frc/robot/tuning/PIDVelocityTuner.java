@@ -33,6 +33,8 @@ public class PIDVelocityTuner implements Tuner {
         double leftF = SmartDashboard.getNumber("Left F", 0);
         double leftMaxVelocity = SmartDashboard.getNumber("Left Max Velocity", 0);
 
+        double rampRate = SmartDashboard.getNumber("Ramp Rate", 1);
+
         double rightP = SmartDashboard.getNumber("Right P", 0);
         double rightI = SmartDashboard.getNumber("Right I", 0);
         double rightD = SmartDashboard.getNumber("Right D", 0);
@@ -45,6 +47,8 @@ public class PIDVelocityTuner implements Tuner {
         SmartDashboard.putNumber("Left F", leftF);
         SmartDashboard.putNumber("Left Max Velocity", leftMaxVelocity);
 
+        SmartDashboard.putNumber("Ramp Rate", rampRate);
+
         SmartDashboard.putNumber("Right P", rightP);
         SmartDashboard.putNumber("Right I", rightI);
         SmartDashboard.putNumber("Right D", rightD);
@@ -54,6 +58,7 @@ public class PIDVelocityTuner implements Tuner {
 
         drive.setLeftPIDFs(leftP, leftI, leftD, leftF, leftMaxVelocity);
         drive.setRightPIDFs(rightP, rightI, rightD, rightF, rightMaxVelocity);
+        drive.setClosedSetRampRate(rampRate);
     }
 
     @Override

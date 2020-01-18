@@ -352,6 +352,16 @@ public class Drive extends DifferentialDrive implements AutoDrive {
     return rightSM.cpr();
   }
 
+  public void setOpenSetRampRate(double rampRate) {
+    leftSM.setOpenLoopRamp(rampRate);
+    rightSM.setOpenLoopRamp(rampRate);
+  }
+
+  public void setClosedSetRampRate(double rampRate) {
+    leftSM.setClosedLoopRamp(rampRate);
+    rightSM.setClosedLoopRamp(rampRate);
+  }
+
   /**
    * Gets the distance moved for checking drive modes.
    *
