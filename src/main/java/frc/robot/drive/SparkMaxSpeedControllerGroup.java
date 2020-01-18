@@ -158,6 +158,7 @@ public class SparkMaxSpeedControllerGroup implements SpeedController {
 
   @Override
   public void pidWrite(double output) {
+    LOGGER.fatal("THIS SHOULD NOT APPEAR 6");
     if (leader == null) {
       LOGGER.trace("No drive system");
       return;
@@ -170,6 +171,7 @@ public class SparkMaxSpeedControllerGroup implements SpeedController {
 
   @Override
   public void set(double speed) {
+    LOGGER.fatal("THIS SHOULD NOT APPEAR 7"); 
     set(ControlType.kVoltage, speed);
   }
 

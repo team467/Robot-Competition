@@ -9,7 +9,7 @@ public class TuneController {
 
   public static void loadTuners() {
     register("LED Strip", new LEDStripTuner());
-    register("Drive Straight", new DriveConstantTuner());
+    // register("Drive Straight", new DriveConstantTuner());
     register("Advanced Tuner", new AdvancedTuner());
   }
 
@@ -28,7 +28,7 @@ public class TuneController {
 
   public static void init() {
     String key = SmartDashboard.getString("DB/String 0", "NO_TEST").toUpperCase();
-    LOGGER.error("Tuner initialized");
+    LOGGER.error("Tuner " + key + " initialized");
   
     if (tuners.containsKey(key)) {
       tuner = tuners.get(key);

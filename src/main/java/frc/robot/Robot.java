@@ -173,6 +173,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
+    LOGGER.fatal("THIS SHOULD NOT APPEAR 4");
     mode = RobotMode.AUTONOMOUS;
     telemetry.robotMode(mode);
     LOGGER.info("Autonomous Initialized");
@@ -184,12 +185,14 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousPeriodic() {
+    LOGGER.fatal("THIS SHOULD NOT APPEAR 3");
     LOGGER.trace("Autonomous Periodic");
     teleopPeriodic();
   }
 
   @Override
   public void teleopInit() {
+    LOGGER.fatal("THIS SHOULD NOT APPEAR 2");
     mode = RobotMode.TELEOP;
     telemetry.robotMode(mode);
     LOGGER.info("Teleop Initialized");
@@ -205,6 +208,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
+    LOGGER.fatal("THIS SHOULD NOT APPEAR 1");
     LOGGER.trace("Teleop Periodic");
     perfTimer.start();
     driverstation.readInputs(); 
@@ -264,10 +268,11 @@ public class Robot extends TimedRobot {
 
   @Override
   public void testInit() {
-    mode = RobotMode.TEST;
-    telemetry.robotMode(mode);
-    TuneController.init();
-    perfTimer = PerfTimer.timer("Test Periodic");
+    LOGGER.fatal("THIS SHOULD APPEAR init");
+    // mode = RobotMode.TEST;
+    // telemetry.robotMode(mode);
+    // TuneController.init();
+    // perfTimer = PerfTimer.timer("Test Periodic");
   }
 
 
@@ -277,11 +282,11 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void testPeriodic() {
-    LOGGER.trace("Test Periodic");
-    perfTimer.start();
-    TuneController.periodic();
-    strip.update();
-    perfTimer.end();
+    LOGGER.fatal("THIS SHOULD APPEAR periodic");
+    // LOGGER.trace("Test Periodic");
+    // perfTimer.start();
+    // TuneController.periodic();
+    // perfTimer.end();
     
   }
 
