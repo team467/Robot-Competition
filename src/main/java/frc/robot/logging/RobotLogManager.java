@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 
-import org.apache.log4j.Appender;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.config.Configuration;
@@ -58,7 +57,7 @@ public class RobotLogManager {
         ConfigurationFactory.setConfigurationFactory(configurationFactory);
         Configuration configuration = configurationFactory.getConfiguration(null, source);
         //TODO make it dynamically change output
-        
+
       } catch (IOException e) {
         e.printStackTrace();
       }

@@ -209,23 +209,30 @@ public class Drive extends DifferentialDrive implements AutoDrive {
   /**
    * Used for tuning PIDs only, does not use carrot drive or left right balancing.
    */
-  public void tuneTurn(final double rotationInDegrees, final int pidSlot) {
+  public void tuneTurn(ControlType controlType, final double rotationInDegrees, final int pidSlot) {
     final double turnDistanceInFeet = degreesToFeet(rotationInDegrees);
-    tuneMove(turnDistanceInFeet, -turnDistanceInFeet, pidSlot);
+    tuneMove(controlType, turnDistanceInFeet, -turnDistanceInFeet, pidSlot);
   }
 
   /**
    * Used for tuning PIDs only, does not use carrot drive or left right balancing.
    */
-  public void tuneMove(final double leftDistance, final double rightDistance, final int pidSlot) {
+  public void tuneMove(ControlType controlType, final double left, final double right, final int pidSlot) {
     leftSM.selectPidSlot(pidSlot); //currently pidSlot does nothing
     rightSM.selectPidSlot(pidSlot);
     LOGGER.debug("Target: L: {} R: {} Current L: {} R: {}", 
-        box(leftDistance), box(rightDistance),
+        box(left), box(right),
         box(getLeftDistance()), box(getRightDistance()));
-    leftSM.set(ControlType.kPosition, feetToTicks(leftDistance));
-    // The right motor is reversed
-    rightSM.set(ControlType.kPosition, feetToTicks(rightDistance));
+
+    if(controlType == ControlType.kVelocity){
+      leftSM.set(controlType, left * m_maxOutput);
+      rightSM.set(controlType, right * m_maxOutput);
+    } else if (controlType == ControlType.kPosition){
+      leftSM.set(controlType, left);
+      rightSM.set(controlType, right);
+    }
+
+
   }
 
   @Override
