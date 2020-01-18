@@ -197,9 +197,8 @@ public class RobotMap {
       HAS_SHOOTER = true;
 
       // Shooter
-
       // TODO:change the values of these later
-      SHOOTERMOTOR = 2;
+      SOOTER_FOLLOWER = true;
       SHOOTER_MOTOR_CHANNEL = 5;
       SHOOTER_MOTOR_INVERTED = false;
       SHOOTER_MOTOR_FOLLOWER_CHANNEL = 6;
@@ -212,6 +211,8 @@ public class RobotMap {
       SHOOTER_D = 0.0;
       SHOOTER_F = 0.0;
 
+      VELOCITY_MULTIPLIER_SHOOTER = 0;
+      SHOOTER_SPEED_TOLERANCE = 0.25;
       break;
 
     case KITBOT:
