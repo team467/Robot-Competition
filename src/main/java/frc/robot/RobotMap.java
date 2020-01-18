@@ -279,7 +279,7 @@ public class RobotMap {
 
       // Shooter
       // TODO:change the values of these later
-      SHOOTERMOTOR = 2;
+      SOOTER_FOLLOWER = true;
       SHOOTER_MOTOR_CHANNEL = 5;
       SHOOTER_MOTOR_INVERTED = false;
       SHOOTER_MOTOR_FOLLOWER_CHANNEL = 6;
@@ -292,6 +292,8 @@ public class RobotMap {
       SHOOTER_D = 0.0;
       SHOOTER_F = 0.0;
 
+      VELOCITY_MULTIPLIER_SHOOTER = 0;
+      SHOOTER_SPEED_TOLERANCE = 0.25;
       break;
     }
 
@@ -389,7 +391,7 @@ public class RobotMap {
 
   // Shooter
   public static boolean HAS_SHOOTER = false;
-  public static int SHOOTERMOTOR;
+  public static boolean SOOTER_FOLLOWER;
   public static int SHOOTER_MOTOR_CHANNEL;
   public static boolean SHOOTER_MOTOR_INVERTED;
   public static int SHOOTER_MOTOR_FOLLOWER_CHANNEL;
@@ -401,6 +403,7 @@ public class RobotMap {
   public static double SHOOTER_D;
   public static double SHOOTER_F;
   public static double VELOCITY_MULTIPLIER_SHOOTER;
+  public static double SHOOTER_SPEED_TOLERANCE;
   public static int SHOOTER_PID_SLOT_DRIVE;
 
   // Intake

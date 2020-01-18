@@ -124,6 +124,22 @@ public class TalonSpeedControllerGroup implements SpeedController {
     leader.setSelectedSensorPosition(0, 0, RobotMap.TALON_TIMEOUT);
   }
 
+  public double closedLoopTarget() {
+    double target = 0;
+    if (leader == null) {
+      target = leader.getClosedLoopTarget();
+    }
+    return target;
+  }
+
+  public double closedLoopError() {
+    double error = 0;
+    if (leader == null) {
+      error = leader.getClosedLoopError();
+    }
+    return error;
+  }
+
   @Override
   public void disable() {
     if (leader == null) {

@@ -18,15 +18,14 @@ public class Shooter extends GamePieceBase implements GamePiece {
 
   private static final Logger LOGGER = RobotLogManager.getMainLogger(Shooter.class.getName());
 
-  // private boolean onManualControl = true;
-  private final TalonSpeedControllerGroup talon1;
-
-  private ControlMode shooterControlMode;
-
   private static final int TALON_PID_SLOT_ID = 0;
 
-  public static WPI_TalonSRX motorLeader;
-  public static WPI_TalonSRX motorFollower;
+  private boolean shootState = false;
+  private double speed = 0;
+
+  private static WPI_TalonSRX flywheelLeader;
+  private static WPI_TalonSRX flywheelFollower;
+  public static TalonSpeedControllerGroup flywheel;
 
   private Hashtable<Integer, Integer> distanceToPower = new Hashtable<Integer, Integer>();
 
@@ -38,78 +37,81 @@ public class Shooter extends GamePieceBase implements GamePiece {
   // WPI_TalonSRX
   public static Shooter getInstance() {
     if (instance == null) {
-      TalonSpeedControllerGroup talon1;
+      if (RobotMap.HAS_SHOOTER) {
+        LOGGER.info("Creating Lead Motors");
 
-      if (RobotMap.HAS_SHOOTER && RobotMap.SHOOTERMOTOR > 0) {
-        LOGGER.info("Creating  Lead Motors");
+        flywheelLeader = new WPI_TalonSRX(RobotMap.SHOOTER_MOTOR_CHANNEL);
+        flywheelFollower = null;
 
-        final WPI_TalonSRX motorLeader = new WPI_TalonSRX(RobotMap.LEFT_LEAD_CHANNEL);
-        WPI_TalonSRX motorFollower = null;
-
-        if (RobotMap.SHOOTERMOTOR == 2) {
+        if (RobotMap.SOOTER_FOLLOWER) {
           LOGGER.info("Creating first set of follower motors");
-          motorFollower = new WPI_TalonSRX(RobotMap.RIGHT_FOLLOWER_1_CHANNEL);
+          flywheelFollower = new WPI_TalonSRX(RobotMap.SHOOTER_MOTOR_FOLLOWER_CHANNEL);
         }
 
-        ControlMode shooterControlMode = ControlMode.PercentOutput;
-        if (RobotMap.USE_VELOCITY_SPEED_CONTROL_FOR_TELOP) {
-          shooterControlMode = ControlMode.Velocity;
-        }
-        talon1 = new TalonSpeedControllerGroup("Shooter", shooterControlMode, RobotMap.SHOOTER_SENSOR_INVERTED,
-            RobotMap.SHOOTER_MOTOR_INVERTED, motorLeader, motorFollower);
+        flywheel = new TalonSpeedControllerGroup("Shooter", ControlMode.Velocity, RobotMap.SHOOTER_SENSOR_INVERTED,
+            RobotMap.SHOOTER_MOTOR_INVERTED, flywheelLeader, flywheelFollower);
+
+        flywheel.pidf(RobotMap.SHOOTER_PID_SLOT_DRIVE, RobotMap.SHOOTER_P, RobotMap.SHOOTER_I, RobotMap.SHOOTER_D,
+            RobotMap.SHOOTER_F, RobotMap.VELOCITY_MULTIPLIER_SHOOTER);
       } else {
-        talon1 = new TalonSpeedControllerGroup();
+        flywheel = new TalonSpeedControllerGroup();
       }
-      instance = new Shooter(talon1);
+      instance = new Shooter(flywheel);
       instance.stop();
     }
     return instance;
   }
 
-  private Shooter(TalonSpeedControllerGroup talon1) {
+  private Shooter(TalonSpeedControllerGroup flywheel) {
     super("Telemetry", "Shooter");
-    this.talon1 = talon1;
-
-    // talon1.config_kP(TALON_PID_SLOT_ID, p, RobotMap.TALON_TIMEOUT);
-    // talon1.config_kI(TALON_PID_SLOT_ID, i, RobotMap.TALON_TIMEOUT);
-    // talon1.config_kD(TALON_PID_SLOT_ID, d, RobotMap.TALON_TIMEOUT);
-    // talon1.config_kF(TALON_PID_SLOT_ID, f, RobotMap.TALON_TIMEOUT);
-
   }
 
-  public void flyWheeelPower() {
-    if (RobotMap.HAS_SHOOTER) {
-      talon1.set(1.0);
+  public void stop() {
+    flywheel.stopMotor();
+  }
+
+  public void setSpeed(double speed) {
+    this.speed = speed;
+  }
+
+  public void rampToSpeed(double speed) {
+    if (flywheel != null && RobotMap.HAS_SHOOTER) {
+      double output = Math.max(-1.0, Math.min(1.0, speed));
+      flywheel.set(ControlMode.Velocity, output);
     }
   }
 
-  public void kick(int count, int limit) {
-    if (RobotMap.HAS_SHOOTER) {
-      talon1.set(1.0);
+  public boolean atSpeed() {
+    double current = flywheel.velocity();
+    double target = flywheel.closedLoopTarget();
+    double error = current / target;
+
+    if (error <= 1 + RobotMap.SHOOTER_SPEED_TOLERANCE || error >= 1 - RobotMap.SHOOTER_SPEED_TOLERANCE) {
+      return true;
+    } else {
+      return false;
     }
-    // count = new
+  }
+
+  public void startShooting() {
+
+  }
+
+  public void stopShooting() {
+
+  }
+
+  public void setShootState(boolean state) {
+    if (flywheel != null && RobotMap.HAS_SHOOTER) {
+      this.shootState = state;
+    }
   }
 
   public void flyWheelPIDF(double kP, double kI, double kD, double kF) {
-    if (talon1 != null) {
-
-      double coefficientP = RobotMap.SHOOTER_P;
-      double coefficientI = RobotMap.SHOOTER_I;
-      double coefficientD = RobotMap.SHOOTER_D;
-      double coefficientF = RobotMap.SHOOTER_F;
-
-      talon1.pidf(RobotMap.SHOOTER_PID_SLOT_DRIVE, coefficientP, coefficientI, coefficientD, coefficientF,
-          RobotMap.VELOCITY_MULTIPLIER_SHOOTER);
+    if (flywheel != null && RobotMap.HAS_SHOOTER) {
+      flywheel.pidf(RobotMap.SHOOTER_PID_SLOT_DRIVE, kP, kI, kD, kF, RobotMap.VELOCITY_MULTIPLIER_SHOOTER);
     }
   }
-
-  // public void tuneSpeed() {
- 
-  // }
-
-  // public flyWheelSpeed(){
-
-  // }
 
   // TODO: implement distance with shoot
   private void smartShoot() {
@@ -124,29 +126,28 @@ public class Shooter extends GamePieceBase implements GamePiece {
     }
 
   }
-  // public void enabled(boolean enabled) {
-
-  // }
 
   /**
    * Called once per robot iteration. This conducts any movement if enabled, and
    * sends telemetry and state information in all cases.
    */
-  
-   public void stop() {
-    talon1.stopMotor();
 
-  }
   public void periodic() {
-
     if (RobotMap.HAS_SHOOTER) {
       if (enabled) {
-        // if (kick(count) > kick(limit)) {
+        if (shootState) {
+          if (atSpeed()) {
+            startShooting();
+          } else {
+            rampToSpeed(speed);
+          }
+        } else {
+          stopShooting();
+          rampToSpeed(0);
+        }
+      } else {
         stop();
       }
     }
   }
-
-
- 
 }
