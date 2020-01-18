@@ -1,10 +1,23 @@
+// Needed for getting the right GUI libraries 
+buildscript {
+  repositories {
+    mavenCentral()
+  }
+  dependencies {
+    classpath 'com.google.gradle:osdetector-gradle-plugin:1.6.0'
+  }
+}
+
 plugins {
     id "java"
     id "edu.wpi.first.GradleRIO" version "2020.1.2"
 }
 
-sourceCompatibility = JavaVersion.VERSION_13
-targetCompatibility = JavaVersion.VERSION_13
+sourceCompatibility = JavaVersion.VERSION_11
+targetCompatibility = JavaVersion.VERSION_11
+
+apply plugin: 'com.google.osdetector'
+ext.platform = osdetector.os == 'osx' ? 'mac' : osdetector.os == 'windows' ? 'win' : osdetector.os
 
 def ROBOT_MAIN_CLASS = "frc.robot.Main"
 
@@ -38,7 +51,7 @@ deploy {
 }
 
 // Set this to true to enable desktop support.
-def includeDesktopSupport = true
+def includeDesktopSupport = false
 
 // Maven central needed for JUnit
 repositories {
@@ -52,44 +65,35 @@ repositories {
 // Defining my dependencies. In this case, WPILib (+ friends), and vendor libraries.
 // Also defines JUnit 4.
 dependencies {
-    implementation wpi.deps.wpilib()
+    compile wpi.deps.wpilib()
+    compile wpi.deps.vendor.java()
     nativeZip wpi.deps.wpilibJni(wpi.platforms.roborio)
     nativeDesktopZip wpi.deps.wpilibJni(wpi.platforms.desktop)
+    testCompile 'junit:junit:4.12'
 
+  compile group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.11.1'
+  compile group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.11.1'
+  // https://mvnrepository.com/artifact/com.fasterxml.jackson.core
+  compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.9.7'
+  compile group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.9.7'
+  compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.7'
+  compile group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-yaml', version: '2.9.7'
 
-    implementation wpi.deps.vendor.java()
-    nativeZip wpi.deps.vendor.jni(wpi.platforms.roborio)
-    nativeDesktopZip wpi.deps.vendor.jni(wpi.platforms.desktop)
-
-    testImplementation 'junit:junit:4.12'
-
-    compile group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.11.1'
-    compile group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.11.1'
-    // https://mvnrepository.com/artifact/com.fasterxml.jackson.core
-    compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.9.7'
-    compile group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.9.7'
-    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.7'
-    compile group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-yaml', version: '2.9.7'
-
-    // https://mvnrepository.com/artifact/org.apache.commons/commons-math3
-    compile group: 'org.apache.commons', name: 'commons-math3', version: '3.6.1'
-    
-    // https://mvnrepository.com/artifact/org.apache.commons/commons-csv
-    compile group: 'org.apache.commons', name: 'commons-csv', version: '1.6'
-
-    // https://mvnrepository.com/artifact/org.apache.commons/commons-csv
-    compile group: 'org.apache.commons', name: 'commons-csv', version: '1.6'
+  // https://mvnrepository.com/artifact/org.apache.commons/commons-math3
+  compile group: 'org.apache.commons', name: 'commons-math3', version: '3.6.1'
   
-    // Enable simulation gui support. Must check the box in vscode to enable support
-    // upon debugging
-    simulation wpi.deps.sim.gui(wpi.platforms.desktop, true)
+// https://mvnrepository.com/artifact/org.apache.commons/commons-csv
+compile group: 'org.apache.commons', name: 'commons-csv', version: '1.6'
+
+  // https://mvnrepository.com/artifact/org.apache.commons/commons-csv
+  compile group: 'org.apache.commons', name: 'commons-csv', version: '1.6'
 }
 
 // Setting up my Jar File. In this case, adding all libraries into the main jar ('fat jar')
 // in order to make them all available at runtime. Also adding the manifest so WPILib
 // knows where to look for our Robot Class.
 jar {
-    from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
     manifest edu.wpi.first.gradlerio.GradleRIOPlugin.javaManifest(ROBOT_MAIN_CLASS)
 }
 

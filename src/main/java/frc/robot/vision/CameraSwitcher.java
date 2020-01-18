@@ -65,17 +65,10 @@ public class CameraSwitcher {
   }
 
   public void cargo() {
-    LOGGER.debug("Setting to cargo camera at index {}", box(RobotMap.CARGO_CAMERA_INDEX));
-    cameraNetworkTableEntry.setDouble(RobotMap.CARGO_CAMERA_INDEX);
-    prevState = currentState;
-    currentState = cameraState.CARGO;
+
   }
 
   public void hatch() {
-    LOGGER.debug("Setting to hatch camera at index {}", box(RobotMap.HATCH_CAMERA_INDEX));
-    cameraNetworkTableEntry.setDouble(RobotMap.HATCH_CAMERA_INDEX);
-    prevState = currentState;
-    currentState = cameraState.HATCH;
   }
 
   public void restart() {

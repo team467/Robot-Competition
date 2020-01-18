@@ -18,6 +18,9 @@ public class RobotMap {
   public static final int PID_SLOT_DRIVE = 0;
   public static final int PID_SLOT_TURN = 1;
 
+  //Sensors
+  public static boolean HAS_GYRO = false;
+
   // Turret angle offsets
   public static final double ON_TARGET = 1.0;
   public static final double ANGLE_OFFSET_LEVEL_ONE = 5.0;
@@ -47,6 +50,9 @@ public class RobotMap {
   public static double LEFT_DRIVE_PID_I;
   public static double LEFT_DRIVE_PID_D;
   public static double LEFT_DRIVE_PID_F;
+
+  public static double CLOSED_LOOP_RAMP_RATE;
+  public static double OPEN_LOOP_RAMP_RATE;
 
   public static int RIGHT_LEAD_CHANNEL;
   public static int RIGHT_FOLLOWER_1_CHANNEL;
@@ -113,7 +119,8 @@ public class RobotMap {
   public static final boolean useRemoteImu = false;
 
   public enum RobotId {
-    ROBOT2020, MINIBOT, ROBOT_2018, ROBOT_2019
+    ROBOT_2020, KITBOT
+
   }
 
   /**
@@ -128,20 +135,23 @@ public class RobotMap {
 
     switch (id) {
 
-      case ROBOT2020:
-      default:
+      case ROBOT_2020:
         HAS_WHEELS = true;
         DRIVEMOTOR_NUM = 4;
         WHEEL_CIRCUMFERENCE = 18.50;
 
-        // CONTROLS_INVERTED_FB = false;
-        // CONTROLS_INVERTED_TURN = false;
+        CONTROLS_INVERTED_FB = false;
+        CONTROLS_INVERTED_TURN = false;
 
         USE_VELOCITY_SPEED_CONTROL_FOR_TELOP = true;
-        // VELOCITY_MULTIPLIER_RIGHT = 1300;
-        // VELOCITY_MULTIPLIER_LEFT = 1300;
+        VELOCITY_MULTIPLIER_RIGHT = 5700;
+        VELOCITY_MULTIPLIER_LEFT = 5700;
+
         NORMAL_DRIVE_SPEED_MULTIPLIER = 0.8;
         SLOW_DRIVE_SPEED_MULTIPLIER = 0.6;
+
+        NORMAL_VELOCITY_SPEED_MULTIPLIER = 0.9;
+        SLOW_VELOCITY_SPEED_MULTIPLIER = 0.7;
 
         LEFT_LEAD_CHANNEL = 1;
         LEFT_FOLLOWER_1_CHANNEL = 2;
@@ -154,26 +164,93 @@ public class RobotMap {
         RIGHT_DRIVE_MOTOR_IS_INVERTED = false;
 
         // Linear PIDS
-        LEFT_DRIVE_PID_P = 0.5;
+        LEFT_DRIVE_PID_P = 0.0002;
         LEFT_DRIVE_PID_I = 0.0;
         LEFT_DRIVE_PID_D = 0.0;
-        LEFT_DRIVE_PID_F = 0.682;
+        LEFT_DRIVE_PID_F = 0.0;
 
-        RIGHT_DRIVE_PID_P = 0.5;
+        RIGHT_DRIVE_PID_P = 0.0002;
         RIGHT_DRIVE_PID_I = 0.0;
         RIGHT_DRIVE_PID_D = 0.0;
-        RIGHT_DRIVE_PID_F = 0.781;
+        RIGHT_DRIVE_PID_F = 0.0;
 
         // Turn PIDs
-        LEFT_TURN_PID_P = 0.5;
+        LEFT_TURN_PID_P = 0.00025;
         LEFT_TURN_PID_I = 0.0;
-        LEFT_TURN_PID_D = 450.0;
+        LEFT_TURN_PID_D = 0.0;
         LEFT_TURN_PID_F = 0.0;
 
-        RIGHT_TURN_PID_P = 0.5;
+        RIGHT_TURN_PID_P = 0.00025;
         RIGHT_TURN_PID_I = 0.0;
-        RIGHT_TURN_PID_D = 450.0;
+        RIGHT_TURN_PID_D = 0.0;
         RIGHT_TURN_PID_F = 0.0;
+
+        CLOSED_LOOP_RAMP_RATE = 0.5;
+        OPEN_LOOP_RAMP_RATE = 0.0;
+
+        FORWARD_CAMERA_INDEX = 0;
+        BACKWARD_CAMERA_INDEX = 2;
+        HAS_CAMERA = true;
+        AUTO_CAMERA = true;
+
+        //sensors
+        HAS_GYRO = false;
+
+        break;
+
+      case KITBOT:
+      default:
+        HAS_WHEELS = true;
+        DRIVEMOTOR_NUM = 4;
+        WHEEL_CIRCUMFERENCE = 18.50;
+
+        // CONTROLS_INVERTED_FB = false;
+        // CONTROLS_INVERTED_TURN = false;
+
+        USE_VELOCITY_SPEED_CONTROL_FOR_TELOP = true;
+        VELOCITY_MULTIPLIER_RIGHT = 5700;
+        VELOCITY_MULTIPLIER_LEFT = 5700;
+        
+        NORMAL_DRIVE_SPEED_MULTIPLIER = 0.8;
+        SLOW_DRIVE_SPEED_MULTIPLIER = 0.6;
+
+        NORMAL_VELOCITY_SPEED_MULTIPLIER = 0.9;
+        SLOW_VELOCITY_SPEED_MULTIPLIER = 0.7;
+
+        LEFT_LEAD_CHANNEL = 1;
+        LEFT_FOLLOWER_1_CHANNEL = 2;
+        LEFT_DRIVE_SENSOR_IS_INVERTED = true;
+        LEFT_DRIVE_MOTOR_IS_INVERTED = false;
+
+        RIGHT_LEAD_CHANNEL = 3;
+        RIGHT_FOLLOWER_1_CHANNEL = 4;
+        RIGHT_DRIVE_SENSOR_IS_INVERTED = true;
+        RIGHT_DRIVE_MOTOR_IS_INVERTED = false;
+
+        // Linear PIDS
+        LEFT_DRIVE_PID_P = 0.00015;
+        LEFT_DRIVE_PID_I = 0.0;
+        LEFT_DRIVE_PID_D = 0.0;
+        LEFT_DRIVE_PID_F = 0.0;
+
+        RIGHT_DRIVE_PID_P = 0.00015;
+        RIGHT_DRIVE_PID_I = 0.0;
+        RIGHT_DRIVE_PID_D = 0.0;
+        RIGHT_DRIVE_PID_F = 0.0;
+
+        // Turn PIDs
+        LEFT_TURN_PID_P = 0.00015;
+        LEFT_TURN_PID_I = 0.0;
+        LEFT_TURN_PID_D = 0.0;
+        LEFT_TURN_PID_F = 0.0;
+
+        RIGHT_TURN_PID_P = 0.00015;
+        RIGHT_TURN_PID_I = 0.0;
+        RIGHT_TURN_PID_D = 0.0;
+        RIGHT_TURN_PID_F = 0.0;
+
+        CLOSED_LOOP_RAMP_RATE = 0.5;
+        OPEN_LOOP_RAMP_RATE = 0.0;
 
         // Cameras
         FORWARD_CAMERA_INDEX = 0;
@@ -201,44 +278,6 @@ public class RobotMap {
         SHOOTER_F = 0.0;
 
         break;
-
-      case MINIBOT:
-        HAS_WHEELS = true;
-        DRIVEMOTOR_NUM = 2;
-        WHEEL_CIRCUMFERENCE = 18.50;
-
-        LEFT_LEAD_CHANNEL = 1;
-        LEFT_DRIVE_SENSOR_IS_INVERTED = false;
-        LEFT_DRIVE_MOTOR_IS_INVERTED = false;
-
-        RIGHT_LEAD_CHANNEL = 4;
-        RIGHT_DRIVE_SENSOR_IS_INVERTED = false;
-        RIGHT_DRIVE_MOTOR_IS_INVERTED = false;
-
-        // Linear PIDS
-        LEFT_DRIVE_PID_P = 1.0;
-        LEFT_DRIVE_PID_I = 0.0;
-        LEFT_DRIVE_PID_D = 450.0;
-        LEFT_DRIVE_PID_F = 0.0;
-
-        RIGHT_DRIVE_PID_P = 1.0;
-        RIGHT_DRIVE_PID_I = 0.0;
-        RIGHT_DRIVE_PID_D = 450.0;
-        RIGHT_DRIVE_PID_F = 0.0;
-
-        // Turn PIDs
-        LEFT_TURN_PID_P = 1.0;
-        LEFT_TURN_PID_I = 0.0;
-        LEFT_TURN_PID_D = 450.0;
-        LEFT_TURN_PID_F = 0.0;
-
-        RIGHT_TURN_PID_P = 1.0;
-        RIGHT_TURN_PID_I = 0.0;
-        RIGHT_TURN_PID_D = 450.0;
-        RIGHT_TURN_PID_F = 0.0;
-
-        break;
-
     }
 
     // These calculations can be made after the robot-specific constants are set.
@@ -313,9 +352,13 @@ public class RobotMap {
   //Speed Controls
   public static double NORMAL_DRIVE_SPEED_MULTIPLIER;
   public static double SLOW_DRIVE_SPEED_MULTIPLIER;
+  public static double NORMAL_VELOCITY_SPEED_MULTIPLIER;
+  public static double SLOW_VELOCITY_SPEED_MULTIPLIER;
   public static boolean USE_VELOCITY_SPEED_CONTROL_FOR_TELOP = false;
   public static double VELOCITY_MULTIPLIER_LEFT;
   public static double VELOCITY_MULTIPLIER_RIGHT;
+  public static boolean CONTROLS_INVERTED_FB;
+  public static boolean CONTROLS_INVERTED_TURN;
 
   // Driver Cameras
   public static int FORWARD_CAMERA_INDEX;
