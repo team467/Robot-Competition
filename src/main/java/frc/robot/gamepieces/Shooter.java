@@ -113,10 +113,10 @@ public class Shooter extends GamePieceBase implements GamePiece {
     }
   }
 
-  // TODO: implement distance with shoot
+  // TODO: implement distance with shoot; auto aim/auto shooting
   private void smartShoot() {
     if (RobotMap.HAS_SHOOTER) {
-      if (!RobotMap.HAS_CAMERA) {
+      if (RobotMap.SHOOTER_SMART_SHOT) {
         // distance and calc to shoot
         // shoot
 
@@ -132,6 +132,7 @@ public class Shooter extends GamePieceBase implements GamePiece {
    * sends telemetry and state information in all cases.
    */
 
+  //TODO Impliment number of balls to shoot; Press once to fire one ball; Hold to fire all
   public void periodic() {
     if (RobotMap.HAS_SHOOTER) {
       if (enabled) {

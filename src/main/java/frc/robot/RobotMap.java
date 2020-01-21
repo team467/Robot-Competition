@@ -203,6 +203,7 @@ public class RobotMap {
       SHOOTER_MOTOR_INVERTED = false;
       SHOOTER_MOTOR_FOLLOWER_CHANNEL = 6;
       SHOOTER_MOTOR_FOLLOWER_INVERTED = false;
+      SHOOTER_SMART_SHOT = true;
 
       SHOOTER_SENSOR_INVERTED = false;
 
@@ -285,6 +286,7 @@ public class RobotMap {
       SHOOTER_MOTOR_INVERTED = false;
       SHOOTER_MOTOR_FOLLOWER_CHANNEL = 6;
       SHOOTER_MOTOR_FOLLOWER_INVERTED = false;
+      SHOOTER_SMART_SHOT = true;
 
       SHOOTER_SENSOR_INVERTED = false;
 
@@ -397,6 +399,7 @@ public class RobotMap {
   public static boolean SHOOTER_MOTOR_INVERTED;
   public static int SHOOTER_MOTOR_FOLLOWER_CHANNEL;
   public static boolean SHOOTER_MOTOR_FOLLOWER_INVERTED;
+  public static boolean SHOOTER_SMART_SHOT;
 
   public static boolean SHOOTER_SENSOR_INVERTED;
   public static double SHOOTER_P;
