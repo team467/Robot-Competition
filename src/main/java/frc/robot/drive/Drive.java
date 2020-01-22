@@ -203,7 +203,7 @@ public class Drive extends DifferentialDrive implements AutoDrive {
    * Used for tuning PIDs only, does not use carrot drive or left right balancing.
    */
   public void tuneForward(final double distanceInFeet, final int pidSlot) {
-    tuneMove(distanceInFeet, distanceInFeet, pidSlot);
+    tuneMove(ControlType.kVoltage, distanceInFeet, distanceInFeet, pidSlot);
   }
 
   /**
@@ -260,7 +260,7 @@ public class Drive extends DifferentialDrive implements AutoDrive {
     // Temp change to tune move to test motor control.
     // moveFeet((distanceInFeet - turnDistanceInFeet), (distanceInFeet +
     // turnDistanceInFeet));
-    tuneMove((distanceInFeet - turnDistanceInFeet), (distanceInFeet + turnDistanceInFeet), RobotMap.PID_SLOT_DRIVE);
+    tuneMove(ControlType.kVoltage,(distanceInFeet - turnDistanceInFeet), (distanceInFeet + turnDistanceInFeet), RobotMap.PID_SLOT_DRIVE);
   }
 
   /**
