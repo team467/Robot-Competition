@@ -260,7 +260,7 @@ public class RobotMap {
         // Game Pieces
 
          //sensors
-         HAS_GYRO = false;
+         HAS_GYRO = true;
          
         break;
     }

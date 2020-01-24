@@ -11,6 +11,7 @@ public class TuneController {
     register("Drive_Straight", new DriveConstantTuner());
     register("PID_Velocity_Tuner", new PIDVelocityTuner());
     register("Advanced_Tuner", new AdvancedTuner());
+    register("Gyro_Tuner", new GyroTuner());
   }
 
   private static final Logger LOGGER
