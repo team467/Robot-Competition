@@ -278,6 +278,15 @@ public class TalonSpeedControllerGroup implements SpeedController {
     return leader.getSelectedSensorVelocity(0);
   }
 
+  public double current() {
+    if (leader == null) {
+      LOGGER.trace("No drive system");
+      return 0;
+    }
+
+    return leader.getSupplyCurrent();
+  }
+
   public void setOpenLoopRamp(final double ramp) {
     if (leader == null) {
       LOGGER.trace("No drive system");

@@ -81,6 +81,10 @@ public class Shooter extends GamePieceBase implements GamePiece {
     }
   }
 
+  public TalonSpeedControllerGroup getMotor() {
+    return flywheel;
+  }
+
   public boolean atSpeed() {
     double current = flywheel.velocity();
     double target = flywheel.closedLoopTarget();
@@ -107,9 +111,9 @@ public class Shooter extends GamePieceBase implements GamePiece {
     }
   }
 
-  public void flyWheelPIDF(double kP, double kI, double kD, double kF) {
+  public void flyWheelPIDF(double kP, double kI, double kD, double kF, double kMaxVelocity) {
     if (flywheel != null && RobotMap.HAS_SHOOTER) {
-      flywheel.pidf(RobotMap.SHOOTER_PID_SLOT_DRIVE, kP, kI, kD, kF, RobotMap.VELOCITY_MULTIPLIER_SHOOTER);
+      flywheel.pidf(RobotMap.SHOOTER_PID_SLOT_DRIVE, kP, kI, kD, kF, kMaxVelocity);
     }
   }
 
