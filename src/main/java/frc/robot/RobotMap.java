@@ -195,17 +195,20 @@ public class RobotMap {
 
       // Game Pieces
       HAS_SHOOTER = true;
+      HAS_TRIGGER = false;
 
       // Shooter
       // TODO:change the values of these later
-      SOOTER_FOLLOWER = true;
+      SHOOTER_FOLLOWER = true;
       SHOOTER_MOTOR_CHANNEL = 5;
       SHOOTER_MOTOR_INVERTED = false;
       SHOOTER_MOTOR_FOLLOWER_CHANNEL = 6;
       SHOOTER_MOTOR_FOLLOWER_INVERTED = false;
       SHOOTER_SMART_SHOT = true;
-
       SHOOTER_SENSOR_INVERTED = false;
+
+      TRIGGER_MOTOR_CHANNEL = 7;
+      TRIGGER_MOTOR_INVERTED = false;
 
       SHOOTER_P = 0.0;
       SHOOTER_I = 0.0;
@@ -278,17 +281,20 @@ public class RobotMap {
 
       // Game Pieces
       HAS_SHOOTER = true;
+      HAS_TRIGGER = false;
 
       // Shooter
       // TODO:change the values of these later
-      SOOTER_FOLLOWER = true;
+      SHOOTER_FOLLOWER = true;
       SHOOTER_MOTOR_CHANNEL = 5;
       SHOOTER_MOTOR_INVERTED = false;
       SHOOTER_MOTOR_FOLLOWER_CHANNEL = 6;
       SHOOTER_MOTOR_FOLLOWER_INVERTED = false;
       SHOOTER_SMART_SHOT = true;
-
       SHOOTER_SENSOR_INVERTED = false;
+
+      TRIGGER_MOTOR_CHANNEL = 7;
+      TRIGGER_MOTOR_INVERTED = false;
 
       SHOOTER_P = 0.0;
       SHOOTER_I = 0.0;
@@ -394,12 +400,15 @@ public class RobotMap {
 
   // Shooter
   public static boolean HAS_SHOOTER = false;
-  public static boolean SOOTER_FOLLOWER;
+  public static boolean HAS_TRIGGER = false;
+  public static boolean SHOOTER_FOLLOWER;
   public static int SHOOTER_MOTOR_CHANNEL;
   public static boolean SHOOTER_MOTOR_INVERTED;
   public static int SHOOTER_MOTOR_FOLLOWER_CHANNEL;
   public static boolean SHOOTER_MOTOR_FOLLOWER_INVERTED;
   public static boolean SHOOTER_SMART_SHOT;
+  public static int TRIGGER_MOTOR_CHANNEL;
+  public static boolean TRIGGER_MOTOR_INVERTED = false;
 
   public static boolean SHOOTER_SENSOR_INVERTED;
   public static double SHOOTER_P;

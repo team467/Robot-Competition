@@ -21,11 +21,15 @@ public class Shooter extends GamePieceBase implements GamePiece {
   private static final int TALON_PID_SLOT_ID = 0;
 
   private boolean shootState = false;
+  private boolean triggerState = false;
   private double speed = 0;
 
   private static WPI_TalonSRX flywheelLeader;
   private static WPI_TalonSRX flywheelFollower;
   public static TalonSpeedControllerGroup flywheel;
+
+  private static WPI_TalonSRX triggerMotor;
+  public static TalonSpeedControllerGroup trigger;
 
   private Hashtable<Integer, Integer> distanceToPower = new Hashtable<Integer, Integer>();
 
@@ -43,7 +47,7 @@ public class Shooter extends GamePieceBase implements GamePiece {
         flywheelLeader = new WPI_TalonSRX(RobotMap.SHOOTER_MOTOR_CHANNEL);
         flywheelFollower = null;
 
-        if (RobotMap.SOOTER_FOLLOWER) {
+        if (RobotMap.SHOOTER_FOLLOWER) {
           LOGGER.info("Creating first set of follower motors");
           flywheelFollower = new WPI_TalonSRX(RobotMap.SHOOTER_MOTOR_FOLLOWER_CHANNEL);
         }
@@ -55,6 +59,13 @@ public class Shooter extends GamePieceBase implements GamePiece {
             RobotMap.SHOOTER_F, RobotMap.VELOCITY_MULTIPLIER_SHOOTER);
       } else {
         flywheel = new TalonSpeedControllerGroup();
+      }
+
+      if (RobotMap.HAS_TRIGGER) {
+        triggerMotor = new WPI_TalonSRX(RobotMap.TRIGGER_MOTOR_CHANNEL);
+        trigger = new TalonSpeedControllerGroup("Trigger", ControlMode.PercentOutput, false, RobotMap.TRIGGER_MOTOR_INVERTED, triggerMotor);
+      } else {
+        trigger = new TalonSpeedControllerGroup();
       }
       instance = new Shooter(flywheel);
       instance.stop();
@@ -98,11 +109,21 @@ public class Shooter extends GamePieceBase implements GamePiece {
   }
 
   public void startShooting() {
-
+    if (flywheel != null && RobotMap.HAS_SHOOTER) {
+      trigger.set(1.0);
+    }
   }
 
   public void stopShooting() {
+    if (flywheel != null && RobotMap.HAS_SHOOTER) {
+      trigger.set(0.0);
+    }
+  }
 
+  public void setTriggerState(boolean state) {
+    if (trigger != null && RobotMap.HAS_TRIGGER) {
+      this.triggerState = state;
+    }
   }
 
   public void setShootState(boolean state) {
@@ -142,13 +163,19 @@ public class Shooter extends GamePieceBase implements GamePiece {
       if (enabled) {
         if (shootState) {
           if (atSpeed()) {
-            startShooting();
+            setTriggerState(true);
           } else {
             rampToSpeed(speed);
           }
         } else {
-          stopShooting();
+          setTriggerState(false);
           rampToSpeed(0);
+        }
+
+        if (triggerState) {
+          startShooting();
+        } else {
+          stopShooting();
         }
       } else {
         stop();
