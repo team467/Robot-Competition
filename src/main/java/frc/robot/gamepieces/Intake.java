@@ -33,8 +33,8 @@ public class Intake extends GamePieceBase implements GamePiece {
         private static WPI_TalonSRX armMotor;
 
         private static void initialize() {
-            armMotor = new WPI_TalonSRX(RobotMap.ARM_MOTOR);
-            armMotor.setInverted(false);
+            armMotor = new WPI_TalonSRX(RobotMap.ARM_MOTOR_CHANNEL);
+            armMotor.setInverted(RobotMap.ARM_MOTOR_INVERTED);
         }
 
         private void actuate() {

@@ -195,6 +195,8 @@ public class RobotMap {
 
       // Game Pieces
       HAS_SHOOTER = true;
+      HAS_INDEXER = true;
+      HAS_INTAKE = true;
 
       // Shooter
       // TODO:change the values of these later
@@ -214,6 +216,21 @@ public class RobotMap {
 
       VELOCITY_MULTIPLIER_SHOOTER = 0;
       SHOOTER_SPEED_TOLERANCE = 0.25;
+
+      //Intake
+      // TODO: change the values of these later.
+      ARM_MOTOR_CHANNEL = 0;
+      ARM_MOTOR_INVERTED = false;
+      ROLLER_MOTOR_CHANNEL = 1;
+      ROLLER_MOTOR_INVERTED = false;
+
+      //Indexer
+      STAGE_FEED_MOTOR_CHANNEL = 0;
+      STAGE_FEED_MOTOR_INVERTED = false;
+      MAGAZINE_FEED_MOTOR_CHANNEL = 0;
+      MAGAZINE_FEED_MOTOR_INVERTED = false;
+
+
       break;
 
     case KITBOT:
@@ -412,7 +429,16 @@ public class RobotMap {
 
   // Intake
   public static boolean HAS_INTAKE = false;
-  public static int ARM_MOTOR;
+  public static int ARM_MOTOR_CHANNEL;
+  public static boolean ARM_MOTOR_INVERTED = false;
   public static int ROLLER_MOTOR_CHANNEL;
   public static boolean ROLLER_MOTOR_INVERTED;
+
+  //INDEXER 
+  public static boolean HAS_INDEXER = false;
+  public static int STAGE_FEED_MOTOR_CHANNEL;
+  public static boolean STAGE_FEED_MOTOR_INVERTED; 
+  public static int MAGAZINE_FEED_MOTOR_CHANNEL;
+  public static boolean MAGAZINE_FEED_MOTOR_INVERTED = false;
+
 }
