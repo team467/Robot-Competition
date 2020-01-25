@@ -31,6 +31,10 @@ public class GyroTuner implements Tuner {
 
     public void periodic() {
 
+      if(gyro.getPitchDegrees() > 4 || gyro.getPitchDegrees() < -4){
+        drive.arcadeDrive(0, -gyro.getPitchDegrees()/100);
+      }
+
        LOGGER.info("Yaw: {}, Pitch: {}, Roll: {}", gyro.getYawDegrees(), gyro.getPitchDegrees(), gyro.getRollDegrees());
 
     }
