@@ -7,6 +7,7 @@ import frc.robot.sensors.Gyrometer;
 
 import org.apache.logging.log4j.Logger;
 
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class GyroTuner implements Tuner {
@@ -16,6 +17,7 @@ public class GyroTuner implements Tuner {
 
   Drive drive;
   Gyrometer gyro;
+  NetworkTableInstance inst = NetworkTableInstance.getDefault();
 
   GyroTuner() {
     drive = Drive.getInstance();
@@ -31,9 +33,14 @@ public class GyroTuner implements Tuner {
 
     public void periodic() {
 
-      if(gyro.getPitchDegrees() > 4 || gyro.getPitchDegrees() < -4){
-        drive.arcadeDrive(0, -gyro.getPitchDegrees()/100);
+      if(gyro.getPitchDegrees() > 4){
+        drive.arcadeDrive(0, 0.3);
+      }else if (gyro.getPitchDegrees() < -4) {
+        drive.arcadeDrive(0, -0.3);
+      } else {
+        drive.arcadeDrive(0, 0);
       }
+
 
        LOGGER.info("Yaw: {}, Pitch: {}, Roll: {}", gyro.getYawDegrees(), gyro.getPitchDegrees(), gyro.getRollDegrees());
 
