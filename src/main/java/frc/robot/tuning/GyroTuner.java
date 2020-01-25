@@ -29,16 +29,17 @@ public class GyroTuner implements Tuner {
     public void init() {
       drive.zero();
       gyro.zero();
+      SmartDashboard.putNumber("Turn Degrees", 0);
     }
 
     public void periodic() {
+      double turn = SmartDashboard.getNumber("Turn Degrees", 0);
 
-      if(gyro.getPitchDegrees() > 4){
-        drive.arcadeDrive(0, 0.3);
-      }else if (gyro.getPitchDegrees() < -4) {
-        drive.arcadeDrive(0, -0.3);
+      if(gyro.getPitchDegrees() <= Math.abs(turn)){
+        drive.arcadeDrive(0, -Math.signum(turn)*0.3);
       } else {
         drive.arcadeDrive(0, 0);
+        gyro.zero();
       }
 
 
