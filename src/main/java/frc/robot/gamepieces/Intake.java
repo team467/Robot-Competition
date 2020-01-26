@@ -9,9 +9,8 @@ package frc.robot.gamepieces;
 
 import frc.robot.RobotMap;
 import frc.robot.logging.RobotLogManager;
-import frc.robot.logging.Telemetry;
-
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import frc.robot.logging.Telemetry;
 
 import org.apache.logging.log4j.Logger;
 
@@ -26,6 +25,10 @@ public class Intake extends GamePieceBase implements GamePiece {
 
     private IntakeRoller roller;
     private IntakeArm arm;
+
+    public static boolean onManualControl = false;
+
+    private boolean commandForward;
 
     public enum IntakeArm {
         STOP, UP, DOWN;
@@ -57,6 +60,11 @@ public class Intake extends GamePieceBase implements GamePiece {
 
     }
 
+    // Call this with true if the control for the indexer wants the controls to go forward || if shooter is in shooting mode
+    public void fowardBalls(boolean command) {
+        commandForward = command;
+    }
+
     public enum IntakeRoller {
         OFF, REJECT, INTAKE;
 
@@ -68,24 +76,33 @@ public class Intake extends GamePieceBase implements GamePiece {
         }
 
         private void actuate() {
-                if (RobotMap.HAS_INTAKE) {
-                    switch(this) {
-                        case OFF:
-                        default: 
-                            rollerMotor.set(0.0);
-                            break;
-                        case REJECT:
-                            rollerMotor.set(1.0);
-                            break;
-
-                        case INTAKE:
-                            rollerMotor.set(-1.0);
-                            break;
-                    }
+            if (RobotMap.HAS_INTAKE) {
+                switch (this) {
+                case OFF:
+                default:
+                    rollerMotor.set(0.0);
+                    break;
+                case REJECT:
+                    rollerMotor.set(1.0);
+                    break;
+                case INTAKE:
+                    rollerMotor.set(-1.0);
+                    break;
                 }
             }
+        }
 
     }
+
+    // public void manual() {
+    //     onManualControl = true;
+
+    //     if (RobotMap.HAS_INTAKE) {
+    //         if (true) {
+    //             IntakeRoller.rollerMotor();
+    //         }
+    //     }
+    // }
 
     public static Intake getInstance() {
         if (instance == null) {
@@ -116,7 +133,12 @@ public class Intake extends GamePieceBase implements GamePiece {
         if (enabled) {
             roller.actuate();
             arm.actuate();
+
+            // if (telemetry.robotMode();)
+            // if (!onManualControl) {
+
+            }
+            
         }
     }
-
 }

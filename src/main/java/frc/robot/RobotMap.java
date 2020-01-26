@@ -225,10 +225,8 @@ public class RobotMap {
       ROLLER_MOTOR_INVERTED = false;
 
       //Indexer
-      STAGE_FEED_MOTOR_CHANNEL = 0;
-      STAGE_FEED_MOTOR_INVERTED = false;
-      MAGAZINE_FEED_MOTOR_CHANNEL = 0;
-      MAGAZINE_FEED_MOTOR_INVERTED = false;
+
+      FIRST_MAGAZINE_FEED_MOTOR_INVERTED = false;
 
 
       break;
@@ -436,9 +434,13 @@ public class RobotMap {
 
   //INDEXER 
   public static boolean HAS_INDEXER = false;
-  public static int STAGE_FEED_MOTOR_CHANNEL;
-  public static boolean STAGE_FEED_MOTOR_INVERTED; 
-  public static int MAGAZINE_FEED_MOTOR_CHANNEL;
-  public static boolean MAGAZINE_FEED_MOTOR_INVERTED = false;
+  public static int FIRST_MAGAZINE_FEED_MOTOR_CHANNEL;
+  public static boolean FIRST_MAGAZINE_FEED_MOTOR_INVERTED = false;
+  public static int SECOND_MAGAZINE_FEED_MOTOR_CHANNEL;
+  public static boolean SECOND_MAGAZINE_FEED_MOTOR_INVERTED = false;
+  public static int THIRD_MAGAZINE_FEED_MOTOR_CHANNEL;
+  public static boolean THIRD_MAGAZINE_FEED_MOTOR_INVERTED = false;
+
+  public static boolean INDEX_FOLLOWER_MOTOR = false;
 
 }

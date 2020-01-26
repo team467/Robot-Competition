@@ -23,14 +23,16 @@ public class Indexer extends GamePieceBase implements GamePiece {
     private static WPI_TalonSRX magazineFeedMotor3;
 
     private static void Initialize() {
-      magazineFeedMotor1 = new WPI_TalonSRX(RobotMap.MAGAZINE_FEED_MOTOR_CHANNEL);
-      magazineFeedMotor1.setInverted(RobotMap.STAGE_FEED_MOTOR_INVERTED);
 
-      magazineFeedMotor2 = new WPI_TalonSRX(RobotMap.MAGAZINE_FEED_MOTOR_CHANNEL);
-      magazineFeedMotor2.setInverted(RobotMap.STAGE_FEED_MOTOR_INVERTED);
+      magazineFeedMotor1 = new WPI_TalonSRX(RobotMap.FIRST_MAGAZINE_FEED_MOTOR_CHANNEL);
+      magazineFeedMotor1.setInverted(RobotMap.FIRST_MAGAZINE_FEED_MOTOR_INVERTED);
 
-      magazineFeedMotor3 = new WPI_TalonSRX(RobotMap.MAGAZINE_FEED_MOTOR_CHANNEL);
-      magazineFeedMotor3.setInverted(RobotMap.STAGE_FEED_MOTOR_INVERTED);
+      magazineFeedMotor2 = new WPI_TalonSRX(RobotMap.SECOND_MAGAZINE_FEED_MOTOR_CHANNEL);
+      magazineFeedMotor2.setInverted(RobotMap.SECOND_MAGAZINE_FEED_MOTOR_INVERTED);
+
+      magazineFeedMotor3 = new WPI_TalonSRX(RobotMap.THIRD_MAGAZINE_FEED_MOTOR_CHANNEL);
+      magazineFeedMotor3.setInverted(RobotMap.THIRD_MAGAZINE_FEED_MOTOR_INVERTED);
+
     }
 
     // all conveyor belts will turn on/off simutanously
@@ -56,6 +58,7 @@ public class Indexer extends GamePieceBase implements GamePiece {
         }
       }
     }
+
   }
 
   public static Indexer getInstance() {

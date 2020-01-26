@@ -1,13 +1,13 @@
-package frc.robot.stateMachine;;
+package frc.robot.stateMachine;
 
 class StateMachine {
     private State currentState;
 
-	public StateMachine(State initialState) {
+    public StateMachine(State initialState) {
         currentState = initialState;
         currentState.enter();
     }
-    
+
     void step() {
         State nextState = currentState.action();
 
