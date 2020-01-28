@@ -5,6 +5,8 @@ import frc.robot.drive.TalonSpeedControllerGroup;
 import frc.robot.gamepieces.Shooter;
 import frc.robot.logging.RobotLogManager;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
+
 import org.apache.logging.log4j.Logger;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -28,6 +30,7 @@ public class ShooterTuner implements Tuner {
         SmartDashboard.putNumber("Shooter Current", 0);
         SmartDashboard.putNumber("Shooter Voltage", 0);
         SmartDashboard.putNumber("Shooter Speed", 0);
+        SmartDashboard.putNumber("Shooter Position", 0);
 
         useVelocity = SmartDashboard.getBoolean("Use Velocity", false);
         double kP = SmartDashboard.getNumber("Shooter P", 0);
@@ -52,13 +55,14 @@ public class ShooterTuner implements Tuner {
         double speed = SmartDashboard.getNumber("Speed", 0);
 
         if (useVelocity) {
-            shooter.setSpeed(speed);
+            shooter.rampToSpeed(speed);
         } else {
-            shooterMotor.set(speed);
+            shooterMotor.set(ControlMode.PercentOutput, speed);
         }
 
         SmartDashboard.putNumber("Shooter Current", shooterMotor.current());
         SmartDashboard.putNumber("Shooter Voltage", shooterMotor.velocity());
         SmartDashboard.putNumber("Shooter Speed", shooterMotor.velocity());
+        SmartDashboard.putNumber("Shooter Position", shooterMotor.position());
     }
 }

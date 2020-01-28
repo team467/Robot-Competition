@@ -184,6 +184,8 @@ public class TalonSpeedControllerGroup implements SpeedController {
       outputValue *= maxVelocity;
     }
 
+    LOGGER.error("Output is {}, in mode {}", outputValue, controlMode);
+
     leader.set(controlMode, outputValue);
     if (follower1 != null) {
       follower1.follow(leader);
@@ -267,6 +269,15 @@ public class TalonSpeedControllerGroup implements SpeedController {
     }
 
     return ticksToFeet(leader.getSelectedSensorPosition(0));
+  }
+
+  public double ticks() {
+    if (leader == null) {
+      LOGGER.trace("No drive system");
+      return 0;
+    }
+
+    return leader.getSelectedSensorPosition(0);
   }
 
   public double velocity() {
