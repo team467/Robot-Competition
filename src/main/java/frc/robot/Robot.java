@@ -10,7 +10,9 @@ package frc.robot;
 import static org.apache.logging.log4j.util.Unbox.box;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import frc.robot.RobotMap.RobotId;
 import frc.robot.drive.Drive;
 import frc.robot.gamepieces.GamePieceController;
@@ -18,12 +20,14 @@ import frc.robot.logging.RobotLogManager;
 import frc.robot.logging.Telemetry;
 import frc.robot.sensors.LedI2C;
 import frc.robot.sensors.PowerDistributionPanel;
-import frc.robot.tuning.TuneController;
 import frc.robot.usercontrol.DriverStation467;
 import frc.robot.utilities.PerfTimer;
 import frc.robot.vision.CameraSwitcher;
+import frc.robot.tuning.TuneController;
 import java.io.IOException;
 import org.apache.logging.log4j.Logger;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -31,6 +35,8 @@ import org.apache.logging.log4j.Logger;
  * documentation. If you change the name of this class or the package after
  * creating this project, you must also update the build.gradle file in the
  * project.
+ * 
+ * 
  */
 public class Robot extends TimedRobot {
 
@@ -44,13 +50,19 @@ public class Robot extends TimedRobot {
   private Drive drive;
   private Telemetry telemetry;
   private CameraSwitcher camera;
-  private GamePieceController gamePieceController;
   private LedI2C leds;
   private PerfTimer perfTimer;
+  private  GamePieceController gamePieceController;
 
   public static long time = System.nanoTime();
   public static long previousTime = time;
   public static int dt = 0;
+
+  private DifferentialDrive m_myRobot;
+
+  private Joystick m_leftStick;
+  private Joystick m_rightStick;
+
 
   public static void enableSimulator() {
     Robot.enableSimulator = true;
@@ -69,14 +81,34 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
-
     // Delete all Network Table keys; relevant ones will be added when they are set
     // NetworkTableInstance.getDefault().deleteAllEntries(); // Uncomment to clear
     // table once.
 
     // Initialize RobotMap
-    RobotMap.init(RobotId.ROBOT_2019);
+    RobotMap.init(RobotId.ROBOT_2020);
     mode = RobotMode.STARTED;
+
+    SmartDashboard.putString("DB/String 0", "NO_TEST");
+
+    SmartDashboard.putNumber("Left P", RobotMap.LEFT_DRIVE_PID_P);
+    SmartDashboard.putNumber("Left I", RobotMap.LEFT_DRIVE_PID_I);
+    SmartDashboard.putNumber("Left D", RobotMap.LEFT_DRIVE_PID_D);
+    SmartDashboard.putNumber("Left F", RobotMap.LEFT_DRIVE_PID_F);
+    SmartDashboard.putNumber("Left Max Velocity", RobotMap.VELOCITY_MULTIPLIER_LEFT);
+
+    SmartDashboard.putNumber("Ramp Rate", RobotMap.CLOSED_LOOP_RAMP_RATE);
+
+    SmartDashboard.putNumber("Right P", RobotMap.RIGHT_DRIVE_PID_P);
+    SmartDashboard.putNumber("Right I", RobotMap.RIGHT_DRIVE_PID_I);
+    SmartDashboard.putNumber("Right D", RobotMap.RIGHT_DRIVE_PID_D);
+    SmartDashboard.putNumber("Right F", RobotMap.RIGHT_DRIVE_PID_F);
+    SmartDashboard.putNumber("Right Max Velocity", RobotMap.VELOCITY_MULTIPLIER_LEFT);
+    
+
+    m_leftStick = new Joystick(0);
+    m_rightStick = new Joystick(1);
+
 
     // Used after init, should be set only by the Simulator GUI
     // this ensures that the simulator is off otherwise.
@@ -99,12 +131,12 @@ public class Robot extends TimedRobot {
     driverstation = DriverStation467.getInstance();
     drive = Drive.getInstance();
     camera = CameraSwitcher.getInstance();
-    gamePieceController = GamePieceController.getInstance();
     leds = LedI2C.getInstance();
+    gamePieceController = GamePieceController.getInstance();
 
     TuneController.loadTuners();
     drive.setPidsFromRobotMap();
-    PowerDistributionPanel.registerPowerDistributionWithTelemetry();
+    //PowerDistributionPanel.registerPowerDistributionWithTelemetry();
 
     telemetry = Telemetry.getInstance();
     telemetry.robotMode(mode);
@@ -128,9 +160,8 @@ public class Robot extends TimedRobot {
   public void autonomousInit() {
     mode = RobotMode.AUTONOMOUS;
     telemetry.robotMode(mode);
-    LOGGER.info("No Autonomous");
+    LOGGER.info("Autonomous Initialized");
     perfTimer = PerfTimer.timer("Autonomous");
-    gamePieceController.runOnTeleopInit();
   }
   
   /**
@@ -138,6 +169,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousPeriodic() {
+    LOGGER.trace("Autonomous Periodic");
     teleopPeriodic();
   }
 
@@ -145,7 +177,7 @@ public class Robot extends TimedRobot {
   public void teleopInit() {
     mode = RobotMode.TELEOP;
     telemetry.robotMode(mode);
-    LOGGER.info("Init Teleop");
+    LOGGER.info("Teleop Initialized");
     perfTimer = PerfTimer.timer("Teleoperated");
     LOGGER.debug("Match time {}", box(DriverStation.getInstance().getMatchTime()));
   }
@@ -155,7 +187,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
-
+    LOGGER.trace("Teleop Periodic");
     perfTimer.start();
     driverstation.readInputs();
 
@@ -170,11 +202,13 @@ public class Robot extends TimedRobot {
     }
 
     if (driverstation.getSlow()) {
-      speed = speed * RobotMap.SLOW_DRIVE_SPEED_MULTIPLIER;
-      turn = turn * RobotMap.SLOW_DRIVE_SPEED_MULTIPLIER;
+      double multiplier = (RobotMap.USE_VELOCITY_SPEED_CONTROL_FOR_TELOP ? RobotMap.SLOW_VELOCITY_SPEED_MULTIPLIER : RobotMap.SLOW_DRIVE_SPEED_MULTIPLIER);
+      speed = speed * multiplier;
+      turn = turn * multiplier;
     } else if (!driverstation.getTurbo() && !driverstation.getSlow()) {
-      speed = speed * RobotMap.NORMAL_DRIVE_SPEED_MULTIPLIER;
-      turn = turn * RobotMap.NORMAL_DRIVE_SPEED_MULTIPLIER;
+      double multiplier = (RobotMap.USE_VELOCITY_SPEED_CONTROL_FOR_TELOP ? RobotMap.NORMAL_VELOCITY_SPEED_MULTIPLIER : RobotMap.NORMAL_DRIVE_SPEED_MULTIPLIER);
+      speed = speed * multiplier;
+      turn = turn * multiplier;
     }
 
     LOGGER.debug("Driver Station Inputs mode: {} speed: {} turn: {}", 
@@ -194,15 +228,14 @@ public class Robot extends TimedRobot {
         break;
 
       case TankDrive:
-        double leftTank = driverstation.getDriveJoystick().getLeftStickY();
-        double rightTank = driverstation.getDriveJoystick().getRightStickY();
-        drive.tankDrive(leftTank, rightTank, true);
+        m_myRobot.tankDrive(m_leftStick.getY(), m_rightStick.getY());
+        // double leftTank = driverstation.getDriveJoystick().getLeftStickY();
+        // double rightTank = driverstation.getDriveJoystick().getRightStickY();
+        // drive.tankDrive(leftTank, rightTank, true);
         break;
 
       default:
     }
-
-    gamePieceController.periodic();
 
     if (driverstation.restartCamera()) {
       camera.restart();
@@ -226,9 +259,11 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void testPeriodic() {
+    LOGGER.trace("Test Periodic");
     perfTimer.start();
     TuneController.periodic();
     perfTimer.end();
+    
   }
 
   @Override
@@ -236,8 +271,8 @@ public class Robot extends TimedRobot {
     mode = RobotMode.DISABLED;
     telemetry.robotMode(mode);
     leds.whenDisabled();
-    PerfTimer.print();
-    LOGGER.info("Init Disabled");
+    // PerfTimer.print();
+    LOGGER.info("Robot Disabled");
   }
 
 
