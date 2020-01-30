@@ -8,9 +8,10 @@ import frc.robot.logging.RobotLogManager;
 public class TuneController {
 
   public static void loadTuners() {
-    register("Drive_Straight", new DriveConstantTuner());
-    register("PID_Velocity_Tuner", new PIDVelocityTuner());
     register("Advanced_Tuner", new AdvancedTuner());
+    register("PID_Velocity_Tuner", new PIDVelocityTuner());
+    register("Shooter_Tuner", new ShooterTuner());
+    register("Drive_Straight", new DriveConstantTuner());
   }
 
   private static final Logger LOGGER
