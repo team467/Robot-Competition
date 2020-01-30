@@ -26,6 +26,8 @@ import frc.robot.vision.CameraSwitcher;
 import frc.robot.tuning.TuneController;
 import java.io.IOException;
 import org.apache.logging.log4j.Logger;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
@@ -105,6 +107,22 @@ public class Robot extends TimedRobot {
     // Initialize RobotMap
     RobotMap.init(RobotId.KITBOT);
     mode = RobotMode.STARTED;
+
+    SmartDashboard.putString("DB/String 0", "NO_TEST");
+
+    SmartDashboard.putNumber("Left P", RobotMap.LEFT_DRIVE_PID_P);
+    SmartDashboard.putNumber("Left I", RobotMap.LEFT_DRIVE_PID_I);
+    SmartDashboard.putNumber("Left D", RobotMap.LEFT_DRIVE_PID_D);
+    SmartDashboard.putNumber("Left F", RobotMap.LEFT_DRIVE_PID_F);
+    SmartDashboard.putNumber("Left Max Velocity", RobotMap.VELOCITY_MULTIPLIER_LEFT);
+
+    SmartDashboard.putNumber("Ramp Rate", RobotMap.CLOSED_LOOP_RAMP_RATE);
+
+    SmartDashboard.putNumber("Right P", RobotMap.RIGHT_DRIVE_PID_P);
+    SmartDashboard.putNumber("Right I", RobotMap.RIGHT_DRIVE_PID_I);
+    SmartDashboard.putNumber("Right D", RobotMap.RIGHT_DRIVE_PID_D);
+    SmartDashboard.putNumber("Right F", RobotMap.RIGHT_DRIVE_PID_F);
+    SmartDashboard.putNumber("Right Max Velocity", RobotMap.VELOCITY_MULTIPLIER_LEFT);
     
 
     m_leftStick = new Joystick(0);
@@ -173,7 +191,6 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
-    LOGGER.fatal("THIS SHOULD NOT APPEAR 4");
     mode = RobotMode.AUTONOMOUS;
     telemetry.robotMode(mode);
     LOGGER.info("Autonomous Initialized");
@@ -185,14 +202,12 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousPeriodic() {
-    LOGGER.fatal("THIS SHOULD NOT APPEAR 3");
     LOGGER.trace("Autonomous Periodic");
     teleopPeriodic();
   }
 
   @Override
   public void teleopInit() {
-    LOGGER.fatal("THIS SHOULD NOT APPEAR 2");
     mode = RobotMode.TELEOP;
     telemetry.robotMode(mode);
     LOGGER.info("Teleop Initialized");
@@ -208,7 +223,6 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
-    LOGGER.fatal("THIS SHOULD NOT APPEAR 1");
     LOGGER.trace("Teleop Periodic");
     perfTimer.start();
     driverstation.readInputs(); 
@@ -224,11 +238,13 @@ public class Robot extends TimedRobot {
     }
 
     if (driverstation.getSlow()) {
-      speed = speed * RobotMap.SLOW_DRIVE_SPEED_MULTIPLIER;
-      turn = turn * RobotMap.SLOW_DRIVE_SPEED_MULTIPLIER;
+      double multiplier = (RobotMap.USE_VELOCITY_SPEED_CONTROL_FOR_TELOP ? RobotMap.SLOW_VELOCITY_SPEED_MULTIPLIER : RobotMap.SLOW_DRIVE_SPEED_MULTIPLIER);
+      speed = speed * multiplier;
+      turn = turn * multiplier;
     } else if (!driverstation.getTurbo() && !driverstation.getSlow()) {
-      speed = speed * RobotMap.NORMAL_DRIVE_SPEED_MULTIPLIER;
-      turn = turn * RobotMap.NORMAL_DRIVE_SPEED_MULTIPLIER;
+      double multiplier = (RobotMap.USE_VELOCITY_SPEED_CONTROL_FOR_TELOP ? RobotMap.NORMAL_VELOCITY_SPEED_MULTIPLIER : RobotMap.NORMAL_DRIVE_SPEED_MULTIPLIER);
+      speed = speed * multiplier;
+      turn = turn * multiplier;
     }
 
     LOGGER.debug("Driver Station Inputs mode: {} speed: {} turn: {}", 
@@ -295,7 +311,7 @@ public class Robot extends TimedRobot {
     mode = RobotMode.DISABLED;
     telemetry.robotMode(mode);
     leds.whenDisabled();
-    PerfTimer.print();
+    // PerfTimer.print();
     LOGGER.info("Robot Disabled");
   }
 

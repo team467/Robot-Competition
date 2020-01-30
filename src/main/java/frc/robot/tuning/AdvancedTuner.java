@@ -25,29 +25,37 @@ public class AdvancedTuner implements Tuner {
       SmartDashboard.putNumber("Left Current", 0);
       SmartDashboard.putNumber("Left Distance", 0);
       SmartDashboard.putNumber("Left Speed", 0);
+      SmartDashboard.putNumber("Right Temperature", 0);
       SmartDashboard.putNumber("Left CPR", 0);
+      SmartDashboard.putBoolean("Using Left", false);
 
       SmartDashboard.putNumber("Right Current", 0);
-      SmartDashboard.putNumber("Right CPR", 0);
       SmartDashboard.putNumber("Right Distance", 0);
       SmartDashboard.putNumber("Right Speed", 0);
+      SmartDashboard.putNumber("Right Temperature", 0);
+      SmartDashboard.putNumber("Right CPR", 0);
+      SmartDashboard.putBoolean("Using Right", false);
       drive.zero();
     }
 
     public void periodic() {
       LOGGER.fatal("THIS SHOULD NOT APPEAR 5");
       double speed = SmartDashboard.getNumber("Speed", 0);
-      drive.tankDrive(speed, speed);
-      drive.getLeftCPR();
+      boolean left = SmartDashboard.getBoolean("Using Left", false);
+      boolean right = SmartDashboard.getBoolean("Using Right", false);
+      
+      drive.tankDrive(left ? speed: 0, right ? speed: 0);
 
       SmartDashboard.putNumber("Left Current", drive.getLeftCurrent());
       SmartDashboard.putNumber("Left Distance", drive.getLeftDistance());
       SmartDashboard.putNumber("Left Speed", drive.getLeftVelocity());
+      SmartDashboard.putNumber("Left Temperature", drive.getLeftTemperature());
       SmartDashboard.putNumber("Left CPR", drive.getLeftCPR());
 
       SmartDashboard.putNumber("Right Current", drive.getRightCurrent());
+      SmartDashboard.putNumber("Right Distance", -drive.getRightDistance());
+      SmartDashboard.putNumber("Right Speed", -drive.getRightVelocity());
+      SmartDashboard.putNumber("Right Temperature", drive.getRightTemperature());
       SmartDashboard.putNumber("Right CPR", drive.getRightCPR());
-      SmartDashboard.putNumber("Right Distance", drive.getRightDistance());
-      SmartDashboard.putNumber("Right Speed", drive.getRightVelocity());
     }
 }

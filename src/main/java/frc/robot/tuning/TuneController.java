@@ -11,6 +11,9 @@ public class TuneController {
     register("LED Strip", new LEDStripTuner());
     // register("Drive Straight", new DriveConstantTuner());
     register("Advanced Tuner", new AdvancedTuner());
+    register("Drive_Straight", new DriveConstantTuner());
+    register("PID_Velocity_Tuner", new PIDVelocityTuner());
+    register("Advanced_Tuner", new AdvancedTuner());
   }
 
   private static final Logger LOGGER
@@ -28,7 +31,8 @@ public class TuneController {
 
   public static void init() {
     String key = SmartDashboard.getString("DB/String 0", "NO_TEST").toUpperCase();
-    LOGGER.error("Tuner " + key + " initialized");
+    SmartDashboard.putString("DB/String 0", key);
+    LOGGER.error("Tuner initialized");
   
     if (tuners.containsKey(key)) {
       tuner = tuners.get(key);
