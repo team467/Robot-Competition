@@ -9,8 +9,7 @@ package frc.robot.stateMachine;
 
 import frc.robot.RobotMap;
 import frc.robot.gamepieces.Indexer;
-
-frc.robot.gamepieces.Indexer;/**
+/**
  * Add your docs here.
  */
 enum IndexerState implements State {
@@ -38,7 +37,7 @@ enum IndexerState implements State {
             if (!RobotMap.HAS_INDEXER) {
                 return Idle; 
             }
-            Indexer.IndexBelt.actuate(OFF);
+            
             return this;
         }
 

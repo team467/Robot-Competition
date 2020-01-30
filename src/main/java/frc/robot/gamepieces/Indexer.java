@@ -18,20 +18,16 @@ public class Indexer extends GamePieceBase implements GamePiece {
   public enum IndexBelt {
     STOP, FEED, EJECT;
 
-    private static WPI_TalonSRX magazineFeedMotor1;
-    private static WPI_TalonSRX magazineFeedMotor2;
-    private static WPI_TalonSRX magazineFeedMotor3;
+    private static WPI_TalonSRX magazineFeedMotorLeader;
+    private static WPI_TalonSRX magazineFeedMotorFollower;
 
     private static void Initialize() {
 
-      magazineFeedMotor1 = new WPI_TalonSRX(RobotMap.FIRST_MAGAZINE_FEED_MOTOR_CHANNEL);
-      magazineFeedMotor1.setInverted(RobotMap.FIRST_MAGAZINE_FEED_MOTOR_INVERTED);
+      magazineFeedMotorLeader = new WPI_TalonSRX(RobotMap.FIRST_MAGAZINE_FEED_MOTOR_CHANNEL);
+      magazineFeedMotorLeader.setInverted(RobotMap.FIRST_MAGAZINE_FEED_MOTOR_INVERTED);
 
-      magazineFeedMotor2 = new WPI_TalonSRX(RobotMap.SECOND_MAGAZINE_FEED_MOTOR_CHANNEL);
-      magazineFeedMotor2.setInverted(RobotMap.SECOND_MAGAZINE_FEED_MOTOR_INVERTED);
-
-      magazineFeedMotor3 = new WPI_TalonSRX(RobotMap.THIRD_MAGAZINE_FEED_MOTOR_CHANNEL);
-      magazineFeedMotor3.setInverted(RobotMap.THIRD_MAGAZINE_FEED_MOTOR_INVERTED);
+      magazineFeedMotorFollower = new WPI_TalonSRX(RobotMap.SECOND_MAGAZINE_FEED_MOTOR_CHANNEL);
+      magazineFeedMotorFollower.setInverted(RobotMap.SECOND_MAGAZINE_FEED_MOTOR_INVERTED);
 
     }
 
@@ -41,19 +37,19 @@ public class Indexer extends GamePieceBase implements GamePiece {
         switch (this) {
         case STOP:
         default:
-          magazineFeedMotor1.set(0.0);
-          magazineFeedMotor2.set(0.0);
-          magazineFeedMotor3.set(0.0);
+          magazineFeedMotorLeader.set(0.0);
+          magazineFeedMotorFollower.set(0.0);
+          LOGGER.debug("Indexer is stopping");
           break;
         case FEED:
-          magazineFeedMotor1.set(1.0);
-          magazineFeedMotor2.set(1.0);
-          magazineFeedMotor3.set(1.0);
+          magazineFeedMotorLeader.set(-1.0);
+          magazineFeedMotorFollower.set(-1.0);
+          LOGGER.debug("Indexer going backwards");
           break;
         case EJECT:
-          magazineFeedMotor1.set(-1.0);
-          magazineFeedMotor2.set(-1.0);
-          magazineFeedMotor3.set(-1.0);
+          magazineFeedMotorLeader.set(1.0);
+          magazineFeedMotorFollower.set(0.0);
+          LOGGER.debug("Indexer going forward");
           break;
         }
       }

@@ -10,7 +10,7 @@ package frc.robot.gamepieces;
 import frc.robot.RobotMap;
 import frc.robot.logging.RobotLogManager;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
-import frc.robot.logging.Telemetry;
+// import frc.robot.logging.Telemetry;
 
 import org.apache.logging.log4j.Logger;
 
@@ -46,13 +46,16 @@ public class Intake extends GamePieceBase implements GamePiece {
                 case STOP:
                 default:
                     armMotor.set(0.0);
+                    LOGGER.debug("Roller has stopped");
                     break;
                 case UP:
                     armMotor.set(1.0);
+                    LOGGER.debug("Arm is up");
                     break;
 
                 case DOWN:
                     armMotor.set(-1.0);
+                    LOGGER.debug("Arm is down");
                     break;
                 }
             }
@@ -60,7 +63,8 @@ public class Intake extends GamePieceBase implements GamePiece {
 
     }
 
-    // Call this with true if the control for the indexer wants the controls to go forward || if shooter is in shooting mode
+    // Call this with true if the control for the indexer wants the controls to go
+    // forward || if shooter is in shooting mode
     public void fowardBalls(boolean command) {
         commandForward = command;
     }
@@ -81,28 +85,21 @@ public class Intake extends GamePieceBase implements GamePiece {
                 case OFF:
                 default:
                     rollerMotor.set(0.0);
+                    LOGGER.debug("Roller is stopped");
                     break;
                 case REJECT:
                     rollerMotor.set(1.0);
+                    LOGGER.debug("Roller is going forward");
                     break;
                 case INTAKE:
                     rollerMotor.set(-1.0);
+                    LOGGER.debug("Roller is going backwards");
                     break;
                 }
             }
         }
 
     }
-
-    // public void manual() {
-    //     onManualControl = true;
-
-    //     if (RobotMap.HAS_INTAKE) {
-    //         if (true) {
-    //             IntakeRoller.rollerMotor();
-    //         }
-    //     }
-    // }
 
     public static Intake getInstance() {
         if (instance == null) {
@@ -117,6 +114,9 @@ public class Intake extends GamePieceBase implements GamePiece {
 
         IntakeArm.initialize();
         IntakeRoller.initialize();
+
+        arm = IntakeArm.UP;
+        roller = IntakeRoller.OFF;
 
     }
 
@@ -134,11 +134,12 @@ public class Intake extends GamePieceBase implements GamePiece {
             roller.actuate();
             arm.actuate();
 
-            // if (telemetry.robotMode();)
-            // if (!onManualControl) {
-
-            }
-            
+            // if ball wants to advance and ball is not at mouth 
+            if ()
+            //turn on belt 
+            //else 
+            // turn off belt 
         }
+
     }
 }
