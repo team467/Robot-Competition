@@ -3,7 +3,7 @@ Configuration:
   Properties:
     Property:
       name: log-path
-      value: "logs"
+      value: "${sys:logFilename}"
   Appenders:
     Console:
       name: Console_Appender

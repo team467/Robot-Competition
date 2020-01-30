@@ -3,6 +3,7 @@ package frc.robot.logging;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Arrays;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -23,6 +24,10 @@ public class RobotLogManager {
     "/media/sda2/logging/log4j2.yaml",
     "/media/sda1/logging/log4j2-test.yaml",
     "/media/sda2/logging/log4j2-test.yaml",
+    "/media/sdb1/logging/log4j2.yaml",
+    "/media/sdb2/logging/log4j2.yaml",
+    "/media/sdb1/logging/log4j2-test.yaml",
+    "/media/sdb2/logging/log4j2-test.yaml",
     "./home/lvuser/deploy/log4j2.yaml",
     "./home/lvuser/deploy/log4j2-test.yaml",
     "./src/main/deploy/log4j2.yaml",
@@ -42,11 +47,15 @@ public class RobotLogManager {
       }
       return true;
     } else {
-      return false;
+      return false; 
     }
   }
-
   private static void init(String pathToConfig) {
+    //pops off anything after last '/'
+    String[] splitString = pathToConfig.split("/");
+    splitString = Arrays.copyOf(splitString, splitString.length-1);
+    String path = String.join("/", splitString);
+    System.setProperty("logFilename", path);
     if (!initialized) {
       try {
         File configSourceFile = new File(pathToConfig);
