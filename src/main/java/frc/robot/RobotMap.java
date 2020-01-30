@@ -153,32 +153,32 @@ public class RobotMap {
 
         LEFT_LEAD_CHANNEL = 1;
         LEFT_FOLLOWER_1_CHANNEL = 2;
-        LEFT_DRIVE_SENSOR_IS_INVERTED = true;
-        LEFT_DRIVE_MOTOR_IS_INVERTED = false;
+        LEFT_DRIVE_SENSOR_IS_INVERTED = false;
+        LEFT_DRIVE_MOTOR_IS_INVERTED = true;
 
         RIGHT_LEAD_CHANNEL = 3;
         RIGHT_FOLLOWER_1_CHANNEL = 4;
-        RIGHT_DRIVE_SENSOR_IS_INVERTED = true;
-        RIGHT_DRIVE_MOTOR_IS_INVERTED = false;
+        RIGHT_DRIVE_SENSOR_IS_INVERTED = false;
+        RIGHT_DRIVE_MOTOR_IS_INVERTED = true;
 
         // Linear PIDS
-        LEFT_DRIVE_PID_P = 0.0002;
+        LEFT_DRIVE_PID_P = 0.0003;
         LEFT_DRIVE_PID_I = 0.0;
         LEFT_DRIVE_PID_D = 0.0;
         LEFT_DRIVE_PID_F = 0.0;
 
-        RIGHT_DRIVE_PID_P = 0.0002;
+        RIGHT_DRIVE_PID_P = 0.0003;
         RIGHT_DRIVE_PID_I = 0.0;
         RIGHT_DRIVE_PID_D = 0.0;
         RIGHT_DRIVE_PID_F = 0.0;
 
         // Turn PIDs
-        LEFT_TURN_PID_P = 0.00025;
+        LEFT_TURN_PID_P = 0.00015;
         LEFT_TURN_PID_I = 0.0;
         LEFT_TURN_PID_D = 0.0;
         LEFT_TURN_PID_F = 0.0;
 
-        RIGHT_TURN_PID_P = 0.00025;
+        RIGHT_TURN_PID_P = 0.00015;
         RIGHT_TURN_PID_I = 0.0;
         RIGHT_TURN_PID_D = 0.0;
         RIGHT_TURN_PID_F = 0.0;
@@ -192,7 +192,7 @@ public class RobotMap {
         AUTO_CAMERA = true;
 
         //sensors
-        HAS_GYRO = false;
+        HAS_GYRO = true;
 
         break;
 

@@ -30,17 +30,21 @@ public class GyroTuner implements Tuner {
       drive.zero();
       gyro.zero();
       SmartDashboard.putNumber("Turn Degrees", 0);
+      SmartDashboard.putNumber("Turn multiplier", 0);
     }
 
     public void periodic() {
       double turn = SmartDashboard.getNumber("Turn Degrees", 0);
+      double turnMult = SmartDashboard.getNumber("Turn multiplier", 0);
 
-      if(gyro.getPitchDegrees() <= Math.abs(turn)){
+     
+      if(gyro.getPitchDegrees() <= Math.abs(turn) * turnMult){
         drive.arcadeDrive(0, -Math.signum(turn)*0.3);
+
       } else {
         drive.arcadeDrive(0, 0);
-        gyro.zero();
       }
+    
 
 
        LOGGER.info("Yaw: {}, Pitch: {}, Roll: {}", gyro.getYawDegrees(), gyro.getPitchDegrees(), gyro.getRollDegrees());
