@@ -140,7 +140,7 @@ public class RobotMap {
       DRIVEMOTOR_NUM = 4;
       WHEEL_CIRCUMFERENCE = 18.50;
 
-      CONTROLS_INVERTED_FB = false;
+      CONTROLS_INVERTED_FB = true;
       CONTROLS_INVERTED_TURN = false;
 
       USE_VELOCITY_SPEED_CONTROL_FOR_TELOP = true;
@@ -196,6 +196,7 @@ public class RobotMap {
       // Game Pieces
       HAS_SHOOTER = true;
       HAS_TRIGGER = false;
+      HAS_SHOOTERLEDS = true;
 
       // Shooter
       // TODO:change the values of these later
@@ -217,6 +218,9 @@ public class RobotMap {
 
       VELOCITY_MULTIPLIER_SHOOTER = 0;
       SHOOTER_SPEED_TOLERANCE = 0.25;
+
+      SHOOTER_LED_AMOUNT = 12;
+      SHOOTER_LED_CHANNEL = 9;
       break;
 
     case KITBOT:
@@ -282,6 +286,7 @@ public class RobotMap {
       // Game Pieces
       HAS_SHOOTER = true;
       HAS_TRIGGER = false;
+      HAS_SHOOTERLEDS = true;
 
       // Shooter
       // TODO:change the values of these later
@@ -303,6 +308,9 @@ public class RobotMap {
 
       VELOCITY_MULTIPLIER_SHOOTER = 6400;
       SHOOTER_SPEED_TOLERANCE = 0.25;
+      
+      SHOOTER_LED_AMOUNT = 12;
+      SHOOTER_LED_CHANNEL = 9;
       break;
     }
 
@@ -401,6 +409,7 @@ public class RobotMap {
   // Shooter
   public static boolean HAS_SHOOTER = false;
   public static boolean HAS_TRIGGER = false;
+  public static boolean HAS_SHOOTERLEDS = false;
   public static boolean SHOOTER_FOLLOWER;
   public static int SHOOTER_MOTOR_CHANNEL;
   public static boolean SHOOTER_MOTOR_INVERTED;
@@ -418,6 +427,9 @@ public class RobotMap {
   public static double VELOCITY_MULTIPLIER_SHOOTER;
   public static double SHOOTER_SPEED_TOLERANCE;
   public static int SHOOTER_PID_SLOT_DRIVE;
+
+  public static int SHOOTER_LED_AMOUNT;
+  public static int SHOOTER_LED_CHANNEL;
 
   // Intake
   public static boolean HAS_INTAKE = false;

@@ -10,6 +10,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import org.apache.logging.log4j.Logger;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.util.Color;
 
 public class ShooterTuner implements Tuner {
 
@@ -56,9 +57,29 @@ public class ShooterTuner implements Tuner {
 
         if (useVelocity) {
             shooter.rampToSpeed(speed);
+            double currentVel = shooter.getMotor().velocity();
+            double setVel = shooter.getMotor().closedLoopTarget();
+
+            double ledFillPercent = Math.min(0, Math.max(1, setVel/currentVel));
+            int fillLeds = (int) (RobotMap.SHOOTER_LED_AMOUNT * ledFillPercent)-1;
+            if (fillLeds >= 0) {
+                shooter.fillStrip(0, 0, 255, fillLeds);
+            } else {
+                shooter.clearStrip();
+            }
         } else {
             shooterMotor.set(ControlMode.PercentOutput, speed);
+
+            double ledFillPercent = Math.max(0, Math.min(1, Math.abs(speed)));
+            int fillLeds = (int) (RobotMap.SHOOTER_LED_AMOUNT * ledFillPercent)-1;
+            if (fillLeds >= 0) {
+                shooter.fillStrip(0, 0, 255, fillLeds);
+            } else {
+                shooter.clearStrip();
+            }
         }
+
+        // shooter.setLedSrip(255, 255, 255, 0, 5);
 
         SmartDashboard.putNumber("Shooter Current", shooterMotor.current());
         SmartDashboard.putNumber("Shooter Voltage", shooterMotor.velocity());

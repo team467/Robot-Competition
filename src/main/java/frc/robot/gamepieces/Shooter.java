@@ -8,6 +8,10 @@ import frc.robot.gamepieces.GamePiece;
 
 import org.apache.logging.log4j.Logger;
 
+import edu.wpi.first.wpilibj.AddressableLED;
+import edu.wpi.first.wpilibj.AddressableLEDBuffer;
+import edu.wpi.first.wpilibj.util.Color;
+
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
@@ -30,6 +34,9 @@ public class Shooter extends GamePieceBase implements GamePiece {
 
   private static WPI_TalonSRX triggerMotor;
   public static TalonSpeedControllerGroup trigger;
+
+  private static AddressableLED leds;
+  private static AddressableLEDBuffer ledBuffer;
 
   private Hashtable<Integer, Integer> distanceToPower = new Hashtable<Integer, Integer>();
 
@@ -67,6 +74,23 @@ public class Shooter extends GamePieceBase implements GamePiece {
       } else {
         trigger = new TalonSpeedControllerGroup();
       }
+
+      if (RobotMap.HAS_SHOOTERLEDS) {
+        leds = new AddressableLED(RobotMap.SHOOTER_LED_CHANNEL);
+        ledBuffer = new AddressableLEDBuffer(RobotMap.SHOOTER_LED_AMOUNT);
+        leds.setLength(ledBuffer.getLength());
+
+        for (var i = 0; i < ledBuffer.getLength(); i++) {
+          ledBuffer.setRGB(i, 0, 0, 0);
+        }
+
+        leds.setData(ledBuffer);
+        leds.start();
+      } else {
+        leds = null;
+        ledBuffer = null;
+      }
+
       instance = new Shooter(flywheel);
       instance.stop();
     }
@@ -138,6 +162,25 @@ public class Shooter extends GamePieceBase implements GamePiece {
     }
   }
 
+  public void setLedSrip(int r, int g, int b, int startingLed, int endingLed) {
+    for (var i = Math.max(0, startingLed); i <= Math.min(ledBuffer.getLength()-1, endingLed); i++) {
+      ledBuffer.setRGB(i, r, g, b);
+   }
+   leds.setData(ledBuffer);
+  }
+
+  public void fillStrip(int r, int g, int b, int led) {
+    int setLed = Math.min(ledBuffer.getLength()-1, led);
+    setLedSrip(r, g, b, 0, setLed);
+    if (setLed < ledBuffer.getLength()-1) {
+      setLedSrip(0, 0, 0, setLed, ledBuffer.getLength()-1);
+    }
+  }
+
+  public void clearStrip() {
+    setLedSrip(0, 0, 0, 0, ledBuffer.getLength()-1);
+  }
+
   // TODO: implement distance with shoot; auto aim/auto shooting
   private void smartShoot() {
     if (RobotMap.HAS_SHOOTER) {
@@ -149,7 +192,6 @@ public class Shooter extends GamePieceBase implements GamePiece {
 
       }
     }
-
   }
 
   /**
