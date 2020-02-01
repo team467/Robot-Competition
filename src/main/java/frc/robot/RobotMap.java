@@ -221,6 +221,7 @@ public class RobotMap {
 
       SHOOTER_LED_AMOUNT = 12;
       SHOOTER_LED_CHANNEL = 9;
+      SHOOTER_DOUBLESIDE_LED = true;
       break;
 
     case KITBOT:
@@ -311,6 +312,7 @@ public class RobotMap {
       
       SHOOTER_LED_AMOUNT = 12;
       SHOOTER_LED_CHANNEL = 9;
+      SHOOTER_DOUBLESIDE_LED = true;
       break;
     }
 
@@ -430,6 +432,7 @@ public class RobotMap {
 
   public static int SHOOTER_LED_AMOUNT;
   public static int SHOOTER_LED_CHANNEL;
+  public static boolean SHOOTER_DOUBLESIDE_LED = false;
 
   // Intake
   public static boolean HAS_INTAKE = false;

@@ -77,7 +77,7 @@ public class Shooter extends GamePieceBase implements GamePiece {
 
       if (RobotMap.HAS_SHOOTERLEDS) {
         leds = new AddressableLED(RobotMap.SHOOTER_LED_CHANNEL);
-        ledBuffer = new AddressableLEDBuffer(RobotMap.SHOOTER_LED_AMOUNT);
+        ledBuffer = new AddressableLEDBuffer(RobotMap.SHOOTER_LED_AMOUNT * (RobotMap.SHOOTER_DOUBLESIDE_LED? 2: 1));
         leds.setLength(ledBuffer.getLength());
 
         for (var i = 0; i < ledBuffer.getLength(); i++) {
@@ -170,10 +170,16 @@ public class Shooter extends GamePieceBase implements GamePiece {
   }
 
   public void fillStrip(int r, int g, int b, int led) {
-    int setLed = Math.min(ledBuffer.getLength()-1, led);
+    int setLed = Math.min(RobotMap.SHOOTER_LED_AMOUNT-1, led);
     setLedSrip(r, g, b, 0, setLed);
-    if (setLed < ledBuffer.getLength()-1) {
-      setLedSrip(0, 0, 0, setLed, ledBuffer.getLength()-1);
+    if (RobotMap.SHOOTER_DOUBLESIDE_LED) {
+      setLedSrip(r, g, b, RobotMap.SHOOTER_LED_AMOUNT, RobotMap.SHOOTER_LED_AMOUNT + setLed);
+    }
+    if (setLed < RobotMap.SHOOTER_LED_AMOUNT-1) {
+      setLedSrip(0, 0, 0, setLed + 1, RobotMap.SHOOTER_LED_AMOUNT-1);
+      if (RobotMap.SHOOTER_DOUBLESIDE_LED) {
+        setLedSrip(r, g, b, RobotMap.SHOOTER_LED_AMOUNT + setLed + 1, ledBuffer.getLength()-1 + setLed);
+      }
     }
   }
 
