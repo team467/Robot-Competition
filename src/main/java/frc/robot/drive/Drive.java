@@ -1,6 +1,8 @@
 package frc.robot.drive;
 
 import static org.apache.logging.log4j.util.Unbox.box;
+
+import com.revrobotics.CANEncoder;
 //import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel;
@@ -10,6 +12,8 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.RobotMap;
 import frc.robot.logging.RobotLogManager;
+import frc.robot.sensors.Gyrometer;
+
 import org.apache.logging.log4j.Logger;
 import edu.wpi.first.wpiutil.math.MathUtil;
 
@@ -22,6 +26,7 @@ public class Drive extends DifferentialDrive implements AutoDrive {
 
   // Single instance of this class
   private static Drive instance = null;
+  public static Gyrometer gyro;
 
   //private final TalonSpeedControllerGroup leftTalons;
   //private final TalonSpeedControllerGroup rightTalons;
@@ -41,6 +46,8 @@ public class Drive extends DifferentialDrive implements AutoDrive {
     if (instance == null) {
       // TalonSpeedControllerGroup leftTalons;
       // TalonSpeedControllerGroup rightTalons;
+
+      gyro = Gyrometer.getInstance();
 
       SparkMaxSpeedControllerGroup leftSM;
       SparkMaxSpeedControllerGroup rightSM;
@@ -456,5 +463,15 @@ public class Drive extends DifferentialDrive implements AutoDrive {
   public void curvatureDrive(final double speed, final double rotation, final boolean isQuickTurn) {
     super.curvatureDrive(speed, rotation, isQuickTurn);
   }
+
+  public CANEncoder getRightEncoder(){
+    return rightSM.leadEncoder;
+  }
+
+  public CANEncoder getLeftEncoder(){
+    return leftSM.leadEncoder;
+  }
+
+  public 
 
 }

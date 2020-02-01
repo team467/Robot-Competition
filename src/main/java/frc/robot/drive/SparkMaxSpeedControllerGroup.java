@@ -26,7 +26,7 @@ public class SparkMaxSpeedControllerGroup implements SpeedController {
   private CANSparkMax follower1;
   private CANSparkMax follower2;
 
-  private CANEncoder leadEncoder;
+  public CANEncoder leadEncoder;
   private CANPIDController leadPidController;
   private ControlType controlType = ControlType.kVoltage;
 
