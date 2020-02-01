@@ -58,10 +58,20 @@ public class Climber extends GamePieceBase implements GamePiece {
     }
 
     public void stop() {
-
+        //to be filled in with anything if nessecary
+        climbGroup.set(0.0);
     }
 
     public void periodic() {
+        //figure out inputs TODO
+        //switch block deciding how to power motors TODO
+        if (RobotMap.HAS_CLIMBER) {
+            if (enabled) {
+                
+            } else {
+                stop();
+            }
+        }
 
     }
 }
