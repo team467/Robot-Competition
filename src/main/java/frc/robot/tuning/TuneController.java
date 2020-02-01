@@ -12,6 +12,7 @@ public class TuneController {
     register("PID_Velocity_Tuner", new PIDVelocityTuner());
     register("Advanced_Tuner", new AdvancedTuner());
     register("Gyro_Tuner", new GyroTuner());
+    register("Puppy_Mode", new PuppyModeTuner());
   }
 
   private static final Logger LOGGER
