@@ -12,7 +12,7 @@ public class Indexer extends GamePieceBase implements GamePiece {
 
   private static final Logger LOGGER = RobotLogManager.getMainLogger(Indexer.class.getName());
 
-  private IndexBelt stage1;
+  private IndexBelt belt;
 
   // change the motor names
   public enum IndexBelt {
@@ -70,19 +70,19 @@ public class Indexer extends GamePieceBase implements GamePiece {
     // Initialize
     IndexBelt.Initialize();
 
-    stage1 = IndexBelt.STOP;
+    belt = IndexBelt.STOP;
 
   }
 
   public IndexBelt stage1() {
-    return stage1;
+    return belt;
   }
 
   public void periodic() {
 
     if (RobotMap.HAS_INDEXER) {
       if (enabled) {
-        stage1.actuate();
+        belt.actuate();
       }
     }
 

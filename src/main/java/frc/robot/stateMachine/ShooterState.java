@@ -1,6 +1,11 @@
-package frc.robot.stateMachine;;
+package frc.robot.stateMachine;
+
+import frc.robot.gamepieces.Shooter;
+import frc.robot.RobotMap;
+
 
 enum ShooterState implements State {
+
     Idle {
         public void enter() {
             // Noop
@@ -8,7 +13,7 @@ enum ShooterState implements State {
 
         public State action() {
             if (System.currentTimeMillis() % 2000 > 1000) {
-                return Prepping;
+                return LoadingBall;
             }
             System.out.print("I");
             return this;
@@ -19,7 +24,7 @@ enum ShooterState implements State {
         }
     },
 
-    Prepping {
+    LoadingBall {
         public void enter() {
             // float distance = Sensor.getDistance();
             // int desiredRPM = (int)(distance * 1 * 1);
@@ -31,6 +36,28 @@ enum ShooterState implements State {
             }
 
             System.out.print("P");
+            return this;
+        }
+
+        public void exit() {
+            // Noop
+        }
+    },
+
+    AdjustingSpeed {
+
+        private Shooter shooter;
+
+        public void enter() {
+
+        }
+
+        public State action() {
+            if (shooter.atSpeed()){
+                if (true) {
+
+                }
+            }
             return this;
         }
 

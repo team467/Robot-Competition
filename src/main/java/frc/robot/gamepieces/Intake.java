@@ -14,9 +14,6 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import org.apache.logging.log4j.Logger;
 
-/**
- * Add your docs here.
- */
 public class Intake extends GamePieceBase implements GamePiece {
 
     private static final Logger LOGGER = RobotLogManager.getMainLogger(Intake.class.getName());
@@ -134,12 +131,12 @@ public class Intake extends GamePieceBase implements GamePiece {
             roller.actuate();
             arm.actuate();
 
-            // if ball wants to advance and ball is not at mouth 
-            if ()
-            //turn on belt 
-            //else 
-            // turn off belt 
+            // if ball wants to advance and ball is not at mout
+            // turn on belt
+            // else
+            // turn off belt
         }
 
     }
+
 }

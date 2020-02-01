@@ -9,9 +9,7 @@ package frc.robot.stateMachine;
 
 import frc.robot.RobotMap;
 import frc.robot.gamepieces.Indexer;
-/**
- * Add your docs here.
- */
+
 enum IndexerState implements State {
 
     Idle {
@@ -28,40 +26,7 @@ enum IndexerState implements State {
         }
     },
 
-    Loading_Off {
-        public void enter() {
-            // Noop
-        }
-
-        public State action() {
-            if (!RobotMap.HAS_INDEXER) {
-                return Idle; 
-            }
-            
-            return this;
-        }
-
-        public void exit() {
-            // Noop
-        }
-    },
-
-    Loading_On {
-        public void enter() {
-            // Noop
-        }
-
-        public State action() {
-
-            return this;
-        }
-
-        public void exit() {
-            // Noop
-        }
-    },
-
-    Staging_Off {
+    Forward {
         public void enter() {
             // Noop
         }
@@ -75,20 +40,6 @@ enum IndexerState implements State {
         }
     },
 
-    Staging_On {
-        public void enter() {
-            // Noop
-        }
-
-        public State action() {
-            return this;
-        }
-
-        public void exit() {
-            // Noop
-        }
-    },
-    
     Reverse {
         public void enter() {
             // Noop
@@ -101,5 +52,20 @@ enum IndexerState implements State {
         public void exit() {
             // Noop
         }
-    }
+    },
+
+    Manual {
+        public void enter() {
+            // Noop
+        }
+
+        public State action() {
+            return this;
+        }
+
+        public void exit() {
+            // Noop
+        }
+    },
+
 }

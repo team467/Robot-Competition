@@ -21,4 +21,8 @@ class StateMachine {
             currentState.enter();
         }
     }
+
+    State getCurrentState() {
+        return currentState;
+    }
 }
