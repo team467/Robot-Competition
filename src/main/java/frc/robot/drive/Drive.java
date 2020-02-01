@@ -32,8 +32,8 @@ public class Drive extends DifferentialDrive implements AutoDrive {
   //private final TalonSpeedControllerGroup rightTalons;
   
   //sparkMax
-  private final SparkMaxSpeedControllerGroup leftSM;
-  private final SparkMaxSpeedControllerGroup rightSM;
+  public final SparkMaxSpeedControllerGroup leftSM;
+  public final SparkMaxSpeedControllerGroup rightSM;
   
   // Private constructor
 
@@ -46,8 +46,6 @@ public class Drive extends DifferentialDrive implements AutoDrive {
     if (instance == null) {
       // TalonSpeedControllerGroup leftTalons;
       // TalonSpeedControllerGroup rightTalons;
-
-      gyro = Gyrometer.getInstance();
 
       SparkMaxSpeedControllerGroup leftSM;
       SparkMaxSpeedControllerGroup rightSM;
@@ -471,7 +469,5 @@ public class Drive extends DifferentialDrive implements AutoDrive {
   public CANEncoder getLeftEncoder(){
     return leftSM.leadEncoder;
   }
-
-  public 
 
 }
