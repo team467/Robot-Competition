@@ -27,6 +27,8 @@ import frc.robot.tuning.TuneController;
 import java.io.IOException;
 import org.apache.logging.log4j.Logger;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
 
 /**
@@ -43,6 +45,9 @@ public class Robot extends TimedRobot {
   private static final Logger LOGGER = RobotLogManager.getMainLogger(Robot.class.getName());
 
   private static boolean enableSimulator = false;
+
+  private Command autonomousCommand;
+  private RobotContainer robotContainer;
 
   // Robot objects
   NetworkTable table;
@@ -133,6 +138,7 @@ public class Robot extends TimedRobot {
     camera = CameraSwitcher.getInstance();
     leds = LedI2C.getInstance();
     gamePieceController = GamePieceController.getInstance();
+    robotContainer = new RobotContainer();
 
     TuneController.loadTuners();
     drive.setPidsFromRobotMap();
@@ -154,6 +160,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotPeriodic() {
+    CommandScheduler.getInstance().run();
   }
 
   @Override
@@ -162,6 +169,11 @@ public class Robot extends TimedRobot {
     telemetry.robotMode(mode);
     LOGGER.info("Autonomous Initialized");
     perfTimer = PerfTimer.timer("Autonomous");
+    autonomousCommand = robotContainer.getAutonomousCommand();
+
+    if (autonomousCommand != null) {
+      autonomousCommand.schedule();
+    }
   }
   
   /**
@@ -170,11 +182,15 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousPeriodic() {
     LOGGER.trace("Autonomous Periodic");
-    teleopPeriodic();
   }
 
   @Override
   public void teleopInit() {
+
+    if (autonomousCommand != null) {
+      autonomousCommand.cancel();
+    }
+
     mode = RobotMode.TELEOP;
     telemetry.robotMode(mode);
     LOGGER.info("Teleop Initialized");

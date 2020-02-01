@@ -3,22 +3,16 @@ package frc.robot.drive;
 
 import com.revrobotics.CANEncoder;
 
-
-import edu.wpi.first.wpilibj.ADXRS450_Gyro;
-import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.PWMVictorSPX;
-import edu.wpi.first.wpilibj.SpeedControllerGroup;
-import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-
+import frc.robot.RobotMap;
 import frc.robot.sensors.Gyrometer;
 
 
-public class DriveSubsystem implements SubsystemBase{
+public class DriveSubsystem extends SubsystemBase{
   // The motors on the left side of the drive.
   // The robot's drive
   private final Drive drive = Drive.getInstance();
@@ -29,7 +23,7 @@ public class DriveSubsystem implements SubsystemBase{
   private final CANEncoder rightEncoder = drive.rightSM.leadEncoder;
 
   private SparkMaxSpeedControllerGroup leftMotors = drive.leftSM;
-  private SparkMaxSpeedControllerGroup rightsMotors = drive.rightSM;
+  private SparkMaxSpeedControllerGroup rightMotors = drive.rightSM;
 
   // The gyro sensor
   private final Gyrometer gyro = Gyrometer.getInstance();
@@ -42,8 +36,8 @@ public class DriveSubsystem implements SubsystemBase{
    */
   public DriveSubsystem() {
     // Sets the distance per pulse for the encoders
-    leftEncoder.setDistancePerPulse(DriveConstants.kEncoderDistancePerPulse);
-    rightEncoder.setDistancePerPulse(DriveConstants.kEncoderDistancePerPulse);
+    leftEncoder.setPositionConversionFactor(RobotMap.POSITION_CONVERSION_FACTOR);
+    rightEncoder.setPositionConversionFactor(RobotMap.POSITION_CONVERSION_FACTOR);
 
     resetEncoders();
     odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()));
@@ -52,8 +46,8 @@ public class DriveSubsystem implements SubsystemBase{
   @Override
   public void periodic() {
     // Update the odometry in the periodic block
-    odometry.update(Rotation2d.fromDegrees(getHeading()), leftEncoder.getDistance(),
-                      rightEncoder.getDistance());
+    odometry.update(Rotation2d.fromDegrees(getHeading()), leftEncoder.getPosition(),
+                      rightEncoder.getPosition());
   }
 
   /**
@@ -71,7 +65,7 @@ public class DriveSubsystem implements SubsystemBase{
    * @return The current wheel speeds.
    */
   public DifferentialDriveWheelSpeeds getWheelSpeeds() {
-    return new DifferentialDriveWheelSpeeds(leftEncoder.getRate(), rightEncoder.getRate());
+    return new DifferentialDriveWheelSpeeds(leftEncoder.getVelocity(), rightEncoder.getVelocity());
   }
 
   /**
@@ -110,8 +104,8 @@ public class DriveSubsystem implements SubsystemBase{
    * Resets the drive encoders to currently read a position of 0.
    */
   public void resetEncoders() {
-    leftEncoder.reset();
-    rightEncoder.reset();
+    leftEncoder.setPosition(0);
+    rightEncoder.setPosition(0);
   }
 
   /**
@@ -120,7 +114,7 @@ public class DriveSubsystem implements SubsystemBase{
    * @return the average of the two encoder readings
    */
   public double getAverageEncoderDistance() {
-    return (leftEncoder.getDistance() + rightEncoder.getDistance()) / 2.0;
+    return (leftEncoder.getPosition() + rightEncoder.getPosition()) / 2.0;
   }
 
   /**
@@ -128,7 +122,7 @@ public class DriveSubsystem implements SubsystemBase{
    *
    * @return the left drive encoder
    */
-  public Encoder getLeftEncoder() {
+  public CANEncoder getLeftEncoder() {
     return leftEncoder;
   }
 
@@ -137,7 +131,7 @@ public class DriveSubsystem implements SubsystemBase{
    *
    * @return the right drive encoder
    */
-  public Encoder getRightEncoder() {
+  public CANEncoder getRightEncoder() {
     return rightEncoder;
   }
 
@@ -163,7 +157,7 @@ public class DriveSubsystem implements SubsystemBase{
    * @return the robot's heading in degrees, from -180 to 180
    */
   public double getHeading() {
-    return Math.IEEEremainder(gyro.getAngle(), 360) * (DriveConstants.kGyroReversed ? -1.0 : 1.0);
+    return Math.IEEEremainder(gyro.getPitchDegrees(), 360) * (RobotMap.GYRO_REVERSED ? -1.0 : 1.0);
   }
 
   /**
@@ -172,6 +166,6 @@ public class DriveSubsystem implements SubsystemBase{
    * @return The turn rate of the robot, in degrees per second
    */
   public double getTurnRate() {
-    return gyro.getRate() * (DriveConstants.kGyroReversed ? -1.0 : 1.0);
+    return gyro.getRate()* (RobotMap.GYRO_REVERSED ? -1.0 : 1.0);
   }
 }

@@ -1,5 +1,6 @@
 package frc.robot;
 
+import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class RobotMap {
@@ -18,6 +19,7 @@ public class RobotMap {
 
   //Sensors
   public static boolean HAS_GYRO = false;
+  public static boolean GYRO_REVERSED = false;
 
   // Turret angle offsets
   public static final double ON_TARGET = 1.0;
@@ -32,6 +34,7 @@ public class RobotMap {
   public static int DRIVEMOTOR_NUM;
   public static int AUTONOMOUS_DRIVE_TIMEOUT_MS = 200;
   public static int AUTONOMOUS_TURN_TIMEOUT_MS = 300;
+  public static double POSITION_CONVERSION_FACTOR;
 
   public static int LEFT_LEAD_CHANNEL;
   public static int LEFT_FOLLOWER_1_CHANNEL;
@@ -85,6 +88,22 @@ public class RobotMap {
 
   public static boolean useSimulator = true;
   public static final double MIN_DRIVE_SPEED = 0.1;
+
+  public static double AUTO_STATIC_VOLTAGE_GAIN = 0.231;
+  public static double AUTO_VELOCITY_VOLTAGE_GAIN = 7.08;
+  public static double AUTO_ACCELERATION_VOLTAGE_GAIN = 0.01;
+  public static double TRACK_WIDTH_METERS = 20.0;
+  public static final DifferentialDriveKinematics kDriveKinematics =
+  new DifferentialDriveKinematics(TRACK_WIDTH_METERS);
+
+  public static double RAMSETE_B = 2;
+  public static double RAMSETE_ZETA = 0.7;
+
+  public static double AUTO_MAX_VELOCITY_METERS = 3;
+  public static double AUTO_MAX_ACCELERATION_METERS = 3;
+
+
+
 
   // How far the sensor speeds can be and still be considered turning in place,
   // in sensor units per 100 ms
@@ -193,6 +212,8 @@ public class RobotMap {
 
         //sensors
         HAS_GYRO = true;
+
+        POSITION_CONVERSION_FACTOR = 0.5;
 
         break;
 
