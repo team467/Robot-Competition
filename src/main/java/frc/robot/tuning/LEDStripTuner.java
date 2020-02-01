@@ -35,7 +35,6 @@ public class LEDStripTuner implements Tuner {
                 int red = Integer.parseInt(tokens[0]);
                 int green = Integer.parseInt(tokens[1]);
                 int blue = Integer.parseInt(tokens[2]);
-                LOGGER.fatal(String.format("%d, %d, %d", red, green, blue));
                 strip.setColorRGB(red, green, blue);
             } catch (ArrayIndexOutOfBoundsException e) {
 

@@ -32,8 +32,6 @@ public class TuneController {
   public static void init() {
     String key = SmartDashboard.getString("DB/String 0", "NO_TEST").toUpperCase();
     SmartDashboard.putString("DB/String 0", key);
-    LOGGER.error("Tuner initialized as ");
-    LOGGER.error(key);
   
     if (tuners.containsKey(key)) {
       LOGGER.error("Tuner found");
