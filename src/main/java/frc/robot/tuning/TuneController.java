@@ -8,7 +8,7 @@ import frc.robot.logging.RobotLogManager;
 public class TuneController {
 
   public static void loadTuners() {
-    register("LED Strip", new LEDStripTuner());
+    register("LED_Strip", new LEDStripTuner());
     // register("Drive Straight", new DriveConstantTuner());
     register("Advanced Tuner", new AdvancedTuner());
     register("Drive_Straight", new DriveConstantTuner());
@@ -32,9 +32,11 @@ public class TuneController {
   public static void init() {
     String key = SmartDashboard.getString("DB/String 0", "NO_TEST").toUpperCase();
     SmartDashboard.putString("DB/String 0", key);
-    LOGGER.error("Tuner initialized");
+    LOGGER.error("Tuner initialized as ");
+    LOGGER.error(key);
   
     if (tuners.containsKey(key)) {
+      LOGGER.error("Tuner found");
       tuner = tuners.get(key);
       tuner.init();
     } else {

@@ -62,20 +62,7 @@ public class Robot extends TimedRobot {
   public static long previousTime = time;
   public static int dt = 0;
   
-  private CANSparkMax smMotor;
-  private CANEncoder smEncoder;
 
-  private static final int leftLeadDeviceID = 1; 
-  private static final int leftFollowerDeviceID = 2;
-
-  private static final int rightLeadDeviceID = 3; 
-  private static final int rightFollowerDeviceID = 4;
-
-  private CANSparkMax m_leftLeadMotor;
-  private CANSparkMax m_leftFollowerMotor;
-
-  private CANSparkMax m_rightLeadMotor;
-  private CANSparkMax m_rightFollwerMotor;
 
   private DifferentialDrive m_myRobot;
 
@@ -129,17 +116,6 @@ public class Robot extends TimedRobot {
     m_rightStick = new Joystick(1);
 
 
-    m_leftLeadMotor = new CANSparkMax(leftLeadDeviceID, MotorType.kBrushless);
-    m_leftFollowerMotor = new CANSparkMax(leftFollowerDeviceID, MotorType.kBrushless);
-
-    m_rightLeadMotor = new CANSparkMax(rightLeadDeviceID, MotorType.kBrushless);
-    m_rightFollwerMotor = new CANSparkMax(rightFollowerDeviceID, MotorType.kBrushless);
-   
-    m_leftFollowerMotor.follow(m_leftLeadMotor);
-    m_rightFollwerMotor.follow(m_rightLeadMotor);
-    
-    m_myRobot = new DifferentialDrive(m_leftLeadMotor, m_rightLeadMotor);
-
     m_leftStick = new Joystick(0);
     m_rightStick = new Joystick(1);
     // Used after init, should be set only by the Simulator GUI
@@ -166,7 +142,6 @@ public class Robot extends TimedRobot {
     leds = LedI2C.getInstance();
 
     TuneController.loadTuners();
-    drive.setPidsFromRobotMap();
     //PowerDistributionPanel.registerPowerDistributionWithTelemetry();
 
     telemetry = Telemetry.getInstance();
@@ -214,8 +189,6 @@ public class Robot extends TimedRobot {
     perfTimer = PerfTimer.timer("Teleoperated");
     LOGGER.debug("Match time {}", box(DriverStation.getInstance().getMatchTime()));
     LOGGER.debug("Match time {}", box(DriverStation.getInstance().getMatchTime()));
-    smMotor = new CANSparkMax(11, MotorType.kBrushless);
-    smEncoder = smMotor.getEncoder();
   }
 
   /**
@@ -257,8 +230,6 @@ public class Robot extends TimedRobot {
           camera.autoSwitch(speed);
         }
         
-        smMotor.set(speed);
-        LOGGER.warn(smEncoder.getPosition());
         break;
 
       case CurvatureDrive:
@@ -284,11 +255,10 @@ public class Robot extends TimedRobot {
 
   @Override
   public void testInit() {
-    LOGGER.fatal("THIS SHOULD APPEAR init");
-    // mode = RobotMode.TEST;
-    // telemetry.robotMode(mode);
-    // TuneController.init();
-    // perfTimer = PerfTimer.timer("Test Periodic");
+    mode = RobotMode.TEST;
+    telemetry.robotMode(mode);
+    TuneController.init();
+    perfTimer = PerfTimer.timer("Test Periodic");
   }
 
 
@@ -298,11 +268,10 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void testPeriodic() {
-    LOGGER.fatal("THIS SHOULD APPEAR periodic");
-    // LOGGER.trace("Test Periodic");
-    // perfTimer.start();
-    // TuneController.periodic();
-    // perfTimer.end();
+    LOGGER.trace("Test Periodic");
+    perfTimer.start();
+    TuneController.periodic();
+    perfTimer.end();
     
   }
 

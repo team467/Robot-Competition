@@ -42,48 +42,48 @@ public class Drive extends DifferentialDrive implements AutoDrive {
       // TalonSpeedControllerGroup leftTalons;
       // TalonSpeedControllerGroup rightTalons;
 
-      SparkMaxSpeedControllerGroup leftSM;
-      SparkMaxSpeedControllerGroup rightSM;
+      // SparkMaxSpeedControllerGroup leftSM;
+      // SparkMaxSpeedControllerGroup rightSM;
 
-      LOGGER.info("Number of Motors: {}", box(RobotMap.DRIVEMOTOR_NUM));
-      if (RobotMap.HAS_WHEELS && RobotMap.DRIVEMOTOR_NUM > 0) {
-        LOGGER.info("Creating  Lead Motors");
+      // LOGGER.info("Number of Motors: {}", box(RobotMap.DRIVEMOTOR_NUM));
+      // if (RobotMap.HAS_WHEELS && RobotMap.DRIVEMOTOR_NUM > 0) {
+      //   LOGGER.info("Creating  Lead Motors");
 
-        CANSparkMax leftLead = new CANSparkMax(RobotMap.LEFT_LEAD_CHANNEL, CANSparkMaxLowLevel.MotorType.kBrushless);
-        CANSparkMax rightLead = new CANSparkMax(RobotMap.RIGHT_LEAD_CHANNEL, CANSparkMaxLowLevel.MotorType.kBrushless);
-        CANSparkMax leftFollower1 = null;
-        CANSparkMax rightFollower1 = null;
-        CANSparkMax leftFollower2 = null;
-        CANSparkMax rightFollower2 = null;
+      //   CANSparkMax leftLead = new CANSparkMax(RobotMap.LEFT_LEAD_CHANNEL, CANSparkMaxLowLevel.MotorType.kBrushless);
+      //   CANSparkMax rightLead = new CANSparkMax(RobotMap.RIGHT_LEAD_CHANNEL, CANSparkMaxLowLevel.MotorType.kBrushless);
+      //   CANSparkMax leftFollower1 = null;
+      //   CANSparkMax rightFollower1 = null;
+      //   CANSparkMax leftFollower2 = null;
+      //   CANSparkMax rightFollower2 = null;
 
-        if (RobotMap.DRIVEMOTOR_NUM > 2) {
-          LOGGER.info("Creating first set of follower motors");
-          leftFollower1 = new CANSparkMax(RobotMap.LEFT_FOLLOWER_1_CHANNEL, CANSparkMaxLowLevel.MotorType.kBrushless);
-          rightFollower1 = new CANSparkMax(RobotMap.RIGHT_FOLLOWER_1_CHANNEL, CANSparkMaxLowLevel.MotorType.kBrushless);
-        }
+      //   if (RobotMap.DRIVEMOTOR_NUM > 2) {
+      //     LOGGER.info("Creating first set of follower motors");
+      //     leftFollower1 = new CANSparkMax(RobotMap.LEFT_FOLLOWER_1_CHANNEL, CANSparkMaxLowLevel.MotorType.kBrushless);
+      //     rightFollower1 = new CANSparkMax(RobotMap.RIGHT_FOLLOWER_1_CHANNEL, CANSparkMaxLowLevel.MotorType.kBrushless);
+      //   }
 
-        if (RobotMap.DRIVEMOTOR_NUM > 4) {
-          LOGGER.info("Creating second set of follower motors");
-          leftFollower2 = new CANSparkMax(RobotMap.LEFT_FOLLOWER_2_CHANNEL, CANSparkMaxLowLevel.MotorType.kBrushless);
-          rightFollower2 = new CANSparkMax(RobotMap.RIGHT_FOLLOWER_2_CHANNEL, CANSparkMaxLowLevel.MotorType.kBrushless);
-        }
+      //   if (RobotMap.DRIVEMOTOR_NUM > 4) {
+      //     LOGGER.info("Creating second set of follower motors");
+      //     leftFollower2 = new CANSparkMax(RobotMap.LEFT_FOLLOWER_2_CHANNEL, CANSparkMaxLowLevel.MotorType.kBrushless);
+      //     rightFollower2 = new CANSparkMax(RobotMap.RIGHT_FOLLOWER_2_CHANNEL, CANSparkMaxLowLevel.MotorType.kBrushless);
+      //   }
 
-        ControlType teleopControlMode = ControlType.kVoltage;
-        if (RobotMap.USE_VELOCITY_SPEED_CONTROL_FOR_TELOP) {
-          teleopControlMode = ControlType.kVelocity;
-        }
+      //   ControlType teleopControlMode = ControlType.kVoltage;
+      //   if (RobotMap.USE_VELOCITY_SPEED_CONTROL_FOR_TELOP) {
+      //     teleopControlMode = ControlType.kVelocity;
+      //   }
 
-        leftSM = new SparkMaxSpeedControllerGroup("Left_Drive", teleopControlMode, RobotMap.LEFT_DRIVE_SENSOR_IS_INVERTED,
-            RobotMap.LEFT_DRIVE_MOTOR_IS_INVERTED, leftLead, leftFollower1, leftFollower2);
-        rightSM = new SparkMaxSpeedControllerGroup("Right_Drive", teleopControlMode,
-            RobotMap.RIGHT_DRIVE_SENSOR_IS_INVERTED, RobotMap.RIGHT_DRIVE_MOTOR_IS_INVERTED, rightLead, rightFollower1,
-            rightFollower2);
-      } else {
-        leftSM = new SparkMaxSpeedControllerGroup();
-        rightSM = new SparkMaxSpeedControllerGroup();
-      }
-      instance = new Drive(leftSM, rightSM);
-      instance.zero();
+      //   leftSM = new SparkMaxSpeedControllerGroup("Left_Drive", teleopControlMode, RobotMap.LEFT_DRIVE_SENSOR_IS_INVERTED,
+      //       RobotMap.LEFT_DRIVE_MOTOR_IS_INVERTED, leftLead, leftFollower1, leftFollower2);
+      //   rightSM = new SparkMaxSpeedControllerGroup("Right_Drive", teleopControlMode,
+      //       RobotMap.RIGHT_DRIVE_SENSOR_IS_INVERTED, RobotMap.RIGHT_DRIVE_MOTOR_IS_INVERTED, rightLead, rightFollower1,
+      //       rightFollower2);
+      // } else {
+      //   leftSM = new SparkMaxSpeedControllerGroup();
+      //   rightSM = new SparkMaxSpeedControllerGroup();
+      // }
+      // instance = new Drive(leftSM, rightSM);
+      // instance.zero();
 
     }
     return instance;
