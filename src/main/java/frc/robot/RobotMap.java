@@ -16,7 +16,7 @@ public class RobotMap {
   public static final int PID_SLOT_DRIVE = 0;
   public static final int PID_SLOT_TURN = 1;
 
-  //Sensors
+  // Sensors
   public static boolean HAS_GYRO = false;
 
   // Turret angle offsets
@@ -113,6 +113,8 @@ public class RobotMap {
   // Set to false to use the local ADIS16448 IMU on the Robo Rio
   public static final boolean useRemoteImu = false;
 
+
+
   public enum RobotId {
     ROBOT_2020, KITBOT
 
@@ -130,131 +132,130 @@ public class RobotMap {
 
     switch (id) {
 
-      case ROBOT_2020:
-        NORMAL_DRIVE_SPEED_MULTIPLIER = 0.8;
-        SLOW_DRIVE_SPEED_MULTIPLIER = 0.6;
+    case ROBOT_2020:
+      NORMAL_DRIVE_SPEED_MULTIPLIER = 0.8;
+      SLOW_DRIVE_SPEED_MULTIPLIER = 0.6;
 
-        HAS_WHEELS = true;
-        DRIVEMOTOR_NUM = 4;
-        WHEEL_CIRCUMFERENCE = 18.50;
+      HAS_WHEELS = true;
+      DRIVEMOTOR_NUM = 4;
+      WHEEL_CIRCUMFERENCE = 18.50;
 
-        CONTROLS_INVERTED_FB = false;
-        CONTROLS_INVERTED_TURN = false;
+      CONTROLS_INVERTED_FB = false;
+      CONTROLS_INVERTED_TURN = false;
 
-        USE_VELOCITY_SPEED_CONTROL_FOR_TELOP = true;
-        VELOCITY_MULTIPLIER_RIGHT = 900;
-        VELOCITY_MULTIPLIER_LEFT = 900;
+      USE_VELOCITY_SPEED_CONTROL_FOR_TELOP = true;
+      VELOCITY_MULTIPLIER_RIGHT = 900;
+      VELOCITY_MULTIPLIER_LEFT = 900;
 
-        LEFT_LEAD_CHANNEL = 1;
-        LEFT_FOLLOWER_1_CHANNEL = 2;
-        LEFT_DRIVE_SENSOR_IS_INVERTED = true;
-        LEFT_DRIVE_MOTOR_IS_INVERTED = false;
+      LEFT_LEAD_CHANNEL = 1;
+      LEFT_FOLLOWER_1_CHANNEL = 2;
+      LEFT_DRIVE_SENSOR_IS_INVERTED = true;
+      LEFT_DRIVE_MOTOR_IS_INVERTED = false;
 
-        RIGHT_LEAD_CHANNEL = 4;
-        RIGHT_FOLLOWER_1_CHANNEL = 5;
-        RIGHT_DRIVE_SENSOR_IS_INVERTED = true;
-        RIGHT_DRIVE_MOTOR_IS_INVERTED = false;
+      RIGHT_LEAD_CHANNEL = 4;
+      RIGHT_FOLLOWER_1_CHANNEL = 5;
+      RIGHT_DRIVE_SENSOR_IS_INVERTED = true;
+      RIGHT_DRIVE_MOTOR_IS_INVERTED = false;
 
-        // Linear PIDS
-        LEFT_DRIVE_PID_P = 0.5;
-        LEFT_DRIVE_PID_I = 0.0;
-        LEFT_DRIVE_PID_D = 0.0;
-        LEFT_DRIVE_PID_F = 1.137;
+      // Linear PIDS
+      LEFT_DRIVE_PID_P = 0.5;
+      LEFT_DRIVE_PID_I = 0.0;
+      LEFT_DRIVE_PID_D = 0.0;
+      LEFT_DRIVE_PID_F = 1.137;
 
-        RIGHT_DRIVE_PID_P = 0.5;
-        RIGHT_DRIVE_PID_I = 0.0;
-        RIGHT_DRIVE_PID_D = 0.0;
-        RIGHT_DRIVE_PID_F = 1.088;
+      RIGHT_DRIVE_PID_P = 0.5;
+      RIGHT_DRIVE_PID_I = 0.0;
+      RIGHT_DRIVE_PID_D = 0.0;
+      RIGHT_DRIVE_PID_F = 1.088;
 
-        // Turn PIDs
-        LEFT_TURN_PID_P = 1.0;
-        LEFT_TURN_PID_I = 0.0;
-        LEFT_TURN_PID_D = 450.0;
-        LEFT_TURN_PID_F = 0.0;
+      // Turn PIDs
+      LEFT_TURN_PID_P = 1.0;
+      LEFT_TURN_PID_I = 0.0;
+      LEFT_TURN_PID_D = 450.0;
+      LEFT_TURN_PID_F = 0.0;
 
-        RIGHT_TURN_PID_P = 1.0;
-        RIGHT_TURN_PID_I = 0.0;
-        RIGHT_TURN_PID_D = 450.0;
-        RIGHT_TURN_PID_F = 0.0;
+      RIGHT_TURN_PID_P = 1.0;
+      RIGHT_TURN_PID_I = 0.0;
+      RIGHT_TURN_PID_D = 450.0;
+      RIGHT_TURN_PID_F = 0.0;
 
-        FORWARD_CAMERA_INDEX = 0;
-        BACKWARD_CAMERA_INDEX = 2;
-        HAS_CAMERA = true;
-        AUTO_CAMERA = true;
+      FORWARD_CAMERA_INDEX = 0;
+      BACKWARD_CAMERA_INDEX = 2;
+      HAS_CAMERA = true;
+      AUTO_CAMERA = true;
 
-        //sensors
-        HAS_GYRO = false;
+      // sensors
+      HAS_GYRO = false;
 
-        break;
+      break;
 
-      case KITBOT:
-      default:
-        
-        HAS_WHEELS = true;
-        DRIVEMOTOR_NUM = 4;
-        WHEEL_CIRCUMFERENCE = 18.50;
+    case KITBOT:
+    default:
 
-        CONTROLS_INVERTED_FB = false;
-        CONTROLS_INVERTED_TURN = false;
+      HAS_WHEELS = true;
+      DRIVEMOTOR_NUM = 4;
+      WHEEL_CIRCUMFERENCE = 18.50;
 
-        USE_VELOCITY_SPEED_CONTROL_FOR_TELOP = true;
-        VELOCITY_MULTIPLIER_RIGHT = 1300;
-        VELOCITY_MULTIPLIER_LEFT = 1300;
-        NORMAL_DRIVE_SPEED_MULTIPLIER = 0.8;
-        SLOW_DRIVE_SPEED_MULTIPLIER = 0.6;
+      CONTROLS_INVERTED_FB = false;
+      CONTROLS_INVERTED_TURN = false;
 
-        LEFT_LEAD_CHANNEL = 1;
-        LEFT_FOLLOWER_1_CHANNEL = 2;
-        LEFT_DRIVE_SENSOR_IS_INVERTED = true;
-        LEFT_DRIVE_MOTOR_IS_INVERTED = false;
+      USE_VELOCITY_SPEED_CONTROL_FOR_TELOP = true;
+      VELOCITY_MULTIPLIER_RIGHT = 1300;
+      VELOCITY_MULTIPLIER_LEFT = 1300;
+      NORMAL_DRIVE_SPEED_MULTIPLIER = 0.8;
+      SLOW_DRIVE_SPEED_MULTIPLIER = 0.6;
 
-        RIGHT_LEAD_CHANNEL = 3;
-        RIGHT_FOLLOWER_1_CHANNEL = 4;
-        RIGHT_DRIVE_SENSOR_IS_INVERTED = true;
-        RIGHT_DRIVE_MOTOR_IS_INVERTED = false;
+      LEFT_LEAD_CHANNEL = 1;
+      LEFT_FOLLOWER_1_CHANNEL = 2;
+      LEFT_DRIVE_SENSOR_IS_INVERTED = true;
+      LEFT_DRIVE_MOTOR_IS_INVERTED = false;
 
-        // Linear PIDS
-        LEFT_DRIVE_PID_P = 0.5;
-        LEFT_DRIVE_PID_I = 0.0;
-        LEFT_DRIVE_PID_D = 0.0;
-        LEFT_DRIVE_PID_F = 0.682;
+      RIGHT_LEAD_CHANNEL = 3;
+      RIGHT_FOLLOWER_1_CHANNEL = 4;
+      RIGHT_DRIVE_SENSOR_IS_INVERTED = true;
+      RIGHT_DRIVE_MOTOR_IS_INVERTED = false;
 
-        RIGHT_DRIVE_PID_P = 0.5;
-        RIGHT_DRIVE_PID_I = 0.0;
-        RIGHT_DRIVE_PID_D = 0.0;
-        RIGHT_DRIVE_PID_F = 0.781;
+      // Linear PIDS
+      LEFT_DRIVE_PID_P = 0.5;
+      LEFT_DRIVE_PID_I = 0.0;
+      LEFT_DRIVE_PID_D = 0.0;
+      LEFT_DRIVE_PID_F = 0.682;
 
-        // Turn PIDs
-        LEFT_TURN_PID_P = 0.5;
-        LEFT_TURN_PID_I = 0.0;
-        LEFT_TURN_PID_D = 450.0;
-        LEFT_TURN_PID_F = 0.0;
+      RIGHT_DRIVE_PID_P = 0.5;
+      RIGHT_DRIVE_PID_I = 0.0;
+      RIGHT_DRIVE_PID_D = 0.0;
+      RIGHT_DRIVE_PID_F = 0.781;
 
-        RIGHT_TURN_PID_P = 0.5;
-        RIGHT_TURN_PID_I = 0.0;
-        RIGHT_TURN_PID_D = 450.0;
-        RIGHT_TURN_PID_F = 0.0;
+      // Turn PIDs
+      LEFT_TURN_PID_P = 0.5;
+      LEFT_TURN_PID_I = 0.0;
+      LEFT_TURN_PID_D = 450.0;
+      LEFT_TURN_PID_F = 0.0;
 
-        // Cameras
-        FORWARD_CAMERA_INDEX = 0;
-        BACKWARD_CAMERA_INDEX = 1;
-        HAS_CAMERA = false;
-        AUTO_CAMERA = false;
+      RIGHT_TURN_PID_P = 0.5;
+      RIGHT_TURN_PID_I = 0.0;
+      RIGHT_TURN_PID_D = 450.0;
+      RIGHT_TURN_PID_F = 0.0;
 
-        // Game Pieces
+      // Cameras
+      FORWARD_CAMERA_INDEX = 0;
+      BACKWARD_CAMERA_INDEX = 1;
+      HAS_CAMERA = false;
+      AUTO_CAMERA = false;
 
-         //sensors
-         HAS_GYRO = false;
-         
-        break;
+      // Game Pieces
+
+      // sensors
+      HAS_GYRO = false;
+
+      break;
     }
 
     // These calculations can be made after the robot-specific constants are set.
     POSITION_ALLOWED_ERROR = ALLOWED_ERROR_INCHES / RobotMap.WHEEL_CIRCUMFERENCE;
 
     // This is in encoder ticks
-    POSITION_ALLOWABLE_CLOSED_LOOP_ERROR 
-        = (int) (POSITION_ALLOWED_ERROR * WHEEL_ENCODER_CODES_PER_REVOLUTION * 0.95);
+    POSITION_ALLOWABLE_CLOSED_LOOP_ERROR = (int) (POSITION_ALLOWED_ERROR * WHEEL_ENCODER_CODES_PER_REVOLUTION * 0.95);
   }
 
   /**
@@ -318,7 +319,7 @@ public class RobotMap {
     }
   }
 
-  //Speed Controls
+  // Speed Controls
   public static double NORMAL_DRIVE_SPEED_MULTIPLIER;
   public static double SLOW_DRIVE_SPEED_MULTIPLIER;
   public static boolean USE_VELOCITY_SPEED_CONTROL_FOR_TELOP = false;
@@ -339,4 +340,15 @@ public class RobotMap {
   public static int TELEMETRY_TIMER_MS = 20;
 
   // Game Pieces
+  // climber
+  public static boolean HAS_CLIMBER = false;
+  public static boolean motorIsInverted = false;
+  public static boolean CLIMBER_SENSOR = false;
+
+  //TODO: change value of motors later
+  public static int CLIMB_MOTER_LEADER = 0;
+  public static int CLIMB_MOTER_FOLLOWER = 1;
+
+  public static boolean HAS_CLIMBFOLLOWER = false;
+  
 }
