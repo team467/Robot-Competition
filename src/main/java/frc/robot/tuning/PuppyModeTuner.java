@@ -37,22 +37,26 @@ public class PuppyModeTuner implements Tuner {
       SmartDashboard.putNumber("Turn Degrees", 0);
       SmartDashboard.putNumber("Turn multiplier", 0);
       SmartDashboard.putNumber("Distance to travel", 0);
+      SmartDashboard.putBoolean("Turn", false);
     }
 
     public void periodic() {
       double turn = SmartDashboard.getNumber("Turn Degrees", 0);
       double turnMult = SmartDashboard.getNumber("Turn multiplier", 0);
       double speed = SmartDashboard.getNumber("Distance to travel", 0);
+      boolean turnBool = SmartDashboard.getBoolean("Turn", false);
       double robotTurner;
 
-      if(Math.abs(gyro.getPitchDegrees()) <= Math.abs(20)){
+      if(Math.abs(gyro.getPitchDegrees()) <= Math.abs(turn)){
           robotTurner = -Math.signum(turn) * 0.3;
       } else {
           robotTurner = 0;
       }
 
-      if(Math.abs(gyro.getPitchDegrees()) >= Math.abs(20)) {
+      if(turnBool) {
           gyro.zero();
+          turnBool = false;
+          SmartDashboard.putBoolean("Turn", false);
       }
 
 
