@@ -1,4 +1,4 @@
-package frc.robot.stateMachine;
+package frc.robot.gamepieces;
 
 class StateMachine {
     private State currentState;

@@ -5,13 +5,14 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.stateMachine;
+package frc.robot.gamepieces;
 
 import frc.robot.RobotMap;
-import frc.robot.gamepieces.Indexer;
+import frc.robot.gamepieces.IndexerController;
 
 enum IndexerState implements State {
-
+   
+    
     Idle {
         public void enter() {
             // Noop
@@ -60,6 +61,7 @@ enum IndexerState implements State {
         }
 
         public State action() {
+            IndexerController.callForward();
             return this;
         }
 

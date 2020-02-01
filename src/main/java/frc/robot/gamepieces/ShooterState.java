@@ -1,4 +1,4 @@
-package frc.robot.stateMachine;
+package frc.robot.gamepieces;
 
 import frc.robot.gamepieces.Shooter;
 import frc.robot.RobotMap;

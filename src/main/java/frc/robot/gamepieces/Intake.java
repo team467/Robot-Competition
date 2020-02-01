@@ -1,4 +1,4 @@
-// /*----------------------------------------------------------------------------*/
+// /*----------------------------------------------------------------------------*/                     
 // /* Copyright (c) 2018-2019 FIRST. All Rights Reserved.                        */
 // /* Open Source Software - may be modified and shared by FRC teams. The code   */
 // /* must be accompanied by the FIRST BSD license file in the root directory of */
@@ -131,10 +131,6 @@ public class Intake extends GamePieceBase implements GamePiece {
             roller.actuate();
             arm.actuate();
 
-            // if ball wants to advance and ball is not at mout
-            // turn on belt
-            // else
-            // turn off belt
         }
 
     }
