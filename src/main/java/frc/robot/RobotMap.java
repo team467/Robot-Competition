@@ -141,7 +141,7 @@ public class RobotMap {
         CONTROLS_INVERTED_FB = false;
         CONTROLS_INVERTED_TURN = false;
 
-        USE_VELOCITY_SPEED_CONTROL_FOR_TELOP = true;
+        USE_VELOCITY_SPEED_CONTROL_FOR_TELOP = false;
         VELOCITY_MULTIPLIER_RIGHT = 5700;
         VELOCITY_MULTIPLIER_LEFT = 5700;
 
@@ -227,12 +227,12 @@ public class RobotMap {
         RIGHT_DRIVE_MOTOR_IS_INVERTED = false;
 
         // Linear PIDS
-        LEFT_DRIVE_PID_P = 0.00015;
+        LEFT_DRIVE_PID_P = 0.000487;
         LEFT_DRIVE_PID_I = 0.0;
         LEFT_DRIVE_PID_D = 0.0;
         LEFT_DRIVE_PID_F = 0.0;
 
-        RIGHT_DRIVE_PID_P = 0.00015;
+        RIGHT_DRIVE_PID_P = 0.000487;
         RIGHT_DRIVE_PID_I = 0.0;
         RIGHT_DRIVE_PID_D = 0.0;
         RIGHT_DRIVE_PID_F = 0.0;

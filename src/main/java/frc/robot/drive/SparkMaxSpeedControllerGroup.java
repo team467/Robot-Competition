@@ -181,7 +181,7 @@ public class SparkMaxSpeedControllerGroup implements SpeedController {
       return;
     }
 
-    LOGGER.info("Output to {} drive is {} in mode: {}", name, outputValue, controlType);
+    LOGGER.trace("Output to {} drive is {} in mode: {}", name, outputValue, controlType);
 
     if (controlType == ControlType.kVelocity) {
       outputValue *= maxVelocity;
