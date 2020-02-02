@@ -54,6 +54,7 @@ public class PuppyModeTuner implements Tuner {
       }
 
       if(turnBool) {
+        //isdone
           gyro.zero();
           turnBool = false;
           SmartDashboard.putBoolean("Turn", false);
