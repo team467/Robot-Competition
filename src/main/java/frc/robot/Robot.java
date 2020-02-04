@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import frc.robot.RobotMap.RobotId;
 import frc.robot.drive.Drive;
+import frc.robot.gamepieces.GamePieceController;
 import frc.robot.logging.RobotLogManager;
 import frc.robot.logging.Telemetry;
 import frc.robot.other.LEDStrip;
@@ -56,6 +57,7 @@ public class Robot extends TimedRobot {
   private CameraSwitcher camera;
   private LedI2C leds;
   private PerfTimer perfTimer;
+  private GamePieceController gamePieceController;
   private LEDStrip strip;
 
   public static long time = System.nanoTime();
@@ -140,8 +142,10 @@ public class Robot extends TimedRobot {
     drive = Drive.getInstance();
     camera = CameraSwitcher.getInstance();
     leds = LedI2C.getInstance();
+    gamePieceController = GamePieceController.getInstance();
 
     TuneController.loadTuners();
+    drive.setPidsFromRobotMap();
     //PowerDistributionPanel.registerPowerDistributionWithTelemetry();
 
     telemetry = Telemetry.getInstance();

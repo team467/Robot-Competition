@@ -99,7 +99,7 @@ public class DriverStation467 {
    * @return currently active drive mode.
    */
   public DriveMode getDriveMode() {
-    return DriveMode.TankDrive;
+    return DriveMode.ArcadeDrive;
   }
 
   /**

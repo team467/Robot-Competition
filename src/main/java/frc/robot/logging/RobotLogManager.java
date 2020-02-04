@@ -55,7 +55,7 @@ public class RobotLogManager {
         ConfigurationFactory configurationFactory = YamlConfigurationFactory.getInstance();
         ConfigurationFactory.setConfigurationFactory(configurationFactory);
         Configuration configuration = configurationFactory.getConfiguration(null, source);
-        //Configurator.initialize(configuration);
+        Configurator.initialize(configuration);
       } catch (IOException e) {
         e.printStackTrace();
       }
