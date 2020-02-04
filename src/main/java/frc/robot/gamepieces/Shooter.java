@@ -144,6 +144,12 @@ public class Shooter extends GamePieceBase implements GamePiece {
     }
   }
 
+  public void reverseShooter() {
+    if (flywheel != null && RobotMap.HAS_SHOOTER) {
+      trigger.set(0.0);
+    }
+  }
+
   public void setTriggerState(boolean state) {
     if (trigger != null && RobotMap.HAS_TRIGGER) {
       this.triggerState = state;
@@ -163,22 +169,26 @@ public class Shooter extends GamePieceBase implements GamePiece {
   }
 
   public void setLedSrip(int r, int g, int b, int startingLed, int endingLed) {
-    for (var i = Math.max(0, startingLed); i <= Math.min(ledBuffer.getLength()-1, endingLed); i++) {
-      ledBuffer.setRGB(i, r, g, b);
-   }
-   leds.setData(ledBuffer);
+    if (ledBuffer != null && leds != null && RobotMap.HAS_SHOOTERLEDS) {
+      for (var i = Math.max(0, startingLed); i <= Math.min(ledBuffer.getLength()-1, endingLed); i++) {
+        ledBuffer.setRGB(i, r, g, b);
+     }
+     leds.setData(ledBuffer);
+    }
   }
 
   public void fillStrip(int r, int g, int b, int led) {
-    int setLed = Math.min(RobotMap.SHOOTER_LED_AMOUNT-1, led);
-    setLedSrip(r, g, b, 0, setLed);
-    if (RobotMap.SHOOTER_DOUBLESIDE_LED) {
-      setLedSrip(r, g, b, RobotMap.SHOOTER_LED_AMOUNT, RobotMap.SHOOTER_LED_AMOUNT + setLed);
-    }
-    if (setLed < RobotMap.SHOOTER_LED_AMOUNT-1) {
-      setLedSrip(0, 0, 0, setLed + 1, RobotMap.SHOOTER_LED_AMOUNT-1);
+    if (ledBuffer != null && leds != null && RobotMap.HAS_SHOOTERLEDS) {
+      int setLed = Math.min(RobotMap.SHOOTER_LED_AMOUNT-1, led);
+      setLedSrip(r, g, b, 0, setLed);
       if (RobotMap.SHOOTER_DOUBLESIDE_LED) {
-        setLedSrip(r, g, b, RobotMap.SHOOTER_LED_AMOUNT + setLed + 1, ledBuffer.getLength()-1 + setLed);
+        setLedSrip(r, g, b, RobotMap.SHOOTER_LED_AMOUNT, RobotMap.SHOOTER_LED_AMOUNT + setLed);
+      }
+      if (setLed < RobotMap.SHOOTER_LED_AMOUNT-1) {
+        setLedSrip(0, 0, 0, setLed + 1, RobotMap.SHOOTER_LED_AMOUNT-1);
+        if (RobotMap.SHOOTER_DOUBLESIDE_LED) {
+          setLedSrip(r, g, b, RobotMap.SHOOTER_LED_AMOUNT + setLed + 1, ledBuffer.getLength()-1 + setLed);
+        }
       }
     }
   }

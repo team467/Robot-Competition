@@ -47,6 +47,8 @@ public class ShooterTuner implements Tuner {
         SmartDashboard.putNumber("Shooter F", kF);
         SmartDashboard.putNumber("Shooter Max Velocity", kMaxVelocity);
 
+        SmartDashboard.putBoolean("Start Shooting", false);
+
         shooter.flyWheelPIDF(kP, kI, kD, kF, kMaxVelocity);
 
         shooter.stop();
@@ -54,32 +56,42 @@ public class ShooterTuner implements Tuner {
 
     public void periodic() {
         double speed = SmartDashboard.getNumber("Speed", 0);
+        boolean startShooting = SmartDashboard.getBoolean("Start Shooting", false);
 
         if (useVelocity) {
             shooter.rampToSpeed(speed);
-            double currentVel = shooter.getMotor().velocity();
-            double setVel = shooter.getMotor().closedLoopTarget();
 
-            double ledFillPercent = Math.min(0, Math.max(1, setVel/currentVel));
-            int fillLeds = (int) (RobotMap.SHOOTER_LED_AMOUNT * ledFillPercent)-1;
-            if (fillLeds >= 0) {
-                shooter.fillStrip(0, 0, 255, fillLeds);
-            } else {
-                shooter.clearStrip();
+            if (RobotMap.HAS_SHOOTERLEDS) {
+                double currentVel = shooter.getMotor().velocity();
+                double setVel = shooter.getMotor().closedLoopTarget();
+
+                double ledFillPercent = Math.min(0, Math.max(1, setVel/currentVel));
+                int fillLeds = (int) (RobotMap.SHOOTER_LED_AMOUNT * ledFillPercent)-1;
+                if (fillLeds >= 0) {
+                    shooter.fillStrip(0, 0, 255, fillLeds);
+                } else {
+                    shooter.clearStrip();
+                }
             }
         } else {
             shooterMotor.set(ControlMode.PercentOutput, speed);
 
-            double ledFillPercent = Math.max(0, Math.min(1, Math.abs(speed)));
-            int fillLeds = (int) (RobotMap.SHOOTER_LED_AMOUNT * ledFillPercent)-1;
-            if (fillLeds >= 0) {
-                shooter.fillStrip(0, 0, 255, fillLeds);
-            } else {
-                shooter.clearStrip();
+            if (RobotMap.HAS_SHOOTERLEDS) {
+                double ledFillPercent = Math.max(0, Math.min(1, Math.abs(speed)));
+                int fillLeds = (int) (RobotMap.SHOOTER_LED_AMOUNT * ledFillPercent)-1;
+                if (fillLeds >= 0) {
+                    shooter.fillStrip(0, 0, 255, fillLeds);
+                } else {
+                    shooter.clearStrip();
+                }
             }
         }
 
-        // shooter.setLedSrip(255, 255, 255, 0, 5);
+        if (startShooting) {
+            shooter.startShooting();
+        } else {
+            shooter.stopShooting();
+        }
 
         SmartDashboard.putNumber("Shooter Current", shooterMotor.current());
         SmartDashboard.putNumber("Shooter Voltage", shooterMotor.velocity());
