@@ -30,7 +30,6 @@ public class RobotMap {
   // Steering motor ids
   public static boolean HAS_WHEELS;
   public static int DRIVEMOTOR_NUM;
-  public static boolean HAS_SPARKMAX;
   public static int AUTONOMOUS_DRIVE_TIMEOUT_MS = 200;
   public static int AUTONOMOUS_TURN_TIMEOUT_MS = 300;
 

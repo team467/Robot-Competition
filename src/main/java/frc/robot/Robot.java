@@ -20,7 +20,6 @@ import frc.robot.logging.RobotLogManager;
 import frc.robot.logging.Telemetry;
 import frc.robot.other.LEDStrip;
 import frc.robot.sensors.LedI2C;
-import frc.robot.sensors.PowerDistributionPanel;
 import frc.robot.usercontrol.DriverStation467;
 import frc.robot.utilities.PerfTimer;
 import frc.robot.vision.CameraSwitcher;
@@ -28,12 +27,6 @@ import frc.robot.tuning.TuneController;
 import java.io.IOException;
 import org.apache.logging.log4j.Logger;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
-
-import com.revrobotics.CANEncoder;
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-
 /**
  * The VM is configured to automatically run this class, and to call the
  * functions corresponding to each mode, as described in the TimedRobot
@@ -118,8 +111,6 @@ public class Robot extends TimedRobot {
     m_rightStick = new Joystick(1);
 
 
-    m_leftStick = new Joystick(0);
-    m_rightStick = new Joystick(1);
     // Used after init, should be set only by the Simulator GUI
     // this ensures that the simulator is off otherwise.
     if (enableSimulator) {
@@ -191,7 +182,6 @@ public class Robot extends TimedRobot {
     telemetry.robotMode(mode);
     LOGGER.info("Teleop Initialized");
     perfTimer = PerfTimer.timer("Teleoperated");
-    LOGGER.debug("Match time {}", box(DriverStation.getInstance().getMatchTime()));
     LOGGER.debug("Match time {}", box(DriverStation.getInstance().getMatchTime()));
   }
 

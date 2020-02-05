@@ -10,7 +10,6 @@ public class TuneController {
   public static void loadTuners() {
     register("LED_Strip", new LEDStripTuner());
     // register("Drive Straight", new DriveConstantTuner());
-    register("Advanced Tuner", new AdvancedTuner());
     register("Drive_Straight", new DriveConstantTuner());
     register("PID_Velocity_Tuner", new PIDVelocityTuner());
     register("Advanced_Tuner", new AdvancedTuner());

@@ -39,7 +39,6 @@ public class AdvancedTuner implements Tuner {
     }
 
     public void periodic() {
-      LOGGER.fatal("THIS SHOULD NOT APPEAR 5");
       double speed = SmartDashboard.getNumber("Speed", 0);
       boolean left = SmartDashboard.getBoolean("Using Left", false);
       boolean right = SmartDashboard.getBoolean("Using Right", false);
