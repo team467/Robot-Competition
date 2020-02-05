@@ -4,7 +4,7 @@ import frc.robot.gamepieces.ShooterController;
 import frc.robot.RobotMap;
 
 
-enum ShooterState implements State {
+enum Shooter implements State {
 
     Idle {
         public void enter() {

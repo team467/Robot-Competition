@@ -10,7 +10,7 @@ package frc.robot.gamepieces;
 import frc.robot.RobotMap;
 import frc.robot.gamepieces.IndexerController;
 
-enum IndexerState implements State {
+enum Indexer implements State {
    
     
     Idle {
