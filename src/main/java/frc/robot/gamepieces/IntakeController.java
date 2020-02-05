@@ -34,26 +34,32 @@ public class IntakeController extends GamePieceBase implements GamePiece {
     }
      
     private void setUp() {
+        LOGGER.debug("setUp called");
         arm.set(1.0);
     }
 
     private void setDown() {
+        LOGGER.debug("setUp called");
         arm.set(-1.0);
     }
 
     private void setForward() {
+        LOGGER.debug("setForward called");
         roller.set(1.0);
     }
 
     private void setBackward() {
+        LOGGER.debug("setBackward called");
         roller.set(-1.0);
     }
 
     private void setRollerStop() {
+        LOGGER.debug("setRollerStop called");
         roller.set(0.0);
     }
 
     private void setArmStop() {
+        LOGGER.debug("setArmStop called");
         arm.set(0.0);
 
     }
