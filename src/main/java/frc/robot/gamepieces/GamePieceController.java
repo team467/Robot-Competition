@@ -8,8 +8,8 @@ import frc.robot.vision.CameraSwitcher;
 import frc.robot.vision.VisionController;
 import org.apache.logging.log4j.Logger;
 import frc.robot.gamepieces.IndexerController;
+import frc.robot.gamepieces.IntakeController;
 import frc.robot.gamepieces.Shooter;
-import frc.robot.gamepieces.Intake;
 
 public class GamePieceController {
 
@@ -23,13 +23,13 @@ public class GamePieceController {
 
   // Game Pieces
   private CameraSwitcher camera;
-  private Intake intake;
+  private IntakeController intake;
   private IndexerController indexer;
   private Shooter shooter;
 
   // Game Pieces' States
   private IndexerState indexerState;
-  private ShooterState shooterState;
+  private ShooterState shooterState;q
 
   private DriverStation467 driverStation;
   private VisionController visionController;

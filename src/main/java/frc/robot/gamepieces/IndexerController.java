@@ -15,17 +15,15 @@ public class IndexerController extends GamePieceBase implements GamePiece {
   private static WPI_TalonSRX indexLeader;
   private static WPI_TalonSRX indexFollower;
 
+  
+
   public static IndexerController getInstance() {
     if (instance == null) {
-
-      indexLeader = new WPI_TalonSRX(RobotMap.ARM_MOTOR_CHANNEL);
-      indexFollower = new WPI_TalonSRX(RobotMap.ARM_MOTOR_CHANNEL);
-      
-      if (!RobotMap.HAS_INDEXER) {
-				instance = new IndexerController(indexLeader, indexFollower);
-			}
+      indexLeader = new WPI_TalonSRX(RobotMap.FIRST_MAGAZINE_FEED_MOTOR_CHANNEL);
+      indexFollower = new WPI_TalonSRX(RobotMap.SECOND_MAGAZINE_FEED_MOTOR_CHANNEL);
+      instance = new IndexerController(indexLeader, indexFollower);
     }
-    return instance;
+      return instance;
   }
 
   private void setForward() {
