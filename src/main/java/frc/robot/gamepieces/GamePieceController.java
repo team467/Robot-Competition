@@ -9,7 +9,8 @@ import frc.robot.vision.VisionController;
 import org.apache.logging.log4j.Logger;
 import frc.robot.gamepieces.IndexerController;
 import frc.robot.gamepieces.IntakeController;
-import frc.robot.gamepieces.Shooter;
+import frc.robot.gamepieces.ShooterController;
+
 
 public class GamePieceController {
 
@@ -23,13 +24,14 @@ public class GamePieceController {
 
   // Game Pieces
   private CameraSwitcher camera;
-  private IntakeController intake;
-  private IndexerController indexer;
-  private Shooter shooter;
+  // private IntakeController intake;
+  // private IndexerController indexerController;
+  // private ShooterController shooterController;
 
   // Game Pieces' States
-  private IndexerState indexerState;
-  private ShooterState shooterState;q
+  private Shooter shooter;
+  private Indexer indexer;
+  private Intaker intaker;
 
   private DriverStation467 driverStation;
   private VisionController visionController;
@@ -49,6 +51,8 @@ public class GamePieceController {
     return instance;
   }
 
+  //TODO: get driverstation input and call intaker periodic().
+  
   public enum GamePieceMode {
     DEFENSE, CARGO, HATCH
   }

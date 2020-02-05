@@ -32,9 +32,7 @@ public class IntakeController extends GamePieceBase implements GamePiece {
         }
         return instance;
     }
-
-    // public static boolean onManualControl = false;
- 
+     
     private void setUp() {
         arm.set(1.0);
     }
