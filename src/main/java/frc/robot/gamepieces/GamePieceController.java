@@ -7,8 +7,8 @@ import frc.robot.usercontrol.DriverStation467;
 import frc.robot.vision.CameraSwitcher;
 import frc.robot.vision.VisionController;
 import org.apache.logging.log4j.Logger;
-import frc.robot.gamepieces.IndexerController;
-import frc.robot.gamepieces.IntakeController;
+import frc.robot.gamepieces.IndexerAL;
+import frc.robot.gamepieces.IntakeAL;
 import frc.robot.gamepieces.ShooterAL;
 
 
@@ -24,8 +24,8 @@ public class GamePieceController {
 
   // Game Pieces
   private CameraSwitcher camera;
-  // private IntakeController intake;
-  // private IndexerController indexerController;
+  // private IntakeAL intake;
+  // private IndexerAL IndexerAL;
   // private ShooterAL ShooterAL;
 
   // Game Pieces' States

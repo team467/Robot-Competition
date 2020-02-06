@@ -9,7 +9,7 @@ package frc.robot.gamepieces;
 
 import org.apache.logging.log4j.Logger;
 
-import frc.robot.gamepieces.IntakeController;
+import frc.robot.gamepieces.IntakeAL;
 import frc.robot.logging.RobotLogManager;
 
 public class Intaker {
@@ -32,24 +32,24 @@ public class Intaker {
         default:
             LOGGER.error("message");
         case ARM_UP:
-            IntakeController.callUp();
+            IntakeAL.callUp();
             break;
 
         case ARM_DOWN:
-            IntakeController.callDown();
+            IntakeAL.callDown();
             break;
         }
         switch (rollers) {
 
         case ROLLERS_IN:
-            IntakeController.callBackward();
+            IntakeAL.callBackward();
             break;
         case ROLLERS_OUT:
-            IntakeController.callFoward();
+            IntakeAL.callFoward();
             break;
         default:
         case ROLLERS_OFF:
-            IntakeController.callRollerStop();
+            IntakeAL.callRollerStop();
             break;
         }
     }

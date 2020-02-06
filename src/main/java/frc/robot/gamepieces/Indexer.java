@@ -8,7 +8,7 @@
 package frc.robot.gamepieces;
 
 import frc.robot.RobotMap;
-import frc.robot.gamepieces.IndexerController;
+import frc.robot.gamepieces.IndexerAL;
 
 enum Indexer implements State {
    
@@ -61,7 +61,7 @@ enum Indexer implements State {
         }
 
         public State action() {
-            IndexerController.callForward();
+            IndexerAL.callForward();
             return this;
         }
 

@@ -14,21 +14,21 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import org.apache.logging.log4j.Logger;
 
-public class IntakeController extends GamePieceBase implements GamePiece {
+public class IntakeAL extends GamePieceBase implements GamePiece {
 
-    private static final Logger LOGGER = RobotLogManager.getMainLogger(IntakeController.class.getName());
+    private static final Logger LOGGER = RobotLogManager.getMainLogger(IntakeAL.class.getName());
 
-    private static IntakeController instance = null;
+    private static IntakeAL instance = null;
    
     private static WPI_TalonSRX arm;
     private static WPI_TalonSRX roller;
 
-    public static IntakeController getInstance() {
+    public static IntakeAL getInstance() {
         if (instance == null) {
             arm = new WPI_TalonSRX(RobotMap.ARM_MOTOR_CHANNEL);
             roller = new WPI_TalonSRX(RobotMap.ROLLER_MOTOR_CHANNEL);
 
-            instance = new IntakeController(arm, roller);
+            instance = new IntakeAL(arm, roller);
         }
         return instance;
     }
@@ -65,30 +65,30 @@ public class IntakeController extends GamePieceBase implements GamePiece {
     }
 
     public static void callUp() {
-        IntakeController.getInstance().setUp();
+        IntakeAL.getInstance().setUp();
     }
 
     public static void callDown() { 
-        IntakeController.getInstance().setDown();
+        IntakeAL.getInstance().setDown();
     }
 
     public static void callFoward() {
-        IntakeController.getInstance().setForward();
+        IntakeAL.getInstance().setForward();
     }
 
     public static void callBackward() {
-        IntakeController.getInstance().setBackward();
+        IntakeAL.getInstance().setBackward();
     }
 
     public static void callArmStop() {
-        IntakeController.getInstance().setArmStop();
+        IntakeAL.getInstance().setArmStop();
     }
 
     public static void callRollerStop() {
-        IntakeController.getInstance().setRollerStop();
+        IntakeAL.getInstance().setRollerStop();
     }
 
-    private IntakeController(WPI_TalonSRX arm, WPI_TalonSRX roller) {
+    private IntakeAL(WPI_TalonSRX arm, WPI_TalonSRX roller) {
         super("Telemetry", "Intake");
     }
 

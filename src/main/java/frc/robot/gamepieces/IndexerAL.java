@@ -6,22 +6,22 @@ import org.apache.logging.log4j.Logger;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
-public class IndexerController extends GamePieceBase implements GamePiece {
+public class IndexerAL extends GamePieceBase implements GamePiece {
 
-  private static IndexerController instance = null;
+  private static IndexerAL instance = null;
 
-  private static final Logger LOGGER = RobotLogManager.getMainLogger(IndexerController.class.getName());
+  private static final Logger LOGGER = RobotLogManager.getMainLogger(IndexerAL.class.getName());
 
   private static WPI_TalonSRX indexLeader;
   private static WPI_TalonSRX indexFollower;
 
   
 
-  public static IndexerController getInstance() {
+  public static IndexerAL getInstance() {
     if (instance == null) {
       indexLeader = new WPI_TalonSRX(RobotMap.FIRST_MAGAZINE_FEED_MOTOR_CHANNEL);
       indexFollower = new WPI_TalonSRX(RobotMap.SECOND_MAGAZINE_FEED_MOTOR_CHANNEL);
-      instance = new IndexerController(indexLeader, indexFollower);
+      instance = new IndexerAL(indexLeader, indexFollower);
     }
       return instance;
   }
@@ -42,19 +42,19 @@ public class IndexerController extends GamePieceBase implements GamePiece {
   }
 
   public static void callForward() {
-    IndexerController.getInstance().setForward();
+    IndexerAL.getInstance().setForward();
   }
 
   public static void callBackwards() {
-    IndexerController.getInstance().setBackwards();
+    IndexerAL.getInstance().setBackwards();
   }
 
   public static void callStop() {
-    IndexerController.getInstance().setStop();
+    IndexerAL.getInstance().setStop();
   }
   
 
-  private IndexerController(WPI_TalonSRX indexLeader, WPI_TalonSRX indexFollower) {
+  private IndexerAL(WPI_TalonSRX indexLeader, WPI_TalonSRX indexFollower) {
     super("Telemetry", "Indexer");
 
   }
