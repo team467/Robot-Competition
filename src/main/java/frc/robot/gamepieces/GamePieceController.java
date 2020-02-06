@@ -9,7 +9,7 @@ import frc.robot.vision.VisionController;
 import org.apache.logging.log4j.Logger;
 import frc.robot.gamepieces.IndexerController;
 import frc.robot.gamepieces.IntakeController;
-import frc.robot.gamepieces.ShooterController;
+import frc.robot.gamepieces.ShooterAL;
 
 
 public class GamePieceController {
@@ -26,7 +26,7 @@ public class GamePieceController {
   private CameraSwitcher camera;
   // private IntakeController intake;
   // private IndexerController indexerController;
-  // private ShooterController shooterController;
+  // private ShooterAL ShooterAL;
 
   // Game Pieces' States
   private Shooter shooter;

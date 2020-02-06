@@ -1,6 +1,6 @@
 package frc.robot.gamepieces;
 
-import frc.robot.gamepieces.ShooterController;
+import frc.robot.gamepieces.ShooterAL;
 import frc.robot.RobotMap;
 
 
@@ -46,7 +46,7 @@ enum Shooter implements State {
 
     AdjustingSpeed {
 
-        private ShooterController shooter;
+        private ShooterAL shooter;
 
         public void enter() {
 

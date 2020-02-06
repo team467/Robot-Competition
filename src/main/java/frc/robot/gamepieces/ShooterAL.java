@@ -12,11 +12,11 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 
-public class ShooterController extends GamePieceBase implements GamePiece {
+public class ShooterAL extends GamePieceBase implements GamePiece {
 
-  private static ShooterController instance = null;
+  private static ShooterAL instance = null;
 
-  private static final Logger LOGGER = RobotLogManager.getMainLogger(ShooterController.class.getName());
+  private static final Logger LOGGER = RobotLogManager.getMainLogger(ShooterAL.class.getName());
 
   private static final int TALON_PID_SLOT_ID = 0;
 
@@ -35,7 +35,7 @@ public class ShooterController extends GamePieceBase implements GamePiece {
    * @return The single instance.
    */
   // WPI_TalonSRX
-  public static ShooterController getInstance() {
+  public static ShooterAL getInstance() {
     if (instance == null) {
       if (RobotMap.HAS_SHOOTER) {
         LOGGER.info("Creating Lead Motors");
@@ -56,13 +56,13 @@ public class ShooterController extends GamePieceBase implements GamePiece {
       } else {
         flywheel = new TalonSpeedControllerGroup();
       }
-      instance = new ShooterController(flywheel);
+      instance = new ShooterAL(flywheel);
       instance.stop();
     }
     return instance;
   }
 
-  private ShooterController(TalonSpeedControllerGroup flywheel) {
+  private ShooterAL(TalonSpeedControllerGroup flywheel) {
     super("Telemetry", "Shooter");
   }
 
