@@ -133,19 +133,19 @@ public class Shooter extends GamePieceBase implements GamePiece {
   }
 
   public void startShooting() {
-    if (flywheel != null && RobotMap.HAS_SHOOTER) {
+    if (trigger != null && RobotMap.HAS_TRIGGER) {
       trigger.set(1.0);
     }
   }
 
   public void stopShooting() {
-    if (flywheel != null && RobotMap.HAS_SHOOTER) {
+    if (trigger != null && RobotMap.HAS_TRIGGER) {
       trigger.set(0.0);
     }
   }
 
   public void reverseShooter() {
-    if (flywheel != null && RobotMap.HAS_SHOOTER) {
+    if (trigger != null && RobotMap.HAS_TRIGGER) {
       trigger.set(0.0);
     }
   }

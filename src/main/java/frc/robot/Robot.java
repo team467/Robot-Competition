@@ -86,7 +86,7 @@ public class Robot extends TimedRobot {
     // table once.
 
     // Initialize RobotMap
-    RobotMap.init(RobotId.ROBOT_2020);
+    RobotMap.init(RobotId.KITBOT);
     mode = RobotMode.STARTED;
 
     SmartDashboard.putString("DB/String 0", "NO_TEST");

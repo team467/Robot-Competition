@@ -196,11 +196,11 @@ public class RobotMap {
       // Game Pieces
       HAS_SHOOTER = true;
       HAS_TRIGGER = false;
-      HAS_SHOOTERLEDS = true;
+      HAS_SHOOTERLEDS = false;
 
       // Shooter
       // TODO:change the values of these later
-      SHOOTER_FOLLOWER = true;
+      SHOOTER_FOLLOWER = false;
       SHOOTER_MOTOR_CHANNEL = 5;
       SHOOTER_MOTOR_INVERTED = false;
       SHOOTER_MOTOR_FOLLOWER_CHANNEL = 6;
@@ -230,8 +230,8 @@ public class RobotMap {
       DRIVEMOTOR_NUM = 4;
       WHEEL_CIRCUMFERENCE = 18.50;
 
-      // CONTROLS_INVERTED_FB = false;
-      // CONTROLS_INVERTED_TURN = false;
+      CONTROLS_INVERTED_FB = false;
+      CONTROLS_INVERTED_TURN = false;
 
       USE_VELOCITY_SPEED_CONTROL_FOR_TELOP = true;
       VELOCITY_MULTIPLIER_RIGHT = 5700;
@@ -286,12 +286,12 @@ public class RobotMap {
 
       // Game Pieces
       HAS_SHOOTER = true;
-      HAS_TRIGGER = false;
-      HAS_SHOOTERLEDS = true;
+      HAS_TRIGGER = true;
+      HAS_SHOOTERLEDS = false;
 
       // Shooter
       // TODO:change the values of these later
-      SHOOTER_FOLLOWER = true;
+      SHOOTER_FOLLOWER = false;
       SHOOTER_MOTOR_CHANNEL = 5;
       SHOOTER_MOTOR_INVERTED = true;
       SHOOTER_MOTOR_FOLLOWER_CHANNEL = 6;
@@ -299,7 +299,7 @@ public class RobotMap {
       SHOOTER_SMART_SHOT = true;
       SHOOTER_SENSOR_INVERTED = true;
 
-      TRIGGER_MOTOR_CHANNEL = 7;
+      TRIGGER_MOTOR_CHANNEL = 6;
       TRIGGER_MOTOR_INVERTED = false;
 
       SHOOTER_P = 0.0775;
