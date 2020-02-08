@@ -125,8 +125,7 @@ public class Gyrometer extends GyroBase implements Gyro {
 
   @Override
   public double getRate() {
-    // TODO Auto-generated method stub
-    return 0;
+    return imu.getRate();
   }
 
   @Override
