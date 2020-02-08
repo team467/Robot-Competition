@@ -110,6 +110,23 @@ public class DriverStation467 {
     return false;
   }
 
+  // TODO change these based on switches.
+  public boolean getArm() {
+    return navJoy.pov() == 1;
+  }
+
+  public boolean indexerManual() {
+    return navJoy.pressed(Button.a);
+  }
+
+  public boolean getIndexerAutoMode() {
+    return navJoy.pressed(Button.b);
+  }
+
+  public boolean indexerManualMove() {
+    return navJoy.pov() == 180;
+  }
+
   public boolean getAcquireHatch() {
     // Nav navJoy.getRightTrigger() > 0.9
     return navJoy.down(Button.BumperRight);

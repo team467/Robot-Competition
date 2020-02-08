@@ -17,16 +17,15 @@ enum IndexerState implements State {
 
     Idle {
      
-        private boolean AutoMode = false;
         private GamePieceController gamePiece;
         private IndexerAL indexer;
-        private Robot robot;
+        
         public void enter() {
             // Noop
         }
 
         public State action() {
-            if (AutoMode) {
+            if (gamePiece.indexerAutoMode()) {
                 if (gamePiece.indexerBallsForward() && indexer.inMouth() && indexer.inChamber()) {
                     return Feed1;
                 }
@@ -54,7 +53,7 @@ enum IndexerState implements State {
 
     Feed1 {
         private IndexerAL indexer;
-        private boolean autoMode = false;
+        private GamePieceController gamePiece;
 
         public void enter() {
             // Noop
@@ -62,7 +61,7 @@ enum IndexerState implements State {
 
         public State action() {
             IndexerAL.callForward();
-            if (autoMode) {   
+            if (gamePiece.indexerAutoMode()) {   
                 if (!indexer.inMouth()) {
                    return Feed2;
                 }
@@ -108,6 +107,7 @@ enum IndexerState implements State {
     Reverse {
 
         private GamePieceController gamePiece;
+        
         public void enter() {
             // Noop
         }

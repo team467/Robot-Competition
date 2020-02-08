@@ -10,7 +10,7 @@ import org.apache.logging.log4j.Logger;
 import frc.robot.gamepieces.AbstractLayers.IndexerAL;
 import frc.robot.gamepieces.AbstractLayers.IntakeAL;
 import frc.robot.gamepieces.AbstractLayers.ShooterAL;
-
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class GamePieceController {
 
@@ -38,7 +38,6 @@ public class GamePieceController {
   private LedI2C led;
 
   private GamePieceMode mode;
-
   /**
    * Returns a singleton instance of the game piece controller.
    * 
@@ -84,14 +83,16 @@ public class GamePieceController {
     // so that tests can manually feed inputs.
     processGamePieceState(
         driverStation.getDriveCameraFront(),
-        driverStation.getDriveCameraBack()
+        driverStation.getDriveCameraBack(),
+        driverStation.getIndexerAutoMode()
     );
 
   }
 
   void processGamePieceState(
       boolean driveCameraFront,
-      boolean driveCameraRear) {
+      boolean driveCameraRear,
+      boolean getIndexerAutoMode) {
 
     // Depending on driver input, camera view switches to front or back.
     // Does not change the mode away from Hatch or Cargo, but does take camera.
@@ -141,13 +142,17 @@ public class GamePieceController {
     return false;
   }
 
+  public boolean indexerAutoMode() {
+    driverStation.getIndexerAutoMode();
+    return true;
+  }
 
   private void registerMetrics() {
     Telemetry telemetry = Telemetry.getInstance();
     telemetry.addStringMetric(name + " Mode", mode::name);
   }
 
-  public void runOnTeleopInit(){
+  public void runOnTeleopInit() {
     mode = GamePieceMode.DEFENSE;
   }
 }
