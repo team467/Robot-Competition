@@ -25,7 +25,7 @@ public enum IndexerState implements State {
 
         public State action() {
             if (AutoMode) {
-                if (indexerBallsForward && indexerAL.inMouth() && indexerAL.inChamber()) {
+                if (indexerBallsForward && isInMouth && isInChamber) {
                     return Feed1;
                 }
 
@@ -50,9 +50,6 @@ public enum IndexerState implements State {
     },
 
     Feed1 {
-        private GamePieceController gamePiece;
-        private IndexerAL indexer;
-        private boolean autoMode = false;
 
         public void enter() {
             // Noop
@@ -61,7 +58,7 @@ public enum IndexerState implements State {
         public State action() {
             IndexerAL.callForward();
             if (AutoMode) {   
-                if (!indexerAL.inMouth()) {
+                if (!isInMouth) {
                    return Feed2;
                 }
             } else {
@@ -104,7 +101,6 @@ public enum IndexerState implements State {
 
     Reverse {
 
-        private GamePieceController gamePiece;
         public void enter() {
             // Noop
         }
@@ -128,8 +124,6 @@ public enum IndexerState implements State {
     },
 
     Manual {
-
-        private GamePieceController gamePiece;
 
         public void enter() {
             // Noop
@@ -164,9 +158,9 @@ public enum IndexerState implements State {
     private static GamePieceController gamePieceController = GamePieceController.getInstance();
     private static boolean indexerBallsReverse = gamePieceController.indexerBallsReverse();
     private static boolean indexerBallsForward = gamePieceController.indexerBallsForward();
-    private static boolean isInMouth = false;
+    private static boolean isInMouth = indexerAL.inMouth();
     private static boolean AutoMode = (gamePieceController.indexMode == IndexerMode.AUTO)? true : false;
-    private static boolean isInChamber = false;
+    private static boolean isInChamber = indexerAL.inChamber();
     IndexerState() {
 
     }
