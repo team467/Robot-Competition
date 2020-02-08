@@ -26,7 +26,7 @@ public class IntakeState {
 
     }
 
-    public void periodic(IntakerArm arm, IntakerRollers rollers) {
+    public void setIntake(IntakerArm arm, IntakerRollers rollers) {
         switch (arm) {
 
         default:

@@ -10,6 +10,9 @@ import org.apache.logging.log4j.Logger;
 import frc.robot.gamepieces.AbstractLayers.IndexerAL;
 import frc.robot.gamepieces.AbstractLayers.IntakeAL;
 import frc.robot.gamepieces.AbstractLayers.ShooterAL;
+import frc.robot.gamepieces.States.IndexerState;
+import frc.robot.gamepieces.States.ShooterState;
+import frc.robot.gamepieces.States.StateMachine;
 
 
 public class GamePieceController {
@@ -33,10 +36,18 @@ public class GamePieceController {
   private IndexerAL indexer;
   private IntakeAL intaker;
 
+  //StateMachine
+  private StateMachine shooterSM;
+  private StateMachine indexerSM;
+  private StateMachine climberSM;
+
   private DriverStation467 driverStation;
   private VisionController visionController;
   private LedI2C led;
 
+  //DS controls 
+  private boolean armPosition;
+  private boolean rollerState;
   private GamePieceMode mode;
 
   /**
@@ -72,6 +83,9 @@ public class GamePieceController {
 
     mode = GamePieceMode.DEFENSE;
 
+    shooterSM = new StateMachine(ShooterState.Idle);
+    shooterSM = new StateMachine(IndexerState.Idle);
+
     registerMetrics();
   }
 
@@ -102,25 +116,15 @@ public class GamePieceController {
       LOGGER.debug("Backward Camera");
       camera.backward();
     }
-
-    switch (mode) {
-
-      case AUTOMODE:
-      break;
-
-      case DEFENSE:
-        break;
-
-      case CARGO:
-      default:
-        LOGGER.error("Should always have a game piece mode.");
-    }
-
     updateGamePieces();
   }
 
-  void updateGamePieces() {
+
+
+  public void updateGamePieces() {
     // Update all systems
+    shooterSM.step();
+    indexerSM.step();
   }
 
   // TODO: put in logic
@@ -149,6 +153,5 @@ public class GamePieceController {
   }
 
   public void runOnTeleopInit(){
-    mode = GamePieceMode.DEFENSE;
   }
 }
