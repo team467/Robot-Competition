@@ -9,21 +9,39 @@ package frc.robot.gamepieces;
 
 import frc.robot.RobotMap;
 import frc.robot.gamepieces.IndexerAL;
+import frc.robot.gamepieces.GamePieceController;
+
+import edu.wpi.first.wpilibj.Timer;
 
 enum Indexer implements State {
-   
-    
+
     Idle {
+        private boolean isInMouth = false;
+        private boolean AutoMode = false;
+        private boolean isInChamber = false;
+        public GamePieceController gamePiece;
+
         public void enter() {
             // Noop
         }
 
         public State action() {
-        //     if (AutoMode) {
-        //     return Forward;
-        // }
-            if () {
-                
+
+            if (AutoMode) {
+                if (gamePiece.indexerBallsForward() && isInMouth && !isInChamber) {
+                    return Feed1;
+                }
+
+                // TODO: if shooterSM asking for a ball return feed.
+                // if() {
+                // return Feed1;
+                // }
+            } else {
+                return Manual;
+            }
+
+            if (gamePiece.indexerBallsReverse()) {
+                return Reverse;
             }
             return this;
         }
@@ -31,44 +49,103 @@ enum Indexer implements State {
         public void exit() {
             // Noop
         }
+
     },
 
-    Forward {
-        public void enter() {
-            // Noop
-        }
+    Feed1 {
+        private GamePieceController gamePiece;
+        private IndexerAL indexer;
+        private boolean autoMode = false;
 
-        public State action() {
-            IndexerController.callForward();
-            return this;
-        }
-
-        public void exit() {
-            // Noop
-        }
-    },
-
-    Reverse {
-        public void enter() {
-            // Noop
-        }
-
-        public State action() {
-            return this;
-        }
-
-        public void exit() {
-            // Noop
-        }
-    },
-
-    Manual {
         public void enter() {
             // Noop
         }
 
         public State action() {
             IndexerAL.callForward();
+            if (autoMode) {   
+                if (!indexer.inMouth()) {
+                   return Feed2;
+                }
+            } else {
+                return Idle;
+            }
+            
+            return this;
+
+        }
+
+        public void exit() {
+            // Noop
+        }
+
+    },
+
+    Feed2 {
+        private Timer timer;
+        public void enter() {
+            timer.start();
+            
+        }
+
+        public State action() {
+            IndexerAL.callForward();
+            // TODO: adjust timer based on how fast the ball is moving. 
+            if (timer.get() == 0.20) {
+                return Idle;
+            }
+            
+            return this;
+        }
+
+        public void exit() {
+            timer.stop();
+            timer.reset();
+        }
+
+    },
+
+    Reverse {
+
+        private GamePieceController gamePiece;
+        public void enter() {
+            // Noop
+        }
+
+        public State action() {
+            IndexerAL.callBackwards();
+            if (gamePiece.indexerBallsReverse()) {
+                return Idle;
+            }
+            return this;
+        }
+
+        public void exit() {
+            // Noop
+        }
+
+    },
+
+    Manual {
+
+        private GamePieceController gamePiece;
+
+        public void enter() {
+            // Noop
+        }
+
+        public State action() {
+
+            if (gamePiece.indexerBallsForward()) {
+                IndexerAL.callForward();
+            }
+            if (gamePiece.indexerBallsReverse()) {
+                IndexerAL.callBackwards();
+            }
+            if (!gamePiece.indexerBallsForward() && !gamePiece.indexerBallsReverse()) {
+                IndexerAL.callStop();
+            }
+
             return this;
         }
 

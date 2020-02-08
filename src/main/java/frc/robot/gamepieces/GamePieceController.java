@@ -29,9 +29,9 @@ public class GamePieceController {
   // private ShooterAL ShooterAL;
 
   // Game Pieces' States
-  private Shooter shooter;
-  private Indexer indexer;
-  private Intaker intaker;
+  private ShooterAL shooter;
+  private IndexerAL indexer;
+  private IntakeAL intaker;
 
   private DriverStation467 driverStation;
   private VisionController visionController;
