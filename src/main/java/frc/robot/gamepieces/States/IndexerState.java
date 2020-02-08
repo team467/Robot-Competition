@@ -149,8 +149,6 @@ public enum IndexerState implements State {
         }
     };
 
-
-    private static ShooterAL shooterAL = ShooterAL.getInstance();
     private static IndexerAL indexerAL= IndexerAL.getInstance();
     private static GamePieceController gamePieceController = GamePieceController.getInstance();
     private static boolean indexerBallsReverse = gamePieceController.indexerBallsReverse();
