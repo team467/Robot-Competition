@@ -7,6 +7,7 @@
 
 package frc.robot.gamepieces;
 
+import frc.robot.Robot;
 import frc.robot.RobotMap;
 import frc.robot.gamepieces.IndexerAL;
 import frc.robot.gamepieces.GamePieceController;
@@ -16,19 +17,18 @@ import edu.wpi.first.wpilibj.Timer;
 enum Indexer implements State {
 
     Idle {
-        private boolean isInMouth = false;
+     
         private boolean AutoMode = false;
-        private boolean isInChamber = false;
-        public GamePieceController gamePiece;
-
+        private GamePieceController gamePiece;
+        private IndexerAL indexer;
+        private Robot robot;
         public void enter() {
             // Noop
         }
 
         public State action() {
-
             if (AutoMode) {
-                if (gamePiece.indexerBallsForward() && isInMouth && !isInChamber) {
+                if (gamePiece.indexerBallsForward() && indexer.inMouth() && indexer.inChamber()) {
                     return Feed1;
                 }
 
@@ -36,6 +36,7 @@ enum Indexer implements State {
                 // if() {
                 // return Feed1;
                 // }
+
             } else {
                 return Manual;
             }
@@ -53,7 +54,6 @@ enum Indexer implements State {
     },
 
     Feed1 {
-        private GamePieceController gamePiece;
         private IndexerAL indexer;
         private boolean autoMode = false;
 
@@ -83,6 +83,7 @@ enum Indexer implements State {
 
     Feed2 {
         private Timer timer;
+
         public void enter() {
             timer.start();
             
@@ -91,7 +92,7 @@ enum Indexer implements State {
         public State action() {
             IndexerAL.callForward();
             // TODO: adjust timer based on how fast the ball is moving. 
-            if (timer.get() == 0.20) {
+            if (timer.get() == RobotMap.INDEXER_MOVE_TIMER) {
                 return Idle;
             }
             

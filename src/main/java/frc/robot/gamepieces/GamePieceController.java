@@ -54,7 +54,7 @@ public class GamePieceController {
   //TODO: get driverstation input and call intaker periodic().
   
   public enum GamePieceMode {
-    AUTOMODE, DEFENSE, CARGO, HATCH
+    AUTOMODE, DEFENSE, 
   }
 
   private GamePieceController() {
@@ -106,12 +106,11 @@ public class GamePieceController {
     switch (mode) {
 
       case AUTOMODE:
-      break;
+        break;
 
       case DEFENSE:
         break;
 
-      case CARGO:
       default:
         LOGGER.error("Should always have a game piece mode.");
     }
