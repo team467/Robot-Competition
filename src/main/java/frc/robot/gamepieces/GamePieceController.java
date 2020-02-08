@@ -38,8 +38,6 @@ public class GamePieceController {
   // private ShooterAL ShooterAL;
 
   // Game Pieces' States
-  public boolean ShooterAutoMode; //TODO finish this
-  public boolean IndexerAutoMode;
   private ShooterAL shooter;
   private IndexerAL indexer;
   private IntakeAL intaker;
