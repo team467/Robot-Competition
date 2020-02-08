@@ -30,7 +30,7 @@ public class ShooterAL extends GamePieceBase implements GamePiece {
   private static final int TALON_PID_SLOT_ID = 0;
 
   private boolean triggerState = false;
-  private double speed = 0; //TODO gamepeice controller helps to determine this
+  private double speed = 0.8; //TODO gamepeice controller helps to determine this
 
   private static WPI_TalonSRX flywheelLeader;
   private static WPI_TalonSRX flywheelFollower;

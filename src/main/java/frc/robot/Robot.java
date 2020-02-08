@@ -162,7 +162,7 @@ public class Robot extends TimedRobot {
 		autonomous = matchConfig.AutoDecisionTree();
 		LOGGER.info("Init Autonomous: {}", autonomous.getName());
 		//ramps.reset();
-		autonomous.enable();
+    autonomous.enable();
   }
   
   /**
@@ -172,6 +172,7 @@ public class Robot extends TimedRobot {
   public void autonomousPeriodic() {
     LOGGER.trace("Autonomous Periodic");
     autonomous.run();
+    gamePieceController.periodic();
   }
 
   @Override

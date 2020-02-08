@@ -27,8 +27,10 @@ public class IntakeAL extends GamePieceBase implements GamePiece {
 
     public static IntakeAL getInstance() {
         if (instance == null) {
+            if(RobotMap.HAS_INTAKE){
             arm = new WPI_TalonSRX(RobotMap.ARM_MOTOR_CHANNEL);
             roller = new WPI_TalonSRX(RobotMap.ROLLER_MOTOR_CHANNEL);
+            }
 
             instance = new IntakeAL();
         }

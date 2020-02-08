@@ -6,6 +6,7 @@ import frc.robot.gamepieces.GamePieceController.ShooterMode;
 import frc.robot.gamepieces.AbstractLayers.ShooterAL.FlywheelSettings;
 import frc.robot.gamepieces.AbstractLayers.IndexerAL;
 import frc.robot.gamepieces.GamePieceController;
+import edu.wpi.first.wpilibj.Timer;
 import frc.robot.RobotMap;
 
 
@@ -76,7 +77,7 @@ public enum ShooterState implements State {
             shooterAL.setFlywheel(FlywheelSettings.FORWARD);
             if(autoMode){
                 if (shooterAL.atSpeed() && robotAligned){
-                    return Shooting;
+                    return ShootingDelayed;
                 }
                 
             } else {
@@ -91,7 +92,7 @@ public enum ShooterState implements State {
         }
     },
 
-    Shooting {
+    ShootingNoDelay {
          
         public void enter() {
             // Noop
@@ -120,6 +121,37 @@ public enum ShooterState implements State {
         }
     },
 
+    ShootingDelayed {
+         
+        public void enter() {
+            timer.start();
+        }
+
+        public State action() {
+            shooterAL.setTrigger(TriggerSettings.SHOOTING);
+            shooterAL.setFlywheel(FlywheelSettings.FORWARD);
+            if(autoMode){
+                if(!fireWhenReady) {
+                    if(timer.get() > 0.20) return Idle;
+                }
+
+                if(!shooterAL.atSpeed() || !indexerAL.inChamber() || robotAligned){
+                    return LoadingBall;
+                }
+            } else {
+                
+                return Idle;
+            }
+            
+            return this;
+        }
+
+        public void exit() {
+            timer.stop();
+            timer.reset();
+        }
+    },
+
     Manual {
         public void enter() {
             // Noop
@@ -143,6 +175,7 @@ public enum ShooterState implements State {
     private static boolean robotAligned = gamePieceController.RobotAligned; //TODO gpc will tell if robot is aligned
     private static boolean fireWhenReady = gamePieceController.fireWhenReady;
     public static boolean autoMode = (gamePieceController.shooterMode == ShooterMode.AUTO) ? true:false;
+    public static Timer timer = new Timer();
 
     ShooterState() {
 

@@ -39,7 +39,7 @@ public class MatchConfiguration {
 
   private ActionGroup autonomous;
 
-  private String[] autolist= {"do nothing"};
+  private String[] autolist= {"do nothing","Shoot Basic"};
 
   private SendableChooser<String> chooser = new SendableChooser<String>();
 
@@ -100,6 +100,9 @@ public class MatchConfiguration {
       case "do nothing":
         autonomous = Actions.doNothing();
           break;
+      case "Shoot Basic":
+        autonomous = Actions.shootGroup();
+        break;
       default:
        Actions.doNothing();
     }

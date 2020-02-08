@@ -17,13 +17,14 @@ import frc.robot.gamepieces.States.IntakeState;
 import frc.robot.gamepieces.States.StateMachine;
 import frc.robot.gamepieces.States.IntakeState.IntakerArm;
 import frc.robot.gamepieces.States.IntakeState.IntakerRollers;
+import frc.robot.RobotMap;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class GamePieceController {
 
   private static GamePieceController instance = null;
-
+  
   private static final Logger LOGGER 
       = RobotLogManager.getMainLogger(GamePieceController.class.getName());
 
@@ -159,9 +160,11 @@ public class GamePieceController {
 
   public void updateGamePieces() {
     // Update all systems
-    shooterSM.step();
-    indexerSM.step();
+    if(RobotMap.HAS_SHOOTER) shooterSM.step();
+    if(RobotMap.HAS_INDEXER) indexerSM.step();
+
     //roller controls
+    if(RobotMap.HAS_INTAKE){
     if(armPosition){
       intake.setIntakeArm(IntakerArm.ARM_UP);
     } else {
@@ -175,6 +178,7 @@ public class GamePieceController {
     } else {
       intake.setIntakeRoller(IntakerRollers.ROLLERS_OFF);
     }
+  }
     
   }
 
@@ -215,5 +219,9 @@ public class GamePieceController {
   }
 
   public void runOnTeleopInit(){
+  }
+
+  public void setAutomousFireWhenReady(boolean fire){
+    fireWhenReady = fire;
   }
 }

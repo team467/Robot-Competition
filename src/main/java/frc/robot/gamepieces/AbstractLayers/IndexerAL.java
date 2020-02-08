@@ -19,12 +19,11 @@ public class IndexerAL extends GamePieceBase implements GamePiece {
 
   public static IndexerAL getInstance() {
     if (instance == null) {
-      indexLeader = new WPI_TalonSRX(RobotMap.FIRST_MAGAZINE_FEED_MOTOR_CHANNEL);
-      indexFollower = new WPI_TalonSRX(RobotMap.SECOND_MAGAZINE_FEED_MOTOR_CHANNEL);
-
       if (RobotMap.HAS_INDEXER) {
-        instance = new IndexerAL();
+        indexLeader = new WPI_TalonSRX(RobotMap.FIRST_MAGAZINE_FEED_MOTOR_CHANNEL);
+        indexFollower = new WPI_TalonSRX(RobotMap.SECOND_MAGAZINE_FEED_MOTOR_CHANNEL);
       }
+      instance = new IndexerAL();
     }
     return instance;
   }
@@ -73,7 +72,7 @@ public class IndexerAL extends GamePieceBase implements GamePiece {
   // TODO: implement TOF sensor in boolean.
   public boolean inChamber() {
 
-    return false;
+    return true;
   }
 
   public void indexerBeltDirection(setBelts direction) {
