@@ -14,81 +14,77 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import org.apache.logging.log4j.Logger;
 
-public class IntakeAL extends GamePieceBase implements GamePiece {
+public class IntakerController extends GamePieceBase implements GamePiece {
 
-    private static final Logger LOGGER = RobotLogManager.getMainLogger(IntakeAL.class.getName());
+    private static final Logger LOGGER = RobotLogManager.getMainLogger(IntakerController.class.getName());
 
-    private static IntakeAL instance = null;
-   
+    private static IntakerController instance = null;
+
     private static WPI_TalonSRX arm;
     private static WPI_TalonSRX roller;
 
-    public static IntakeAL getInstance() {
+    public static IntakerController getInstance() {
         if (instance == null) {
-            arm = new WPI_TalonSRX(RobotMap.ARM_MOTOR_CHANNEL);
-            roller = new WPI_TalonSRX(RobotMap.ROLLER_MOTOR_CHANNEL);
 
-            instance = new IntakeAL();
+            if (RobotMap.HAS_INTAKE) {
+                arm = new WPI_TalonSRX(RobotMap.ARM_MOTOR_CHANNEL);
+                roller = new WPI_TalonSRX(RobotMap.ROLLER_MOTOR_CHANNEL);
+            }
+            instance = new IntakerController();
         }
         return instance;
     }
-     
+
     private void setUp() {
-        LOGGER.debug("setUp called");
         arm.set(1.0);
     }
 
     private void setDown() {
-        LOGGER.debug("setUp called");
         arm.set(-1.0);
     }
 
     private void setForward() {
-        LOGGER.debug("setForward called");
         roller.set(1.0);
     }
 
     private void setBackward() {
-        LOGGER.debug("setBackward called");
         roller.set(-1.0);
     }
 
     private void setRollerStop() {
-        LOGGER.debug("setRollerStop called");
         roller.set(0.0);
     }
 
     private void setArmStop() {
-        LOGGER.debug("setArmStop called");
         arm.set(0.0);
 
     }
 
     public static void callUp() {
-        IntakeAL.getInstance().setUp();
+        IntakerController.getInstance().setUp();
     }
 
-    public static void callDown() { 
-        IntakeAL.getInstance().setDown();
+    public static void callDown() {
+        IntakerController.getInstance().setDown();
     }
 
     public static void callFoward() {
-        IntakeAL.getInstance().setForward();
+        IntakerController.getInstance().setForward();
     }
 
     public static void callBackward() {
-        IntakeAL.getInstance().setBackward();
+        IntakerController.getInstance().setBackward();
     }
 
     public static void callArmStop() {
-        IntakeAL.getInstance().setArmStop();
+        IntakerController.getInstance().setArmStop();
     }
 
     public static void callRollerStop() {
-        IntakeAL.getInstance().setRollerStop();
+        IntakerController.getInstance().setRollerStop();
     }
 
-    private IntakeAL() {
+    private IntakerController() {
         super("Telemetry", "Intake");
     }
 

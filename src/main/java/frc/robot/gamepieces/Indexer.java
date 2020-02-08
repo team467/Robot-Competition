@@ -19,6 +19,12 @@ enum Indexer implements State {
         }
 
         public State action() {
+        //     if (AutoMode) {
+        //     return Forward;
+        // }
+            if () {
+                
+            }
             return this;
         }
 
@@ -33,6 +39,7 @@ enum Indexer implements State {
         }
 
         public State action() {
+            IndexerController.callForward();
             return this;
         }
 

@@ -15,28 +15,32 @@ public class IndexerAL extends GamePieceBase implements GamePiece {
   private static WPI_TalonSRX indexLeader;
   private static WPI_TalonSRX indexFollower;
 
-  
-
   public static IndexerAL getInstance() {
     if (instance == null) {
       indexLeader = new WPI_TalonSRX(RobotMap.FIRST_MAGAZINE_FEED_MOTOR_CHANNEL);
       indexFollower = new WPI_TalonSRX(RobotMap.SECOND_MAGAZINE_FEED_MOTOR_CHANNEL);
-      instance = new IndexerAL(indexLeader, indexFollower);
+
+      if (RobotMap.HAS_INDEXER) {
+        instance = new IndexerAL();
+      }
     }
-      return instance;
+    return instance;
   }
 
   private void setForward() {
+    LOGGER.debug("Indexer going forward");
     indexLeader.set(1.0);
     indexFollower.set(1.0);
   }
 
   private void setBackwards() {
+    LOGGER.debug("Indexer going backwards");
     indexLeader.set(-1.0);
     indexFollower.set(-1.0);
   }
 
   private void setStop() {
+    LOGGER.debug("Indexer stopped");
     indexLeader.set(0.0);
     indexFollower.set(0.0);
   }
@@ -52,9 +56,47 @@ public class IndexerAL extends GamePieceBase implements GamePiece {
   public static void callStop() {
     IndexerAL.getInstance().setStop();
   }
-  
 
-  private IndexerAL(WPI_TalonSRX indexLeader, WPI_TalonSRX indexFollower) {
+  public enum setBelts {
+    FORWARD, OFF, REVERSE
+
+  }
+
+  // TODO: implement TOF sensor in boolean.
+  public boolean inMouth() {
+    
+    return false;
+  }
+
+  // TODO: implement TOF sensor in boolean.
+  public boolean inChamber() {
+
+    return false;
+  }
+
+  public void indexerBeltDirection(setBelts direction) {
+
+    switch (direction) {
+
+    default:
+
+    case FORWARD:
+      setForward();
+      break;
+
+    case OFF:
+      setStop();
+      break;
+
+    case REVERSE:
+      setBackwards();
+      break;
+
+    }
+
+  }
+
+  private IndexerAL() {
     super("Telemetry", "Indexer");
 
   }

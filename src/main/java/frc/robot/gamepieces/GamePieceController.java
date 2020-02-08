@@ -54,7 +54,7 @@ public class GamePieceController {
   //TODO: get driverstation input and call intaker periodic().
   
   public enum GamePieceMode {
-    DEFENSE, CARGO, HATCH
+    AUTOMODE, DEFENSE, CARGO, HATCH
   }
 
   private GamePieceController() {
@@ -105,6 +105,9 @@ public class GamePieceController {
 
     switch (mode) {
 
+      case AUTOMODE:
+      break;
+
       case DEFENSE:
         break;
 
@@ -119,6 +122,26 @@ public class GamePieceController {
   void updateGamePieces() {
     // Update all systems
   }
+
+  // TODO: put in logic
+  public boolean indexerBallsForward() {
+    return false;
+  }
+
+  // TODO: put in logic 
+  public boolean indexerBallsReverse() {
+
+    return false;
+  }
+
+  public boolean indexerForward() {
+    return false;
+  }
+
+  public boolean indexerBackwards() {
+    return false;
+  }
+
 
   private void registerMetrics() {
     Telemetry telemetry = Telemetry.getInstance();
