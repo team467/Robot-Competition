@@ -31,6 +31,8 @@ public class Climber extends GamePieceBase implements GamePiece {
     private static CANSparkMax climbFollower;
     private static SparkMaxSpeedControllerGroup climbGroup;
     // status of robot
+    //test
+    
     private ClimberStates states;
     // solenoid on lock mechanism
     Solenoid solenoidLock = new Solenoid(1); //which ever port it uses TODO, tbd
