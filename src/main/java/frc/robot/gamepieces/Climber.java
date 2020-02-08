@@ -18,21 +18,37 @@ import frc.robot.logging.RobotLogManager;
 import org.apache.logging.log4j.Logger;
 import com.revrobotics.*;
 
+//adds solenoid class
+import edu.wpi.first.wpilibj.Solenoid;
+
 public class Climber extends GamePieceBase implements GamePiece {
     // logger
     private static final Logger LOGGER = RobotLogManager.getMainLogger(Climber.class.getName());
-    // inst reresenting climber
+    // inst representing climber
     private static Climber instance = null;
     // motors
     private static CANSparkMax climbLeader;
     private static CANSparkMax climbFollower;
     private static SparkMaxSpeedControllerGroup climbGroup;
     // status of robot
-    private ClimberStatus status;
+    private ClimberStates states;
+    // solenoid on lock mechanism
+    Solenoid solenoidLock = new Solenoid(1); //which ever port it uses TODO, tbd
 
     // constructor
-    private Climber(SparkMaxSpeedControllerGroup climber) { // constructor
+    private Climber(SparkMaxSpeedControllerGroup climbGroup) { // constructor
         super("Telemetry", "Climber");
+        this.climbGroup = climbGroup;
+    }
+
+    // method to make the climber move up or down
+    public void set(ClimberStates states) {
+        this.states = states;
+    }
+
+    // starts the solenoid
+    public void initialize() {
+        solenoidLock.set(true); // sets solennoid state
     }
 
     // gets the instance
@@ -62,17 +78,7 @@ public class Climber extends GamePieceBase implements GamePiece {
         return instance;
     }
 
-    public void stop() {
-        // stops the climber so that the robot doesnt move
-        climbGroup.set(0.0);
-    }
-
-    // method to make the climber move up or down
-    public void set(ClimberStatus status) {
-        this.status = status;
-    }
-
-    public enum ClimberStatus {
+    public enum ClimberStates {
         UP, DOWN, STOP;
 
         public void actuate() {
@@ -96,10 +102,15 @@ public class Climber extends GamePieceBase implements GamePiece {
         }
     }
 
+    public void stop() {
+        // stops the climber so that the robot doesnt move
+        climbGroup.set(0.0);
+    }
+
     public void periodic() {
         if (RobotMap.HAS_CLIMBER) {
             if (enabled) {
-                status.actuate();
+                states.actuate();
             } else {
                 stop();
             }
