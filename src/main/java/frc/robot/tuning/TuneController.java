@@ -14,6 +14,7 @@ public class TuneController {
     register("PID_Velocity_Tuner", new PIDVelocityTuner());
     register("Shooter_Tuner", new ShooterTuner());
     register("Drive_Straight", new DriveConstantTuner());
+    register("Sm_Test", new stateMachineTuner());
   }
 
   private static final Logger LOGGER

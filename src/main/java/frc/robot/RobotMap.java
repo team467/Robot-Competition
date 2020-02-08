@@ -298,6 +298,9 @@ public class RobotMap {
 
       // Game Pieces
       HAS_SHOOTER = true;
+      HAS_INDEXER = false;
+      HAS_INTAKE = false;
+
 
       // Shooter
       // TODO:change the values of these later
