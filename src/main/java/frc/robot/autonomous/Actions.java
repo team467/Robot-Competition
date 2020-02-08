@@ -2,7 +2,9 @@ package frc.robot.autonomous;
 
 import frc.robot.RobotMap;
 import frc.robot.drive.Drive;
+import frc.robot.gamepieces.GamePieceController;
 import frc.robot.logging.RobotLogManager;
+import frc.robot.gamepieces.AbstractLayers.IndexerAL;
 
 import java.text.DecimalFormat;
 
@@ -15,6 +17,8 @@ public class Actions {
   private static final DecimalFormat df = new DecimalFormat("####0.00");
 
   private static Drive drive = Drive.getInstance();
+
+  private static GamePieceController gamePieceController = GamePieceController.getInstance();
 
   private static double mirrorTurns = 1.0;
   
@@ -34,14 +38,23 @@ public class Actions {
     String actionText = "Do Nothing";
     return new Action(actionText,
         () -> drive.isStopped(),
-        () -> drive.moveLinearFeet(0));
+        () -> drive.arcadeDrive(0, 0, false));
+  }
+
+  public static final Action Shoot() {
+    String actionText = "shoot";
+    
+    IndexerAL indexer = IndexerAL.getInstance();
+    return new Action(actionText,
+        () -> indexer.inChamber(),
+        () -> gamePieceController.setAutomousFireWhenReady(true));
   }
 
   public static Action wait(double duration) {
     String actionText = "Do Nothing";
     return new Action(actionText,
         new ActionGroup.Duration(duration),
-        () -> drive.moveLinearFeet(0));
+        () -> drive.arcadeDrive(0, 0));
   }
 
   public static final Action nothingForever() {
@@ -77,9 +90,11 @@ public class Actions {
    */
   public static Action moveDistanceForward(double distance) {
     String actionText = "Move forward " + distance + " feet";
+    //TODO determine the mult values
+    double timeAmt = (distance - 0.112)/10.3596;
     return new Action(actionText,
-        new ActionGroup.ReachDistance(distance),
-        () -> drive.moveLinearFeet(distance));
+        new ActionGroup.Duration(timeAmt),
+        () -> drive.arcadeDrive(0.8,0));
   }
 
   /**
@@ -130,6 +145,21 @@ public class Actions {
     ActionGroup mode = new ActionGroup(actionGroupText);
     return mode;
   }
+
+  public static ActionGroup DoNothing() {
+    String actionGroupText = "doing nothing";
+    ActionGroup mode = new ActionGroup(actionGroupText);
+    mode.addAction(nothing());
+    return mode;
+  }
+
+  public static ActionGroup shootGroup() {
+    String actionGroupText = "doing nothing";
+    ActionGroup mode = new ActionGroup(actionGroupText);
+    mode.addAction(Shoot());
+    return mode;
+  }
+
 
   public static ActionGroup crossAutoLine() {
     String actionGroupText = "Go straight to cross the auto line.";
