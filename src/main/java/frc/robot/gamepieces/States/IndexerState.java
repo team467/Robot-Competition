@@ -7,27 +7,24 @@
 
 package frc.robot.gamepieces.States;
 
+import frc.robot.Robot;
 import frc.robot.RobotMap;
 import frc.robot.gamepieces.AbstractLayers.IndexerAL;
+import frc.robot.gamepieces.AbstractLayers.ShooterAL;
 import frc.robot.gamepieces.GamePieceController;
 import edu.wpi.first.wpilibj.Timer;
 
 public enum IndexerState implements State {
 
     Idle {
-        private boolean isInMouth = false;
-        private boolean AutoMode = false;
-        private boolean isInChamber = false;
-        public GamePieceController gamePiece;
 
         public void enter() {
             // Noop
         }
 
         public State action() {
-
-            if (AutoMode) {
-                if (gamePiece.indexerBallsForward() && isInMouth && !isInChamber) {
+            if (gamePiece.indexerAutoMode()) {
+                if (gamePiece.indexerBallsForward() && indexerAL.inMouth() && indexerAL.inChamber()) {
                     return Feed1;
                 }
 
@@ -35,6 +32,7 @@ public enum IndexerState implements State {
                 // if() {
                 // return Feed1;
                 // }
+
             } else {
                 return Manual;
             }
@@ -52,9 +50,6 @@ public enum IndexerState implements State {
     },
 
     Feed1 {
-        private GamePieceController gamePiece;
-        private IndexerAL indexer;
-        private boolean autoMode = false;
 
         public void enter() {
             // Noop
@@ -62,8 +57,8 @@ public enum IndexerState implements State {
 
         public State action() {
             IndexerAL.callForward();
-            if (autoMode) {   
-                if (!indexer.inMouth()) {
+            if (gamePiece.indexerAutoMode()) {   
+                if (!indexerAL.inMouth()) {
                    return Feed2;
                 }
             } else {
@@ -82,6 +77,7 @@ public enum IndexerState implements State {
 
     Feed2 {
         private Timer timer;
+
         public void enter() {
             timer.start();
             
@@ -90,7 +86,7 @@ public enum IndexerState implements State {
         public State action() {
             IndexerAL.callForward();
             // TODO: adjust timer based on how fast the ball is moving. 
-            if (timer.get() == 0.20) {
+            if (timer.get() == RobotMap.INDEXER_MOVE_TIMER) {
                 return Idle;
             }
             
@@ -106,7 +102,6 @@ public enum IndexerState implements State {
 
     Reverse {
 
-        private GamePieceController gamePiece;
         public void enter() {
             // Noop
         }
@@ -151,6 +146,14 @@ public enum IndexerState implements State {
         public void exit() {
             // Noop
         }
-    },
+    };
+
+    private static ShooterAL shooterAL = ShooterAL.getInstance();
+    private static IndexerAL indexerAL= IndexerAL.getInstance();
+    private static GamePieceController gamePiece;
+ 
+    IndexerState() {
+
+    }
 
 }

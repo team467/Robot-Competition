@@ -10,9 +10,7 @@ package frc.robot;
 import static org.apache.logging.log4j.util.Unbox.box;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import frc.robot.RobotMap.RobotId;
 import frc.robot.autonomous.ActionGroup;
 import frc.robot.autonomous.Actions;
@@ -61,11 +59,6 @@ public class Robot extends TimedRobot {
   public static long previousTime = time;
   public static int dt = 0;
 
-  private DifferentialDrive m_myRobot;
-
-  private Joystick m_leftStick;
-  private Joystick m_rightStick;
-
   private MatchConfiguration matchConfig;
   private ActionGroup autonomous;
 
@@ -111,11 +104,6 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("Right F", RobotMap.RIGHT_DRIVE_PID_F);
     SmartDashboard.putNumber("Right Max Velocity", RobotMap.VELOCITY_MULTIPLIER_LEFT);
     
-
-    m_leftStick = new Joystick(0);
-    m_rightStick = new Joystick(1);
-
-
     // Used after init, should be set only by the Simulator GUI
     // this ensures that the simulator is off otherwise.
     if (enableSimulator) {
@@ -242,10 +230,9 @@ public class Robot extends TimedRobot {
         break;
 
       case TankDrive:
-        m_myRobot.tankDrive(m_leftStick.getY(), m_rightStick.getY());
-        // double leftTank = driverstation.getDriveJoystick().getLeftStickY();
-        // double rightTank = driverstation.getDriveJoystick().getRightStickY();
-        // drive.tankDrive(leftTank, rightTank, true);
+        double leftTank = driverstation.getDriveJoystick().getLeftStickY();
+        double rightTank = driverstation.getDriveJoystick().getRightStickY();
+        drive.tankDrive(leftTank, rightTank, true);
         break;
 
       default:

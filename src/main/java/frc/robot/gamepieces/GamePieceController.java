@@ -13,10 +13,12 @@ import frc.robot.gamepieces.AbstractLayers.ShooterAL;
 import frc.robot.gamepieces.States.IndexerState;
 import frc.robot.gamepieces.States.IntakeState;
 import frc.robot.gamepieces.States.ShooterState;
+import frc.robot.gamepieces.States.IntakeState;
 import frc.robot.gamepieces.States.StateMachine;
 import frc.robot.gamepieces.States.IntakeState.IntakerArm;
 import frc.robot.gamepieces.States.IntakeState.IntakerRollers;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class GamePieceController {
 
@@ -130,14 +132,16 @@ public class GamePieceController {
     // so that tests can manually feed inputs.
     processGamePieceState(
         driverStation.getDriveCameraFront(),
-        driverStation.getDriveCameraBack()
+        driverStation.getDriveCameraBack(),
+        driverStation.getIndexerAutoMode()
     );
 
   }
 
   void processGamePieceState(
       boolean driveCameraFront,
-      boolean driveCameraRear) {
+      boolean driveCameraRear,
+      boolean getIndexerAutoMode) {
 
     // Depending on driver input, camera view switches to front or back.
     // Does not change the mode away from Hatch or Cargo, but does take camera.
@@ -193,6 +197,17 @@ public class GamePieceController {
     return false;
   }
 
+  public boolean indexerAutoMode() {
+    driverStation.getIndexerAutoMode();
+    return true;
+  }
+
+  // public boolean shooterLoadingBall() {
+  //   if (shooterSM.) {
+
+  //   }
+  //   return true;
+  // }
 
   private void registerMetrics() {
     Telemetry telemetry = Telemetry.getInstance();
