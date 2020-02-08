@@ -1,5 +1,7 @@
 package frc.robot;
 
+import com.fasterxml.jackson.databind.ser.std.StdKeySerializers.Default;
+
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class RobotMap {
@@ -16,7 +18,7 @@ public class RobotMap {
   public static final int PID_SLOT_DRIVE = 0;
   public static final int PID_SLOT_TURN = 1;
 
-  //Sensors
+  // Sensors
   public static boolean HAS_GYRO = false;
 
   // Turret angle offsets
@@ -269,8 +271,7 @@ public class RobotMap {
     POSITION_ALLOWED_ERROR = ALLOWED_ERROR_INCHES / RobotMap.WHEEL_CIRCUMFERENCE;
 
     // This is in encoder ticks
-    POSITION_ALLOWABLE_CLOSED_LOOP_ERROR 
-        = (int) (POSITION_ALLOWED_ERROR * WHEEL_ENCODER_CODES_PER_REVOLUTION * 0.95);
+    POSITION_ALLOWABLE_CLOSED_LOOP_ERROR = (int) (POSITION_ALLOWED_ERROR * WHEEL_ENCODER_CODES_PER_REVOLUTION * 0.95);
   }
 
   /**
@@ -334,7 +335,7 @@ public class RobotMap {
     }
   }
 
-  //Speed Controls
+  // Speed Controls
   public static double NORMAL_DRIVE_SPEED_MULTIPLIER;
   public static double SLOW_DRIVE_SPEED_MULTIPLIER;
   public static double NORMAL_VELOCITY_SPEED_MULTIPLIER;
@@ -357,4 +358,36 @@ public class RobotMap {
   public static int TELEMETRY_TIMER_MS = 20;
 
   // Game Pieces
+
+  // Shooter
+  public static boolean HAS_SHOOTER = false;
+  public static boolean HAS_TRIGGER = false;
+  public static boolean HAS_SHOOTERLEDS = false;
+  public static boolean SHOOTER_FOLLOWER;
+  public static int SHOOTER_MOTOR_CHANNEL;
+  public static boolean SHOOTER_MOTOR_INVERTED;
+  public static int SHOOTER_MOTOR_FOLLOWER_CHANNEL;
+  public static boolean SHOOTER_MOTOR_FOLLOWER_INVERTED;
+  public static boolean SHOOTER_SMART_SHOT;
+  public static int TRIGGER_MOTOR_CHANNEL;
+  public static boolean TRIGGER_MOTOR_INVERTED = false;
+
+  public static boolean SHOOTER_SENSOR_INVERTED;
+  public static double SHOOTER_P;
+  public static double SHOOTER_I;
+  public static double SHOOTER_D;
+  public static double SHOOTER_F;
+  public static double VELOCITY_MULTIPLIER_SHOOTER;
+  public static double SHOOTER_SPEED_TOLERANCE;
+  public static int SHOOTER_PID_SLOT_DRIVE;
+
+  public static int SHOOTER_LED_AMOUNT;
+  public static int SHOOTER_LED_CHANNEL;
+  public static boolean SHOOTER_DOUBLESIDE_LED = false;
+
+  // Intake
+  public static boolean HAS_INTAKE = false;
+  public static int ARM_MOTOR;
+  public static int ROLLER_MOTOR_CHANNEL;
+  public static boolean ROLLER_MOTOR_INVERTED;
 }
