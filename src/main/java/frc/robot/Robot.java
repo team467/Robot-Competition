@@ -104,6 +104,12 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("Right D", RobotMap.RIGHT_DRIVE_PID_D);
     SmartDashboard.putNumber("Right F", RobotMap.RIGHT_DRIVE_PID_F);
     SmartDashboard.putNumber("Right Max Velocity", RobotMap.VELOCITY_MULTIPLIER_LEFT);
+
+    SmartDashboard.putNumber("Shooter P", RobotMap.SHOOTER_P);
+    SmartDashboard.putNumber("Shooter I", RobotMap.SHOOTER_I);
+    SmartDashboard.putNumber("Shooter D", RobotMap.SHOOTER_D);
+    SmartDashboard.putNumber("Shooter F", RobotMap.SHOOTER_F);
+    SmartDashboard.putNumber("Shooter Max Velocity", RobotMap.VELOCITY_MULTIPLIER_SHOOTER);
     
 
     m_leftStick = new Joystick(0);

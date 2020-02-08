@@ -47,7 +47,7 @@ public class ShooterTuner implements Tuner {
         SmartDashboard.putNumber("Shooter F", kF);
         SmartDashboard.putNumber("Shooter Max Velocity", kMaxVelocity);
 
-        SmartDashboard.putBoolean("Start Shooting", false);
+        SmartDashboard.putBoolean("Shoot", false);
 
         shooter.flyWheelPIDF(kP, kI, kD, kF, kMaxVelocity);
 
@@ -56,7 +56,7 @@ public class ShooterTuner implements Tuner {
 
     public void periodic() {
         double speed = SmartDashboard.getNumber("Speed", 0);
-        boolean startShooting = SmartDashboard.getBoolean("Start Shooting", false);
+        boolean startShooting = SmartDashboard.getBoolean("Shoot", false);
 
         if (useVelocity) {
             shooter.rampToSpeed(speed);
