@@ -200,19 +200,23 @@ public class RobotMap {
       // TODO:change the values of these later
       SHOOTER_FOLLOWER = true;
       SHOOTER_MOTOR_CHANNEL = 5;
-      SHOOTER_MOTOR_INVERTED = false;
+      SHOOTER_MOTOR_INVERTED = true;
       SHOOTER_MOTOR_FOLLOWER_CHANNEL = 6;
-      SHOOTER_MOTOR_FOLLOWER_INVERTED = false;
+      SHOOTER_MOTOR_FOLLOWER_INVERTED = true;
       SHOOTER_SMART_SHOT = true;
 
-      SHOOTER_SENSOR_INVERTED = false;
+      SHOOTER_SENSOR_INVERTED = true;
 
-      SHOOTER_P = 0.0;
+      TRIGGER_MOTOR_CHANNEL = 6;
+      TRIGGER_MOTOR_INVERTED = false;
+
+
+      SHOOTER_P = 2;
       SHOOTER_I = 0.0;
       SHOOTER_D = 0.0;
       SHOOTER_F = 0.0;
 
-      VELOCITY_MULTIPLIER_SHOOTER = 0;
+      VELOCITY_MULTIPLIER_SHOOTER = 8200;
       SHOOTER_SPEED_TOLERANCE = 0.25;
       MANUAL_MODE_SHOOTER_SPEED = 1.0; //TODO determine the speed
       
@@ -313,12 +317,12 @@ public class RobotMap {
 
       SHOOTER_SENSOR_INVERTED = false;
 
-      SHOOTER_P = 0.0;
+      SHOOTER_P = 2;
       SHOOTER_I = 0.0;
       SHOOTER_D = 0.0;
       SHOOTER_F = 0.0;
 
-      VELOCITY_MULTIPLIER_SHOOTER = 0;
+      VELOCITY_MULTIPLIER_SHOOTER = 8200;
       SHOOTER_SPEED_TOLERANCE = 0.25;
       MANUAL_MODE_SHOOTER_SPEED = 1.0;
       break;
