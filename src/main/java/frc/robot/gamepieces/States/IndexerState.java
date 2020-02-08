@@ -13,7 +13,7 @@ import frc.robot.gamepieces.AbstractLayers.IndexerAL;
 import frc.robot.gamepieces.GamePieceController;
 import edu.wpi.first.wpilibj.Timer;
 
-enum IndexerState implements State {
+public enum IndexerState implements State {
 
     Idle {
      

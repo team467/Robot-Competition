@@ -10,6 +10,10 @@ import org.apache.logging.log4j.Logger;
 import frc.robot.gamepieces.AbstractLayers.IndexerAL;
 import frc.robot.gamepieces.AbstractLayers.IntakeAL;
 import frc.robot.gamepieces.AbstractLayers.ShooterAL;
+import frc.robot.gamepieces.States.ShooterState;
+import frc.robot.gamepieces.States.IndexerState;
+import frc.robot.gamepieces.States.IntakeState;
+
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class GamePieceController {
@@ -29,6 +33,10 @@ public class GamePieceController {
   // private ShooterAL ShooterAL;
 
   // Game Pieces' States
+  private ShooterState shooterSM;
+  private IndexerState indexerSM;
+  private IntakeState IntakeState;
+
   private ShooterAL shooter;
   private IndexerAL indexer;
   private IntakeAL intaker;
@@ -146,6 +154,13 @@ public class GamePieceController {
     driverStation.getIndexerAutoMode();
     return true;
   }
+
+  // public boolean shooterLoadingBall() {
+  //   if (shooterSM.) {
+
+  //   }
+  //   return true;
+  // }
 
   private void registerMetrics() {
     Telemetry telemetry = Telemetry.getInstance();
