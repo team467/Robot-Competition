@@ -216,6 +216,8 @@ public class RobotMap {
 
       VELOCITY_MULTIPLIER_SHOOTER = 0;
       SHOOTER_SPEED_TOLERANCE = 0.25;
+      MANUAL_MODE_SHOOTER_SPEED = 1.0; //TODO determine the speed
+      
 
       //Intake
       // TODO: change the values of these later.
@@ -428,6 +430,7 @@ public class RobotMap {
   public static double VELOCITY_MULTIPLIER_SHOOTER;
   public static double SHOOTER_SPEED_TOLERANCE;
   public static int SHOOTER_PID_SLOT_DRIVE;
+  public static double MANUAL_MODE_SHOOTER_SPEED;
 
   public static int SHOOTER_LED_AMOUNT;
   public static int SHOOTER_LED_CHANNEL;

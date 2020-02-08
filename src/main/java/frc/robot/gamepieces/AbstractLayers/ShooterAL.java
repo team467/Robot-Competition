@@ -30,7 +30,7 @@ public class ShooterAL extends GamePieceBase implements GamePiece {
   private static final int TALON_PID_SLOT_ID = 0;
 
   private boolean triggerState = false;
-  private double speed = 0;
+  private double speed = 0; //TODO gamepeice controller helps to determine this
 
   private static WPI_TalonSRX flywheelLeader;
   private static WPI_TalonSRX flywheelFollower;
@@ -204,9 +204,10 @@ public class ShooterAL extends GamePieceBase implements GamePiece {
   }
 
   public enum FlywheelSettings {
-    FOWARD,
+    FORWARD,
     BACKWARD,
-    STOP
+    STOP,
+    MANUAL_FORWARD
   }
 
   public enum TriggerSettings {
@@ -215,9 +216,9 @@ public class ShooterAL extends GamePieceBase implements GamePiece {
     REVERSE
   }
 
-  public void setFlywheel(FlywheelSettings setting, double Speed) {
+  public void setFlywheel(FlywheelSettings setting) {
     switch(setting) {
-      case FOWARD:
+      case FORWARD:
         rampToSpeed(Math.abs(speed));
         break;
 
@@ -225,6 +226,9 @@ public class ShooterAL extends GamePieceBase implements GamePiece {
         rampToSpeed(-Math.abs(speed));
         break;
 
+      case MANUAL_FORWARD:
+        rampToSpeed(RobotMap.MANUAL_MODE_SHOOTER_SPEED); //TODO tbd speed
+        break;
       case STOP:
         stop();
       
@@ -260,7 +264,7 @@ public class ShooterAL extends GamePieceBase implements GamePiece {
       try {
 
         setTrigger(TriggerSettings.SHOOTING);
-        setFlywheel(FlywheelSettings.FOWARD, 1.0);
+        setFlywheel(FlywheelSettings.FORWARD);
 
       
         if(flywheelLeader.isAlive()) {

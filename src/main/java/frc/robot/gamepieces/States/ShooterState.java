@@ -1,22 +1,35 @@
 package frc.robot.gamepieces.States;
 
 import frc.robot.gamepieces.AbstractLayers.ShooterAL;
+import frc.robot.gamepieces.AbstractLayers.ShooterAL.TriggerSettings;
+import frc.robot.gamepieces.AbstractLayers.ShooterAL.FlywheelSettings;
+import frc.robot.gamepieces.AbstractLayers.IndexerAL;
 import frc.robot.RobotMap;
 
 
-enum Shooter implements State {
+public enum ShooterState implements State {
 
     Idle {
+
         public void enter() {
             // Noop
         }
 
         public State action() {
-            if (System.currentTimeMillis() % 2000 > 1000) {
-                return LoadingBall;
+            shooterAL.setTrigger(TriggerSettings.STOP);
+            shooterAL.setFlywheel(FlywheelSettings.STOP);
+
+            if(autoMode) {
+
+                if(fireWhenReady) {
+                    return LoadingBall;
+                }
+
+                return this;
+
+            } else {
+                return Manual;
             }
-            System.out.print("I");
-            return this;
         }
 
         public void exit() {
@@ -31,12 +44,19 @@ enum Shooter implements State {
         }
 
         public State action() {
-            if (System.currentTimeMillis() % 2000 < 1000) {
+            shooterAL.setTrigger(TriggerSettings.STOP);
+            shooterAL.setFlywheel(FlywheelSettings.FORWARD);
+        
+            if(autoMode){
+                if(indexerAL.inChamber()) {
+                    return AdjustingSpeed;
+                }
+            } else {
                 return Idle;
             }
 
-            System.out.print("P");
             return this;
+
         }
 
         public void exit() {
@@ -45,19 +65,22 @@ enum Shooter implements State {
     },
 
     AdjustingSpeed {
-
-        private ShooterAL shooter;
-
         public void enter() {
 
         }
 
         public State action() {
-            if (shooter.atSpeed()){
-                if (true) {
-
+            shooterAL.setTrigger(TriggerSettings.STOP);
+            shooterAL.setFlywheel(FlywheelSettings.FORWARD);
+            if(autoMode){
+                if (shooterAL.atSpeed() && robotAligned){
+                    return Shooting;
                 }
+                
+            } else {
+                return Idle;
             }
+
             return this;
         }
 
@@ -67,16 +90,60 @@ enum Shooter implements State {
     },
 
     Shooting {
+         
         public void enter() {
             // Noop
         }
 
         public State action() {
+            shooterAL.setTrigger(TriggerSettings.SHOOTING);
+            shooterAL.setFlywheel(FlywheelSettings.FORWARD);
+            if(autoMode){
+                if(!fireWhenReady) {
+                    return Idle;
+                }
+
+                if(!shooterAL.atSpeed() || !indexerAL.inChamber() || robotAligned){
+                    return LoadingBall;
+                }
+            } else {
+                return Idle;
+            }
+            
             return this;
         }
 
         public void exit() {
             // Noop
         }
+    },
+
+    Manual {
+        public void enter() {
+            // Noop
+        }
+
+        public State action() {
+            //Manual mode does not care about speeds, just shoots and constantly feeds
+            shooterAL.setFlywheel(FlywheelSettings.MANUAL_FORWARD);
+            shooterAL.setTrigger(TriggerSettings.SHOOTING);
+            return this;
+        }
+
+        public void exit() {
+            // Noop
+        }
+    };
+
+    private static ShooterAL shooterAL = ShooterAL.getInstance();
+    private static IndexerAL indexerAL = IndexerAL.getInstance();
+    private static boolean robotAligned = false; //TODO gpc will tell if robot is aligned
+    private static boolean fireWhenReady = false;
+    public static boolean autoMode = false;
+
+    ShooterState() {
+
     }
+
+
 }
