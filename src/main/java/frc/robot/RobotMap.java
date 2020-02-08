@@ -49,6 +49,9 @@ public class RobotMap {
   public static double LEFT_DRIVE_PID_D;
   public static double LEFT_DRIVE_PID_F;
 
+  public static double CLOSED_LOOP_RAMP_RATE;
+  public static double OPEN_LOOP_RAMP_RATE;
+
   public static int RIGHT_LEAD_CHANNEL;
   public static int RIGHT_FOLLOWER_1_CHANNEL;
   public static int RIGHT_FOLLOWER_2_CHANNEL;
@@ -322,6 +325,8 @@ public class RobotMap {
   // Speed Controls
   public static double NORMAL_DRIVE_SPEED_MULTIPLIER;
   public static double SLOW_DRIVE_SPEED_MULTIPLIER;
+  public static double NORMAL_VELOCITY_SPEED_MULTIPLIER;
+  public static double SLOW_VELOCITY_SPEED_MULTIPLIER;
   public static boolean USE_VELOCITY_SPEED_CONTROL_FOR_TELOP = false;
   public static double VELOCITY_MULTIPLIER_LEFT;
   public static double VELOCITY_MULTIPLIER_RIGHT;
@@ -340,6 +345,7 @@ public class RobotMap {
   public static int TELEMETRY_TIMER_MS = 20;
 
   // Game Pieces
+
   // climber
   public static boolean HAS_CLIMBER = false;
   public static boolean motorIsInverted = false;
