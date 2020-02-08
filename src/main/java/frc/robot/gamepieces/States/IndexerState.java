@@ -11,6 +11,7 @@ import frc.robot.Robot;
 import frc.robot.RobotMap;
 import frc.robot.gamepieces.AbstractLayers.IndexerAL;
 import frc.robot.gamepieces.AbstractLayers.ShooterAL;
+import frc.robot.gamepieces.GamePiece;
 import frc.robot.gamepieces.GamePieceController;
 import edu.wpi.first.wpilibj.Timer;
 
@@ -23,8 +24,8 @@ public enum IndexerState implements State {
         }
 
         public State action() {
-            if (gamePiece.indexerAutoMode()) {
-                if (gamePiece.indexerBallsForward() && indexerAL.inMouth() && indexerAL.inChamber()) {
+            if (gamePieceController.indexerAutoMode()) {
+                if (indexerBallsForward && indexerAL.inMouth() && indexerAL.inChamber()) {
                     return Feed1;
                 }
 
@@ -37,7 +38,7 @@ public enum IndexerState implements State {
                 return Manual;
             }
 
-            if (gamePiece.indexerBallsReverse()) {
+            if (indexerBallsReverse) {
                 return Reverse;
             }
             return this;
@@ -57,7 +58,7 @@ public enum IndexerState implements State {
 
         public State action() {
             IndexerAL.callForward();
-            if (gamePiece.indexerAutoMode()) {   
+            if (gamePieceController.indexerAutoMode()) {   
                 if (!indexerAL.inMouth()) {
                    return Feed2;
                 }
@@ -108,7 +109,7 @@ public enum IndexerState implements State {
 
         public State action() {
             IndexerAL.callBackwards();
-            if (gamePiece.indexerBallsReverse()) {
+            if (indexerBallsReverse) {
                 return Idle;
             }
             return this;
@@ -130,13 +131,13 @@ public enum IndexerState implements State {
 
         public State action() {
 
-            if (gamePiece.indexerBallsForward()) {
+            if (indexerBallsForward) {
                 IndexerAL.callForward();
             }
-            if (gamePiece.indexerBallsReverse()) {
+            if (indexerBallsReverse) {
                 IndexerAL.callBackwards();
             }
-            if (!gamePiece.indexerBallsForward() && !gamePiece.indexerBallsReverse()) {
+            if (!indexerBallsForward && !indexerBallsReverse) {
                 IndexerAL.callStop();
             }
 
@@ -148,9 +149,12 @@ public enum IndexerState implements State {
         }
     };
 
+
     private static ShooterAL shooterAL = ShooterAL.getInstance();
     private static IndexerAL indexerAL= IndexerAL.getInstance();
-    private static GamePieceController gamePiece;
+    private static GamePieceController gamePieceController = GamePieceController.getInstance();
+    private static boolean indexerBallsReverse = gamePieceController.indexerBallsReverse();
+    private static boolean indexerBallsForward = gamePieceController.indexerBallsForward();
  
     IndexerState() {
 

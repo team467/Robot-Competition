@@ -14,6 +14,7 @@ import frc.robot.logging.RobotLogManager;
 
 public class IntakeState {
 
+    private static IntakeState instance = null;
     private static final Logger LOGGER = RobotLogManager.getMainLogger(IntakeState.class.getName());
 
     public enum IntakerArm {
@@ -26,7 +27,15 @@ public class IntakeState {
 
     }
 
-    public void setIntake(IntakerArm arm, IntakerRollers rollers) {
+    public static IntakeState getInstance() {
+        if (instance == null) {
+          instance = new IntakeState();
+        }
+        return instance;
+      }
+    
+
+    public void setIntakeArm(IntakerArm arm, IntakerRollers rollers) {
         switch (arm) {
 
         default:
@@ -34,7 +43,6 @@ public class IntakeState {
         case ARM_UP:
             IntakeAL.callUp();
             break;
-
         case ARM_DOWN:
             IntakeAL.callDown();
             break;
@@ -53,4 +61,34 @@ public class IntakeState {
             break;
         }
     }
+    public void setIntakeArm(IntakerArm arm) {
+        switch (arm) {
+
+        default:
+            LOGGER.error("message");
+        case ARM_UP:
+            IntakeAL.callUp();
+            break;
+
+        case ARM_DOWN:
+            IntakeAL.callDown();
+            break;
+        }
+    }
+
+    public void setIntakeRoller(IntakerRollers rollers) {
+        switch (rollers) {
+        case ROLLERS_IN:
+            IntakeAL.callBackward();
+            break;
+        case ROLLERS_OUT:
+            IntakeAL.callFoward();
+            break;
+        default:
+        case ROLLERS_OFF:
+            IntakeAL.callRollerStop();
+            break;
+        }
+    }
 }
+

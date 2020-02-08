@@ -2,8 +2,10 @@ package frc.robot.gamepieces.States;
 
 import frc.robot.gamepieces.AbstractLayers.ShooterAL;
 import frc.robot.gamepieces.AbstractLayers.ShooterAL.TriggerSettings;
+import frc.robot.gamepieces.GamePieceController.ShooterMode;
 import frc.robot.gamepieces.AbstractLayers.ShooterAL.FlywheelSettings;
 import frc.robot.gamepieces.AbstractLayers.IndexerAL;
+import frc.robot.gamepieces.GamePieceController;
 import frc.robot.RobotMap;
 
 
@@ -135,11 +137,12 @@ public enum ShooterState implements State {
         }
     };
 
+    private static GamePieceController gamePieceController = GamePieceController.getInstance();
     private static ShooterAL shooterAL = ShooterAL.getInstance();
     private static IndexerAL indexerAL = IndexerAL.getInstance();
-    private static boolean robotAligned = false; //TODO gpc will tell if robot is aligned
-    private static boolean fireWhenReady = false;
-    public static boolean autoMode = false;
+    private static boolean robotAligned = gamePieceController.RobotAligned; //TODO gpc will tell if robot is aligned
+    private static boolean fireWhenReady = gamePieceController.fireWhenReady;
+    public static boolean autoMode = (gamePieceController.shooterMode == ShooterMode.AUTO) ? true:false;
 
     ShooterState() {
 

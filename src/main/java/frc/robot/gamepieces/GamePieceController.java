@@ -11,9 +11,12 @@ import frc.robot.gamepieces.AbstractLayers.IndexerAL;
 import frc.robot.gamepieces.AbstractLayers.IntakeAL;
 import frc.robot.gamepieces.AbstractLayers.ShooterAL;
 import frc.robot.gamepieces.States.IndexerState;
+import frc.robot.gamepieces.States.IntakeState;
 import frc.robot.gamepieces.States.ShooterState;
 import frc.robot.gamepieces.States.IntakeState;
 import frc.robot.gamepieces.States.StateMachine;
+import frc.robot.gamepieces.States.IntakeState.IntakerArm;
+import frc.robot.gamepieces.States.IntakeState.IntakerRollers;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -34,6 +37,8 @@ public class GamePieceController {
   // private ShooterAL ShooterAL;
 
   // Game Pieces' States
+  public boolean ShooterAutoMode; //TODO finish this
+  public boolean IndexerAutoMode;
   private ShooterAL shooter;
   private IndexerAL indexer;
   private IntakeAL intaker;
@@ -42,15 +47,26 @@ public class GamePieceController {
   private StateMachine shooterSM;
   private StateMachine indexerSM;
   private StateMachine climberSM;
+  private IntakeState intake;
 
   private DriverStation467 driverStation;
   private VisionController visionController;
   private LedI2C led;
+  public boolean RobotAligned = false;//TODO determine where this is set
+
 
   //DS controls 
-  private boolean armPosition;
-  private boolean rollerState;
-  private GamePieceMode mode;
+  private boolean IndexAuto = false;
+  private boolean ShooterAuto = false;
+  private boolean armPosition = false; //TODO get inputs from DS class
+  private boolean rollerStateIN = false;
+  private boolean rollerStateOUT = false;
+  public boolean fireWhenReady = false;
+
+  public IndexerMode indexMode;
+  public ShooterMode shooterMode;
+
+
   /**
    * Returns a singleton instance of the game piece controller.
    * 
@@ -65,8 +81,12 @@ public class GamePieceController {
 
   //TODO: get driverstation input and call intaker periodic().
   
-  public enum GamePieceMode {
-    AUTOMODE, DEFENSE, 
+  public enum IndexerMode {
+    AUTO, MANUAL
+  }
+
+  public enum ShooterMode {
+    AUTO, MANUAL
   }
 
   private GamePieceController() {
@@ -82,10 +102,11 @@ public class GamePieceController {
 
     LOGGER.debug("Starting in DEFENSE mode.");
 
-    mode = GamePieceMode.DEFENSE;
 
     shooterSM = new StateMachine(ShooterState.Idle);
-    shooterSM = new StateMachine(IndexerState.Idle);
+    indexerSM = new StateMachine(IndexerState.Idle);
+    intake = IntakeState.getInstance();
+
 
     registerMetrics();
   }
@@ -94,6 +115,18 @@ public class GamePieceController {
    * Checks for states from driverStation.
    */
   public void periodic() {
+
+    if(IndexAuto){
+      indexMode = IndexerMode.AUTO;
+    } else {
+      indexMode = IndexerMode.MANUAL;
+    }
+
+    if(ShooterAuto){
+      shooterMode = shooterMode.AUTO;
+    } else {
+      shooterMode = shooterMode.MANUAL;
+    }
 
     // Separate reading from driver station from processing state 
     // so that tests can manually feed inputs.
@@ -128,6 +161,21 @@ public class GamePieceController {
     // Update all systems
     shooterSM.step();
     indexerSM.step();
+    //roller controls
+    if(armPosition){
+      intake.setIntakeArm(IntakerArm.ARM_UP);
+    } else {
+      intake.setIntakeArm(IntakerArm.ARM_DOWN);
+    }
+
+    if(rollerStateIN){
+      intake.setIntakeRoller(IntakerRollers.ROLLERS_IN);
+    } else if(rollerStateOUT){
+      intake.setIntakeRoller(IntakerRollers.ROLLERS_OUT);
+    } else {
+      intake.setIntakeRoller(IntakerRollers.ROLLERS_OFF);
+    }
+    
   }
 
   // TODO: put in logic
@@ -163,9 +211,10 @@ public class GamePieceController {
 
   private void registerMetrics() {
     Telemetry telemetry = Telemetry.getInstance();
-    telemetry.addStringMetric(name + " Mode", mode::name);
+    //telemetry.addStringMetric(name + " Mode", mode::name);
   }
 
   public void runOnTeleopInit(){
   }
+  
 }
