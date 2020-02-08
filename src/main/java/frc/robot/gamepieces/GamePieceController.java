@@ -7,6 +7,10 @@ import frc.robot.usercontrol.DriverStation467;
 import frc.robot.vision.CameraSwitcher;
 import frc.robot.vision.VisionController;
 import org.apache.logging.log4j.Logger;
+import frc.robot.gamepieces.IndexerAL;
+import frc.robot.gamepieces.IntakeAL;
+import frc.robot.gamepieces.ShooterAL;
+
 
 public class GamePieceController {
 
@@ -20,6 +24,14 @@ public class GamePieceController {
 
   // Game Pieces
   private CameraSwitcher camera;
+  // private IntakeAL intake;
+  // private IndexerAL IndexerAL;
+  // private ShooterAL ShooterAL;
+
+  // Game Pieces' States
+  private ShooterAL shooter;
+  private IndexerAL indexer;
+  private IntakeAL intaker;
 
   private DriverStation467 driverStation;
   private VisionController visionController;
@@ -39,8 +51,10 @@ public class GamePieceController {
     return instance;
   }
 
+  //TODO: get driverstation input and call intaker periodic().
+  
   public enum GamePieceMode {
-    DEFENSE, CARGO, HATCH
+    AUTOMODE, DEFENSE, CARGO, HATCH
   }
 
   private GamePieceController() {
@@ -91,6 +105,9 @@ public class GamePieceController {
 
     switch (mode) {
 
+      case AUTOMODE:
+      break;
+
       case DEFENSE:
         break;
 
@@ -105,6 +122,26 @@ public class GamePieceController {
   void updateGamePieces() {
     // Update all systems
   }
+
+  // TODO: put in logic
+  public boolean indexerBallsForward() {
+    return false;
+  }
+
+  // TODO: put in logic 
+  public boolean indexerBallsReverse() {
+
+    return false;
+  }
+
+  public boolean indexerForward() {
+    return false;
+  }
+
+  public boolean indexerBackwards() {
+    return false;
+  }
+
 
   private void registerMetrics() {
     Telemetry telemetry = Telemetry.getInstance();

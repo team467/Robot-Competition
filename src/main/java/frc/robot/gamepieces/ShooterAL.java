@@ -1,5 +1,11 @@
 package frc.robot.gamepieces;
 
+import frc.robot.gamepieces.ShooterAL;
+import frc.robot.RobotMap;
+
+import edu.wpi.first.wpilibj.AddressableLED;
+import edu.wpi.first.wpilibj.AddressableLEDBuffer;
+import edu.wpi.first.wpilibj.util.Color;
 import java.util.Hashtable;
 import frc.robot.RobotMap;
 import frc.robot.drive.TalonSpeedControllerGroup;
@@ -7,10 +13,6 @@ import frc.robot.logging.RobotLogManager;
 import frc.robot.gamepieces.GamePiece;
 
 import org.apache.logging.log4j.Logger;
-
-import edu.wpi.first.wpilibj.AddressableLED;
-import edu.wpi.first.wpilibj.AddressableLEDBuffer;
-import edu.wpi.first.wpilibj.util.Color;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.ControlMode;
@@ -101,6 +103,10 @@ public class ShooterAL extends GamePieceBase implements GamePiece {
     super("Telemetry", "Shooter");
   }
 
+  public TalonSpeedControllerGroup getMotor() {
+    return flywheel;
+  }
+
   public void stop() {
     flywheel.stopMotor();
   }
@@ -116,10 +122,6 @@ public class ShooterAL extends GamePieceBase implements GamePiece {
     }
   }
 
-  public TalonSpeedControllerGroup getMotor() {
-    return flywheel;
-  }
-
   public boolean atSpeed() {
     double current = flywheel.velocity();
     double target = flywheel.closedLoopTarget();
@@ -131,6 +133,7 @@ public class ShooterAL extends GamePieceBase implements GamePiece {
       return false;
     }
   }
+
 
   public void startShooting() {
     if (trigger != null && RobotMap.HAS_TRIGGER) {
@@ -153,12 +156,6 @@ public class ShooterAL extends GamePieceBase implements GamePiece {
   public void setTriggerState(boolean state) {
     if (trigger != null && RobotMap.HAS_TRIGGER) {
       this.triggerState = state;
-    }
-  }
-
-  public void setShootState(boolean state) {
-    if (flywheel != null && RobotMap.HAS_SHOOTER) {
-      this.shootState = state;
     }
   }
 
@@ -197,18 +194,20 @@ public class ShooterAL extends GamePieceBase implements GamePiece {
     setLedSrip(0, 0, 0, 0, ledBuffer.getLength()-1);
   }
 
-  // TODO: implement distance with shoot; auto aim/auto shooting
-  private void smartShoot() {
-    if (RobotMap.HAS_SHOOTER) {
-      if (RobotMap.SHOOTER_SMART_SHOT) {
-        // distance and calc to shoot
-        // shoot
 
-      } else {
-
-      }
+  public void setShootState(boolean state) {
+    if (flywheel != null && RobotMap.HAS_SHOOTER) {
+      this.shootState = state;
     }
   }
+
+  public void flyWheelPIDF(double kP, double kI, double kD, double kF) {
+    if (flywheel != null && RobotMap.HAS_SHOOTER) {
+      flywheel.pidf(RobotMap.SHOOTER_PID_SLOT_DRIVE, kP, kI, kD, kF, RobotMap.VELOCITY_MULTIPLIER_SHOOTER);
+    }
+  }
+
+
 
   /**
    * Called once per robot iteration. This conducts any movement if enabled, and
@@ -222,6 +221,7 @@ public class ShooterAL extends GamePieceBase implements GamePiece {
         if (shootState) {
           if (atSpeed()) {
             setTriggerState(true);
+            startShooting();
           } else {
             rampToSpeed(speed);
           }
@@ -234,6 +234,8 @@ public class ShooterAL extends GamePieceBase implements GamePiece {
           startShooting();
         } else {
           stopShooting();
+          stopShooting();
+          rampToSpeed(0);
         }
       } else {
         stop();
@@ -241,3 +243,4 @@ public class ShooterAL extends GamePieceBase implements GamePiece {
     }
   }
 }
+  
