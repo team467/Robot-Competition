@@ -5,11 +5,11 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.gamepieces;
+package frc.robot.gamepieces.States;
 
 import org.apache.logging.log4j.Logger;
 
-import frc.robot.gamepieces.IntakeAL;
+import frc.robot.gamepieces.AbstractLayers.IntakeAL;
 import frc.robot.logging.RobotLogManager;
 
 public class IntakeState {

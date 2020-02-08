@@ -1,16 +1,19 @@
-package frc.robot.gamepieces;
+package frc.robot.gamepieces.AbstractLayers;
 
-import frc.robot.gamepieces.ShooterAL;
+import frc.robot.gamepieces.AbstractLayers.ShooterAL;
 import frc.robot.RobotMap;
 
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.util.Color;
+
+import java.io.IOException;
 import java.util.Hashtable;
 import frc.robot.RobotMap;
 import frc.robot.drive.TalonSpeedControllerGroup;
 import frc.robot.logging.RobotLogManager;
 import frc.robot.gamepieces.GamePiece;
+import frc.robot.gamepieces.GamePieceBase;
 
 import org.apache.logging.log4j.Logger;
 
@@ -26,7 +29,6 @@ public class ShooterAL extends GamePieceBase implements GamePiece {
 
   private static final int TALON_PID_SLOT_ID = 0;
 
-  private boolean shootState = false;
   private boolean triggerState = false;
   private double speed = 0;
 
@@ -98,6 +100,7 @@ public class ShooterAL extends GamePieceBase implements GamePiece {
     }
     return instance;
   }
+
 
   private ShooterAL(TalonSpeedControllerGroup flywheel) {
     super("Telemetry", "Shooter");
@@ -194,20 +197,84 @@ public class ShooterAL extends GamePieceBase implements GamePiece {
     setLedSrip(0, 0, 0, 0, ledBuffer.getLength()-1);
   }
 
-
-  public void setShootState(boolean state) {
-    if (flywheel != null && RobotMap.HAS_SHOOTER) {
-      this.shootState = state;
-    }
-  }
-
   public void flyWheelPIDF(double kP, double kI, double kD, double kF) {
     if (flywheel != null && RobotMap.HAS_SHOOTER) {
       flywheel.pidf(RobotMap.SHOOTER_PID_SLOT_DRIVE, kP, kI, kD, kF, RobotMap.VELOCITY_MULTIPLIER_SHOOTER);
     }
   }
 
+  public enum FlywheelSettings {
+    FOWARD,
+    BACKWARD,
+    STOP
+  }
 
+  public enum TriggerSettings {
+    SHOOTING,
+    STOP,
+    REVERSE
+  }
+
+  public void setFlywheel(FlywheelSettings setting, double Speed) {
+    switch(setting) {
+      case FOWARD:
+        rampToSpeed(Math.abs(speed));
+        break;
+
+      case BACKWARD:
+        rampToSpeed(-Math.abs(speed));
+        break;
+
+      case STOP:
+        stop();
+      
+      default:
+        stop();
+
+    }
+  }
+
+    public void setTrigger(TriggerSettings setting) {
+
+      switch(setting) {
+        case SHOOTING:
+          startShooting();
+          break;
+        case STOP:
+          stopShooting();
+          break;
+        case REVERSE:
+          reverseShooter();
+          break;
+        default:
+          stopShooting();
+      }
+
+    }
+
+
+
+    @Override
+    public void checkSystem() {
+
+      try {
+
+        setTrigger(TriggerSettings.SHOOTING);
+        setFlywheel(FlywheelSettings.FOWARD, 1.0);
+
+      
+        if(flywheelLeader.isAlive()) {
+          LOGGER.info("flywheel is alive");
+        } else {
+          LOGGER.error("flywheel is not alive");
+        }
+
+      } catch (NullPointerException e) {
+        LOGGER.error("something is wrong with the shooter");
+         e.printStackTrace();
+      }
+
+    }
 
   /**
    * Called once per robot iteration. This conducts any movement if enabled, and
@@ -218,27 +285,31 @@ public class ShooterAL extends GamePieceBase implements GamePiece {
   public void periodic() {
     if (RobotMap.HAS_SHOOTER) {
       if (enabled) {
-        if (shootState) {
-          if (atSpeed()) {
-            setTriggerState(true);
-            startShooting();
-          } else {
-            rampToSpeed(speed);
-          }
-        } else {
-          setTriggerState(false);
-          rampToSpeed(0);
-        }
 
-        if (triggerState) {
-          startShooting();
-        } else {
-          stopShooting();
-          stopShooting();
-          rampToSpeed(0);
-        }
-      } else {
-        stop();
+
+      
+      //   if (shootState) {
+      //     if (atSpeed()) {
+      //       setTriggerState(true);
+      //       startShooting();
+      //     } else {
+      //       rampToSpeed(speed);
+      //     }
+      //   } else {
+      //     setTriggerState(false);
+      //     rampToSpeed(0);
+      //   }
+
+      //   if (triggerState) {
+      //     startShooting();
+      //   } else {
+      //     stopShooting();
+      //     stopShooting();
+      //     rampToSpeed(0);
+      //   }
+      // } else {
+      //   stop();
+      // }
       }
     }
   }

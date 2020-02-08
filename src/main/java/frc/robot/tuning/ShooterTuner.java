@@ -2,7 +2,7 @@ package frc.robot.tuning;
 
 import frc.robot.RobotMap;
 import frc.robot.drive.TalonSpeedControllerGroup;
-import frc.robot.gamepieces.ShooterAL;
+import frc.robot.gamepieces.AbstractLayers.ShooterAL;
 import frc.robot.logging.RobotLogManager;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;

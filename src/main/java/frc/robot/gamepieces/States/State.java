@@ -1,6 +1,6 @@
-package frc.robot.gamepieces;
+package frc.robot.gamepieces.States;
 
-interface State {
+public interface State {
     /**
      * 
      */

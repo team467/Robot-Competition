@@ -1,6 +1,6 @@
-package frc.robot.gamepieces;
+package frc.robot.gamepieces.States;
 
-import frc.robot.gamepieces.ShooterAL;
+import frc.robot.gamepieces.AbstractLayers.ShooterAL;
 import frc.robot.RobotMap;
 
 
