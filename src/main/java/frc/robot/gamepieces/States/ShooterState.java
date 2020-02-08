@@ -159,8 +159,8 @@ public enum ShooterState implements State {
 
         public State action() {
             //Manual mode does not care about speeds, just shoots and constantly feeds
-            shooterAL.setFlywheel(FlywheelSettings.MANUAL_FORWARD);
-            shooterAL.setTrigger(TriggerSettings.SHOOTING);
+            if(flyWheelMan)shooterAL.setFlywheel(FlywheelSettings.MANUAL_FORWARD);
+            if(triggerMan)shooterAL.setTrigger(TriggerSettings.SHOOTING);
             return this;
         }
 
@@ -169,12 +169,19 @@ public enum ShooterState implements State {
         }
     };
 
+    //controllers
     private static GamePieceController gamePieceController = GamePieceController.getInstance();
     private static ShooterAL shooterAL = ShooterAL.getInstance();
     private static IndexerAL indexerAL = IndexerAL.getInstance();
     private static boolean robotAligned = gamePieceController.RobotAligned; //TODO gpc will tell if robot is aligned
     private static boolean fireWhenReady = gamePieceController.fireWhenReady;
     public static boolean autoMode = (gamePieceController.shooterMode == ShooterMode.AUTO) ? true:false;
+
+    //Manual settings
+    public static boolean triggerMan = gamePieceController.triggerManual;
+    public static boolean flyWheelMan = gamePieceController.flywheelManual;
+
+    //delay
     public static Timer timer = new Timer();
 
     ShooterState() {
