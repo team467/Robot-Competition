@@ -317,6 +317,7 @@ public class RobotMap {
 
       VELOCITY_MULTIPLIER_SHOOTER = 0;
       SHOOTER_SPEED_TOLERANCE = 0.25;
+      MANUAL_MODE_SHOOTER_SPEED = 1.0;
       break;
     }
 
