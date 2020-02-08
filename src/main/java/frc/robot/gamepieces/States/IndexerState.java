@@ -10,23 +10,21 @@ package frc.robot.gamepieces.States;
 import frc.robot.Robot;
 import frc.robot.RobotMap;
 import frc.robot.gamepieces.AbstractLayers.IndexerAL;
+import frc.robot.gamepieces.AbstractLayers.ShooterAL;
 import frc.robot.gamepieces.GamePieceController;
 import edu.wpi.first.wpilibj.Timer;
 
 public enum IndexerState implements State {
 
     Idle {
-     
-        private GamePieceController gamePiece;
-        private IndexerAL indexer;
-        
+
         public void enter() {
             // Noop
         }
 
         public State action() {
             if (gamePiece.indexerAutoMode()) {
-                if (gamePiece.indexerBallsForward() && indexer.inMouth() && indexer.inChamber()) {
+                if (gamePiece.indexerBallsForward() && indexerAL.inMouth() && indexerAL.inChamber()) {
                     return Feed1;
                 }
 
@@ -52,8 +50,6 @@ public enum IndexerState implements State {
     },
 
     Feed1 {
-        private IndexerAL indexer;
-        private GamePieceController gamePiece;
 
         public void enter() {
             // Noop
@@ -62,7 +58,7 @@ public enum IndexerState implements State {
         public State action() {
             IndexerAL.callForward();
             if (gamePiece.indexerAutoMode()) {   
-                if (!indexer.inMouth()) {
+                if (!indexerAL.inMouth()) {
                    return Feed2;
                 }
             } else {
@@ -106,8 +102,6 @@ public enum IndexerState implements State {
 
     Reverse {
 
-        private GamePieceController gamePiece;
-        
         public void enter() {
             // Noop
         }
@@ -152,6 +146,14 @@ public enum IndexerState implements State {
         public void exit() {
             // Noop
         }
-    },
+    };
+
+    private static ShooterAL shooterAL = ShooterAL.getInstance();
+    private static IndexerAL indexerAL= IndexerAL.getInstance();
+    private static GamePieceController gamePiece;
+ 
+    IndexerState() {
+
+    }
 
 }
