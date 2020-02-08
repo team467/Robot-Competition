@@ -37,6 +37,13 @@ public class Actions {
         () -> drive.arcadeDrive(0, 0, false));
   }
 
+  public static final Action Shooter() {
+    String actionText = "shoot and move basic";
+    return new Action(actionText,
+        () -> drive.isStopped(),
+        () -> drive.arcadeDrive(0, 0, false));
+  }
+
   public static Action wait(double duration) {
     String actionText = "Do Nothing";
     return new Action(actionText,
