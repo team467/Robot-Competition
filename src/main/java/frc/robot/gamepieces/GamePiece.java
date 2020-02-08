@@ -21,4 +21,9 @@ public interface GamePiece {
    */
   public void periodic();
 
+  /**
+   * Check the systemn to make sure it works
+   */
+  public void checkSystem();
+
 }

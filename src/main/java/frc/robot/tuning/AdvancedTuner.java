@@ -25,7 +25,7 @@ public class AdvancedTuner implements Tuner {
       SmartDashboard.putNumber("Left Current", 0);
       SmartDashboard.putNumber("Left Distance", 0);
       SmartDashboard.putNumber("Left Speed", 0);
-      SmartDashboard.putNumber("Right Temperature", 0);
+      SmartDashboard.putNumber("Left Temperature", 0);
       SmartDashboard.putNumber("Left CPR", 0);
       SmartDashboard.putBoolean("Using Left", false);
 

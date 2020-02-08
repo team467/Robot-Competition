@@ -1,8 +1,10 @@
-package frc.robot.gamepieces;
+package frc.robot.gamepieces.AbstractLayers;
 
 import frc.robot.RobotMap;
 import frc.robot.logging.RobotLogManager;
 import org.apache.logging.log4j.Logger;
+import frc.robot.gamepieces.GamePieceBase;
+import frc.robot.gamepieces.GamePiece;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
@@ -78,8 +80,6 @@ public class IndexerAL extends GamePieceBase implements GamePiece {
 
     switch (direction) {
 
-    default:
-
     case FORWARD:
       setForward();
       break;
@@ -91,6 +91,9 @@ public class IndexerAL extends GamePieceBase implements GamePiece {
     case REVERSE:
       setBackwards();
       break;
+
+    default:
+      setStop();
 
     }
 
@@ -108,5 +111,11 @@ public class IndexerAL extends GamePieceBase implements GamePiece {
 
       }
     }
+  }
+
+  @Override
+  public void checkSystem() {
+    // TODO Auto-generated method stub
+
   }
 }

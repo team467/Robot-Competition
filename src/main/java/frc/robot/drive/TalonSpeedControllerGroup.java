@@ -184,6 +184,8 @@ public class TalonSpeedControllerGroup implements SpeedController {
       outputValue *= maxVelocity;
     }
 
+    LOGGER.error("Output is {}, in mode {}", outputValue, controlMode);
+
     leader.set(controlMode, outputValue);
     if (follower1 != null) {
       follower1.follow(leader);
@@ -269,6 +271,15 @@ public class TalonSpeedControllerGroup implements SpeedController {
     return ticksToFeet(leader.getSelectedSensorPosition(0));
   }
 
+  public double ticks() {
+    if (leader == null) {
+      LOGGER.trace("No drive system");
+      return 0;
+    }
+
+    return leader.getSelectedSensorPosition(0);
+  }
+
   public double velocity() {
     if (leader == null) {
       LOGGER.trace("No drive system");
@@ -276,6 +287,33 @@ public class TalonSpeedControllerGroup implements SpeedController {
     }
 
     return leader.getSelectedSensorVelocity(0);
+  }
+
+  public double current() {
+    if (leader == null) {
+      LOGGER.trace("No drive system");
+      return 0;
+    }
+
+    return leader.getSupplyCurrent();
+  }
+
+  public double voltage() {
+    if (leader == null) {
+      LOGGER.trace("No drive system");
+      return 0;
+    }
+
+    return leader.getMotorOutputVoltage();
+  }
+
+  public double busVoltage() {
+    if (leader == null) {
+      LOGGER.trace("No drive system");
+      return 0;
+    }
+
+    return leader.getBusVoltage();
   }
 
   public void setOpenLoopRamp(final double ramp) {

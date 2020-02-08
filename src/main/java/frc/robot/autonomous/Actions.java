@@ -34,14 +34,21 @@ public class Actions {
     String actionText = "Do Nothing";
     return new Action(actionText,
         () -> drive.isStopped(),
-        () -> drive.moveLinearFeet(0));
+        () -> drive.arcadeDrive(0, 0, false));
+  }
+
+  public static final Action Shooter() {
+    String actionText = "shoot and move basic";
+    return new Action(actionText,
+        () -> drive.isStopped(),
+        () -> drive.arcadeDrive(0, 0, false));
   }
 
   public static Action wait(double duration) {
     String actionText = "Do Nothing";
     return new Action(actionText,
         new ActionGroup.Duration(duration),
-        () -> drive.moveLinearFeet(0));
+        () -> drive.arcadeDrive(0, 0));
   }
 
   public static final Action nothingForever() {
@@ -128,6 +135,13 @@ public class Actions {
   public static ActionGroup start() {
     String actionGroupText = "Lower grabber down and move elevator to safe height";
     ActionGroup mode = new ActionGroup(actionGroupText);
+    return mode;
+  }
+
+  public static ActionGroup DoNothing() {
+    String actionGroupText = "doing nothing";
+    ActionGroup mode = new ActionGroup(actionGroupText);
+    mode.addAction(nothing());
     return mode;
   }
 

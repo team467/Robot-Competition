@@ -2,11 +2,13 @@ package frc.robot.autonomous;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import frc.robot.logging.RobotLogManager;
 
 import org.apache.logging.log4j.Logger;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /** 
  * This class determines the robots position during the beginning of the game.
@@ -35,8 +37,22 @@ public class MatchConfiguration {
 
   private String autoMode = "None"; 
 
+  private ActionGroup autonomous;
+
+  private String[] autolist= {"do nothing"};
+
+  private SendableChooser<String> chooser = new SendableChooser<String>();
+
   private MatchConfiguration() {
     teamColor = TeamColor.UNKNOWN;
+
+    for(String s : autolist) {
+      chooser.addOption(s,s);
+    }
+
+    SmartDashboard.putData("Auto Chooser", chooser);
+    
+
   }
 
   public static MatchConfiguration getInstance() {
@@ -64,9 +80,34 @@ public class MatchConfiguration {
   }
 
   public void setAutoModeAndStartPosition() {
-    autoMode = SmartDashboard.getString("Auto Selector", "None");
+    autoMode = chooser.getSelected();
     LOGGER.info("AutoMode: {} '", autoMode);
   }
+
+  public ActionGroup AutoDecisionTree() {
+    autonomous = Actions.doNothing();
+		
+		// if (autoMode.startsWith("Left")) {
+		// 	Actions.startOnLeft();
+		// } else if (autoMode.startsWith("Right")) {
+		// 	Actions.startOnRight();
+		// } else {
+		// 	Actions.startInCenter();
+		// }
+
+
+		switch(autoMode) {
+      case "do nothing":
+        autonomous = Actions.doNothing();
+          break;
+      default:
+       Actions.doNothing();
+    }
+
+    autonomous.enable();
+
+    return autonomous;
+  } 
 
 
   public void load() {

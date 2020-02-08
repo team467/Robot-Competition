@@ -5,16 +5,16 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.gamepieces;
+package frc.robot.gamepieces.States;
 
 import org.apache.logging.log4j.Logger;
 
-import frc.robot.gamepieces.IntakeAL;
+import frc.robot.gamepieces.AbstractLayers.IntakeAL;
 import frc.robot.logging.RobotLogManager;
 
-public class Intaker {
+public class IntakeState {
 
-    private static final Logger LOGGER = RobotLogManager.getMainLogger(Intaker.class.getName());
+    private static final Logger LOGGER = RobotLogManager.getMainLogger(IntakeState.class.getName());
 
     public enum IntakerArm {
         ARM_UP, ARM_DOWN

@@ -10,10 +10,11 @@ package frc.robot;
 import static org.apache.logging.log4j.util.Unbox.box;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import frc.robot.RobotMap.RobotId;
+import frc.robot.autonomous.ActionGroup;
+import frc.robot.autonomous.Actions;
+import frc.robot.autonomous.MatchConfiguration;
 import frc.robot.drive.Drive;
 import frc.robot.gamepieces.GamePieceController;
 import frc.robot.logging.RobotLogManager;
@@ -57,7 +58,11 @@ public class Robot extends TimedRobot {
   public static long time = System.nanoTime();
   public static long previousTime = time;
   public static int dt = 0;
-  
+
+  private MatchConfiguration matchConfig;
+  private ActionGroup autonomous;
+
+
   public static void enableSimulator() {
     Robot.enableSimulator = true;
   }
@@ -126,6 +131,7 @@ public class Robot extends TimedRobot {
     TuneController.loadTuners();
     drive.setPidsFromRobotMap();
     //PowerDistributionPanel.registerPowerDistributionWithTelemetry();
+    matchConfig = MatchConfiguration.getInstance();
 
     telemetry = Telemetry.getInstance();
     telemetry.robotMode(mode);
@@ -151,6 +157,12 @@ public class Robot extends TimedRobot {
     telemetry.robotMode(mode);
     LOGGER.info("Autonomous Initialized");
     perfTimer = PerfTimer.timer("Autonomous");
+    driverstation.readInputs();
+		matchConfig.load();
+		autonomous = matchConfig.AutoDecisionTree();
+		LOGGER.info("Init Autonomous: {}", autonomous.getName());
+		//ramps.reset();
+		autonomous.enable();
   }
   
   /**
@@ -159,7 +171,7 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousPeriodic() {
     LOGGER.trace("Autonomous Periodic");
-    teleopPeriodic();
+    autonomous.run();
   }
 
   @Override
@@ -169,6 +181,7 @@ public class Robot extends TimedRobot {
     LOGGER.info("Teleop Initialized");
     perfTimer = PerfTimer.timer("Teleoperated");
     LOGGER.debug("Match time {}", box(DriverStation.getInstance().getMatchTime()));
+    autonomous = Actions.doNothing();
   }
 
   /**

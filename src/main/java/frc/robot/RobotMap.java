@@ -200,7 +200,7 @@ public class RobotMap {
 
       // Shooter
       // TODO:change the values of these later
-      SOOTER_FOLLOWER = true;
+      SHOOTER_FOLLOWER = true;
       SHOOTER_MOTOR_CHANNEL = 5;
       SHOOTER_MOTOR_INVERTED = false;
       SHOOTER_MOTOR_FOLLOWER_CHANNEL = 6;
@@ -301,7 +301,7 @@ public class RobotMap {
 
       // Shooter
       // TODO:change the values of these later
-      SOOTER_FOLLOWER = true;
+      SHOOTER_FOLLOWER = true;
       SHOOTER_MOTOR_CHANNEL = 5;
       SHOOTER_MOTOR_INVERTED = false;
       SHOOTER_MOTOR_FOLLOWER_CHANNEL = 6;
@@ -414,12 +414,16 @@ public class RobotMap {
 
   // Shooter
   public static boolean HAS_SHOOTER = false;
-  public static boolean SOOTER_FOLLOWER;
+  public static boolean HAS_TRIGGER = false;
+  public static boolean HAS_SHOOTERLEDS = false;
+  public static boolean SHOOTER_FOLLOWER;
   public static int SHOOTER_MOTOR_CHANNEL;
   public static boolean SHOOTER_MOTOR_INVERTED;
   public static int SHOOTER_MOTOR_FOLLOWER_CHANNEL;
   public static boolean SHOOTER_MOTOR_FOLLOWER_INVERTED;
   public static boolean SHOOTER_SMART_SHOT;
+  public static int TRIGGER_MOTOR_CHANNEL;
+  public static boolean TRIGGER_MOTOR_INVERTED = false;
 
   public static boolean SHOOTER_SENSOR_INVERTED;
   public static double SHOOTER_P;
@@ -429,6 +433,10 @@ public class RobotMap {
   public static double VELOCITY_MULTIPLIER_SHOOTER;
   public static double SHOOTER_SPEED_TOLERANCE;
   public static int SHOOTER_PID_SLOT_DRIVE;
+
+  public static int SHOOTER_LED_AMOUNT;
+  public static int SHOOTER_LED_CHANNEL;
+  public static boolean SHOOTER_DOUBLESIDE_LED = false;
 
   // Intake
   public static boolean HAS_INTAKE = false;

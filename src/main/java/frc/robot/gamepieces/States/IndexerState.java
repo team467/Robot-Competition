@@ -5,16 +5,15 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.gamepieces;
+package frc.robot.gamepieces.States;
 
 import frc.robot.Robot;
 import frc.robot.RobotMap;
-import frc.robot.gamepieces.IndexerAL;
+import frc.robot.gamepieces.AbstractLayers.IndexerAL;
 import frc.robot.gamepieces.GamePieceController;
-
 import edu.wpi.first.wpilibj.Timer;
 
-enum Indexer implements State {
+enum IndexerState implements State {
 
     Idle {
      
