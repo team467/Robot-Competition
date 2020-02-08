@@ -10,9 +10,10 @@ import org.apache.logging.log4j.Logger;
 import frc.robot.gamepieces.AbstractLayers.IndexerAL;
 import frc.robot.gamepieces.AbstractLayers.IntakeAL;
 import frc.robot.gamepieces.AbstractLayers.ShooterAL;
-import frc.robot.gamepieces.States.ShooterState;
 import frc.robot.gamepieces.States.IndexerState;
+import frc.robot.gamepieces.States.ShooterState;
 import frc.robot.gamepieces.States.IntakeState;
+import frc.robot.gamepieces.States.StateMachine;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -33,18 +34,22 @@ public class GamePieceController {
   // private ShooterAL ShooterAL;
 
   // Game Pieces' States
-  private ShooterState shooterSM;
-  private IndexerState indexerSM;
-  private IntakeState IntakeState;
-
   private ShooterAL shooter;
   private IndexerAL indexer;
   private IntakeAL intaker;
+
+  //StateMachine
+  private StateMachine shooterSM;
+  private StateMachine indexerSM;
+  private StateMachine climberSM;
 
   private DriverStation467 driverStation;
   private VisionController visionController;
   private LedI2C led;
 
+  //DS controls 
+  private boolean armPosition;
+  private boolean rollerState;
   private GamePieceMode mode;
   /**
    * Returns a singleton instance of the game piece controller.
@@ -79,6 +84,9 @@ public class GamePieceController {
 
     mode = GamePieceMode.DEFENSE;
 
+    shooterSM = new StateMachine(ShooterState.Idle);
+    shooterSM = new StateMachine(IndexerState.Idle);
+
     registerMetrics();
   }
 
@@ -111,24 +119,15 @@ public class GamePieceController {
       LOGGER.debug("Backward Camera");
       camera.backward();
     }
-
-    switch (mode) {
-
-      case AUTOMODE:
-        break;
-
-      case DEFENSE:
-        break;
-
-      default:
-        LOGGER.error("Should always have a game piece mode.");
-    }
-
     updateGamePieces();
   }
 
-  void updateGamePieces() {
+
+
+  public void updateGamePieces() {
     // Update all systems
+    shooterSM.step();
+    indexerSM.step();
   }
 
   // TODO: put in logic
@@ -167,7 +166,6 @@ public class GamePieceController {
     telemetry.addStringMetric(name + " Mode", mode::name);
   }
 
-  public void runOnTeleopInit() {
-    mode = GamePieceMode.DEFENSE;
+  public void runOnTeleopInit(){
   }
 }

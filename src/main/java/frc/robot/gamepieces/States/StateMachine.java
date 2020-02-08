@@ -1,6 +1,13 @@
 package frc.robot.gamepieces.States;
 
-class StateMachine {
+import org.apache.logging.log4j.Logger;
+
+import frc.robot.logging.RobotLogManager;
+
+public class StateMachine {
+    
+  private static final Logger LOGGER = RobotLogManager.getMainLogger(StateMachine.class.getName());
+
     private State currentState;
 
     public StateMachine(State initialState) {
@@ -8,21 +15,21 @@ class StateMachine {
         currentState.enter();
     }
 
-    void step() {
+    public void step() {
         State nextState = currentState.action();
 
         if (nextState != currentState) {
-            System.out.println("Leaving state " + currentState.toString());
+            LOGGER.debug("Leaving state " + currentState.toString());
             currentState.exit();
 
             currentState = nextState;
 
-            System.out.println("Entering state " + currentState.toString());
+            LOGGER.debug("Entering state " + currentState.toString());
             currentState.enter();
         }
     }
 
-    State getCurrentState() {
+    public State getCurrentState() {
         return currentState;
     }
 }
