@@ -19,12 +19,12 @@ public class StateMachine {
         State nextState = currentState.action();
 
         if (nextState != currentState) {
-            LOGGER.debug("Leaving state " + currentState.toString());
+            LOGGER.error("Leaving state " + currentState.toString());
             currentState.exit();
 
             currentState = nextState;
 
-            LOGGER.debug("Entering state " + currentState.toString());
+            LOGGER.error("Entering state " + currentState.toString());
             currentState.enter();
         }
     }

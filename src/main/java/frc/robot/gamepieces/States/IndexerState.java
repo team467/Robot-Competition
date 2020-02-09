@@ -165,7 +165,7 @@ public enum IndexerState implements State {
     private static boolean indexerBallsReverse = gamePieceController.indexerBallsReverse();
     private static boolean indexerBallsForward = gamePieceController.indexerBallsForward();
     private static boolean isInMouth = false;
-    private static boolean AutoMode = (gamePieceController.indexMode == IndexerMode.AUTO)? true : false;
+    private static boolean AutoMode = (gamePieceController.ShooterAuto)? false : true;
     private static boolean isInChamber = false;
     IndexerState() {
 
