@@ -61,6 +61,9 @@ public class GamePieceController {
   private boolean rollerStateIN = false;
   private boolean rollerStateOUT = false;
   public boolean fireWhenReady = false;
+  public boolean climberEnabled = false;
+  public boolean climberUp = false;
+  public boolean climberDown = false;
 
   public IndexerMode indexMode;
   public ShooterMode shooterMode;
