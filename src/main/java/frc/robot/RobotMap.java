@@ -17,7 +17,7 @@ public class RobotMap {
   public static final int PID_SLOT_TURN = 1;
 
   // Sensors
-  public static boolean HAS_GYRO = false;
+  public static boolean HAS_GYRO = true;
 
   // Turret angle offsets
   public static final double ON_TARGET = 1.0;
