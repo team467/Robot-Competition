@@ -19,8 +19,13 @@ public class TOFSensor {
     private Rev2mDistanceSensor distSensor; 
     private TOFSensor(){
         distSensor = new Rev2mDistanceSensor(Port.kOnboard);
-        distSensor.setAutomaticMode(true);
         distSensor.setDistanceUnits(Unit.kMillimeters);
+    }
+    public void enable(){
+        distSensor.setAutomaticMode(true);
+    }
+    public void disable(){
+        distSensor.setAutomaticMode(false);
     }
     public static TOFSensor getInstance(){
         if(instance == null){
@@ -28,6 +33,7 @@ public class TOFSensor {
         }
         return instance;
     }
+
     public double getDistance(){
         return distSensor.getRange();
     }
