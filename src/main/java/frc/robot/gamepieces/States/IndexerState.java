@@ -29,6 +29,9 @@ public enum IndexerState implements State {
                     return Feed1;
                 }
 
+                // if (GamePieceController){
+                //    return Feed1; 
+                // }
                 // TODO: if shooterSM asking for a ball return feed.
                 // if() {
                 // return Feed1;
@@ -58,7 +61,7 @@ public enum IndexerState implements State {
         public State action() {
             IndexerAL.callForward();
             if (AutoMode) {   
-                if (!isInMouth) {
+                if (!indexerAL.inMouth()) {
                    return Feed2;
                 }
             } else {
@@ -161,6 +164,7 @@ public enum IndexerState implements State {
     private static boolean isInMouth = indexerAL.inMouth();
     private static boolean AutoMode = (gamePieceController.indexMode == IndexerMode.AUTO)? true : false;
     private static boolean isInChamber = indexerAL.inChamber();
+    
     IndexerState() {
 
     }
