@@ -60,19 +60,19 @@ public class ClimberAL extends GamePieceBase implements GamePiece {
     }
 
     public boolean isDown() {
-        return false; // TODO: is climber down?
+        return false; // TODO: is climber at its lowest?
     }
 
     public boolean isUp() {
-        return false; // TODO: is climber up?
+        return false; // TODO: is climber at its highest?
     }
 
-    public boolean climberArmLifted() {
+    public boolean climberArmLifted() { 
         return false; // TODO: is climberArmLifted?
     }
 
-    public float climberPosition() {
-        return 0.0f; // TODO: climberPosition
+    private float climberPosition() {
+        return 0.0f; // TODO: what to do with this?
     }
 
     // gets the instance
@@ -94,7 +94,7 @@ public class ClimberAL extends GamePieceBase implements GamePiece {
             } else {
                 climbGroup = new SparkMaxSpeedControllerGroup();
             }
-            instance = new ClimberAL(climbGroup);
+            instance = new ClimberAL(climbGroup); //invoking the constructor
 
             instance.stop();
 
@@ -121,7 +121,7 @@ public class ClimberAL extends GamePieceBase implements GamePiece {
                     climbGroup.set(-1.0);
                     LOGGER.debug("Climber Going Down");
                     break;
-                case DOWNSTOP: // slow down the motor
+                case DOWNSTOP: // slows down the motor
                     climbGroup.set(0.5);
                     LOGGER.debug("Climber Slowed Down For Solenoid Lock");
                     break;
