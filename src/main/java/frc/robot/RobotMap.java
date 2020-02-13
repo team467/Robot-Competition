@@ -463,5 +463,6 @@ public class RobotMap {
   public static boolean INDEX_FOLLOWER_MOTOR = false;
 
   public static double INDEXER_MOVE_TIMER;
-
+  //distance threshold in mm for detecting a ball
+  public static double TOF_THRESHOLD;
 }

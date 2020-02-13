@@ -2,6 +2,8 @@ package frc.robot.gamepieces.AbstractLayers;
 
 import frc.robot.RobotMap;
 import frc.robot.logging.RobotLogManager;
+import frc.robot.sensors.TOFSensor;
+
 import org.apache.logging.log4j.Logger;
 import frc.robot.gamepieces.GamePieceBase;
 import frc.robot.gamepieces.GamePiece;
@@ -65,14 +67,12 @@ public class IndexerAL extends GamePieceBase implements GamePiece {
 
   // TODO: implement TOF sensor in boolean.
   public boolean inMouth() {
-    
-    return false;
+    return TOFSensor.getInstance().getMouthDistance()<RobotMap.TOF_THRESHOLD;
   }
 
   // TODO: implement TOF sensor in boolean.
   public boolean inChamber() {
-
-    return true;
+    return TOFSensor.getInstance().getChamberDistance()<RobotMap.TOF_THRESHOLD;
   }
 
   public void indexerBeltDirection(setBelts direction) {

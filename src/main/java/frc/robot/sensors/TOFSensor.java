@@ -16,16 +16,21 @@ import com.revrobotics.Rev2mDistanceSensor.Unit;
  */
 public class TOFSensor {
     private static TOFSensor instance = null;
-    private Rev2mDistanceSensor distSensor; 
+    private Rev2mDistanceSensor chamberSensor; 
+    private Rev2mDistanceSensor mouthSensor; 
     private TOFSensor(){
-        distSensor = new Rev2mDistanceSensor(Port.kOnboard);
-        distSensor.setDistanceUnits(Unit.kMillimeters);
+        chamberSensor = new Rev2mDistanceSensor(Port.kOnboard);
+        mouthSensor = new Rev2mDistanceSensor(Port.kOnboard);
+        chamberSensor.setDistanceUnits(Unit.kMillimeters);
+        mouthSensor.setDistanceUnits(Unit.kMillimeters);
     }
     public void enable(){
-        distSensor.setAutomaticMode(true);
+        chamberSensor.setAutomaticMode(true);
+        mouthSensor.setAutomaticMode(true);
     }
     public void disable(){
-        distSensor.setAutomaticMode(false);
+        chamberSensor.setAutomaticMode(false);
+        mouthSensor.setAutomaticMode(false);
     }
     public static TOFSensor getInstance(){
         if(instance == null){
@@ -34,7 +39,11 @@ public class TOFSensor {
         return instance;
     }
 
-    public double getDistance(){
-        return distSensor.getRange();
+    public double getMouthDistance(){
+        return mouthSensor.getRange();
     }
+    public double getChamberDistance(){
+        return chamberSensor.getRange();
+    }
+
 }
