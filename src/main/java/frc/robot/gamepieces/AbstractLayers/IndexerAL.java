@@ -16,16 +16,20 @@ public class IndexerAL extends GamePieceBase implements GamePiece {
 
   private static final Logger LOGGER = RobotLogManager.getMainLogger(IndexerAL.class.getName());
 
-  private static WPI_TalonSRX indexLeader;
-  private static WPI_TalonSRX indexFollower;
+  private WPI_TalonSRX indexLeader;
+  private WPI_TalonSRX indexFollower;
+
+  public boolean override;
+  public boolean mouthOverride;
+  public boolean chamberOverride;
 
   public static IndexerAL getInstance() {
     if (instance == null) {
-      if (RobotMap.HAS_INDEXER) {
-        indexLeader = new WPI_TalonSRX(RobotMap.FIRST_MAGAZINE_FEED_MOTOR_CHANNEL);
-        indexFollower = new WPI_TalonSRX(RobotMap.SECOND_MAGAZINE_FEED_MOTOR_CHANNEL);
-      }
       instance = new IndexerAL();
+      if (RobotMap.HAS_INDEXER) {
+        instance.indexLeader = new WPI_TalonSRX(RobotMap.FIRST_MAGAZINE_FEED_MOTOR_CHANNEL);
+        instance.indexFollower = new WPI_TalonSRX(RobotMap.SECOND_MAGAZINE_FEED_MOTOR_CHANNEL);
+      }
     }
     return instance;
   }
@@ -66,11 +70,19 @@ public class IndexerAL extends GamePieceBase implements GamePiece {
   }
 
   public boolean inMouth() {
-    return TOFSensor.getInstance().getMouthDistance()<RobotMap.TOF_THRESHOLD;
+    if (override) {
+      return mouthOverride;
+    } else {
+      return TOFSensor.getInstance().getMouthDistance() < RobotMap.TOF_THRESHOLD;
+    }
   }
 
   public boolean inChamber() {
-    return TOFSensor.getInstance().getChamberDistance()<RobotMap.TOF_THRESHOLD;
+    if (override) {
+      return chamberOverride;
+    } else {
+      return TOFSensor.getInstance().getChamberDistance() < RobotMap.TOF_THRESHOLD;
+    }
   }
 
   public void indexerBeltDirection(setBelts direction) {
