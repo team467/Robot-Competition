@@ -11,6 +11,7 @@ public class TuneController {
     register("Advanced_Tuner", new AdvancedTuner());
     register("PID_Velocity_Tuner", new PIDVelocityTuner());
     register("Shooter_Tuner", new ShooterTuner());
+    register("Auto_Shooter_tuner", new AutoShooterTuner());
     register("Drive_Straight", new DriveConstantTuner());
   }
 

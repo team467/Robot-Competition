@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.util.Color;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 
 public class Shooter extends GamePieceBase implements GamePiece {
 
@@ -52,11 +53,13 @@ public class Shooter extends GamePieceBase implements GamePiece {
         LOGGER.info("Creating Lead Motors");
 
         flywheelLeader = new WPI_TalonSRX(RobotMap.SHOOTER_MOTOR_CHANNEL);
+        flywheelLeader.setNeutralMode(NeutralMode.Coast);
         flywheelFollower = null;
 
         if (RobotMap.SHOOTER_FOLLOWER) {
           LOGGER.info("Creating first set of follower motors");
           flywheelFollower = new WPI_TalonSRX(RobotMap.SHOOTER_MOTOR_FOLLOWER_CHANNEL);
+          flywheelFollower.setNeutralMode(NeutralMode.Coast);
         }
 
         flywheel = new TalonSpeedControllerGroup("Shooter", ControlMode.Velocity, RobotMap.SHOOTER_SENSOR_INVERTED,
