@@ -66,8 +66,8 @@ public class ClimberAL extends GamePieceBase implements GamePiece {
     public boolean isUp() {
         return false; // TODO: is climber at its highest?
     }
-
-    public boolean climberArmLifted() { 
+           
+    public boolean isTilted() {
         return false; // TODO: is climberArmLifted?
     }
 
@@ -94,7 +94,7 @@ public class ClimberAL extends GamePieceBase implements GamePiece {
             } else {
                 climbGroup = new SparkMaxSpeedControllerGroup();
             }
-            instance = new ClimberAL(climbGroup); //invoking the constructor
+            instance = new ClimberAL(climbGroup); // invoking the constructor
 
             instance.stop();
 
@@ -103,27 +103,30 @@ public class ClimberAL extends GamePieceBase implements GamePiece {
     }
 
     public enum climberSpeed {
-        UP, DOWN, STOP, DOWNSTOP;
+        OFF, UPSLOW, UPFAST, DOWNFAST, DOWNSLOW,;
 
         public void actuate() {
             if (RobotMap.HAS_CLIMBER) { // TODO: whats the correct motor speed?
                 switch (this) {
-                case STOP:
+                case OFF:
                 default:
                     climbGroup.set(0.0);
-                    LOGGER.debug("Climber Stopped");
+                    LOGGER.debug("Climber Has Stopped");
                     break;
-                case UP:
+                case UPFAST:
                     climbGroup.set(1.0);
-                    LOGGER.debug("Climber Going Up");
+                    LOGGER.debug("Climber Is Going Up FAST");
                     break;
-                case DOWN:
-                    climbGroup.set(-1.0);
-                    LOGGER.debug("Climber Going Down");
-                    break;
-                case DOWNSTOP: // slows down the motor
+                case UPSLOW:
                     climbGroup.set(0.5);
-                    LOGGER.debug("Climber Slowed Down For Solenoid Lock");
+                    LOGGER.debug("CLimber Is Going Up Slowly");
+                case DOWNFAST:
+                    climbGroup.set(-1.0);
+                    LOGGER.debug("Climber Is Going Down FAST");
+                    break;
+                case DOWNSLOW:
+                    climbGroup.set(0.5);
+                    LOGGER.debug("Climber Is Going Down Slowly");
                     break;
                 }
             }
@@ -162,4 +165,6 @@ public class ClimberAL extends GamePieceBase implements GamePiece {
         // TODO Auto-generated method stub
 
     }
+
+    // TODO: tie climbersm to gpc, check how shooter is done
 }

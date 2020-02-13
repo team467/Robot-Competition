@@ -9,13 +9,15 @@ package frc.robot.gamepieces.States;
 
 import frc.robot.gamepieces.GamePieceController;
 import frc.robot.gamepieces.AbstractLayers.ClimberAL;
+import static frc.robot.gamepieces.AbstractLayers.ClimberAL.solenoidLock.*;
+import static frc.robot.gamepieces.AbstractLayers.ClimberAL.climberSpeed.*;
 import edu.wpi.first.wpilibj.Timer;
 
 /**
  * Add your docs here.
  */
 public enum ClimberState implements State{
-    ClimberDown {
+    InitialLocked {
         //inlcude these
         public boolean upWanted;
         public boolean downWanted;
@@ -31,11 +33,11 @@ public enum ClimberState implements State{
             upWanted = GamePieceController.getInstance().upWanted;
             downWanted = GamePieceController.getInstance().downWanted;
 
-            ClimberAL.climberSpeed(STOP);
-            CLimberAL.setLock(LOCK);
+            climberAL.set(OFF);
+            climberAL.setLock(LOCK);
             if(climberEnabled && upWanted) {
 
-                return Extending;
+                return Unlocking;
 
             } 
             return this;
@@ -44,7 +46,7 @@ public enum ClimberState implements State{
         public void exit() {
             // Noop
         }
-    }
+    }, //it's an enum so a period is neccessary
 
     Unlocking {
         public boolean upWanted;
@@ -58,15 +60,18 @@ public enum ClimberState implements State{
             upWanted = GamePieceController.getInstance().upWanted;
             downWanted = GamePieceController.getInstance().downWanted;
 
-            ClimberAL.climberSpeed(STOP);
-            CLimberAL.setLock(UNLOCK);
-            if(timer.get() > 1) { //TODO: figure out timing
-
-                return Extending;
-
+            climberAL.set(OFF);
+            climberAL.setLock(UNLOCK);
+            if(timer.get() > 1) { //TODO: timer pause second 
+                if(upWanted && !isHighest) {
+                    return ExtendingFast;
+                }
+                if(downWanted && !upWanted && !isLowest) {
+                    return RetractingFast;
+                }
             } 
-            if (!upWanted) {
-                return Locking;
+            if (!upWanted && !downWanted) {
+                return GameLocked;
             }
 
             return this;
@@ -76,9 +81,39 @@ public enum ClimberState implements State{
             timer.stop();
             timer.reset();
         }
-    }
+    },
 
-    Extending {
+    ExtendingSlow{
+        public boolean upWanted;
+        public boolean downWanted;
+
+        public void enter() {
+            timer.start();
+        }
+
+        public State action() {
+            upWanted = GamePieceController.getInstance().upWanted;
+            downWanted = GamePieceController.getInstance().downWanted;
+
+            climberAL.set(UPSLOW);
+            climberAL.setLock(UNLOCK);
+            if(timer.get() > 1) { //TODO: timer pause second
+                return LockingUp;
+            }
+            if(upWanted && !isHighest) {
+                return ExtendingFast;
+            }
+            return this;
+        }
+        
+        
+        public void exit() {
+            timer.stop();
+            timer.reset();
+        }
+    },
+
+    ExtendingFast{
         public boolean upWanted;
         public boolean downWanted;
 
@@ -90,26 +125,24 @@ public enum ClimberState implements State{
             upWanted = GamePieceController.getInstance().upWanted;
             downWanted = GamePieceController.getInstance().downWanted;
 
-            ClimberAL.climberSpeed(UP);
-            CLimberAL.setLock(UNLOCK);
-            if(!upWanted & downWanted) {
-                return RetractingSlow;
-            } 
-            if (!upWanted) {
-                return ClimberUp;
+            climberAL.set(UPFAST);
+            climberAL.setLock(UNLOCK);
+            if(isHighest) {
+                return ExtendingSlow;
             }
-            if (climberIsHighest) {
-                return ClimberUp; 
+            if(!upWanted || downWanted) {
+                return ExtendingSlow;
             }
             return this;
         }
         
+        
         public void exit() {
             // Noop
         }
-    }
+    },
 
-    ClimberUp { //TODO: pickup from here
+    LockingUp{ //TODO: pickup from here
         public boolean upWanted;
         public boolean downWanted;
 
@@ -121,13 +154,13 @@ public enum ClimberState implements State{
             upWanted = GamePieceController.getInstance().upWanted;
             downWanted = GamePieceController.getInstance().downWanted;
 
-            ClimberAL.climberSpeed(STOP);
-            CLimberAL.setLock(LOCK);
-            if(upWanted & !climberIsHighest) {
-                return Extending;
-            } 
-            if(downWanted & !climberIsLowest){
-                return RetractingFast;
+            climberAL.set(UPSLOW);
+            climberAL.setLock(LOCK);
+            if(timer.get() > 1) { //TODO: timer pause second
+                return GameLocked;
+            }
+            if(upWanted && !isHighest) {
+                return Unlocking;
             }
             return this;
         }
@@ -135,95 +168,123 @@ public enum ClimberState implements State{
         public void exit() {
             // Noop
         }
-    }
+    },
+
+    GameLocked { //TODO: pickup from here
+        public boolean upWanted;
+        public boolean downWanted;
+
+        public void enter() {
+            // Noop
+        }
+
+        public State action() {
+            upWanted = GamePieceController.getInstance().upWanted;
+            downWanted = GamePieceController.getInstance().downWanted;
+
+            climberAL.set(OFF);
+            climberAL.setLock(LOCK);
+            if(upWanted & downWanted) {
+                return Unlocking;
+            }
+            return this;
+        }
+        
+        public void exit() {
+            // Noop
+        }
+    },
 
     RetractingFast {
         public boolean upWanted;
         public boolean downWanted;
 
         public void enter() {
-            // Noop
+            //Noop
         }
 
         public State action() {
             upWanted = GamePieceController.getInstance().upWanted;
             downWanted = GamePieceController.getInstance().downWanted;
 
-            ClimberAL.climberSpeed(DOWN);
-            CLimberAL.setLock(UNLOCK);
-            if(upWanted) {
-                return Extending;
-            } 
-            if(climberIsLowest || !downWanted) {
-                return ClimberUp;
+            climberAL.set(DOWNFAST);
+            climberAL.setLock(UNLOCK);
+            if(!downWanted) {
+                return RetractingSlow;
+            }
+            if(isLowest) {
+                return RetractingSlow;
             }
             return this;
         }
         
         public void exit() {
-            // Noop
+            //Noop
         }
-    }
+    },
 
     RetractingSlow {
         public boolean upWanted;
         public boolean downWanted;
 
         public void enter() {
-            // Noop
+            timer.start();
         }
 
         public State action() {
             upWanted = GamePieceController.getInstance().upWanted;
             downWanted = GamePieceController.getInstance().downWanted;
 
-            ClimberAL.climberSpeed(DOWNSTOP);
-            CLimberAL.setLock(UNLOCK);
-            if(!upWanted & !downWanted) {
-                return Locking;
-            } 
-            if(upWanted) {
-                return Extending; //extending slow cuz changing direction
+            climberAL.set(DOWNSLOW);
+            climberAL.setLock(UNLOCK);
+            if(timer.get() > 1) { //TODO: timer pause second
+                return LockingDown;
+            }
+            if(downWanted && !isLowest) {
+                return RetractingFast;
             }
             return this;
         }
         
         public void exit() {
-            // Noop
+            timer.stop();
+            timer.reset();
         }
-    }
-
-    Locking {
+    },
+ 
+    LockingDown { //locking while going down
         public boolean upWanted;
         public boolean downWanted;
 
         public void enter() {
-            // Noop
+            timer.start();
         }
 
         public State action() {
             upWanted = GamePieceController.getInstance().upWanted;
             downWanted = GamePieceController.getInstance().downWanted;
 
-            ClimberAL.climberSpeed(DOWNSTOP);
-            CLimberAL.setLock(LOCK);
-            if(downWanted & climberIsLowest) {
-                return RetractingFast;
+            climberAL.set(DOWNSLOW);
+            climberAL.setLock(LOCK);
+            if(timer.get() > 1) { //TODO: timer pause second
+                return GameLocked;
             }
-            if(upWanted) {
-                return Extending; //extending slow
+            if(downWanted && !isLowest) {
+                return Unlocking;
             }
             return this;
         }
         
         public void exit() {
-            // Noop
+            timer.stop();
+            timer.reset();
         }
-    }
+    };
 
-    private static boolean climberIsLowest = ClimberAL.getInstance().isUp();
-    private static boolean climberIsHighest = ClimberAL.getInstance().isDown();
-   
+    private static ClimberAL climberAL = ClimberAL.getInstance();
+    private static boolean isLowest = ClimberAL.getInstance().isDown();
+    private static boolean isHighest = ClimberAL.getInstance().isUp();
+    public static Timer timer = new Timer();
     ClimberState() {
 
     }
