@@ -21,22 +21,17 @@ public class IntakeAL extends GamePieceBase implements GamePiece {
     private static final Logger LOGGER = RobotLogManager.getMainLogger(IntakeAL.class.getName());
 
     private static IntakeAL instance = null;
-   
+
     private static WPI_TalonSRX arm;
     private static WPI_TalonSRX roller;
 
     public static IntakeAL getInstance() {
         if (instance == null) {
-            if(RobotMap.HAS_INTAKE){
-            arm = new WPI_TalonSRX(RobotMap.ARM_MOTOR_CHANNEL);
-            roller = new WPI_TalonSRX(RobotMap.ROLLER_MOTOR_CHANNEL);
-            }
-
             instance = new IntakeAL();
         }
         return instance;
     }
-     
+
     private void setUp() {
         LOGGER.debug("setUp called");
         arm.set(1.0);
@@ -72,7 +67,7 @@ public class IntakeAL extends GamePieceBase implements GamePiece {
         IntakeAL.getInstance().setUp();
     }
 
-    public static void callDown() { 
+    public static void callDown() {
         IntakeAL.getInstance().setDown();
     }
 
@@ -94,6 +89,11 @@ public class IntakeAL extends GamePieceBase implements GamePiece {
 
     private IntakeAL() {
         super("Telemetry", "Intake");
+
+        if (RobotMap.HAS_INTAKE) {
+            arm = new WPI_TalonSRX(RobotMap.ARM_MOTOR_CHANNEL);
+            roller = new WPI_TalonSRX(RobotMap.ROLLER_MOTOR_CHANNEL);
+        }
     }
 
     public void periodic() {

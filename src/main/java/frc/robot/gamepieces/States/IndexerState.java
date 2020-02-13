@@ -9,12 +9,9 @@ package frc.robot.gamepieces.States;
 
 import frc.robot.RobotMap;
 import frc.robot.gamepieces.AbstractLayers.IndexerAL;
-import frc.robot.gamepieces.AbstractLayers.ShooterAL;
 import frc.robot.gamepieces.GamePieceController.IndexerMode;
-import frc.robot.gamepieces.GamePiece;
 import frc.robot.gamepieces.GamePieceController;
 import edu.wpi.first.wpilibj.Timer;
-import frc.robot.gamepieces.States.StateMachine;
 
 public enum IndexerState implements State {
 
@@ -30,13 +27,6 @@ public enum IndexerState implements State {
                     return Feed1;
                 }
 
-                // if (){
-                //    return Feed1; 
-                // }
-                // TODO: if shooterSM asking for a ball return feed.
-                // if() {
-                // return Feed1;
-                // }
             } else {
                 return Manual;
             }
@@ -61,14 +51,14 @@ public enum IndexerState implements State {
 
         public State action() {
             IndexerAL.callForward();
-            if (AutoMode) {   
+            if (AutoMode) {
                 if (!indexerAL.inMouth()) {
-                   return Feed2;
+                    return Feed2;
                 }
             } else {
                 return Idle;
             }
-            
+
             return this;
 
         }
@@ -81,18 +71,19 @@ public enum IndexerState implements State {
 
     Feed2 {
         private Timer timer;
+
         public void enter() {
             timer.start();
-            
+
         }
 
         public State action() {
             IndexerAL.callForward();
-            // TODO: adjust timer based on how fast the ball is moving. 
-            if (timer.get() == 0.20) {
+            // TODO: adjust timer based on how fast the ball is moving.
+            if (timer.get() == RobotMap.INDEXER_MOVE_TIMER) {
                 return Idle;
             }
-            
+
             return this;
         }
 
@@ -110,14 +101,14 @@ public enum IndexerState implements State {
         }
 
         public State action() {
-            if(AutoMode){
-            IndexerAL.callBackwards();
-            if (indexerBallsReverse) {
-                return Idle;
-            }     
-        } else {
-            return Manual;
-        }
+            if (AutoMode) {
+                IndexerAL.callBackwards();
+                if (indexerBallsReverse) {
+                    return Idle;
+                }
+            } else {
+                return Manual;
+            }
             return this;
         }
 
@@ -135,22 +126,22 @@ public enum IndexerState implements State {
 
         public State action() {
 
-        if(!AutoMode){
-            if (indexerBallsForward) {
-                IndexerAL.callForward();
-            }
-            if (indexerBallsReverse) {
-                IndexerAL.callBackwards();
-            }
-            if (!indexerBallsForward && !indexerBallsReverse) {
-                IndexerAL.callStop();
+            if (!AutoMode) {
+                if (indexerBallsForward) {
+                    IndexerAL.callForward();
+                }
+                if (indexerBallsReverse) {
+                    IndexerAL.callBackwards();
+                }
+                if (!indexerBallsForward && !indexerBallsReverse) {
+                    IndexerAL.callStop();
+                }
+
+            } else {
+                return Idle;
             }
 
-        } else {
-            return Idle;
-        }
-
-        return this;
+            return this;
         }
 
         public void exit() {
@@ -158,14 +149,14 @@ public enum IndexerState implements State {
         }
     };
 
-    private static IndexerAL indexerAL= IndexerAL.getInstance();
+    private static IndexerAL indexerAL = IndexerAL.getInstance();
     private static GamePieceController gamePieceController = GamePieceController.getInstance();
     private static boolean indexerBallsReverse = gamePieceController.indexerBallsReverse();
     private static boolean indexerBallsForward = gamePieceController.indexerBallsForward();
     private static boolean isInMouth = indexerAL.inMouth();
-    private static boolean AutoMode = (gamePieceController.indexMode == IndexerMode.AUTO)? true : false;
+    private static boolean AutoMode = (gamePieceController.indexMode == IndexerMode.AUTO) ? true : false;
     private static boolean isInChamber = indexerAL.inChamber();
-    
+
     IndexerState() {
 
     }

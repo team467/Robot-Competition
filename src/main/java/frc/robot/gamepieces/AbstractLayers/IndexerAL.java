@@ -22,14 +22,12 @@ public class IndexerAL extends GamePieceBase implements GamePiece {
   public boolean override;
   public boolean mouthOverride;
   public boolean chamberOverride;
+  public static boolean calledForward;
+  public static boolean calledReverse;
 
   public static IndexerAL getInstance() {
     if (instance == null) {
       instance = new IndexerAL();
-      if (RobotMap.HAS_INDEXER) {
-        instance.indexLeader = new WPI_TalonSRX(RobotMap.FIRST_MAGAZINE_FEED_MOTOR_CHANNEL);
-        instance.indexFollower = new WPI_TalonSRX(RobotMap.SECOND_MAGAZINE_FEED_MOTOR_CHANNEL);
-      }
     }
     return instance;
   }
@@ -53,10 +51,13 @@ public class IndexerAL extends GamePieceBase implements GamePiece {
   }
 
   public static void callForward() {
+    calledForward = true;
     IndexerAL.getInstance().setForward();
+  
   }
 
   public static void callBackwards() {
+    calledReverse = true;
     IndexerAL.getInstance().setBackwards();
   }
 
@@ -111,14 +112,17 @@ public class IndexerAL extends GamePieceBase implements GamePiece {
   private IndexerAL() {
     super("Telemetry", "Indexer");
 
+    if (RobotMap.HAS_INDEXER) {
+      instance.indexLeader = new WPI_TalonSRX(RobotMap.FIRST_MAGAZINE_FEED_MOTOR_CHANNEL);
+      instance.indexFollower = new WPI_TalonSRX(RobotMap.SECOND_MAGAZINE_FEED_MOTOR_CHANNEL);
+    }
+
   }
 
   public void periodic() {
 
-    if (RobotMap.HAS_INDEXER) {
-      if (enabled) {
+    if (enabled) {
 
-      }
     }
   }
 

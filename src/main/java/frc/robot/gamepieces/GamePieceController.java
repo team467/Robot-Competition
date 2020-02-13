@@ -47,7 +47,6 @@ public class GamePieceController {
   private StateMachine indexerSM;
   private StateMachine climberSM;
   private IntakeState intake;
-  private ShooterState shoot;
 
   private DriverStation467 driverStation;
   private VisionController visionController;
@@ -66,9 +65,10 @@ public class GamePieceController {
   public ShooterMode shooterMode;
 
   private State currentState;
-  
+
   // Shooter States
   private State shooterState;
+
   /**
    * Returns a singleton instance of the game piece controller.
    * 
@@ -123,27 +123,15 @@ public class GamePieceController {
     }
 
     if (ShooterAuto) {
-      shooterMode = shooterMode.AUTO;
+      shooterMode = ShooterMode.AUTO;
     } else {
-      shooterMode = shooterMode.MANUAL;
+      shooterMode = ShooterMode.MANUAL;
     }
 
-    updateStates();
     // Separate reading from driver station from processing state
     // so that tests can manually feed inputs.
     processGamePieceState(driverStation.getDriveCameraFront(), driverStation.getDriveCameraBack());
 
-  }
-
-  public void updateStates() {
-    shooterState = shooterSM.getCurrentState();
-    // shooterState = shoot.Idle;
-    // shooterState = shoot.LoadingBall;
-    // shooterState = shoot.AdjustingSpeed;
-    // shooterState = shoot.ShootingNoDelay;
-    // shooterState = shoot.ShootingDelayed;
-    // shooterState = shoot.Manual;
- 
   }
 
   void processGamePieceState(boolean driveCameraFront, boolean driveCameraRear) {
@@ -188,12 +176,19 @@ public class GamePieceController {
 
   // TODO: put in logic
   public boolean indexerBallsForward() {
+    if (IndexerAL.calledForward) {
+      IndexerAL.calledForward = false;
+      return true;
+    }
     return false;
   }
 
   // TODO: put in logic
   public boolean indexerBallsReverse() {
-
+    if (indexer.calledReverse) {
+      indexer.calledReverse = false;
+      return true;
+    }
     return false;
   }
 
