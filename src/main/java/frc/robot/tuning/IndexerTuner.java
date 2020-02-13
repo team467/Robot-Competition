@@ -30,13 +30,7 @@ public class IndexerTuner implements Tuner {
         // display values
         SmartDashboard.putNumber("IndexerAL Chamber Sensor Value", 0);
         SmartDashboard.putNumber("IndexerAL Mouth Sensor Value", 0);
-
-        // user input
-        SmartDashboard.putBoolean("Feed", false);
-        SmartDashboard.putBoolean("Override TOF", false);
-        SmartDashboard.putBoolean("Override Chamber", false);
-        SmartDashboard.putBoolean("Override Mouth", false);
-
+        
         IndexerAL.callStop();
     }
 

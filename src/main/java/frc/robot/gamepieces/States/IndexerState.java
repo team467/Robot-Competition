@@ -14,6 +14,7 @@ import frc.robot.gamepieces.GamePieceController.IndexerMode;
 import frc.robot.gamepieces.GamePiece;
 import frc.robot.gamepieces.GamePieceController;
 import edu.wpi.first.wpilibj.Timer;
+import frc.robot.gamepieces.States.StateMachine;
 
 public enum IndexerState implements State {
 
@@ -29,7 +30,7 @@ public enum IndexerState implements State {
                     return Feed1;
                 }
 
-                // if (GamePieceController){
+                // if (){
                 //    return Feed1; 
                 // }
                 // TODO: if shooterSM asking for a ball return feed.
