@@ -198,7 +198,7 @@ public class RobotMap {
 
       // Shooter
       // TODO:change the values of these later
-      SHOOTER_FOLLOWER = true;
+      SHOOTER_FOLLOWER = false;
       SHOOTER_MOTOR_CHANNEL = 5;
       SHOOTER_MOTOR_INVERTED = true;
       SHOOTER_MOTOR_FOLLOWER_CHANNEL = 6;
@@ -308,12 +308,14 @@ public class RobotMap {
 
       // Shooter
       // TODO:change the values of these later
-      SHOOTER_FOLLOWER = true;
+      SHOOTER_FOLLOWER = false;
       SHOOTER_MOTOR_CHANNEL = 5;
       SHOOTER_MOTOR_INVERTED = false;
-      SHOOTER_MOTOR_FOLLOWER_CHANNEL = 6;
       SHOOTER_MOTOR_FOLLOWER_INVERTED = false;
       SHOOTER_SMART_SHOT = true;
+
+      TRIGGER_MOTOR_CHANNEL = 6;
+      HAS_TRIGGER = true;
 
       SHOOTER_SENSOR_INVERTED = false;
 
@@ -421,8 +423,8 @@ public class RobotMap {
   // Game Pieces
 
   // Shooter
-  public static boolean HAS_SHOOTER = false;
-  public static boolean HAS_TRIGGER = false;
+  public static boolean HAS_SHOOTER = true;
+  public static boolean HAS_TRIGGER = true;
   public static boolean HAS_SHOOTERLEDS = false;
   public static boolean SHOOTER_FOLLOWER;
   public static int SHOOTER_MOTOR_CHANNEL;

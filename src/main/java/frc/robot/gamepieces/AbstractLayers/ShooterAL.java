@@ -14,6 +14,7 @@ import frc.robot.drive.TalonSpeedControllerGroup;
 import frc.robot.logging.RobotLogManager;
 import frc.robot.gamepieces.GamePiece;
 import frc.robot.gamepieces.GamePieceBase;
+import frc.robot.gamepieces.GamePieceController;
 
 import org.apache.logging.log4j.Logger;
 
@@ -123,6 +124,7 @@ public class ShooterAL extends GamePieceBase implements GamePiece {
     if (flywheel != null && RobotMap.HAS_SHOOTER) {
       double output = Math.max(-1.0, Math.min(1.0, speed));
       flywheel.set(ControlMode.Velocity, output);
+      LOGGER.error("the speed is {}", output);
     }
   }
 
@@ -142,18 +144,19 @@ public class ShooterAL extends GamePieceBase implements GamePiece {
   public void startShooting() {
     if (trigger != null && RobotMap.HAS_TRIGGER) {
       trigger.set(1.0);
+      LOGGER.error(trigger.get());
     }
   }
 
   public void stopShooting() {
     if (trigger != null && RobotMap.HAS_TRIGGER) {
-      trigger.set(0.0);
+      trigger.set(1.0);
     }
   }
 
   public void reverseShooter() {
     if (trigger != null && RobotMap.HAS_TRIGGER) {
-      trigger.set(0.0);
+      trigger.set(1.0);
     }
   }
 
@@ -218,10 +221,11 @@ public class ShooterAL extends GamePieceBase implements GamePiece {
   }
 
   public void setFlywheel(FlywheelSettings setting) {
+    speed = GamePieceController.getInstance().shooterSpeed;
     switch(setting) {
       case FORWARD:
-        rampToSpeed(Math.abs(speed));
-        LOGGER.error("shooter forward");
+        rampToSpeed(-Math.abs(speed));
+        LOGGER.error("shooter speed = {}" + speed);
         break;
 
       case BACKWARD:

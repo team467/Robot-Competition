@@ -61,9 +61,11 @@ public class GamePieceController {
   private boolean armPosition = false; //TODO get inputs from DS class
   private boolean rollerStateIN = false;
   private boolean rollerStateOUT = false;
-  public boolean fireWhenReady;
+  public boolean fireWhenReady= false;
   public boolean triggerManual = false;
   public boolean flywheelManual = false;
+  public double shooterSpeed;
+  public static double shooterPreviousSpeed;
 
   public IndexerMode indexMode;
   public ShooterMode shootMode;
@@ -208,6 +210,17 @@ public class GamePieceController {
     return true;
   }
 
+  public void determineShooterSpeed() {
+    //math
+    if(visionController.hasDistance()) {
+      shooterSpeed = (0.16120202 * visionController.dist() + 65.5092) / 100;
+      shooterPreviousSpeed = shooterSpeed;
+    } else {
+      shooterSpeed = shooterPreviousSpeed; 
+    }
+
+    //TODO figure out what speeds it will set
+  }
   // public boolean shooterLoadingBall() {
   //   if (shooterSM.) {
 

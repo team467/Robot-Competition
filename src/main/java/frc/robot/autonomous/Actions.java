@@ -157,6 +157,7 @@ public class Actions {
     String actionGroupText = "doing nothing";
     ActionGroup mode = new ActionGroup(actionGroupText);
     mode.addAction(Shoot());
+    mode.addAction(moveDistanceForward(10));
     return mode;
   }
 

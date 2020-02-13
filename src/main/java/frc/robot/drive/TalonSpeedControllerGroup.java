@@ -184,7 +184,7 @@ public class TalonSpeedControllerGroup implements SpeedController {
       outputValue *= maxVelocity;
     }
 
-    LOGGER.error("Output is {}, in mode {}", outputValue, controlMode);
+    LOGGER.debug("Output is {}, in mode {}", outputValue, controlMode);
 
     leader.set(controlMode, outputValue);
     if (follower1 != null) {
