@@ -51,7 +51,7 @@ public class AutoShooterTuner implements Tuner {
         boolean hasDistance = hasDistanceTable.getBoolean(false);
         boolean startShooting = SmartDashboard.getBoolean("Shoot", false);
         boolean startFlywheel = SmartDashboard.getBoolean("Flywheel", false);
-        double speed = (0.019 * distance) + 0.827;
+        double speed = ((0.161202 * distance) + 65.5093)/100;
 
         if (startFlywheel) {
             if (hasDistance) {
