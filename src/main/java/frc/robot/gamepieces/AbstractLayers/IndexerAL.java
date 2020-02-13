@@ -65,12 +65,10 @@ public class IndexerAL extends GamePieceBase implements GamePiece {
 
   }
 
-  // TODO: implement TOF sensor in boolean.
   public boolean inMouth() {
     return TOFSensor.getInstance().getMouthDistance()<RobotMap.TOF_THRESHOLD;
   }
 
-  // TODO: implement TOF sensor in boolean.
   public boolean inChamber() {
     return TOFSensor.getInstance().getChamberDistance()<RobotMap.TOF_THRESHOLD;
   }
