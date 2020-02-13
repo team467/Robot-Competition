@@ -39,6 +39,7 @@ public class AutoShooterTuner implements Tuner {
         SmartDashboard.putNumber("Shooter Voltage", 0);
         SmartDashboard.putNumber("Shooter Speed", 0);
         SmartDashboard.putNumber("Shooter Position", 0);
+        SmartDashboard.putNumber("Speed", 0);
         SmartDashboard.putBoolean("Shoot", false);
         SmartDashboard.putBoolean("Flywheel", false);
         
@@ -83,5 +84,6 @@ public class AutoShooterTuner implements Tuner {
         SmartDashboard.putNumber("Shooter Voltage", shooterMotor.velocity());
         SmartDashboard.putNumber("Shooter Speed", shooterMotor.velocity());
         SmartDashboard.putNumber("Shooter Position", shooterMotor.position());
+        SmartDashboard.putNumber("Speed", 0);
     }
 }
