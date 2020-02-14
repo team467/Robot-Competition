@@ -31,6 +31,11 @@ public enum IndexerState implements State {
                 return Manual;
             }
 
+            // if(Shooter state is in LoadingBall)
+            if (GamePieceController.getInstance().getShooterState()==ShooterState.LoadingBall) {
+                return Feed1;
+            }
+
             if (indexerBallsReverse) {
                 return Reverse;
             }
@@ -149,6 +154,7 @@ public enum IndexerState implements State {
         }
     };
 
+    private static StateMachine stateMachine;
     private static IndexerAL indexerAL = IndexerAL.getInstance();
     private static GamePieceController gamePieceController = GamePieceController.getInstance();
     private static boolean indexerBallsReverse = gamePieceController.indexerBallsReverse();

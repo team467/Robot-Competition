@@ -128,13 +128,20 @@ public class GamePieceController {
       shooterMode = ShooterMode.MANUAL;
     }
 
+    updateStates();
+
     // Separate reading from driver station from processing state
     // so that tests can manually feed inputs.
     processGamePieceState(driverStation.getDriveCameraFront(), driverStation.getDriveCameraBack());
 
   }
 
-  void processGamePieceState(boolean driveCameraFront, boolean driveCameraRear) {
+  public void updateStates() {
+    shooterState = shooterSM.getCurrentState();
+
+  }
+
+  public void processGamePieceState(boolean driveCameraFront, boolean driveCameraRear) {
 
     // Depending on driver input, camera view switches to front or back.
     // Does not change the mode away from Hatch or Cargo, but does take camera.
@@ -185,8 +192,8 @@ public class GamePieceController {
 
   // TODO: put in logic
   public boolean indexerBallsReverse() {
-    if (indexer.calledReverse) {
-      indexer.calledReverse = false;
+    if (IndexerAL.calledReverse) {
+      IndexerAL.calledReverse = false;
       return true;
     }
     return false;
@@ -202,5 +209,8 @@ public class GamePieceController {
 
   public void setAutomousFireWhenReady(boolean fire) {
     fireWhenReady = fire;
+  }
+  public State getShooterState(){
+    return shooterState;
   }
 }
