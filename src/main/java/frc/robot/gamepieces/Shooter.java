@@ -11,6 +11,7 @@ import org.apache.logging.log4j.Logger;
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.util.Color;
+import edu.wpi.first.wpilibj.Servo;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.ControlMode;
@@ -35,6 +36,8 @@ public class Shooter extends GamePieceBase implements GamePiece {
 
   private static WPI_TalonSRX triggerMotor;
   public static TalonSpeedControllerGroup trigger;
+
+  public static Servo hood;
 
   private static AddressableLED leds;
   private static AddressableLEDBuffer ledBuffer;
@@ -76,6 +79,10 @@ public class Shooter extends GamePieceBase implements GamePiece {
         trigger = new TalonSpeedControllerGroup("Trigger", ControlMode.PercentOutput, false, RobotMap.TRIGGER_MOTOR_INVERTED, triggerMotor);
       } else {
         trigger = new TalonSpeedControllerGroup();
+      }
+
+      if (RobotMap.HAS_HOOD) {
+        hood = new Servo(RobotMap.HOOD_PWM_PORT);
       }
 
       if (RobotMap.HAS_SHOOTERLEDS) {
@@ -157,6 +164,21 @@ public class Shooter extends GamePieceBase implements GamePiece {
     if (trigger != null && RobotMap.HAS_TRIGGER) {
       this.triggerState = state;
     }
+  }
+
+  public void setHoodAngle(double angle) {
+    if (hood != null && RobotMap.HAS_HOOD) {
+      double setAngle = Math.max(0.0, Math.min(1.0, speed));
+      hood.set(setAngle);
+    }
+  }
+
+  public double getHoodAngle() {
+    double angle = 0;
+    if (hood != null && RobotMap.HAS_HOOD) {
+      angle = hood.getAngle();
+    }
+    return angle;
   }
 
   public void setShootState(boolean state) {

@@ -32,6 +32,7 @@ public class ShooterTuner implements Tuner {
         SmartDashboard.putNumber("Shooter Voltage", 0);
         SmartDashboard.putNumber("Shooter Speed", 0);
         SmartDashboard.putNumber("Shooter Position", 0);
+        SmartDashboard.putNumber("Hood Angle", 0);
 
         useVelocity = SmartDashboard.getBoolean("Use Velocity", false);
         double kP = SmartDashboard.getNumber("Shooter P", 0);
@@ -57,6 +58,7 @@ public class ShooterTuner implements Tuner {
     public void periodic() {
         double speed = SmartDashboard.getNumber("Speed", 0);
         boolean startShooting = SmartDashboard.getBoolean("Shoot", false);
+        double angle = SmartDashboard.getNumber("Hood Angle", 0);
 
         if (useVelocity) {
             shooter.rampToSpeed(speed);
@@ -86,6 +88,8 @@ public class ShooterTuner implements Tuner {
                 }
             }
         }
+
+        shooter.setHoodAngle(angle);
 
         if (startShooting) {
             shooter.startShooting();
