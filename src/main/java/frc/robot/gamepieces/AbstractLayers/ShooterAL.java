@@ -31,7 +31,7 @@ public class ShooterAL extends GamePieceBase implements GamePiece {
   private static final int TALON_PID_SLOT_ID = 0;
 
   private boolean triggerState = false;
-  private double speed = 0.8; //TODO gamepeice controller helps to determine this
+  private double speed = 0.0; //TODO gamepeice controller helps to determine this
 
   private static WPI_TalonSRX flywheelLeader;
   private static WPI_TalonSRX flywheelFollower;
@@ -122,9 +122,10 @@ public class ShooterAL extends GamePieceBase implements GamePiece {
 
   public void rampToSpeed(double speed) {
     if (flywheel != null && RobotMap.HAS_SHOOTER) {
-      double output = Math.max(-1.0, Math.min(1.0, speed));
+      double output = speed; //Math.max(-1.0, Math.min(1.0, speed));
       flywheel.set(ControlMode.Velocity, output);
       LOGGER.error("the speed is {}", output);
+      LOGGER.error("Talon: {}, id: {}", flywheel.get());
     }
   }
 
@@ -221,11 +222,11 @@ public class ShooterAL extends GamePieceBase implements GamePiece {
   }
 
   public void setFlywheel(FlywheelSettings setting) {
-    speed = GamePieceController.getInstance().shooterSpeed;
+    speed = 0.4; //GamePieceController.getInstance().shooterSpeed;
     switch(setting) {
       case FORWARD:
         rampToSpeed(-Math.abs(speed));
-        LOGGER.error("shooter speed = {}" + speed);
+        LOGGER.error("shooter speed = {}", speed);
         break;
 
       case BACKWARD:

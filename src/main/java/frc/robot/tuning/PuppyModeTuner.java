@@ -106,6 +106,8 @@ public class PuppyModeTuner implements Tuner {
 
       gamePieceController.periodic();
 
+      gamePieceController.setAutomousFireWhenReady(true);
+
       if(tryShot){
       gamePieceController.determineShooterSpeed();
       drive.arcadeDrive(0, visionController.setTurn());

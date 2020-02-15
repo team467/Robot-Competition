@@ -319,7 +319,7 @@ public class RobotMap {
 
       SHOOTER_SENSOR_INVERTED = false;
 
-      SHOOTER_P = 2;
+      SHOOTER_P = 0.2;
       SHOOTER_I = 0.0;
       SHOOTER_D = 0.0;
       SHOOTER_F = 0.0;
