@@ -317,7 +317,7 @@ public class RobotMap {
       TRIGGER_MOTOR_CHANNEL = 6;
       HAS_TRIGGER = true;
 
-      SHOOTER_SENSOR_INVERTED = false;
+      SHOOTER_SENSOR_INVERTED = true;
 
       SHOOTER_P = 0.2;
       SHOOTER_I = 0.0;

@@ -1,3 +1,4 @@
+
 package frc.robot.tuning;
 
 import frc.robot.RobotMap;
@@ -16,86 +17,90 @@ public class ShooterTuner implements Tuner {
 
     private static final Logger LOGGER = RobotLogManager.getMainLogger(TuneController.class.getName());
 
-    ShooterAL ShooterAL;
-    TalonSpeedControllerGroup ShooterALMotor;
+    ShooterAL shooter;
+    TalonSpeedControllerGroup shooterMotor;
     boolean useVelocity;
 
     ShooterTuner() {
-        ShooterAL = ShooterAL.getInstance();
-        ShooterALMotor = ShooterAL.getMotor();
+        shooter = ShooterAL.getInstance();
+        shooterMotor = shooter.getMotor();
     }
 
     public void init() {
         SmartDashboard.putNumber("Speed", 0);
 
-        SmartDashboard.putNumber("ShooterAL Current", 0);
-        SmartDashboard.putNumber("ShooterAL Voltage", 0);
-        SmartDashboard.putNumber("ShooterAL Speed", 0);
-        SmartDashboard.putNumber("ShooterAL Position", 0);
+        SmartDashboard.putNumber("Shooter Current", 0);
+        SmartDashboard.putNumber("Shooter Voltage", 0);
+        SmartDashboard.putNumber("Shooter Speed", 0);
+        SmartDashboard.putNumber("Shooter Position", 0);
+        SmartDashboard.putNumber("Hood Angle", 0);
 
         useVelocity = SmartDashboard.getBoolean("Use Velocity", false);
-        double kP = SmartDashboard.getNumber("ShooterAL P", 0);
-        double kI = SmartDashboard.getNumber("ShooterAL I", 0);
-        double kD = SmartDashboard.getNumber("ShooterAL D", 0);
-        double kF = SmartDashboard.getNumber("ShooterAL F", 0);
-        double kMaxVelocity = SmartDashboard.getNumber("ShooterAL Max Velocity", 0);
+        double kP = SmartDashboard.getNumber("Shooter P", 0);
+        double kI = SmartDashboard.getNumber("Shooter I", 0);
+        double kD = SmartDashboard.getNumber("Shooter D", 0);
+        double kF = SmartDashboard.getNumber("Shooter F", 0);
+        double kMaxVelocity = SmartDashboard.getNumber("Shooter Max Velocity", 0);
 
         SmartDashboard.putBoolean("Use Velocity", useVelocity);
-        SmartDashboard.putNumber("ShooterAL P", kP);
-        SmartDashboard.putNumber("ShooterAL I", kI);
-        SmartDashboard.putNumber("ShooterAL D", kD);
-        SmartDashboard.putNumber("ShooterAL F", kF);
-        SmartDashboard.putNumber("ShooterAL Max Velocity", kMaxVelocity);
+        SmartDashboard.putNumber("Shooter P", kP);
+        SmartDashboard.putNumber("Shooter I", kI);
+        SmartDashboard.putNumber("Shooter D", kD);
+        SmartDashboard.putNumber("Shooter F", kF);
+        SmartDashboard.putNumber("Shooter Max Velocity", kMaxVelocity);
 
         SmartDashboard.putBoolean("Shoot", false);
 
-        ShooterAL.flyWheelPIDF(kP, kI, kD, kF, kMaxVelocity);
+        shooter.flyWheelPIDF(kP, kI, kD, kF, kMaxVelocity);
 
-        ShooterAL.stop();
+        shooter.stop();
     }
 
     public void periodic() {
         double speed = SmartDashboard.getNumber("Speed", 0);
         boolean startShooting = SmartDashboard.getBoolean("Shoot", false);
+        double angle = SmartDashboard.getNumber("Hood Angle", 0);
 
         if (useVelocity) {
-            ShooterAL.rampToSpeed(speed);
+            shooter.rampToSpeed(speed);
 
             if (RobotMap.HAS_SHOOTERLEDS) {
-                double currentVel = ShooterAL.getMotor().velocity();
-                double setVel = ShooterAL.getMotor().closedLoopTarget();
+                double currentVel = shooter.getMotor().velocity();
+                double setVel = shooter.getMotor().closedLoopTarget();
 
                 double ledFillPercent = Math.min(0, Math.max(1, setVel/currentVel));
                 int fillLeds = (int) (RobotMap.SHOOTER_LED_AMOUNT * ledFillPercent)-1;
                 if (fillLeds >= 0) {
-                    ShooterAL.fillStrip(0, 0, 255, fillLeds);
+                    shooter.fillStrip(0, 0, 255, fillLeds);
                 } else {
-                    ShooterAL.clearStrip();
+                    shooter.clearStrip();
                 }
             }
         } else {
-            ShooterALMotor.set(ControlMode.PercentOutput, speed);
+            shooterMotor.set(ControlMode.PercentOutput, speed);
 
             if (RobotMap.HAS_SHOOTERLEDS) {
                 double ledFillPercent = Math.max(0, Math.min(1, Math.abs(speed)));
                 int fillLeds = (int) (RobotMap.SHOOTER_LED_AMOUNT * ledFillPercent)-1;
                 if (fillLeds >= 0) {
-                    ShooterAL.fillStrip(0, 0, 255, fillLeds);
+                    shooter.fillStrip(0, 0, 255, fillLeds);
                 } else {
-                    ShooterAL.clearStrip();
+                    shooter.clearStrip();
                 }
             }
         }
 
+        //shooter.setHoodAngle(angle);
+
         if (startShooting) {
-            ShooterAL.startShooting();
+            shooter.startShooting();
         } else {
-            ShooterAL.stopShooting();
+            shooter.stopShooting();
         }
 
-        SmartDashboard.putNumber("ShooterAL Current", ShooterALMotor.current());
-        SmartDashboard.putNumber("ShooterAL Voltage", ShooterALMotor.velocity());
-        SmartDashboard.putNumber("ShooterAL Speed", ShooterALMotor.velocity());
-        SmartDashboard.putNumber("ShooterAL Position", ShooterALMotor.position());
+        SmartDashboard.putNumber("Shooter Current", shooterMotor.current());
+        SmartDashboard.putNumber("Shooter Voltage", shooterMotor.velocity());
+        SmartDashboard.putNumber("Shooter Speed", shooterMotor.velocity());
+        SmartDashboard.putNumber("Shooter Position", shooterMotor.position());
     }
 }

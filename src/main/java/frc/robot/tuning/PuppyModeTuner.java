@@ -74,54 +74,25 @@ public class PuppyModeTuner implements Tuner {
 
 
 
-      if(haveAngle){
-        if(Math.abs(angle + gyro.getPitchDegrees()) < 2) {
-          robotTurner = 0.0;
-        } else if(-gyro.getPitchDegrees() < angle) {
-            robotTurner = 0.2;
-         } else if(-gyro.getPitchDegrees() > angle) {
-           robotTurner = -0.2;
-         } else {
-           robotTurner = 0.0;
-         }       
-
-      } else {
-          robotTurner = 0.0;
-          
-      }
-      
-
-      if(isTurnDone) {
-        //isdone
-          //gyro.zero();
-          //isTurnDone = false;
-          SmartDashboard.putBoolean("Turn", false);
-      }
-
-      if(dist > 40 && haveDistance) {
-        speed = -0.2;
-      } else {
-        speed = 0;
-      }
-
+      if(tryShot){
+      //gamePieceController.determineShooterSpeed();
+     // drive.arcadeDrive(0, visionController.setTurn());
       gamePieceController.periodic();
 
-      gamePieceController.setAutomousFireWhenReady(true);
-
-      if(tryShot){
-      gamePieceController.determineShooterSpeed();
-      drive.arcadeDrive(0, visionController.setTurn());
-
-      if(visionController.atAngle()){
+      if(true){ //visionController.atAngle()
         gamePieceController.setAutomousFireWhenReady(true);
       
       } else {
         gamePieceController.setAutomousFireWhenReady(false);
       }
+    } else {
+      gamePieceController.setAutomousFireWhenReady(false);
+      LOGGER.debug("Speed Shooter = {}", gamePieceController.getFireWhenReady());
+      
     }
     
 
-      LOGGER.debug("Speed Shooter = {}", gamePieceController.shooterSpeed);
+      
 
       LOGGER.debug("Yaw: {}, Pitch: {}, Roll: {}", gyro.getYawDegrees(), gyro.getPitchDegrees(), gyro.getRollDegrees());
 

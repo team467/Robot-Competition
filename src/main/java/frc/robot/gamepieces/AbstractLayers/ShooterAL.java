@@ -31,7 +31,7 @@ public class ShooterAL extends GamePieceBase implements GamePiece {
   private static final int TALON_PID_SLOT_ID = 0;
 
   private boolean triggerState = false;
-  private double speed = 0.0; //TODO gamepeice controller helps to determine this
+  private double speed = 0.1; //TODO gamepeice controller helps to determine this
 
   private static WPI_TalonSRX flywheelLeader;
   private static WPI_TalonSRX flywheelFollower;
@@ -122,10 +122,10 @@ public class ShooterAL extends GamePieceBase implements GamePiece {
 
   public void rampToSpeed(double speed) {
     if (flywheel != null && RobotMap.HAS_SHOOTER) {
-      double output = speed; //Math.max(-1.0, Math.min(1.0, speed));
+      double output = Math.max(-1.0, Math.min(1.0, speed));
       flywheel.set(ControlMode.Velocity, output);
-      LOGGER.error("the speed is {}", output);
-      LOGGER.error("Talon: {}, id: {}", flywheel.get());
+      LOGGER.debug("the speed is {}", output);
+      //LOGGER.debug("Talon: {}, id: {}", flywheel.get());
     }
   }
 
@@ -145,7 +145,7 @@ public class ShooterAL extends GamePieceBase implements GamePiece {
   public void startShooting() {
     if (trigger != null && RobotMap.HAS_TRIGGER) {
       trigger.set(1.0);
-      LOGGER.error(trigger.get());
+      LOGGER.debug(trigger.get());
     }
   }
 
@@ -222,22 +222,22 @@ public class ShooterAL extends GamePieceBase implements GamePiece {
   }
 
   public void setFlywheel(FlywheelSettings setting) {
-    speed = 0.4; //GamePieceController.getInstance().shooterSpeed;
+   speed = GamePieceController.getInstance().shooterSpeed;
     switch(setting) {
       case FORWARD:
-        rampToSpeed(-Math.abs(speed));
-        LOGGER.error("shooter speed = {}", speed);
+        ShooterAL.getInstance().rampToSpeed(-speed);
+        LOGGER.debug("shooter speed = {}", speed);
         break;
 
       case BACKWARD:
-        rampToSpeed(-Math.abs(speed));
+        ShooterAL.getInstance().rampToSpeed(speed);
         break;
 
       case MANUAL_FORWARD:
-        rampToSpeed(RobotMap.MANUAL_MODE_SHOOTER_SPEED); //TODO tbd speed
+        this.rampToSpeed(RobotMap.MANUAL_MODE_SHOOTER_SPEED); //TODO tbd speed
         break;
       case STOP:
-        stop();
+      ShooterAL.getInstance().stop();
         LOGGER.debug("shooter stopping");
         break;
       
@@ -279,11 +279,11 @@ public class ShooterAL extends GamePieceBase implements GamePiece {
         if(flywheelLeader.isAlive()) {
           LOGGER.info("flywheel is alive");
         } else {
-          LOGGER.error("flywheel is not alive");
+          LOGGER.debug("flywheel is not alive");
         }
 
       } catch (NullPointerException e) {
-        LOGGER.error("something is wrong with the shooter");
+        LOGGER.debug("something is wrong with the shooter");
          e.printStackTrace();
       }
 

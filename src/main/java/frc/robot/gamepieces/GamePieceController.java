@@ -64,7 +64,7 @@ public class GamePieceController {
   public boolean fireWhenReady= false;
   public boolean triggerManual = false;
   public boolean flywheelManual = false;
-  public double shooterSpeed;
+  public double shooterSpeed = 0.1;
   public static double shooterPreviousSpeed;
 
   public IndexerMode indexMode;
@@ -238,5 +238,9 @@ public class GamePieceController {
 
   public void setAutomousFireWhenReady(boolean fire){
     fireWhenReady = fire;
+  }
+
+  public boolean getFireWhenReady() {
+    return fireWhenReady;
   }
 }
