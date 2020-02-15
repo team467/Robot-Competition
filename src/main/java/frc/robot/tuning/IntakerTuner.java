@@ -41,6 +41,7 @@ public class IntakerTuner implements Tuner {
         //inputs
         boolean sucking = SmartDashboard.getBoolean("Sucking", false);
         boolean armActivated = SmartDashboard.getBoolean("Arm Raise", false);
+        
         if(sucking){
             IntakeAL.callBackward();
         }else{

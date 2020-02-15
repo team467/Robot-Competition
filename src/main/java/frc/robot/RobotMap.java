@@ -220,7 +220,6 @@ public class RobotMap {
       SHOOTER_SPEED_TOLERANCE = 0.25;
       MANUAL_MODE_SHOOTER_SPEED = 1.0; //TODO determine the speed
       
-
       //Intake
       // TODO: change the values of these later.
       ARM_MOTOR_CHANNEL = 0;
