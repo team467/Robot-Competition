@@ -40,6 +40,7 @@ public class ClimberAL extends GamePieceBase implements GamePiece {
     private static Relay climbLock;
     private static DigitalInput topSensor;
     private static DigitalInput bottomSensor;
+    private static DigitalInput tiltLimitSwitch;
 
     // states of robot
     private climberSpeed speed;
@@ -119,6 +120,12 @@ public class ClimberAL extends GamePieceBase implements GamePiece {
                 bottomSensor = new DigitalInput(RobotMap.CLIMB_BOTTOM_SENSOR_CHANNEL);
             } else {
                 bottomSensor = null;
+            }
+
+            if (RobotMap.HAS_CLIMB_TILT_SWITCH) {
+                tiltLimitSwitch = new DigitalInput(RobotMap.CLIMB_TILT_SWITCH_CHANNEL);
+            } else {
+                tiltLimitSwitch = null;
             }
 
             instance = new ClimberAL(climbGroup); // invoking the constructor
@@ -234,7 +241,10 @@ public class ClimberAL extends GamePieceBase implements GamePiece {
     public boolean getTopSensor() {
         boolean result = false;
         if (topSensor != null && RobotMap.HAS_CLIMB_TOP_SENSOR) {
-            result = topSensor.get();
+            result = !topSensor.get();
+            if (RobotMap.CLIMB_TOP_SENSOR_INVERTED) {
+                result = !result;
+            }
         }
         return result;
     }
@@ -242,7 +252,21 @@ public class ClimberAL extends GamePieceBase implements GamePiece {
     public boolean getBottomSensor() {
         boolean result = false;
         if (bottomSensor != null && RobotMap.HAS_CLIMB_BOTTOM_SENSOR) {
-            result = bottomSensor.get();
+            result = !bottomSensor.get();
+            if (RobotMap.CLIMB_BOTTOM_SENSOR_INVERTED) {
+                result = !result;
+            }
+        }
+        return result;
+    }
+
+    public boolean getTiltSwitch() {
+        boolean result = false;
+        if (bottomSensor != null && RobotMap.HAS_CLIMB_TILT_SWITCH) {
+            result = !tiltLimitSwitch.get();
+            if (RobotMap.CLIMB_TILT_SWITCH_INVERTED) {
+                result = !result;
+            }
         }
         return result;
     }

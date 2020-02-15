@@ -258,8 +258,14 @@ public class RobotMap {
 
       HAS_CLIMB_TOP_SENSOR = true;
       HAS_CLIMB_BOTTOM_SENSOR = true;
+      CLIMB_TOP_SENSOR_INVERTED = false;
+      CLIMB_BOTTOM_SENSOR_INVERTED = false;
       CLIMB_TOP_SENSOR_CHANNEL = 1;
       CLIMB_BOTTOM_SENSOR_CHANNEL = 2;
+
+      HAS_CLIMB_TILT_SWITCH = true;
+      CLIMB_TILT_SWITCH_INVERTED = false;
+      CLIMB_TILT_SWITCH_CHANNEL = 3;
 
       HAS_CLIMBLOCK = false;
       CLIMB_LOCK_CHANNEL = 0;
@@ -369,8 +375,14 @@ public class RobotMap {
 
       HAS_CLIMB_TOP_SENSOR = true;
       HAS_CLIMB_BOTTOM_SENSOR = true;
+      CLIMB_TOP_SENSOR_INVERTED = false;
+      CLIMB_BOTTOM_SENSOR_INVERTED = false;
       CLIMB_TOP_SENSOR_CHANNEL = 1;
       CLIMB_BOTTOM_SENSOR_CHANNEL = 2;
+
+      HAS_CLIMB_TILT_SWITCH = true;
+      CLIMB_TILT_SWITCH_INVERTED = false;
+      CLIMB_TILT_SWITCH_CHANNEL = 3;
 
       HAS_CLIMBLOCK = false;
       CLIMB_LOCK_CHANNEL = 0;
@@ -485,8 +497,13 @@ public class RobotMap {
   public static boolean CLIMB_LOCK_INVERTED = false;
   public static boolean HAS_CLIMB_TOP_SENSOR = false;
   public static boolean HAS_CLIMB_BOTTOM_SENSOR = false;
+  public static boolean CLIMB_TOP_SENSOR_INVERTED = false;
+  public static boolean CLIMB_BOTTOM_SENSOR_INVERTED = false;
   public static int CLIMB_TOP_SENSOR_CHANNEL;
   public static int CLIMB_BOTTOM_SENSOR_CHANNEL;
+  public static boolean HAS_CLIMB_TILT_SWITCH = true;
+  public static boolean CLIMB_TILT_SWITCH_INVERTED = false;
+  public static int CLIMB_TILT_SWITCH_CHANNEL = 3;
   public static int CLIMBER_PID_SLOT;
   public static double CLIMBER_P;
   public static double CLIMBER_I;
