@@ -30,7 +30,7 @@ public class IndexerTuner implements Tuner {
         // display values
         SmartDashboard.putNumber("IndexerAL Chamber Sensor Value", 0);
         SmartDashboard.putNumber("IndexerAL Mouth Sensor Value", 0);
-        
+
         IndexerAL.callStop();
     }
 
@@ -42,9 +42,9 @@ public class IndexerTuner implements Tuner {
         if (feeding) {
             indexerAL.indexerBeltDirection(IndexerAL.setBelts.FORWARD);
         }
-        indexerAL.override=override;
-        indexerAL.mouthOverride=overrideMouth;
-        indexerAL.chamberOverride=overrideChamber;
+        indexerAL.override = override;
+        indexerAL.mouthOverride = overrideMouth;
+        indexerAL.chamberOverride = overrideChamber;
     }
 
 }
