@@ -34,8 +34,10 @@ public class stateMachineTuner implements Tuner {
  
         
         boolean fire = SmartDashboard.getBoolean("fire", false);
-        boolean auto = true;
-        gamePieceController.fireWhenReady = fire;
+        boolean auto = SmartDashboard.getBoolean("Auto", false);
+        gamePieceController.setAutomousFireWhenReady(fire);
+        gamePieceController.ShooterAuto = auto;
+
         gamePieceController.periodic();
 
 

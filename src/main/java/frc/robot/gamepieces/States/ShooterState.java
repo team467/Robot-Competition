@@ -31,16 +31,19 @@ public enum ShooterState implements State {
             fireWhenReady = GamePieceController.getInstance().getFireWhenReady();
             shooterAL.setTrigger(TriggerSettings.STOP);
             shooterAL.setFlywheel(FlywheelSettings.STOP);
+            LOGGER.debug("ID " + fireWhenReady);
 
 
 
             if(autoMode) {
 
                 if(fireWhenReady) {
+                    //LOGGER.error(fireWhenReady);
 
                     return LoadingBall;
                 }
 
+                //LOGGER.error(fireWhenReady);
                 return this;
 
             } else {
@@ -56,6 +59,7 @@ public enum ShooterState implements State {
 
     LoadingBall {
         public boolean autoMode;
+        public boolean fireWhenReady = GamePieceController.getInstance().getFireWhenReady();
         public void enter() {
             // float distance = Sensor.getDistance();
             // int desiredRPM = (int)(distance * 1 * 1);
@@ -67,6 +71,7 @@ public enum ShooterState implements State {
             shooterAL.setTrigger(TriggerSettings.STOP);
             shooterAL.setFlywheel(FlywheelSettings.FORWARD);
         
+            LOGGER.debug("LB " + fireWhenReady);
             if(autoMode){
                 if(indexerAL.inChamber()) {
                     return AdjustingSpeed;
@@ -125,7 +130,7 @@ public enum ShooterState implements State {
         public State action() {
             autoMode = GamePieceController.getInstance().ShooterAuto;
             fireWhenReady = GamePieceController.getInstance().getFireWhenReady();
-            LOGGER.error(fireWhenReady);
+            //LOGGER.error(fireWhenReady);
             shooterAL.setFlywheel(FlywheelSettings.FORWARD);
             if(autoMode){
                 if(fireWhenReady){
@@ -134,11 +139,10 @@ public enum ShooterState implements State {
                     if(!shooterAL.atSpeed() || !indexerAL.inChamber() || robotAligned){
                         LOGGER.debug("Shooter is not at speed or nothing in the chamber or robot is not aligned changing to moving ball");
                         return LoadingBall;
-                    } 
-                    if(!fireWhenReady || !robotAligned){
-                        LOGGER.debug("no longer shooting");
-                        return Idle;
                     }
+                } else {
+                    LOGGER.debug("no longer shooting");
+                    return Idle;
                 }
             } else {
                 return Manual;
@@ -164,20 +168,22 @@ public enum ShooterState implements State {
         public State action() {
             autoMode = GamePieceController.getInstance().ShooterAuto;
             fireWhenReady = GamePieceController.getInstance().getFireWhenReady();
-            LOGGER.error(fireWhenReady);
-            shooterAL.setTrigger(TriggerSettings.SHOOTING);
+            //LOGGER.error(fireWhenReady);
             shooterAL.setFlywheel(FlywheelSettings.FORWARD);
             if(autoMode){
-                if(!fireWhenReady) {
-                    if(timer.get() > 0.20) return Idle;
-                }
-
-                if(!shooterAL.atSpeed() || !indexerAL.inChamber() || robotAligned){
-                    return LoadingBall;
+                if(fireWhenReady){
+                    shooterAL.setTrigger(TriggerSettings.SHOOTING);
+                    
+                    if(!shooterAL.atSpeed() || !indexerAL.inChamber() || robotAligned){
+                        LOGGER.debug("Shooter is not at speed or nothing in the chamber or robot is not aligned changing to moving ball");
+                        return LoadingBall;
+                    }
+                } else {
+                    LOGGER.debug("no longer shooting");
+                    return Idle;
                 }
             } else {
-                
-                return Idle;
+                return Manual;
             }
             
             return this;
@@ -190,14 +196,21 @@ public enum ShooterState implements State {
     },
 
     Manual {
+        public boolean autoMode;
         public void enter() {
             // Noop
         }
 
         public State action() {
+            autoMode = GamePieceController.getInstance().ShooterAuto;
             //Manual mode based on controls
-            if(flyWheelMan)shooterAL.setFlywheel(FlywheelSettings.MANUAL_FORWARD);
-            if(triggerMan)shooterAL.setTrigger(TriggerSettings.SHOOTING);
+            if(autoMode){
+                LOGGER.info("Manual");
+                if(flyWheelMan)shooterAL.setFlywheel(FlywheelSettings.MANUAL_FORWARD);
+                if(triggerMan)shooterAL.setTrigger(TriggerSettings.SHOOTING);
+            } else {
+                return LoadingBall;
+            }
             return this;
         }
 
