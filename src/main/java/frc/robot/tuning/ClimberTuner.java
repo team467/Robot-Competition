@@ -20,8 +20,7 @@ public class ClimberTuner implements Tuner {
     boolean useVelocity = false;
 
     ClimberTuner() {
-        climber = climber.getInstance();
-
+        climber = ClimberAL.getInstance();
     }
 
     public void init() {
@@ -29,6 +28,8 @@ public class ClimberTuner implements Tuner {
         SmartDashboard.putNumber("Climber Speed", 0);
         SmartDashboard.putNumber("Climber Position", 0);
         SmartDashboard.putBoolean("Lock Solenoid", false);
+        SmartDashboard.putBoolean("Top Sensor", false);
+        SmartDashboard.putBoolean("Bottom Sensor", false);
 
         double kP = SmartDashboard.getNumber("Climber P", 0);
         double kI = SmartDashboard.getNumber("Climber I", 0);
@@ -67,5 +68,7 @@ public class ClimberTuner implements Tuner {
 
         SmartDashboard.putNumber("Climber Speed", climber.getVelocity());
         SmartDashboard.putNumber("Climber Position", climber.getPosition());
+        SmartDashboard.putBoolean("Top Sensor", climber.getTopSensor());
+        SmartDashboard.putBoolean("Bottom Sensor", climber.getBottomSensor());
     }
 }
