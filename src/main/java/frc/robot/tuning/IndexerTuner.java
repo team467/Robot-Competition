@@ -25,7 +25,10 @@ public class IndexerTuner implements Tuner {
     }
 
     public void init() {
-        SmartDashboard.putNumber("key", 0);
+        SmartDashboard.putBoolean("Feed", false);
+        SmartDashboard.putBoolean("Override TOF", false);
+        SmartDashboard.putBoolean("Override Chamber", false);
+        SmartDashboard.putBoolean("Override Mouth", false);
 
         // display values
         SmartDashboard.putNumber("IndexerAL Chamber Sensor Value", 0);
@@ -39,12 +42,17 @@ public class IndexerTuner implements Tuner {
         boolean override = SmartDashboard.getBoolean("Override TOF", false);
         boolean overrideChamber = SmartDashboard.getBoolean("Override Chamber", false);
         boolean overrideMouth = SmartDashboard.getBoolean("Override Mouth", false);
-        if (feeding) {
+        if (feeding) { 
             indexerAL.indexerBeltDirection(IndexerAL.setBelts.FORWARD);
         }
         indexerAL.override = override;
         indexerAL.mouthOverride = overrideMouth;
         indexerAL.chamberOverride = overrideChamber;
+
+
+        
+        SmartDashboard.putNumber("IndexerAL Chamber Sensor Value", indexerAL.chamberSensorValue());
+        SmartDashboard.putNumber("IndexerAL Mouth Sensor Value", indexerAL.mouthSensorValue());
     }
 
 }
