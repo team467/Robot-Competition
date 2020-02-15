@@ -242,10 +242,12 @@ public class ClimberAL extends GamePieceBase implements GamePiece {
         boolean result = false;
         if (topSensor != null && RobotMap.HAS_CLIMB_TOP_SENSOR) {
             result = !topSensor.get();
-            if (RobotMap.CLIMB_TOP_SENSOR_INVERTED) {
-                result = !result;
-            }
         }
+        
+        if (RobotMap.CLIMB_TOP_SENSOR_INVERTED) {
+            result = !result;
+        }
+        
         return result;
     }
 
@@ -253,10 +255,12 @@ public class ClimberAL extends GamePieceBase implements GamePiece {
         boolean result = false;
         if (bottomSensor != null && RobotMap.HAS_CLIMB_BOTTOM_SENSOR) {
             result = !bottomSensor.get();
-            if (RobotMap.CLIMB_BOTTOM_SENSOR_INVERTED) {
-                result = !result;
-            }
         }
+        
+        if (RobotMap.CLIMB_BOTTOM_SENSOR_INVERTED) {
+            result = !result;
+        }
+        
         return result;
     }
 
