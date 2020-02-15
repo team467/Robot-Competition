@@ -168,8 +168,8 @@ public class GamePieceController {
     if(RobotMap.HAS_INDEXER) indexerSM.step();
 
     //roller controls
-    if(RobotMap.HAS_INTAKE){
-    if(armPosition){
+    if(RobotMap.HAS_INTAKE) {
+    if(armPosition) {
       intake.setIntakeArm(IntakerArm.ARM_UP);
     } else {
       intake.setIntakeArm(IntakerArm.ARM_DOWN);

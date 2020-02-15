@@ -112,7 +112,7 @@ public class ShooterAL extends GamePieceBase implements GamePiece {
   }
 
   public void stop() {
-    LOGGER.error("Stop called");
+    //LOGGER.error("Stop called");
     flywheel.stopMotor();
   }
 
@@ -126,7 +126,6 @@ public class ShooterAL extends GamePieceBase implements GamePiece {
       double output = Math.max(-1.0, Math.min(1.0, speed));
       flywheel.set(ControlMode.Velocity, output);
       LOGGER.debug("the speed is {}", output);
-      //LOGGER.debug("Talon: {}, id: {}", flywheel.get());
     }
   }
 
@@ -227,7 +226,6 @@ public class ShooterAL extends GamePieceBase implements GamePiece {
     switch(setting) {
       case FORWARD:
         rampToSpeed(-speed);
-        LOGGER.debug("shooter speed = {}", speed);
         break;
 
       case BACKWARD:
@@ -239,7 +237,6 @@ public class ShooterAL extends GamePieceBase implements GamePiece {
         break;
       case STOP:
       stop();
-        LOGGER.debug("shooter stopping");
         break;
       
       default:
