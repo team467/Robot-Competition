@@ -129,7 +129,7 @@ public class GamePieceController {
     }
 
     updateStates();
-
+    
     // Separate reading from driver station from processing state
     // so that tests can manually feed inputs.
     processGamePieceState(driverStation.getDriveCameraFront(), driverStation.getDriveCameraBack());

@@ -53,7 +53,7 @@ public class IndexerAL extends GamePieceBase implements GamePiece {
   public static void callForward() {
     calledForward = true;
     IndexerAL.getInstance().setForward();
-  
+
   }
 
   public static void callBackwards() {
@@ -70,6 +70,7 @@ public class IndexerAL extends GamePieceBase implements GamePiece {
 
   }
 
+  // TODO determine TOF threshold
   public boolean inMouth() {
     if (override) {
       return mouthOverride;
@@ -90,20 +91,20 @@ public class IndexerAL extends GamePieceBase implements GamePiece {
 
     switch (direction) {
 
-    case FORWARD:
-      setForward();
-      break;
+      case FORWARD:
+        setForward();
+        break;
+  
+      case REVERSE:
+        setBackwards();
+        break;
 
-    case OFF:
-      setStop();
-      break;
+      case OFF:
+          setStop();
+          break;
 
-    case REVERSE:
-      setBackwards();
-      break;
-
-    default:
-      setStop();
+      default:
+        setStop();
 
     }
 
@@ -117,7 +118,7 @@ public class IndexerAL extends GamePieceBase implements GamePiece {
       instance.indexFollower = new WPI_TalonSRX(RobotMap.SECOND_MAGAZINE_FEED_MOTOR_CHANNEL);
     }
 
-   }
+  }
 
   public void periodic() {
 
@@ -129,6 +130,8 @@ public class IndexerAL extends GamePieceBase implements GamePiece {
   @Override
   public void checkSystem() {
     // TODO Auto-generated method stub
+
+    indexerBeltDirection(setBelts.FORWARD);
 
   }
 }

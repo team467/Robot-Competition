@@ -20,7 +20,7 @@ public class TOFSensor {
     private Rev2mDistanceSensor mouthSensor; 
     private TOFSensor(){
         chamberSensor = new Rev2mDistanceSensor(Port.kOnboard);
-        mouthSensor = new Rev2mDistanceSensor(Port.kOnboard);
+        mouthSensor = new Rev2mDistanceSensor(Port.kMXP);
         chamberSensor.setDistanceUnits(Unit.kMillimeters);
         mouthSensor.setDistanceUnits(Unit.kMillimeters);
     }

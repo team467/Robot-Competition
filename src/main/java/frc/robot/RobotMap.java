@@ -234,7 +234,11 @@ public class RobotMap {
       SECOND_MAGAZINE_FEED_MOTOR_CHANNEL = 1;
       SECOND_MAGAZINE_FEED_MOTOR_INVERTED = false;
       INDEX_FOLLOWER_MOTOR = false;
+  
+      INDEXER_MOVE_TIMER = 0.05;
+      TOF_THRESHOLD = 100.0;
       
+
       INDEXER_MOVE_TIMER = 0.2;
 
       break;
