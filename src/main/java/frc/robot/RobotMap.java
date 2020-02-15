@@ -197,6 +197,7 @@ public class RobotMap {
       HAS_SHOOTER = true;
       HAS_INDEXER = true;
       HAS_INTAKE = true;
+      HAS_CLIMBER = true;
 
       // Shooter
       // TODO:change the values of these later
@@ -240,6 +241,24 @@ public class RobotMap {
       
       INDEXER_MOVE_TIMER = 0.2;
 
+      //Climber
+      CLIMBER_MOTOR_INVERTED = false;
+      CLIMBER_SENSOR = false;
+      HAS_CLIMBFOLLOWER = false;
+      CLIMB_MOTER_LEADER = 0;
+      CLIMB_MOTER_FOLLOWER = 1;
+
+      CLIMBER_P = 2;
+      CLIMBER_I = 0.0;
+      CLIMBER_D = 0.0;
+      CLIMBER_F = 0.0;
+
+      VELOCITY_MULTIPLIER_CLIMBER = 8200;
+      CLIMBER_PID_SLOT = 0;
+
+      HAS_CLIMBLOCK = false;
+      CLIMB_LOCK_CHANNEL = 0;
+      CLIMB_LOCK_INVERTED = false;
       break;
 
     case KITBOT:
@@ -306,7 +325,7 @@ public class RobotMap {
       HAS_SHOOTER = true;
       HAS_INDEXER = false;
       HAS_INTAKE = false;
-
+      HAS_CLIMBER = false;
 
       // Shooter
       // TODO:change the values of these later
@@ -327,6 +346,25 @@ public class RobotMap {
       VELOCITY_MULTIPLIER_SHOOTER = 8200;
       SHOOTER_SPEED_TOLERANCE = 0.25;
       MANUAL_MODE_SHOOTER_SPEED = 1.0;
+
+      //Climber
+      CLIMBER_MOTOR_INVERTED = false;
+      CLIMBER_SENSOR = false;
+      HAS_CLIMBFOLLOWER = false;
+      CLIMB_MOTER_LEADER = 0;
+      CLIMB_MOTER_FOLLOWER = 1;
+
+      CLIMBER_P = 2;
+      CLIMBER_I = 0.0;
+      CLIMBER_D = 0.0;
+      CLIMBER_F = 0.0;
+
+      VELOCITY_MULTIPLIER_CLIMBER = 8200;
+      CLIMBER_PID_SLOT = 0;
+
+      HAS_CLIMBLOCK = false;
+      CLIMB_LOCK_CHANNEL = 0;
+      CLIMB_LOCK_INVERTED = false;
       break;
     }
 
@@ -398,7 +436,7 @@ public class RobotMap {
     }
   }
 
-  // Speed Controls
+  // Speed Controlsclimer
   public static double NORMAL_DRIVE_SPEED_MULTIPLIER;
   public static double SLOW_DRIVE_SPEED_MULTIPLIER;
   public static double NORMAL_VELOCITY_SPEED_MULTIPLIER;
@@ -424,7 +462,7 @@ public class RobotMap {
 
   // climber
   public static boolean HAS_CLIMBER = false;
-  public static boolean motorIsInverted = false;
+  public static boolean CLIMBER_MOTOR_INVERTED = false;
   public static boolean CLIMBER_SENSOR = false;
 
   //TODO: change value of motors later
@@ -432,6 +470,15 @@ public class RobotMap {
   public static int CLIMB_MOTER_FOLLOWER = 1;
 
   public static boolean HAS_CLIMBFOLLOWER = false;
+  public static boolean HAS_CLIMBLOCK = false;
+  public static int CLIMB_LOCK_CHANNEL;
+  public static boolean CLIMB_LOCK_INVERTED = false;
+  public static int CLIMBER_PID_SLOT;
+  public static double CLIMBER_P;
+  public static double CLIMBER_I;
+  public static double CLIMBER_D;
+  public static double CLIMBER_F;
+  public static double VELOCITY_MULTIPLIER_CLIMBER;
   
   // Shooter
   public static boolean HAS_SHOOTER = false;
