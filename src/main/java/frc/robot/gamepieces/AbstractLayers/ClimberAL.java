@@ -19,9 +19,10 @@ import org.apache.logging.log4j.Logger;
 import com.revrobotics.*;
 import frc.robot.gamepieces.GamePieceBase;
 import frc.robot.gamepieces.GamePiece;
-
+import edu.wpi.first.wpilibj.Relay;
 //adds solenoid class
 import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.Relay.Value;
 
 public class ClimberAL extends GamePieceBase implements GamePiece {
 
@@ -35,6 +36,7 @@ public class ClimberAL extends GamePieceBase implements GamePiece {
     private static CANSparkMax climbLeader;
     private static CANSparkMax climbFollower;
     private static SparkMaxSpeedControllerGroup climbGroup;
+    private static Relay climbLock;
 
     // states of robot
     private climberSpeed speed;
@@ -66,7 +68,7 @@ public class ClimberAL extends GamePieceBase implements GamePiece {
     public boolean isUp() {
         return false; // TODO: is climber at its highest?
     }
-           
+
     public boolean isTilted() {
         return false; // TODO: is climberArmLifted?
     }
@@ -76,7 +78,7 @@ public class ClimberAL extends GamePieceBase implements GamePiece {
     }
 
     // gets the instance
-    public static ClimberAL getInstance() {
+    public ClimberAL getInstance() {
         // creates new instance if none exists
         if (instance == null) {
             if (RobotMap.HAS_CLIMBER) {
@@ -89,47 +91,59 @@ public class ClimberAL extends GamePieceBase implements GamePiece {
                 }
                 // creates control group
                 climbGroup = new SparkMaxSpeedControllerGroup("Climber", ControlType.kVelocity, RobotMap.CLIMBER_SENSOR,
-                        RobotMap.motorIsInverted, climbLeader, climbFollower);
+                        RobotMap.CLIMBER_MOTOR_INVERTED, climbLeader, climbFollower);
 
+                setClimberPIDF(RobotMap.CLIMBER_P, RobotMap.CLIMBER_I, RobotMap.CLIMBER_D, RobotMap.CLIMBER_F,
+                        RobotMap.VELOCITY_MULTIPLIER_CLIMBER);
             } else {
                 climbGroup = new SparkMaxSpeedControllerGroup();
             }
+
+            if (RobotMap.HAS_CLIMBLOCK) {
+                climbLock = new Relay(RobotMap.CLIMB_LOCK_CHANNEL);
+            } else {
+                climbLock = null;
+            }
+
             instance = new ClimberAL(climbGroup); // invoking the constructor
 
-            instance.stop();
+            instance.stopMotors();
 
         }
         return instance;
     }
 
-    public enum climberSpeed {
-        OFF, UPSLOW, UPFAST, DOWNFAST, DOWNSLOW,;
+    public void climberOff() {
+        climbGroup.set(0.0);
+        LOGGER.debug("Climber Has Stopped");
+    }
 
-        public void actuate() {
-            if (RobotMap.HAS_CLIMBER) { // TODO: whats the correct motor speed?
-                switch (this) {
-                case OFF:
-                default:
-                    climbGroup.set(0.0);
-                    LOGGER.debug("Climber Has Stopped");
-                    break;
-                case UPFAST:
-                    climbGroup.set(1.0);
-                    LOGGER.debug("Climber Is Going Up FAST");
-                    break;
-                case UPSLOW:
-                    climbGroup.set(0.5);
-                    LOGGER.debug("CLimber Is Going Up Slowly");
-                case DOWNFAST:
-                    climbGroup.set(-1.0);
-                    LOGGER.debug("Climber Is Going Down FAST");
-                    break;
-                case DOWNSLOW:
-                    climbGroup.set(0.5);
-                    LOGGER.debug("Climber Is Going Down Slowly");
-                    break;
-                }
-            }
+    public void climberUp() {
+        climbGroup.set(0.5);
+        LOGGER.debug("CLimber Is Going Up");
+    }
+
+    public void climberDown() {
+        climbGroup.set(0.5);
+        LOGGER.debug("Climber Is Going Down");
+    }
+
+    public enum climberSpeed {
+        OFF, UP, DOWN;
+    }
+
+    public void climberDirection(climberSpeed direction) {
+        switch (direction) {
+        case OFF:
+        default:
+            climberOff();
+            break;
+        case UP:
+            climberUp();
+            break;
+        case DOWN:
+            climberDown();
+            break;
         }
     }
 
@@ -146,16 +160,42 @@ public class ClimberAL extends GamePieceBase implements GamePiece {
         }
     }
 
-    public void stop() {
+    public void stopMotors() {
         climbGroup.set(0.0);
+    }
+
+    private void climberLock() {
+        if (climbLock != null && RobotMap.HAS_CLIMBLOCK) {
+            climbLock.set(Value.kOn);
+        }
+    }
+
+    private void climberUnlock() {
+        if (climbLock != null && RobotMap.HAS_CLIMBLOCK) {
+            climbLock.set(Value.kOff);
+        }
+    }
+
+    // public or private
+    public void setClimberPIDF(double kP, double kI, double kD, double kF, double maxVelocity) {
+        if (climbGroup != null && RobotMap.HAS_CLIMBER) {
+            climbGroup.pidf(RobotMap.CLIMBER_PID_SLOT, kP, kI, kD, kF, maxVelocity);
+        }
+    }
+
+    private void setClimb(double speed) {
+        if (climbGroup != null && RobotMap.HAS_CLIMBER) {
+            speed = Math.max(-1.0, Math.min(1.0, speed));
+            climbGroup.set(ControlType.kVelocity, speed);
+        }
     }
 
     public void periodic() {
         if (RobotMap.HAS_CLIMBER) {
             if (enabled) {
-                speed.actuate();
+                // climberDirection(direction);
             } else {
-                stop();
+                // ClimberAL.set(climberSpeed.OFF);
             }
         }
     }
