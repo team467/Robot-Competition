@@ -164,13 +164,13 @@ public class ClimberAL extends GamePieceBase implements GamePiece {
         climbGroup.set(0.0);
     }
 
-    private void climberLock() {
+    public void climberLock() {
         if (climbLock != null && RobotMap.HAS_CLIMBLOCK) {
             climbLock.set(Value.kOn);
         }
     }
 
-    private void climberUnlock() {
+    public void climberUnlock() {
         if (climbLock != null && RobotMap.HAS_CLIMBLOCK) {
             climbLock.set(Value.kOff);
         }
@@ -183,11 +183,34 @@ public class ClimberAL extends GamePieceBase implements GamePiece {
         }
     }
 
-    private void setClimb(double speed) {
+    public void setClimb(double speed) {
         if (climbGroup != null && RobotMap.HAS_CLIMBER) {
             speed = Math.max(-1.0, Math.min(1.0, speed));
             climbGroup.set(ControlType.kVelocity, speed);
         }
+    }
+
+    public void setSpeed(double speed) {
+        if (climbGroup != null && RobotMap.HAS_CLIMBER) {
+            speed = Math.max(-1.0, Math.min(1.0, speed));
+            climbGroup.set(speed);
+        }
+    }
+
+    public double getVelocity() {
+        double speed = 0;
+        if (climbGroup != null && RobotMap.HAS_CLIMBER) {
+            speed = climbGroup.velocity();
+        }
+        return speed;
+    }
+
+    public double getPosition() {
+        double position = 0;
+        if (climbGroup != null && RobotMap.HAS_CLIMBER) {
+            position = climbGroup.position();
+        }
+        return position;
     }
 
     public void periodic() {
