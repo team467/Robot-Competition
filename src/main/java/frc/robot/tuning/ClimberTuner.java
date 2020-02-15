@@ -17,6 +17,7 @@ public class ClimberTuner implements Tuner {
     private static final Logger LOGGER = RobotLogManager.getMainLogger(TuneController.class.getName());
 
     ClimberAL climber;
+    boolean useVelocity = false;
 
     ClimberTuner() {
         climber = climber.getInstance();
@@ -24,6 +25,7 @@ public class ClimberTuner implements Tuner {
     }
 
     public void init() {
+        SmartDashboard.putNumber("Speed", 0);
         SmartDashboard.putNumber("Climber Speed", 0);
         SmartDashboard.putNumber("Climber Position", 0);
         SmartDashboard.putBoolean("Lock Solenoid", false);
@@ -33,11 +35,14 @@ public class ClimberTuner implements Tuner {
         double kD = SmartDashboard.getNumber("Climber D", 0);
         double kF = SmartDashboard.getNumber("Climber F", 0);
         double maxVelocity = SmartDashboard.getNumber("Climber Max Velocity", 0);
+        useVelocity = SmartDashboard.getBoolean("Use Velocity", false);
 
         SmartDashboard.putNumber("Climber P", kP);
         SmartDashboard.putNumber("Climber I", kI);
         SmartDashboard.putNumber("Climber D", kD);
         SmartDashboard.putNumber("Climber F", kF);
+        SmartDashboard.putNumber("Climber Max Velocity", maxVelocity);
+        SmartDashboard.putBoolean("Use Velocity", useVelocity);
 
         climber.setClimberPIDF(kP, kI, kD, kF, maxVelocity);
 
@@ -45,15 +50,22 @@ public class ClimberTuner implements Tuner {
     }
 
     public void periodic() {
-        double climberSpeed = SmartDashboard.getNumber("Speed", 0);
-        double climberPosition = SmartDashboard.getNumber("Position", 0);
-        double solenoidLock = SmartDashboard.getNumber("Solenoid Lock", 0);
-        boolean climb = SmartDashboard.getBoolean("Climb", false);
-        if(climb){
-            climber.set(climberSpeed.UP);
-        }else{
-            climber.set(climberSpeed.OFF);
+        double speed = SmartDashboard.getNumber("Speed", 0);
+        boolean lockSolenoid = SmartDashboard.putBoolean("Lock Solenoid", false);
+
+        if (useVelocity) {
+            climber.setClimb(speed);
+        } else {
+            climber.setSpeed(speed);
         }
-        climber.
+
+        if (lockSolenoid) {
+            climber.climberLock();
+        } else {
+            climber.climberUnlock();
+        }
+
+        SmartDashboard.putNumber("Climber Speed", climber.getVelocity());
+        SmartDashboard.putNumber("Climber Position", climber.getPosition());
     }
 }
