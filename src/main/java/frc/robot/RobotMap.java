@@ -475,6 +475,7 @@ public class RobotMap {
 
   //INDEXER 
   public static boolean HAS_INDEXER = false;
+  public static boolean INDEXER_FOLLOWER = false;
   public static int FIRST_MAGAZINE_FEED_MOTOR_CHANNEL;
   public static boolean FIRST_MAGAZINE_FEED_MOTOR_INVERTED = false;
   public static int SECOND_MAGAZINE_FEED_MOTOR_CHANNEL;

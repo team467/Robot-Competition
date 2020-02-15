@@ -9,6 +9,7 @@ import org.apache.logging.log4j.Logger;
 import frc.robot.gamepieces.GamePieceBase;
 import frc.robot.gamepieces.GamePiece;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 public class IndexerAL extends GamePieceBase implements GamePiece {
@@ -17,8 +18,8 @@ public class IndexerAL extends GamePieceBase implements GamePiece {
 
   private static final Logger LOGGER = RobotLogManager.getMainLogger(IndexerAL.class.getName());
 
-  private WPI_TalonSRX indexLeader;
-  private WPI_TalonSRX indexFollower;
+  private static WPI_TalonSRX indexLeader;
+  private static WPI_TalonSRX indexFollower;
 
   public static TalonSpeedControllerGroup indexer;
   public boolean override;
@@ -37,7 +38,7 @@ public class IndexerAL extends GamePieceBase implements GamePiece {
           indexFollower = new WPI_TalonSRX(RobotMap.SECOND_MAGAZINE_FEED_MOTOR_CHANNEL);
         }
 
-        indexer = new  new TalonSpeedControllerGroup("Shooter", ControlMode.Velocity, RobotMap.INDEXER_SENSOR_INVERTED,
+        indexer = new TalonSpeedControllerGroup("Indexer", ControlMode.Velocity, RobotMap.INDEXER_SENSOR_INVERTED,
         RobotMap.INDEXER_MOTOR_INVERTED, indexLeader, indexFollower);
 
       } else {

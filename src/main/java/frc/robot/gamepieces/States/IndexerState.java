@@ -17,12 +17,16 @@ public enum IndexerState implements State {
 
     Idle {
 
+        public boolean autoMode;
+
         public void enter() {
             // Noop
         }
 
         public State action() {
-            if (AutoMode) {
+            // autoMode = GamePieceController.getInstance().IndexAuto;
+
+            if (autoMode) {
                 if (indexerBallsForward && isInMouth && isInChamber) {
                     return Feed1;
                 }
