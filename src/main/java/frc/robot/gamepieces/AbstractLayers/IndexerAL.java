@@ -1,6 +1,7 @@
 package frc.robot.gamepieces.AbstractLayers;
 
 import frc.robot.RobotMap;
+import frc.robot.drive.TalonSpeedControllerGroup;
 import frc.robot.logging.RobotLogManager;
 import frc.robot.sensors.TOFSensor;
 
@@ -19,6 +20,7 @@ public class IndexerAL extends GamePieceBase implements GamePiece {
   private WPI_TalonSRX indexLeader;
   private WPI_TalonSRX indexFollower;
 
+  public static TalonSpeedControllerGroup indexer;
   public boolean override;
   public boolean mouthOverride;
   public boolean chamberOverride;
@@ -28,30 +30,38 @@ public class IndexerAL extends GamePieceBase implements GamePiece {
   public static IndexerAL getInstance() {
     if (instance == null) {
       if (RobotMap.HAS_INDEXER) {
-        instance.indexLeader = new WPI_TalonSRX(RobotMap.FIRST_MAGAZINE_FEED_MOTOR_CHANNEL);
-        instance.indexFollower = new WPI_TalonSRX(RobotMap.SECOND_MAGAZINE_FEED_MOTOR_CHANNEL);
+        indexLeader = new WPI_TalonSRX(RobotMap.FIRST_MAGAZINE_FEED_MOTOR_CHANNEL);
+        indexFollower = null;
+       
+        if (RobotMap.INDEXER_FOLLOWER) {
+          indexFollower = new WPI_TalonSRX(RobotMap.SECOND_MAGAZINE_FEED_MOTOR_CHANNEL);
+        }
+
+        indexer = new  new TalonSpeedControllerGroup("Shooter", ControlMode.Velocity, RobotMap.INDEXER_SENSOR_INVERTED,
+        RobotMap.INDEXER_MOTOR_INVERTED, indexLeader, indexFollower);
+
+      } else {
+        indexer = new TalonSpeedControllerGroup();
       }
-      instance = new IndexerAL();
+
+      instance = new IndexerAL(indexer);
     }
     return instance;
   }
 
   private void setForward() {
     LOGGER.debug("Indexer going forward");
-    indexLeader.set(1.0);
-    indexFollower.set(1.0);
+    indexer.set(1.0);
   }
 
   private void setBackwards() {
     LOGGER.debug("Indexer going backwards");
-    indexLeader.set(-1.0);
-    indexFollower.set(-1.0);
+    indexer.set(-1.0);
   }
 
   private void setStop() {
     LOGGER.debug("Indexer stopped");
-    indexLeader.set(0.0);
-    indexFollower.set(0.0);
+    indexer.set(0.0);
   }
 
   public static void callForward() {
@@ -93,11 +103,11 @@ public class IndexerAL extends GamePieceBase implements GamePiece {
 
   // TODO determine TOF threshold
   public double mouthSensorValue() {
-      return TOFSensor.getInstance().getMouthDistance();
+    return TOFSensor.getInstance().getMouthDistance();
   }
 
   public double chamberSensorValue() {
-      return TOFSensor.getInstance().getChamberDistance();
+    return TOFSensor.getInstance().getChamberDistance();
   }
 
   public void indexerBeltDirection(setBelts direction) {
@@ -123,9 +133,8 @@ public class IndexerAL extends GamePieceBase implements GamePiece {
 
   }
 
-  private IndexerAL() {
+  private IndexerAL(TalonSpeedControllerGroup indexer) {
     super("Telemetry", "Indexer");
-
   }
 
   public void periodic() {
@@ -138,8 +147,6 @@ public class IndexerAL extends GamePieceBase implements GamePiece {
   @Override
   public void checkSystem() {
     // TODO Auto-generated method stub
-
-    indexerBeltDirection(setBelts.FORWARD);
 
   }
 }

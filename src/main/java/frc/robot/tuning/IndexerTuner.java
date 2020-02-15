@@ -49,8 +49,6 @@ public class IndexerTuner implements Tuner {
         indexerAL.mouthOverride = overrideMouth;
         indexerAL.chamberOverride = overrideChamber;
 
-
-        
         SmartDashboard.putNumber("IndexerAL Chamber Sensor Value", indexerAL.chamberSensorValue());
         SmartDashboard.putNumber("IndexerAL Mouth Sensor Value", indexerAL.mouthSensorValue());
     }

@@ -11,6 +11,9 @@ import com.revrobotics.Rev2mDistanceSensor;
 import com.revrobotics.Rev2mDistanceSensor.Port;
 import com.revrobotics.Rev2mDistanceSensor.Unit;
 
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
+
 /**
  * Add your docs here.
  */
@@ -40,7 +43,9 @@ public class TOFSensor {
     }
 
     public double getMouthDistance(){
-        return mouthSensor.getRange();
+        //TODO put NT values
+        NetworkTable table = NetworkTableInstance.getDefault().getTable("PUT VALUE HERE");
+        return table.getEntry("PUT VALUE HERE").getDouble(0);
     }
     public double getChamberDistance(){
         return chamberSensor.getRange();

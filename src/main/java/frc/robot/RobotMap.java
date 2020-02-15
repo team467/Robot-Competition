@@ -466,6 +466,8 @@ public class RobotMap {
   public static int SECOND_MAGAZINE_FEED_MOTOR_CHANNEL;
   public static boolean SECOND_MAGAZINE_FEED_MOTOR_INVERTED = false;
   public static boolean INDEX_FOLLOWER_MOTOR = false;
+  public static boolean INDEXER_SENSOR_INVERTED = false;
+  public static boolean INDEXER_MOTOR_INVERTED = false;
 
   public static double INDEXER_MOVE_TIMER;
   //distance threshold in mm for detecting a ball
