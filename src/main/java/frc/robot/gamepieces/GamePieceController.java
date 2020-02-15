@@ -51,18 +51,22 @@ public class GamePieceController {
   private DriverStation467 driverStation;
   private VisionController visionController;
   private LedI2C led;
-  public boolean RobotAligned = false;// TODO determine where this is set
+  public boolean RobotAligned = true;// TODO determine where this is set
 
   // DS controls
-  private boolean IndexAuto = false;
-  private boolean ShooterAuto = false;
+  private boolean IndexAuto = true;
+  public boolean ShooterAuto = true;
   private boolean armPosition = false; // TODO get inputs from DS class
   private boolean rollerStateIN = false;
   private boolean rollerStateOUT = false;
   public boolean fireWhenReady = false;
+  public boolean triggerManual = false;
+  public boolean flywheelManual = false;
+  public double shooterSpeed = 0.1;
+  public static double shooterPreviousSpeed;
 
   public IndexerMode indexMode;
-  public ShooterMode shooterMode;
+  public ShooterMode shootMode;
 
   private State currentState;
 
@@ -123,13 +127,13 @@ public class GamePieceController {
     }
 
     if (ShooterAuto) {
-      shooterMode = ShooterMode.AUTO;
+      shootMode = ShooterMode.AUTO;
     } else {
-      shooterMode = ShooterMode.MANUAL;
+      shootMode = ShooterMode.MANUAL;
     }
 
     updateStates();
-    
+
     // Separate reading from driver station from processing state
     // so that tests can manually feed inputs.
     processGamePieceState(driverStation.getDriveCameraFront(), driverStation.getDriveCameraBack());
@@ -159,6 +163,7 @@ public class GamePieceController {
     // Update all systems
     if (RobotMap.HAS_SHOOTER)
       shooterSM.step();
+
     if (RobotMap.HAS_INDEXER)
       indexerSM.step();
 
@@ -170,18 +175,9 @@ public class GamePieceController {
         intake.setIntakeArm(IntakerArm.ARM_DOWN);
       }
 
-      if (rollerStateIN) {
-        intake.setIntakeRoller(IntakerRollers.ROLLERS_IN);
-      } else if (rollerStateOUT) {
-        intake.setIntakeRoller(IntakerRollers.ROLLERS_OUT);
-      } else {
-        intake.setIntakeRoller(IntakerRollers.ROLLERS_OFF);
-      }
     }
-
   }
 
-  // TODO: put in logic
   public boolean indexerBallsForward() {
     if (IndexerAL.calledForward) {
       IndexerAL.calledForward = false;
@@ -190,7 +186,6 @@ public class GamePieceController {
     return false;
   }
 
-  // TODO: put in logic
   public boolean indexerBallsReverse() {
     if (IndexerAL.calledReverse) {
       IndexerAL.calledReverse = false;
@@ -198,6 +193,29 @@ public class GamePieceController {
     }
     return false;
   }
+
+  public boolean indexerAutoMode() {
+    driverStation.getIndexerAutoMode();
+    return true;
+  }
+
+  public void determineShooterSpeed() {
+    // math
+    if (visionController.hasDistance()) {
+      shooterSpeed = (0.16120202 * visionController.dist() + 65.5092) / 100;
+      shooterPreviousSpeed = shooterSpeed;
+    } else {
+      shooterSpeed = shooterPreviousSpeed;
+    }
+
+    // TODO figure out what speeds it will set
+  }
+  // public boolean shooterLoadingBall() {
+  // if (shooterSM.) {
+
+  // }
+  // return true;
+  // }
 
   private void registerMetrics() {
     Telemetry telemetry = Telemetry.getInstance();
@@ -210,6 +228,11 @@ public class GamePieceController {
   public void setAutomousFireWhenReady(boolean fire) {
     fireWhenReady = fire;
   }
+
+  public boolean getFireWhenReady() {
+    return fireWhenReady;
+  }
+
   public State getShooterState(){
     return shooterState;
   }

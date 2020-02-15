@@ -22,7 +22,6 @@ public enum IndexerState implements State {
         }
 
         public State action() {
-            
             if (AutoMode) {
                 if (indexerBallsForward && isInMouth && isInChamber) {
                     return Feed1;
@@ -32,7 +31,7 @@ public enum IndexerState implements State {
                 return Manual;
             }
 
-            if (GamePieceController.getInstance().getShooterState()==ShooterState.LoadingBall) {
+            if (GamePieceController.getInstance().getShooterState() == ShooterState.LoadingBall) {
                 return Feed1;
             }
 
@@ -159,7 +158,7 @@ public enum IndexerState implements State {
     private static boolean indexerBallsReverse = gamePieceController.indexerBallsReverse();
     private static boolean indexerBallsForward = gamePieceController.indexerBallsForward();
     private static boolean isInMouth = indexerAL.inMouth();
-    private static boolean AutoMode = (gamePieceController.indexMode == IndexerMode.AUTO) ? true : false;
+    private static boolean AutoMode = (gamePieceController.indexerAutoMode()) ? true : false;
     private static boolean isInChamber = indexerAL.inChamber();
 
     IndexerState() {

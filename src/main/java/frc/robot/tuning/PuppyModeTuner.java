@@ -2,8 +2,10 @@ package frc.robot.tuning;
 
 import frc.robot.RobotMap;
 import frc.robot.drive.Drive;
+import frc.robot.gamepieces.GamePieceController;
 import frc.robot.logging.RobotLogManager;
 import frc.robot.sensors.Gyrometer;
+import frc.robot.vision.VisionController;
 
 import org.apache.logging.log4j.Logger;
 
@@ -21,6 +23,8 @@ public class PuppyModeTuner implements Tuner {
   Drive drive;
   Gyrometer gyro;
   Timer timer;
+  GamePieceController gamePieceController;
+  VisionController visionController;
   NetworkTableInstance inst = NetworkTableInstance.getDefault();
   NetworkTable table = inst.getTable("vision");
   NetworkTableEntry netAngle = table.getEntry("TurningAngle");
@@ -37,6 +41,7 @@ public class PuppyModeTuner implements Tuner {
 
   PuppyModeTuner() {
     drive = Drive.getInstance();
+    visionController = visionController.getInstance();
 
     gyro = Gyrometer.getInstance();
     timer = new Timer();
@@ -51,7 +56,8 @@ public class PuppyModeTuner implements Tuner {
       SmartDashboard.putNumber("Turn Degrees", 0);
       SmartDashboard.putNumber("Turn multiplier", 0);
       SmartDashboard.putNumber("Distance to travel", 0);
-      SmartDashboard.putBoolean("Turn", false);
+      SmartDashboard.putBoolean("Try Shot", false);
+      gamePieceController = GamePieceController.getInstance();
     }
 
     public void periodic() {
@@ -63,46 +69,32 @@ public class PuppyModeTuner implements Tuner {
       boolean isTurnDone = false;//SmartDashboard.getBoolean("Turn", false);
       boolean isDriveDone = false;
       double robotTurner;
+      boolean tryShot = SmartDashboard.getBoolean("Try Shot", false);
 
 
 
-      if(haveAngle){
-        if(Math.abs(angle + gyro.getPitchDegrees()) < 2) {
-          robotTurner = 0.0;
-        } else if(-gyro.getPitchDegrees() < angle) {
-            robotTurner = 0.2;
-         } else if(-gyro.getPitchDegrees() > angle) {
-           robotTurner = -0.2;
-         } else {
-           robotTurner = 0.0;
-         }       
+      gamePieceController.periodic();
 
-      } else {
-          robotTurner = 0.0;
-          
-      }
+      if(tryShot){
+      gamePieceController.determineShooterSpeed();
+      drive.arcadeDrive(0, visionController.setTurn());
+
+      if(visionController.atAngle()){ 
+        gamePieceController.setAutomousFireWhenReady(true);
       
-
-      if(isTurnDone) {
-        //isdone
-          //gyro.zero();
-          //isTurnDone = false;
-          SmartDashboard.putBoolean("Turn", false);
-      }
-
-      if(dist > 40 && haveDistance) {
-        speed = -0.2;
       } else {
-        speed = 0;
+        gamePieceController.setAutomousFireWhenReady(false);
       }
-
-
-      drive.arcadeDrive(0, robotTurner);
+    } else {
+      gamePieceController.setAutomousFireWhenReady(false);
+      LOGGER.debug("Speed Shooter = {}", gamePieceController.getFireWhenReady());
+      
+    }
     
 
-      LOGGER.info("angle= {}, dist= {}, have angle = {}", angle, dist, haveAngle);
+      
 
-      LOGGER.info("Yaw: {}, Pitch: {}, Roll: {}", gyro.getYawDegrees(), gyro.getPitchDegrees(), gyro.getRollDegrees());
+      LOGGER.debug("Yaw: {}, Pitch: {}, Roll: {}", gyro.getYawDegrees(), gyro.getPitchDegrees(), gyro.getRollDegrees());
 
     }
 }
