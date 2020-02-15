@@ -151,13 +151,13 @@ public class ShooterAL extends GamePieceBase implements GamePiece {
 
   public void stopShooting() {
     if (trigger != null && RobotMap.HAS_TRIGGER) {
-      trigger.set(1.0);
+      trigger.set(0.0);
     }
   }
 
   public void reverseShooter() {
     if (trigger != null && RobotMap.HAS_TRIGGER) {
-      trigger.set(1.0);
+      trigger.set(-1.0);
     }
   }
 

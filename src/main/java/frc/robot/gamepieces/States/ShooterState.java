@@ -37,6 +37,7 @@ public enum ShooterState implements State {
             if(autoMode) {
 
                 if(fireWhenReady) {
+
                     return LoadingBall;
                 }
 
@@ -49,7 +50,7 @@ public enum ShooterState implements State {
         }
 
         public void exit() {
-            // Noop
+           LOGGER.debug("Requested to load ball");
         }
     },
 
@@ -58,6 +59,7 @@ public enum ShooterState implements State {
         public void enter() {
             // float distance = Sensor.getDistance();
             // int desiredRPM = (int)(distance * 1 * 1);
+            LOGGER.debug("entering Loading ball");
         }
 
         public State action() {
@@ -79,6 +81,7 @@ public enum ShooterState implements State {
 
         public void exit() {
             // Noop
+            LOGGER.debug("Requested to adjust speed");
         }
     },
 
@@ -100,7 +103,7 @@ public enum ShooterState implements State {
                 }
                 
             } else {
-                return Idle;
+                return Manual;
             }
 
             return this;
@@ -123,18 +126,22 @@ public enum ShooterState implements State {
             autoMode = GamePieceController.getInstance().ShooterAuto;
             fireWhenReady = GamePieceController.getInstance().getFireWhenReady();
             LOGGER.error(fireWhenReady);
-            shooterAL.setTrigger(TriggerSettings.SHOOTING);
             shooterAL.setFlywheel(FlywheelSettings.FORWARD);
             if(autoMode){
-                if(!fireWhenReady) {
-                    return Idle;
-                }
-
-                if(!shooterAL.atSpeed() || !indexerAL.inChamber() || robotAligned){
-                    return LoadingBall;
+                if(fireWhenReady){
+                    shooterAL.setTrigger(TriggerSettings.SHOOTING);
+                    
+                    if(!shooterAL.atSpeed() || !indexerAL.inChamber() || robotAligned){
+                        LOGGER.debug("Shooter is not at speed or nothing in the chamber or robot is not aligned changing to moving ball");
+                        return LoadingBall;
+                    } 
+                    if(!fireWhenReady || !robotAligned){
+                        LOGGER.debug("no longer shooting");
+                        return Idle;
+                    }
                 }
             } else {
-                return Idle;
+                return Manual;
             }
             
             return this;
