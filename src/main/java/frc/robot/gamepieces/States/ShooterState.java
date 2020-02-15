@@ -14,13 +14,20 @@ public enum ShooterState implements State {
 
     Idle {
 
+        public  boolean autoMode;
+        public boolean fireWhenReady;
+
         public void enter() {
             // Noop
         }
 
         public State action() {
+            autoMode = GamePieceController.getInstance().ShooterAuto;
+            fireWhenReady = GamePieceController.getInstance().fireWhenReady;
             shooterAL.setTrigger(TriggerSettings.STOP);
             shooterAL.setFlywheel(FlywheelSettings.STOP);
+
+
 
             if(autoMode) {
 
@@ -32,6 +39,7 @@ public enum ShooterState implements State {
 
             } else {
                 return Manual;
+
             }
         }
 
@@ -41,12 +49,14 @@ public enum ShooterState implements State {
     },
 
     LoadingBall {
+        public boolean autoMode;
         public void enter() {
             // float distance = Sensor.getDistance();
             // int desiredRPM = (int)(distance * 1 * 1);
         }
 
         public State action() {
+            autoMode = GamePieceController.getInstance().ShooterAuto;
             shooterAL.setTrigger(TriggerSettings.STOP);
             shooterAL.setFlywheel(FlywheelSettings.FORWARD);
         
@@ -68,16 +78,20 @@ public enum ShooterState implements State {
     },
 
     AdjustingSpeed {
+        public boolean autoMode;
+        //Auto align robot and check if shooter is at the speed
         public void enter() {
 
         }
 
         public State action() {
+            autoMode = GamePieceController.getInstance().ShooterAuto;
             shooterAL.setTrigger(TriggerSettings.STOP);
             shooterAL.setFlywheel(FlywheelSettings.FORWARD);
             if(autoMode){
                 if (shooterAL.atSpeed() && robotAligned){
-                    return ShootingDelayed;
+                    System.out.println("shooting");
+                    return ShootingNoDelay;
                 }
                 
             } else {
@@ -93,12 +107,16 @@ public enum ShooterState implements State {
     },
 
     ShootingNoDelay {
-         
+        public boolean autoMode;
+        public boolean fireWhenReady;
+
         public void enter() {
             // Noop
         }
 
         public State action() {
+            autoMode = GamePieceController.getInstance().ShooterAuto;
+            fireWhenReady = GamePieceController.getInstance().fireWhenReady;
             shooterAL.setTrigger(TriggerSettings.SHOOTING);
             shooterAL.setFlywheel(FlywheelSettings.FORWARD);
             if(autoMode){
@@ -123,11 +141,16 @@ public enum ShooterState implements State {
 
     ShootingDelayed {
          
+        //shooterdelays
+        public boolean autoMode;
+        public boolean fireWhenReady;
         public void enter() {
             timer.start();
         }
 
         public State action() {
+            autoMode = GamePieceController.getInstance().ShooterAuto;
+            fireWhenReady = GamePieceController.getInstance().fireWhenReady;
             shooterAL.setTrigger(TriggerSettings.SHOOTING);
             shooterAL.setFlywheel(FlywheelSettings.FORWARD);
             if(autoMode){
@@ -158,9 +181,9 @@ public enum ShooterState implements State {
         }
 
         public State action() {
-            //Manual mode does not care about speeds, just shoots and constantly feeds
-            shooterAL.setFlywheel(FlywheelSettings.MANUAL_FORWARD);
-            shooterAL.setTrigger(TriggerSettings.SHOOTING);
+            //Manual mode based on controls
+            if(flyWheelMan)shooterAL.setFlywheel(FlywheelSettings.MANUAL_FORWARD);
+            if(triggerMan)shooterAL.setTrigger(TriggerSettings.SHOOTING);
             return this;
         }
 
@@ -169,12 +192,19 @@ public enum ShooterState implements State {
         }
     };
 
+    //controllers
     private static GamePieceController gamePieceController = GamePieceController.getInstance();
     private static ShooterAL shooterAL = ShooterAL.getInstance();
     private static IndexerAL indexerAL = IndexerAL.getInstance();
     private static boolean robotAligned = gamePieceController.RobotAligned; //TODO gpc will tell if robot is aligned
-    private static boolean fireWhenReady = gamePieceController.fireWhenReady;
-    public static boolean autoMode = (gamePieceController.shooterMode == ShooterMode.AUTO) ? true:false;
+
+
+
+    //Manual settings
+    public static boolean triggerMan = gamePieceController.triggerManual;
+    public static boolean flyWheelMan = gamePieceController.flywheelManual;
+
+    //delay
     public static Timer timer = new Timer();
 
     ShooterState() {

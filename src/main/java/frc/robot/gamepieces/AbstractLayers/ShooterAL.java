@@ -116,6 +116,7 @@ public class ShooterAL extends GamePieceBase implements GamePiece {
 
   public void setSpeed(double speed) {
     this.speed = speed;
+    
   }
 
   public void rampToSpeed(double speed) {
@@ -220,6 +221,7 @@ public class ShooterAL extends GamePieceBase implements GamePiece {
     switch(setting) {
       case FORWARD:
         rampToSpeed(Math.abs(speed));
+        LOGGER.error("shooter forward");
         break;
 
       case BACKWARD:
@@ -231,6 +233,8 @@ public class ShooterAL extends GamePieceBase implements GamePiece {
         break;
       case STOP:
         stop();
+        LOGGER.debug("shooter stopping");
+        break;
       
       default:
         stop();

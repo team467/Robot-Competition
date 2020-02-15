@@ -47,16 +47,17 @@ public class GamePieceController {
   private StateMachine indexerSM;
   private StateMachine climberSM;
   private IntakeState intake;
+  private ShooterState shooterState;
 
   private DriverStation467 driverStation;
   private VisionController visionController;
   private LedI2C led;
-  public boolean RobotAligned = false;//TODO determine where this is set
+  public boolean RobotAligned = true;//TODO determine where this is set
 
 
   //DS controls 
-  private boolean IndexAuto = false;
-  private boolean ShooterAuto = false;
+  private boolean IndexAuto = true;
+  public boolean ShooterAuto = true;
   private boolean armPosition = false; //TODO get inputs from DS class
   private boolean rollerStateIN = false;
   private boolean rollerStateOUT = false;
@@ -67,7 +68,7 @@ public class GamePieceController {
   public boolean downButtonPressed = false;
 
   public IndexerMode indexMode;
-  public ShooterMode shooterMode;
+  public ShooterMode shootMode;
 
 
   /**
@@ -126,9 +127,9 @@ public class GamePieceController {
     }
 
     if(ShooterAuto){
-      shooterMode = shooterMode.AUTO;
+      shootMode = ShooterMode.AUTO;
     } else {
-      shooterMode = shooterMode.MANUAL;
+      shootMode = ShooterMode.MANUAL;
     }
 
     // Separate reading from driver station from processing state 
@@ -163,6 +164,7 @@ public class GamePieceController {
   public void updateGamePieces() {
     // Update all systems
     if(RobotMap.HAS_SHOOTER) shooterSM.step();
+
     if(RobotMap.HAS_INDEXER) indexerSM.step();
 
     //roller controls

@@ -21,24 +21,23 @@ public class stateMachineTuner implements Tuner {
   GamePieceController gamePieceController;
 
   stateMachineTuner() {
-    drive = Drive.getInstance();
     gamePieceController = GamePieceController.getInstance();
-    gyro = Gyrometer.getInstance();
     LOGGER.info("Gyro created: " + gyro);
   }
 
     public void init() {
       SmartDashboard.putBoolean("fire", false);
-      SmartDashboard.putNumber("Turn multiplier", 0);
+      SmartDashboard.putBoolean("Auto", false);
     }
 
     public void periodic() {
  
+        
         boolean fire = SmartDashboard.getBoolean("fire", false);
-        gamePieceController.setAutomousFireWhenReady(fire);
+        boolean auto = SmartDashboard.getBoolean("Auto", false);
+        gamePieceController.fireWhenReady = fire;
         gamePieceController.periodic();
 
-       LOGGER.info("Yaw: {}, Pitch: {}, Roll: {}", gyro.getYawDegrees(), gyro.getPitchDegrees(), gyro.getRollDegrees());
 
     }
 }
