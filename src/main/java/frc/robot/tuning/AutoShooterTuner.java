@@ -57,7 +57,7 @@ public class AutoShooterTuner implements Tuner {
             if (hasDistance) {
                 shooter.rampToSpeed(speed);
 
-                if (RobotMap.HAS_SHOOTERLEDS) {
+                if (RobotMap.HAS_SHOOTER_LEDS) {
                     double currentVel = shooter.getMotor().velocity();
                     double setVel = shooter.getMotor().closedLoopTarget();
 

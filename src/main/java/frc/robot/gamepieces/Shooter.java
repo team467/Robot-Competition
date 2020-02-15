@@ -74,18 +74,20 @@ public class Shooter extends GamePieceBase implements GamePiece {
         flywheel = new TalonSpeedControllerGroup();
       }
 
-      if (RobotMap.HAS_TRIGGER) {
+      if (RobotMap.HAS_SHOOTER_TRIGGER) {
         triggerMotor = new WPI_TalonSRX(RobotMap.TRIGGER_MOTOR_CHANNEL);
         trigger = new TalonSpeedControllerGroup("Trigger", ControlMode.PercentOutput, false, RobotMap.TRIGGER_MOTOR_INVERTED, triggerMotor);
       } else {
         trigger = new TalonSpeedControllerGroup();
       }
 
-      if (RobotMap.HAS_HOOD) {
+      if (RobotMap.HAS_SHOOTER_HOOD) {
         hood = new Servo(RobotMap.HOOD_PWM_PORT);
+      } else {
+        hood = null;
       }
 
-      if (RobotMap.HAS_SHOOTERLEDS) {
+      if (RobotMap.HAS_SHOOTER_LEDS) {
         leds = new AddressableLED(RobotMap.SHOOTER_LED_CHANNEL);
         ledBuffer = new AddressableLEDBuffer(RobotMap.SHOOTER_LED_AMOUNT * (RobotMap.SHOOTER_DOUBLESIDE_LED? 2: 1));
         leds.setLength(ledBuffer.getLength());
@@ -143,31 +145,31 @@ public class Shooter extends GamePieceBase implements GamePiece {
   }
 
   public void startShooting() {
-    if (trigger != null && RobotMap.HAS_TRIGGER) {
+    if (trigger != null && RobotMap.HAS_SHOOTER_TRIGGER) {
       trigger.set(1.0);
     }
   }
 
   public void stopShooting() {
-    if (trigger != null && RobotMap.HAS_TRIGGER) {
+    if (trigger != null && RobotMap.HAS_SHOOTER_TRIGGER) {
       trigger.set(0.0);
     }
   }
 
   public void reverseShooter() {
-    if (trigger != null && RobotMap.HAS_TRIGGER) {
+    if (trigger != null && RobotMap.HAS_SHOOTER_TRIGGER) {
       trigger.set(0.0);
     }
   }
 
   public void setTriggerState(boolean state) {
-    if (trigger != null && RobotMap.HAS_TRIGGER) {
+    if (trigger != null && RobotMap.HAS_SHOOTER_TRIGGER) {
       this.triggerState = state;
     }
   }
 
   public void setHoodAngle(double angle) {
-    if (hood != null && RobotMap.HAS_HOOD) {
+    if (hood != null && RobotMap.HAS_SHOOTER_HOOD) {
       double setAngle = Math.max(0.0, Math.min(1.0, speed));
       hood.set(setAngle);
     }
@@ -175,7 +177,7 @@ public class Shooter extends GamePieceBase implements GamePiece {
 
   public double getHoodAngle() {
     double angle = 0;
-    if (hood != null && RobotMap.HAS_HOOD) {
+    if (hood != null && RobotMap.HAS_SHOOTER_HOOD) {
       angle = hood.getAngle();
     }
     return angle;
@@ -194,7 +196,7 @@ public class Shooter extends GamePieceBase implements GamePiece {
   }
 
   public void setLedSrip(int r, int g, int b, int startingLed, int endingLed) {
-    if (ledBuffer != null && leds != null && RobotMap.HAS_SHOOTERLEDS) {
+    if (ledBuffer != null && leds != null && RobotMap.HAS_SHOOTER_LEDS) {
       for (var i = Math.max(0, startingLed); i <= Math.min(ledBuffer.getLength()-1, endingLed); i++) {
         ledBuffer.setRGB(i, r, g, b);
      }
@@ -203,7 +205,7 @@ public class Shooter extends GamePieceBase implements GamePiece {
   }
 
   public void fillStrip(int r, int g, int b, int led) {
-    if (ledBuffer != null && leds != null && RobotMap.HAS_SHOOTERLEDS) {
+    if (ledBuffer != null && leds != null && RobotMap.HAS_SHOOTER_LEDS) {
       int setLed = Math.min(RobotMap.SHOOTER_LED_AMOUNT-1, led);
       setLedSrip(r, g, b, 0, setLed);
       if (RobotMap.SHOOTER_DOUBLESIDE_LED) {

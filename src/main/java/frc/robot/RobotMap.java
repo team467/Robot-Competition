@@ -195,9 +195,6 @@ public class RobotMap {
 
       // Game Pieces
       HAS_SHOOTER = true;
-      HAS_TRIGGER = false;
-      HAS_SHOOTERLEDS = false;
-      HAS_HOOD = false;
 
       // Shooter
       // TODO:change the values of these later
@@ -209,11 +206,18 @@ public class RobotMap {
       SHOOTER_SMART_SHOT = true;
       SHOOTER_SENSOR_INVERTED = true;
 
+      HAS_SHOOTER_TRIGGER = false;
       TRIGGER_MOTOR_CHANNEL = 6;
       TRIGGER_MOTOR_INVERTED = false;
 
+      HAS_SHOOTER_HOOD = false;
       HOOD_PWM_PORT = 1;
       HOOD_MAX_ANGLE = 165;
+
+      HAS_SHOOTER_LEDS = false;
+      SHOOTER_LED_AMOUNT = 12;
+      SHOOTER_LED_CHANNEL = 9;
+      SHOOTER_DOUBLESIDE_LED = true;
 
       SHOOTER_P = 2;
       SHOOTER_I = 0.0;
@@ -222,10 +226,6 @@ public class RobotMap {
 
       VELOCITY_MULTIPLIER_SHOOTER = 8200;
       SHOOTER_SPEED_TOLERANCE = 0.25;
-
-      SHOOTER_LED_AMOUNT = 12;
-      SHOOTER_LED_CHANNEL = 9;
-      SHOOTER_DOUBLESIDE_LED = true;
       break;
 
     case KITBOT:
@@ -290,9 +290,6 @@ public class RobotMap {
 
       // Game Pieces
       HAS_SHOOTER = true;
-      HAS_TRIGGER = true;
-      HAS_SHOOTERLEDS = false;
-      HAS_HOOD = true;
 
       // Shooter
       // TODO:change the values of these later
@@ -304,11 +301,18 @@ public class RobotMap {
       SHOOTER_SMART_SHOT = true;
       SHOOTER_SENSOR_INVERTED = true;
 
+      HAS_SHOOTER_TRIGGER = true;
       TRIGGER_MOTOR_CHANNEL = 6;
       TRIGGER_MOTOR_INVERTED = false;
 
+      HAS_SHOOTER_HOOD = true;
       HOOD_PWM_PORT = 1;
       HOOD_MAX_ANGLE = 165;
+
+      HAS_SHOOTER_LEDS = false;
+      SHOOTER_LED_AMOUNT = 12;
+      SHOOTER_LED_CHANNEL = 9;
+      SHOOTER_DOUBLESIDE_LED = true;
 
       SHOOTER_P = 2;
       SHOOTER_I = 0.0;
@@ -317,10 +321,6 @@ public class RobotMap {
 
       VELOCITY_MULTIPLIER_SHOOTER = 8200;
       SHOOTER_SPEED_TOLERANCE = 0.25;
-      
-      SHOOTER_LED_AMOUNT = 12;
-      SHOOTER_LED_CHANNEL = 9;
-      SHOOTER_DOUBLESIDE_LED = true;
       break;
     }
 
@@ -418,19 +418,25 @@ public class RobotMap {
 
   // Shooter
   public static boolean HAS_SHOOTER = false;
-  public static boolean HAS_TRIGGER = false;
-  public static boolean HAS_SHOOTERLEDS = false;
-  public static boolean HAS_HOOD = false;
   public static boolean SHOOTER_FOLLOWER;
   public static int SHOOTER_MOTOR_CHANNEL;
   public static boolean SHOOTER_MOTOR_INVERTED;
   public static int SHOOTER_MOTOR_FOLLOWER_CHANNEL;
   public static boolean SHOOTER_MOTOR_FOLLOWER_INVERTED;
   public static boolean SHOOTER_SMART_SHOT;
+  
+  public static boolean HAS_SHOOTER_TRIGGER = false;
   public static int TRIGGER_MOTOR_CHANNEL;
   public static boolean TRIGGER_MOTOR_INVERTED = false;
+  
+  public static boolean HAS_SHOOTER_HOOD = false;
   public static int HOOD_PWM_PORT;
   public static double HOOD_MAX_ANGLE;
+
+  public static boolean HAS_SHOOTER_LEDS = false;
+  public static int SHOOTER_LED_AMOUNT;
+  public static int SHOOTER_LED_CHANNEL;
+  public static boolean SHOOTER_DOUBLESIDE_LED = false;
 
   public static boolean SHOOTER_SENSOR_INVERTED;
   public static double SHOOTER_P;
@@ -440,10 +446,6 @@ public class RobotMap {
   public static double VELOCITY_MULTIPLIER_SHOOTER;
   public static double SHOOTER_SPEED_TOLERANCE;
   public static int SHOOTER_PID_SLOT_DRIVE;
-
-  public static int SHOOTER_LED_AMOUNT;
-  public static int SHOOTER_LED_CHANNEL;
-  public static boolean SHOOTER_DOUBLESIDE_LED = false;
 
   // Intake
   public static boolean HAS_INTAKE = false;

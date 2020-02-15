@@ -63,7 +63,7 @@ public class ShooterTuner implements Tuner {
         if (useVelocity) {
             shooter.rampToSpeed(speed);
 
-            if (RobotMap.HAS_SHOOTERLEDS) {
+            if (RobotMap.HAS_SHOOTER_LEDS) {
                 double currentVel = shooter.getMotor().velocity();
                 double setVel = shooter.getMotor().closedLoopTarget();
 
@@ -78,7 +78,7 @@ public class ShooterTuner implements Tuner {
         } else {
             shooterMotor.set(ControlMode.PercentOutput, speed);
 
-            if (RobotMap.HAS_SHOOTERLEDS) {
+            if (RobotMap.HAS_SHOOTER_LEDS) {
                 double ledFillPercent = Math.max(0, Math.min(1, Math.abs(speed)));
                 int fillLeds = (int) (RobotMap.SHOOTER_LED_AMOUNT * ledFillPercent)-1;
                 if (fillLeds >= 0) {
