@@ -226,6 +226,9 @@ public class RobotMap {
       ARM_MOTOR_INVERTED = false;
       ROLLER_MOTOR_CHANNEL = 1;
       ROLLER_MOTOR_INVERTED = false;
+      ARM_TOP_LIMIT_INVERTED = false;
+      ARM_BOTTOM_LIMIT_INVERTED = false;
+      
 
       //Indexer
       // TODO: change the values of these later. 
@@ -330,6 +333,15 @@ public class RobotMap {
       VELOCITY_MULTIPLIER_SHOOTER = 8200;
       SHOOTER_SPEED_TOLERANCE = 0.25;
       MANUAL_MODE_SHOOTER_SPEED = 1.0;
+
+      //Intake
+      // TODO: change the values of these later.
+      ARM_MOTOR_CHANNEL = 0;
+      ARM_MOTOR_INVERTED = false;
+      ROLLER_MOTOR_CHANNEL = 1;
+      ROLLER_MOTOR_INVERTED = false;
+      ARM_TOP_LIMIT_INVERTED = false;
+      ARM_BOTTOM_LIMIT_INVERTED = false;
       break;
     }
 
@@ -457,7 +469,9 @@ public class RobotMap {
   public static int ARM_MOTOR_CHANNEL;
   public static boolean ARM_MOTOR_INVERTED = false;
   public static int ROLLER_MOTOR_CHANNEL;
-  public static boolean ROLLER_MOTOR_INVERTED;
+  public static boolean ROLLER_MOTOR_INVERTED = false;
+  public static boolean ARM_TOP_LIMIT_INVERTED = false;
+  public static boolean ARM_BOTTOM_LIMIT_INVERTED = false;
 
   //INDEXER 
   public static boolean HAS_INDEXER = false;
