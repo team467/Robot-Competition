@@ -117,7 +117,7 @@ public class IndexerAL extends GamePieceBase implements GamePiece {
       instance.indexFollower = new WPI_TalonSRX(RobotMap.SECOND_MAGAZINE_FEED_MOTOR_CHANNEL);
     }
 
-  }
+   }
 
   public void periodic() {
 
