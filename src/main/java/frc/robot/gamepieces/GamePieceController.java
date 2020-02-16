@@ -132,16 +132,9 @@ public class GamePieceController {
       shootMode = ShooterMode.MANUAL;
     }
 
-    updateStates();
-
     // Separate reading from driver station from processing state
     // so that tests can manually feed inputs.
     processGamePieceState(driverStation.getDriveCameraFront(), driverStation.getDriveCameraBack());
-
-  }
-
-  public void updateStates() {
-    shooterState = shooterSM.getCurrentState();
 
   }
 
@@ -167,10 +160,9 @@ public class GamePieceController {
     if (RobotMap.HAS_INDEXER)
       indexerSM.step();
 
-
-    //roller controls
-    if(RobotMap.HAS_INTAKE) {
-      if(armPosition) {
+    // roller controls
+    if (RobotMap.HAS_INTAKE) {
+      if (armPosition) {
         intake.setIntakeArm(IntakerArm.ARM_UP);
       } else {
         intake.setIntakeArm(IntakerArm.ARM_DOWN);
@@ -179,19 +171,19 @@ public class GamePieceController {
   }
 
   public boolean indexerBallsForward() {
-    if (IndexerAL.calledForward) {
-      IndexerAL.calledForward = false;
+    boolean feed = false;
+    if (driverStation.indexerFeed()) {
       return true;
     }
-    return false;
+    return feed;
   }
 
   public boolean indexerBallsReverse() {
-    if (IndexerAL.calledReverse) {
-      IndexerAL.calledReverse = false;
+    boolean reverse = false;
+    if (driverStation.indexerReverse()) {
       return true;
     }
-    return false;
+    return reverse;
   }
 
   public boolean indexerAutoMode() {
@@ -233,7 +225,7 @@ public class GamePieceController {
     return fireWhenReady;
   }
 
-  public State getShooterState(){
+  public State getShooterState() {
     return shooterState;
   }
 }

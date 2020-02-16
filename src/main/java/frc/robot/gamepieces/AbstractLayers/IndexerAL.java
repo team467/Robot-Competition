@@ -143,13 +143,11 @@ public class IndexerAL extends GamePieceBase implements GamePiece {
   }
 
   public static void moveBallsTowardIntake() {
-    calledForward = true;
     IndexerAL.getInstance().setForward();
 
   }
 
   public static void advanceBallsToShooter() {
-    calledReverse = true;
     IndexerAL.getInstance().setBackwards();
   }
 
@@ -160,32 +158,6 @@ public class IndexerAL extends GamePieceBase implements GamePiece {
   public enum setBelts {
     FORWARD, OFF, REVERSE
 
-  }
-
-  // TODO determine TOF threshold
-  public boolean inMouth() {
-    if (override) {
-      return mouthOverride;
-    } else {
-      return TOFSensor.getInstance().getMouthDistance() < RobotMap.TOF_THRESHOLD;
-    }
-  }
-
-  public boolean inChamber() {
-    if (override) {
-      return chamberOverride;
-    } else {
-      return TOFSensor.getInstance().getChamberDistance() < RobotMap.TOF_THRESHOLD;
-    }
-  }
-
-  // TODO determine TOF threshold
-  public double mouthSensorValue() {
-    return TOFSensor.getInstance().getMouthDistance();
-  }
-
-  public double chamberSensorValue() {
-    return TOFSensor.getInstance().getChamberDistance();
   }
 
   public void indexerBeltDirection(setBelts direction) {

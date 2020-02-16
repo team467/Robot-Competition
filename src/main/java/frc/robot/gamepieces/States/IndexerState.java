@@ -34,8 +34,8 @@ public enum IndexerState implements State {
             autoMode = GamePieceController.getInstance().IndexAuto;
             indexerBallsReverse = GamePieceController.getInstance().indexerBallsReverse();
             indexerBallsForward = GamePieceController.getInstance().indexerBallsForward();
-            isInMouth = indexerAL.inMouth();
-            isInChamber = indexerAL.inChamber();
+            isInMouth = indexerAL.isBallInMouth();
+            isInChamber = indexerAL.isBallInChamber();
 
             if (!autoMode) {
                 return Manual;
@@ -78,7 +78,7 @@ public enum IndexerState implements State {
                 return Idle;
             }
 
-            if (!indexerAL.inMouth()) {
+            if (!indexerAL.isBallInMouth()) {
                 return FeedBuffer;
             }
 

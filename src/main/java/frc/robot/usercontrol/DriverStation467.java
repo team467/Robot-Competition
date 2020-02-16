@@ -116,7 +116,7 @@ public class DriverStation467 {
 
   // indexer TODO change later
   public boolean indexerManual() {
-    return false;
+    return true;
   }
 
   public boolean getIndexerAutoMode() {
