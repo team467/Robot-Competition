@@ -9,8 +9,11 @@ package frc.robot.gamepieces.States;
 
 import frc.robot.RobotMap;
 import frc.robot.gamepieces.AbstractLayers.IndexerAL;
-import frc.robot.gamepieces.GamePieceController.IndexerMode;
 import frc.robot.gamepieces.GamePieceController;
+import frc.robot.logging.RobotLogManager;
+
+import org.apache.logging.log4j.Logger;
+
 import edu.wpi.first.wpilibj.Timer;
 
 public enum IndexerState implements State {
@@ -18,21 +21,28 @@ public enum IndexerState implements State {
     Idle {
 
         public boolean autoMode;
+        public boolean indexerBallsReverse;
+        public boolean indexerBallsForward;
+        public boolean isInMouth;
+        public boolean isInChamber;
 
         public void enter() {
             // Noop
         }
 
         public State action() {
-            // autoMode = GamePieceController.getInstance().IndexAuto;
+            autoMode = GamePieceController.getInstance().IndexAuto;
+            indexerBallsReverse = GamePieceController.getInstance().indexerBallsReverse();
+            indexerBallsForward = GamePieceController.getInstance().indexerBallsForward();
+            isInMouth = indexerAL.inMouth();
+            isInChamber = indexerAL.inChamber();
 
-            if (autoMode) {
-                if (indexerBallsForward && isInMouth && isInChamber) {
-                    return Feed1;
-                }
-
-            } else {
+            if (!autoMode) {
                 return Manual;
+            }
+
+            if (indexerBallsForward && isInMouth && !isInChamber) {
+                return Feed1;
             }
 
             if (GamePieceController.getInstance().getShooterState() == ShooterState.LoadingBall) {
@@ -53,13 +63,17 @@ public enum IndexerState implements State {
 
     Feed1 {
 
+        public boolean autoMode;
+
         public void enter() {
             // Noop
         }
 
         public State action() {
+            autoMode = GamePieceController.getInstance().IndexAuto;
+
             IndexerAL.callForward();
-            if (AutoMode) {
+            if (autoMode) {
                 if (!indexerAL.inMouth()) {
                     return Feed2;
                 }
@@ -78,6 +92,7 @@ public enum IndexerState implements State {
     },
 
     Feed2 {
+
         private Timer timer;
 
         public void enter() {
@@ -104,12 +119,18 @@ public enum IndexerState implements State {
 
     Reverse {
 
+        public boolean autoMode;
+        public boolean indexerBallsReverse;
+
         public void enter() {
             // Noop
         }
 
         public State action() {
-            if (AutoMode) {
+            autoMode = GamePieceController.getInstance().IndexAuto;
+            indexerBallsReverse = GamePieceController.getInstance().indexerBallsReverse();
+
+            if (autoMode) {
                 IndexerAL.callBackwards();
                 if (indexerBallsReverse) {
                     return Idle;
@@ -128,13 +149,20 @@ public enum IndexerState implements State {
 
     Manual {
 
+        public boolean autoMode;
+        public boolean indexerBallsForward;
+        public boolean indexerBallsReverse;
+
         public void enter() {
             // Noop
         }
 
         public State action() {
+            autoMode = GamePieceController.getInstance().IndexAuto;
+            indexerBallsReverse = GamePieceController.getInstance().indexerBallsReverse();
+            indexerBallsForward = GamePieceController.getInstance().indexerBallsReverse();
 
-            if (!AutoMode) {
+            if (!autoMode) {
                 if (indexerBallsForward) {
                     IndexerAL.callForward();
                 }
@@ -158,12 +186,12 @@ public enum IndexerState implements State {
     };
 
     private static IndexerAL indexerAL = IndexerAL.getInstance();
-    private static GamePieceController gamePieceController = GamePieceController.getInstance();
-    private static boolean indexerBallsReverse = gamePieceController.indexerBallsReverse();
-    private static boolean indexerBallsForward = gamePieceController.indexerBallsForward();
-    private static boolean isInMouth = indexerAL.inMouth();
-    private static boolean AutoMode = (gamePieceController.indexerAutoMode()) ? true : false;
-    private static boolean isInChamber = indexerAL.inChamber();
+
+    // LOGGER
+    private static final Logger LOGGER = RobotLogManager.getMainLogger(IndexerAL.class.getName());
+
+    // delay
+    public static Timer timer = new Timer();
 
     IndexerState() {
 

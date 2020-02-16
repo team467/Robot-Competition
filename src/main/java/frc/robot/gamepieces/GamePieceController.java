@@ -54,7 +54,7 @@ public class GamePieceController {
   public boolean RobotAligned = true;// TODO determine where this is set
 
   // DS controls
-  private boolean IndexAuto = true;
+  public boolean IndexAuto = true;
   public boolean ShooterAuto = true;
   private boolean armPosition = false; // TODO get inputs from DS class
   private boolean rollerStateIN = false;
