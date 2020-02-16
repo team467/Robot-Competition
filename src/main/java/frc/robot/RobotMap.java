@@ -483,6 +483,8 @@ public class RobotMap {
   public static boolean INDEX_FOLLOWER_MOTOR = false;
   public static boolean INDEXER_SENSOR_INVERTED = false;
   public static boolean INDEXER_MOTOR_INVERTED = false;
+  public static boolean INDEXER_CHAMBER_TOF_ONBOARD = false;
+  public static boolean HAS_INDEXER_TOF_SENSORS = false;
 
   public static double INDEXER_MOVE_TIMER;
   //distance threshold in mm for detecting a ball

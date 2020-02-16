@@ -6,6 +6,8 @@ import frc.robot.logging.RobotLogManager;
 import frc.robot.sensors.TOFSensor;
 
 import org.apache.logging.log4j.Logger;
+
+import edu.wpi.first.networktables.NetworkTableEntry;
 import frc.robot.gamepieces.GamePieceBase;
 import frc.robot.gamepieces.GamePiece;
 
@@ -20,13 +22,16 @@ public class IndexerAL extends GamePieceBase implements GamePiece {
 
   private static WPI_TalonSRX indexLeader;
   private static WPI_TalonSRX indexFollower;
+  private static TalonSpeedControllerGroup indexer;
+  
+  private static TOFSensor onboardTOF;
+  private static NetworkTableEntry networkTableTOF;
 
-  public static TalonSpeedControllerGroup indexer;
-  public boolean override;
-  public boolean mouthOverride;
-  public boolean chamberOverride;
-  public static boolean calledForward;
-  public static boolean calledReverse;
+  // public boolean override;
+  // public boolean mouthOverride;
+  // public boolean chamberOverride;
+  // public static boolean calledForward;
+  // public static boolean calledReverse;
 
   public static IndexerAL getInstance() {
     if (instance == null) {
@@ -45,9 +50,39 @@ public class IndexerAL extends GamePieceBase implements GamePiece {
         indexer = new TalonSpeedControllerGroup();
       }
 
+      if (RobotMap.HAS_INDEXER_TOF_SENSORS) {
+        onboardTOF = new TOFSensor();    
+      }
+
       instance = new IndexerAL(indexer);
     }
     return instance;
+  }
+
+  public void stopIndexer() {
+    if (indexer != null && RobotMap.HAS_INDEXER) {
+      indexer.set(0.0);
+    }
+  }
+
+  public void setIndexerSpeed(double speed) {
+    if (indexer != null && RobotMap.HAS_INDEXER) {
+        double output = Math.max(-1.0, Math.min(1.0, speed));
+        indexer.set(output);
+    }
+  }
+
+  public double getMouthDistance() {
+    if ()
+  }
+
+  public double getChamberDistance() {
+    
+  }
+
+  public boolean hasChamberBall() {
+    // TODO write code
+    // return (chamberDistance < threshold);
   }
 
   private void setForward() {

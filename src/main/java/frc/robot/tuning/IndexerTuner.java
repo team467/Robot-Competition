@@ -17,24 +17,19 @@ public class IndexerTuner implements Tuner {
 
     private static final Logger LOGGER = RobotLogManager.getMainLogger(TuneController.class.getName());
 
-    IndexerAL indexerAL;
+    IndexerAL indexer;
 
     IndexerTuner() {
-        indexerAL = IndexerAL.getInstance();
-        // IndexerALSensors = IndexerAL.getSensors();
+        indexer = IndexerAL.getInstance();
     }
 
     public void init() {
-        SmartDashboard.putBoolean("Feed", false);
-        SmartDashboard.putBoolean("Override TOF", false);
-        SmartDashboard.putBoolean("Override Chamber", false);
-        SmartDashboard.putBoolean("Override Mouth", false);
+        SmartDashboard.putNumber("Speed", 0);
 
-        // display values
-        SmartDashboard.putNumber("IndexerAL Chamber Sensor Value", 0);
-        SmartDashboard.putNumber("IndexerAL Mouth Sensor Value", 0);
+        SmartDashboard.putBoolean("Mouth TOF", false);
+        SmartDashboard.putBoolean("Chamber TOF", false);
 
-        IndexerAL.callStop();
+        index.callStop();
     }
 
     public void periodic() {
