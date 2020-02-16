@@ -110,14 +110,7 @@ public class DriverStation467 {
     return false;
   }
 
-  // TODO change these based on switches.
-  public boolean getArm() {
-    return navJoy.pov() == 1;
-  }
-
-  public boolean indexerManual() {
-    return navJoy.pressed(Button.a);
-  }
+  // indexer TODO change later
 
   public boolean getIndexerAutoMode() {
     return navJoy.pressed(Button.b);
@@ -127,14 +120,20 @@ public class DriverStation467 {
     return navJoy.pov() == 180;
   }
 
-  public boolean getAcquireHatch() {
-    // Nav navJoy.getRightTrigger() > 0.9
-    return navJoy.down(Button.BumperRight);
+  public boolean indexerFeed() {
+    if (!getIndexerAutoMode()) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
-  public boolean getCargoWristLowRocketPosition() {
-    // Nav
-    return navJoy.pov() == 0;
+  public boolean indexerReverse() {
+    if (!getIndexerAutoMode()) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   public boolean getCargoWristCargoShipPosition() {
@@ -276,9 +275,6 @@ public class DriverStation467 {
       telemetry.addBooleanMetric("Input Fire Cargo", this::getFireCall);
       telemetry.addBooleanMetric("Input Wrist - Cargo Ship", 
           this::getCargoWristCargoShipPosition);
-      telemetry.addBooleanMetric("Input Wrist - Low Rocket", 
-          this::getCargoWristLowRocketPosition);
-      telemetry.addBooleanMetric("Input Acquire Hatch", this::getAcquireHatch);
       telemetry.addBooleanMetric("Input Fire Hatch", this::getFireHatch);
       telemetry.addBooleanMetric("Input Reject Ball", this::getRejectBall);
       telemetry.addBooleanMetric("Input Intake Ball", this::getIntakeBall);

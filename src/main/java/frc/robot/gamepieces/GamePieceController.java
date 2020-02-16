@@ -13,6 +13,7 @@ import frc.robot.gamepieces.AbstractLayers.ShooterAL;
 import frc.robot.gamepieces.States.IndexerState;
 import frc.robot.gamepieces.States.IntakeState;
 import frc.robot.gamepieces.States.ShooterState;
+import frc.robot.gamepieces.States.State;
 import frc.robot.gamepieces.States.IntakeState;
 import frc.robot.gamepieces.States.StateMachine;
 import frc.robot.gamepieces.States.IntakeState.IntakerArm;
@@ -56,7 +57,7 @@ public class GamePieceController {
 
 
   //DS controls 
-  private boolean IndexAuto = true;
+  public boolean IndexAuto = true;
   public boolean ShooterAuto = true;
   private boolean armPosition = false; //TODO get inputs from DS class
   private boolean rollerStateIN = false;
@@ -132,7 +133,7 @@ public class GamePieceController {
       shootMode = ShooterMode.MANUAL;
     }
 
-    // Separate reading from driver station from processing state 
+    // Separate reading from driver station from processing state
     // so that tests can manually feed inputs.
     processGamePieceState(
         driverStation.getDriveCameraFront(),
@@ -182,27 +183,26 @@ public class GamePieceController {
     } else {
       intake.setIntakeRoller(IntakerRollers.ROLLERS_OFF);
     }
-  }
-    
+      
+    }
   }
 
   // TODO: put in logic
   public boolean indexerBallsForward() {
-    return false;
+    boolean feed = false;
+    if (driverStation.indexerFeed()) {
+      return true;
+    }
+    return feed;
   }
 
   // TODO: put in logic 
   public boolean indexerBallsReverse() {
-
-    return false;
-  }
-
-  public boolean indexerForward() {
-    return false;
-  }
-
-  public boolean indexerBackwards() {
-    return false;
+    boolean reverse = false;
+    if (driverStation.indexerReverse()) {
+      return true;
+    }
+    return reverse;
   }
 
   public boolean indexerAutoMode() {
@@ -242,5 +242,9 @@ public class GamePieceController {
 
   public boolean getFireWhenReady() {
     return fireWhenReady;
+  }
+
+  public State getShooterState() {
+    return shooterState;
   }
 }

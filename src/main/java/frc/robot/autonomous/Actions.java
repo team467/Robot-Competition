@@ -46,7 +46,7 @@ public class Actions {
     
     IndexerAL indexer = IndexerAL.getInstance();
     return new Action(actionText,
-        () -> indexer.inChamber(),
+        () -> indexer.isBallInChamber(),
         () -> gamePieceController.setAutomousFireWhenReady(true));
   }
 
