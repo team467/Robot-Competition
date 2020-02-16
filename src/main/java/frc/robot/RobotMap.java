@@ -275,7 +275,7 @@ public class RobotMap {
     case KITBOT:
     default:
       HAS_WHEELS = true;
-      DRIVEMOTOR_NUM = 2;
+      DRIVEMOTOR_NUM = 4;
       WHEEL_CIRCUMFERENCE = 18.50;
 
       // CONTROLS_INVERTED_FB = false;
@@ -336,7 +336,7 @@ public class RobotMap {
       HAS_SHOOTER = true;
       HAS_INDEXER = false;
       HAS_INTAKE = false;
-      HAS_CLIMBER = true;
+      HAS_CLIMBER = false;
 
       // Shooter
       // TODO:change the values of these later
@@ -373,7 +373,7 @@ public class RobotMap {
       //Climber
       CLIMBER_MOTOR_INVERTED = false;
       CLIMBER_SENSOR = false;
-      HAS_CLIMBFOLLOWER = true;
+      HAS_CLIMBFOLLOWER = false;
       CLIMB_MOTER_LEADER = 1;
       CLIMB_MOTER_FOLLOWER = 2;
 
@@ -385,14 +385,14 @@ public class RobotMap {
       VELOCITY_MULTIPLIER_CLIMBER = 8200;
       CLIMBER_PID_SLOT = 0;
 
-      HAS_CLIMB_TOP_SENSOR = true;
-      HAS_CLIMB_BOTTOM_SENSOR = true;
+      HAS_CLIMB_TOP_SENSOR = false;
+      HAS_CLIMB_BOTTOM_SENSOR = false;
       CLIMB_TOP_SENSOR_INVERTED = false;
       CLIMB_BOTTOM_SENSOR_INVERTED = false;
       CLIMB_TOP_SENSOR_CHANNEL = 1;
       CLIMB_BOTTOM_SENSOR_CHANNEL = 2;
 
-      HAS_CLIMB_TILT_SWITCH = true;
+      HAS_CLIMB_TILT_SWITCH = false;
       CLIMB_TILT_SWITCH_INVERTED = false;
       CLIMB_TILT_SWITCH_CHANNEL = 3;
 

@@ -114,7 +114,7 @@ public class IndexerAL extends GamePieceBase implements GamePiece {
   }
 
   public boolean isBallInChamber() {
-    boolean result = false;
+    boolean result = true; //TODO make this false when have indexer
     if (networkTableTOF != null && RobotMap.HAS_INDEXER_TOF_SENSORS) {
       double distance = getChamberDistance();
       double threshold = RobotMap.INDEXER_TOF_THRESHOLD;

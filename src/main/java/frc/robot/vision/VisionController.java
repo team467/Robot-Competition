@@ -92,7 +92,7 @@ public class VisionController {
       return 0.0;
     }
 
-    if (Math.abs(angle() + gyro.getPitchDegrees()) < 4) {
+    if (Math.abs(angle()) < 4) {//Math.abs(angle() + gyro.getPitchDegrees())
         return 0.0;
     } 
     

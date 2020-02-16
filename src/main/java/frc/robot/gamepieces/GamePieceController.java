@@ -68,7 +68,7 @@ public class GamePieceController {
   public boolean climberDownButtonPressed = false;
   public boolean climberUpButtonPressed = false;
   public boolean climberEnabled = false;
-  public double shooterSpeed = 0.1;
+  public double shooterSpeed = 0.9;
   public static double shooterPreviousSpeed;
 
   public IndexerMode indexMode;

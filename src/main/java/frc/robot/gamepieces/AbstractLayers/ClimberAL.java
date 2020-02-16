@@ -44,8 +44,6 @@ public class ClimberAL extends GamePieceBase implements GamePiece {
     // states of robot
     private climberSpeed speed;
 
-    // solenoid on lock mechanism
-    Solenoid solenoidLock = new Solenoid(1); // TODO: which port will the solenoid be connected to?
 
     // constructor
     private ClimberAL(SparkMaxSpeedControllerGroup climbGroup) { // constructor
@@ -60,7 +58,6 @@ public class ClimberAL extends GamePieceBase implements GamePiece {
 
     // starts the solenoid
     public void initialize() {
-        solenoidLock.set(true); // sets solennoid state
         // TODO: delay function for solenoid!
     }
 
