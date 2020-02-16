@@ -29,23 +29,22 @@ public class IndexerTuner implements Tuner {
         SmartDashboard.putBoolean("Mouth TOF", false);
         SmartDashboard.putBoolean("Chamber TOF", false);
 
-        index.callStop();
+        SmartDashboard.putNumber("Mouth Distance", 0);
+        SmartDashboard.putNumber("Chamber Distance", 0);
+
+        indexer.stopIndexer();
     }
 
     public void periodic() {
-        boolean feeding = SmartDashboard.getBoolean("Feed", false);
-        boolean override = SmartDashboard.getBoolean("Override TOF", false);
-        boolean overrideChamber = SmartDashboard.getBoolean("Override Chamber", false);
-        boolean overrideMouth = SmartDashboard.getBoolean("Override Mouth", false);
-        if (feeding) { 
-            indexerAL.indexerBeltDirection(IndexerAL.setBelts.FORWARD);
-        }
-        indexerAL.override = override;
-        indexerAL.mouthOverride = overrideMouth;
-        indexerAL.chamberOverride = overrideChamber;
+        double speed = SmartDashboard.getNumber("Speed", 0);
 
-        SmartDashboard.putNumber("IndexerAL Chamber Sensor Value", indexerAL.chamberSensorValue());
-        SmartDashboard.putNumber("IndexerAL Mouth Sensor Value", indexerAL.mouthSensorValue());
+        indexer.setIndexerSpeed(speed);
+
+        SmartDashboard.putBoolean("Mouth TOF", indexer.isBallInMouth());
+        SmartDashboard.putBoolean("Chamber TOF", indexer.isBallInChamber());
+
+        SmartDashboard.putNumber("Mouth Distance", indexer.getMouthDistance());
+        SmartDashboard.putNumber("Chamber Distance", indexer.getChamberDistance());
     }
 
 }

@@ -3,16 +3,20 @@ package frc.robot.gamepieces.AbstractLayers;
 import frc.robot.RobotMap;
 import frc.robot.drive.TalonSpeedControllerGroup;
 import frc.robot.logging.RobotLogManager;
-import frc.robot.sensors.TOFSensor;
 
 import org.apache.logging.log4j.Logger;
 
+import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import frc.robot.gamepieces.GamePieceBase;
 import frc.robot.gamepieces.GamePiece;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.revrobotics.Rev2mDistanceSensor;
+import com.revrobotics.Rev2mDistanceSensor;
+import com.revrobotics.Rev2mDistanceSensor.Port;
 
 public class IndexerAL extends GamePieceBase implements GamePiece {
 
@@ -24,7 +28,7 @@ public class IndexerAL extends GamePieceBase implements GamePiece {
   private static WPI_TalonSRX indexFollower;
   private static TalonSpeedControllerGroup indexer;
   
-  private static TOFSensor onboardTOF;
+  private static Rev2mDistanceSensor onboardTOF;
   private static NetworkTableEntry networkTableTOF;
 
   // public boolean override;
@@ -51,7 +55,10 @@ public class IndexerAL extends GamePieceBase implements GamePiece {
       }
 
       if (RobotMap.HAS_INDEXER_TOF_SENSORS) {
-        onboardTOF = new TOFSensor();    
+        onboardTOF = new Rev2mDistanceSensor(Port.kOnboard);
+        onboardTOF.setAutomaticMode(true);
+        NetworkTable table = NetworkTableInstance.getDefault().getTable("sensors");
+        networkTableTOF = table.getEntry("tof");    
       }
 
       instance = new IndexerAL(indexer);
@@ -73,16 +80,51 @@ public class IndexerAL extends GamePieceBase implements GamePiece {
   }
 
   public double getMouthDistance() {
-    if ()
+    double distance = 0;
+    if (onboardTOF != null && RobotMap.HAS_INDEXER_TOF_SENSORS) {
+      if (onboardTOF.isRangeValid()) {
+        distance = onboardTOF.getRange();
+      } 
+    }
+
+    return distance;
   }
 
   public double getChamberDistance() {
+    double distance = 0;
+    if (networkTableTOF != null && RobotMap.HAS_INDEXER_TOF_SENSORS) {
+      distance = networkTableTOF.getDouble(0);
+    }
     
+    return distance;
   }
 
-  public boolean hasChamberBall() {
-    // TODO write code
-    // return (chamberDistance < threshold);
+  public boolean isBallInMouth() {
+    boolean result = false;
+    if (onboardTOF != null && RobotMap.HAS_INDEXER_TOF_SENSORS) {
+      double distance = getMouthDistance();
+      double threshold = RobotMap.INDEXER_TOF_THRESHOLD;
+
+      if (distance <= threshold) {
+        result = true;
+      }
+    }
+
+    return result;
+  }
+
+  public boolean isBallInChamber() {
+    boolean result = false;
+    if (networkTableTOF != null && RobotMap.HAS_INDEXER_TOF_SENSORS) {
+      double distance = getChamberDistance();
+      double threshold = RobotMap.INDEXER_TOF_THRESHOLD;
+
+      if (distance <= threshold) {
+        result = true;
+      }
+    }
+
+    return result;
   }
 
   private void setForward() {
