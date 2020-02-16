@@ -91,12 +91,10 @@ public class VisionController {
       if(Math.abs(angle() + gyro.getPitchDegrees()) < 4) {
         robotTurner = 0.0;
       } else if(-gyro.getPitchDegrees() < angle()) {
-          robotTurner = 0.2;
+          robotTurner = 0.3;
        } else if(-gyro.getPitchDegrees() > angle()) {
-          robotTurner = -0.2;
-       } else {
-         robotTurner = 0.0;
-       }       
+          robotTurner = -0.3;
+       } 
 
       } else {
           robotTurner = 0.0;

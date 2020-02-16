@@ -213,7 +213,7 @@ public class GamePieceController {
   public void determineShooterSpeed() {
     //math
     if(visionController.hasDistance()) {
-      shooterSpeed = (0.16120202 * visionController.dist() + 65.5092) / 100;
+      shooterSpeed = ((0.16120202 * visionController.dist() + 65.5092) / 100) * 0.95;
       shooterPreviousSpeed = shooterSpeed;
     } else {
       shooterSpeed = shooterPreviousSpeed; 

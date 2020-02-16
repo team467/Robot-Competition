@@ -125,7 +125,7 @@ public class ShooterAL extends GamePieceBase implements GamePiece {
     if (flywheel != null && RobotMap.HAS_SHOOTER) {
       double output = Math.max(-1.0, Math.min(1.0, speed));
       flywheel.set(ControlMode.Velocity, output);
-      LOGGER.debug("the speed is {}", output);
+      LOGGER.error("the speed is {}", output);
     }
   }
 
