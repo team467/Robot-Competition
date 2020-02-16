@@ -42,11 +42,11 @@ public enum IndexerState implements State {
             }
 
             if (indexerBallsForward && isInMouth && !isInChamber) {
-                return Feed1;
+                return Feed;
             }
 
             if (GamePieceController.getInstance().getShooterState() == ShooterState.LoadingBall) {
-                return Feed1;
+                return Feed;
             }
 
             if (indexerBallsReverse) {
@@ -61,7 +61,7 @@ public enum IndexerState implements State {
 
     },
 
-    Feed1 {
+    Feed {
 
         public boolean autoMode;
 
@@ -72,13 +72,14 @@ public enum IndexerState implements State {
         public State action() {
             autoMode = GamePieceController.getInstance().IndexAuto;
 
-            IndexerAL.callForward();
-            if (autoMode) {
-                if (!indexerAL.inMouth()) {
-                    return Feed2;
-                }
-            } else {
+            IndexerAL.advanceBallsToShooter();
+
+            if (!autoMode) {
                 return Idle;
+            }
+
+            if (!indexerAL.inMouth()) {
+                return FeedBuffer;
             }
 
             return this;
@@ -91,7 +92,9 @@ public enum IndexerState implements State {
 
     },
 
-    Feed2 {
+    // Timed for 50ms to let the ball Feed advance to make room for another ball to
+    // be seen by the mouth TOF sensor.
+    FeedBuffer {
 
         private Timer timer;
 
@@ -101,7 +104,8 @@ public enum IndexerState implements State {
         }
 
         public State action() {
-            IndexerAL.callForward();
+
+            IndexerAL.advanceBallsToShooter();
             // TODO: adjust timer based on how fast the ball is moving.
             if (timer.get() == RobotMap.INDEXER_MOVE_TIMER) {
                 return Idle;
@@ -130,19 +134,21 @@ public enum IndexerState implements State {
             autoMode = GamePieceController.getInstance().IndexAuto;
             indexerBallsReverse = GamePieceController.getInstance().indexerBallsReverse();
 
-            if (autoMode) {
-                IndexerAL.callBackwards();
-                if (indexerBallsReverse) {
-                    return Idle;
-                }
-            } else {
+            IndexerAL.advanceBallsToShooter();
+
+            if (!autoMode) {
                 return Manual;
             }
+
+            if (indexerBallsReverse) {
+                return Idle;
+            }
+
             return this;
         }
 
         public void exit() {
-            // Noop tst
+            // Noop 
         }
 
     },
@@ -162,19 +168,18 @@ public enum IndexerState implements State {
             indexerBallsReverse = GamePieceController.getInstance().indexerBallsReverse();
             indexerBallsForward = GamePieceController.getInstance().indexerBallsReverse();
 
-            if (!autoMode) {
-                if (indexerBallsForward) {
-                    IndexerAL.callForward();
-                }
-                if (indexerBallsReverse) {
-                    IndexerAL.callBackwards();
-                }
-                if (!indexerBallsForward && !indexerBallsReverse) {
-                    IndexerAL.callStop();
-                }
-
-            } else {
+            if (autoMode) {
                 return Idle;
+            }
+
+            if (indexerBallsForward) {
+                IndexerAL.moveBallsTowardIntake();
+            }
+            if (indexerBallsReverse) {
+                IndexerAL.advanceBallsToShooter();
+            }
+            if (!indexerBallsForward && !indexerBallsReverse) {
+                IndexerAL.callStop();
             }
 
             return this;

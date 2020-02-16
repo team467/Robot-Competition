@@ -65,13 +65,13 @@ public class IndexerAL extends GamePieceBase implements GamePiece {
     indexer.set(0.0);
   }
 
-  public static void callForward() {
+  public static void moveBallsTowardIntake() {
     calledForward = true;
     IndexerAL.getInstance().setForward();
 
   }
 
-  public static void callBackwards() {
+  public static void advanceBallsToShooter() {
     calledReverse = true;
     IndexerAL.getInstance().setBackwards();
   }
