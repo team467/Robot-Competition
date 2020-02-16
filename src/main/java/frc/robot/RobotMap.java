@@ -220,13 +220,15 @@ public class RobotMap {
       SHOOTER_SPEED_TOLERANCE = 0.25;
       MANUAL_MODE_SHOOTER_SPEED = 1.0; //TODO determine the speed
       
-
       //Intake
       // TODO: change the values of these later.
       ARM_MOTOR_CHANNEL = 0;
       ARM_MOTOR_INVERTED = false;
       ROLLER_MOTOR_CHANNEL = 1;
       ROLLER_MOTOR_INVERTED = false;
+      ARM_TOP_LIMIT_INVERTED = false;
+      ARM_BOTTOM_LIMIT_INVERTED = false;
+      
 
       //Indexer
       // TODO: change the values of these later. 
@@ -235,7 +237,11 @@ public class RobotMap {
       SECOND_MAGAZINE_FEED_MOTOR_CHANNEL = 1;
       SECOND_MAGAZINE_FEED_MOTOR_INVERTED = false;
       INDEX_FOLLOWER_MOTOR = false;
+  
+      INDEXER_MOVE_TIMER = 0.05;
+      INDEXER_TOF_THRESHOLD = 100.0;
       
+
       INDEXER_MOVE_TIMER = 0.2;
 
       break;
@@ -327,6 +333,15 @@ public class RobotMap {
       VELOCITY_MULTIPLIER_SHOOTER = 8200;
       SHOOTER_SPEED_TOLERANCE = 0.25;
       MANUAL_MODE_SHOOTER_SPEED = 1.0;
+
+      //Intake
+      // TODO: change the values of these later.
+      ARM_MOTOR_CHANNEL = 0;
+      ARM_MOTOR_INVERTED = false;
+      ROLLER_MOTOR_CHANNEL = 1;
+      ROLLER_MOTOR_INVERTED = false;
+      ARM_TOP_LIMIT_INVERTED = false;
+      ARM_BOTTOM_LIMIT_INVERTED = false;
       break;
     }
 
@@ -454,16 +469,23 @@ public class RobotMap {
   public static int ARM_MOTOR_CHANNEL;
   public static boolean ARM_MOTOR_INVERTED = false;
   public static int ROLLER_MOTOR_CHANNEL;
-  public static boolean ROLLER_MOTOR_INVERTED;
+  public static boolean ROLLER_MOTOR_INVERTED = false;
+  public static boolean ARM_TOP_LIMIT_INVERTED = false;
+  public static boolean ARM_BOTTOM_LIMIT_INVERTED = false;
 
   //INDEXER 
   public static boolean HAS_INDEXER = false;
+  public static boolean INDEXER_FOLLOWER = false;
   public static int FIRST_MAGAZINE_FEED_MOTOR_CHANNEL;
   public static boolean FIRST_MAGAZINE_FEED_MOTOR_INVERTED = false;
   public static int SECOND_MAGAZINE_FEED_MOTOR_CHANNEL;
   public static boolean SECOND_MAGAZINE_FEED_MOTOR_INVERTED = false;
   public static boolean INDEX_FOLLOWER_MOTOR = false;
+  public static boolean INDEXER_SENSOR_INVERTED = false;
+  public static boolean INDEXER_MOTOR_INVERTED = false;
+  public static boolean HAS_INDEXER_TOF_SENSORS = false;
 
   public static double INDEXER_MOVE_TIMER;
-
+  //distance threshold in mm for detecting a ball
+  public static double INDEXER_TOF_THRESHOLD;
 }

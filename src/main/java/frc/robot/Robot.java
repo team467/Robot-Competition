@@ -21,6 +21,7 @@ import frc.robot.logging.RobotLogManager;
 import frc.robot.logging.Telemetry;
 import frc.robot.sensors.LedI2C;
 import frc.robot.sensors.PowerDistributionPanel;
+import frc.robot.sensors.TOFSensor;
 import frc.robot.usercontrol.DriverStation467;
 import frc.robot.utilities.PerfTimer;
 import frc.robot.vision.CameraSwitcher;
@@ -54,7 +55,7 @@ public class Robot extends TimedRobot {
   private LedI2C leds;
   private PerfTimer perfTimer;
   private  GamePieceController gamePieceController;
-
+  private TOFSensor timeOfFlightSensor;
   public static long time = System.nanoTime();
   public static long previousTime = time;
   public static int dt = 0;
@@ -133,6 +134,7 @@ public class Robot extends TimedRobot {
     camera = CameraSwitcher.getInstance();
     leds = LedI2C.getInstance();
     gamePieceController = GamePieceController.getInstance();
+    timeOfFlightSensor = TOFSensor.getInstance();
 
     TuneController.loadTuners();
     drive.setPidsFromRobotMap();
@@ -160,6 +162,7 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     mode = RobotMode.AUTONOMOUS;
+    timeOfFlightSensor.enable();
     telemetry.robotMode(mode);
     LOGGER.info("Autonomous Initialized");
     perfTimer = PerfTimer.timer("Autonomous");
@@ -183,6 +186,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
+    timeOfFlightSensor.enable();
     mode = RobotMode.TELEOP;
     telemetry.robotMode(mode);
     LOGGER.info("Teleop Initialized");
@@ -254,6 +258,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void testInit() {
+    timeOfFlightSensor.enable();
     mode = RobotMode.TEST;
     telemetry.robotMode(mode);
     TuneController.init();
@@ -276,6 +281,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void disabledInit() {
+    timeOfFlightSensor.disable();
     mode = RobotMode.DISABLED;
     telemetry.robotMode(mode);
     leds.whenDisabled();

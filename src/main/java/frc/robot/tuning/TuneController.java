@@ -13,6 +13,7 @@ public class TuneController {
     register("Puppy_Mode", new PuppyModeTuner());
     register("PID_Velocity_Tuner", new PIDVelocityTuner());
     register("Shooter_Tuner", new ShooterTuner());
+    register("Intake_Tuner", new IntakeTuner());
     register("Drive_Straight", new DriveConstantTuner());
     register("Sm_Test", new stateMachineTuner());
   }
