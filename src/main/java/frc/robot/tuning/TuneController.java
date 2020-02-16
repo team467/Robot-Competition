@@ -13,6 +13,13 @@ public class TuneController {
     register("Drive_Straight", new DriveConstantTuner());
     register("PID_Velocity_Tuner", new PIDVelocityTuner());
     register("Advanced_Tuner", new AdvancedTuner());
+    register("Gyro_Tuner", new GyroTuner());
+    register("Puppy_Mode", new PuppyModeTuner());
+    register("PID_Velocity_Tuner", new PIDVelocityTuner());
+    register("Shooter_Tuner", new ShooterTuner());
+    register("Climber_Tuner", new ClimberTuner());
+    register("Drive_Straight", new DriveConstantTuner());
+    register("Sm_Test", new stateMachineTuner());
   }
 
   private static final Logger LOGGER

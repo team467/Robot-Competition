@@ -7,11 +7,25 @@ import frc.robot.usercontrol.DriverStation467;
 import frc.robot.vision.CameraSwitcher;
 import frc.robot.vision.VisionController;
 import org.apache.logging.log4j.Logger;
+import frc.robot.gamepieces.AbstractLayers.IndexerAL;
+import frc.robot.gamepieces.AbstractLayers.IntakeAL;
+import frc.robot.gamepieces.AbstractLayers.ShooterAL;
+import frc.robot.gamepieces.States.IndexerState;
+import frc.robot.gamepieces.States.IntakeState;
+import frc.robot.gamepieces.States.ShooterState;
+import frc.robot.gamepieces.States.State;
+import frc.robot.gamepieces.States.IntakeState;
+import frc.robot.gamepieces.States.StateMachine;
+import frc.robot.gamepieces.States.IntakeState.IntakerArm;
+import frc.robot.gamepieces.States.IntakeState.IntakerRollers;
+import frc.robot.RobotMap;
+
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class GamePieceController {
 
   private static GamePieceController instance = null;
-
+  
   private static final Logger LOGGER 
       = RobotLogManager.getMainLogger(GamePieceController.class.getName());
 
@@ -20,12 +34,46 @@ public class GamePieceController {
 
   // Game Pieces
   private CameraSwitcher camera;
+  // private IntakeAL intake;
+  // private IndexerAL IndexerAL;
+  // private ShooterAL ShooterAL;
+
+  // Game Pieces' States
+  private ShooterAL shooter;
+  private IndexerAL indexer;
+  private IntakeAL intaker;
+
+  //StateMachine
+  private StateMachine shooterSM;
+  private StateMachine indexerSM;
+  private StateMachine climberSM;
+  private IntakeState intake;
+  private ShooterState shooterState;
 
   private DriverStation467 driverStation;
   private VisionController visionController;
   private LedI2C led;
+  public boolean RobotAligned = true;//TODO determine where this is set
 
-  private GamePieceMode mode;
+
+  //DS controls 
+  public boolean IndexAuto = true;
+  public boolean ShooterAuto = true;
+  private boolean armPosition = false; //TODO get inputs from DS class
+  private boolean rollerStateIN = false;
+  private boolean rollerStateOUT = false;
+  public boolean fireWhenReady= false;
+  public boolean triggerManual = false;
+  public boolean flywheelManual = false;
+  public boolean climberDownButtonPressed = false;
+  public boolean climberUpButtonPressed = false;
+  public boolean climberEnabled = false;
+  public double shooterSpeed = 0.1;
+  public static double shooterPreviousSpeed;
+
+  public IndexerMode indexMode;
+  public ShooterMode shootMode;
+
 
   /**
    * Returns a singleton instance of the game piece controller.
@@ -39,8 +87,14 @@ public class GamePieceController {
     return instance;
   }
 
-  public enum GamePieceMode {
-    DEFENSE, CARGO, HATCH
+  //TODO: get driverstation input and call intaker periodic().
+  
+  public enum IndexerMode {
+    AUTO, MANUAL
+  }
+
+  public enum ShooterMode {
+    AUTO, MANUAL
   }
 
   private GamePieceController() {
@@ -56,7 +110,11 @@ public class GamePieceController {
 
     LOGGER.debug("Starting in DEFENSE mode.");
 
-    mode = GamePieceMode.DEFENSE;
+
+    shooterSM = new StateMachine(ShooterState.Idle);
+    indexerSM = new StateMachine(IndexerState.Idle);
+    intake = IntakeState.getInstance();
+
 
     registerMetrics();
   }
@@ -66,18 +124,32 @@ public class GamePieceController {
    */
   public void periodic() {
 
-    // Separate reading from driver station from processing state 
+    if(IndexAuto){
+      indexMode = IndexerMode.AUTO;
+    } else {
+      indexMode = IndexerMode.MANUAL;
+    }
+
+    if(ShooterAuto){
+      shootMode = ShooterMode.AUTO;
+    } else {
+      shootMode = ShooterMode.MANUAL;
+    }
+
+    // Separate reading from driver station from processing state
     // so that tests can manually feed inputs.
     processGamePieceState(
         driverStation.getDriveCameraFront(),
-        driverStation.getDriveCameraBack()
+        driverStation.getDriveCameraBack(),
+        driverStation.getIndexerAutoMode()
     );
 
   }
 
   void processGamePieceState(
       boolean driveCameraFront,
-      boolean driveCameraRear) {
+      boolean driveCameraRear,
+      boolean getIndexerAutoMode) {
 
     // Depending on driver input, camera view switches to front or back.
     // Does not change the mode away from Hatch or Cargo, but does take camera.
@@ -88,30 +160,94 @@ public class GamePieceController {
       LOGGER.debug("Backward Camera");
       camera.backward();
     }
-
-    switch (mode) {
-
-      case DEFENSE:
-        break;
-
-      case CARGO:
-      default:
-        LOGGER.error("Should always have a game piece mode.");
-    }
-
     updateGamePieces();
   }
 
-  void updateGamePieces() {
+
+
+  public void updateGamePieces() {
     // Update all systems
+    if(RobotMap.HAS_SHOOTER) shooterSM.step();
+
+    if(RobotMap.HAS_INDEXER) indexerSM.step();
+
+    //roller controls
+    if(RobotMap.HAS_INTAKE) {
+    if(armPosition) {
+      intake.setIntakeArm(IntakerArm.ARM_UP);
+    } else {
+      intake.setIntakeArm(IntakerArm.ARM_DOWN);
+    }
+
+    if(rollerStateIN){
+      intake.setIntakeRoller(IntakerRollers.ROLLERS_IN);
+    } else if(rollerStateOUT){
+      intake.setIntakeRoller(IntakerRollers.ROLLERS_OUT);
+    } else {
+      intake.setIntakeRoller(IntakerRollers.ROLLERS_OFF);
+    }
+      
+    }
   }
+
+  // TODO: put in logic
+  public boolean indexerBallsForward() {
+    boolean feed = false;
+    if (driverStation.indexerFeed()) {
+      return true;
+    }
+    return feed;
+  }
+
+  // TODO: put in logic 
+  public boolean indexerBallsReverse() {
+    boolean reverse = false;
+    if (driverStation.indexerReverse()) {
+      return true;
+    }
+    return reverse;
+  }
+
+  public boolean indexerAutoMode() {
+    driverStation.getIndexerAutoMode();
+    return true;
+  }
+
+  public void determineShooterSpeed() {
+    //math
+    if(visionController.hasDistance()) {
+      shooterSpeed = ((0.16120202 * visionController.dist() + 65.5092) / 100) * 0.95;
+      shooterPreviousSpeed = shooterSpeed;
+    } else {
+      shooterSpeed = shooterPreviousSpeed; 
+    }
+
+    //TODO figure out what speeds it will set
+  }
+  // public boolean shooterLoadingBall() {
+  //   if (shooterSM.) {
+
+  //   }
+  //   return true;
+  // }
 
   private void registerMetrics() {
     Telemetry telemetry = Telemetry.getInstance();
-    telemetry.addStringMetric(name + " Mode", mode::name);
+    //telemetry.addStringMetric(name + " Mode", mode::name);
   }
 
   public void runOnTeleopInit(){
-    mode = GamePieceMode.DEFENSE;
+  }
+
+  public void setAutomousFireWhenReady(boolean fire){
+    fireWhenReady = fire;
+  }
+
+  public boolean getFireWhenReady() {
+    return fireWhenReady;
+  }
+
+  public State getShooterState() {
+    return shooterState;
   }
 }
