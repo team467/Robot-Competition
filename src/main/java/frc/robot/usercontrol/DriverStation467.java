@@ -110,63 +110,72 @@ public class DriverStation467 {
     return false;
   }
 
-  // public boolean getArm() {
-  // return navJoy.pov() == 1;
-  // }
+  // TODO change these based on switches.
+  public boolean getArm() {
+    return navJoy.pov() == 1;
+  }
 
-  // indexer TODO change later
   public boolean indexerManual() {
-    return false;
+    return navJoy.pressed(Button.a);
   }
 
   public boolean getIndexerAutoMode() {
-    return false;
+    return navJoy.pressed(Button.b);
   }
 
   public boolean indexerManualMove() {
-    return false;
+    return navJoy.pov() == 180;
   }
 
-  public boolean indexerFeed() {
-    if (indexerManual()) {
-      return true;
-    } else {
-      return false;
-    }
+  public boolean getAcquireHatch() {
+    // Nav navJoy.getRightTrigger() > 0.9
+    return navJoy.down(Button.BumperRight);
   }
 
-  public boolean indexerReverse() {
-    if (indexerManual()) {
-      return true;
-    } else {
-      return false;
-    }
+  public boolean getCargoWristLowRocketPosition() {
+    // Nav
+    return navJoy.pov() == 0;
   }
 
-
-  // Intaker TODO change later
-  public boolean arm() {
-    return false;
+  public boolean getCargoWristCargoShipPosition() {
+    // Nav
+    return navJoy.pov() == 180;
   }
 
-  public boolean roller() {
-    return false;
+  public boolean getAutoTargetButtonPressed() {
+    // Nav
+    // TODO: check if implemented
+    return navJoy.pressed(Button.a);
   }
 
-  // shooter TODO change later
-  public boolean shooterAuto() {
-    return false;
+  public boolean getTurretRight() {
+    // Nav
+    return navJoy.pressed(Button.b);
   }
 
-  public boolean flywheel() {
-    return false;
+  public boolean getTurretHome() {
+    // Nav
+    return navJoy.pressed(Button.y);
   }
 
-  public boolean shoot() {
-    return false;
+  public boolean getTurretLeft() {
+    // NAV
+    return navJoy.pressed(Button.x);
   }
 
-  // Rumble
+  public boolean getHatchMode() {
+    // NAV navJoy.down(Button.BumperLeft)
+    return navJoy.getLeftTrigger() > 0.9;
+  }
+
+  public boolean getCargoMode() {
+    return navJoy.getRightTrigger() > 0.9;
+  }
+
+  public boolean getFireCall() {
+    return navJoy.down(Button.BumperLeft);
+  }
+
   public void navSetLeftRumble(double value) {
     navJoy.leftRumble(value);
   }
@@ -195,6 +204,26 @@ public class DriverStation467 {
     return driverJoy.pov() == 180;
   }
 
+  public boolean getAcquireBall() {
+    return navJoy.down(Button.y);
+  }
+
+  public boolean getDefenseMode() {
+    if (driverJoy.down(Button.start) == true && driverJoy.down(Button.back) == true) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  public boolean getRejectBall() {
+    return driverJoy.down(Button.BumperLeft);
+  }
+
+  public boolean getIntakeBall() {
+    return navJoy.down(Button.y);
+  }
+
   public void driverSetLeftRumble(double value) {
     driverJoy.leftRumble(value);
   }
@@ -203,32 +232,60 @@ public class DriverStation467 {
     driverJoy.rightRumble(value);
   }
 
-  // public boolean getFireHatch() {
-  // return navJoy.down(Button.BumperLeft);
-  // }
+  public boolean getFireHatch() {
+    return navJoy.down(Button.BumperLeft);
+  }
 
   public boolean restartCamera() {
     return navJoy.pressed(Button.start);
   }
 
-  public boolean getSlow() {
+  public boolean getSlow(){
     return driverJoy.getRightTrigger() > 0.9;
   }
 
-  public boolean getTurbo() {
+  public boolean getTurbo(){
     return driverJoy.getLeftTrigger() > 0.9;
   }
 
-  // public boolean getDisableSafety() {
-  // return driverJoy.down(Button.BumperRight);
-  // }
+  public boolean getDisableSafety() {
+    return driverJoy.down(Button.BumperRight);
+  }
+
+  public boolean getIntakeUp() {
+    return driverJoy.down(Button.y);
+  }
+
+  public boolean getIntakeDown() {
+    return driverJoy.down(Button.a);
+  }
 
   public void registerMetrics() {
-    Telemetry telemetry = Telemetry.getInstance();
+    Telemetry telemetry = Telemetry.getInstance(); 
     if (RobotMap.ENABLE_DRIVER_STATION_TELEMETRY && !RobotMap.useSimulator) {
       telemetry.addBooleanMetric("Input Restart Camera", this::restartCamera);
       telemetry.addBooleanMetric("Input Drive Camera Front", this::getDriveCameraFront);
       telemetry.addBooleanMetric("Input Drive Camera Back", this::getDriveCameraBack);
+      telemetry.addBooleanMetric("Input Disable Safety", this::getDisableSafety);
+      telemetry.addBooleanMetric("Input Defense Mode", this::getDefenseMode);
+      telemetry.addBooleanMetric("Input Hatch Mode", this::getHatchMode);
+      telemetry.addBooleanMetric("Input Cargo Mode", this::getCargoMode);
+      telemetry.addBooleanMetric("Input Intake Up", this::getIntakeUp);
+      telemetry.addBooleanMetric("Input Intake Down", this::getIntakeDown);
+      telemetry.addBooleanMetric("Input Acquire Ball", this::getAcquireBall);
+      telemetry.addBooleanMetric("Input Fire Cargo", this::getFireCall);
+      telemetry.addBooleanMetric("Input Wrist - Cargo Ship", 
+          this::getCargoWristCargoShipPosition);
+      telemetry.addBooleanMetric("Input Wrist - Low Rocket", 
+          this::getCargoWristLowRocketPosition);
+      telemetry.addBooleanMetric("Input Acquire Hatch", this::getAcquireHatch);
+      telemetry.addBooleanMetric("Input Fire Hatch", this::getFireHatch);
+      telemetry.addBooleanMetric("Input Reject Ball", this::getRejectBall);
+      telemetry.addBooleanMetric("Input Intake Ball", this::getIntakeBall);
+      telemetry.addBooleanMetric("Input Turret Home", this::getTurretHome);
+      telemetry.addBooleanMetric("Input Turret Left", this::getTurretLeft);
+      telemetry.addBooleanMetric("Input Turret Right", this::getTurretRight);
+      telemetry.addBooleanMetric("Input Target Lock", this::getAutoTargetButtonPressed);
       telemetry.addDoubleMetric("Input Arcade Speed", this::getArcadeSpeed);
       telemetry.addDoubleMetric("Input Arcade Turn", this::getArcadeTurn);
     }
