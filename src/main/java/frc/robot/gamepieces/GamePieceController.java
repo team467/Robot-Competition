@@ -65,6 +65,9 @@ public class GamePieceController {
   public boolean fireWhenReady= false;
   public boolean triggerManual = false;
   public boolean flywheelManual = false;
+  public boolean climberDownButtonPressed = false;
+  public boolean climberUpButtonPressed = false;
+  public boolean climberEnabled = false;
   public double shooterSpeed = 0.1;
   public static double shooterPreviousSpeed;
 

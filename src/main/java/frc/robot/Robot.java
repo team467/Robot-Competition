@@ -10,11 +10,10 @@ package frc.robot;
 import static org.apache.logging.log4j.util.Unbox.box;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import frc.robot.RobotMap.RobotId;
-import frc.robot.autonomous.ActionGroup;
-import frc.robot.autonomous.Actions;
-import frc.robot.autonomous.MatchConfiguration;
 import frc.robot.drive.Drive;
 import frc.robot.gamepieces.GamePieceController;
 import frc.robot.logging.RobotLogManager;
@@ -59,8 +58,10 @@ public class Robot extends TimedRobot {
   public static long previousTime = time;
   public static int dt = 0;
 
-  private MatchConfiguration matchConfig;
-  private ActionGroup autonomous;
+  private DifferentialDrive m_myRobot;
+
+  private Joystick m_leftStick;
+  private Joystick m_rightStick;
 
 
   public static void enableSimulator() {
@@ -110,6 +111,11 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("Shooter F", RobotMap.SHOOTER_F);
     SmartDashboard.putNumber("Shooter Max Velocity", RobotMap.VELOCITY_MULTIPLIER_SHOOTER);
     
+
+    m_leftStick = new Joystick(0);
+    m_rightStick = new Joystick(1);
+
+
     // Used after init, should be set only by the Simulator GUI
     // this ensures that the simulator is off otherwise.
     if (enableSimulator) {
@@ -137,7 +143,6 @@ public class Robot extends TimedRobot {
     TuneController.loadTuners();
     drive.setPidsFromRobotMap();
     //PowerDistributionPanel.registerPowerDistributionWithTelemetry();
-    matchConfig = MatchConfiguration.getInstance();
 
     telemetry = Telemetry.getInstance();
     telemetry.robotMode(mode);
@@ -163,12 +168,6 @@ public class Robot extends TimedRobot {
     telemetry.robotMode(mode);
     LOGGER.info("Autonomous Initialized");
     perfTimer = PerfTimer.timer("Autonomous");
-    driverstation.readInputs();
-		matchConfig.load();
-		autonomous = matchConfig.AutoDecisionTree();
-		LOGGER.info("Init Autonomous: {}", autonomous.getName());
-		//ramps.reset();
-    autonomous.enable();
   }
   
   /**
@@ -177,8 +176,7 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousPeriodic() {
     LOGGER.trace("Autonomous Periodic");
-    autonomous.run();
-    gamePieceController.periodic();
+    teleopPeriodic();
   }
 
   @Override
@@ -188,7 +186,6 @@ public class Robot extends TimedRobot {
     LOGGER.info("Teleop Initialized");
     perfTimer = PerfTimer.timer("Teleoperated");
     LOGGER.debug("Match time {}", box(DriverStation.getInstance().getMatchTime()));
-    autonomous = Actions.doNothing();
   }
 
   /**
@@ -237,9 +234,10 @@ public class Robot extends TimedRobot {
         break;
 
       case TankDrive:
-        double leftTank = driverstation.getDriveJoystick().getLeftStickY();
-        double rightTank = driverstation.getDriveJoystick().getRightStickY();
-        drive.tankDrive(leftTank, rightTank, true);
+        m_myRobot.tankDrive(m_leftStick.getY(), m_rightStick.getY());
+        // double leftTank = driverstation.getDriveJoystick().getLeftStickY();
+        // double rightTank = driverstation.getDriveJoystick().getRightStickY();
+        // drive.tankDrive(leftTank, rightTank, true);
         break;
 
       default:

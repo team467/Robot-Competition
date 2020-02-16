@@ -116,6 +116,8 @@ public class RobotMap {
   // Set to false to use the local ADIS16448 IMU on the Robo Rio
   public static final boolean useRemoteImu = false;
 
+
+
   public enum RobotId {
     ROBOT_2020, KITBOT
 
@@ -195,6 +197,7 @@ public class RobotMap {
       HAS_SHOOTER = true;
       HAS_INDEXER = true;
       HAS_INTAKE = true;
+      HAS_CLIMBER = true;
 
       // Shooter
       // TODO:change the values of these later
@@ -238,12 +241,41 @@ public class RobotMap {
       
       INDEXER_MOVE_TIMER = 0.2;
 
+      //Climber
+      CLIMBER_MOTOR_INVERTED = false;
+      CLIMBER_SENSOR = false;
+      HAS_CLIMBFOLLOWER = false;
+      CLIMB_MOTER_LEADER = 0;
+      CLIMB_MOTER_FOLLOWER = 1;
+
+      CLIMBER_P = 2;
+      CLIMBER_I = 0.0;
+      CLIMBER_D = 0.0;
+      CLIMBER_F = 0.0;
+
+      VELOCITY_MULTIPLIER_CLIMBER = 8200;
+      CLIMBER_PID_SLOT = 0;
+
+      HAS_CLIMB_TOP_SENSOR = true;
+      HAS_CLIMB_BOTTOM_SENSOR = true;
+      CLIMB_TOP_SENSOR_INVERTED = false;
+      CLIMB_BOTTOM_SENSOR_INVERTED = false;
+      CLIMB_TOP_SENSOR_CHANNEL = 1;
+      CLIMB_BOTTOM_SENSOR_CHANNEL = 2;
+
+      HAS_CLIMB_TILT_SWITCH = true;
+      CLIMB_TILT_SWITCH_INVERTED = false;
+      CLIMB_TILT_SWITCH_CHANNEL = 3;
+
+      HAS_CLIMBLOCK = false;
+      CLIMB_LOCK_CHANNEL = 0;
+      CLIMB_LOCK_INVERTED = false;
       break;
 
     case KITBOT:
     default:
       HAS_WHEELS = true;
-      DRIVEMOTOR_NUM = 4;
+      DRIVEMOTOR_NUM = 2;
       WHEEL_CIRCUMFERENCE = 18.50;
 
       // CONTROLS_INVERTED_FB = false;
@@ -259,8 +291,8 @@ public class RobotMap {
       NORMAL_VELOCITY_SPEED_MULTIPLIER = 0.9;
       SLOW_VELOCITY_SPEED_MULTIPLIER = 0.7;
 
-      LEFT_LEAD_CHANNEL = 1;
-      LEFT_FOLLOWER_1_CHANNEL = 2;
+      LEFT_LEAD_CHANNEL = 4;
+      LEFT_FOLLOWER_1_CHANNEL = 6;
       LEFT_DRIVE_SENSOR_IS_INVERTED = true;
       LEFT_DRIVE_MOTOR_IS_INVERTED = false;
 
@@ -304,7 +336,7 @@ public class RobotMap {
       HAS_SHOOTER = true;
       HAS_INDEXER = false;
       HAS_INTAKE = false;
-
+      HAS_CLIMBER = true;
 
       // Shooter
       // TODO:change the values of these later
@@ -327,6 +359,36 @@ public class RobotMap {
       VELOCITY_MULTIPLIER_SHOOTER = 8200;
       SHOOTER_SPEED_TOLERANCE = 0.25;
       MANUAL_MODE_SHOOTER_SPEED = 1.0;
+
+      //Climber
+      CLIMBER_MOTOR_INVERTED = false;
+      CLIMBER_SENSOR = false;
+      HAS_CLIMBFOLLOWER = true;
+      CLIMB_MOTER_LEADER = 1;
+      CLIMB_MOTER_FOLLOWER = 2;
+
+      CLIMBER_P = 2;
+      CLIMBER_I = 0.0;
+      CLIMBER_D = 0.0;
+      CLIMBER_F = 0.0;
+
+      VELOCITY_MULTIPLIER_CLIMBER = 8200;
+      CLIMBER_PID_SLOT = 0;
+
+      HAS_CLIMB_TOP_SENSOR = true;
+      HAS_CLIMB_BOTTOM_SENSOR = true;
+      CLIMB_TOP_SENSOR_INVERTED = false;
+      CLIMB_BOTTOM_SENSOR_INVERTED = false;
+      CLIMB_TOP_SENSOR_CHANNEL = 1;
+      CLIMB_BOTTOM_SENSOR_CHANNEL = 2;
+
+      HAS_CLIMB_TILT_SWITCH = true;
+      CLIMB_TILT_SWITCH_INVERTED = false;
+      CLIMB_TILT_SWITCH_CHANNEL = 3;
+
+      HAS_CLIMBLOCK = false;
+      CLIMB_LOCK_CHANNEL = 0;
+      CLIMB_LOCK_INVERTED = false;
       break;
     }
 
@@ -398,7 +460,7 @@ public class RobotMap {
     }
   }
 
-  // Speed Controls
+  // Speed Controlsclimer
   public static double NORMAL_DRIVE_SPEED_MULTIPLIER;
   public static double SLOW_DRIVE_SPEED_MULTIPLIER;
   public static double NORMAL_VELOCITY_SPEED_MULTIPLIER;
@@ -422,6 +484,35 @@ public class RobotMap {
 
   // Game Pieces
 
+  // climber
+  public static boolean HAS_CLIMBER = false;
+  public static boolean CLIMBER_MOTOR_INVERTED = false;
+  public static boolean CLIMBER_SENSOR = false;
+
+  //TODO: change value of motors later
+  public static int CLIMB_MOTER_LEADER = 0;
+  public static int CLIMB_MOTER_FOLLOWER = 1;
+
+  public static boolean HAS_CLIMBFOLLOWER = false;
+  public static boolean HAS_CLIMBLOCK = false;
+  public static int CLIMB_LOCK_CHANNEL;
+  public static boolean CLIMB_LOCK_INVERTED = false;
+  public static boolean HAS_CLIMB_TOP_SENSOR = false;
+  public static boolean HAS_CLIMB_BOTTOM_SENSOR = false;
+  public static boolean CLIMB_TOP_SENSOR_INVERTED = false;
+  public static boolean CLIMB_BOTTOM_SENSOR_INVERTED = false;
+  public static int CLIMB_TOP_SENSOR_CHANNEL;
+  public static int CLIMB_BOTTOM_SENSOR_CHANNEL;
+  public static boolean HAS_CLIMB_TILT_SWITCH = true;
+  public static boolean CLIMB_TILT_SWITCH_INVERTED = false;
+  public static int CLIMB_TILT_SWITCH_CHANNEL = 3;
+  public static int CLIMBER_PID_SLOT;
+  public static double CLIMBER_P;
+  public static double CLIMBER_I;
+  public static double CLIMBER_D;
+  public static double CLIMBER_F;
+  public static double VELOCITY_MULTIPLIER_CLIMBER;
+  
   // Shooter
   public static boolean HAS_SHOOTER = true;
   public static boolean HAS_TRIGGER = true;
