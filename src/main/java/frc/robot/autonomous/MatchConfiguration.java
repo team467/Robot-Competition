@@ -50,8 +50,7 @@ public class MatchConfiguration {
       chooser.addOption(s,s);
     }
 
-    SmartDashboard.putData("Auto Chooser", chooser);
-    
+    SmartDashboard.putData("Auto Chooser", chooser);  
 
   }
 

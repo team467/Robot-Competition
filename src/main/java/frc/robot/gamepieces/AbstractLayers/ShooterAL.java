@@ -5,6 +5,7 @@ import frc.robot.RobotMap;
 
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
+import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.util.Color;
 
 import java.io.IOException;
@@ -21,6 +22,7 @@ import org.apache.logging.log4j.Logger;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 
 public class ShooterAL extends GamePieceBase implements GamePiece {
 
@@ -39,6 +41,9 @@ public class ShooterAL extends GamePieceBase implements GamePiece {
 
   private static WPI_TalonSRX triggerMotor;
   public static TalonSpeedControllerGroup trigger;
+  
+
+  public static Servo hood;
 
   private static AddressableLED leds;
   private static AddressableLEDBuffer ledBuffer;
@@ -57,11 +62,13 @@ public class ShooterAL extends GamePieceBase implements GamePiece {
         LOGGER.info("Creating Lead Motors");
 
         flywheelLeader = new WPI_TalonSRX(RobotMap.SHOOTER_MOTOR_CHANNEL);
+        flywheelLeader.setNeutralMode(NeutralMode.Coast);
         flywheelFollower = null;
 
         if (RobotMap.SHOOTER_FOLLOWER) {
           LOGGER.info("Creating first set of follower motors");
           flywheelFollower = new WPI_TalonSRX(RobotMap.SHOOTER_MOTOR_FOLLOWER_CHANNEL);
+          flywheelFollower.setNeutralMode(NeutralMode.Coast);
         }
 
         flywheel = new TalonSpeedControllerGroup("Shooter", ControlMode.Velocity, RobotMap.SHOOTER_SENSOR_INVERTED,
@@ -73,14 +80,20 @@ public class ShooterAL extends GamePieceBase implements GamePiece {
         flywheel = new TalonSpeedControllerGroup();
       }
 
-      if (RobotMap.HAS_TRIGGER) {
+      if (RobotMap.HAS_SHOOTER_TRIGGER) {
         triggerMotor = new WPI_TalonSRX(RobotMap.TRIGGER_MOTOR_CHANNEL);
         trigger = new TalonSpeedControllerGroup("Trigger", ControlMode.PercentOutput, false, RobotMap.TRIGGER_MOTOR_INVERTED, triggerMotor);
       } else {
         trigger = new TalonSpeedControllerGroup();
       }
 
-      if (RobotMap.HAS_SHOOTERLEDS) {
+      if (RobotMap.HAS_SHOOTER_HOOD) {
+        hood = new Servo(RobotMap.HOOD_PWM_PORT);
+      } else {
+        hood = null;
+      }
+
+      if (RobotMap.HAS_SHOOTER_LEDS) {
         leds = new AddressableLED(RobotMap.SHOOTER_LED_CHANNEL);
         ledBuffer = new AddressableLEDBuffer(RobotMap.SHOOTER_LED_AMOUNT * (RobotMap.SHOOTER_DOUBLESIDE_LED? 2: 1));
         leds.setLength(ledBuffer.getLength());
@@ -200,6 +213,20 @@ public class ShooterAL extends GamePieceBase implements GamePiece {
 
   public void clearStrip() {
     setLedSrip(0, 0, 0, 0, ledBuffer.getLength()-1);
+  }
+  public void setHoodAngle(double angle) {
+    if (hood != null && RobotMap.HAS_SHOOTER_HOOD) {
+      double setAngle = Math.max(0.0, Math.min(1.0, speed));
+      hood.set(setAngle);
+    }
+  }
+
+  public double getHoodAngle() {
+    double angle = 0;
+    if (hood != null && RobotMap.HAS_SHOOTER_HOOD) {
+      angle = hood.getAngle();
+    }
+    return angle;
   }
 
   public void flyWheelPIDF(double kP, double kI, double kD, double kF) {
