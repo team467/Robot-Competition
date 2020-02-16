@@ -110,14 +110,7 @@ public class DriverStation467 {
     return false;
   }
 
-  // public boolean getArm() {
-  // return navJoy.pov() == 1;
-  // }
-
   // indexer TODO change later
-  public boolean indexerManual() {
-    return true;
-  }
 
   public boolean getIndexerAutoMode() {
     return false;
@@ -128,7 +121,7 @@ public class DriverStation467 {
   }
 
   public boolean indexerFeed() {
-    if (indexerManual()) {
+    if (!getIndexerAutoMode()) {
       return true;
     } else {
       return false;
@@ -136,7 +129,7 @@ public class DriverStation467 {
   }
 
   public boolean indexerReverse() {
-    if (indexerManual()) {
+    if (!getIndexerAutoMode()) {
       return true;
     } else {
       return false;
