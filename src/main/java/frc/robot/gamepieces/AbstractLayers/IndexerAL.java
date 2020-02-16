@@ -31,12 +31,6 @@ public class IndexerAL extends GamePieceBase implements GamePiece {
   private static Rev2mDistanceSensor onboardTOF;
   private static NetworkTableEntry networkTableTOF;
 
-  // public boolean override;
-  // public boolean mouthOverride;
-  // public boolean chamberOverride;
-  // public static boolean calledForward;
-  // public static boolean calledReverse;
-
   public static IndexerAL getInstance() {
     if (instance == null) {
       if (RobotMap.HAS_INDEXER) {
@@ -100,7 +94,7 @@ public class IndexerAL extends GamePieceBase implements GamePiece {
   }
 
   public boolean isBallInMouth() {
-    boolean result = false;
+    boolean result = true; //TODO make this false when have indexer
     if (onboardTOF != null && RobotMap.HAS_INDEXER_TOF_SENSORS) {
       double distance = getMouthDistance();
       double threshold = RobotMap.INDEXER_TOF_THRESHOLD;
@@ -114,7 +108,7 @@ public class IndexerAL extends GamePieceBase implements GamePiece {
   }
 
   public boolean isBallInChamber() {
-    boolean result = true; //TODO make this false when have indexer
+    boolean result = false; //TODO make this false when have indexer
     if (networkTableTOF != null && RobotMap.HAS_INDEXER_TOF_SENSORS) {
       double distance = getChamberDistance();
       double threshold = RobotMap.INDEXER_TOF_THRESHOLD;
@@ -143,11 +137,13 @@ public class IndexerAL extends GamePieceBase implements GamePiece {
   }
 
   public static void moveBallsTowardIntake() {
+    LOGGER.error("moving toward intake");
     IndexerAL.getInstance().setForward();
 
   }
 
   public static void advanceBallsToShooter() {
+    LOGGER.error("advancing toward shooter");
     IndexerAL.getInstance().setBackwards();
   }
 
