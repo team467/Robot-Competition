@@ -60,7 +60,7 @@ public class VisionController {
     netAngle = table.getEntry("TurningAngle");
     angle = netAngle.getDouble(180);
     LOGGER.debug("Angle from network table is {}", angle);
-    return angle;
+    return angle - 5;
   }
 
   public boolean hasAngle(){
@@ -87,20 +87,29 @@ public class VisionController {
    * tells the robot to turn
    */
   public double setTurn() {
-    if(hasAngle()){
-      if(Math.abs(angle() + gyro.getPitchDegrees()) < 4) {
-        robotTurner = 0.0;
-      } else if(-gyro.getPitchDegrees() < angle()) {
-          robotTurner = 0.3;
-       } else if(-gyro.getPitchDegrees() > angle()) {
-          robotTurner = -0.3;
-       } 
 
-      } else {
-          robotTurner = 0.0;
-        
+    if (!hasAngle()) {
+      return 0.0;
     }
-    return robotTurner;
+
+    if (Math.abs(angle() + gyro.getPitchDegrees()) < 4) {
+        return 0.0;
+    } 
+    
+    if (-gyro.getPitchDegrees() < angle()) {
+        return 0.2;
+    }
+
+    if (-gyro.getPitchDegrees() > angle()) {
+        return -0.2;
+    }
+
+    return 0;
+
+  }
+
+  public void resetGyro() {
+    gyro.reset();
   }
 
   public double setDistDrive() {
