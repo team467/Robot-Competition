@@ -1,4 +1,4 @@
-package frc.robot.other;
+package frc.robot.LED;
 
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
@@ -22,7 +22,7 @@ public class LEDStrip {
     private Pattern mode = Pattern.WHITE;
 
     public static enum Pattern {
-        RGB, RED, GREEN, BLUE, RAINBOW, BLINKING, WHITE, BOOMER
+        RGB, RED, GREEN, BLUE, YELLOW, RAINBOW, BLINKING, WHITE, BOOMER, BLANK
     }
 
     public static LEDStrip getInstance() {
@@ -69,6 +69,11 @@ public class LEDStrip {
                 LEDBuffer.setRGB(i, 0, 0, 255);
             }
             break;
+        case YELLOW:
+            for (int i = 0; i < LEDBuffer.getLength(); i++) {
+                LEDBuffer.setRGB(i, 255, 255, 0);
+            }
+            break;
         case RAINBOW:
             for (int i = 0; i < LEDBuffer.getLength(); i++) {
                 Color rainbow = Color.getHSBColor((float) i / RobotMap.LEDCount + (float) time / 50, 1, 1);
@@ -91,7 +96,7 @@ public class LEDStrip {
             break;
         case BOOMER:
             for (int i = 0; i < LEDBuffer.getLength(); i++) {
-                int position = i+time;
+                int position = i   + time;
                 if (position % 4 < 2) {
                     LEDBuffer.setRGB(i, 16, 16, 82);
                 } else {
@@ -99,6 +104,19 @@ public class LEDStrip {
                 }
             }
             break;
+        case BLANK:
+        for (int i = 0; i < LEDBuffer.getLength(); i++) {
+            int position = i   + time;
+            if (position % 4 < 2) {
+                LEDBuffer.setRGB(i, 16, 16, 82);
+            } else {
+                LEDBuffer.setRGB(i, 0, 0, 0);
+            }
+        }
+        break;
+
+        default:
+            LOGGER.warn("Pattern not implemented yet");
         }
         // copies stuff to LEDS
         LEDStrip.setData(LEDBuffer);
@@ -124,6 +142,9 @@ public class LEDStrip {
         case "BLUE":
             mode = Pattern.BLUE;
             return true;
+        case "YELLOW":;
+            mode = Pattern.YELLOW;    
+            return true;
         case "RAINBOW":
             mode = Pattern.RAINBOW;
             return true;
@@ -136,7 +157,14 @@ public class LEDStrip {
         case "BOOMER":
             mode = Pattern.BOOMER;
             return true;
+        case "BLANK":
+            mode = Pattern.BLANK;
+            return true;
         }
         return false;
+    }
+
+    public void setColorEnum(Pattern pattern) {
+        mode = pattern;
     }
 }

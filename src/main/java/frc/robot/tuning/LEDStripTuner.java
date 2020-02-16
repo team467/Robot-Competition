@@ -3,7 +3,7 @@ package frc.robot.tuning;
 import java.text.ParseException;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.other.LEDStrip;
+import frc.robot.LED.LEDStrip;
 import frc.robot.logging.RobotLogManager;
 import org.apache.logging.log4j.Logger;
 

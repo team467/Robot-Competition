@@ -18,7 +18,7 @@ import frc.robot.drive.Drive;
 import frc.robot.gamepieces.GamePieceController;
 import frc.robot.logging.RobotLogManager;
 import frc.robot.logging.Telemetry;
-import frc.robot.other.LEDStrip;
+import frc.robot.LED.LEDStrip;
 import frc.robot.sensors.LedI2C;
 import frc.robot.usercontrol.DriverStation467;
 import frc.robot.utilities.PerfTimer;
