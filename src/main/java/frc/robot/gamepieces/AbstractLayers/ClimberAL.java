@@ -66,15 +66,15 @@ public class ClimberAL extends GamePieceBase implements GamePiece {
     }
 
     public boolean isDown() {
-        return false; // TODO: is climber at its lowest?
+        return getBottomSensor(); // TODO: is climber at its lowest? combiantion of potientiometer and bottom limit sensor
     }
 
     public boolean isUp() {
-        return false; // TODO: is climber at its highest?
+        return getTopSensor(); // TODO: is climber at its highest? combiantion of potientiometer and upper limit sensor
     }
 
     public boolean isTilted() {
-        return false; // TODO: is climberArmLifted?
+        return getTiltSwitch(); // TODO: is climberArmLifted? tilt limit switch
     }
 
     private float climberPosition() {
