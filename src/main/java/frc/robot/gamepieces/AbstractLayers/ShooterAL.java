@@ -43,7 +43,8 @@ public class ShooterAL extends GamePieceBase implements GamePiece {
   public static TalonSpeedControllerGroup trigger;
   
 
-  public static Servo hood;
+  public static Servo hoodLeader;
+  public static Servo hoodFollower;
 
   private static AddressableLED leds;
   private static AddressableLEDBuffer ledBuffer;
@@ -88,9 +89,16 @@ public class ShooterAL extends GamePieceBase implements GamePiece {
       }
 
       if (RobotMap.HAS_SHOOTER_HOOD) {
-        hood = new Servo(RobotMap.HOOD_PWM_PORT);
+        hoodLeader = new Servo(RobotMap.HOOD_PWM_PORT);
+        hoodFollower = null;
+
+        if (RobotMap.HOOD_FOLLOWER) {
+          hoodFollower = new Servo(RobotMap.HOOD_FOLLOWER_PWM_PORT);
+        }
+
       } else {
-        hood = null;
+        hoodLeader = null;
+        hoodFollower = null;
       }
 
       if (RobotMap.HAS_SHOOTER_LEDS) {
@@ -215,16 +223,22 @@ public class ShooterAL extends GamePieceBase implements GamePiece {
     setLedSrip(0, 0, 0, 0, ledBuffer.getLength()-1);
   }
   public void setHoodAngle(double angle) {
-    if (hood != null && RobotMap.HAS_SHOOTER_HOOD) {
+    if (hoodLeader != null && RobotMap.HAS_SHOOTER_HOOD) {
       double setAngle = Math.max(0.0, Math.min(1.0, speed));
-      hood.set(setAngle);
+      setAngle = setAngle * (RobotMap.HOOD_INVERTED ? -1 : 1);
+      hoodLeader.set(setAngle);
+
+      if (hoodFollower != null && RobotMap.HOOD_FOLLOWER) {
+        double followerAngle = setAngle * (RobotMap.HOOD_FOLLOWER_INVERTED ? -1 : 1);
+        hoodFollower.set(followerAngle);
+      } 
     }
   }
 
   public double getHoodAngle() {
     double angle = 0;
-    if (hood != null && RobotMap.HAS_SHOOTER_HOOD) {
-      angle = hood.getAngle();
+    if (hoodLeader != null && RobotMap.HAS_SHOOTER_HOOD) {
+      angle = hoodLeader.getAngle();
     }
     return angle;
   }
