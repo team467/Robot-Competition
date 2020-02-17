@@ -75,7 +75,7 @@ public class ClimberAL extends GamePieceBase implements GamePiece {
         return getTiltSwitch(); // TODO: is climberArmLifted? tilt limit switch
     }
 
-    private double climberPosition() {
+    public double climberPosition() {
         double result = 0;
         if (potentiometer != null && RobotMap.HAS_CLIMB_POT) {
             result = potentiometer.get();
