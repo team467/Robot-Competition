@@ -65,7 +65,7 @@ public enum ClimberState implements State{
             if (isHighest) { 
                 return GameLocked;
             }
-            if(!upButtonPressed || downButtonPressed) {
+            if (!upButtonPressed || downButtonPressed) {
                 return GameLocked;
             }
             return this;
