@@ -9,6 +9,7 @@ public class DriverStation467 {
 
   private XBoxJoystick467 driverJoy;
   private XBoxJoystick467 navJoy;
+  private OperatorController467 opCon;
 
   private Rumbler driverRumbler;
   private Rumbler navRumbler;
