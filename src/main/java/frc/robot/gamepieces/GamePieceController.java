@@ -208,11 +208,6 @@ public class GamePieceController {
     return reverse;
   }
 
-  public boolean indexerAutoMode() {
-    driverStation.getIndexerAutoMode();
-    return true;
-  }
-
   public void determineShooterSpeed() {
     //math
     if(visionController.hasDistance()) {

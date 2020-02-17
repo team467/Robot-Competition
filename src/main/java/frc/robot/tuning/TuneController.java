@@ -17,6 +17,7 @@ public class TuneController {
     register("Drive_Straight", new DriveConstantTuner());
     register("Indexer_Tuner", new IndexerTuner());
     register("Sm_Test", new stateMachineTuner());
+    register("Indexer_SM_Tuner", new IndexerStateTuner());
   }
 
   private static final Logger LOGGER
