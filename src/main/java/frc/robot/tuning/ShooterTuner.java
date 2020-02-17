@@ -90,7 +90,7 @@ public class ShooterTuner implements Tuner {
             }
         }
 
-        //shooter.setHoodAngle(angle);
+        shooter.setHoodAngle(angle);
 
         if (startShooting) {
             shooter.startShooting();

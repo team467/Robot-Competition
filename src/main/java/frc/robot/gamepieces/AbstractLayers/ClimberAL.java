@@ -18,6 +18,7 @@ import org.apache.logging.log4j.Logger;
 import com.revrobotics.*;
 import frc.robot.gamepieces.GamePieceBase;
 import frc.robot.gamepieces.GamePiece;
+import edu.wpi.first.wpilibj.AnalogPotentiometer;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Relay;
 //adds solenoid class
@@ -40,6 +41,7 @@ public class ClimberAL extends GamePieceBase implements GamePiece {
     private static DigitalInput topSensor;
     private static DigitalInput bottomSensor;
     private static DigitalInput tiltLimitSwitch;
+    private static AnalogPotentiometer potentiometer; 
 
     // states of robot
     private climberSpeed speed;
@@ -73,8 +75,12 @@ public class ClimberAL extends GamePieceBase implements GamePiece {
         return false; // TODO: is climberArmLifted?
     }
 
-    private float climberPosition() {
-        return 0.0f; // TODO: what to do with this?
+    private double climberPosition() {
+        double result = 0;
+        if (potentiometer != null && RobotMap.HAS_CLIMB_POT) {
+            result = potentiometer.get();
+        }
+        return result;
     }
 
     // gets the instance
@@ -122,6 +128,12 @@ public class ClimberAL extends GamePieceBase implements GamePiece {
                 tiltLimitSwitch = new DigitalInput(RobotMap.CLIMB_TILT_SWITCH_CHANNEL);
             } else {
                 tiltLimitSwitch = null;
+            }
+
+            if (RobotMap.HAS_CLIMB_POT) {
+                potentiometer = new AnalogPotentiometer(RobotMap.CLIMB_POT_CHANNEL);
+            } else {
+                potentiometer = null;
             }
 
             instance = new ClimberAL(climbGroup); // invoking the constructor
