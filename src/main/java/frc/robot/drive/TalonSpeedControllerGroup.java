@@ -173,6 +173,7 @@ public class TalonSpeedControllerGroup implements SpeedController {
   }
 
   public void set(final ControlMode controlMode, double outputValue) {
+    LOGGER.info(outputValue);
     if (leader == null) {
       LOGGER.error("No drive system");
       return;
@@ -184,6 +185,7 @@ public class TalonSpeedControllerGroup implements SpeedController {
       outputValue *= maxVelocity;
     }
 
+    LOGGER.info("outputValue - " + outputValue);
     LOGGER.debug("Output is {}, in mode {}", outputValue, controlMode);
 
     leader.set(controlMode, outputValue);

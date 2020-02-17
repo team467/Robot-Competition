@@ -27,22 +27,32 @@ public class IndexerAL extends GamePieceBase implements GamePiece {
   private static WPI_TalonSRX indexLeader;
   private static WPI_TalonSRX indexFollower;
   private static TalonSpeedControllerGroup indexer;
-  
+
   private static Rev2mDistanceSensor onboardTOF;
   private static NetworkTableEntry networkTableTOF;
+
+  public enum SensorTestMode {
+    FORCE_TRUE, FORCE_FALSE, USE_SENSOR
+  }
+
+  SensorTestMode forceMouthSensor = SensorTestMode.USE_SENSOR;
+  SensorTestMode forceChamberSensor = SensorTestMode.USE_SENSOR;
 
   public static IndexerAL getInstance() {
     if (instance == null) {
       if (RobotMap.HAS_INDEXER) {
+        LOGGER.info("lead created");
         indexLeader = new WPI_TalonSRX(RobotMap.FIRST_MAGAZINE_FEED_MOTOR_CHANNEL);
         indexFollower = null;
-       
-        if (RobotMap.INDEXER_FOLLOWER) {
+
+        if (RobotMap.INDEX_FOLLOWER_MOTOR){
+          LOGGER.info("follower created");
           indexFollower = new WPI_TalonSRX(RobotMap.SECOND_MAGAZINE_FEED_MOTOR_CHANNEL);
         }
 
-        indexer = new TalonSpeedControllerGroup("Indexer", ControlMode.Velocity, RobotMap.INDEXER_SENSOR_INVERTED,
-        RobotMap.INDEXER_MOTOR_INVERTED, indexLeader, indexFollower);
+        indexer = new TalonSpeedControllerGroup("Indexer", ControlMode.PercentOutput, RobotMap.INDEXER_SENSOR_INVERTED,
+            RobotMap.INDEXER_MOTOR_INVERTED, indexLeader, indexFollower);
+        LOGGER.info("Talon group:" + indexer.toString());
 
       } else {
         indexer = new TalonSpeedControllerGroup();
@@ -52,7 +62,7 @@ public class IndexerAL extends GamePieceBase implements GamePiece {
         onboardTOF = new Rev2mDistanceSensor(Port.kOnboard);
         onboardTOF.setAutomaticMode(true);
         NetworkTable table = NetworkTableInstance.getDefault().getTable("sensors");
-        networkTableTOF = table.getEntry("tof");    
+        networkTableTOF = table.getEntry("tof");
       }
 
       instance = new IndexerAL(indexer);
@@ -68,8 +78,8 @@ public class IndexerAL extends GamePieceBase implements GamePiece {
 
   public void setIndexerSpeed(double speed) {
     if (indexer != null && RobotMap.HAS_INDEXER) {
-        double output = Math.max(-1.0, Math.min(1.0, speed));
-        indexer.set(output);
+      double output = Math.max(-1.0, Math.min(1.0, speed));
+      indexer.set(output);
     }
   }
 
@@ -78,7 +88,7 @@ public class IndexerAL extends GamePieceBase implements GamePiece {
     if (onboardTOF != null && RobotMap.HAS_INDEXER_TOF_SENSORS) {
       if (onboardTOF.isRangeValid()) {
         distance = onboardTOF.getRange();
-      } 
+      }
     }
 
     return distance;
@@ -89,12 +99,32 @@ public class IndexerAL extends GamePieceBase implements GamePiece {
     if (networkTableTOF != null && RobotMap.HAS_INDEXER_TOF_SENSORS) {
       distance = networkTableTOF.getDouble(0);
     }
-    
+
     return distance;
   }
 
+  public void setForceBallInMouth(SensorTestMode mode) {
+    forceMouthSensor = mode;
+  }
+
+  public void setForceBallInChamber(SensorTestMode mode) {
+    forceChamberSensor = mode;
+  }
+
+  
+
   public boolean isBallInMouth() {
-    boolean result = true; //TODO make this false when have indexer
+   
+    // Tuners may force a result, bypassing the sensor.
+    if (forceMouthSensor == SensorTestMode.FORCE_TRUE) {
+      LOGGER.debug("ball is present in mouth");
+      return true;
+    } else {
+      if (forceMouthSensor == SensorTestMode.FORCE_FALSE)
+      return false;
+    }
+
+    boolean result = false; // TODO make this false when have indexer
     if (onboardTOF != null && RobotMap.HAS_INDEXER_TOF_SENSORS) {
       double distance = getMouthDistance();
       double threshold = RobotMap.INDEXER_TOF_THRESHOLD;
@@ -108,7 +138,15 @@ public class IndexerAL extends GamePieceBase implements GamePiece {
   }
 
   public boolean isBallInChamber() {
-    boolean result = false; //TODO make this false when have indexer
+   
+    if (forceChamberSensor == SensorTestMode.FORCE_TRUE) {
+      LOGGER.debug("ball is present in chamber");
+      return true;
+    } else {
+      if (forceChamberSensor == SensorTestMode.FORCE_FALSE)
+      return false;
+    }
+    boolean result = false; // TODO make this false when have indexer
     if (networkTableTOF != null && RobotMap.HAS_INDEXER_TOF_SENSORS) {
       double distance = getChamberDistance();
       double threshold = RobotMap.INDEXER_TOF_THRESHOLD;
@@ -122,28 +160,28 @@ public class IndexerAL extends GamePieceBase implements GamePiece {
   }
 
   private void setForward() {
-    LOGGER.debug("Indexer going forward");
+    LOGGER.info("Indexer going forward");
     indexer.set(1.0);
   }
 
   private void setBackwards() {
-    LOGGER.debug("Indexer going backwards");
+    LOGGER.info("Indexer going backwards");
     indexer.set(-1.0);
   }
 
   private void setStop() {
-    LOGGER.debug("Indexer stopped");
+    LOGGER.info("Indexer stopped");
     indexer.set(0.0);
   }
 
   public static void moveBallsTowardIntake() {
-    LOGGER.error("moving toward intake");
+    LOGGER.debug("moving toward intake");
     IndexerAL.getInstance().setForward();
 
   }
 
   public static void advanceBallsToShooter() {
-    LOGGER.error("advancing toward shooter");
+    LOGGER.debug("advancing toward shooter");
     IndexerAL.getInstance().setBackwards();
   }
 

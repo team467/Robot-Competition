@@ -37,19 +37,25 @@ public enum IndexerState implements State {
             isInMouth = indexerAL.isBallInMouth();
             isInChamber = indexerAL.isBallInChamber();
 
+            // Works
             if (!autoMode) {
                 return Manual;
             }
 
+            // Works 
             if (indexerBallsForward && isInMouth && !isInChamber) {
+                LOGGER.info("isInMouth and is not in Chamber");
                 return Feed;
             }
 
+            
             if (GamePieceController.getInstance().getShooterState() == ShooterState.LoadingBall) {
+                LOGGER.info("LoadingBalls");
                 return Feed;
             }
 
             if (indexerBallsReverse) {
+                LOGGER.info("indexerBallsReverse {}", indexerBallsReverse);
                 return Reverse;
             }
             return this;
@@ -70,6 +76,7 @@ public enum IndexerState implements State {
         }
 
         public State action() {
+            LOGGER.debug("Feed is activated");
             autoMode = GamePieceController.getInstance().IndexAuto;
 
             IndexerAL.advanceBallsToShooter();
@@ -96,8 +103,6 @@ public enum IndexerState implements State {
     // be seen by the mouth TOF sensor.
     FeedBuffer {
 
-        private Timer timer;
-
         public void enter() {
             timer.start();
 
@@ -107,11 +112,12 @@ public enum IndexerState implements State {
 
             IndexerAL.advanceBallsToShooter();
             // TODO: adjust timer based on how fast the ball is moving.
-            if (timer.get() == RobotMap.INDEXER_MOVE_TIMER) {
+            if (timer.get() >= RobotMap.INDEXER_MOVE_TIMER) {
+                IndexerAL.callStop();
                 return Idle;
+            } else {
+                return this;
             }
-
-            return this;
         }
 
         public void exit() {

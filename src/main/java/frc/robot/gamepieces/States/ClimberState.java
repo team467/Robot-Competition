@@ -5,80 +5,122 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
+
 package frc.robot.gamepieces.States;
 
 import frc.robot.gamepieces.GamePieceController;
 import frc.robot.gamepieces.AbstractLayers.ClimberAL;
-import frc.robot.gamepieces.AbstractLayers.ClimberAL.solenoidLock;
-import frc.robot.gamepieces.AbstractLayers.ClimberAL.climberSpeed;
+import static frc.robot.gamepieces.AbstractLayers.ClimberAL.solenoidLock.*;
+import static frc.robot.gamepieces.AbstractLayers.ClimberAL.climberSpeed.*;
 import edu.wpi.first.wpilibj.Timer;
 
 /**
  * Add your docs here.
  */
-public enum ClimberState implements State{
+public enum ClimberState implements State {
     InitialLocked {
-        //inlcude these
+        // inlcude these
         public boolean upButtonPressed;
-        public boolean downButtonPressed; 
+        public boolean downButtonPressed;
         public boolean climberEnabled;
 
         public void enter() {
-            //noop
+            // noop
         }
-        
+
         public State action() {
-            //first hand updates on the status of these stuff
+            // first hand updates on the status of these stuff
             climberEnabled = GamePieceController.getInstance().climberEnabled;
             upButtonPressed = GamePieceController.getInstance().climberUpButtonPressed;
             downButtonPressed = GamePieceController.getInstance().climberDownButtonPressed;
 
-            climberAL.climberDirection(climberSpeed.OFF);
-            climberAL.setLock(solenoidLock.LOCK);
-            if(climberEnabled && upButtonPressed) {
+            climberAL.set(OFF);
+            climberAL.setLock(LOCK);
+            if (climberEnabled && upButtonPressed) {
 
                 return Extending;
 
-            } 
+            }
             return this;
         }
 
         public void exit() {
             // Noop
         }
-    }, 
+    }, // it's an enum so a period is neccessary
 
-    Extending{
+    UnlockingUp {
         public boolean upButtonPressed;
         public boolean downButtonPressed;
+        public double Position;
+        public double unlockingDelay;
 
         public void enter() {
-           //Noop
+            timer.start();
         }
 
         public State action() {
-            upButtonPressed = GamePieceController.getInstance().climberUpButtonPressed;
-            downButtonPressed = GamePieceController.getInstance().climberDownButtonPressed;
+            upButtonPressed = GamePieceController.getInstance().upButtonPressed;
+            downButtonPressed = GamePieceController.getInstance().downButtonPressed;
+            Position = ClimberAL.getInstance().getPosition();
 
-            climberAL.climberDirection(climberSpeed.UP);
-            climberAL.setLock(solenoidLock.UNLOCK);
-            if (isHighest) { 
-                return GameLocked;
-            }
-
-            if (!upButtonPressed || downButtonPressed) {
-                return GameLocked;
+            climberAL.set(UPSLOW);
+            climberAL.setLock(LOCK);
+            if (Position >= unlockingDelay) {
+                if (upButtonPressed) {
+                    return Extending;
+                }
+                if (!upButtonPressed) {
+                    return GameLocked;
+                }
             }
             return this;
         }
-        
-        
+
         public void exit() {
-            //Noop
+            timer.stop();
+            timer.reset();
         }
     },
 
-    GameLocked { 
+    UnlockingDown {
+        public boolean upButtonPressed;
+        public boolean downButtonPressed;
+        public double Position;
+        public double unlockingDelay;
+
+        public void enter() {
+            timer.start();
+        }
+
+        public State action() {
+            upButtonPressed = GamePieceController.getInstance().upButtonPressed;
+            downButtonPressed = GamePieceController.getInstance().downButtonPressed;
+            Position = ClimberAL.getInstance().getPosition();
+
+            climberAL.set(DOWNSLOW);
+            climberAL.setLock(LOCK);
+            if (Position >= unlockingDelay) {
+                if (downButtonPressed) {
+                    return Extending;
+                }
+                if (!downButtonPressed) {
+                    return GameLocked;
+                }
+            }
+            if (timer.get() > unlockingDelay && Position <= 2) { // TODO: determine position value
+                return Disabled;
+            }
+            return this;
+        }
+
+        public void exit() {
+            timer.stop();
+            timer.reset();
+        }
+    },
+
+    Extending {
         public boolean upButtonPressed;
         public boolean downButtonPressed;
 
@@ -90,19 +132,18 @@ public enum ClimberState implements State{
             upButtonPressed = GamePieceController.getInstance().climberUpButtonPressed;
             downButtonPressed = GamePieceController.getInstance().climberDownButtonPressed;
 
-            climberAL.set(climberSpeed.OFF);
-            climberAL.setLock(solenoidLock.LOCK);
-            if (upButtonPressed && !downButtonPressed && !isHighest) {
-                return Extending;
+            climberAL.set(UP);
+            climberAL.setLock(UNLOCK);
+            if (isHighest) {
+                return GameLocked;
             }
-
-            if (downButtonPressed && !upButtonPressed && !isLowest) {
-                return Retracting;
+            if (!upButtonPressed || downButtonPressed) {
+                return GameLocked;
             }
 
             return this;
         }
-        
+
         public void exit() {
             // Noop
         }
@@ -113,33 +154,86 @@ public enum ClimberState implements State{
         public boolean downButtonPressed;
 
         public void enter() {
-            //Noop
+            // Noop
         }
 
         public State action() {
             upButtonPressed = GamePieceController.getInstance().climberUpButtonPressed;
             downButtonPressed = GamePieceController.getInstance().climberDownButtonPressed;
 
-            climberAL.set(climberSpeed.DOWN);
-            climberAL.setLock(solenoidLock.UNLOCK);
-            if(!downButtonPressed) {
+            climberAL.set(DOWN);
+            climberAL.setLock(UNLOCK);
+            if (!downButtonPressed) {
                 return GameLocked;
             }
-            if(isLowest) {
+            if (isLowest) {
                 return GameLocked;
             }
             return this;
         }
-        
+
         public void exit() {
-            //Noop
+            // Noop
+        }
+    },
+
+    GameLocked {
+        public boolean upButtonPressed;
+        public boolean downButtonPressed;
+
+        public void enter() {
+            // Noop
+        }
+
+        public State action() {
+            upButtonPressed = GamePieceController.getInstance().upButtonPressed;
+            downButtonPressed = GamePieceController.getInstance().downButtonPressed;
+
+            climberAL.set(OFF);
+            climberAL.setLock(LOCK);
+            if (upButtonPressed && !downButtonPressed && !isHighest) {
+                return UnlockingUp;
+            }
+            if (downButtonPressed && !upButtonPressed && !isLowest) {
+                return UnlockingDown;
+            }
+            return this;
+        }
+
+        public void exit() {
+            // Noop
+        }
+    },
+
+    Disabled {
+        public double disableDelay;
+
+        public void enter() {
+            timer.start();
+        }
+
+        public State action() {
+            climberAL.set(OFF);
+            climberAL.setLock(LOCK);
+            if (timer.get() > disableDelay) { // TODO: determine timer value
+                return GameLocked;
+            }
+            return this;
+        }
+
+        public void exit() {
+            timer.stop();
+            timer.reset();
         }
     };
 
     private static ClimberAL climberAL = ClimberAL.getInstance();
     private static boolean isLowest = climberAL.isDown();
     private static boolean isHighest = climberAL.isUp();
+    private final double unlockingDelay = 2.0; // TODO: determine delay in seconds
+    private final double disableDelay = 3.0; // TODO: determine delay in seconds
     public static Timer timer = new Timer();
+
     ClimberState() {
 
     }

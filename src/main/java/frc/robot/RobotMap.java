@@ -335,10 +335,12 @@ public class RobotMap {
       AUTO_CAMERA = false;
 
       // Game Pieces
-      HAS_SHOOTER = true;
-      HAS_INDEXER = false;
+      HAS_SHOOTER = false;
+      HAS_INDEXER = true;
       HAS_INTAKE = false;
       HAS_CLIMBER = false;
+
+      IS_IN_TEST_MODE = true;
 
       // Shooter
       // TODO:change the values of these later
@@ -408,6 +410,18 @@ public class RobotMap {
       HAS_CLIMBLOCK = false;
       CLIMB_LOCK_CHANNEL = 0;
       CLIMB_LOCK_INVERTED = false;
+
+      //Indexer 
+
+      FIRST_MAGAZINE_FEED_MOTOR_CHANNEL = 6;
+      FIRST_MAGAZINE_FEED_MOTOR_INVERTED = false;
+      SECOND_MAGAZINE_FEED_MOTOR_CHANNEL = 5;
+      SECOND_MAGAZINE_FEED_MOTOR_INVERTED = false;
+      INDEX_FOLLOWER_MOTOR = true;
+      
+      INDEXER_MOVE_TIMER = 0.2;
+      INDEXER_TOF_THRESHOLD = 100;
+
       break;
     }
 
@@ -589,6 +603,9 @@ public class RobotMap {
   public static boolean INDEXER_SENSOR_INVERTED = false;
   public static boolean INDEXER_MOTOR_INVERTED = false;
   public static boolean HAS_INDEXER_TOF_SENSORS = false;
+
+
+  public static boolean IS_IN_TEST_MODE = false;
 
   public static double INDEXER_MOVE_TIMER;
   //distance threshold in mm for detecting a ball
