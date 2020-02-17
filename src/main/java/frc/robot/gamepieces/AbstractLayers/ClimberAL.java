@@ -18,6 +18,7 @@ import org.apache.logging.log4j.Logger;
 import com.revrobotics.*;
 import frc.robot.gamepieces.GamePieceBase;
 import frc.robot.gamepieces.GamePiece;
+import edu.wpi.first.wpilibj.AnalogPotentiometer;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Relay;
 //adds solenoid class
@@ -40,6 +41,7 @@ public class ClimberAL extends GamePieceBase implements GamePiece {
     private static DigitalInput topSensor;
     private static DigitalInput bottomSensor;
     private static DigitalInput tiltLimitSwitch;
+    private static AnalogPotentiometer potentiometer; 
 
     // states of robot
     private climberSpeed speed;
@@ -62,19 +64,23 @@ public class ClimberAL extends GamePieceBase implements GamePiece {
     }
 
     public boolean isDown() {
-        return false; // TODO: is climber at its lowest?
+        return getBottomSensor(); // TODO: is climber at its lowest? combiantion of potientiometer and bottom limit sensor
     }
 
     public boolean isUp() {
-        return false; // TODO: is climber at its highest?
+        return getTopSensor(); // TODO: is climber at its highest? combiantion of potientiometer and upper limit sensor
     }
 
     public boolean isTilted() {
-        return false; // TODO: is climberArmLifted?
+        return getTiltSwitch(); // TODO: is climberArmLifted? tilt limit switch
     }
 
-    private float climberPosition() {
-        return 0.0f; // TODO: what to do with this?
+    public double climberPosition() {
+        double result = 0;
+        if (potentiometer != null && RobotMap.HAS_CLIMB_POT) {
+            result = potentiometer.get();
+        }
+        return result;
     }
 
     // gets the instance
@@ -94,8 +100,8 @@ public class ClimberAL extends GamePieceBase implements GamePiece {
                 climbGroup = new SparkMaxSpeedControllerGroup("Climber", ControlType.kVelocity, RobotMap.CLIMBER_SENSOR,
                         RobotMap.CLIMBER_MOTOR_INVERTED, climbLeader, climbFollower);
 
-                climbGroup.pidf(RobotMap.CLIMBER_PID_SLOT, RobotMap.CLIMBER_P, RobotMap.CLIMBER_I, RobotMap.CLIMBER_D, RobotMap.CLIMBER_F,
-                        RobotMap.VELOCITY_MULTIPLIER_CLIMBER);
+                climbGroup.pidf(RobotMap.CLIMBER_PID_SLOT, RobotMap.CLIMBER_P, RobotMap.CLIMBER_I, RobotMap.CLIMBER_D,
+                        RobotMap.CLIMBER_F, RobotMap.VELOCITY_MULTIPLIER_CLIMBER);
             } else {
                 climbGroup = new SparkMaxSpeedControllerGroup();
             }
@@ -124,6 +130,12 @@ public class ClimberAL extends GamePieceBase implements GamePiece {
                 tiltLimitSwitch = null;
             }
 
+            if (RobotMap.HAS_CLIMB_POT) {
+                potentiometer = new AnalogPotentiometer(RobotMap.CLIMB_POT_CHANNEL);
+            } else {
+                potentiometer = null;
+            }
+
             instance = new ClimberAL(climbGroup); // invoking the constructor
             LOGGER.error("Instance is {}", instance);
 
@@ -149,8 +161,18 @@ public class ClimberAL extends GamePieceBase implements GamePiece {
         LOGGER.debug("Climber Is Going Down");
     }
 
+    public void climberUpSlow() {
+        climbGroup.set(0.1); // TODO: how slow? 5%?
+        LOGGER.debug("Climber Is Going Up Slowly");
+    }
+
+    public void climberDownSlow() {
+        climbGroup.set(0.1);
+        LOGGER.debug("Climber Is Going Down Slowly");
+    }
+
     public enum climberSpeed {
-        OFF, UP, DOWN;
+        OFF, UP, UPSLOW, DOWN, DOWNSLOW;
     }
 
     public void climberDirection(climberSpeed direction) {
@@ -162,8 +184,14 @@ public class ClimberAL extends GamePieceBase implements GamePiece {
         case UP:
             climberUp();
             break;
+        case UPSLOW:
+            climberUpSlow();
+            break;
         case DOWN:
             climberDown();
+            break;
+        case DOWNSLOW:
+            climberDownSlow();
             break;
         }
     }
@@ -239,11 +267,11 @@ public class ClimberAL extends GamePieceBase implements GamePiece {
         if (topSensor != null && RobotMap.HAS_CLIMB_TOP_SENSOR) {
             result = !topSensor.get();
         }
-        
+
         if (RobotMap.CLIMB_TOP_SENSOR_INVERTED) {
             result = !result;
         }
-        
+
         return result;
     }
 
@@ -252,11 +280,11 @@ public class ClimberAL extends GamePieceBase implements GamePiece {
         if (bottomSensor != null && RobotMap.HAS_CLIMB_BOTTOM_SENSOR) {
             result = !bottomSensor.get();
         }
-        
+
         if (RobotMap.CLIMB_BOTTOM_SENSOR_INVERTED) {
             result = !result;
         }
-        
+
         return result;
     }
 
