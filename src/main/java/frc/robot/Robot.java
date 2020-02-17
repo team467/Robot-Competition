@@ -21,6 +21,7 @@ import frc.robot.logging.Telemetry;
 import frc.robot.sensors.LedI2C;
 import frc.robot.sensors.PowerDistributionPanel;
 import frc.robot.usercontrol.DriverStation467;
+import frc.robot.usercontrol.OperatorController467;
 import frc.robot.utilities.PerfTimer;
 import frc.robot.vision.CameraSwitcher;
 import frc.robot.tuning.TuneController;
@@ -288,11 +289,15 @@ public class Robot extends TimedRobot {
     leds.whenDisabled();
     
     driverstation.readInputs();
-    if (driverstation.restartCamera()) {
-      camera.restart();
-    } else {
-      camera.fourWaySwitch(driverstation.getNavJoystick().getJoystick().getPOV());
+    OperatorController467 opcon = driverstation.getOperatorController();
+    for (int i = 1; i <= opcon.getButtonCount(); i++) {
+      SmartDashboard.putBoolean("Button " + i, opcon.getRawButton(i));
     }
+    // if (driverstation.restartCamera()) {
+    //   camera.restart();
+    // } else {
+    //   camera.fourWaySwitch(driverstation.getNavJoystick().getJoystick().getPOV());
+    // }
 
   }
 

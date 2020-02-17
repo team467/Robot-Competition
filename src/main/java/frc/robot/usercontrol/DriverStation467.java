@@ -35,10 +35,11 @@ public class DriverStation467 {
    */
   private DriverStation467() {
     driverJoy = new XBoxJoystick467(0, "driver");
-    navJoy = new XBoxJoystick467(1, "nav");
+    // navJoy = new XBoxJoystick467(1, "nav");
+    opCon = new OperatorController467(1);
 
     driverRumbler = new Rumbler(driverJoy);
-    navRumbler = new Rumbler(navJoy);
+    // navRumbler = new Rumbler(navJoy);
 
     registerMetrics();
   }
@@ -49,12 +50,15 @@ public class DriverStation467 {
   public void readInputs() {
     if (driverJoy != null) {
       driverJoy.read();
+      driverRumbler.periodic();
     }
     if (navJoy != null) {
       navJoy.read();
+      navRumbler.periodic();
     }
-    driverRumbler.periodic();
-    navRumbler.periodic();
+    if (opCon != null) {
+      opCon.read();
+    }
   }
 
   public void logJoystickIDs() {
@@ -77,6 +81,10 @@ public class DriverStation467 {
 
   public XBoxJoystick467 getNavJoystick() {
     return navJoy;
+  }
+
+  public OperatorController467 getOperatorController() {
+    return opCon;
   }
 
   public Rumbler getDriverRumbler() {

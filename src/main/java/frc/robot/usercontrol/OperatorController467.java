@@ -33,10 +33,8 @@ public class OperatorController467 extends GenericHID {
      * @param buttonTotal - Total amount of buttons on the controller
      * @param axesTotal - Total amount of axes on the controller
      */
-    public OperatorController467(final int port, final int buttonTotal, final int axesTotal) {
+    public OperatorController467(final int port) {
         super(port);
-        this.buttonTotal = buttonTotal;
-        this.axesTotal = axesTotal;
     }
 
     /**
@@ -50,14 +48,15 @@ public class OperatorController467 extends GenericHID {
     }
 
     private void readButtons() {
-        for (int b = 0; b < buttonTotal; b++) {
+        for (int b = 1; b <= buttonTotal; b++) {
             previousButtonDown.put(b, buttonDown.get(b));
+            LOGGER.error("Button {}", b);
             buttonDown.put(b, controllerHID.getRawButton(b));
         }
     }
 
     private void readAxes() {
-        for (int axis = 0; axis < axesTotal; axis++) {
+        for (int axis = 1; axis <= axesTotal; axis++) {
             axes.put(axis, controllerHID.getRawAxis(axis));
         }
     }
