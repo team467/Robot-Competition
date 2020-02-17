@@ -73,8 +73,8 @@ public class ClimberAL extends GamePieceBase implements GamePiece {
         return getTiltSwitch(); // TODO: is climberArmLifted? tilt limit switch
     }
 
-    private float climberPosition() {
-        return 0.0f; // TODO: what to do with this?
+    public double climberPosition() {
+        return 0.0; // TODO 
     }
 
     // gets the instance
