@@ -10,7 +10,6 @@ package frc.robot.tuning;
 import org.apache.logging.log4j.Logger;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.gamepieces.GamePieceController;
 import frc.robot.gamepieces.AbstractLayers.IndexerAL;
 import frc.robot.logging.RobotLogManager;
 
@@ -19,14 +18,13 @@ public class IndexerTuner implements Tuner {
     private static final Logger LOGGER = RobotLogManager.getMainLogger(TuneController.class.getName());
 
     IndexerAL indexer;
-    GamePieceController gamePieceController;
 
     IndexerTuner() {
         indexer = IndexerAL.getInstance();
     }
 
     public void init() {
-        SmartDashboard.putBoolean("shoot", false);
+        SmartDashboard.putNumber("Speed", 0);
 
         SmartDashboard.putBoolean("Mouth TOF", false);
         SmartDashboard.putBoolean("Chamber TOF", false);
@@ -34,21 +32,13 @@ public class IndexerTuner implements Tuner {
         SmartDashboard.putNumber("Mouth Distance", 0);
         SmartDashboard.putNumber("Chamber Distance", 0);
 
-        gamePieceController.getInstance();
-
         indexer.stopIndexer();
     }
 
     public void periodic() {
-        boolean shoot = SmartDashboard.getBoolean("shoot", false);
+        double speed = SmartDashboard.getNumber("Speed", 0);
 
-    
-        gamePieceController.IndexAuto = true;
-        gamePieceController.periodic();
-
-        if(shoot){
-
-        }
+        indexer.setIndexerSpeed(speed);
 
         SmartDashboard.putBoolean("Mouth TOF", indexer.isBallInMouth());
         SmartDashboard.putBoolean("Chamber TOF", indexer.isBallInChamber());
