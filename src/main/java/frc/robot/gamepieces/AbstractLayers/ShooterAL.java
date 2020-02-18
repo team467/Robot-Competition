@@ -222,6 +222,7 @@ public class ShooterAL extends GamePieceBase implements GamePiece {
   public void clearStrip() {
     setLedSrip(0, 0, 0, 0, ledBuffer.getLength()-1);
   }
+  
   public void setHoodAngle(double angle) {
     if (hoodLeader != null && RobotMap.HAS_SHOOTER_HOOD) {
       if (RobotMap.HOOD_INVERTED) {
