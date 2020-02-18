@@ -353,16 +353,15 @@ public class RobotMap {
       HAS_TRIGGER = true;
       HAS_SHOOTER_TRIGGER = true;
 
-      HAS_SHOOTER_HOOD = false;
-      HOOD_INVERTED = false;
-      HOOD_PWM_PORT = 0;
-      HOOD_FOLLOWER = true;
-      HOOD_FOLLOWER_PWM_PORT = 1;
-      HOOD_FOLLOWER_INVERTED = true;
-      // HOOD_MAX_ANGLE = 165;
+      HAS_SHOOTER_HOOD = true;
+      HOOD_LEFT_PWM_PORT = 0;
+      HOOD_RIGHT_PWM_PORT = 1;
+      HOOD_LEFT_INVERTED = false;
+      HOOD_RIGHT_INVERTED = true;
+      HOOD_MAX_ANGLE = 165;
 
 
-      HAS_SHOOTER_LEDS = true;
+      HAS_SHOOTER_LEDS = false;
       SHOOTER_LED_AMOUNT = 20;
       SHOOTER_LED_CHANNEL = 2;
       SHOOTER_DOUBLESIDE_LED = true;
@@ -564,11 +563,10 @@ public class RobotMap {
   public static boolean TRIGGER_MOTOR_INVERTED = false;
 
   public static boolean HAS_SHOOTER_HOOD = false;
-  public static boolean HOOD_INVERTED = false;
-  public static int HOOD_PWM_PORT;
-  public static boolean HOOD_FOLLOWER = false;
-  public static int HOOD_FOLLOWER_PWM_PORT;
-  public static boolean HOOD_FOLLOWER_INVERTED = false;
+  public static int HOOD_LEFT_PWM_PORT;
+  public static int HOOD_RIGHT_PWM_PORT;
+  public static boolean HOOD_LEFT_INVERTED = false;
+  public static boolean HOOD_RIGHT_INVERTED = false;
   public static int HOOD_MAX_ANGLE;
 
   public static boolean SHOOTER_SENSOR_INVERTED;
