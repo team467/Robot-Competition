@@ -155,7 +155,7 @@ public class ShooterAL extends GamePieceBase implements GamePiece {
     double target = flywheel.closedLoopTarget();
     double error = current / target;
 
-    if (Math.abs(error) <= 1 + RobotMap.SHOOTER_SPEED_TOLERANCE) {
+    if (Math.abs(error - 1) <= RobotMap.SHOOTER_SPEED_TOLERANCE) {
       return true;
     } else {
       return false;
