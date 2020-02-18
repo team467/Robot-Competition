@@ -35,11 +35,11 @@ public class DriverStation467 {
    */
   private DriverStation467() {
     driverJoy = new XBoxJoystick467(0, "driver");
-    // navJoy = new XBoxJoystick467(1, "nav");
+    navJoy = new XBoxJoystick467(1, "nav");
     opCon = new OperatorController467(1);
 
     driverRumbler = new Rumbler(driverJoy);
-    // navRumbler = new Rumbler(navJoy);
+    navRumbler = new Rumbler(navJoy);
 
     registerMetrics();
   }
