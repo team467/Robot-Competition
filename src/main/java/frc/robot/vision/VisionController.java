@@ -1,32 +1,39 @@
 package frc.robot.vision;
 
-import static org.apache.logging.log4j.util.Unbox.box;
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableInstance;
 import frc.robot.RobotMap;
 import frc.robot.logging.RobotLogManager;
 import frc.robot.logging.Telemetry;
-import frc.robot.usercontrol.DriverStation467;
-import frc.robot.sensors.LedI2C;
-import frc.robot.sensors.LedI2C.LedBlink;
-import frc.robot.sensors.LedI2C.LedColor;
-import frc.robot.sensors.LedI2C.LedMode;
+import frc.robot.sensors.Gyrometer;
+
 import org.apache.logging.log4j.Logger;
 
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
 public class VisionController {
 
   private static VisionController instance = null;
 
   private static final Logger LOGGER = RobotLogManager.getMainLogger(VisionController.class.getName());
+  
+  Gyrometer gyro;
 
-  private NetworkTable vision;
-  private DriverStation467 driverStation;
+  NetworkTableInstance inst;
+  NetworkTable table;
+  NetworkTableEntry netAngle;
+  NetworkTableEntry netDist;
+  NetworkTableEntry net_Have_Angle;
+  NetworkTableEntry net_Have_Dist;
 
-  // Led Variables
-  private LedI2C lights;
-  private LedMode ledMode;
-  private LedColor ledColor;
-  private LedBlink ledBlink;
+
+  double angle;
+  double dist;
+  boolean haveDistance;
+  boolean haveAngle;
+  boolean isTurnDone = false;//SmartDashboard.getBoolean("Turn", false);
+  boolean isDriveDone = false;
+  double robotTurner;
+  double speed;
 
   /**
    * Returns a singleton instance of the telemery builder.
@@ -42,72 +49,83 @@ public class VisionController {
 
   // TODO log these
   private VisionController() {
-    vision = NetworkTableInstance.getDefault().getTable("vision");
-    driverStation = DriverStation467.getInstance();
+    inst = NetworkTableInstance.getDefault();
+    table = inst.getTable("vision");
+    gyro = Gyrometer.getInstance();
+
     registerMetrics();
   }
 
   public double angle() {
-    double angle = vision.getEntry("angle").getDouble(-1000);
-    LOGGER.debug("Angle from network table is {}", box(angle));
-    return angle;
+    netAngle = table.getEntry("TurningAngle");
+    angle = netAngle.getDouble(180);
+    LOGGER.debug("Angle from network table is {}", angle);
+    return angle - 5;
   }
 
-public boolean hasAngle(){
-  return vision.getEntry("angle").exists();
-}
-  public double getAngle(){
-    return vision.getEntry("angle").getDouble(-1000);
+  public boolean hasAngle(){
+    net_Have_Angle = table.getEntry("haveAngle");
+    haveAngle = net_Have_Angle.getBoolean(false);
+    return haveAngle;
   }
-  
-  public void setAngle(double angle){
-    vision.getEntry("angle").setDouble(angle);
+
+  public boolean atAngle() {
+    return Math.abs(angle() + gyro.getPitchDegrees()) < 4;
+  }
+
+  public boolean hasDistance() {
+    net_Have_Dist = table.getEntry("haveDistance");
+    return net_Have_Dist.getBoolean(false);
+  }
+
+  public double dist() {
+    netDist = table.getEntry("DistanceFromTarget");
+    return netDist.getDouble(0.0);
+  }
+
+  /**
+   * tells the robot to turn
+   */
+  public double setTurn() {
+
+    if (!hasAngle()) {
+      return 0.0;
+    }
+
+    if (Math.abs(angle()) < 4) {//Math.abs(angle() + gyro.getPitchDegrees())
+        return 0.0;
+    } 
+    
+    if (-gyro.getPitchDegrees() < angle()) {
+        return 0.2;
+    }
+
+    if (-gyro.getPitchDegrees() > angle()) {
+        return -0.2;
+    }
+
+    return 0;
+
+  }
+
+  public void resetGyro() {
+    gyro.reset();
+  }
+
+  public double setDistDrive() {
+    if(dist() > 40 && hasDistance()) {
+      speed = -0.2;
+    } else {
+      speed = 0;
+    }
+
+    return speed;
   }
 
   /**
    * Sets the feedback for the navigator, including LEDs and rumble.
    */
-  public void navigatorFeedback() {
-    double angle = angle();
-    boolean haveAngle = vision.getEntry("haveAngle").getBoolean(false);
-    if (haveAngle) {
-      if (Math.abs(angle) <= RobotMap.ON_TARGET) {
-        // TODO: Debug Log
-        // TODO: LED FUNCTION
-        // TODO: RUMBLE
-        driverStation.driverSetLeftRumble(1.0);
-        driverStation.driverSetRightRumble(1.0);
-        // mode, color, blink
-        // all none for now because it needs to be implemented later
-        lights.sendLedCommand(ledMode.NONE, ledColor.NONE, ledBlink.NONE);
-
-      } else if (Math.abs(angle) <= RobotMap.ANGLE_OFFSET_LEVEL_ONE) {
-        // TODO: Debug Log
-        // TODO: LED FUNCTION
-        // TODO: RUMBLE
-        driverStation.driverSetLeftRumble(0.2);
-        driverStation.driverSetRightRumble(0.2);
-        lights.sendLedCommand(ledMode.NONE, ledColor.NONE, ledBlink.NONE);
-
-      } else if (Math.abs(angle) <= RobotMap.ANGLE_OFFSET_LEVEL_TWO) {
-        // TODO: Debug Log
-        // TODO: LED FUNCTION
-        lights.sendLedCommand(ledMode.NONE, ledColor.NONE, ledBlink.NONE);
-      } else if (Math.abs(angle) <= RobotMap.ANGLE_OFFSET_LEVEL_THREE) {
-        // TODO: Debug Log
-        // TODO: LED FUNCTION
-        lights.sendLedCommand(ledMode.NONE, ledColor.NONE, ledBlink.NONE);
-      } else if (Math.abs(angle) <= RobotMap.ANGLE_OFFSET_LEVEL_FOUR) {
-        // TODO: Debug Log
-        // TODO: LED FUNCTION
-        lights.sendLedCommand(ledMode.NONE, ledColor.NONE, ledBlink.NONE);
-      } else {
-        // TODO: Debug Log
-        lights.sendLedCommand(ledMode.NONE, ledColor.NONE, ledBlink.NONE);
-      }
-    }
-  }
-
+  
   private String name;
   private String subsystem;
 
@@ -134,7 +152,6 @@ public boolean hasAngle(){
 
   public void registerMetrics() {
     Telemetry telemetry = Telemetry.getInstance();
-    telemetry.addDoubleMetric("Vision Angle", this::getAngle);
     telemetry.addBooleanMetric("Vision Has Angle", this::hasAngle);
   }
 

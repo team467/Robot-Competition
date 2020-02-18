@@ -21,6 +21,7 @@ import frc.robot.logging.Telemetry;
 import frc.robot.sensors.LedI2C;
 import frc.robot.sensors.PowerDistributionPanel;
 import frc.robot.usercontrol.DriverStation467;
+import frc.robot.usercontrol.OperatorController467;
 import frc.robot.utilities.PerfTimer;
 import frc.robot.vision.CameraSwitcher;
 import frc.robot.tuning.TuneController;
@@ -104,6 +105,12 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("Right D", RobotMap.RIGHT_DRIVE_PID_D);
     SmartDashboard.putNumber("Right F", RobotMap.RIGHT_DRIVE_PID_F);
     SmartDashboard.putNumber("Right Max Velocity", RobotMap.VELOCITY_MULTIPLIER_LEFT);
+
+    SmartDashboard.putNumber("Shooter P", RobotMap.SHOOTER_P);
+    SmartDashboard.putNumber("Shooter I", RobotMap.SHOOTER_I);
+    SmartDashboard.putNumber("Shooter D", RobotMap.SHOOTER_D);
+    SmartDashboard.putNumber("Shooter F", RobotMap.SHOOTER_F);
+    SmartDashboard.putNumber("Shooter Max Velocity", RobotMap.VELOCITY_MULTIPLIER_SHOOTER);
     
 
     m_leftStick = new Joystick(0);
@@ -282,11 +289,15 @@ public class Robot extends TimedRobot {
     leds.whenDisabled();
     
     driverstation.readInputs();
-    if (driverstation.restartCamera()) {
-      camera.restart();
-    } else {
-      camera.fourWaySwitch(driverstation.getNavJoystick().getJoystick().getPOV());
+    OperatorController467 opcon = driverstation.getOperatorController();
+    for (int i = 1; i <= opcon.getButtonCount(); i++) {
+      SmartDashboard.putBoolean("Button " + i, opcon.getRawButton(i));
     }
+    // if (driverstation.restartCamera()) {
+    //   camera.restart();
+    // } else {
+    //   camera.fourWaySwitch(driverstation.getNavJoystick().getJoystick().getPOV());
+    // }
 
   }
 

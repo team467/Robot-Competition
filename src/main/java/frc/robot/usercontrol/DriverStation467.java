@@ -9,6 +9,7 @@ public class DriverStation467 {
 
   private XBoxJoystick467 driverJoy;
   private XBoxJoystick467 navJoy;
+  private OperatorController467 opCon;
 
   private Rumbler driverRumbler;
   private Rumbler navRumbler;
@@ -35,6 +36,7 @@ public class DriverStation467 {
   private DriverStation467() {
     driverJoy = new XBoxJoystick467(0, "driver");
     navJoy = new XBoxJoystick467(1, "nav");
+    opCon = new OperatorController467(1);
 
     driverRumbler = new Rumbler(driverJoy);
     navRumbler = new Rumbler(navJoy);
@@ -48,12 +50,15 @@ public class DriverStation467 {
   public void readInputs() {
     if (driverJoy != null) {
       driverJoy.read();
+      driverRumbler.periodic();
     }
     if (navJoy != null) {
       navJoy.read();
+      navRumbler.periodic();
     }
-    driverRumbler.periodic();
-    navRumbler.periodic();
+    if (opCon != null) {
+      opCon.read();
+    }
   }
 
   public void logJoystickIDs() {
@@ -76,6 +81,10 @@ public class DriverStation467 {
 
   public XBoxJoystick467 getNavJoystick() {
     return navJoy;
+  }
+
+  public OperatorController467 getOperatorController() {
+    return opCon;
   }
 
   public Rumbler getDriverRumbler() {
@@ -110,14 +119,22 @@ public class DriverStation467 {
     return false;
   }
 
-  public boolean getAcquireHatch() {
-    // Nav navJoy.getRightTrigger() > 0.9
-    return navJoy.down(Button.BumperRight);
+  // indexer TODO change later
+
+  public boolean getIndexerAutoMode() {
+    return navJoy.pressed(Button.b);
   }
 
-  public boolean getCargoWristLowRocketPosition() {
-    // Nav
-    return navJoy.pov() == 0;
+  public boolean indexerManualMove() {
+    return navJoy.pov() == 180;
+  }
+
+  public boolean indexerFeed() {
+    return false;
+  }
+
+  public boolean indexerReverse() {
+      return false;
   }
 
   public boolean getCargoWristCargoShipPosition() {
@@ -259,9 +276,6 @@ public class DriverStation467 {
       telemetry.addBooleanMetric("Input Fire Cargo", this::getFireCall);
       telemetry.addBooleanMetric("Input Wrist - Cargo Ship", 
           this::getCargoWristCargoShipPosition);
-      telemetry.addBooleanMetric("Input Wrist - Low Rocket", 
-          this::getCargoWristLowRocketPosition);
-      telemetry.addBooleanMetric("Input Acquire Hatch", this::getAcquireHatch);
       telemetry.addBooleanMetric("Input Fire Hatch", this::getFireHatch);
       telemetry.addBooleanMetric("Input Reject Ball", this::getRejectBall);
       telemetry.addBooleanMetric("Input Intake Ball", this::getIntakeBall);

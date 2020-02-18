@@ -181,7 +181,7 @@ public class SparkMaxSpeedControllerGroup implements SpeedController {
       return;
     }
 
-    LOGGER.info("Output to {} drive is {} in mode: {}", name, outputValue, controlType);
+    LOGGER.trace("Output to {} drive is {} in mode: {}", name, outputValue, controlType);
 
     if (controlType == ControlType.kVelocity) {
       outputValue *= maxVelocity;
@@ -292,6 +292,15 @@ public class SparkMaxSpeedControllerGroup implements SpeedController {
     }
 
     return leader.getOutputCurrent();
+  }
+
+  public double busVoltage() {
+    if (leader == null) {
+      LOGGER.trace("No drive system");
+      return 0;
+    }
+
+    return leader.getBusVoltage();
   }
 
   public double temperature() {

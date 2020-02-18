@@ -16,9 +16,8 @@ public interface GamePiece {
   public boolean enabled();
 
   /**
-   * Called once per robot iteration. This conducts any movement if enabled, 
-   * and sends telemetry and state information in all cases.
+   * Check the systemn to make sure it works
    */
-  public void periodic();
+  public void checkSystem();
 
 }
