@@ -224,12 +224,17 @@ public class ShooterAL extends GamePieceBase implements GamePiece {
   }
   public void setHoodAngle(double angle) {
     if (hoodLeader != null && RobotMap.HAS_SHOOTER_HOOD) {
-      double setAngle = Math.max(0.0, Math.min(RobotMap.HOOD_MAX_ANGLE, speed));
-      setAngle = setAngle * (RobotMap.HOOD_INVERTED ? -1 : 1);
-      hoodLeader.setAngle(setAngle);
+      if (RobotMap.HOOD_INVERTED) {
+        angle = Math.abs(RobotMap.HOOD_MAX_ANGLE - angle);
+      }
+
+      hoodLeader.setAngle(angle);
 
       if (hoodFollower != null && RobotMap.HOOD_FOLLOWER) {
-        double followerAngle = setAngle * (RobotMap.HOOD_FOLLOWER_INVERTED ? -1 : 1);
+        double followerAngle = angle;
+        if (RobotMap.HOOD_FOLLOWER_INVERTED) {
+          followerAngle = Math.abs(RobotMap.HOOD_MAX_ANGLE - followerAngle);
+        }
         hoodFollower.setAngle(followerAngle);
       } 
     }
