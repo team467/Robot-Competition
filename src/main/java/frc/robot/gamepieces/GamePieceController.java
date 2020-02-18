@@ -25,9 +25,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class GamePieceController {
 
   private static GamePieceController instance = null;
-  
-  private static final Logger LOGGER 
-      = RobotLogManager.getMainLogger(GamePieceController.class.getName());
+
+  private static final Logger LOGGER = RobotLogManager.getMainLogger(GamePieceController.class.getName());
 
   protected String name = "Game Piece Controller";
   protected String subsystem = "Gamepieces";
@@ -43,7 +42,7 @@ public class GamePieceController {
   private IndexerAL indexer;
   private IntakeAL intaker;
 
-  //StateMachine
+  // StateMachine
   private StateMachine shooterSM;
   private StateMachine indexerSM;
   private StateMachine climberSM;
@@ -53,16 +52,15 @@ public class GamePieceController {
   private DriverStation467 driverStation;
   private VisionController visionController;
   private LedI2C led;
-  public boolean RobotAligned = true;//TODO determine where this is set
+  public boolean RobotAligned = true;// TODO determine where this is set
 
-
-  //DS controls 
-  public boolean IndexAuto = true;
+  // DS controls
+  public boolean IndexAuto = false;
   public boolean ShooterAuto = true;
-  private boolean armPosition = false; //TODO get inputs from DS class
+  private boolean armPosition = false; // TODO get inputs from DS class
   private boolean rollerStateIN = false;
   private boolean rollerStateOUT = false;
-  public boolean fireWhenReady= false;
+  public boolean fireWhenReady = false;
   public boolean triggerManual = false;
   public boolean flywheelManual = false;
   public boolean climberDownButtonPressed = false;
@@ -77,7 +75,6 @@ public class GamePieceController {
   public IndexerMode indexMode;
   public ShooterMode shootMode;
 
-
   /**
    * Returns a singleton instance of the game piece controller.
    * 
@@ -90,8 +87,8 @@ public class GamePieceController {
     return instance;
   }
 
-  //TODO: get driverstation input and call intaker periodic().
-  
+  // TODO: get driverstation input and call intaker periodic().
+
   public enum IndexerMode {
     AUTO, MANUAL
   }
@@ -113,11 +110,9 @@ public class GamePieceController {
 
     LOGGER.debug("Starting in DEFENSE mode.");
 
-
     shooterSM = new StateMachine(ShooterState.Idle);
     indexerSM = new StateMachine(IndexerState.Idle);
     intake = IntakeState.getInstance();
-
 
     registerMetrics();
   }
@@ -127,32 +122,13 @@ public class GamePieceController {
    */
   public void periodic() {
 
-    if(IndexAuto){
-      indexMode = IndexerMode.AUTO;
-    } else {
-      indexMode = IndexerMode.MANUAL;
-    }
-
-    if(ShooterAuto){
-      shootMode = ShooterMode.AUTO;
-    } else {
-      shootMode = ShooterMode.MANUAL;
-    }
-
-    // Separate reading from driver station from processing state
-    // so that tests can manually feed inputs.
-    processGamePieceState(
-        driverStation.getDriveCameraFront(),
-        driverStation.getDriveCameraBack(),
-        driverStation.getIndexerAutoMode()
-    );
-
+      // Separate reading from driver station from processing state
+      // so that tests can manually feed inputs.
+      processGamePieceState(driverStation.getDriveCameraFront(), driverStation.getDriveCameraBack());
+   
   }
 
-  void processGamePieceState(
-      boolean driveCameraFront,
-      boolean driveCameraRear,
-      boolean getIndexerAutoMode) {
+  void processGamePieceState(boolean driveCameraFront, boolean driveCameraRear) {
 
     // Depending on driver input, camera view switches to front or back.
     // Does not change the mode away from Hatch or Cargo, but does take camera.
@@ -166,35 +142,73 @@ public class GamePieceController {
     updateGamePieces();
   }
 
-
-
   public void updateGamePieces() {
     // Update all systems
-    if(RobotMap.HAS_SHOOTER) shooterSM.step();
+    if (RobotMap.HAS_SHOOTER)
+      shooterSM.step();
 
-    if(RobotMap.HAS_INDEXER) indexerSM.step();
+    if (RobotMap.HAS_INDEXER)
+      indexerSM.step();
 
-    //roller controls
-    if(RobotMap.HAS_INTAKE) {
-    if(armPosition) {
-      intake.setIntakeArm(IntakerArm.ARM_UP);
-    } else {
-      intake.setIntakeArm(IntakerArm.ARM_DOWN);
-    }
+    // roller controls
+    if (RobotMap.HAS_INTAKE) {
+      if (armPosition) {
+        intake.setIntakeArm(IntakerArm.ARM_UP);
+      } else {
+        intake.setIntakeArm(IntakerArm.ARM_DOWN);
+      }
 
-    if(rollerStateIN){
-      intake.setIntakeRoller(IntakerRollers.ROLLERS_IN);
-    } else if(rollerStateOUT){
-      intake.setIntakeRoller(IntakerRollers.ROLLERS_OUT);
-    } else {
-      intake.setIntakeRoller(IntakerRollers.ROLLERS_OFF);
-    }
-      
+      if (rollerStateIN) {
+        intake.setIntakeRoller(IntakerRollers.ROLLERS_IN);
+      } else if (rollerStateOUT) {
+        intake.setIntakeRoller(IntakerRollers.ROLLERS_OUT);
+      } else {
+        intake.setIntakeRoller(IntakerRollers.ROLLERS_OFF);
+      }
+
     }
   }
 
+  public enum DriverInput {
+    FORCE_TRUE, FORCE_FALSE, FORCE_AUTO_TRUE, FORCE_AUTO_FALSE, USE_DRIVER_INPUT
+  }
+
+  DriverInput forceCellsForward = DriverInput.USE_DRIVER_INPUT;
+  DriverInput forceCellsReverse = DriverInput.USE_DRIVER_INPUT;
+  DriverInput forceToAuto = DriverInput.USE_DRIVER_INPUT;
+
+  public void cellsForward(DriverInput mode) {
+    forceCellsForward = mode;
+  }
+
+  public void cellsReverse(DriverInput mode) {
+    forceCellsReverse = mode;
+  }
+
+  public void autoInput(DriverInput mode) {
+    forceToAuto = mode;
+  }
+
+  public boolean IndexerAuto() {
+    boolean auto = false;
+    if (forceToAuto == DriverInput.FORCE_AUTO_TRUE) {
+      LOGGER.info("Driver pressed forward");
+      return auto = true;
+    } else {
+      if (forceToAuto == DriverInput.FORCE_AUTO_FALSE)
+        return auto =false;
+    }
+    return auto;
+  }
   // TODO: put in logic
   public boolean indexerBallsForward() {
+    if (forceCellsForward == DriverInput.FORCE_TRUE) {
+      LOGGER.info("Driver pressed forward");
+      return true;
+    } else {
+      if (forceCellsForward == DriverInput.FORCE_FALSE)
+        return false;
+    }
     boolean feed = false;
     if (driverStation.indexerFeed()) {
       return true;
@@ -202,8 +216,16 @@ public class GamePieceController {
     return feed;
   }
 
-  // TODO: put in logic 
+  // TODO: put in logic
   public boolean indexerBallsReverse() {
+    if (forceCellsReverse == DriverInput.FORCE_TRUE) {
+      LOGGER.info("Driver pressed forward");
+      return true;
+    } else {
+      if (forceCellsReverse == DriverInput.FORCE_FALSE)
+        return false;
+    }
+
     boolean reverse = false;
     if (driverStation.indexerReverse()) {
       return true;
@@ -212,32 +234,32 @@ public class GamePieceController {
   }
 
   public void determineShooterSpeed() {
-    //math
-    if(visionController.hasDistance()) {
+    // math
+    if (visionController.hasDistance()) {
       shooterSpeed = ((0.16120202 * visionController.dist() + 65.5092) / 100) * 0.95;
       shooterPreviousSpeed = shooterSpeed;
     } else {
-      shooterSpeed = shooterPreviousSpeed; 
+      shooterSpeed = shooterPreviousSpeed;
     }
 
-    //TODO figure out what speeds it will set
+    // TODO figure out what speeds it will set
   }
   // public boolean shooterLoadingBall() {
-  //   if (shooterSM.) {
+  // if (shooterSM.) {
 
-  //   }
-  //   return true;
+  // }
+  // return true;
   // }
 
   private void registerMetrics() {
     Telemetry telemetry = Telemetry.getInstance();
-    //telemetry.addStringMetric(name + " Mode", mode::name);
+    // telemetry.addStringMetric(name + " Mode", mode::name);
   }
 
-  public void runOnTeleopInit(){
+  public void runOnTeleopInit() {
   }
 
-  public void setAutomousFireWhenReady(boolean fire){
+  public void setAutomousFireWhenReady(boolean fire) {
     fireWhenReady = fire;
   }
 

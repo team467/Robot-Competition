@@ -41,18 +41,18 @@ public class IndexerAL extends GamePieceBase implements GamePiece {
   public static IndexerAL getInstance() {
     if (instance == null) {
       if (RobotMap.HAS_INDEXER) {
-        LOGGER.info("lead created");
+        LOGGER.debug("lead created");
         indexLeader = new WPI_TalonSRX(RobotMap.FIRST_MAGAZINE_FEED_MOTOR_CHANNEL);
         indexFollower = null;
 
         if (RobotMap.INDEX_FOLLOWER_MOTOR){
-          LOGGER.info("follower created");
+          LOGGER.debug("follower created");
           indexFollower = new WPI_TalonSRX(RobotMap.SECOND_MAGAZINE_FEED_MOTOR_CHANNEL);
         }
 
         indexer = new TalonSpeedControllerGroup("Indexer", ControlMode.PercentOutput, RobotMap.INDEXER_SENSOR_INVERTED,
             RobotMap.INDEXER_MOTOR_INVERTED, indexLeader, indexFollower);
-        LOGGER.info("Talon group:" + indexer.toString());
+        LOGGER.debug("Talon group:" + indexer.toString());
 
       } else {
         indexer = new TalonSpeedControllerGroup();
@@ -161,12 +161,12 @@ public class IndexerAL extends GamePieceBase implements GamePiece {
 
   private void setForward() {
     LOGGER.info("Indexer going forward");
-    indexer.set(1.0);
+    indexer.set(0.2);
   }
 
   private void setBackwards() {
     LOGGER.info("Indexer going backwards");
-    indexer.set(-1.0);
+    indexer.set(-0.2);
   }
 
   private void setStop() {

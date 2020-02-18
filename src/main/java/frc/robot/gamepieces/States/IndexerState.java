@@ -12,6 +12,8 @@ import frc.robot.gamepieces.AbstractLayers.IndexerAL;
 import frc.robot.gamepieces.GamePieceController;
 import frc.robot.logging.RobotLogManager;
 
+import com.fasterxml.jackson.core.io.InputDecorator;
+
 import org.apache.logging.log4j.Logger;
 
 import edu.wpi.first.wpilibj.Timer;
@@ -20,7 +22,7 @@ public enum IndexerState implements State {
 
     Idle {
 
-        public boolean autoMode;
+        public boolean indexAuto;
         public boolean indexerBallsReverse;
         public boolean indexerBallsForward;
         public boolean isInMouth;
@@ -31,33 +33,31 @@ public enum IndexerState implements State {
         }
 
         public State action() {
-            autoMode = GamePieceController.getInstance().IndexAuto;
+            indexAuto = GamePieceController.getInstance().IndexAuto;
             indexerBallsReverse = GamePieceController.getInstance().indexerBallsReverse();
             indexerBallsForward = GamePieceController.getInstance().indexerBallsForward();
             isInMouth = indexerAL.isBallInMouth();
             isInChamber = indexerAL.isBallInChamber();
 
-            // Works
-            if (!autoMode) {
+            if (!indexAuto) {
                 return Manual;
+            } else {
+                if (indexerBallsReverse && isInMouth && !isInChamber) {
+                    LOGGER.debug("isInMouth and is not in Chamber");
+                    return Feed;
+                }
+
+                if (GamePieceController.getInstance().getShooterState() == ShooterState.LoadingBall) {
+                    LOGGER.debug("LoadingBalls");
+                    return Feed;
+                }
+
+                if (indexerBallsReverse) {
+                    LOGGER.debug("indexerBallsReverse {}", indexerBallsReverse);
+                    return Reverse;
+                }
             }
 
-            // Works 
-            if (indexerBallsForward && isInMouth && !isInChamber) {
-                LOGGER.info("isInMouth and is not in Chamber");
-                return Feed;
-            }
-
-            
-            if (GamePieceController.getInstance().getShooterState() == ShooterState.LoadingBall) {
-                LOGGER.info("LoadingBalls");
-                return Feed;
-            }
-
-            if (indexerBallsReverse) {
-                LOGGER.info("indexerBallsReverse {}", indexerBallsReverse);
-                return Reverse;
-            }
             return this;
         }
 
@@ -70,6 +70,7 @@ public enum IndexerState implements State {
     Feed {
 
         public boolean autoMode;
+        public boolean indexerBallsReverse;
 
         public void enter() {
             // Noop
@@ -78,14 +79,16 @@ public enum IndexerState implements State {
         public State action() {
             LOGGER.debug("Feed is activated");
             autoMode = GamePieceController.getInstance().IndexAuto;
+            indexerBallsReverse = GamePieceController.getInstance().indexerBallsReverse();
 
             IndexerAL.advanceBallsToShooter();
 
             if (!autoMode) {
+                IndexerAL.callStop();
                 return Idle;
             }
 
-            if (!indexerAL.isBallInMouth()) {
+            if (!indexerAL.isBallInMouth() || !indexerBallsReverse) {
                 return FeedBuffer;
             }
 
@@ -130,7 +133,7 @@ public enum IndexerState implements State {
     Reverse {
 
         public boolean autoMode;
-        public boolean indexerBallsReverse;
+        public boolean indexerBallsForward;
 
         public void enter() {
             // Noop
@@ -138,15 +141,16 @@ public enum IndexerState implements State {
 
         public State action() {
             autoMode = GamePieceController.getInstance().IndexAuto;
-            indexerBallsReverse = GamePieceController.getInstance().indexerBallsReverse();
+            indexerBallsForward = GamePieceController.getInstance().indexerBallsReverse();
 
-            IndexerAL.advanceBallsToShooter();
+            IndexerAL.moveBallsTowardIntake();
 
             if (!autoMode) {
                 return Manual;
             }
 
-            if (indexerBallsReverse) {
+            if (!indexerBallsForward) {
+                IndexerAL.callStop();
                 return Idle;
             }
 
@@ -154,7 +158,7 @@ public enum IndexerState implements State {
         }
 
         public void exit() {
-            // Noop 
+            // Noop
         }
 
     },
@@ -172,7 +176,7 @@ public enum IndexerState implements State {
         public State action() {
             autoMode = GamePieceController.getInstance().IndexAuto;
             indexerBallsReverse = GamePieceController.getInstance().indexerBallsReverse();
-            indexerBallsForward = GamePieceController.getInstance().indexerBallsReverse();
+            indexerBallsForward = GamePieceController.getInstance().indexerBallsForward();
 
             if (autoMode) {
                 return Idle;

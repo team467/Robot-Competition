@@ -395,7 +395,7 @@ public class RobotMap {
       CLIMBER_PID_SLOT = 0;
 
       HAS_CLIMB_TOP_SENSOR = false;
-      HAS_CLIMB_BOTTOM_SENSOR = false;
+      HAS_CLIMB_BOTTOM_SENSOR = true;
       CLIMB_TOP_SENSOR_INVERTED = false;
       CLIMB_BOTTOM_SENSOR_INVERTED = false;
       CLIMB_TOP_SENSOR_CHANNEL = 1;
