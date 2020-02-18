@@ -68,13 +68,15 @@ public class GamePieceController {
   public boolean climberEnabled = false;
   public double shooterSpeed = 0.9;
   public static double shooterPreviousSpeed;
-  public boolean upButtonPressed = false;
-  public boolean downButtonPressed = false;
+
+  // climber state tuner
+  public boolean climberForceEnabled = false;
+  public boolean climberForcedUp = false;
+  public boolean climberForcedDown = false;
 
   public enum DriverInput {
     FORCE_TRUE, FORCE_FALSE, FORCE_AUTO_TRUE, FORCE_AUTO_FALSE, USE_DRIVER_INPUT
   }
-
 
   public IndexerMode indexMode;
   public ShooterMode shootMode;
@@ -243,7 +245,6 @@ public class GamePieceController {
       shooterSpeed = shooterPreviousSpeed;
     }
 
-
   }
 
   private void registerMetrics() {
@@ -261,15 +262,36 @@ public class GamePieceController {
   public boolean getFireWhenReady() {
     return fireWhenReady;
   }
-  
+
   public void setShooterWantsBall(boolean toggle) {
     shooterWantsBall = toggle;
   }
 
   public boolean getShooterState() {
     if (shooterState == ShooterState.LoadingBall) {
-      return shooterWantsBall = true; 
+      return shooterWantsBall = true;
     }
     return shooterWantsBall;
+  }
+
+  public boolean climberIsEnabled() {
+    if (climberForceEnabled) {
+      return climberEnabled = true;
+    }
+    return climberEnabled;
+  }
+
+  public boolean climberUpButtonPressed() {
+    if (climberForcedUp) {
+      return climberUpButtonPressed = true;
+    }
+    return climberUpButtonPressed = false;
+  }
+
+  public boolean climberDownButtonPressed() {
+    if (climberForcedDown) {
+      return climberDownButtonPressed = true;
+    }
+    return climberDownButtonPressed = false;
   }
 }

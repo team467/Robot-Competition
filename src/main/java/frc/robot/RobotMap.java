@@ -335,10 +335,10 @@ public class RobotMap {
       AUTO_CAMERA = false;
 
       // Game Pieces
-      HAS_SHOOTER = true;
+      HAS_SHOOTER = false;
       HAS_INDEXER = false;
       HAS_INTAKE = false;
-      HAS_CLIMBER = false;
+      HAS_CLIMBER = true;
 
       // Shooter
       // TODO:change the values of these later
@@ -350,8 +350,8 @@ public class RobotMap {
       SHOOTER_SMART_SHOT = true;
 
       TRIGGER_MOTOR_CHANNEL = 6;
-      HAS_TRIGGER = true;
-      HAS_SHOOTER_TRIGGER = true;
+      HAS_TRIGGER = false;
+      HAS_SHOOTER_TRIGGER = false;
 
       HAS_SHOOTER_HOOD = false;
       HOOD_INVERTED = false;
@@ -362,7 +362,7 @@ public class RobotMap {
       // HOOD_MAX_ANGLE = 165;
 
 
-      HAS_SHOOTER_LEDS = true;
+      HAS_SHOOTER_LEDS = false;
       SHOOTER_LED_AMOUNT = 20;
       SHOOTER_LED_CHANNEL = 2;
       SHOOTER_DOUBLESIDE_LED = true;
@@ -380,10 +380,10 @@ public class RobotMap {
 
       //Climber
       CLIMBER_MOTOR_INVERTED = false;
-      CLIMBER_SENSOR = false;
-      HAS_CLIMBFOLLOWER = false;
-      CLIMB_MOTER_LEADER = 1;
-      CLIMB_MOTER_FOLLOWER = 2;
+      CLIMBER_SENSOR = true;
+      HAS_CLIMBFOLLOWER = true;
+      CLIMB_MOTER_LEADER = 5;
+      CLIMB_MOTER_FOLLOWER = 6;
 
       CLIMBER_P = 2;
       CLIMBER_I = 0.0;
@@ -393,20 +393,20 @@ public class RobotMap {
       VELOCITY_MULTIPLIER_CLIMBER = 8200;
       CLIMBER_PID_SLOT = 0;
 
-      HAS_CLIMB_TOP_SENSOR = false;
-      HAS_CLIMB_BOTTOM_SENSOR = false;
+      HAS_CLIMB_TOP_SENSOR = true;
+      HAS_CLIMB_BOTTOM_SENSOR = true;
       CLIMB_TOP_SENSOR_INVERTED = false;
       CLIMB_BOTTOM_SENSOR_INVERTED = false;
-      CLIMB_TOP_SENSOR_CHANNEL = 1;
-      CLIMB_BOTTOM_SENSOR_CHANNEL = 2;
-      HAS_CLIMB_POT = false;
-      CLIMB_POT_CHANNEL = 1;
+      CLIMB_TOP_SENSOR_CHANNEL = 5;
+      CLIMB_BOTTOM_SENSOR_CHANNEL = 4;
+      HAS_CLIMB_POT = true;
+      CLIMB_POT_CHANNEL = 0;
 
       HAS_CLIMB_TILT_SWITCH = false;
       CLIMB_TILT_SWITCH_INVERTED = false;
       CLIMB_TILT_SWITCH_CHANNEL = 3;
 
-      HAS_CLIMBLOCK = false;
+      HAS_CLIMBLOCK = true;
       CLIMB_LOCK_CHANNEL = 0;
       CLIMB_LOCK_INVERTED = false;
 
