@@ -103,7 +103,7 @@ public class ShooterAL extends GamePieceBase implements GamePiece {
 
       if (RobotMap.HAS_SHOOTER_LEDS) {
         leds = new AddressableLED(RobotMap.SHOOTER_LED_CHANNEL);
-        ledBuffer = new AddressableLEDBuffer(RobotMap.SHOOTER_LED_AMOUNT * (RobotMap.SHOOTER_DOUBLESIDE_LED? 2: 1));
+        ledBuffer = new AddressableLEDBuffer(RobotMap.SHOOTER_LED_AMOUNT * (RobotMap.SHOOTER_DOUBLESIDE_LED ? 2: 1));
         leds.setLength(ledBuffer.getLength());
 
         for (var i = 0; i < ledBuffer.getLength(); i++) {
@@ -195,8 +195,9 @@ public class ShooterAL extends GamePieceBase implements GamePiece {
   }
 
   public void setLedStrip(int r, int g, int b, int startingLed, int endingLed) {
-    if (ledBuffer != null && leds != null && RobotMap.HAS_SHOOTERLEDS) {
+    if (ledBuffer != null && leds != null && RobotMap.HAS_SHOOTER_LEDS) {
       for (var i = Math.max(0, startingLed); i <= Math.min(ledBuffer.getLength()-1, endingLed); i++) {
+        LOGGER.warn("Setting led {} to color R{} G{} B{}", i, r, g, b);
         ledBuffer.setRGB(i, r, g, b);
      }
      leds.setData(ledBuffer);
@@ -204,7 +205,7 @@ public class ShooterAL extends GamePieceBase implements GamePiece {
   }
 
   public void fillStrip(int r, int g, int b, int led) {
-    if (ledBuffer != null && leds != null && RobotMap.HAS_SHOOTERLEDS) {
+    if (ledBuffer != null && leds != null && RobotMap.HAS_SHOOTER_LEDS) {
       int setLed = Math.min(RobotMap.SHOOTER_LED_AMOUNT-1, led);
       setLedStrip(r, g, b, 0, setLed);
       if (RobotMap.SHOOTER_DOUBLESIDE_LED) {
@@ -219,10 +220,18 @@ public class ShooterAL extends GamePieceBase implements GamePiece {
     }
   }
 
+  public void fillStrip(Color color, int led) {
+    int r = (int) color.red * 255; 
+    int g = (int) color.green * 255; 
+    int b = (int) color.blue * 255; 
+
+    fillStrip(r, g, b, led);
+  }
+
   public void clearStrip() {
     setLedStrip(0, 0, 0, 0, ledBuffer.getLength()-1);
   }
-  
+
   public void setHoodAngle(double angle) {
     if (hoodLeader != null && RobotMap.HAS_SHOOTER_HOOD) {
       if (RobotMap.HOOD_INVERTED) {
