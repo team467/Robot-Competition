@@ -41,13 +41,9 @@ public class ShooterAL extends GamePieceBase implements GamePiece {
 
   private static WPI_TalonSRX triggerMotor;
   public static TalonSpeedControllerGroup trigger;
-  
 
   public static Servo hoodLeader;
   public static Servo hoodFollower;
-
-  private static AddressableLED leds;
-  private static AddressableLEDBuffer ledBuffer;
 
   private Hashtable<Integer, Integer> distanceToPower = new Hashtable<Integer, Integer>();
 
@@ -192,44 +188,6 @@ public class ShooterAL extends GamePieceBase implements GamePiece {
     if (flywheel != null && RobotMap.HAS_SHOOTER) {
       flywheel.pidf(RobotMap.SHOOTER_PID_SLOT_DRIVE, kP, kI, kD, kF, kMaxVelocity);
     }
-  }
-
-  public void setLedStrip(int r, int g, int b, int startingLed, int endingLed) {
-    if (ledBuffer != null && leds != null && RobotMap.HAS_SHOOTER_LEDS) {
-      for (var i = Math.max(0, startingLed); i <= Math.min(ledBuffer.getLength()-1, endingLed); i++) {
-        LOGGER.warn("Setting led {} to color R{} G{} B{}", i, r, g, b);
-        ledBuffer.setRGB(i, r, g, b);
-     }
-     leds.setData(ledBuffer);
-    }
-  }
-
-  public void fillStrip(int r, int g, int b, int led) {
-    if (ledBuffer != null && leds != null && RobotMap.HAS_SHOOTER_LEDS) {
-      int setLed = Math.min(RobotMap.SHOOTER_LED_AMOUNT-1, led);
-      setLedStrip(r, g, b, 0, setLed);
-      if (RobotMap.SHOOTER_DOUBLESIDE_LED) {
-        setLedStrip(r, g, b, RobotMap.SHOOTER_LED_AMOUNT, RobotMap.SHOOTER_LED_AMOUNT + setLed);
-      }
-      if (setLed < RobotMap.SHOOTER_LED_AMOUNT-1) {
-        setLedStrip(0, 0, 0, setLed + 1, RobotMap.SHOOTER_LED_AMOUNT-1);
-        if (RobotMap.SHOOTER_DOUBLESIDE_LED) {
-          setLedStrip(r, g, b, RobotMap.SHOOTER_LED_AMOUNT + setLed + 1, ledBuffer.getLength()-1 + setLed);
-        }
-      }
-    }
-  }
-
-  public void fillStrip(Color color, int led) {
-    int r = (int) color.red * 255; 
-    int g = (int) color.green * 255; 
-    int b = (int) color.blue * 255; 
-
-    fillStrip(r, g, b, led);
-  }
-
-  public void clearStrip() {
-    setLedStrip(0, 0, 0, 0, ledBuffer.getLength()-1);
   }
 
   public void setHoodAngle(double angle) {
