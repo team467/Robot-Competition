@@ -42,9 +42,6 @@ public class IndexerTuner implements Tuner {
 
         SmartDashboard.putBoolean("Mouth TOF", indexer.isBallInMouth());
         SmartDashboard.putBoolean("Chamber TOF", indexer.isBallInChamber());
-
-        SmartDashboard.putNumber("Mouth Distance", indexer.getMouthDistance());
-        SmartDashboard.putNumber("Chamber Distance", indexer.getChamberDistance());
     }
 
 }

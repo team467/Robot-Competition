@@ -71,6 +71,11 @@ public class GamePieceController {
   public boolean upButtonPressed = false;
   public boolean downButtonPressed = false;
 
+  public enum DriverInput {
+    FORCE_TRUE, FORCE_FALSE, FORCE_AUTO_TRUE, FORCE_AUTO_FALSE, USE_DRIVER_INPUT
+  }
+
+
   public IndexerMode indexMode;
   public ShooterMode shootMode;
 
@@ -170,15 +175,11 @@ public class GamePieceController {
     }
   }
 
-  public enum DriverInput {
-    FORCE_TRUE, FORCE_FALSE, FORCE_AUTO_TRUE, FORCE_AUTO_FALSE, USE_DRIVER_INPUT
-  }
-
   DriverInput forceCellsForward = DriverInput.USE_DRIVER_INPUT;
   DriverInput forceCellsReverse = DriverInput.USE_DRIVER_INPUT;
   DriverInput forceToAuto = DriverInput.USE_DRIVER_INPUT;
 
-  public void cellsForward(DriverInput mode) {
+  public void setCellsForward(DriverInput mode) {
     forceCellsForward = mode;
   }
 
@@ -202,7 +203,6 @@ public class GamePieceController {
     return auto;
   }
 
-  // TODO: put in logic
   public boolean indexerBallsForward() {
     if (forceCellsForward == DriverInput.FORCE_TRUE) {
       LOGGER.debug("Driver pressed forward");
@@ -218,7 +218,6 @@ public class GamePieceController {
     return feed;
   }
 
-  // TODO: put in logic
   public boolean indexerBallsReverse() {
     if (forceCellsReverse == DriverInput.FORCE_TRUE) {
       LOGGER.debug("Driver pressed forward");
@@ -244,14 +243,8 @@ public class GamePieceController {
       shooterSpeed = shooterPreviousSpeed;
     }
 
-    // TODO figure out what speeds it will set
-  }
-  // public boolean shooterLoadingBall() {
-  // if (shooterSM.) {
 
-  // }
-  // return true;
-  // }
+  }
 
   private void registerMetrics() {
     Telemetry telemetry = Telemetry.getInstance();

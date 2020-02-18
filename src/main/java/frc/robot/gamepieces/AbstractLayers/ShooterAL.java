@@ -67,7 +67,7 @@ public class ShooterAL extends GamePieceBase implements GamePiece {
         flywheelFollower = null;
 
         if (RobotMap.SHOOTER_FOLLOWER) {
-          LOGGER.info("Creating first set of follower motors");
+          LOGGER.info("Creating follow motors");
           flywheelFollower = new WPI_TalonSRX(RobotMap.SHOOTER_MOTOR_FOLLOWER_CHANNEL);
           flywheelFollower.setNeutralMode(NeutralMode.Coast);
         }
@@ -155,7 +155,7 @@ public class ShooterAL extends GamePieceBase implements GamePiece {
     double target = flywheel.closedLoopTarget();
     double error = current / target;
 
-    if (error <= 1 + RobotMap.SHOOTER_SPEED_TOLERANCE || error >= 1 - RobotMap.SHOOTER_SPEED_TOLERANCE) {
+    if (Math.abs(error) <= 1 + RobotMap.SHOOTER_SPEED_TOLERANCE) {
       return true;
     } else {
       return false;
@@ -194,7 +194,7 @@ public class ShooterAL extends GamePieceBase implements GamePiece {
     }
   }
 
-  public void setLedSrip(int r, int g, int b, int startingLed, int endingLed) {
+  public void setLedStrip(int r, int g, int b, int startingLed, int endingLed) {
     if (ledBuffer != null && leds != null && RobotMap.HAS_SHOOTERLEDS) {
       for (var i = Math.max(0, startingLed); i <= Math.min(ledBuffer.getLength()-1, endingLed); i++) {
         ledBuffer.setRGB(i, r, g, b);
@@ -206,21 +206,21 @@ public class ShooterAL extends GamePieceBase implements GamePiece {
   public void fillStrip(int r, int g, int b, int led) {
     if (ledBuffer != null && leds != null && RobotMap.HAS_SHOOTERLEDS) {
       int setLed = Math.min(RobotMap.SHOOTER_LED_AMOUNT-1, led);
-      setLedSrip(r, g, b, 0, setLed);
+      setLedStrip(r, g, b, 0, setLed);
       if (RobotMap.SHOOTER_DOUBLESIDE_LED) {
-        setLedSrip(r, g, b, RobotMap.SHOOTER_LED_AMOUNT, RobotMap.SHOOTER_LED_AMOUNT + setLed);
+        setLedStrip(r, g, b, RobotMap.SHOOTER_LED_AMOUNT, RobotMap.SHOOTER_LED_AMOUNT + setLed);
       }
       if (setLed < RobotMap.SHOOTER_LED_AMOUNT-1) {
-        setLedSrip(0, 0, 0, setLed + 1, RobotMap.SHOOTER_LED_AMOUNT-1);
+        setLedStrip(0, 0, 0, setLed + 1, RobotMap.SHOOTER_LED_AMOUNT-1);
         if (RobotMap.SHOOTER_DOUBLESIDE_LED) {
-          setLedSrip(r, g, b, RobotMap.SHOOTER_LED_AMOUNT + setLed + 1, ledBuffer.getLength()-1 + setLed);
+          setLedStrip(r, g, b, RobotMap.SHOOTER_LED_AMOUNT + setLed + 1, ledBuffer.getLength()-1 + setLed);
         }
       }
     }
   }
 
   public void clearStrip() {
-    setLedSrip(0, 0, 0, 0, ledBuffer.getLength()-1);
+    setLedStrip(0, 0, 0, 0, ledBuffer.getLength()-1);
   }
   
   public void setHoodAngle(double angle) {
@@ -333,43 +333,5 @@ public class ShooterAL extends GamePieceBase implements GamePiece {
       }
 
     }
-
-  /**
-   * Called once per robot iteration. This conducts any movement if enabled, and
-   * sends telemetry and state information in all cases.
-   */
-
-  //TODO Impliment number of balls to shoot; Press once to fire one ball; Hold to fire all
-  public void periodic() {
-    if (RobotMap.HAS_SHOOTER) {
-      if (enabled) {
-
-
-      
-      //   if (shootState) {
-      //     if (atSpeed()) {
-      //       setTriggerState(true);
-      //       startShooting();
-      //     } else {
-      //       rampToSpeed(speed);
-      //     }
-      //   } else {
-      //     setTriggerState(false);
-      //     rampToSpeed(0);
-      //   }
-
-      //   if (triggerState) {
-      //     startShooting();
-      //   } else {
-      //     stopShooting();
-      //     stopShooting();
-      //     rampToSpeed(0);
-      //   }
-      // } else {
-      //   stop();
-      // }
-      }
-    }
-  }
 }
   

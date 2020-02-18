@@ -16,7 +16,7 @@ public class TuneController {
     register("Climber_Tuner", new ClimberTuner());
     register("Drive_Straight", new DriveConstantTuner());
     register("Indexer_Tuner", new IndexerTuner());
-    register("Sm_Test", new stateMachineTuner());
+    register("Sm_Test", new ShooterStateMachineTuner());
     register("Indexer_SM_Tuner", new IndexerStateTuner());
   }
 

@@ -215,8 +215,4 @@ public enum IndexerState implements State {
     // delay
     public static Timer timer = new Timer();
 
-    IndexerState() {
-
-    }
-
 }

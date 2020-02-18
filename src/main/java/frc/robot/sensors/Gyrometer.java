@@ -20,7 +20,7 @@ public class Gyrometer extends GyroBase implements Gyro {
    * private constructor (singleton pattern)
    */
   private Gyrometer() {
-    imu = new ADIS16448_IMU(); //TODO: gyro should not be null but we need to figure out the ADIS IMU before it goes into the code.
+    imu = new ADIS16448_IMU();
   }
 
   /**

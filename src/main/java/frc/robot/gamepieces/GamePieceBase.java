@@ -30,9 +30,7 @@ public abstract class GamePieceBase implements GamePiece {
   public boolean enabled() {
     return enabled;
   }
-
-  @Override
-  public abstract void periodic();
+  
   private void registerMetrics() {
     Telemetry telemetry = Telemetry.getInstance();
     telemetry.addBooleanMetric(name + "Enabled", this::enabled);

@@ -89,9 +89,9 @@ public class IndexerStateTuner implements Tuner {
     
         if (driverForwardInput == true) {
             LOGGER.debug("mouthSensor is true");
-            gamePieceController.cellsForward(DriverInput.FORCE_TRUE);
+            gamePieceController.setCellsForward(DriverInput.FORCE_TRUE);
         } else {
-            gamePieceController.cellsForward(DriverInput.FORCE_FALSE);
+            gamePieceController.setCellsForward(DriverInput.FORCE_FALSE);
         }
 
         if (driverReverseInput == true) {
@@ -101,8 +101,8 @@ public class IndexerStateTuner implements Tuner {
             gamePieceController.cellsReverse(DriverInput.FORCE_FALSE);
         
         }
-        SmartDashboard.putNumber("Mouth Distance", indexer.getMouthDistance());
-        SmartDashboard.putNumber("Chamber Distance", indexer.getChamberDistance());
+        //SmartDashboard.putNumber("Mouth Distance", indexer.getMouthDistance());
+        //SmartDashboard.putNumber("Chamber Distance", indexer.getChamberDistance());
     }
 
 }

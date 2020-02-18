@@ -66,7 +66,7 @@ public class ClimberTuner implements Tuner {
             climber.climberUnlock();
         }
 
-        SmartDashboard.putNumber("Climber Speed", climber.getVelocity());
+        SmartDashboard.putNumber("Climber Speed", climber.getSpeed());
         SmartDashboard.putNumber("Climber Position", climber.getPosition());
         SmartDashboard.putBoolean("Top Sensor", climber.getTopSensor());
         SmartDashboard.putBoolean("Bottom Sensor", climber.getBottomSensor());

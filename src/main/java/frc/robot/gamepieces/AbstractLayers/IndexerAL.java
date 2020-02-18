@@ -83,7 +83,7 @@ public class IndexerAL extends GamePieceBase implements GamePiece {
     }
   }
 
-  public double getMouthDistance() {
+  private double getMouthDistance() {
     double distance = 0;
     if (onboardTOF != null && RobotMap.HAS_INDEXER_TOF_SENSORS) {
       if (onboardTOF.isRangeValid()) {
@@ -94,7 +94,7 @@ public class IndexerAL extends GamePieceBase implements GamePiece {
     return distance;
   }
 
-  public double getChamberDistance() {
+  private double getChamberDistance() {
     double distance = 0;
     if (networkTableTOF != null && RobotMap.HAS_INDEXER_TOF_SENSORS) {
       distance = networkTableTOF.getDouble(0);
@@ -189,12 +189,12 @@ public class IndexerAL extends GamePieceBase implements GamePiece {
     IndexerAL.getInstance().setStop();
   }
 
-  public enum setBelts {
+  public enum SetBelts {
     FORWARD, OFF, REVERSE
 
   }
 
-  public void indexerBeltDirection(setBelts direction) {
+  public void setDirection(SetBelts direction) {
 
     switch (direction) {
 
@@ -220,14 +220,7 @@ public class IndexerAL extends GamePieceBase implements GamePiece {
   private IndexerAL(TalonSpeedControllerGroup indexer) {
     super("Telemetry", "Indexer");
   }
-
-  public void periodic() {
-
-    if (enabled) {
-
-    }
-  }
-
+  
   @Override
   public void checkSystem() {
     // TODO Auto-generated method stub

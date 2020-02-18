@@ -11,7 +11,7 @@ import org.apache.logging.log4j.Logger;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public class stateMachineTuner implements Tuner {
+public class ShooterStateMachineTuner implements Tuner {
 
   private static final Logger LOGGER
       = RobotLogManager.getMainLogger(TuneController.class.getName());
@@ -20,7 +20,7 @@ public class stateMachineTuner implements Tuner {
   Gyrometer gyro;
   GamePieceController gamePieceController;
 
-  stateMachineTuner() {
+  ShooterStateMachineTuner() {
     gamePieceController = GamePieceController.getInstance();
     LOGGER.info("Gyro created: " + gyro);
   }

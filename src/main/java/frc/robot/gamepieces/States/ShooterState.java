@@ -177,10 +177,4 @@ public enum ShooterState implements State {
 
     //delay
     public static Timer timer = new Timer();
-
-    ShooterState() {
-
-    }
-
-
 }

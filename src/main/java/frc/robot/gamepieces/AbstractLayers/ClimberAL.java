@@ -56,7 +56,7 @@ public class ClimberAL extends GamePieceBase implements GamePiece {
     }
 
     // method to make the climber move up or down
-    public void set(climberSpeed speed) {
+    public void setSpeed(climberSpeed speed) {
         this.speed = speed;
     }
 
@@ -186,8 +186,8 @@ public class ClimberAL extends GamePieceBase implements GamePiece {
         OFF, UP, UPSLOW, DOWN, DOWNSLOW;
     }
 
-    public void climberDirection(climberSpeed direction) {
-        switch (direction) {
+    public void climberMotion(climberSpeed motion) {
+        switch (motion) {
         case OFF:
         default:
             climberOff();
@@ -207,11 +207,11 @@ public class ClimberAL extends GamePieceBase implements GamePiece {
         }
     }
 
-    public enum solenoidLock {
+    public enum SolenoidLock {
         LOCK, UNLOCK;
     }
 
-    public void setLock(solenoidLock state) {
+    public void setLock(SolenoidLock state) {
         switch (state) {
         case LOCK:
             break;
@@ -257,7 +257,7 @@ public class ClimberAL extends GamePieceBase implements GamePiece {
         }
     }
 
-    public double getVelocity() {
+    public double getSpeed() {
         double speed = 0;
         if (climbGroup != null && RobotMap.HAS_CLIMBER) {
             speed = climbGroup.velocity();
@@ -273,6 +273,9 @@ public class ClimberAL extends GamePieceBase implements GamePiece {
         return position;
     }
 
+    /**
+     * @return what the topsensor sees, true if something is detected false if nothing is detected
+     */
     public boolean getTopSensor() {
         boolean result = false;
         if (topSensor != null && RobotMap.HAS_CLIMB_TOP_SENSOR) {
@@ -286,6 +289,9 @@ public class ClimberAL extends GamePieceBase implements GamePiece {
         return result;
     }
 
+    /**
+     * @return what the topsensor sees, true if something is detected false if nothing is detected
+     */
     public boolean getBottomSensor() {
         boolean result = false;
         if (bottomSensor != null && RobotMap.HAS_CLIMB_BOTTOM_SENSOR) {
@@ -299,6 +305,9 @@ public class ClimberAL extends GamePieceBase implements GamePiece {
         return result;
     }
 
+    /**
+     * @return if the climber is tilted or not true if it is detected false if it is not
+     */
     public boolean getTiltSwitch() {
         boolean result = false;
         if (bottomSensor != null && RobotMap.HAS_CLIMB_TILT_SWITCH) {
@@ -308,16 +317,6 @@ public class ClimberAL extends GamePieceBase implements GamePiece {
             }
         }
         return result;
-    }
-
-    public void periodic() {
-        if (RobotMap.HAS_CLIMBER) {
-            if (enabled) {
-                // climberDirection(direction);
-            } else {
-                // ClimberAL.set(climberSpeed.OFF);
-            }
-        }
     }
 
     @Override

@@ -96,13 +96,6 @@ public class IntakeAL extends GamePieceBase implements GamePiece {
         super("Telemetry", "Intake");
     }
 
-    public void periodic() {
-
-        if (enabled) {
-        }
-
-    }
-
     @Override
     public void checkSystem() {
         // TODO Auto-generated method stub

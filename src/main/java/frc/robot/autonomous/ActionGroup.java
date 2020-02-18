@@ -198,7 +198,6 @@ public class ActionGroup {
     }
   }
 
-
   public String getName() {
     return name;
   }
