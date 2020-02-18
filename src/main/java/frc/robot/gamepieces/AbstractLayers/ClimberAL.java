@@ -41,11 +41,13 @@ public class ClimberAL extends GamePieceBase implements GamePiece {
     private static DigitalInput topSensor;
     private static DigitalInput bottomSensor;
     private static DigitalInput tiltLimitSwitch;
-    private static AnalogPotentiometer potentiometer; 
+    private static AnalogPotentiometer potentiometer;
 
     // states of robot
     private climberSpeed speed;
-
+    // threshold
+    private double lowestPoint = 1.0; // TODO: determine threshold value
+    private double highestPoint = 5.0; // TODO: determine threshold value
 
     // constructor
     private ClimberAL(SparkMaxSpeedControllerGroup climbGroup) { // constructor
@@ -63,16 +65,25 @@ public class ClimberAL extends GamePieceBase implements GamePiece {
         // TODO: delay function for solenoid!
     }
 
-    public boolean isDown() {
-        return getBottomSensor(); // TODO: is climber at its lowest? combiantion of potientiometer and bottom limit sensor
+    public boolean isDown() { // TODO: equal to or not
+        if (getBottomSensor() || climberPosition() <= lowestPoint) {
+            return true;
+        }
+        return false;
     }
 
-    public boolean isUp() {
-        return getTopSensor(); // TODO: is climber at its highest? combiantion of potientiometer and upper limit sensor
+    public boolean isUp() { // TODO: equal or not
+        if (getTopSensor() || climberPosition() >= highestPoint) {
+            return true;
+        }
+        return false;
     }
 
     public boolean isTilted() {
-        return getTiltSwitch(); // TODO: is climberArmLifted? tilt limit switch
+        if (getTiltSwitch()) {
+            return true;
+        }
+        return false;
     }
 
     public double climberPosition() {
