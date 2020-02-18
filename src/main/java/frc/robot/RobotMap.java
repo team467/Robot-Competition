@@ -335,12 +335,10 @@ public class RobotMap {
       AUTO_CAMERA = false;
 
       // Game Pieces
-      HAS_SHOOTER = false;
-      HAS_INDEXER = true;
+      HAS_SHOOTER = true;
+      HAS_INDEXER = false;
       HAS_INTAKE = false;
       HAS_CLIMBER = false;
-
-      IS_IN_TEST_MODE = true;
 
       // Shooter
       // TODO:change the values of these later
@@ -348,24 +346,25 @@ public class RobotMap {
       SHOOTER_MOTOR_CHANNEL = 5;
       SHOOTER_MOTOR_INVERTED = false;
       SHOOTER_MOTOR_FOLLOWER_INVERTED = false;
+      SHOOTER_MOTOR_FOLLOWER_CHANNEL = 6;
       SHOOTER_SMART_SHOT = true;
 
       TRIGGER_MOTOR_CHANNEL = 6;
       HAS_TRIGGER = true;
       HAS_SHOOTER_TRIGGER = true;
 
-      HAS_SHOOTER_HOOD = true;
+      HAS_SHOOTER_HOOD = false;
       HOOD_INVERTED = false;
       HOOD_PWM_PORT = 0;
       HOOD_FOLLOWER = true;
       HOOD_FOLLOWER_PWM_PORT = 1;
       HOOD_FOLLOWER_INVERTED = true;
-      HOOD_MAX_ANGLE = 165;
+      // HOOD_MAX_ANGLE = 165;
 
 
-      HAS_SHOOTER_LEDS = false;
-      SHOOTER_LED_AMOUNT = 12;
-      SHOOTER_LED_CHANNEL = 9;
+      HAS_SHOOTER_LEDS = true;
+      SHOOTER_LED_AMOUNT = 20;
+      SHOOTER_LED_CHANNEL = 2;
       SHOOTER_DOUBLESIDE_LED = true;
 
       SHOOTER_SENSOR_INVERTED = true;
@@ -395,12 +394,12 @@ public class RobotMap {
       CLIMBER_PID_SLOT = 0;
 
       HAS_CLIMB_TOP_SENSOR = false;
-      HAS_CLIMB_BOTTOM_SENSOR = true;
+      HAS_CLIMB_BOTTOM_SENSOR = false;
       CLIMB_TOP_SENSOR_INVERTED = false;
       CLIMB_BOTTOM_SENSOR_INVERTED = false;
       CLIMB_TOP_SENSOR_CHANNEL = 1;
       CLIMB_BOTTOM_SENSOR_CHANNEL = 2;
-      HAS_CLIMB_POT = true;
+      HAS_CLIMB_POT = false;
       CLIMB_POT_CHANNEL = 1;
 
       HAS_CLIMB_TILT_SWITCH = false;
@@ -417,7 +416,7 @@ public class RobotMap {
       FIRST_MAGAZINE_FEED_MOTOR_INVERTED = false;
       SECOND_MAGAZINE_FEED_MOTOR_CHANNEL = 5;
       SECOND_MAGAZINE_FEED_MOTOR_INVERTED = false;
-      INDEX_FOLLOWER_MOTOR = true;
+      INDEX_FOLLOWER_MOTOR = false;
       
       INDEXER_MOVE_TIMER = 0.2;
       INDEXER_TOF_THRESHOLD = 100;
@@ -553,7 +552,6 @@ public class RobotMap {
   // Shooter
   public static boolean HAS_SHOOTER = false;
   public static boolean HAS_TRIGGER = false;
-  public static boolean HAS_SHOOTERLEDS = false;
   public static boolean SHOOTER_FOLLOWER;
   public static int SHOOTER_MOTOR_CHANNEL;
   public static boolean SHOOTER_MOTOR_INVERTED;

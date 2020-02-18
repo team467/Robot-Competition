@@ -64,14 +64,18 @@ public class ShooterTuner implements Tuner {
         if (useVelocity) {
             shooter.rampToSpeed(speed);
 
-            if (RobotMap.HAS_SHOOTERLEDS) {
+            if (RobotMap.HAS_SHOOTER_LEDS) {
                 double currentVel = shooter.getMotor().velocity();
                 double setVel = shooter.getMotor().closedLoopTarget();
 
-                double ledFillPercent = Math.min(0, Math.max(1, setVel/currentVel));
+                double ledFillPercent = Math.max(0, Math.min(1, Math.abs(speed)));
+                Color ledColor = Color.kBlueViolet;
+                if (currentVel/setVel > 0.9) {
+                    ledColor = Color.kDarkGoldenrod;
+                }
                 int fillLeds = (int) (RobotMap.SHOOTER_LED_AMOUNT * ledFillPercent)-1;
                 if (fillLeds >= 0) {
-                    shooter.fillStrip(0, 0, 255, fillLeds);
+                    shooter.fillStrip(ledColor, fillLeds);
                 } else {
                     shooter.clearStrip();
                 }
@@ -79,7 +83,7 @@ public class ShooterTuner implements Tuner {
         } else {
             shooterMotor.set(ControlMode.PercentOutput, speed);
 
-            if (RobotMap.HAS_SHOOTERLEDS) {
+            if (RobotMap.HAS_SHOOTER_LEDS) {
                 double ledFillPercent = Math.max(0, Math.min(1, Math.abs(speed)));
                 int fillLeds = (int) (RobotMap.SHOOTER_LED_AMOUNT * ledFillPercent)-1;
                 if (fillLeds >= 0) {
