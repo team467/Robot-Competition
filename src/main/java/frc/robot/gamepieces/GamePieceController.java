@@ -70,10 +70,11 @@ public class GamePieceController {
   public static double shooterPreviousSpeed;
   public boolean upButtonPressed = false;
   public boolean downButtonPressed = false;
-  
 
   public IndexerMode indexMode;
   public ShooterMode shootMode;
+
+  public boolean shooterWantsBall = false;
 
   /**
    * Returns a singleton instance of the game piece controller.
@@ -122,10 +123,10 @@ public class GamePieceController {
    */
   public void periodic() {
 
-      // Separate reading from driver station from processing state
-      // so that tests can manually feed inputs.
-      processGamePieceState(driverStation.getDriveCameraFront(), driverStation.getDriveCameraBack());
-   
+    // Separate reading from driver station from processing state
+    // so that tests can manually feed inputs.
+    processGamePieceState(driverStation.getDriveCameraFront(), driverStation.getDriveCameraBack());
+
   }
 
   void processGamePieceState(boolean driveCameraFront, boolean driveCameraRear) {
@@ -192,18 +193,19 @@ public class GamePieceController {
   public boolean IndexerAuto() {
     boolean auto = false;
     if (forceToAuto == DriverInput.FORCE_AUTO_TRUE) {
-      LOGGER.info("Driver pressed forward");
+      LOGGER.debug("Driver pressed forward");
       return auto = true;
     } else {
       if (forceToAuto == DriverInput.FORCE_AUTO_FALSE)
-        return auto =false;
+        return auto = false;
     }
     return auto;
   }
+
   // TODO: put in logic
   public boolean indexerBallsForward() {
     if (forceCellsForward == DriverInput.FORCE_TRUE) {
-      LOGGER.info("Driver pressed forward");
+      LOGGER.debug("Driver pressed forward");
       return true;
     } else {
       if (forceCellsForward == DriverInput.FORCE_FALSE)
@@ -219,7 +221,7 @@ public class GamePieceController {
   // TODO: put in logic
   public boolean indexerBallsReverse() {
     if (forceCellsReverse == DriverInput.FORCE_TRUE) {
-      LOGGER.info("Driver pressed forward");
+      LOGGER.debug("Driver pressed forward");
       return true;
     } else {
       if (forceCellsReverse == DriverInput.FORCE_FALSE)
@@ -266,8 +268,15 @@ public class GamePieceController {
   public boolean getFireWhenReady() {
     return fireWhenReady;
   }
+  
+  public void setShooterWantsBall(boolean toggle) {
+    shooterWantsBall = toggle;
+  }
 
-  public State getShooterState() {
-    return shooterState;
+  public boolean getShooterState() {
+    if (shooterState == ShooterState.LoadingBall) {
+      return shooterWantsBall = true; 
+    }
+    return shooterWantsBall;
   }
 }

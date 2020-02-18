@@ -16,8 +16,6 @@ import frc.robot.logging.RobotLogManager;
 import frc.robot.gamepieces.AbstractLayers.IndexerAL.SensorTestMode;
 import frc.robot.gamepieces.GamePieceController.DriverInput;
 
-
-
 public class IndexerStateTuner implements Tuner {
 
     private static final Logger LOGGER = RobotLogManager.getMainLogger(TuneController.class.getName());
@@ -39,6 +37,7 @@ public class IndexerStateTuner implements Tuner {
         SmartDashboard.putBoolean("forwardInput", false);
         SmartDashboard.putBoolean("reverseInput", false);
         SmartDashboard.putBoolean("setAuto", false);
+        SmartDashboard.putBoolean("Shooter asking for ball", false);
 
         gamePieceController = GamePieceController.getInstance();
 
@@ -56,7 +55,15 @@ public class IndexerStateTuner implements Tuner {
 
         boolean indexToAuto = SmartDashboard.getBoolean("setAuto", false);
 
+        boolean shooterWantsBall = SmartDashboard.getBoolean("Shooter asking for ball", false);
         gamePieceController.periodic();
+
+        if (shooterWantsBall == true) {
+            LOGGER.debug("Shooter Wants ball!!!");
+            gamePieceController.shooterWantsBall = true;
+        } else {
+            gamePieceController.shooterWantsBall = false;
+        }
 
         if (indexToAuto == true) {
             gamePieceController.autoInput(DriverInput.FORCE_AUTO_TRUE);

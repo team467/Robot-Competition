@@ -160,17 +160,17 @@ public class IndexerAL extends GamePieceBase implements GamePiece {
   }
 
   private void setForward() {
-    LOGGER.info("Indexer going forward");
-    indexer.set(0.2);
+    LOGGER.debug("Indexer going forward");
+    indexer.set(RobotMap.INDEXER_FORWARD_SPEED);
   }
 
   private void setBackwards() {
-    LOGGER.info("Indexer going backwards");
-    indexer.set(-0.2);
+    LOGGER.debug("Indexer going backwards");
+    indexer.set(RobotMap.INDEXER_INVERSE_SPEED);
   }
 
   private void setStop() {
-    LOGGER.info("Indexer stopped");
+    LOGGER.debug("Indexer stopped");
     indexer.set(0.0);
   }
 

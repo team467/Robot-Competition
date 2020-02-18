@@ -175,7 +175,7 @@ public class TalonSpeedControllerGroup implements SpeedController {
   public void set(final ControlMode controlMode, double outputValue) {
     LOGGER.info(outputValue);
     if (leader == null) {
-      LOGGER.error("No drive system");
+      LOGGER.debug("No drive system");
       return;
     }
 

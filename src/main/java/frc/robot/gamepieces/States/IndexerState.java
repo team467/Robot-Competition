@@ -27,6 +27,7 @@ public enum IndexerState implements State {
         public boolean indexerBallsForward;
         public boolean isInMouth;
         public boolean isInChamber;
+        public boolean shooterWantsBall;
 
         public void enter() {
             // Noop
@@ -38,7 +39,8 @@ public enum IndexerState implements State {
             indexerBallsForward = GamePieceController.getInstance().indexerBallsForward();
             isInMouth = indexerAL.isBallInMouth();
             isInChamber = indexerAL.isBallInChamber();
-
+            shooterWantsBall = GamePieceController.getInstance().shooterWantsBall;
+            LOGGER.debug("Shooter wants ball {}", shooterWantsBall);
             if (!indexAuto) {
                 return Manual;
             } else {
@@ -47,14 +49,13 @@ public enum IndexerState implements State {
                     return Feed;
                 }
 
-                if (GamePieceController.getInstance().getShooterState() == ShooterState.LoadingBall) {
+                if (shooterWantsBall) {
                     LOGGER.debug("LoadingBalls");
                     return Feed;
                 }
 
                 if (indexerBallsReverse) {
-                    LOGGER.debug("indexerBallsReverse {}", indexerBallsReverse);
-                    return Reverse;
+                    return Feed;
                 }
             }
 
@@ -71,6 +72,7 @@ public enum IndexerState implements State {
 
         public boolean autoMode;
         public boolean indexerBallsReverse;
+        public boolean isInChamber;
 
         public void enter() {
             // Noop
@@ -80,6 +82,7 @@ public enum IndexerState implements State {
             LOGGER.debug("Feed is activated");
             autoMode = GamePieceController.getInstance().IndexAuto;
             indexerBallsReverse = GamePieceController.getInstance().indexerBallsReverse();
+            isInChamber = indexerAL.isBallInChamber();
 
             IndexerAL.advanceBallsToShooter();
 
@@ -88,8 +91,12 @@ public enum IndexerState implements State {
                 return Idle;
             }
 
-            if (!indexerAL.isBallInMouth() || !indexerBallsReverse) {
+            if (!indexerAL.isBallInMouth()) {
                 return FeedBuffer;
+            }
+
+            if (isInChamber) {
+                IndexerAL.callStop();
             }
 
             return this;

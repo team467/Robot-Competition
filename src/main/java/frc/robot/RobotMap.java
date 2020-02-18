@@ -421,6 +421,9 @@ public class RobotMap {
       
       INDEXER_MOVE_TIMER = 0.2;
       INDEXER_TOF_THRESHOLD = 100;
+     
+      INDEXER_FORWARD_SPEED = 1.0;
+      INDEXER_INVERSE_SPEED = -1.0;
 
       break;
     }
@@ -603,6 +606,8 @@ public class RobotMap {
   public static boolean INDEXER_SENSOR_INVERTED = false;
   public static boolean INDEXER_MOTOR_INVERTED = false;
   public static boolean HAS_INDEXER_TOF_SENSORS = false;
+  public static double INDEXER_FORWARD_SPEED;
+  public static double INDEXER_INVERSE_SPEED;
 
 
   public static boolean IS_IN_TEST_MODE = false;

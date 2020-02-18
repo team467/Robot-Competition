@@ -53,6 +53,7 @@ public enum ShooterState implements State {
     LoadingBall {
         public boolean autoMode;
         public boolean fireWhenReady = GamePieceController.getInstance().getFireWhenReady();
+        public GamePieceController gamePieceController = GamePieceController.getInstance();
         public void enter() {
             // float distance = Sensor.getDistance();
             // int desiredRPM = (int)(distance * 1 * 1);
@@ -62,6 +63,7 @@ public enum ShooterState implements State {
             autoMode = GamePieceController.getInstance().ShooterAuto;
             shooterAL.setTrigger(TriggerSettings.STOP);
             shooterAL.setFlywheel(FlywheelSettings.FORWARD);
+            gamePieceController.setShooterWantsBall(true);
         
             LOGGER.debug("LB " + fireWhenReady);
             if (!autoMode){
