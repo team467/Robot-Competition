@@ -229,6 +229,7 @@ public class ShooterAL extends GamePieceBase implements GamePiece {
   }
 
   public void setHoodAngle(double leftAngle, double rightAngle) {
+    //TODO Fix code, it doesnt set the angle correct
     if (hoodLeft != null && hoodRight != null && RobotMap.HAS_SHOOTER_HOOD) {
       if (RobotMap.HOOD_LEFT_INVERTED) {
         leftAngle = RobotMap.HOOD_MAX_ANGLE - leftAngle;
