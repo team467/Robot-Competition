@@ -229,19 +229,37 @@ public class ShooterAL extends GamePieceBase implements GamePiece {
   }
 
   public void setHoodAngle(double leftAngle, double rightAngle) {
-    //TODO Fix code, it doesnt set the angle correct
     if (hoodLeft != null && hoodRight != null && RobotMap.HAS_SHOOTER_HOOD) {
+      setLeftHoodAngle(leftAngle);
+      setRightHoodAngle(rightAngle)
+    }
+  }
+
+  public void setLeftHoodAngle(double angle) {
+    if (hoodLeft != null && RobotMap.HAS_SHOOTER_HOOD) {
+      angle = Math.max(-1, Math.min(1, angle));
+
       if (RobotMap.HOOD_LEFT_INVERTED) {
-        leftAngle = RobotMap.HOOD_MAX_ANGLE - leftAngle;
+        angle = -angle;
       }
+
+      double set = ((RobotMap.HOOD_MAX_ANGLE/2) * angle) + RobotMap.HOOD_MAX_ANGLE;
+
+      hoodLeft.setAngle(set);
+    }
+  }
+
+  public void setRightHoodAngle(double angle) {
+    if (hoodRight != null && RobotMap.HAS_SHOOTER_HOOD) {
+      angle = Math.max(-1, Math.min(1, angle));
 
       if (RobotMap.HOOD_RIGHT_INVERTED) {
-        rightAngle = RobotMap.HOOD_MAX_ANGLE - rightAngle;
+        angle = -angle;
       }
 
+      double set = ((RobotMap.HOOD_MAX_ANGLE/2) * angle) + RobotMap.HOOD_MAX_ANGLE;
 
-      hoodLeft.setAngle(leftAngle);
-      hoodRight.setAngle(rightAngle);
+      hoodLeft.setAngle(set);
     }
   }
 
