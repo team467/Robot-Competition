@@ -49,6 +49,10 @@ public class ClimberAL extends GamePieceBase implements GamePiece {
     private double lowestPoint = 1.0; // TODO: determine threshold value
     private double highestPoint = 5.0; // TODO: determine threshold value
 
+    // climber tuner
+    public boolean hasHighestPoint = false;
+    public boolean hasLowestPoint = false;
+
     // constructor
     private ClimberAL(SparkMaxSpeedControllerGroup climbGroup) { // constructor
         super("Telemetry", "Climber");
@@ -168,7 +172,7 @@ public class ClimberAL extends GamePieceBase implements GamePiece {
     }
 
     public void climberDown() {
-        climbGroup.set(0.5);
+        climbGroup.set(-0.5);
         LOGGER.debug("Climber Is Going Down");
     }
 
@@ -178,7 +182,7 @@ public class ClimberAL extends GamePieceBase implements GamePiece {
     }
 
     public void climberDownSlow() {
-        climbGroup.set(0.1);
+        climbGroup.set(-0.1);
         LOGGER.debug("Climber Is Going Down Slowly");
     }
 
@@ -214,23 +218,28 @@ public class ClimberAL extends GamePieceBase implements GamePiece {
     public void setLock(SolenoidLock state) {
         switch (state) {
         case LOCK:
+            climberLock();
             break;
         case UNLOCK:
+            climberUnlock();
             break;
         }
     }
 
     public void stopMotors() {
+        LOGGER.debug("motors has stopped");
         climbGroup.set(0.0);
     }
 
     public void climberLock() {
+        LOGGER.debug("climber lock");
         if (climbLock != null && RobotMap.HAS_CLIMBLOCK) {
             climbLock.set(Value.kOn);
         }
     }
 
     public void climberUnlock() {
+        LOGGER.debug("climnber unlock");
         if (climbLock != null && RobotMap.HAS_CLIMBLOCK) {
             climbLock.set(Value.kOff);
         }
@@ -274,7 +283,8 @@ public class ClimberAL extends GamePieceBase implements GamePiece {
     }
 
     /**
-     * @return what the topsensor sees, true if something is detected false if nothing is detected
+     * @return what the topsensor sees, true if something is detected false if
+     *         nothing is detected
      */
     public boolean getTopSensor() {
         boolean result = false;
@@ -290,7 +300,8 @@ public class ClimberAL extends GamePieceBase implements GamePiece {
     }
 
     /**
-     * @return what the topsensor sees, true if something is detected false if nothing is detected
+     * @return what the topsensor sees, true if something is detected false if
+     *         nothing is detected
      */
     public boolean getBottomSensor() {
         boolean result = false;
@@ -306,7 +317,8 @@ public class ClimberAL extends GamePieceBase implements GamePiece {
     }
 
     /**
-     * @return if the climber is tilted or not true if it is detected false if it is not
+     * @return if the climber is tilted or not true if it is detected false if it is
+     *         not
      */
     public boolean getTiltSwitch() {
         boolean result = false;

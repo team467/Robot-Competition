@@ -5,13 +5,12 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-
 package frc.robot.gamepieces.States;
 
 import frc.robot.gamepieces.GamePieceController;
 import frc.robot.gamepieces.AbstractLayers.ClimberAL;
-import static frc.robot.gamepieces.AbstractLayers.ClimberAL.SolenoidLock.*;
-import static frc.robot.gamepieces.AbstractLayers.ClimberAL.climberSpeed.*;
+import frc.robot.gamepieces.AbstractLayers.ClimberAL.climberSpeed;
+import frc.robot.gamepieces.AbstractLayers.ClimberAL.SolenoidLock;
 import edu.wpi.first.wpilibj.Timer;
 
 /**
@@ -30,8 +29,8 @@ public enum ClimberState implements State {
             climberEnabled = GamePieceController.getInstance().climberIsEnabled();
             upButtonPressed = GamePieceController.getInstance().climberUpButtonPressed();
 
-            climberAL.setSpeed(OFF);
-            climberAL.setLock(LOCK);
+            climber.setSpeed(climberSpeed.OFF);
+            climber.setLock(SolenoidLock.LOCK);
             if (climberEnabled && upButtonPressed) {
                 return UnlockingUp;
 
@@ -51,20 +50,20 @@ public enum ClimberState implements State {
 
         public void enter() {
             timer.start();
-            entryPosition = climberAL.climberPosition();
+          
         }
 
         public State action() {
             upButtonPressed = GamePieceController.getInstance().climberUpButtonPressed();
-            currentPosition = climberAL.climberPosition();
-
-            climberAL.setSpeed(UPSLOW);
-            climberAL.setLock(LOCK);
+            currentPosition = climber.climberPosition();
+            entryPosition = climber.climberPosition();
+            
+            climber.setSpeed(climberSpeed.UPSLOW);
+            climber.setLock(SolenoidLock.LOCK);
             if (Math.abs(currentPosition - entryPosition) > climbThreshold) {
                 if (upButtonPressed) {
                     return Extending;
-                }
-                if (!upButtonPressed) {
+                } else {
                     return GameLocked;
                 }
             }
@@ -87,15 +86,15 @@ public enum ClimberState implements State {
 
         public void enter() {
             timer.start();
-            entryPosition = climberAL.climberPosition();
+            entryPosition = climber.climberPosition();
         }
 
         public State action() {
             downButtonPressed = GamePieceController.getInstance().climberDownButtonPressed();
-            currentPosition = climberAL.climberPosition();
+            currentPosition = climber.climberPosition();
 
-            climberAL.setSpeed(DOWNSLOW);
-            climberAL.setLock(LOCK);
+            climber.setSpeed(climberSpeed.DOWNSLOW);
+            climber.setLock(SolenoidLock.LOCK);
             if (Math.abs(currentPosition - entryPosition) > climbThreshold) {
                 if (downButtonPressed) {
                     return Retracting;
@@ -128,8 +127,8 @@ public enum ClimberState implements State {
             upButtonPressed = GamePieceController.getInstance().climberUpButtonPressed();
             downButtonPressed = GamePieceController.getInstance().climberDownButtonPressed();
 
-            climberAL.setSpeed(UP);
-            climberAL.setLock(UNLOCK);
+            climber.setSpeed(climberSpeed.UP);
+            climber.setLock(SolenoidLock.UNLOCK);
             if (isHighest) {
                 return GameLocked;
             }
@@ -155,14 +154,12 @@ public enum ClimberState implements State {
         public State action() {
             downButtonPressed = GamePieceController.getInstance().climberDownButtonPressed();
 
-            climberAL.setSpeed(DOWN);
-            climberAL.setLock(UNLOCK);
-            if (!downButtonPressed) {
+            climber.setSpeed(climberSpeed.DOWN);
+            climber.setLock(SolenoidLock.UNLOCK);
+            if (!downButtonPressed || isLowest) {
                 return GameLocked;
             }
-            if (isLowest) {
-                return GameLocked;
-            }
+            
             return this;
         }
 
@@ -183,8 +180,8 @@ public enum ClimberState implements State {
             upButtonPressed = GamePieceController.getInstance().climberUpButtonPressed();
             downButtonPressed = GamePieceController.getInstance().climberDownButtonPressed();
 
-            climberAL.setSpeed(OFF);
-            climberAL.setLock(LOCK);
+            climber.setSpeed(climberSpeed.OFF);
+            climber.setLock(SolenoidLock.LOCK);
             if (upButtonPressed && !downButtonPressed && !isHighest) {
                 return UnlockingUp;
             }
@@ -205,8 +202,8 @@ public enum ClimberState implements State {
         }
 
         public State action() {
-            climberAL.setSpeed(OFF);
-            climberAL.setLock(LOCK);
+            climber.setSpeed(climberSpeed.OFF);
+            climber.setLock(SolenoidLock.LOCK);
             if (timer.get() > disableDelay) { // TODO: determine timer value
                 return GameLocked;
             }
@@ -219,9 +216,9 @@ public enum ClimberState implements State {
         }
     };
 
-    private static ClimberAL climberAL = ClimberAL.getInstance();
-    private static boolean isLowest = climberAL.isDown();
-    private static boolean isHighest = climberAL.isUp();
+    private static ClimberAL climber = ClimberAL.getInstance();
+    private static boolean isLowest = climber.isDown();
+    private static boolean isHighest = climber.isUp();
 
     private final static double unlockingDelay = 2.0; // TODO: determine delay in seconds
     private final static double disableDelay = 3.0; // TODO: determine delay in seconds
