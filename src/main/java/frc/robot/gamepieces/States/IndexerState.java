@@ -200,8 +200,8 @@ public enum IndexerState implements State {
 
         public State action() {
             autoMode = GamePieceController.getInstance().IndexAuto;
-            indexerBallsReverse = GamePieceController.getInstance().indexerBallsReverse();
-            indexerBallsForward = GamePieceController.getInstance().indexerBallsForward();
+            indexerBallsReverse = GamePieceController.getInstance().indexerBallsReverse;
+            indexerBallsForward = GamePieceController.getInstance().indexerBallsForward;
 
             if (autoMode) {
                 return Idle;

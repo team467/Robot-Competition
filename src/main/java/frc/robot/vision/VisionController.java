@@ -122,6 +122,19 @@ public class VisionController {
     return speed;
   }
 
+  public double determineShooterSpeed() {
+    double shooterSpeed;
+    double shooterPreviousSpeed = RobotMap.MANUAL_MODE_SHOOTER_SPEED;
+    if (hasDistance()) {
+      shooterSpeed = ((0.16120202 * dist() + 65.5092) / 100) * 0.95;
+      shooterPreviousSpeed = shooterSpeed;
+    } else {
+      shooterSpeed = shooterPreviousSpeed;
+    }
+
+    return shooterSpeed;
+  }
+
   /**
    * Sets the feedback for the navigator, including LEDs and rumble.
    */

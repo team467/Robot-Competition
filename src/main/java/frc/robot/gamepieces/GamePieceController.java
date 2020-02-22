@@ -57,9 +57,9 @@ public class GamePieceController {
   // DS controls
   public boolean IndexAuto = true;
   public boolean ShooterAuto = true;
-  private boolean armPosition = false; // TODO get inputs from DS class
-  private boolean rollerStateIN = false;
-  private boolean rollerStateOUT = false;
+  public boolean armPosition = false; // TODO get inputs from DS class
+  public boolean rollerStateIN = false;
+  public boolean rollerStateOUT = false;
   public boolean fireWhenReady = false;
   public boolean triggerManual = false;
   public boolean flywheelManual = false;
@@ -70,6 +70,8 @@ public class GamePieceController {
   public static double shooterPreviousSpeed;
   public boolean upButtonPressed = false;
   public boolean downButtonPressed = false;
+  public boolean indexerBallsReverse = false;
+  public boolean indexerBallsForward = false;
   
 
   public enum DriverInput {
@@ -229,18 +231,6 @@ public class GamePieceController {
     return reverse;
   }
 
-  public void determineShooterSpeed() {
-    // math
-    if (visionController.hasDistance()) {
-      shooterSpeed = ((0.16120202 * visionController.dist() + 65.5092) / 100) * 0.95;
-      shooterPreviousSpeed = shooterSpeed;
-    } else {
-      shooterSpeed = shooterPreviousSpeed;
-    }
-
-
-  }
-
   private void registerMetrics() {
     Telemetry telemetry = Telemetry.getInstance();
     // telemetry.addStringMetric(name + " Mode", mode::name);
@@ -261,6 +251,10 @@ public class GamePieceController {
     shooterWantsBall = toggle;
   }
 
+  public void determineShooterSpeed() {
+    shooterSpeed = visionController.determineShooterSpeed();
+  }
+  
   public boolean getShooterState() {
     if (shooterState == ShooterState.LoadingBall) {
       return shooterWantsBall = true; 

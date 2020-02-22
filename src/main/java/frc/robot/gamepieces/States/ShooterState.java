@@ -162,7 +162,7 @@ public enum ShooterState implements State {
             autoMode = GamePieceController.getInstance().ShooterAuto;
             flyWheelMan = GamePieceController.getInstance().flywheelManual;
             triggerMan = GamePieceController.getInstance().triggerManual;
-            
+
             //Manual mode based on controls
             if (flyWheelMan) {
                 shooterAL.setFlywheel(FlywheelSettings.MANUAL_FORWARD);

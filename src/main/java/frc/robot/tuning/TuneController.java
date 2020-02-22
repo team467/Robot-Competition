@@ -18,6 +18,7 @@ public class TuneController {
     register("Indexer_Tuner", new IndexerTuner());
     register("Sm_Test", new ShooterStateMachineTuner());
     register("Indexer_SM_Tuner", new IndexerStateTuner());
+    register("GamePieceController_Tuner", new GPCTuner());
   }
 
   private static final Logger LOGGER

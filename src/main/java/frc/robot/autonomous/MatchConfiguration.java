@@ -50,6 +50,7 @@ public class MatchConfiguration {
     }
 
     SmartDashboard.putData("Auto Chooser", chooser);  
+    SmartDashboard.putString("Auto Chooser", "None"); //TODO: TEST
 
   }
 

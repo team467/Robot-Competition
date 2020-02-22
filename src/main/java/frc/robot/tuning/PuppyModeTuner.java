@@ -77,7 +77,7 @@ public class PuppyModeTuner implements Tuner {
 
       if(tryShot){
       gyro.zero();
-      gamePieceController.determineShooterSpeed();
+      visionController.determineShooterSpeed();
       drive.arcadeDrive(0, visionController.setTurn());
 
       if(visionController.atAngle()){ 
