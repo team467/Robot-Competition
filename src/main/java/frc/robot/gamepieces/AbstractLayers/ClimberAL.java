@@ -323,13 +323,6 @@ public class ClimberAL extends GamePieceBase implements GamePiece {
 
     @Override
     public void checkSystem() {
-      try {
-        getInstance();
-      } catch (Exception e) {
-        LOGGER.error("Climber system error");
-        e.printStackTrace();
-      }
-
     }
 
     // TODO: tie climbersm to gpc, check how shooter is done

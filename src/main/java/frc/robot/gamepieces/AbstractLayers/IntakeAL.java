@@ -103,7 +103,6 @@ public class IntakeAL extends GamePieceBase implements GamePiece {
 
     @Override
     public void checkSystem() {
-        // TODO Auto-generated method stub
 
     }
 
