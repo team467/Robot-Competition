@@ -21,6 +21,7 @@ public enum ShooterState implements State {
 
         public  boolean autoMode;
         public boolean fireWhenReady;
+        public boolean climberEnabled;
 
         public void enter() {
             // Noop
@@ -29,20 +30,24 @@ public enum ShooterState implements State {
         public State action() {
             autoMode = GamePieceController.getInstance().ShooterAuto;
             fireWhenReady = GamePieceController.getInstance().getFireWhenReady();
+            climberEnabled = GamePieceController.getInstance().climberEnabled;
             shooterAL.setTrigger(TriggerSettings.STOP);
             shooterAL.setFlywheel(FlywheelSettings.STOP);
 
+
+            if(climberEnabled){
+                LOGGER.debug("Climber enabled, stopping shooter");
+                return this;
+            }
 
             if(autoMode) {
                 if(fireWhenReady) {
                     return LoadingBall;
                 }
-                //LOGGER.error(fireWhenReady);
                 return this;
 
             } else {
                 return Manual;
-
             }
         }
 
@@ -146,13 +151,14 @@ public enum ShooterState implements State {
         public State action() {
             autoMode = GamePieceController.getInstance().ShooterAuto;
             //Manual mode based on controls
-            if(!autoMode){
                 if(flyWheelMan)shooterAL.setFlywheel(FlywheelSettings.MANUAL_FORWARD);
                 if(triggerMan)shooterAL.setTrigger(TriggerSettings.SHOOTING);
-            } else {
+
+            if (autoMode) {
                 return LoadingBall;
-            }
+            } else {
             return this;
+            }
         }
 
         public void exit() {

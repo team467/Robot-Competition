@@ -55,7 +55,7 @@ public class GamePieceController {
   public boolean RobotAligned = true;// TODO determine where this is set
 
   // DS controls
-  public boolean IndexAuto = false;
+  public boolean IndexAuto = true;
   public boolean ShooterAuto = true;
   private boolean armPosition = false; // TODO get inputs from DS class
   private boolean rollerStateIN = false;
@@ -70,6 +70,7 @@ public class GamePieceController {
   public static double shooterPreviousSpeed;
   public boolean upButtonPressed = false;
   public boolean downButtonPressed = false;
+  
 
   public enum DriverInput {
     FORCE_TRUE, FORCE_FALSE, FORCE_AUTO_TRUE, FORCE_AUTO_FALSE, USE_DRIVER_INPUT
@@ -135,16 +136,6 @@ public class GamePieceController {
   }
 
   void processGamePieceState(boolean driveCameraFront, boolean driveCameraRear) {
-
-    // Depending on driver input, camera view switches to front or back.
-    // Does not change the mode away from Hatch or Cargo, but does take camera.
-    if (driveCameraFront) {
-      LOGGER.debug("Forward Camera");
-      camera.forward();
-    } else if (driveCameraRear) {
-      LOGGER.debug("Backward Camera");
-      camera.backward();
-    }
     updateGamePieces();
   }
 
@@ -158,18 +149,22 @@ public class GamePieceController {
 
     // roller controls
     if (RobotMap.HAS_INTAKE) {
-      if (armPosition) {
+      if (armPosition && !climberEnabled) {
         intake.setIntakeArm(IntakerArm.ARM_UP);
       } else {
         intake.setIntakeArm(IntakerArm.ARM_DOWN);
       }
 
-      if (rollerStateIN) {
+      if (rollerStateIN && !climberEnabled) {
         intake.setIntakeRoller(IntakerRollers.ROLLERS_IN);
       } else if (rollerStateOUT) {
         intake.setIntakeRoller(IntakerRollers.ROLLERS_OUT);
       } else {
         intake.setIntakeRoller(IntakerRollers.ROLLERS_OFF);
+      }
+
+      if (climberEnabled) {
+        intake.setIntakeArm(IntakerArm.ARM_UP);
       }
 
     }
