@@ -15,6 +15,9 @@ import frc.robot.RobotMap;
 import frc.robot.drive.SparkMaxSpeedControllerGroup;
 import frc.robot.logging.RobotLogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.io.IOException;
+
 import com.revrobotics.*;
 import frc.robot.gamepieces.GamePieceBase;
 import frc.robot.gamepieces.GamePiece;
@@ -320,7 +323,12 @@ public class ClimberAL extends GamePieceBase implements GamePiece {
 
     @Override
     public void checkSystem() {
-        // TODO Auto-generated method stub
+      try {
+        getInstance();
+      } catch (Exception e) {
+        LOGGER.error("Climber system error");
+        e.printStackTrace();
+      }
 
     }
 

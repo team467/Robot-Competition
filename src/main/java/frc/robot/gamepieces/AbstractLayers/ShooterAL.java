@@ -317,7 +317,7 @@ public class ShooterAL extends GamePieceBase implements GamePiece {
         case REVERSE:
           reverseShooter();
           break;
-          
+
         default:
           LOGGER.debug("invalid trigger setting defaulting to stop");
           stopShooting();
@@ -325,24 +325,21 @@ public class ShooterAL extends GamePieceBase implements GamePiece {
 
     }
 
-
-
     @Override
     public void checkSystem() {
 
       try {
-
+        getInstance();
         setTrigger(TriggerSettings.SHOOTING);
         setFlywheel(FlywheelSettings.FORWARD);
 
-      
         if(flywheelLeader.isAlive()) {
           LOGGER.info("flywheel is alive");
         } else {
           LOGGER.debug("flywheel is not alive");
         }
 
-      } catch (NullPointerException e) {
+      } catch (Exception e) {
         LOGGER.debug("something is wrong with the shooter");
          e.printStackTrace();
       }

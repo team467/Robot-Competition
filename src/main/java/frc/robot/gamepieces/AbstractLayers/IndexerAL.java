@@ -223,7 +223,16 @@ public class IndexerAL extends GamePieceBase implements GamePiece {
   
   @Override
   public void checkSystem() {
-    // TODO Auto-generated method stub
+
+  try {
+    getInstance();
+   setDirection(SetBelts.FORWARD);
+
+  } catch (Exception e) {
+
+    LOGGER.error("Indexer problem");
+    e.printStackTrace();
+  }
 
   }
 }
