@@ -18,6 +18,7 @@ public class RobotMap {
 
   // Sensors
   public static boolean HAS_GYRO = true;
+  public static double AUTOALIGN_TURN_SPEED;
 
   // Turret angle offsets
   public static final double ON_TARGET = 1.0;
@@ -613,10 +614,7 @@ public class RobotMap {
   public static boolean HAS_INDEXER_TOF_SENSORS = false;
   public static double INDEXER_FORWARD_SPEED;
   public static double INDEXER_INVERSE_SPEED;
-  public static double AUTOALIGN_TURN_SPEED;
 
-
-  public static boolean IS_IN_TEST_MODE = false;
 
   public static double INDEXER_MOVE_TIMER;
   //distance threshold in mm for detecting a ball
