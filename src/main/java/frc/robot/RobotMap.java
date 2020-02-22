@@ -233,9 +233,9 @@ public class RobotMap {
 
       //Indexer
       // TODO: change the values of these later. 
-      FIRST_MAGAZINE_FEED_MOTOR_CHANNEL = 1;
+      FIRST_MAGAZINE_FEED_MOTOR_CHANNEL = 5;
       FIRST_MAGAZINE_FEED_MOTOR_INVERTED = false;
-      SECOND_MAGAZINE_FEED_MOTOR_CHANNEL = 1;
+      SECOND_MAGAZINE_FEED_MOTOR_CHANNEL = 6;
       SECOND_MAGAZINE_FEED_MOTOR_INVERTED = false;
       INDEX_FOLLOWER_MOTOR = false;
       
