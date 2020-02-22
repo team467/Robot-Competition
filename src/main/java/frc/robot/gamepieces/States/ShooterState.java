@@ -7,7 +7,7 @@ import frc.robot.gamepieces.AbstractLayers.ShooterAL.FlywheelSettings;
 import frc.robot.gamepieces.AbstractLayers.IndexerAL;
 import frc.robot.gamepieces.GamePieceController;
 import frc.robot.logging.RobotLogManager;
-
+import frc.robot.vision.VisionController;
 
 import org.apache.logging.log4j.Logger;
 
@@ -118,6 +118,8 @@ public enum ShooterState implements State {
     ShootingNoDelay {
         public boolean autoMode;
         public boolean fireWhenReady;
+        public boolean hasAngle;
+        public boolean hasDistance;
 
         public void enter() {
             timer.start();
@@ -126,9 +128,15 @@ public enum ShooterState implements State {
         public State action() {
             autoMode = GamePieceController.getInstance().ShooterAuto;
             fireWhenReady = GamePieceController.getInstance().getFireWhenReady();
-            //LOGGER.error(fireWhenReady);
-            shooterAL.setFlywheel(FlywheelSettings.FORWARD);
-            shooterAL.setTrigger(TriggerSettings.SHOOTING);
+            hasAngle = VisionController.getInstance().hasAngle();
+            hasDistance = VisionController.getInstance().hasDistance();
+
+            if (hasAngle && hasDistance) {
+                shooterAL.setFlywheel(FlywheelSettings.FORWARD);
+                shooterAL.setTrigger(TriggerSettings.SHOOTING);
+            } else {
+                return Manual;
+            }
 
             if(timer.get() < 1.0){ //!shooterAL.atSpeed() || !indexerAL.inChamber()
                 return ShootingNoDelay;
@@ -145,20 +153,29 @@ public enum ShooterState implements State {
 
     Manual {
         public boolean autoMode;
+        public boolean triggerMan, flyWheelMan;
         public void enter() {
             // Noop
         }
 
         public State action() {
             autoMode = GamePieceController.getInstance().ShooterAuto;
+            flyWheelMan = GamePieceController.getInstance().flywheelManual;
+            triggerMan = GamePieceController.getInstance().triggerManual;
+            
             //Manual mode based on controls
-                if(flyWheelMan)shooterAL.setFlywheel(FlywheelSettings.MANUAL_FORWARD);
-                if(triggerMan)shooterAL.setTrigger(TriggerSettings.SHOOTING);
+            if (flyWheelMan) {
+                shooterAL.setFlywheel(FlywheelSettings.MANUAL_FORWARD);
+            }
+
+            if (triggerMan) {
+                shooterAL.setTrigger(TriggerSettings.SHOOTING);
+            }
 
             if (autoMode) {
                 return LoadingBall;
             } else {
-            return this;
+                return this;
             }
         }
 
@@ -173,15 +190,8 @@ public enum ShooterState implements State {
     private static IndexerAL indexerAL = IndexerAL.getInstance();
     private static boolean robotAligned = gamePieceController.RobotAligned; //TODO gpc will tell if robot is aligned
 
-
-
-
     private static final Logger LOGGER = RobotLogManager.getMainLogger(ShooterAL.class.getName());
-
-    //Manual settings
-    public static boolean triggerMan = gamePieceController.triggerManual;
-    public static boolean flyWheelMan = gamePieceController.flywheelManual;
-
+    
     //delay
     public static Timer timer = new Timer();
 }
