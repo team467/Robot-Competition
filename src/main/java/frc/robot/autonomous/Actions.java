@@ -121,7 +121,6 @@ public class Actions {
   public static ActionGroup move(double distance) {
     String actionGroupText = "Move forward " + distance + " feet";
     ActionGroup mode = new ActionGroup(actionGroupText);
-    mode.addAction(zeroDistance());
     mode.addAction(moveDistanceForward(distance));
     return mode;
   }
@@ -171,9 +170,9 @@ public class Actions {
   public static Action getAngleFromTarget() {
     String actionText = "sense angle from target";
     return new Action(actionText, //
-        () -> true, //if an angle has been sensed
+        () -> true, // if an angle has been sensed
         () -> {
-        }//sense for an angle
+        }// sense for an angle
     );
   }
 
@@ -204,14 +203,45 @@ public class Actions {
     mode.addAction(getAngleFromTarget());
     mode.addActions(turn(-90));
     // mode.addActions(modeForwardByTheAmountINeedPlus5.66Feet()); TODO
-    //formula is tan(theta)*10.16+5.66
+    // formula is tan(theta)*10.16+5.66
     mode.addActions(turn(-90));
     mode.addActions(move(16.06));
     mode.addActions(turn(-160.59));
     mode.addActions(move(17.03));
     mode.addActions(turn(-19.41));
-    mode.addActions(shootGroup());
+    mode.addAction(Shoot());
 
+    return mode;
+  }
+
+  public static ActionGroup shootLB() {
+    // stuff
+    String actionGroupText = "shoot from loading bay";
+    ActionGroup mode = new ActionGroup(actionGroupText);
+    mode.addActions(turn(-62.78));
+    mode.addActions(move(6.56));
+    mode.addActions(turn(5.78));
+    mode.addAction(Shoot());
+
+
+    return mode;
+  }
+
+  public static ActionGroup shootPP() {
+    // stuff
+    String actionGroupText = "shoot from power port";
+    ActionGroup mode = new ActionGroup(actionGroupText);
+    mode.addActions(move(8));
+    mode.addAction(Shoot());
+    return mode;
+  }
+
+  public static ActionGroup shootPS1() {
+    // stuff
+    String actionGroupText = "shoot from player station 1";
+    ActionGroup mode = new ActionGroup(actionGroupText);
+    mode.addActions(turn(28.43));
+    move(4.5);
     return mode;
   }
 
