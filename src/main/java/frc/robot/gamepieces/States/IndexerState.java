@@ -29,6 +29,7 @@ public enum IndexerState implements State {
         public boolean isInChamber;
         public boolean shooterWantsBall;
         public boolean climberEnabled;
+        public boolean shooterAuto;
 
         public void enter() {
             // Noop
@@ -36,6 +37,7 @@ public enum IndexerState implements State {
 
         public State action() {
             indexAuto = GamePieceController.getInstance().IndexAuto;
+            shooterAuto = GamePieceController.getInstance().ShooterAuto;
             indexerBallsReverse = GamePieceController.getInstance().indexerBallsReverse();
             indexerBallsForward = GamePieceController.getInstance().indexerBallsForward();
             climberEnabled = GamePieceController.getInstance().climberEnabled;
@@ -61,6 +63,11 @@ public enum IndexerState implements State {
 
                 if (shooterWantsBall) {
                     LOGGER.debug("LoadingBalls");
+                    return Feed;
+                }
+
+                if (!shooterAuto) {
+                    LOGGER.debug("Shooter in Manual sending power cell to feed");
                     return Feed;
                 }
 

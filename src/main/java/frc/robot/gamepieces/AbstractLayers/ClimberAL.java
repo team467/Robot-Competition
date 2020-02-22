@@ -151,7 +151,6 @@ public class ClimberAL extends GamePieceBase implements GamePiece {
             LOGGER.error("Instance is {}", instance);
 
             instance.stopMotors();
-
         }
         LOGGER.error("Instance is {}", instance);
         return instance;
