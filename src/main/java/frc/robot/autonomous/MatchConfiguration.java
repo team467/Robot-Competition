@@ -8,7 +8,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.logging.RobotLogManager;
 
 import org.apache.logging.log4j.Logger;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /** 
  * This class determines the robots position during the beginning of the game.

@@ -63,6 +63,7 @@ public enum IndexerState implements State {
                     LOGGER.debug("LoadingBalls");
                     return Feed;
                 }
+                
 
                 if (indexerBallsReverse) {
                     return Feed;

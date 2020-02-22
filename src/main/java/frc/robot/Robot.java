@@ -24,6 +24,7 @@ import frc.robot.usercontrol.DriverStation467;
 import frc.robot.usercontrol.OperatorController467;
 import frc.robot.utilities.PerfTimer;
 import frc.robot.vision.CameraSwitcher;
+import frc.robot.vision.VisionController;
 import frc.robot.tuning.TuneController;
 import java.io.IOException;
 import org.apache.logging.log4j.Logger;
@@ -54,6 +55,7 @@ public class Robot extends TimedRobot {
   private LedI2C leds;
   private PerfTimer perfTimer;
   private  GamePieceController gamePieceController;
+  public VisionController visionController;
 
   public static long time = System.nanoTime();
   public static long previousTime = time;
@@ -140,6 +142,7 @@ public class Robot extends TimedRobot {
     camera = CameraSwitcher.getInstance();
     leds = LedI2C.getInstance();
     gamePieceController = GamePieceController.getInstance();
+    visionController = VisionController.getInstance();
 
     TuneController.loadTuners();
     drive.setPidsFromRobotMap();
@@ -200,6 +203,7 @@ public class Robot extends TimedRobot {
 
     double speed = driverstation.getArcadeSpeed();
     double turn = driverstation.getArcadeTurn();
+    boolean autoAlign = true; //TODO change this to be a driverstation input
 
     if (Math.abs(speed) < RobotMap.MIN_DRIVE_SPEED) {
       speed = 0.0;
@@ -224,7 +228,13 @@ public class Robot extends TimedRobot {
     switch (driverstation.getDriveMode()) {
 
       case ArcadeDrive:
-        drive.arcadeDrive(speed, turn, true);
+      //auto align will remove control for driver to drive and align until driver lets go
+        if (autoAlign && visionController.hasAngle()) {
+            drive.arcadeDrive(visionController.setDistDrive(), visionController.setTurn());
+          } else {
+            drive.arcadeDrive(speed, turn, true);
+          }
+          
         if (RobotMap.AUTO_CAMERA) {
           camera.autoSwitch(speed);
         }
