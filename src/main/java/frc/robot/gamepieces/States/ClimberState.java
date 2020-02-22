@@ -53,6 +53,7 @@ public enum ClimberState implements State {
 
         public void enter() {
             entryPosition = ClimberAL.getInstance().climberPosition();
+            encoder.setDistancePerPulse(3./256.); //TODO determine value
         }
 
         public State action() {
@@ -72,7 +73,6 @@ public enum ClimberState implements State {
                     return GameLocked;
                 }
             }
-            distanceTravelled = encoder.getDistance();
             return this;
         }
 
@@ -90,6 +90,7 @@ public enum ClimberState implements State {
 
         public void enter() {
             entryPosition = ClimberAL.getInstance().climberPosition();
+            encoder.setDistancePerPulse(3./256.); //TODO determine value
         }
 
         public State action() {
@@ -100,17 +101,16 @@ public enum ClimberState implements State {
             climber.setSpeed(DOWNSLOW);
             climber.setLock(LOCK);
             if (Math.abs(currentPosition - entryPosition) > climbThreshold) {
-                if (downButtonPressed && distanceNeeded < distanceTravelled) {
+                if (downButtonPressed && distanceNeeded > distanceTravelled) {
                     return this;
                 }
-                if (distanceNeeded > distanceTravelled) {
+                if (distanceNeeded < distanceTravelled) {
                     return Retracting;
                 }
                 if (!downButtonPressed) {
                     return GameLocked;
                 }
             }
-            distanceTravelled = encoder.getDistance();
             return this;
         }
 
