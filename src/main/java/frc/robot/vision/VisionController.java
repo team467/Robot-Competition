@@ -70,7 +70,7 @@ public class VisionController {
   }
 
   public boolean atAngle() {
-    return Math.abs(angle() + gyro.getPitchDegrees()) < 4;
+    return Math.abs(angle()) < 4;
   }
 
   public boolean hasDistance() {
@@ -96,11 +96,11 @@ public class VisionController {
         return 0.0;
     } 
     
-    if (-gyro.getPitchDegrees() < angle()) {
+    if ((gyro.getPitchDegrees()) < angle()) {
         return RobotMap.AUTOALIGN_TURN_SPEED;
     }
 
-    if (-gyro.getPitchDegrees() > angle()) {
+    if ((gyro.getPitchDegrees()) > angle()) {
         return -RobotMap.AUTOALIGN_TURN_SPEED;
     }
 

@@ -140,6 +140,8 @@ public class RobotMap {
       DRIVEMOTOR_NUM = 4;
       WHEEL_CIRCUMFERENCE = 18.50;
 
+      GYRO_MULTIPLIER = 1.0;
+
       CONTROLS_INVERTED_FB = false;
       CONTROLS_INVERTED_TURN = false;
 
@@ -280,6 +282,8 @@ public class RobotMap {
       HAS_WHEELS = true;
       DRIVEMOTOR_NUM = 4;
       WHEEL_CIRCUMFERENCE = 18.50;
+
+      GYRO_MULTIPLIER = -1.0;
 
       // CONTROLS_INVERTED_FB = false;
       // CONTROLS_INVERTED_TURN = false;
@@ -507,6 +511,7 @@ public class RobotMap {
   public static double VELOCITY_MULTIPLIER_RIGHT;
   public static boolean CONTROLS_INVERTED_FB;
   public static boolean CONTROLS_INVERTED_TURN;
+  public static double GYRO_MULTIPLIER;
 
   // Driver Cameras
   public static int FORWARD_CAMERA_INDEX;

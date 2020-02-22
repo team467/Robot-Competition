@@ -103,7 +103,7 @@ public class Gyrometer extends GyroBase implements Gyro {
    */
   public double getPitchRadians() {
     if (RobotMap.HAS_GYRO) {
-      return Math.toRadians(-imu.getGyroAngleZ());
+      return RobotMap.GYRO_MULTIPLIER * Math.toRadians(-imu.getGyroAngleZ());
     } else {
       return 0;
     } 
