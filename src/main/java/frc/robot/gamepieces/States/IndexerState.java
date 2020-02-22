@@ -45,6 +45,7 @@ public enum IndexerState implements State {
             shooterWantsBall = GamePieceController.getInstance().shooterWantsBall;
             LOGGER.debug("Shooter wants ball {}", shooterWantsBall);
 
+            //if climber is enabled stop moving on
             if (climberEnabled) {
                 LOGGER.debug("Climber enabled stopping");
                 return this;

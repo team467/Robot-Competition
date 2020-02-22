@@ -35,6 +35,7 @@ public enum ShooterState implements State {
             shooterAL.setFlywheel(FlywheelSettings.STOP);
 
 
+            //if climber is enabled stop moving on
             if(climberEnabled){
                 LOGGER.debug("Climber enabled, stopping shooter");
                 return this;
