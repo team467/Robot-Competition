@@ -103,7 +103,7 @@ public class IntakeAL extends GamePieceBase implements GamePiece {
 
     @Override
     public void checkSystem() {
-
+        
     }
 
 }

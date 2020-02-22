@@ -227,9 +227,7 @@ public class IndexerAL extends GamePieceBase implements GamePiece {
   try {
     getInstance();
    setDirection(SetBelts.FORWARD);
-
   } catch (Exception e) {
-
     LOGGER.error("Indexer problem");
     e.printStackTrace();
   }
