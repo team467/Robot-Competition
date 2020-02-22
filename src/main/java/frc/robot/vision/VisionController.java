@@ -60,7 +60,7 @@ public class VisionController {
     netAngle = table.getEntry("TurningAngle");
     angle = netAngle.getDouble(180);
     LOGGER.debug("Angle from network table is {}", angle);
-    return angle - 5;
+    return angle;
   }
 
   public boolean hasAngle(){
