@@ -192,6 +192,7 @@ public class RobotMap {
       BACKWARD_CAMERA_INDEX = 2;
       HAS_CAMERA = true;
       AUTO_CAMERA = true;
+      AUTOALIGN_TURN_SPEED = 0.2;
 
       // Game Pieces
       HAS_SHOOTER = true;
@@ -333,6 +334,7 @@ public class RobotMap {
       BACKWARD_CAMERA_INDEX = 1;
       HAS_CAMERA = false;
       AUTO_CAMERA = false;
+      AUTOALIGN_TURN_SPEED = 0.2;
 
       // Game Pieces
       HAS_SHOOTER = true;
@@ -606,6 +608,7 @@ public class RobotMap {
   public static boolean HAS_INDEXER_TOF_SENSORS = false;
   public static double INDEXER_FORWARD_SPEED;
   public static double INDEXER_INVERSE_SPEED;
+  public static double AUTOALIGN_TURN_SPEED;
 
 
   public static boolean IS_IN_TEST_MODE = false;

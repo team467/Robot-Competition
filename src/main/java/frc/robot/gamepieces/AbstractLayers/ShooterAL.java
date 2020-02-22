@@ -291,11 +291,13 @@ public class ShooterAL extends GamePieceBase implements GamePiece {
       case MANUAL_FORWARD:
         rampToSpeed(RobotMap.MANUAL_MODE_SHOOTER_SPEED); //TODO tbd speed
         break;
+
       case STOP:
       stop();
         break;
       
       default:
+        LOGGER.debug("invalid flywheel setting defaulting to stop");
         stop();
 
     }
@@ -307,13 +309,17 @@ public class ShooterAL extends GamePieceBase implements GamePiece {
         case SHOOTING:
           startShooting();
           break;
+
         case STOP:
           stopShooting();
           break;
+
         case REVERSE:
           reverseShooter();
           break;
+          
         default:
+          LOGGER.debug("invalid trigger setting defaulting to stop");
           stopShooting();
       }
 

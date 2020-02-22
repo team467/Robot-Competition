@@ -97,11 +97,11 @@ public class VisionController {
     } 
     
     if (-gyro.getPitchDegrees() < angle()) {
-        return 0.2;
+        return RobotMap.AUTOALIGN_TURN_SPEED;
     }
 
     if (-gyro.getPitchDegrees() > angle()) {
-        return -0.2;
+        return -RobotMap.AUTOALIGN_TURN_SPEED;
     }
 
     return 0;
