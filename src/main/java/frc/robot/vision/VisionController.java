@@ -30,7 +30,7 @@ public class VisionController {
   double dist;
   boolean haveDistance;
   boolean haveAngle;
-  boolean isTurnDone = false;//SmartDashboard.getBoolean("Turn", false);
+  boolean isTurnDone = false; //SmartDashboard.getBoolean("Turn", false);
   boolean isDriveDone = false;
   double robotTurner;
   double speed;
