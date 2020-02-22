@@ -34,7 +34,7 @@ public class MatchConfiguration {
 
   private ActionGroup autonomous;
 
-  private String[] autolist = { "None", "Shoot Basic", "Collect And Shoot", "Shoot from LB", "Shoot From PP", "Shoot From PS1"};
+  private String[] autolist = { "None", "Shoot Basic", "Collect And Shoot", "Shoot from LB", "Shoot From PP", "Shoot From PS1", "Get Out Of The Way"};
 
   private SendableChooser<String> chooser = new SendableChooser<String>();
 
@@ -108,6 +108,8 @@ public class MatchConfiguration {
         case "Shoot From PS1":
         autonomous = Actions.shootPS1();
         break;
+        case "Get Out Of The Way":
+        autonomous = Actions.noShoot();
       default:
         Actions.doNothing();
     }

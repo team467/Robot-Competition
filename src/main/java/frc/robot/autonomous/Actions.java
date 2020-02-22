@@ -87,16 +87,19 @@ public class Actions {
     double timeAmt = (distance - 0.112) / 10.3596;
     return new Action(actionText, new ActionGroup.Duration(timeAmt), () -> drive.arcadeDrive(0.8, 0));
   }
+
   /**
    * 
    * @param distance moves robot in feet.
-   * @param rotation enter positive degrees for left turn and enter negative degrees for right turn.
+   * @param rotation enter positive degrees for left turn and enter negative
+   *                 degrees for right turn.
    * @return
    */
   public static Action arc(double speed, double rotation) {
     String actionText = "Move forward " + speed + " feet";
     // TODO determine the mult values
-    ActionGroup.MultiCondition condition = new ActionGroup.MultiCondition(new ActionGroup.ReachAngle(rotation),new ActionGroup.ReachDistance(speed));
+    ActionGroup.MultiCondition condition = new ActionGroup.MultiCondition(new ActionGroup.ReachAngle(rotation),
+        new ActionGroup.ReachDistance(speed));
 
     return new Action(actionText, condition, () -> drive.arcadeDrive(speed, rotation));
   }
@@ -223,6 +226,7 @@ public class Actions {
     mode.addActions(turn(-160.59));
     mode.addActions(move(17.03));
     mode.addActions(turn(-19.41));
+    // TODO make these align ans shoot
     mode.addAction(Shoot());
 
     return mode;
@@ -232,12 +236,15 @@ public class Actions {
     // stuff
     String actionGroupText = "shoot from loading bay";
     ActionGroup mode = new ActionGroup(actionGroupText);
+    // TODO make these based off of camera readings
     mode.addActions(turn(-62.78));
     mode.addActions(move(6.56));
     mode.addActions(turn(5.78));
+    // TODO make these align and shoot
     mode.addAction(Shoot());
-
-
+    // move out of the way after shot
+    mode.addActions(turn(57.4));
+    mode.addActions(move(-10));
     return mode;
   }
 
@@ -245,8 +252,10 @@ public class Actions {
     // stuff
     String actionGroupText = "shoot from power port";
     ActionGroup mode = new ActionGroup(actionGroupText);
-    mode.addActions(move(8));
+    // TODO make these align and shoot
     mode.addAction(Shoot());
+    // move back after shot
+    mode.addActions(move(-10));
     return mode;
   }
 
@@ -255,7 +264,20 @@ public class Actions {
     String actionGroupText = "shoot from player station 1";
     ActionGroup mode = new ActionGroup(actionGroupText);
     mode.addActions(turn(28.43));
-    move(4.5);
+    // TODO make these align and shoot
+    mode.addAction(Shoot());
+    mode.addActions(turn(-28.43));
+    // move out of the way after shot
+    mode.addActions(move(-10));
+
+    return mode;
+  }
+
+  public static ActionGroup noShoot() {
+    // stuff
+    String actionGroupText = "shoot from player station 1";
+    ActionGroup mode = new ActionGroup(actionGroupText);
+    mode.addActions(move(-10));
     return mode;
   }
 
