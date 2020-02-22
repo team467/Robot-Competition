@@ -87,8 +87,22 @@ public class Actions {
     double timeAmt = (distance - 0.112) / 10.3596;
     return new Action(actionText, new ActionGroup.Duration(timeAmt), () -> drive.arcadeDrive(0.8, 0));
   }
+  /**
+   * 
+   * @param distance moves robot in feet.
+   * @param rotation enter positive degrees for left turn and enter negative degrees for right turn.
+   * @return
+   */
+  public static Action arc(double speed, double rotation) {
+    String actionText = "Move forward " + speed + " feet";
+    // TODO determine the mult values
+    ActionGroup.MultiCondition condition = new ActionGroup.MultiCondition(new ActionGroup.ReachAngle(rotation),new ActionGroup.ReachDistance(speed));
+
+    return new Action(actionText, condition, () -> drive.arcadeDrive(speed, rotation));
+  }
 
   /**
+   * 
    * 
    * @param rotationInDegrees Rotates robot in radians. Enter rotation amount in
    *                          Degrees.
