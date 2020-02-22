@@ -13,8 +13,8 @@ import frc.robot.gamepieces.AbstractLayers.ShooterAL;
 import frc.robot.gamepieces.States.IndexerState;
 import frc.robot.gamepieces.States.IntakeState;
 import frc.robot.gamepieces.States.ShooterState;
+import frc.robot.gamepieces.States.ClimberState;
 import frc.robot.gamepieces.States.State;
-import frc.robot.gamepieces.States.IntakeState;
 import frc.robot.gamepieces.States.StateMachine;
 import frc.robot.gamepieces.States.IntakeState.IntakerArm;
 import frc.robot.gamepieces.States.IntakeState.IntakerRollers;
@@ -48,6 +48,7 @@ public class GamePieceController {
   private StateMachine climberSM;
   private IntakeState intake;
   private ShooterState shooterState;
+  private ClimberState climberState;
 
   private DriverStation467 driverStation;
   private VisionController visionController;
@@ -120,6 +121,7 @@ public class GamePieceController {
 
     shooterSM = new StateMachine(ShooterState.Idle);
     indexerSM = new StateMachine(IndexerState.Idle);
+    climberSM = new StateMachine(ClimberState.InitialLocked);
     intake = IntakeState.getInstance();
 
     registerMetrics();
@@ -158,6 +160,9 @@ public class GamePieceController {
     if (RobotMap.HAS_INDEXER)
       indexerSM.step();
 
+    if (RobotMap.HAS_CLIMBER)
+      climberSM.step();
+
     // roller controls
     if (RobotMap.HAS_INTAKE) {
       if (armPosition) {
@@ -181,7 +186,7 @@ public class GamePieceController {
   DriverInput forceCellsReverse = DriverInput.USE_DRIVER_INPUT;
   DriverInput forceToAuto = DriverInput.USE_DRIVER_INPUT;
 
-  public void setCellsForward(DriverInput mode) {
+  public void cellsForward(DriverInput mode) {
     forceCellsForward = mode;
   }
 
@@ -205,6 +210,7 @@ public class GamePieceController {
     return auto;
   }
 
+  // TODO: put in logic
   public boolean indexerBallsForward() {
     if (forceCellsForward == DriverInput.FORCE_TRUE) {
       LOGGER.debug("Driver pressed forward");
@@ -220,6 +226,7 @@ public class GamePieceController {
     return feed;
   }
 
+  // TODO: put in logic
   public boolean indexerBallsReverse() {
     if (forceCellsReverse == DriverInput.FORCE_TRUE) {
       LOGGER.debug("Driver pressed forward");
@@ -244,7 +251,6 @@ public class GamePieceController {
     } else {
       shooterSpeed = shooterPreviousSpeed;
     }
-
   }
 
   private void registerMetrics() {
@@ -262,18 +268,18 @@ public class GamePieceController {
   public boolean getFireWhenReady() {
     return fireWhenReady;
   }
-
+  
   public void setShooterWantsBall(boolean toggle) {
     shooterWantsBall = toggle;
   }
 
   public boolean getShooterState() {
     if (shooterState == ShooterState.LoadingBall) {
-      return shooterWantsBall = true;
+      return shooterWantsBall = true; 
     }
     return shooterWantsBall;
   }
-
+  
   public boolean climberIsEnabled() {
     if (climberForceEnabled) {
       return climberEnabled = true;

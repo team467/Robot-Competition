@@ -335,10 +335,10 @@ public class RobotMap {
       AUTO_CAMERA = false;
 
       // Game Pieces
-      HAS_SHOOTER = false;
+      HAS_SHOOTER = true;
       HAS_INDEXER = false;
       HAS_INTAKE = false;
-      HAS_CLIMBER = true;
+      HAS_CLIMBER = false;
 
       // Shooter
       // TODO:change the values of these later
@@ -353,14 +353,12 @@ public class RobotMap {
       HAS_TRIGGER = false;
       HAS_SHOOTER_TRIGGER = false;
 
-      HAS_SHOOTER_HOOD = false;
-      HOOD_INVERTED = false;
-      HOOD_PWM_PORT = 0;
-      HOOD_FOLLOWER = true;
-      HOOD_FOLLOWER_PWM_PORT = 1;
-      HOOD_FOLLOWER_INVERTED = true;
-      // HOOD_MAX_ANGLE = 165;
-
+      HAS_SHOOTER_HOOD = true;
+      HOOD_LEFT_PWM_PORT = 0;
+      HOOD_RIGHT_PWM_PORT = 1;
+      HOOD_LEFT_INVERTED = false;
+      HOOD_RIGHT_INVERTED = true;
+      HOOD_MAX_ANGLE = 165;
 
       HAS_SHOOTER_LEDS = false;
       SHOOTER_LED_AMOUNT = 20;
@@ -406,7 +404,7 @@ public class RobotMap {
       CLIMB_TILT_SWITCH_INVERTED = false;
       CLIMB_TILT_SWITCH_CHANNEL = 3;
 
-      HAS_CLIMBLOCK = true;
+      HAS_CLIMBLOCK = false;
       CLIMB_LOCK_CHANNEL = 0;
       CLIMB_LOCK_INVERTED = false;
 
@@ -564,11 +562,10 @@ public class RobotMap {
   public static boolean TRIGGER_MOTOR_INVERTED = false;
 
   public static boolean HAS_SHOOTER_HOOD = false;
-  public static boolean HOOD_INVERTED = false;
-  public static int HOOD_PWM_PORT;
-  public static boolean HOOD_FOLLOWER = false;
-  public static int HOOD_FOLLOWER_PWM_PORT;
-  public static boolean HOOD_FOLLOWER_INVERTED = false;
+  public static int HOOD_LEFT_PWM_PORT;
+  public static int HOOD_RIGHT_PWM_PORT;
+  public static boolean HOOD_LEFT_INVERTED = false;
+  public static boolean HOOD_RIGHT_INVERTED = false;
   public static int HOOD_MAX_ANGLE;
 
   public static boolean SHOOTER_SENSOR_INVERTED;

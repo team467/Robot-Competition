@@ -5,7 +5,6 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-
 package frc.robot.gamepieces.States;
 
 import frc.robot.gamepieces.GamePieceController;
@@ -31,8 +30,8 @@ public enum ClimberState implements State {
             climberEnabled = GamePieceController.getInstance().climberIsEnabled();
             upButtonPressed = GamePieceController.getInstance().climberUpButtonPressed();
 
-            climberAL.setSpeed(OFF);
-            climberAL.setLock(LOCK);
+            climber.setSpeed(OFF);
+            climber.setLock(LOCK);
             if (climberEnabled && upButtonPressed) {
                 return UnlockingUp;
 
@@ -53,24 +52,23 @@ public enum ClimberState implements State {
         public double distanceNeeded;
 
         public void enter() {
-            entryPosition = climberAL.climberPosition();
+            entryPosition = ClimberAL.getInstance().climberPosition();
         }
 
         public State action() {
             upButtonPressed = GamePieceController.getInstance().climberUpButtonPressed();
-            currentPosition = climberAL.climberPosition();
+            currentPosition = ClimberAL.getInstance().climberPosition();
             distanceTravelled = encoder.getDistance();
 
-            climberAL.setSpeed(UPSLOW);
-            climberAL.setLock(LOCK);
+            climber.setSpeed(UPSLOW);
+            climber.setLock(LOCK);
             if (Math.abs(currentPosition - entryPosition) > climbThreshold) {
                 if (upButtonPressed && distanceNeeded > distanceTravelled) {
                     return this;
                 }
                 if (distanceNeeded < distanceTravelled ) {
                     return Extending;
-                }
-                if (!upButtonPressed) {
+                } else {
                     return GameLocked;
                 }
             }
@@ -91,16 +89,16 @@ public enum ClimberState implements State {
         public double distanceNeeded;
 
         public void enter() {
-            entryPosition = climberAL.climberPosition();
+            entryPosition = ClimberAL.getInstance().climberPosition();
         }
 
         public State action() {
             downButtonPressed = GamePieceController.getInstance().climberDownButtonPressed();
-            currentPosition = climberAL.climberPosition();
+            currentPosition = ClimberAL.getInstance().climberPosition();
             distanceTravelled = encoder.getDistance();
 
-            climberAL.setSpeed(DOWNSLOW);
-            climberAL.setLock(LOCK);
+            climber.setSpeed(DOWNSLOW);
+            climber.setLock(LOCK);
             if (Math.abs(currentPosition - entryPosition) > climbThreshold) {
                 if (downButtonPressed && distanceNeeded < distanceTravelled) {
                     return this;
@@ -133,8 +131,8 @@ public enum ClimberState implements State {
             upButtonPressed = GamePieceController.getInstance().climberUpButtonPressed();
             downButtonPressed = GamePieceController.getInstance().climberDownButtonPressed();
 
-            climberAL.setSpeed(UP);
-            climberAL.setLock(UNLOCK);
+            climber.setSpeed(UP);
+            climber.setLock(UNLOCK);
             if (isHighest) {
                 return GameLocked;
             }
@@ -160,14 +158,12 @@ public enum ClimberState implements State {
         public State action() {
             downButtonPressed = GamePieceController.getInstance().climberDownButtonPressed();
 
-            climberAL.setSpeed(DOWN);
-            climberAL.setLock(UNLOCK);
-            if (!downButtonPressed) {
+            climber.setSpeed(DOWN);
+            climber.setLock(UNLOCK);
+            if (!downButtonPressed || isLowest) {
                 return GameLocked;
             }
-            if (isLowest) {
-                return GameLocked;
-            }
+            
             return this;
         }
 
@@ -188,8 +184,8 @@ public enum ClimberState implements State {
             upButtonPressed = GamePieceController.getInstance().climberUpButtonPressed();
             downButtonPressed = GamePieceController.getInstance().climberDownButtonPressed();
 
-            climberAL.setSpeed(OFF);
-            climberAL.setLock(LOCK);
+            climber.setSpeed(OFF);
+            climber.setLock(LOCK);
             if (upButtonPressed && !downButtonPressed && !isHighest) {
                 return UnlockingUp;
             }
@@ -204,12 +200,12 @@ public enum ClimberState implements State {
         }
     };
 
-    private static ClimberAL climberAL = ClimberAL.getInstance();
-    private static boolean isLowest = climberAL.isDown();
-    private static boolean isHighest = climberAL.isUp();
+    private static ClimberAL climber = ClimberAL.getInstance();
+    private static boolean isLowest = climber.isDown();
+    private static boolean isHighest = climber.isUp();
 
     Encoder encoder = new Encoder(0, 1, false, Encoder.EncodingType.k2X);
-    private final double distanceNeeded = 3.0; //TODO: determine value
+    public final double distanceNeeded = 3.0; //TODO: determine value
     
     private final static double climbThreshold = 2.0; // TODO: determine threshold for climber, should this be static or non static
 

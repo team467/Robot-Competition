@@ -89,9 +89,9 @@ public class IndexerStateTuner implements Tuner {
     
         if (driverForwardInput == true) {
             LOGGER.debug("mouthSensor is true");
-            gamePieceController.setCellsForward(DriverInput.FORCE_TRUE);
+            gamePieceController.cellsForward(DriverInput.FORCE_TRUE);
         } else {
-            gamePieceController.setCellsForward(DriverInput.FORCE_FALSE);
+            gamePieceController.cellsForward(DriverInput.FORCE_FALSE);
         }
 
         if (driverReverseInput == true) {
