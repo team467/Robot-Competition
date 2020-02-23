@@ -231,7 +231,7 @@ public class ShooterAL extends GamePieceBase implements GamePiece {
   public void setHoodAngle(double leftAngle, double rightAngle) {
     if (hoodLeft != null && hoodRight != null && RobotMap.HAS_SHOOTER_HOOD) {
       setLeftHoodAngle(leftAngle);
-      setRightHoodAngle(rightAngle)
+      setRightHoodAngle(rightAngle);
     }
   }
 
