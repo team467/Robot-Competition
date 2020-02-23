@@ -64,11 +64,11 @@ public class ShooterTuner implements Tuner {
     public void periodic() {
         double speed = SmartDashboard.getNumber("Speed", 0);
         boolean startShooting = SmartDashboard.getBoolean("Shoot", false);
-        double leftAngle = SmartDashboard.getNumber("Left Hood Angle", RobotMap.HOOD_STARTING_POSITION);
-        double rightAngle = SmartDashboard.getNumber("Right Hood Angle", RobotMap.HOOD_STARTING_POSITION);
+        double leftAngle = SmartDashboard.getNumber("Left Hood Angle", RobotMap.HOOD_LEFT_STARTING_POSITION);
+        double rightAngle = SmartDashboard.getNumber("Right Hood Angle", RobotMap.HOOD_LEFT_STARTING_POSITION);
         boolean leftServo = SmartDashboard.getBoolean("Left Servo", false);
         boolean rightServo = SmartDashboard.getBoolean("Right Servo", false);
-        double hoodAngle = SmartDashboard.getNumber("Hood Angle", RobotMap.HOOD_STARTING_POSITION);
+        double hoodAngle = SmartDashboard.getNumber("Hood Angle", 0.5);
         boolean useBoth = SmartDashboard.getBoolean("Control Both", false);
 
         if (useVelocity) {
