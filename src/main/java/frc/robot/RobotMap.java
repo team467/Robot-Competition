@@ -220,6 +220,14 @@ public class RobotMap {
     HOOD_LEFT_INVERTED = false;
     HOOD_RIGHT_INVERTED = true;
     HOOD_MAX_ANGLE = 165;
+    HOOD_ADD_NOISE = false;
+    
+    HOOD_LEFT_MIN = 0.65;
+    HOOD_RIGHT_MIN = 0.55;
+    HOOD_LEFT_MAX = 0.85;
+    HOOD_RIGHT_MAX = 0.77;
+    HOOD_LEFT_STARTING_POSITION = (HOOD_LEFT_MIN + HOOD_LEFT_MAX)/2;
+    HOOD_RIGHT_STARTING_POSITION = (HOOD_RIGHT_MIN + HOOD_RIGHT_MAX)/2;
 
 
     HAS_SHOOTER_LEDS = false;
@@ -229,12 +237,12 @@ public class RobotMap {
 
     SHOOTER_SENSOR_INVERTED = false;
 
-    SHOOTER_P = 2;
+    SHOOTER_P = 1.2;
     SHOOTER_I = 0.0;
-    SHOOTER_D = 0.0;
+    SHOOTER_D = 120.0;
     SHOOTER_F = 0.0;
 
-    VELOCITY_MULTIPLIER_SHOOTER = 8200;
+    VELOCITY_MULTIPLIER_SHOOTER = 10000;
     SHOOTER_SPEED_TOLERANCE = 0.25;
     MANUAL_MODE_SHOOTER_SPEED = 1.0;
 
@@ -372,7 +380,14 @@ public class RobotMap {
       HOOD_LEFT_INVERTED = false;
       HOOD_RIGHT_INVERTED = true;
       HOOD_MAX_ANGLE = 165;
-
+      HOOD_ADD_NOISE = false;
+      
+      HOOD_LEFT_MIN = 0.65;
+      HOOD_RIGHT_MIN = 0.55;
+      HOOD_LEFT_MAX = 0.85;
+      HOOD_RIGHT_MAX = 0.77;
+      HOOD_LEFT_STARTING_POSITION = (HOOD_LEFT_MIN + HOOD_LEFT_MAX)/2;
+      HOOD_RIGHT_STARTING_POSITION = (HOOD_RIGHT_MIN + HOOD_RIGHT_MAX)/2;
 
       HAS_SHOOTER_LEDS = false;
       SHOOTER_LED_AMOUNT = 20;
@@ -581,6 +596,13 @@ public class RobotMap {
   public static boolean HOOD_LEFT_INVERTED = false;
   public static boolean HOOD_RIGHT_INVERTED = false;
   public static int HOOD_MAX_ANGLE;
+  public static boolean HOOD_ADD_NOISE = false;
+  public static double HOOD_LEFT_MIN;
+  public static double HOOD_RIGHT_MIN;
+  public static double HOOD_LEFT_MAX;
+  public static double HOOD_RIGHT_MAX;
+  public static double HOOD_LEFT_STARTING_POSITION;
+  public static double HOOD_RIGHT_STARTING_POSITION;
 
   public static boolean SHOOTER_SENSOR_INVERTED;
   public static double SHOOTER_P;

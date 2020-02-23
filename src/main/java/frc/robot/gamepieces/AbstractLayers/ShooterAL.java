@@ -24,6 +24,8 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 
+import java.util.Random;
+
 public class ShooterAL extends GamePieceBase implements GamePiece {
 
   private static ShooterAL instance = null;
@@ -91,6 +93,9 @@ public class ShooterAL extends GamePieceBase implements GamePiece {
       if (RobotMap.HAS_SHOOTER_HOOD) {
         hoodLeft = new Servo(RobotMap.HOOD_LEFT_PWM_PORT);
         hoodRight = new Servo(RobotMap.HOOD_RIGHT_PWM_PORT);
+
+        hoodLeft.set(RobotMap.HOOD_LEFT_STARTING_POSITION);
+        hoodRight.set(RobotMap.HOOD_RIGHT_STARTING_POSITION);
 
       } else {
         hoodLeft = null;
@@ -235,31 +240,35 @@ public class ShooterAL extends GamePieceBase implements GamePiece {
     }
   }
 
-  public void setLeftHoodAngle(double angle) {
+  public void setLeftHoodAngleRaw(double angle) {
     if (hoodLeft != null && RobotMap.HAS_SHOOTER_HOOD) {
-      angle = Math.max(-1, Math.min(1, angle));
+      angle = Math.max(RobotMap.HOOD_LEFT_MIN, Math.min(RobotMap.HOOD_LEFT_MAX, angle));
 
       if (RobotMap.HOOD_LEFT_INVERTED) {
-        angle = -angle;
+        angle = Math.abs(angle-1);
       }
 
-      double set = ((RobotMap.HOOD_MAX_ANGLE/2) * angle) + RobotMap.HOOD_MAX_ANGLE;
+      if (RobotMap.HOOD_ADD_NOISE) {
+        angle = angle + ((new Random().nextInt(101)-50)/10000);
+      }
 
-      hoodLeft.setAngle(set);
+      hoodLeft.set(angle);
     }
   }
 
-  public void setRightHoodAngle(double angle) {
+  public void setRightHoodAngleRaw(double angle) {
     if (hoodRight != null && RobotMap.HAS_SHOOTER_HOOD) {
-      angle = Math.max(-1, Math.min(1, angle));
+      angle = Math.max(0, Math.min(1, angle));
 
       if (RobotMap.HOOD_RIGHT_INVERTED) {
-        angle = -angle;
+        angle = Math.abs(angle-1);
       }
 
-      double set = ((RobotMap.HOOD_MAX_ANGLE/2) * angle) + RobotMap.HOOD_MAX_ANGLE;
+      if (RobotMap.HOOD_ADD_NOISE) {
+        angle = angle + ((new Random().nextInt(101)-50)/10000);
+      }
 
-      hoodLeft.setAngle(set);
+      hoodRight.set(angle);
     }
   }
 
