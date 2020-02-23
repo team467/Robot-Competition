@@ -121,7 +121,6 @@ public class RobotMap {
 
   public enum RobotId {
     ROBOT_2020, KITBOT
-
   }
 
   /**
@@ -199,13 +198,13 @@ public class RobotMap {
 
       // Game Pieces
       HAS_SHOOTER = true;
-      HAS_INDEXER = true;
-      HAS_INTAKE = true;
-      HAS_CLIMBER = true;
+      HAS_INDEXER = false;
+      HAS_INTAKE = false;
+      HAS_CLIMBER = false;
 
       // Shooter
       // TODO:change the values of these later
-      SHOOTER_FOLLOWER = false;
+      SHOOTER_FOLLOWER = true;
       SHOOTER_MOTOR_CHANNEL = 5;
       SHOOTER_MOTOR_INVERTED = true;
       SHOOTER_MOTOR_FOLLOWER_CHANNEL = 6;
@@ -214,7 +213,7 @@ public class RobotMap {
 
       SHOOTER_SENSOR_INVERTED = true;
 
-      TRIGGER_MOTOR_CHANNEL = 6;
+      TRIGGER_MOTOR_CHANNEL = 7;
       TRIGGER_MOTOR_INVERTED = false;
 
 
@@ -223,7 +222,7 @@ public class RobotMap {
       SHOOTER_D = 0.0;
       SHOOTER_F = 0.0;
 
-      VELOCITY_MULTIPLIER_SHOOTER = 8200;
+      VELOCITY_MULTIPLIER_SHOOTER = 10000;
       SHOOTER_SPEED_TOLERANCE = 0.25;
       MANUAL_MODE_SHOOTER_SPEED = 1.0; //TODO determine the speed
       
