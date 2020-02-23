@@ -42,7 +42,7 @@ public class ClimberStateTuner implements Tuner {
         boolean climberUpButtonPressed = SmartDashboard.getBoolean("upButton", false);
         boolean climberDownButtonPressed = SmartDashboard.getBoolean("downButton", false);
         boolean climberTopSensor = SmartDashboard.getBoolean("topSensor", false);
-        boolean climberBottomSensor = SmartDashboard.getBoolean("bootomSensor", false);
+        boolean climberBottomSensor = SmartDashboard.getBoolean("bottomSensor", false);
 
         if (climberEnabled) { 
             gamePieceController.climberForceEnabled = true;
