@@ -193,6 +193,15 @@ public class Actions {
     );
   }
 
+  public static ActionGroup aimAndShoot() {
+    String actionGroupText = "aims at the target and shoot";
+    double thing;
+    ActionGroup mode = new ActionGroup(actionGroupText);
+
+    return mode;
+
+  }
+
   // TEST ACTIONS
 
   public static ActionGroup fourFootSquare() {
@@ -232,6 +241,10 @@ public class Actions {
     return mode;
   }
 
+  /**
+   * turns right, moves closer to the power port and shoots at the port. Then it
+   * turns and moves pas the line and out of the way
+   */
   public static ActionGroup shootLB() {
     // stuff
     String actionGroupText = "shoot from loading bay";
@@ -248,6 +261,9 @@ public class Actions {
     return mode;
   }
 
+  /**
+   * shoots and moves back out of the way
+   */
   public static ActionGroup shootPP() {
     // stuff
     String actionGroupText = "shoot from power port";
@@ -259,6 +275,9 @@ public class Actions {
     return mode;
   }
 
+  /**
+   * turns a little left anf shoots, then turns back and drives back
+   */
   public static ActionGroup shootPS1() {
     // stuff
     String actionGroupText = "shoot from player station 1";
@@ -273,11 +292,44 @@ public class Actions {
     return mode;
   }
 
+  /**
+   * if the robots shooter is broken, then it moves back out of the way
+   * immediately
+   */
   public static ActionGroup noShoot() {
     // stuff
     String actionGroupText = "shoot from player station 1";
     ActionGroup mode = new ActionGroup(actionGroupText);
     mode.addActions(move(-10));
+    return mode;
+  }
+
+  // TODO change names
+  public static ActionGroup leftSide() {
+    String actionGroupText = "aims at the target and shoot";
+    double thing;
+    ActionGroup mode = new ActionGroup(actionGroupText);
+    mode.addAction(Shoot());
+    mode.addActions(turn(-114.79));
+    mode.addActions(move(9)/* suck TODO */);
+    mode.addActions(move(-4.5));
+    mode.addActions(turn(-46.4));
+    mode.addAction(Shoot());
+    return mode;
+  }
+
+  public static ActionGroup rightSide(){
+    String actionGroupText = "aims at the target and shoot";
+    ActionGroup mode = new ActionGroup(actionGroupText);
+    mode.addActions(Shoot());
+    mode.addActions(turn(/*TODO to the left*/));
+    mode.addActions(move(/*TODO forward and suck simultaneoulsy*/));
+    mode.addActions(turn(-180));
+    mode.addActions(move(/*TODO forward*/));
+    mode.adddActions(turn(/*TODO left*/));
+    mode.addAction(Shoot());
+    mode.
+
     return mode;
   }
 
