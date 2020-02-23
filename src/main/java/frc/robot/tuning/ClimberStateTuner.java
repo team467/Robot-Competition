@@ -44,7 +44,7 @@ public class ClimberStateTuner implements Tuner {
         boolean climberTopSensor = SmartDashboard.getBoolean("topSensor", false);
         boolean climberBottomSensor = SmartDashboard.getBoolean("bootomSensor", false);
 
-        if (climberEnabled) { //TODO: create function for climebr enabled
+        if (climberEnabled) { 
             gamePieceController.climberForceEnabled = true;
         } else {
             gamePieceController.climberForceEnabled = false;

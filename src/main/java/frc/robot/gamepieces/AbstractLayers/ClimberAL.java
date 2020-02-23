@@ -64,11 +64,6 @@ public class ClimberAL extends GamePieceBase implements GamePiece {
         this.speed = speed;
     }
 
-    // starts the solenoid
-    public void initialize() {
-        // TODO: delay function for solenoid!
-    }
-
     public boolean isDown() { // TODO: equal to or not
         if (getBottomSensor() || climberPosition() <= lowestPoint) {
             return true;
