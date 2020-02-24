@@ -28,8 +28,8 @@ public class ClimberStateTuner implements Tuner {
         SmartDashboard.putBoolean("isEnabled", false);
         SmartDashboard.putBoolean("upButton", false);
         SmartDashboard.putBoolean("downButton", false);
-        SmartDashboard.putBoolean("topSensor", false);
-        SmartDashboard.putBoolean("bottomSensor", false);
+        // SmartDashboard.putBoolean("topSensor", false);
+        // SmartDashboard.putBoolean("bottomSensor", false);
 
         gamePieceController = GamePieceController.getInstance();
 
@@ -41,10 +41,11 @@ public class ClimberStateTuner implements Tuner {
         boolean climberEnabled = SmartDashboard.getBoolean("isEnabled", false);
         boolean climberUpButtonPressed = SmartDashboard.getBoolean("upButton", false);
         boolean climberDownButtonPressed = SmartDashboard.getBoolean("downButton", false);
-        boolean climberTopSensor = SmartDashboard.getBoolean("topSensor", false);
-        boolean climberBottomSensor = SmartDashboard.getBoolean("bootomSensor", false);
+        // boolean climberTopSensor = SmartDashboard.getBoolean("topSensor", false);
+        // boolean climberBottomSensor = SmartDashboard.getBoolean("bootomSensor",
+        // false);
 
-        if (climberEnabled) { //TODO: create function for climebr enabled
+        if (climberEnabled) { // TODO: create function for climebr enabled
             gamePieceController.climberForceEnabled = true;
         } else {
             gamePieceController.climberForceEnabled = false;
@@ -63,15 +64,15 @@ public class ClimberStateTuner implements Tuner {
         }
 
         // if (climberTopSensor) {
-        //     climber.hasHighestPoint = true;
+        // climber.hasHighestPoint = true;
         // } else {
-        //     climber.hasHighestPoint =  false;
+        // climber.hasHighestPoint = false;
         // }
 
         // if (climberBottomSensor) {
-        //     climber.hasLowestPoint = true;
+        // climber.hasLowestPoint = true;
         // } else {
-        //     climber.hasLowestPoint = false;
+        // climber.hasLowestPoint = false;
         // }
 
     }
