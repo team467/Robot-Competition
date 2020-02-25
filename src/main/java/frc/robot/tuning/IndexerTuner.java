@@ -26,22 +26,16 @@ public class IndexerTuner implements Tuner {
     public void init() {
         SmartDashboard.putNumber("Speed", 0);
 
-        SmartDashboard.putBoolean("Mouth TOF", false);
-        SmartDashboard.putBoolean("Chamber TOF", false);
-
-        SmartDashboard.putNumber("Mouth Distance", 0);
-        SmartDashboard.putNumber("Chamber Distance", 0);
-
         indexer.stopIndexer();
     }
 
     public void periodic() {
         double speed = SmartDashboard.getNumber("Speed", 0);
-
+    
+        SmartDashboard.putBoolean("Mouth Sensor", indexer.isBallInMouth());
+        SmartDashboard.putBoolean("Chamber Sensor", indexer.isBallInChamber());
+        
         indexer.setIndexerSpeed(speed);
-
-        SmartDashboard.putBoolean("Mouth TOF", indexer.isBallInMouth());
-        SmartDashboard.putBoolean("Chamber TOF", indexer.isBallInChamber());
     }
 
 }
