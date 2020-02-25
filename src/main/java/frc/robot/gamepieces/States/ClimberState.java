@@ -53,13 +53,13 @@ public enum ClimberState implements State {
 
         public void enter() {
             entryPosition = ClimberAL.getInstance().climberPosition();
-            encoder.setDistancePerPulse(3./256.); //TODO determine value
+            ClimberAL.getInstance().getPosition(); //Units in feet
         }
 
         public State action() {
             upButtonPressed = GamePieceController.getInstance().climberUpButtonPressed();
             currentPosition = ClimberAL.getInstance().climberPosition();
-            distanceTravelled = encoder.getDistance();
+            distanceTravelled = ClimberAL.getInstance().getPosition();
 
             climber.setSpeed(UPSLOW);
             climber.setLock(LOCK);
@@ -90,13 +90,13 @@ public enum ClimberState implements State {
 
         public void enter() {
             entryPosition = ClimberAL.getInstance().climberPosition();
-            encoder.setDistancePerPulse(3./256.); //TODO determine value
+            ClimberAL.getInstance().getPosition(); //Units in feet
         }
 
         public State action() {
             downButtonPressed = GamePieceController.getInstance().climberDownButtonPressed();
             currentPosition = ClimberAL.getInstance().climberPosition();
-            distanceTravelled = encoder.getDistance();
+            distanceTravelled = ClimberAL.getInstance().getPosition();
 
             climber.setSpeed(DOWNSLOW);
             climber.setLock(LOCK);

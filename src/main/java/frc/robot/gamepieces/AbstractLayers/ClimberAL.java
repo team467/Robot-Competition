@@ -92,7 +92,7 @@ public class ClimberAL extends GamePieceBase implements GamePiece {
         }
         return result;
     }
-
+    
     // gets the instance
     public static ClimberAL getInstance() {
         // creates new instance if none exists
