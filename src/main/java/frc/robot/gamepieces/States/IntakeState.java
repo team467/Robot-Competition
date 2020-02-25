@@ -10,12 +10,18 @@ package frc.robot.gamepieces.States;
 import org.apache.logging.log4j.Logger;
 
 import frc.robot.gamepieces.AbstractLayers.IntakeAL;
+import frc.robot.gamepieces.AbstractLayers.IndexerAL;
+import frc.robot.gamepieces.GamePieceController;
+
 import frc.robot.logging.RobotLogManager;
 
 public class IntakeState {
 
     private static IntakeState instance = null;
     private static final Logger LOGGER = RobotLogManager.getMainLogger(IntakeState.class.getName());
+    private static IndexerAL indexer = IndexerAL.getInstance();
+    private static GamePieceController gamePieceController = GamePieceController.getInstance();
+    private static IntakeAL intake = IntakeAL.getInstance();
 
     public enum IntakerArm {
         ARM_UP, ARM_DOWN
@@ -88,6 +94,15 @@ public class IntakeState {
         case ROLLERS_OFF:
             IntakeAL.callRollerStop();
             break;
+        }
+    }
+
+    public void setIntakeBeltAuto() {
+        if ((gamePieceController.indexerBallsReverse || gamePieceController.ShooterAuto) && 
+        !(indexer.isBallInMouth() || indexer.isBallInChamber())) {
+            IntakeAL.callIntakeBeltToIndexer();
+        } else {
+            IntakeAL.callIntakeBeltOff();
         }
     }
 }

@@ -47,7 +47,7 @@ public enum IndexerState implements State {
             shooterWantsBall = GamePieceController.getInstance().shooterWantsBall;
             LOGGER.debug("Shooter wants ball {}", shooterWantsBall);
 
-            //if climber is enabled stop moving on
+            // if climber is enabled stop moving on
             if (climberEnabled) {
                 LOGGER.debug("Climber enabled stopping");
                 return this;
@@ -65,7 +65,6 @@ public enum IndexerState implements State {
                     LOGGER.debug("LoadingBalls");
                     return Feed;
                 }
-                
 
                 if (!shooterAuto) {
                     LOGGER.debug("Shooter in Manual sending power cell to feed");
@@ -76,6 +75,8 @@ public enum IndexerState implements State {
                     return Feed;
                 }
             }
+
+            
 
             return this;
         }

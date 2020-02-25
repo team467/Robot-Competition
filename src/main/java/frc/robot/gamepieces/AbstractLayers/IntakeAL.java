@@ -38,7 +38,19 @@ public class IntakeAL extends GamePieceBase implements GamePiece {
         }
         return instance;
     }
+
+    private void setFeed() {
+        indexFollower.set(1.0);
+    }
      
+    private void setReverseFeed() {
+        indexFollower.set(-1.0);
+    }
+
+    private void setStopFeed() {
+        indexFollower.set(0.0);
+    }
+
     private void setUp() {
         LOGGER.debug("setUp called");
         arm.set(1.0);
@@ -57,13 +69,11 @@ public class IntakeAL extends GamePieceBase implements GamePiece {
     private void setBackward() {
         LOGGER.debug("setBackward called");
         roller.set(-1.0);
-        indexFollower.set(1.0);
     }
 
     private void setRollerStop() {
         LOGGER.debug("setRollerStop called");
         roller.set(0.0);
-        indexFollower.set(0.0);
     }
 
     private void setArmStop() {
@@ -77,6 +87,17 @@ public class IntakeAL extends GamePieceBase implements GamePiece {
         
     }
 
+    public static void callIntakeBeltOff() {
+        IntakeAL.getInstance().setStopFeed();
+    }
+
+    public static void callIntakeBeltToIndexer() {
+        IntakeAL.getInstance().setFeed();
+    }
+
+    public static void callIntakeBeltInverse() {
+        IntakeAL.getInstance().setReverseFeed();
+    }
     public static void callDown() { 
         IntakeAL.getInstance().setDown();
     }
