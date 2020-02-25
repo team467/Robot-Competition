@@ -19,6 +19,7 @@ public class TuneController {
     register("Sm_Test", new ShooterStateMachineTuner());
     register("Indexer_SM_Tuner", new IndexerStateTuner());
     register("GamePieceController_Tuner", new GPCTuner());
+    register("Climber_SM_Tunner", new ClimberStateTuner());
   }
 
   private static final Logger LOGGER

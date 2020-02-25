@@ -52,7 +52,7 @@ public class ClimberTuner implements Tuner {
 
     public void periodic() {
         double speed = SmartDashboard.getNumber("Speed", 0);
-        boolean lockSolenoid = SmartDashboard.putBoolean("Lock Solenoid", false);
+        boolean lockSolenoid = SmartDashboard.getBoolean("Lock Solenoid", false);
 
         if (useVelocity) {
             climber.setClimb(speed);
