@@ -36,6 +36,7 @@ public class IndexerTuner implements Tuner {
         SmartDashboard.putBoolean("Chamber Sensor", indexer.isBallInChamber());
         
         indexer.setIndexerSpeed(speed);
+
     }
 
 }

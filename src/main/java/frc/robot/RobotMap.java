@@ -598,7 +598,11 @@ public class RobotMap {
   public static int ARM_MOTOR_CHANNEL;
   public static boolean ARM_MOTOR_INVERTED = false;
   public static int ROLLER_MOTOR_CHANNEL;
-  public static boolean ROLLER_MOTOR_INVERTED;
+  public static boolean ROLLER_MOTOR_INVERTED = false;
+  public static boolean INTAKE_BELT_MOTOR_INVERTED = false;
+  public static boolean ARM_TOP_LIMIT_INVERTED = false;
+  public static boolean ARM_BOTTOM_LIMIT_INVERTED = false;
+
 
   //INDEXER 
   public static boolean HAS_INDEXER = false;

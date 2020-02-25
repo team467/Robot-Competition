@@ -8,9 +8,13 @@
 package frc.robot.gamepieces.AbstractLayers;
 
 import frc.robot.RobotMap;
+import frc.robot.drive.TalonSpeedControllerGroup;
 import frc.robot.gamepieces.GamePiece;
 import frc.robot.gamepieces.GamePieceBase;
 import frc.robot.logging.RobotLogManager;
+
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.SensorCollection;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 // import frc.robot.logging.Telemetry;
 
@@ -21,34 +25,126 @@ public class IntakeAL extends GamePieceBase implements GamePiece {
     private static final Logger LOGGER = RobotLogManager.getMainLogger(IntakeAL.class.getName());
 
     private static IntakeAL instance = null;
-   
-    private static WPI_TalonSRX arm;
-    private static WPI_TalonSRX roller;
-    private static WPI_TalonSRX indexFollower;
+
+    private static WPI_TalonSRX armMotor;
+    private static WPI_TalonSRX rollerMotor;
+    private static WPI_TalonSRX indexFollowerMotor;
+
+    private static TalonSpeedControllerGroup arm;
+    private static TalonSpeedControllerGroup roller;
+    private static TalonSpeedControllerGroup intakeBelt;
+
+    private static SensorCollection armSensors;
 
     public static IntakeAL getInstance() {
         if (instance == null) {
-            if(RobotMap.HAS_INTAKE){
-            arm = new WPI_TalonSRX(RobotMap.ARM_MOTOR_CHANNEL);
-            roller = new WPI_TalonSRX(RobotMap.ROLLER_MOTOR_CHANNEL);
-            indexFollower = new WPI_TalonSRX(RobotMap.SECOND_MAGAZINE_FEED_MOTOR_CHANNEL);
+            if (RobotMap.HAS_INTAKE) {
+                armMotor = new WPI_TalonSRX(RobotMap.ARM_MOTOR_CHANNEL);
+                rollerMotor = new WPI_TalonSRX(RobotMap.ROLLER_MOTOR_CHANNEL);
+                indexFollowerMotor = new WPI_TalonSRX(RobotMap.SECOND_MAGAZINE_FEED_MOTOR_CHANNEL);
+
+                arm = new TalonSpeedControllerGroup("Arm", ControlMode.PercentOutput, false, RobotMap.ARM_MOTOR_INVERTED, armMotor);
+                roller = new TalonSpeedControllerGroup("Roller", ControlMode.PercentOutput, false, RobotMap.ROLLER_MOTOR_INVERTED, rollerMotor);
+                intakeBelt = new TalonSpeedControllerGroup("IntakeBelt", ControlMode.PercentOutput, false, RobotMap.INTAKE_BELT_MOTOR_INVERTED, indexFollowerMotor);
+
+                armSensors = armMotor.getSensorCollection();
+            } else {
+                arm = new TalonSpeedControllerGroup();
+                roller = new TalonSpeedControllerGroup();
+                intakeBelt = new TalonSpeedControllerGroup();
             }
 
             instance = new IntakeAL();
+
+            instance.stopArm();
+            instance.stopRoller();
+            instance.setIntakeBeltStop();
         }
         return instance;
     }
 
-    private void setFeed() {
-        indexFollower.set(1.0);
-    }
-     
-    private void setReverseFeed() {
-        indexFollower.set(-1.0);
+    public void stopArm() {
+        if (arm != null && RobotMap.HAS_INTAKE) {
+            arm.set(0.0);
+        }
     }
 
-    private void setStopFeed() {
-        indexFollower.set(0.0);
+    public void setArmSpeed(double speed) {
+        if (arm != null && RobotMap.HAS_INTAKE) {
+            double output = Math.max(-1.0, Math.min(1.0, speed));
+            arm.set(output);
+        }
+    }
+
+    public void armUp() {
+        if (arm != null && RobotMap.HAS_INTAKE) {
+            setArmSpeed(-1.0);
+        }
+    }
+
+    public void armDown() {
+        if (arm != null && RobotMap.HAS_INTAKE) {
+            setArmSpeed(1.0);
+        }
+    }
+
+    public void stopRoller() {
+        if (roller != null && RobotMap.HAS_INTAKE) {
+            roller.set(0.0);
+        }
+    }
+
+    public void setRollerSpeed(double speed) {
+        if (roller != null && RobotMap.HAS_INTAKE) {
+            double output = Math.max(-1.0, Math.min(1.0, speed));
+            roller.set(output);
+        }
+    }
+
+    public void setIntakeBeltToIndexer() {
+        if (intakeBelt != null && RobotMap.HAS_INTAKE) {
+        intakeBelt.set(-1.0);
+        }
+    }
+
+    
+    public void setIntakeBeltStop() {
+        if (intakeBelt != null && RobotMap.HAS_INTAKE) {
+        intakeBelt.set(0.0);
+        }
+    }
+
+    
+    public void setIntakeBeltToReverse() {
+        if (intakeBelt != null && RobotMap.HAS_INTAKE) {
+        intakeBelt.set(1.0);
+        }
+    }
+
+    public boolean getTopLimit() {
+        boolean result = false;
+        if (roller != null && RobotMap.HAS_INTAKE) {
+            result = armSensors.isFwdLimitSwitchClosed();
+        }
+
+        if (RobotMap.ARM_TOP_LIMIT_INVERTED) {
+            result = !result;
+        }
+
+        return result;
+    }
+
+    public boolean getBottomLimit() {
+        boolean result = false;
+        if (roller != null && RobotMap.HAS_INTAKE) {
+            result = armSensors.isRevLimitSwitchClosed();
+        }
+
+        if (RobotMap.ARM_BOTTOM_LIMIT_INVERTED) {
+            result = !result;
+        }
+
+        return result;
     }
 
     private void setUp() {
@@ -84,21 +180,9 @@ public class IntakeAL extends GamePieceBase implements GamePiece {
 
     public static void callUp() {
         IntakeAL.getInstance().setUp();
-        
     }
 
-    public static void callIntakeBeltOff() {
-        IntakeAL.getInstance().setStopFeed();
-    }
-
-    public static void callIntakeBeltToIndexer() {
-        IntakeAL.getInstance().setFeed();
-    }
-
-    public static void callIntakeBeltInverse() {
-        IntakeAL.getInstance().setReverseFeed();
-    }
-    public static void callDown() { 
+    public static void callDown() {
         IntakeAL.getInstance().setDown();
     }
 
@@ -117,14 +201,35 @@ public class IntakeAL extends GamePieceBase implements GamePiece {
     public static void callRollerStop() {
         IntakeAL.getInstance().setRollerStop();
     }
+    
+    public static void callIntakeBeltOff() {
+        IntakeAL.getInstance().setIntakeBeltStop();
+    }
+
+    public static void callIntakeBeltToIndexer() {
+        IntakeAL.getInstance().setIntakeBeltToIndexer();
+    }
+
+    public static void callIntakeBeltInverse() {
+        IntakeAL.getInstance().setIntakeBeltToReverse();
+    }
+
 
     private IntakeAL() {
         super("Telemetry", "Intake");
     }
 
+    public void periodic() {
+
+        if (enabled) {
+        }
+
+    }
+
     @Override
     public void checkSystem() {
-        
+        // TODO Auto-generated method stub
+
     }
 
 }
