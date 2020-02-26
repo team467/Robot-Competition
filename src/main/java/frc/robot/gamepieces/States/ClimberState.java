@@ -205,7 +205,7 @@ public enum ClimberState implements State {
     private static boolean isHighest = climber.isUp();
 
     Encoder encoder = new Encoder(0, 1, false, Encoder.EncodingType.k2X);
-    public final double distanceNeeded = 3.0; //TODO: determine value
+    public final double distanceNeeded = 3.0; //TODO: determine value, wait til climber is avaliable
     
     private final static double climbThreshold = 2.0; // TODO: determine threshold for climber, should this be static or non static
 

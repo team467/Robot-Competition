@@ -45,9 +45,9 @@ public class ClimberAL extends GamePieceBase implements GamePiece {
 
     // states of robot
     private climberSpeed speed;
-    // threshold
-    private double lowestPoint = 1.0; // TODO: determine threshold value
-    private double highestPoint = 5.0; // TODO: determine threshold value
+    // threshold TODO determine these values, wait til climber is avaliable
+    private double lowestPoint = 1.0; 
+    private double highestPoint = 5.0; 
 
     // climber tuner
     public boolean hasHighestPoint = false;
@@ -64,14 +64,14 @@ public class ClimberAL extends GamePieceBase implements GamePiece {
         this.speed = speed;
     }
 
-    public boolean isDown() { // TODO: equal to or not
+    public boolean isDown() { 
         if (getBottomSensor() || climberPosition() <= lowestPoint) {
             return true;
         }
         return false;
     }
 
-    public boolean isUp() { // TODO: equal or not
+    public boolean isUp() { 
         if (getTopSensor() || climberPosition() >= highestPoint) {
             return true;
         }
@@ -92,7 +92,7 @@ public class ClimberAL extends GamePieceBase implements GamePiece {
         }
         return result;
     }
-    
+
     // gets the instance
     public static ClimberAL getInstance() {
         // creates new instance if none exists
@@ -161,7 +161,7 @@ public class ClimberAL extends GamePieceBase implements GamePiece {
         LOGGER.debug("Climber Has Stopped");
     }
 
-    public void climberUp() {
+    public void climberUp() { //TODO change speed, wait til climber is avaliable
         climbGroup.set(0.5);
         LOGGER.debug("CLimber Is Going Up");
     }
@@ -172,7 +172,7 @@ public class ClimberAL extends GamePieceBase implements GamePiece {
     }
 
     public void climberUpSlow() {
-        climbGroup.set(0.1); // TODO: how slow? 5%?
+        climbGroup.set(0.1); 
         LOGGER.debug("Climber Is Going Up Slowly");
     }
 
@@ -331,6 +331,4 @@ public class ClimberAL extends GamePieceBase implements GamePiece {
         // TODO Auto-generated method stub
 
     }
-
-    // TODO: tie climbersm to gpc, check how shooter is done
 }
