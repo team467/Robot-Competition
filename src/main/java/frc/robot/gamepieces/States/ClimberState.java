@@ -53,13 +53,13 @@ public enum ClimberState implements State {
 
         public void enter() {
             entryPosition = ClimberAL.getInstance().climberPosition();
-            encoder.setDistancePerPulse(3./256.); //TODO determine value
+            //encoder.setDistancePerPulse(3./256.); //TODO determine value
         }
 
         public State action() {
             upButtonPressed = GamePieceController.getInstance().climberUpButtonPressed();
             currentPosition = ClimberAL.getInstance().climberPosition();
-            distanceTravelled = encoder.getDistance();
+           // distanceTravelled = encoder.getDistance();
 
             climber.setSpeed(UPSLOW);
             climber.setLock(LOCK);
@@ -77,7 +77,7 @@ public enum ClimberState implements State {
         }
 
         public void exit() {
-            encoder.reset();
+            //encoder.reset();
         }
     },
 
@@ -90,13 +90,13 @@ public enum ClimberState implements State {
 
         public void enter() {
             entryPosition = ClimberAL.getInstance().climberPosition();
-            encoder.setDistancePerPulse(3./256.); //TODO determine value
+            //encoder.setDistancePerPulse(3./256.); //TODO determine value
         }
 
         public State action() {
             downButtonPressed = GamePieceController.getInstance().climberDownButtonPressed();
             currentPosition = ClimberAL.getInstance().climberPosition();
-            distanceTravelled = encoder.getDistance();
+            //distanceTravelled = encoder.getDistance();
 
             climber.setSpeed(DOWNSLOW);
             climber.setLock(LOCK);
@@ -115,7 +115,7 @@ public enum ClimberState implements State {
         }
 
         public void exit() {
-            encoder.reset();
+            //encoder.reset();
         }
     },
 
@@ -204,7 +204,7 @@ public enum ClimberState implements State {
     private static boolean isLowest = climber.isDown();
     private static boolean isHighest = climber.isUp();
 
-    Encoder encoder = new Encoder(0, 1, false, Encoder.EncodingType.k2X);
+    //Encoder encoder = new Encoder(0, 1, false, Encoder.EncodingType.k2X);
     public final double distanceNeeded = 3.0; //TODO: determine value
     
     private final static double climbThreshold = 2.0; // TODO: determine threshold for climber, should this be static or non static

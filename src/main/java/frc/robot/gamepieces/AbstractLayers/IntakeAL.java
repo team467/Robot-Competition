@@ -65,7 +65,7 @@ public class IntakeAL extends GamePieceBase implements GamePiece {
 
     public void stopArm() {
         if (arm != null && RobotMap.HAS_INTAKE) {
-            arm.set(0.0);
+            arm.set(0.5);
         }
     }
 
@@ -78,13 +78,13 @@ public class IntakeAL extends GamePieceBase implements GamePiece {
 
     public void armUp() {
         if (arm != null && RobotMap.HAS_INTAKE) {
-            setArmSpeed(-1.0);
+            setArmSpeed(0.5);
         }
     }
 
     public void armDown() {
         if (arm != null && RobotMap.HAS_INTAKE) {
-            setArmSpeed(1.0);
+            setArmSpeed(-0.5);
         }
     }
 
@@ -98,6 +98,13 @@ public class IntakeAL extends GamePieceBase implements GamePiece {
         if (roller != null && RobotMap.HAS_INTAKE) {
             double output = Math.max(-1.0, Math.min(1.0, speed));
             roller.set(output);
+        }
+    }
+
+    public void setIntakeBeltSpeed(double speed) {
+        if (intakeBelt != null && RobotMap.HAS_INTAKE) {
+            double output = Math.max(-1.0, Math.min(1.0, speed));
+            intakeBelt.set(output);
         }
     }
 
@@ -149,12 +156,12 @@ public class IntakeAL extends GamePieceBase implements GamePiece {
 
     private void setUp() {
         LOGGER.debug("setUp called");
-        arm.set(1.0);
+        arm.set(0.5);
     }
 
     private void setDown() {
         LOGGER.debug("setUp called");
-        arm.set(-1.0);
+        arm.set(-0.5);
     }
 
     private void setForward() {
@@ -186,7 +193,7 @@ public class IntakeAL extends GamePieceBase implements GamePiece {
         IntakeAL.getInstance().setDown();
     }
 
-    public static void callFoward() {
+    public static void callForward() {
         IntakeAL.getInstance().setForward();
     }
 

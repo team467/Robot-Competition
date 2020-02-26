@@ -198,8 +198,8 @@ public class RobotMap {
 
       // Game Pieces
       HAS_SHOOTER = true;
-      HAS_INDEXER = false;
-      HAS_INTAKE = false;
+      HAS_INDEXER = true;
+      HAS_INTAKE = true;
       HAS_CLIMBER = false;
 
       // Shooter
@@ -229,17 +229,17 @@ public class RobotMap {
 
       //Intake
       // TODO: change the values of these later.
-      ARM_MOTOR_CHANNEL = 0;
+      ARM_MOTOR_CHANNEL = 8;
       ARM_MOTOR_INVERTED = false;
-      ROLLER_MOTOR_CHANNEL = 1;
-      ROLLER_MOTOR_INVERTED = false;
+      ROLLER_MOTOR_CHANNEL = 9;
+      ROLLER_MOTOR_INVERTED = true;
 
       //Indexer
       // TODO: change the values of these later. 
-      FIRST_MAGAZINE_FEED_MOTOR_CHANNEL = 5;
+      FIRST_MAGAZINE_FEED_MOTOR_CHANNEL = 10;
       FIRST_MAGAZINE_FEED_MOTOR_INVERTED = false;
-      SECOND_MAGAZINE_FEED_MOTOR_CHANNEL = 6;
-      SECOND_MAGAZINE_FEED_MOTOR_INVERTED = false;
+      SECOND_MAGAZINE_FEED_MOTOR_CHANNEL = 11;
+      SECOND_MAGAZINE_FEED_MOTOR_INVERTED = true;
       INDEX_FOLLOWER_MOTOR = false;
       
       INDEXER_MOVE_TIMER = 0.2;
@@ -263,8 +263,8 @@ public class RobotMap {
       HAS_CLIMB_BOTTOM_SENSOR = true;
       CLIMB_TOP_SENSOR_INVERTED = false;
       CLIMB_BOTTOM_SENSOR_INVERTED = false;
-      CLIMB_TOP_SENSOR_CHANNEL = 1;
-      CLIMB_BOTTOM_SENSOR_CHANNEL = 2;
+      CLIMB_TOP_SENSOR_CHANNEL = 4;
+      CLIMB_BOTTOM_SENSOR_CHANNEL = 5;
       HAS_CLIMB_POT = true;
       CLIMB_POT_CHANNEL = 1;
 

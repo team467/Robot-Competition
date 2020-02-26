@@ -34,6 +34,7 @@ public class IntakeTuner implements Tuner {
         SmartDashboard.putBoolean("Arm Down", false);
 
         SmartDashboard.putNumber("Speed", 0);
+        SmartDashboard.putNumber("Belt Speed", 0);
 
         IntakeAL.callArmStop();
         IntakeAL.callRollerStop();
@@ -43,36 +44,46 @@ public class IntakeTuner implements Tuner {
         boolean armUp = SmartDashboard.getBoolean("Arm Up", false);
         boolean armDown = SmartDashboard.getBoolean("Arm Down", false);
         double speed = SmartDashboard.getNumber("Speed", 0);
+        double beltSpeed = SmartDashboard.getNumber("Belt Speed", 0);
+        
+        intake.setRollerSpeed(speed);
+        intake.setIntakeBeltSpeed(beltSpeed);
 
-        intake.setArmSpeed(speed);
+        // if (armUp) {
+        //     if (currentState != ArmState.UP) {
+        //         SmartDashboard.putBoolean("Arm Down", false);
+        //         currentState = ArmState.UP;
+        //     }
+            
+        //     if (intake.getTopLimit()) {
+        //         SmartDashboard.putBoolean("Arm Up", false);
+        //         intake.stopArm();
+        //     } else {
+        //         intake.armUp();
+        //     }
+        // } else if (armDown) {
+        //     if (currentState != ArmState.DOWN) {
+        //         SmartDashboard.putBoolean("Arm Up", false);
+        //         currentState = ArmState.DOWN;
+        //     }            
+            
+        //     if (intake.getBottomLimit()) {
+        //         SmartDashboard.putBoolean("Arm Down", false);
+        //         intake.stopArm();
+        //     } else {
+        //         intake.armDown();
+        //     }
+        // } else {
+        //     intake.stopArm();
+        //     currentState = ArmState.STOP;
+        // }
 
         if (armUp) {
-            if (currentState != ArmState.UP) {
-                SmartDashboard.putBoolean("Arm Down", false);
-                currentState = ArmState.UP;
-            }
-            
-            if (intake.getTopLimit()) {
-                SmartDashboard.putBoolean("Arm Up", false);
-                intake.stopArm();
-            } else {
-                intake.armUp();
-            }
+            intake.armUp();
         } else if (armDown) {
-            if (currentState != ArmState.DOWN) {
-                SmartDashboard.putBoolean("Arm Up", false);
-                currentState = ArmState.DOWN;
-            }            
-            
-            if (intake.getBottomLimit()) {
-                SmartDashboard.putBoolean("Arm Down", false);
-                intake.stopArm();
-            } else {
-                intake.armDown();
-            }
+            intake.armDown();
         } else {
             intake.stopArm();
-            currentState = ArmState.STOP;
         }
 
         SmartDashboard.putBoolean("Top Limit Switch", intake.getTopLimit());
