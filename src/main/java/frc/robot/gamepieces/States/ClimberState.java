@@ -11,8 +11,6 @@ import frc.robot.gamepieces.GamePieceController;
 import frc.robot.gamepieces.AbstractLayers.ClimberAL;
 import static frc.robot.gamepieces.AbstractLayers.ClimberAL.SolenoidLock.*;
 import static frc.robot.gamepieces.AbstractLayers.ClimberAL.climberSpeed.*;
-import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.Timer;
 
 /**
  * Add your docs here.
@@ -42,42 +40,48 @@ public enum ClimberState implements State {
         public void exit() {
             // Noop
         }
-    }, 
+    },
 
     UnlockingUp {
         public boolean upButtonPressed;
         public double entryPosition;
         public double currentPosition;
-        public double distanceTravelled;
-        public double distanceNeeded;
+        public boolean isHighest;
 
         public void enter() {
-            entryPosition = ClimberAL.getInstance().climberPosition();
-            ClimberAL.getInstance().getPosition(); //Units in feet
+            entryPosition = ClimberAL.getInstance().potentiometerPosition();
         }
 
         public State action() {
             upButtonPressed = GamePieceController.getInstance().climberUpButtonPressed();
-            currentPosition = ClimberAL.getInstance().climberPosition();
-            distanceTravelled = ClimberAL.getInstance().getPosition();
+            currentPosition = ClimberAL.getInstance().potentiometerPosition();
+            isHighest = ClimberAL.getInstance().isUp();
 
             climber.setSpeed(UPSLOW);
-            climber.setLock(LOCK);
-            if (Math.abs(currentPosition - entryPosition) > climbThreshold) {
-                if (upButtonPressed && distanceNeeded > distanceTravelled) {
-                    return this;
-                }
-                if (distanceNeeded < distanceTravelled ) {
-                    return Extending;
-                } else {
-                    return GameLocked;
-                }
+            climber.setLock(UNLOCK);
+
+            // if potentiometer returns true for highest, it stops the motor and goes to
+            // gamelocked
+            if (isHighest) {
+                return GameLocked;
             }
+
+            // if the operator no longer wishes to go up, it stops
+            if (!upButtonPressed) {
+                return GameLocked;
+            }
+
+            // compares the potentiometer position to see if enough has been travelled for
+            // it to go up at normal speed
+            if (Math.abs(currentPosition - entryPosition) > climbThreshold) {
+                return Extending;
+            }
+
             return this;
         }
 
         public void exit() {
-            encoder.reset();
+            // Noop
         }
     },
 
@@ -85,37 +89,42 @@ public enum ClimberState implements State {
         public boolean downButtonPressed;
         public double entryPosition;
         public double currentPosition;
-        public double distanceTravelled;
-        public double distanceNeeded;
+        public boolean isLowest;
 
         public void enter() {
-            entryPosition = ClimberAL.getInstance().climberPosition();
-            ClimberAL.getInstance().getPosition(); //Units in feet
+            entryPosition = ClimberAL.getInstance().potentiometerPosition();
+            ClimberAL.getInstance().getPosition();
         }
 
         public State action() {
             downButtonPressed = GamePieceController.getInstance().climberDownButtonPressed();
-            currentPosition = ClimberAL.getInstance().climberPosition();
-            distanceTravelled = ClimberAL.getInstance().getPosition();
+            currentPosition = ClimberAL.getInstance().potentiometerPosition();
+            isLowest = ClimberAL.getInstance().isDown();
 
             climber.setSpeed(DOWNSLOW);
-            climber.setLock(LOCK);
-            if (Math.abs(currentPosition - entryPosition) > climbThreshold) {
-                if (downButtonPressed && distanceNeeded > distanceTravelled) {
-                    return this;
-                }
-                if (distanceNeeded < distanceTravelled) {
-                    return Retracting;
-                }
-                if (!downButtonPressed) {
-                    return GameLocked;
-                }
+            climber.setLock(UNLOCK);
+
+            // if potentiometer returns true for lowest, it stops
+            if (isLowest) {
+                return GameLocked;
             }
+
+            // if the operator no longer wants to go down, it stops
+            if (!downButtonPressed) {
+                return GameLocked;
+            }
+
+            // compares the potentiometer position to see if enough has been travelled for
+            // it to go down at normal speed
+            if (Math.abs(currentPosition - entryPosition) > climbThreshold) {
+                return Retracting;
+            }
+
             return this;
         }
 
         public void exit() {
-            encoder.reset();
+            // Noop
         }
     },
 
@@ -163,7 +172,7 @@ public enum ClimberState implements State {
             if (!downButtonPressed || isLowest) {
                 return GameLocked;
             }
-            
+
             return this;
         }
 
@@ -186,6 +195,7 @@ public enum ClimberState implements State {
 
             climber.setSpeed(OFF);
             climber.setLock(LOCK);
+
             if (upButtonPressed && !downButtonPressed && !isHighest) {
                 return UnlockingUp;
             }
@@ -203,12 +213,6 @@ public enum ClimberState implements State {
     private static ClimberAL climber = ClimberAL.getInstance();
     private static boolean isLowest = climber.isDown();
     private static boolean isHighest = climber.isUp();
-
-    Encoder encoder = new Encoder(0, 1, false, Encoder.EncodingType.k2X);
-    public final double distanceNeeded = 3.0; //TODO: determine value, wait til climber is avaliable
-    
-    private final static double climbThreshold = 2.0; // TODO: determine threshold for climber, should this be static or non static
-
-    public static Timer timer = new Timer();
+    private final static double climbThreshold = 2.0; // TODO: determine threshold for climber, should this be static or
+                                                      // non static
 }
-

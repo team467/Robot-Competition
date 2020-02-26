@@ -65,14 +65,14 @@ public class ClimberAL extends GamePieceBase implements GamePiece {
     }
 
     public boolean isDown() { 
-        if (getBottomSensor() || climberPosition() <= lowestPoint) {
+        if (getBottomSensor() || potentiometerPosition() <= lowestPoint) {
             return true;
         }
         return false;
     }
 
     public boolean isUp() { 
-        if (getTopSensor() || climberPosition() >= highestPoint) {
+        if (getTopSensor() || potentiometerPosition() >= highestPoint) {
             return true;
         }
         return false;
@@ -85,7 +85,7 @@ public class ClimberAL extends GamePieceBase implements GamePiece {
         return false;
     }
 
-    public double climberPosition() {
+    public double potentiometerPosition() {
         double result = 0;
         if (potentiometer != null && RobotMap.HAS_CLIMB_POT) {
             result = potentiometer.get();
