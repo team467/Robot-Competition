@@ -5,6 +5,7 @@ import frc.robot.drive.Drive;
 import frc.robot.gamepieces.GamePieceController;
 import frc.robot.logging.RobotLogManager;
 import frc.robot.gamepieces.AbstractLayers.IndexerAL;
+import frc.robot.gamepieces.AbstractLayers.IntakeAL;
 
 import java.text.DecimalFormat;
 
@@ -86,6 +87,23 @@ public class Actions {
     // TODO determine the mult values
     double timeAmt = (distance - 0.112) / 10.3596;
     return new Action(actionText, new ActionGroup.Duration(timeAmt), () -> drive.arcadeDrive(0.8, 0));
+  }
+
+  /**
+   * 
+   * @param distance moves robot in feet.
+   * @return
+   */
+  public static ActionGroup moveDistanceForwardAndGather(double distance) {
+    String actionGroupText = "Move forward " + distance + " feet";
+    ActionGroup mode = new ActionGroup(actionGroupText);
+    // TODO determine the mult values
+    double timeAmt = (distance - 0.112) / 10.3596;
+    mode.addAction( new Action("", new ActionGroup.Duration(timeAmt), new ActionGroup.ConcurrentActions(
+        () -> drive.arcadeDrive(0.8, 0), () -> IntakeAL.callForward())));
+        //TODO i dont know if this just does this once and stops;
+        mode.addAction(new Action("",()->false,()->IntakeAL.callRollerStop()));
+        return mode;
   }
 
   /**
@@ -276,7 +294,7 @@ public class Actions {
   }
 
   /**
-   * turns a little left anf shoots, then turns back and drives back
+   * turns a little left and shoots, then turns back and drives back
    */
   public static ActionGroup shootPS1() {
     // stuff
@@ -310,26 +328,23 @@ public class Actions {
     double thing;
     ActionGroup mode = new ActionGroup(actionGroupText);
     mode.addAction(Shoot());
-    mode.addActions(turn(-114.79));
-    mode.addActions(move(9)/* suck TODO */);
-    mode.addActions(move(-4.5));
-    mode.addActions(turn(-46.4));
+    mode.addActions(turn(-150));
+    mode.addActions(moveDistanceForwardAndGather(16)/* suck TODO */);
+    mode.addActions(move(-9));
+    mode.addActions(turn(-160)); 
     mode.addAction(Shoot());
     return mode;
   }
 
-  public static ActionGroup rightSide(){
+  public static ActionGroup rightSide() {
     String actionGroupText = "aims at the target and shoot";
     ActionGroup mode = new ActionGroup(actionGroupText);
-    mode.addActions(Shoot());
-    mode.addActions(turn(/*TODO to the left*/));
-    mode.addActions(move(/*TODO forward and suck simultaneoulsy*/));
-    mode.addActions(turn(-180));
-    mode.addActions(move(/*TODO forward*/));
-    mode.adddActions(turn(/*TODO left*/));
+    mode.addActions(move(-12));
+    mode.addActions(turn(42));
+    mode.addActions(moveDistanceForwardAndGather(7));
+    mode.addActions(move(-2));
+    mode.addActions(turn(-45));
     mode.addAction(Shoot());
-    mode.
-
     return mode;
   }
 
