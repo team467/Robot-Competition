@@ -69,6 +69,7 @@ public class ShooterAL extends GamePieceBase implements GamePiece {
         if (RobotMap.SHOOTER_FOLLOWER) {
           LOGGER.info("Creating follow motors");
           flywheelFollower = new WPI_TalonSRX(RobotMap.SHOOTER_MOTOR_FOLLOWER_CHANNEL);
+          flywheelFollower.setInverted(RobotMap.SHOOTER_MOTOR_FOLLOWER_INVERTED);
           flywheelFollower.setNeutralMode(NeutralMode.Coast);
         }
 

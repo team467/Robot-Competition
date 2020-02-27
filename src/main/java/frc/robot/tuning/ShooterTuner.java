@@ -99,6 +99,7 @@ public class ShooterTuner implements Tuner {
         shooter.setHoodAngle(leftAngle, rightAngle);
 
         if (startShooting) {
+            LOGGER.error("trigger");
             shooter.startShooting();
         } else {
             shooter.stopShooting();

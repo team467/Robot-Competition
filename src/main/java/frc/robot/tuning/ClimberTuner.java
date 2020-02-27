@@ -31,7 +31,7 @@ public class ClimberTuner implements Tuner {
         SmartDashboard.putBoolean("Top Sensor", false);
         SmartDashboard.putBoolean("Bottom Sensor", false);
 
-        double kP = SmartDashboard.getNumber("Climber P", 0);
+        double kP = SmartDashboard.getNumber("Climber P", 0.00015);
         double kI = SmartDashboard.getNumber("Climber I", 0);
         double kD = SmartDashboard.getNumber("Climber D", 0);
         double kF = SmartDashboard.getNumber("Climber F", 0);
