@@ -234,15 +234,20 @@ public class RobotMap {
       ROLLER_MOTOR_CHANNEL = 9;
       ROLLER_MOTOR_INVERTED = true;
 
+      SECOND_MAGAZINE_FEED_MOTOR_CHANNEL = 11;
+      SECOND_MAGAZINE_FEED_MOTOR_INVERTED = true;
+
       //Indexer
       // TODO: change the values of these later. 
       FIRST_MAGAZINE_FEED_MOTOR_CHANNEL = 10;
-      FIRST_MAGAZINE_FEED_MOTOR_INVERTED = false;
-      SECOND_MAGAZINE_FEED_MOTOR_CHANNEL = 11;
-      SECOND_MAGAZINE_FEED_MOTOR_INVERTED = true;
+      INDEXER_MOTOR_INVERTED = true;
       INDEX_FOLLOWER_MOTOR = false;
       
       INDEXER_MOVE_TIMER = 0.2;
+
+      INDEXER_FORWARD_SPEED = -0.2;
+      INDEXER_INVERSE_SPEED = 0.2;
+
 
       //Climber
       CLIMBER_MOTOR_INVERTED = false;
