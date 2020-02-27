@@ -54,7 +54,7 @@ public enum IndexerState implements State {
             if (!indexAuto) {
                 return Manual;
             } else {
-                if (indexerBallsReverse && isInMouth && !isInChamber) {
+                if (indexerBallsForward && isInMouth && !isInChamber) {
                     LOGGER.debug("isInMouth and is not in Chamber");
                     return Feed;
                 }
@@ -69,7 +69,7 @@ public enum IndexerState implements State {
                     return Feed;
                 }
 
-                if (indexerBallsReverse) {
+                if (indexerBallsForward) {
                     return Feed;
                 }
             }
@@ -157,7 +157,7 @@ public enum IndexerState implements State {
     Reverse {
 
         public boolean autoMode;
-        public boolean indexerBallsForward;
+        public boolean indexerBallsReverse;
 
         public void enter() {
             // Noop
@@ -165,7 +165,7 @@ public enum IndexerState implements State {
 
         public State action() {
             autoMode = GamePieceController.getInstance().IndexAuto;
-            indexerBallsForward = GamePieceController.getInstance().indexerBallsReverse();
+            indexerBallsReverse = GamePieceController.getInstance().indexerBallsReverse();
 
             IndexerAL.moveBallsTowardIntake();
 
@@ -173,7 +173,7 @@ public enum IndexerState implements State {
                 return Manual;
             }
 
-            if (!indexerBallsForward) {
+            if (!indexerBallsReverse) {
                 IndexerAL.callStop();
                 return Idle;
             }
@@ -207,10 +207,10 @@ public enum IndexerState implements State {
             }
 
             if (indexerBallsForward) {
-                IndexerAL.moveBallsTowardIntake();
+                IndexerAL.advanceBallsToShooter();
             }
             if (indexerBallsReverse) {
-                IndexerAL.advanceBallsToShooter();
+                IndexerAL.moveBallsTowardIntake();
             }
             if (!indexerBallsForward && !indexerBallsReverse) {
                 IndexerAL.callStop();
