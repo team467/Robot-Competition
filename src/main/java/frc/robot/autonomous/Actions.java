@@ -84,9 +84,7 @@ public class Actions {
    */
   public static Action moveDistanceForward(double distance) {
     String actionText = "Move forward " + distance + " feet";
-    // TODO determine the mult values
-    double timeAmt = (distance - 0.112) / 10.3596;
-    return new Action(actionText, new ActionGroup.Duration(timeAmt), () -> drive.arcadeDrive(0.8, 0));
+    return new Action(actionText, new ActionGroup.ReachDistance(distance), () -> drive.arcadeDrive(0.8, 0));
   }
 
   /**
@@ -97,9 +95,7 @@ public class Actions {
   public static ActionGroup moveDistanceForwardAndGather(double distance) {
     String actionGroupText = "Move forward " + distance + " feet";
     ActionGroup mode = new ActionGroup(actionGroupText);
-    // TODO determine the mult values
-    double timeAmt = (distance - 0.112) / 10.3596;
-    mode.addAction( new Action("", new ActionGroup.Duration(timeAmt), new ActionGroup.ConcurrentActions(
+    mode.addAction( new Action("", new ActionGroup.ReachDistance(distance), new ActionGroup.ConcurrentActions(
         () -> drive.arcadeDrive(0.8, 0), () -> IntakeAL.callForward())));
         //TODO i dont know if this just does this once and stops;
         mode.addAction(new Action("",()->false,()->IntakeAL.callRollerStop()));
@@ -115,7 +111,6 @@ public class Actions {
    */
   public static Action arc(double speed, double rotation) {
     String actionText = "Move forward " + speed + " feet";
-    // TODO determine the mult values
     ActionGroup.MultiCondition condition = new ActionGroup.MultiCondition(new ActionGroup.ReachAngle(rotation),
         new ActionGroup.ReachDistance(speed));
 
