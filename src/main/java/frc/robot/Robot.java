@@ -258,6 +258,9 @@ public class Robot extends TimedRobot {
       camera.restart();
     }
 
+    //gamePieceController.periodic(); 
+    
+
     perfTimer.end();
   }
 

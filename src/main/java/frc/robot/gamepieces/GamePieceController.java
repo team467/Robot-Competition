@@ -158,26 +158,26 @@ public class GamePieceController {
       climberSM.step();
 
     // roller controls
-    if (RobotMap.HAS_INTAKE) {
-      if (armPosition && !climberEnabled) {
-        intake.setIntakeArm(IntakerArm.ARM_UP);
-      } else {
-        intake.setIntakeArm(IntakerArm.ARM_DOWN);
-      }
+    // if (RobotMap.HAS_INTAKE) {
+    //   if (armPosition && !climberEnabled) {
+    //     intake.setIntakeArm(IntakerArm.ARM_UP);
+    //   } else {
+    //     intake.setIntakeArm(IntakerArm.ARM_DOWN);
+    //   }
 
-      if (rollerStateIN && !climberEnabled) {
-        intake.setIntakeRoller(IntakerRollers.ROLLERS_IN);
-      } else if (rollerStateOUT) {
-        intake.setIntakeRoller(IntakerRollers.ROLLERS_OUT);
-      } else {
-        intake.setIntakeRoller(IntakerRollers.ROLLERS_OFF);
-      }
+    //   if (rollerStateIN && !climberEnabled) {
+    //     intake.setIntakeRoller(IntakerRollers.ROLLERS_IN);
+    //   } else if (rollerStateOUT) {
+    //     intake.setIntakeRoller(IntakerRollers.ROLLERS_OUT);
+    //   } else {
+    //     intake.setIntakeRoller(IntakerRollers.ROLLERS_OFF);
+    //   }
 
-      if (climberEnabled) {
-        intake.setIntakeArm(IntakerArm.ARM_UP);
-      }
+    //   if (climberEnabled) {
+    //     intake.setIntakeArm(IntakerArm.ARM_UP);
+    //   }
 
-    }
+    // }
   }
 
   DriverInput forceCellsForward = DriverInput.USE_DRIVER_INPUT;

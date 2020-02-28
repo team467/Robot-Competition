@@ -142,7 +142,7 @@ public class RobotMap {
 
       GYRO_MULTIPLIER = 1.0;
 
-      CONTROLS_INVERTED_FB = false;
+      CONTROLS_INVERTED_FB = true;
       CONTROLS_INVERTED_TURN = false;
 
       USE_VELOCITY_SPEED_CONTROL_FOR_TELOP = true;
@@ -238,16 +238,16 @@ public class RobotMap {
       ROLLER_MOTOR_CHANNEL = 9;
       ROLLER_MOTOR_INVERTED = true;
 
-      SECOND_MAGAZINE_FEED_MOTOR_CHANNEL = 11;
-      SECOND_MAGAZINE_FEED_MOTOR_INVERTED = true;
-
       //Indexer
       // TODO: change the values of these later. 
       FIRST_MAGAZINE_FEED_MOTOR_CHANNEL = 10;
       INDEXER_MOTOR_INVERTED = true;
       INDEX_FOLLOWER_MOTOR = false;
+      SECOND_MAGAZINE_FEED_MOTOR_CHANNEL = 11;
+      SECOND_MAGAZINE_FEED_MOTOR_INVERTED = true;
       
       INDEXER_MOVE_TIMER = 0.2;
+      INDEXER_TOF_THRESHOLD = 100.0;
 
       INDEXER_FORWARD_SPEED = -0.2;
       INDEXER_INVERSE_SPEED = 0.2;

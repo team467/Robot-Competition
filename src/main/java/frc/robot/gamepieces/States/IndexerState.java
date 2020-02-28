@@ -53,8 +53,9 @@ public enum IndexerState implements State {
 
             if (!indexAuto) {
                 return Manual;
-            } else {
-                if (indexerBallsForward && isInMouth && !isInChamber) {
+            }
+
+            if (indexerBallsForward && isInMouth && !isInChamber) {
                     LOGGER.debug("isInMouth and is not in Chamber");
                     return Feed;
                 }
@@ -68,14 +69,6 @@ public enum IndexerState implements State {
                     LOGGER.debug("Shooter in Manual sending power cell to feed");
                     return Feed;
                 }
-
-                if (indexerBallsForward) {
-                    return Feed;
-                }
-            }
-
-            
-
             return this;
         }
 
@@ -108,7 +101,7 @@ public enum IndexerState implements State {
                 return Idle;
             }
 
-            if (!indexerAL.isBallInMouth()) {
+            if (indexerAL.isBallInMouth()) {
                 return FeedBuffer;
             }
 
