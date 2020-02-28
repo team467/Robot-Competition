@@ -123,7 +123,8 @@ public class IndexerAL extends GamePieceBase implements GamePiece {
       if (forceMouthSensor == SensorTestMode.FORCE_FALSE)
       return false;
     }
-
+    
+    LOGGER.info("Ball is in mouth {}", isBallInMouth());
     boolean result = false; // TODO make this false when have indexer
     if (onboardTOF != null && RobotMap.HAS_INDEXER_TOF_SENSORS) {
       double distance = getMouthDistance();
@@ -146,6 +147,7 @@ public class IndexerAL extends GamePieceBase implements GamePiece {
       if (forceChamberSensor == SensorTestMode.FORCE_FALSE)
       return false;
     }
+    LOGGER.info("Ball is in Chamber {}", isBallInChamber());
     boolean result = false; // TODO make this false when have indexer
     if (networkTableTOF != null && RobotMap.HAS_INDEXER_TOF_SENSORS) {
       double distance = getChamberDistance();

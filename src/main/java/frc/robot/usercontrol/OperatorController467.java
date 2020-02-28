@@ -80,8 +80,11 @@ public class OperatorController467 extends GenericHID {
      * @return
      */
     public boolean down(final int b) {
-        final boolean result = buttonDown.get(b);
-        LOGGER.debug("Button: {} = {}", b, box(result));
+        boolean result = false;
+        if (b <= buttonTotal) {
+            result = buttonDown.get(b);
+            LOGGER.debug("Button: {} = {}", b, box(result));
+        }
         return result;
     }
 

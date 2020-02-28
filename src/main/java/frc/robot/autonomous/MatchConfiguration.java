@@ -38,7 +38,7 @@ public class MatchConfiguration {
 
   private ActionGroup autonomous;
 
-  private String[] autolist= {"None","Shoot Basic"};
+  private String[] autolist= {"None","Shoot Basic","Move forward"};
 
   private SendableChooser<String> chooser = new SendableChooser<String>();
 
@@ -50,7 +50,7 @@ public class MatchConfiguration {
     }
 
     SmartDashboard.putData("Auto Chooser", chooser);  
-    SmartDashboard.putString("Auto Chooser", "None"); //TODO: TEST
+ //TODO: TEST
 
   }
 
@@ -102,6 +102,8 @@ public class MatchConfiguration {
       case "Shoot Basic":
         autonomous = Actions.shootGroup();
         break;
+      case "Move foward":
+        autonomous = Actions.move(3);
       default:
        Actions.doNothing();
     }

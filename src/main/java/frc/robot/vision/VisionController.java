@@ -80,7 +80,8 @@ public class VisionController {
 
   public double dist() {
     netDist = table.getEntry("DistanceFromTarget");
-    return netDist.getDouble(0.0);
+   //return netDist.getDouble(0.0);
+   return 120;
   }
 
   /**

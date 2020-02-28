@@ -14,6 +14,8 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import frc.robot.RobotMap.RobotId;
+import frc.robot.autonomous.ActionGroup;
+import frc.robot.autonomous.MatchConfiguration;
 import frc.robot.drive.Drive;
 import frc.robot.gamepieces.GamePieceController;
 import frc.robot.logging.RobotLogManager;
@@ -56,6 +58,8 @@ public class Robot extends TimedRobot {
   private PerfTimer perfTimer;
   private  GamePieceController gamePieceController;
   public VisionController visionController;
+  public MatchConfiguration matchConfig;
+  public ActionGroup autonomous;
 
   public static long time = System.nanoTime();
   public static long previousTime = time;
@@ -169,9 +173,13 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     mode = RobotMode.AUTONOMOUS;
+    driverstation.readInputs();
+    matchConfig.load();
     telemetry.robotMode(mode);
     LOGGER.info("Autonomous Initialized");
     perfTimer = PerfTimer.timer("Autonomous");
+    autonomous = matchConfig.AutoDecisionTree();
+    autonomous.enable();
   }
   
   /**
@@ -180,7 +188,8 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousPeriodic() {
     LOGGER.trace("Autonomous Periodic");
-    teleopPeriodic();
+    gamePieceController.periodic();
+    autonomous.run();
   }
 
   @Override
@@ -299,9 +308,9 @@ public class Robot extends TimedRobot {
     
     driverstation.readInputs();
     OperatorController467 opcon = driverstation.getOperatorController();
-    for (int i = 1; i <= opcon.getButtonCount(); i++) {
-      SmartDashboard.putBoolean("Button " + i, opcon.getRawButton(i));
-    }
+    // for (int i = 1; i <= opcon.getButtonCount(); i++) {
+    //   SmartDashboard.putBoolean("Button " + i, opcon.getRawButton(i));
+    // }
     // if (driverstation.restartCamera()) {
     //   camera.restart();
     // } else {

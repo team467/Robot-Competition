@@ -231,7 +231,7 @@ public class ClimberAL extends GamePieceBase implements GamePiece {
     public void climberLock() {
         LOGGER.debug("climber lock");
         if (climbLock != null && RobotMap.HAS_CLIMBLOCK) {
-            climbLock.set(Value.kOn);
+            climbLock.set(Value.kForward);
         }
     }
 

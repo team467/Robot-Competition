@@ -92,7 +92,7 @@ public class ShooterAL extends GamePieceBase implements GamePiece {
       if (RobotMap.HAS_SHOOTER_HOOD) {
         hoodLeft = new Servo(RobotMap.HOOD_LEFT_PWM_PORT);
         hoodRight = new Servo(RobotMap.HOOD_RIGHT_PWM_PORT);
-
+        
       } else {
         hoodLeft = null;
         hoodRight = null;

@@ -117,8 +117,6 @@ public class RobotMap {
   // Set to false to use the local ADIS16448 IMU on the Robo Rio
   public static final boolean useRemoteImu = false;
 
-
-
   public enum RobotId {
     ROBOT_2020, KITBOT
   }
@@ -135,338 +133,315 @@ public class RobotMap {
 
     switch (id) {
 
-    case ROBOT_2020:
-      HAS_WHEELS = true;
-      DRIVEMOTOR_NUM = 4;
-      WHEEL_CIRCUMFERENCE = 18.50;
-
-      GYRO_MULTIPLIER = 1.0;
-
-      CONTROLS_INVERTED_FB = true;
-      CONTROLS_INVERTED_TURN = false;
-
-      USE_VELOCITY_SPEED_CONTROL_FOR_TELOP = true;
-      VELOCITY_MULTIPLIER_RIGHT = 5700;
-      VELOCITY_MULTIPLIER_LEFT = 5700;
-
-      NORMAL_DRIVE_SPEED_MULTIPLIER = 0.8;
-      SLOW_DRIVE_SPEED_MULTIPLIER = 0.6;
-
-      NORMAL_VELOCITY_SPEED_MULTIPLIER = 0.9;
-      SLOW_VELOCITY_SPEED_MULTIPLIER = 0.7;
-
-      LEFT_LEAD_CHANNEL = 1;
-      LEFT_FOLLOWER_1_CHANNEL = 2;
-      LEFT_DRIVE_SENSOR_IS_INVERTED = true;
-      LEFT_DRIVE_MOTOR_IS_INVERTED = false;
-
-      RIGHT_LEAD_CHANNEL = 3;
-      RIGHT_FOLLOWER_1_CHANNEL = 4;
-      RIGHT_DRIVE_SENSOR_IS_INVERTED = true;
-      RIGHT_DRIVE_MOTOR_IS_INVERTED = false;
-
-      // Linear PIDS
-      LEFT_DRIVE_PID_P = 0.0002;
-      LEFT_DRIVE_PID_I = 0.0;
-      LEFT_DRIVE_PID_D = 0.0;
-      LEFT_DRIVE_PID_F = 0.0;
-
-      RIGHT_DRIVE_PID_P = 0.0002;
-      RIGHT_DRIVE_PID_I = 0.0;
-      RIGHT_DRIVE_PID_D = 0.0;
-      RIGHT_DRIVE_PID_F = 0.0;
-
-    // CONTROLS_INVERTED_FB = false;
-    // CONTROLS_INVERTED_TURN = false;
-
-    USE_VELOCITY_SPEED_CONTROL_FOR_TELOP = true;
-    VELOCITY_MULTIPLIER_RIGHT = 5700;
-    VELOCITY_MULTIPLIER_LEFT = 5700;
-
-    NORMAL_DRIVE_SPEED_MULTIPLIER = 0.8;
-    SLOW_DRIVE_SPEED_MULTIPLIER = 0.6;
-
-      FORWARD_CAMERA_INDEX = 0;
-      BACKWARD_CAMERA_INDEX = 2;
-      HAS_CAMERA = true;
-      AUTO_CAMERA = true;
-      AUTOALIGN_TURN_SPEED = 0.2;
-    NORMAL_VELOCITY_SPEED_MULTIPLIER = 0.9;
-    SLOW_VELOCITY_SPEED_MULTIPLIER = 0.7;
-
-    LEFT_LEAD_CHANNEL = 3;
-    LEFT_FOLLOWER_1_CHANNEL = 4;
-    LEFT_DRIVE_SENSOR_IS_INVERTED = true;
-    LEFT_DRIVE_MOTOR_IS_INVERTED = false;
-
-      // Shooter
-      // TODO:change the values of these later
-      SHOOTER_FOLLOWER = true;
-      SHOOTER_MOTOR_CHANNEL = 5;
-      SHOOTER_MOTOR_INVERTED = false;
-      SHOOTER_MOTOR_FOLLOWER_CHANNEL = 6;
-      SHOOTER_MOTOR_FOLLOWER_INVERTED = true;
-      SHOOTER_SMART_SHOT = true;
-
-      SHOOTER_SENSOR_INVERTED = true;
-
-      TRIGGER_MOTOR_CHANNEL = 7;
-      TRIGGER_MOTOR_INVERTED = true;
-      HAS_TRIGGER = true;
-      HAS_SHOOTER_TRIGGER = true;
-
-      
-
-
-      SHOOTER_P = 2;
-      SHOOTER_I = 0.0;
-      SHOOTER_D = 0.0;
-      SHOOTER_F = 0.0;
-
-      VELOCITY_MULTIPLIER_SHOOTER = 10000;
-      SHOOTER_SPEED_TOLERANCE = 0.25;
-      MANUAL_MODE_SHOOTER_SPEED = 1.0; //TODO determine the speed
-      
-
-      //Intake
-      // TODO: change the values of these later.
-      ARM_MOTOR_CHANNEL = 8;
-      ARM_MOTOR_INVERTED = false;
-      ROLLER_MOTOR_CHANNEL = 9;
-      ROLLER_MOTOR_INVERTED = true;
-
-      //Indexer
-      // TODO: change the values of these later. 
-      FIRST_MAGAZINE_FEED_MOTOR_CHANNEL = 10;
-      INDEXER_MOTOR_INVERTED = true;
-      INDEX_FOLLOWER_MOTOR = false;
-      SECOND_MAGAZINE_FEED_MOTOR_CHANNEL = 11;
-      SECOND_MAGAZINE_FEED_MOTOR_INVERTED = true;
-      
-      INDEXER_MOVE_TIMER = 0.2;
-      INDEXER_TOF_THRESHOLD = 100.0;
-
-      INDEXER_FORWARD_SPEED = -0.2;
-      INDEXER_INVERSE_SPEED = 0.2;
-
-
-      //Climber
-      CLIMBER_MOTOR_INVERTED = false;
-      CLIMBER_SENSOR = false;
-      HAS_CLIMBFOLLOWER = true;
-      CLIMB_MOTER_LEADER = 5;
-      CLIMB_MOTER_FOLLOWER = 6;
-
-      CLIMBER_P = 2;
-      CLIMBER_I = 0.0;
-      CLIMBER_D = 0.0;
-      CLIMBER_F = 0.0;
-
-    RIGHT_DRIVE_PID_P = 0.00015;
-    RIGHT_DRIVE_PID_I = 0.0;
-    RIGHT_DRIVE_PID_D = 0.0;
-    RIGHT_DRIVE_PID_F = 0.0;
-
-      HAS_CLIMB_TOP_SENSOR = true;
-      HAS_CLIMB_BOTTOM_SENSOR = true;
-      CLIMB_TOP_SENSOR_INVERTED = false;
-      CLIMB_BOTTOM_SENSOR_INVERTED = false;
-      CLIMB_TOP_SENSOR_CHANNEL = 4;
-      CLIMB_BOTTOM_SENSOR_CHANNEL = 5;
-      HAS_CLIMB_POT = false;
-      CLIMB_POT_CHANNEL = 1;
-
-    RIGHT_TURN_PID_P = 0.00015;
-    RIGHT_TURN_PID_I = 0.0;
-    RIGHT_TURN_PID_D = 0.0;
-    RIGHT_TURN_PID_F = 0.0;
-
-      HAS_CLIMBLOCK = true;
-      CLIMB_LOCK_CHANNEL = 0;
-      CLIMB_LOCK_INVERTED = false;
-      HAS_SHOOTER_HOOD = true;
-    HOOD_LEFT_PWM_PORT = 2;
-    HOOD_RIGHT_PWM_PORT = 3;
-    HOOD_LEFT_INVERTED = false;
-    HOOD_RIGHT_INVERTED = true;
-    HOOD_MAX_ANGLE = 165;
-    HOOD_ADD_NOISE = false;
-    
-    HOOD_LEFT_MIN = 0.65;
-    HOOD_RIGHT_MIN = 0.55;
-    HOOD_LEFT_MAX = 0.85;
-    HOOD_RIGHT_MAX = 0.77;
-    HOOD_LEFT_STARTING_POSITION = (HOOD_LEFT_MIN + HOOD_LEFT_MAX)/2;
-    HOOD_RIGHT_STARTING_POSITION = (HOOD_RIGHT_MIN + HOOD_RIGHT_MAX)/2;
-
-
-    HAS_SHOOTER_LEDS = false;
-    SHOOTER_LED_AMOUNT = 20;
-    SHOOTER_LED_CHANNEL = 1;
-    SHOOTER_DOUBLESIDE_LED = true;
-
-      break;
-
-    case KITBOT:
-    default:
-      HAS_WHEELS = true;
-      DRIVEMOTOR_NUM = 4;
-      WHEEL_CIRCUMFERENCE = 18.50;
-
-      GYRO_MULTIPLIER = -1.0;
-
-      // CONTROLS_INVERTED_FB = false;
-      // CONTROLS_INVERTED_TURN = false;
-
-      USE_VELOCITY_SPEED_CONTROL_FOR_TELOP = true;
-      VELOCITY_MULTIPLIER_RIGHT = 5700;
-      VELOCITY_MULTIPLIER_LEFT = 5700;
-
-      NORMAL_DRIVE_SPEED_MULTIPLIER = 0.8;
-      SLOW_DRIVE_SPEED_MULTIPLIER = 0.6;
-
-      NORMAL_VELOCITY_SPEED_MULTIPLIER = 0.9;
-      SLOW_VELOCITY_SPEED_MULTIPLIER = 0.7;
-
-      LEFT_LEAD_CHANNEL = 3;
-      LEFT_FOLLOWER_1_CHANNEL = 4;
-      LEFT_DRIVE_SENSOR_IS_INVERTED = true;
-      LEFT_DRIVE_MOTOR_IS_INVERTED = false;
-
-      RIGHT_LEAD_CHANNEL = 1;
-      RIGHT_FOLLOWER_1_CHANNEL = 2;
-      RIGHT_DRIVE_SENSOR_IS_INVERTED = true;
-      RIGHT_DRIVE_MOTOR_IS_INVERTED = false;
-
-      // Linear PIDS
-      LEFT_DRIVE_PID_P = 0.00015;
-      LEFT_DRIVE_PID_I = 0.0;
-      LEFT_DRIVE_PID_D = 0.0;
-      LEFT_DRIVE_PID_F = 0.0;
-
-      RIGHT_DRIVE_PID_P = 0.00015;
-      RIGHT_DRIVE_PID_I = 0.0;
-      RIGHT_DRIVE_PID_D = 0.0;
-      RIGHT_DRIVE_PID_F = 0.0;
-
-      // Turn PIDs
-      LEFT_TURN_PID_P = 0.00015;
-      LEFT_TURN_PID_I = 0.0;
-      LEFT_TURN_PID_D = 0.0;
-      LEFT_TURN_PID_F = 0.0;
-
-      RIGHT_TURN_PID_P = 0.00015;
-      RIGHT_TURN_PID_I = 0.0;
-      RIGHT_TURN_PID_D = 0.0;
-      RIGHT_TURN_PID_F = 0.0;
-
-      CLOSED_LOOP_RAMP_RATE = 0.5;
-      OPEN_LOOP_RAMP_RATE = 0.0;
-
-      // Cameras
-      FORWARD_CAMERA_INDEX = 0;
-      BACKWARD_CAMERA_INDEX = 1;
-      HAS_CAMERA = false;
-      AUTO_CAMERA = false;
-      AUTOALIGN_TURN_SPEED = 0.2;
-
-      // Game Pieces
-      HAS_SHOOTER = true;
-      HAS_INDEXER = false;
-      HAS_INTAKE = false;
-      HAS_CLIMBER = false;
-
-      // Shooter
-      // TODO:change the values of these later
-      SHOOTER_FOLLOWER = true;
-      SHOOTER_MOTOR_CHANNEL = 5;
-      SHOOTER_MOTOR_INVERTED = true;
-      SHOOTER_MOTOR_FOLLOWER_INVERTED = true;
-      SHOOTER_MOTOR_FOLLOWER_CHANNEL = 6;
-      SHOOTER_SMART_SHOT = true;
-
-      TRIGGER_MOTOR_CHANNEL = 6;
-      HAS_TRIGGER = true;
-      HAS_SHOOTER_TRIGGER = true;
-
-      HAS_SHOOTER_HOOD = true;
-      HOOD_LEFT_PWM_PORT = 0;
-      HOOD_RIGHT_PWM_PORT = 1;
-      HOOD_LEFT_INVERTED = false;
-      HOOD_RIGHT_INVERTED = true;
-      HOOD_MAX_ANGLE = 165;
-      HOOD_ADD_NOISE = false;
-      
-      HOOD_LEFT_MIN = 0.65;
-      HOOD_RIGHT_MIN = 0.55;
-      HOOD_LEFT_MAX = 0.85;
-      HOOD_RIGHT_MAX = 0.77;
-      HOOD_LEFT_STARTING_POSITION = (HOOD_LEFT_MIN + HOOD_LEFT_MAX)/2;
-      HOOD_RIGHT_STARTING_POSITION = (HOOD_RIGHT_MIN + HOOD_RIGHT_MAX)/2;
-
-      HAS_SHOOTER_LEDS = false;
-      SHOOTER_LED_AMOUNT = 20;
-      SHOOTER_LED_CHANNEL = 2;
-      SHOOTER_DOUBLESIDE_LED = true;
-
-      SHOOTER_SENSOR_INVERTED = false;
-
-      SHOOTER_P = 2;
-      SHOOTER_I = 0.0;
-      SHOOTER_D = 0.0;
-      SHOOTER_F = 0.0;
-
-      VELOCITY_MULTIPLIER_SHOOTER = 10000;
-      SHOOTER_SPEED_TOLERANCE = 0.25;
-      MANUAL_MODE_SHOOTER_SPEED = 1.0;
-
-      //Climber
-      CLIMBER_MOTOR_INVERTED = false;
-      CLIMBER_SENSOR = true;
-      HAS_CLIMBFOLLOWER = true;
-      CLIMB_MOTER_LEADER = 5;
-      CLIMB_MOTER_FOLLOWER = 6;
-
-      CLIMBER_P = 2;
-      CLIMBER_I = 0.0;
-      CLIMBER_D = 0.0;
-      CLIMBER_F = 0.0;
-
-      VELOCITY_MULTIPLIER_CLIMBER = 8200;
-      CLIMBER_PID_SLOT = 0;
-
-      HAS_CLIMB_TOP_SENSOR = true;
-      HAS_CLIMB_BOTTOM_SENSOR = true;
-      CLIMB_TOP_SENSOR_INVERTED = false;
-      CLIMB_BOTTOM_SENSOR_INVERTED = false;
-      CLIMB_TOP_SENSOR_CHANNEL = 5;
-      CLIMB_BOTTOM_SENSOR_CHANNEL = 4;
-      HAS_CLIMB_POT = true;
-      CLIMB_POT_CHANNEL = 0;
-
-      HAS_CLIMB_TILT_SWITCH = false;
-      CLIMB_TILT_SWITCH_INVERTED = false;
-      CLIMB_TILT_SWITCH_CHANNEL = 3;
-
-      HAS_CLIMBLOCK = false;
-      CLIMB_LOCK_CHANNEL = 0;
-      CLIMB_LOCK_INVERTED = false;
-
-      //Indexer 
-
-      FIRST_MAGAZINE_FEED_MOTOR_CHANNEL = 6;
-      FIRST_MAGAZINE_FEED_MOTOR_INVERTED = true;
-      SECOND_MAGAZINE_FEED_MOTOR_CHANNEL = 5;
-      SECOND_MAGAZINE_FEED_MOTOR_INVERTED = false;
-      INDEX_FOLLOWER_MOTOR = true;
-      
-      INDEXER_MOVE_TIMER = 0.2;
-      INDEXER_TOF_THRESHOLD = 100;
-     
-      INDEXER_FORWARD_SPEED = 1.0;
-      INDEXER_INVERSE_SPEED = -1.0;
-
-      break;
+      case ROBOT_2020:
+        HAS_WHEELS = true;
+        DRIVEMOTOR_NUM = 4;
+        WHEEL_CIRCUMFERENCE = 18.50;
+
+        GYRO_MULTIPLIER = 1.0;
+
+        CONTROLS_INVERTED_FB = true;
+        CONTROLS_INVERTED_TURN = true;
+
+        USE_VELOCITY_SPEED_CONTROL_FOR_TELOP = false;
+        VELOCITY_MULTIPLIER_RIGHT = 5700;
+        VELOCITY_MULTIPLIER_LEFT = 5700;
+
+        NORMAL_DRIVE_SPEED_MULTIPLIER = 0.8;
+        SLOW_DRIVE_SPEED_MULTIPLIER = 0.6;
+
+        LEFT_LEAD_CHANNEL = 1;
+        LEFT_FOLLOWER_1_CHANNEL = 2;
+        LEFT_DRIVE_SENSOR_IS_INVERTED = true;
+        LEFT_DRIVE_MOTOR_IS_INVERTED = false;
+
+        RIGHT_LEAD_CHANNEL = 3;
+        RIGHT_FOLLOWER_1_CHANNEL = 4;
+        RIGHT_DRIVE_SENSOR_IS_INVERTED = true;
+        RIGHT_DRIVE_MOTOR_IS_INVERTED = false;
+
+        // Linear PIDS
+        LEFT_DRIVE_PID_P = 0.0002;
+        LEFT_DRIVE_PID_I = 0.0;
+        LEFT_DRIVE_PID_D = 0.0;
+        LEFT_DRIVE_PID_F = 0.0;
+
+        RIGHT_DRIVE_PID_P = 0.0002;
+        RIGHT_DRIVE_PID_I = 0.0;
+        RIGHT_DRIVE_PID_D = 0.0;
+        RIGHT_DRIVE_PID_F = 0.0;
+
+        // CONTROLS_INVERTED_FB = false;
+        // CONTROLS_INVERTED_TURN = false;
+
+        VELOCITY_MULTIPLIER_RIGHT = 5700;
+        VELOCITY_MULTIPLIER_LEFT = 5700;
+
+        NORMAL_DRIVE_SPEED_MULTIPLIER = 0.8;
+        SLOW_DRIVE_SPEED_MULTIPLIER = 0.6;
+
+        // Game Pieces
+        HAS_SHOOTER = true;
+        HAS_INDEXER = true;
+        HAS_INTAKE = true;
+        HAS_CLIMBER = true;
+
+        // Shooter
+        // TODO:change the values of these later
+        SHOOTER_FOLLOWER = true;
+        SHOOTER_MOTOR_CHANNEL = 5;
+        SHOOTER_MOTOR_INVERTED = false;
+        SHOOTER_MOTOR_FOLLOWER_CHANNEL = 6;
+        SHOOTER_MOTOR_FOLLOWER_INVERTED = true;
+        SHOOTER_SMART_SHOT = true;
+
+        SHOOTER_SENSOR_INVERTED = true;
+
+        TRIGGER_MOTOR_CHANNEL = 7;
+        TRIGGER_MOTOR_INVERTED = true;
+        HAS_TRIGGER = true;
+        HAS_SHOOTER_TRIGGER = true;
+
+        SHOOTER_P = 2;
+        SHOOTER_I = 0.0;
+        SHOOTER_D = 0.0;
+        SHOOTER_F = 0.0;
+
+        VELOCITY_MULTIPLIER_SHOOTER = 10000;
+        SHOOTER_SPEED_TOLERANCE = 0.25;
+        MANUAL_MODE_SHOOTER_SPEED = 1.0; // TODO determine the speed
+
+        // Intake
+        // TODO: change the values of these later.
+        ARM_MOTOR_CHANNEL = 8;
+        ARM_MOTOR_INVERTED = false;
+        ROLLER_MOTOR_CHANNEL = 9;
+        ROLLER_MOTOR_INVERTED = true;
+
+        // Indexer
+        // TODO: change the values of these later.
+        FIRST_MAGAZINE_FEED_MOTOR_CHANNEL = 10;
+        INDEXER_MOTOR_INVERTED = true;
+        INDEX_FOLLOWER_MOTOR = false;
+        SECOND_MAGAZINE_FEED_MOTOR_CHANNEL = 11;
+        SECOND_MAGAZINE_FEED_MOTOR_INVERTED = true;
+
+        INDEXER_MOVE_TIMER = 1.0;
+        INDEXER_TOF_THRESHOLD = 100.0;
+
+        INDEXER_FORWARD_SPEED = -0.2;
+        INDEXER_INVERSE_SPEED = 0.2;
+
+        // Climber
+        CLIMBER_MOTOR_INVERTED = false;
+        CLIMBER_SENSOR = false;
+        HAS_CLIMBFOLLOWER = true;
+        CLIMB_MOTER_LEADER = 5;
+        CLIMB_MOTER_FOLLOWER = 6;
+
+        CLIMBER_P = 2;
+        CLIMBER_I = 0.0;
+        CLIMBER_D = 0.0;
+        CLIMBER_F = 0.0;
+
+        HAS_CLIMB_TOP_SENSOR = true;
+        HAS_CLIMB_BOTTOM_SENSOR = true;
+        CLIMB_TOP_SENSOR_INVERTED = false;
+        CLIMB_BOTTOM_SENSOR_INVERTED = false;
+        CLIMB_TOP_SENSOR_CHANNEL = 4;
+        CLIMB_BOTTOM_SENSOR_CHANNEL = 5;
+        HAS_CLIMB_POT = false;
+        CLIMB_POT_CHANNEL = 1;
+
+        HAS_CLIMB_TILT_SWITCH = true;
+        CLIMB_TILT_SWITCH_INVERTED = false;
+        CLIMB_TILT_SWITCH_CHANNEL = 3;
+
+        HAS_CLIMBLOCK = true;
+        CLIMB_LOCK_CHANNEL = 0;
+        CLIMB_LOCK_INVERTED = false;
+        HAS_SHOOTER_HOOD = true;
+        HOOD_LEFT_PWM_PORT = 2;
+        HOOD_RIGHT_PWM_PORT = 3;
+        HOOD_LEFT_INVERTED = false;
+        HOOD_RIGHT_INVERTED = true;
+        HOOD_MAX_ANGLE = 165;
+        HOOD_ADD_NOISE = false;
+
+        HOOD_LEFT_MIN = 0.65;
+        HOOD_RIGHT_MIN = 0.55;
+        HOOD_LEFT_MAX = 0.85;
+        HOOD_RIGHT_MAX = 0.77;
+        HOOD_LEFT_STARTING_POSITION = (HOOD_LEFT_MIN + HOOD_LEFT_MAX) / 2;
+        HOOD_RIGHT_STARTING_POSITION = (HOOD_RIGHT_MIN + HOOD_RIGHT_MAX) / 2;
+
+        HAS_SHOOTER_LEDS = false;
+        SHOOTER_LED_AMOUNT = 20;
+        SHOOTER_LED_CHANNEL = 1;
+        SHOOTER_DOUBLESIDE_LED = true;
+
+        break;
+
+      case KITBOT:
+      default:
+        HAS_WHEELS = true;
+        DRIVEMOTOR_NUM = 4;
+        WHEEL_CIRCUMFERENCE = 18.50;
+
+        GYRO_MULTIPLIER = -1.0;
+
+        // CONTROLS_INVERTED_FB = false;
+        // CONTROLS_INVERTED_TURN = false;
+
+        USE_VELOCITY_SPEED_CONTROL_FOR_TELOP = true;
+        VELOCITY_MULTIPLIER_RIGHT = 5700;
+        VELOCITY_MULTIPLIER_LEFT = 5700;
+
+        NORMAL_DRIVE_SPEED_MULTIPLIER = 0.8;
+        SLOW_DRIVE_SPEED_MULTIPLIER = 0.6;
+
+        NORMAL_VELOCITY_SPEED_MULTIPLIER = 0.9;
+        SLOW_VELOCITY_SPEED_MULTIPLIER = 0.7;
+
+        LEFT_LEAD_CHANNEL = 3;
+        LEFT_FOLLOWER_1_CHANNEL = 4;
+        LEFT_DRIVE_SENSOR_IS_INVERTED = true;
+        LEFT_DRIVE_MOTOR_IS_INVERTED = false;
+
+        RIGHT_LEAD_CHANNEL = 1;
+        RIGHT_FOLLOWER_1_CHANNEL = 2;
+        RIGHT_DRIVE_SENSOR_IS_INVERTED = true;
+        RIGHT_DRIVE_MOTOR_IS_INVERTED = false;
+
+        // Linear PIDS
+        LEFT_DRIVE_PID_P = 0.00015;
+        LEFT_DRIVE_PID_I = 0.0;
+        LEFT_DRIVE_PID_D = 0.0;
+        LEFT_DRIVE_PID_F = 0.0;
+
+        RIGHT_DRIVE_PID_P = 0.00015;
+        RIGHT_DRIVE_PID_I = 0.0;
+        RIGHT_DRIVE_PID_D = 0.0;
+        RIGHT_DRIVE_PID_F = 0.0;
+
+        // Turn PIDs
+        LEFT_TURN_PID_P = 0.00015;
+        LEFT_TURN_PID_I = 0.0;
+        LEFT_TURN_PID_D = 0.0;
+        LEFT_TURN_PID_F = 0.0;
+
+        RIGHT_TURN_PID_P = 0.00015;
+        RIGHT_TURN_PID_I = 0.0;
+        RIGHT_TURN_PID_D = 0.0;
+        RIGHT_TURN_PID_F = 0.0;
+
+        CLOSED_LOOP_RAMP_RATE = 0.5;
+        OPEN_LOOP_RAMP_RATE = 0.0;
+
+        // Cameras
+        FORWARD_CAMERA_INDEX = 0;
+        BACKWARD_CAMERA_INDEX = 1;
+        HAS_CAMERA = false;
+        AUTO_CAMERA = false;
+        AUTOALIGN_TURN_SPEED = 0.2;
+
+        // Game Pieces
+        HAS_SHOOTER = true;
+        HAS_INDEXER = false;
+        HAS_INTAKE = false;
+        HAS_CLIMBER = false;
+
+        // Shooter
+        // TODO:change the values of these later
+        SHOOTER_FOLLOWER = true;
+        SHOOTER_MOTOR_CHANNEL = 5;
+        SHOOTER_MOTOR_INVERTED = true;
+        SHOOTER_MOTOR_FOLLOWER_INVERTED = true;
+        SHOOTER_MOTOR_FOLLOWER_CHANNEL = 6;
+        SHOOTER_SMART_SHOT = true;
+
+        TRIGGER_MOTOR_CHANNEL = 6;
+        HAS_TRIGGER = true;
+        HAS_SHOOTER_TRIGGER = true;
+
+        HAS_SHOOTER_HOOD = true;
+        HOOD_LEFT_PWM_PORT = 0;
+        HOOD_RIGHT_PWM_PORT = 1;
+        HOOD_LEFT_INVERTED = false;
+        HOOD_RIGHT_INVERTED = true;
+        HOOD_MAX_ANGLE = 165;
+        HOOD_ADD_NOISE = false;
+
+        HOOD_LEFT_MIN = 0.65;
+        HOOD_RIGHT_MIN = 0.55;
+        HOOD_LEFT_MAX = 0.85;
+        HOOD_RIGHT_MAX = 0.77;
+        HOOD_LEFT_STARTING_POSITION = (HOOD_LEFT_MIN + HOOD_LEFT_MAX) / 2;
+        HOOD_RIGHT_STARTING_POSITION = (HOOD_RIGHT_MIN + HOOD_RIGHT_MAX) / 2;
+
+        HAS_SHOOTER_LEDS = false;
+        SHOOTER_LED_AMOUNT = 20;
+        SHOOTER_LED_CHANNEL = 2;
+        SHOOTER_DOUBLESIDE_LED = true;
+
+        SHOOTER_SENSOR_INVERTED = false;
+
+        SHOOTER_P = 2;
+        SHOOTER_I = 0.0;
+        SHOOTER_D = 0.0;
+        SHOOTER_F = 0.0;
+
+        VELOCITY_MULTIPLIER_SHOOTER = 10000;
+        SHOOTER_SPEED_TOLERANCE = 0.25;
+        MANUAL_MODE_SHOOTER_SPEED = 1.0;
+
+        // Climber
+        CLIMBER_MOTOR_INVERTED = false;
+        CLIMBER_SENSOR = true;
+        HAS_CLIMBFOLLOWER = true;
+        CLIMB_MOTER_LEADER = 5;
+        CLIMB_MOTER_FOLLOWER = 6;
+
+        CLIMBER_P = 2;
+        CLIMBER_I = 0.0;
+        CLIMBER_D = 0.0;
+        CLIMBER_F = 0.0;
+
+        VELOCITY_MULTIPLIER_CLIMBER = 8200;
+        CLIMBER_PID_SLOT = 0;
+
+        HAS_CLIMB_TOP_SENSOR = true;
+        HAS_CLIMB_BOTTOM_SENSOR = true;
+        CLIMB_TOP_SENSOR_INVERTED = false;
+        CLIMB_BOTTOM_SENSOR_INVERTED = false;
+        CLIMB_TOP_SENSOR_CHANNEL = 5;
+        CLIMB_BOTTOM_SENSOR_CHANNEL = 4;
+        HAS_CLIMB_POT = true;
+        CLIMB_POT_CHANNEL = 0;
+
+        HAS_CLIMB_TILT_SWITCH = false;
+        CLIMB_TILT_SWITCH_INVERTED = false;
+        CLIMB_TILT_SWITCH_CHANNEL = 3;
+
+        HAS_CLIMBLOCK = false;
+        CLIMB_LOCK_CHANNEL = 0;
+        CLIMB_LOCK_INVERTED = false;
+
+        // Indexer
+
+        FIRST_MAGAZINE_FEED_MOTOR_CHANNEL = 6;
+        FIRST_MAGAZINE_FEED_MOTOR_INVERTED = true;
+        SECOND_MAGAZINE_FEED_MOTOR_CHANNEL = 5;
+        SECOND_MAGAZINE_FEED_MOTOR_INVERTED = false;
+        INDEX_FOLLOWER_MOTOR = true;
+
+        INDEXER_MOVE_TIMER = 0.2;
+        INDEXER_TOF_THRESHOLD = 100;
+
+        INDEXER_FORWARD_SPEED = 1.0;
+        INDEXER_INVERSE_SPEED = -1.0;
+
+        break;
     }
 
     // These calculations can be made after the robot-specific constants are set.
@@ -591,7 +566,7 @@ public class RobotMap {
   public static double CLIMBER_D;
   public static double CLIMBER_F;
   public static double VELOCITY_MULTIPLIER_CLIMBER;
-  
+
   // Shooter
   public static boolean HAS_SHOOTER = false;
   public static boolean HAS_TRIGGER = false;
@@ -645,8 +620,7 @@ public class RobotMap {
   public static boolean ARM_TOP_LIMIT_INVERTED = false;
   public static boolean ARM_BOTTOM_LIMIT_INVERTED = false;
 
-
-  //INDEXER 
+  // INDEXER
   public static boolean HAS_INDEXER = false;
   public static boolean INDEXER_FOLLOWER = false;
   public static int FIRST_MAGAZINE_FEED_MOTOR_CHANNEL;
@@ -660,8 +634,7 @@ public class RobotMap {
   public static double INDEXER_FORWARD_SPEED;
   public static double INDEXER_INVERSE_SPEED;
 
-
   public static double INDEXER_MOVE_TIMER;
-  //distance threshold in mm for detecting a ball
+  // distance threshold in mm for detecting a ball
   public static double INDEXER_TOF_THRESHOLD;
 }

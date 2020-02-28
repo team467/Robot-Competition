@@ -56,23 +56,22 @@ public class GamePieceController {
   public boolean RobotAligned = true;// TODO determine where this is set
 
   // DS controls
-  public boolean IndexAuto = true;
-  public boolean ShooterAuto = true;
-  public boolean armPosition = false; // TODO get inputs from DS class
-  public boolean rollerStateIN = false;
-  public boolean rollerStateOUT = false;
-  public boolean fireWhenReady = false;
-  public boolean triggerManual = false;
-  public boolean flywheelManual = false;
-  public boolean climberDownButtonPressed = false;
-  public boolean climberUpButtonPressed = false;
-  public boolean climberEnabled = false;
+  public boolean IndexAuto = driverStation.getIndexerAutoMode();
+  public boolean ShooterAuto = driverStation.getShooterAutoMode();
+  public boolean armPosition = driverStation.getIntakeUp(); // TODO get inputs from DS class
+  public boolean rollerStateIN = driverStation.getIntakeFeed();
+  public boolean rollerStateOUT = driverStation.getIntakeReverse();
+
+  public boolean fireWhenReady = driverStation.getShootButton();
+  public boolean triggerManual = (driverStation.getShooterManualMode()) ? driverStation.getShootButton() : false;
+  public boolean flywheelManual = driverStation.getFlywheelEnabled();
+  public boolean climberDownButtonPressed = driverStation.getClimbDown();
+  public boolean climberUpButtonPressed = driverStation.getClimbUp();
+  public boolean climberEnabled = driverStation.getClimberEnable();
   public double shooterSpeed = 0.9;
   public static double shooterPreviousSpeed;
-  public boolean upButtonPressed = false;
-  public boolean downButtonPressed = false;
-  public boolean indexerBallsReverse = false;
-  public boolean indexerBallsForward = false;
+  public boolean indexerBallsReverse = driverStation.getIndexerReverse();
+  public boolean indexerBallsForward = driverStation.getIndexerFeed();
   
   // climber state tuner
   public boolean climberForceEnabled = false;
@@ -158,26 +157,26 @@ public class GamePieceController {
       climberSM.step();
 
     // roller controls
-    // if (RobotMap.HAS_INTAKE) {
-    //   if (armPosition && !climberEnabled) {
-    //     intake.setIntakeArm(IntakerArm.ARM_UP);
-    //   } else {
-    //     intake.setIntakeArm(IntakerArm.ARM_DOWN);
-    //   }
+    if (RobotMap.HAS_INTAKE) {
+      if (armPosition && !climberEnabled) {
+        intake.setIntakeArm(IntakerArm.ARM_UP);
+      } else {
+        intake.setIntakeArm(IntakerArm.ARM_DOWN);
+      }
 
-    //   if (rollerStateIN && !climberEnabled) {
-    //     intake.setIntakeRoller(IntakerRollers.ROLLERS_IN);
-    //   } else if (rollerStateOUT) {
-    //     intake.setIntakeRoller(IntakerRollers.ROLLERS_OUT);
-    //   } else {
-    //     intake.setIntakeRoller(IntakerRollers.ROLLERS_OFF);
-    //   }
+      if (rollerStateIN && !climberEnabled) {
+        intake.setIntakeRoller(IntakerRollers.ROLLERS_IN);
+      } else if (rollerStateOUT) {
+        intake.setIntakeRoller(IntakerRollers.ROLLERS_OUT);
+      } else {
+        intake.setIntakeRoller(IntakerRollers.ROLLERS_OFF);
+      }
 
-    //   if (climberEnabled) {
-    //     intake.setIntakeArm(IntakerArm.ARM_UP);
-    //   }
+      if (climberEnabled) {
+        intake.setIntakeArm(IntakerArm.ARM_UP);
+      }
 
-    // }
+    }
   }
 
   DriverInput forceCellsForward = DriverInput.USE_DRIVER_INPUT;
@@ -218,7 +217,7 @@ public class GamePieceController {
         return false;
     }
     boolean feed = false;
-    if (driverStation.getIntakeFeed()) {
+    if (driverStation.getIndexerFeed()) {
       return true;
     }
     return feed;
@@ -240,10 +239,6 @@ public class GamePieceController {
     }
     return reverse;
   }
-
-  // public void determineShooterSpeed() {
-  //   shooterSpeed = visionController.determineShooterSpeed();
-  // }
   
   public void determineShooterSpeed() {
     // math
