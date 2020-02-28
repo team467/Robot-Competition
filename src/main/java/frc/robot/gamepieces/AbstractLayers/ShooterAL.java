@@ -24,6 +24,8 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 
+import java.util.Random;
+
 public class ShooterAL extends GamePieceBase implements GamePiece {
 
   private static ShooterAL instance = null;
@@ -43,8 +45,8 @@ public class ShooterAL extends GamePieceBase implements GamePiece {
   public static TalonSpeedControllerGroup trigger;
   
 
-  public static Servo hoodLeader;
-  public static Servo hoodFollower;
+  public static Servo hoodLeft;
+  public static Servo hoodRight;
 
   private static AddressableLED leds;
   private static AddressableLEDBuffer ledBuffer;
@@ -89,16 +91,15 @@ public class ShooterAL extends GamePieceBase implements GamePiece {
       }
 
       if (RobotMap.HAS_SHOOTER_HOOD) {
-        hoodLeader = new Servo(RobotMap.HOOD_PWM_PORT);
-        hoodFollower = null;
+        hoodLeft = new Servo(RobotMap.HOOD_LEFT_PWM_PORT);
+        hoodRight = new Servo(RobotMap.HOOD_RIGHT_PWM_PORT);
 
-        if (RobotMap.HOOD_FOLLOWER) {
-          hoodFollower = new Servo(RobotMap.HOOD_FOLLOWER_PWM_PORT);
-        }
+        hoodLeft.set(RobotMap.HOOD_LEFT_STARTING_POSITION);
+        hoodRight.set(RobotMap.HOOD_RIGHT_STARTING_POSITION);
 
       } else {
-        hoodLeader = null;
-        hoodFollower = null;
+        hoodLeft = null;
+        hoodRight = null;
       }
 
       if (RobotMap.HAS_SHOOTER_LEDS) {
@@ -232,28 +233,93 @@ public class ShooterAL extends GamePieceBase implements GamePiece {
     setLedStrip(0, 0, 0, 0, ledBuffer.getLength()-1);
   }
 
-  public void setHoodAngle(double angle) {
-    if (hoodLeader != null && RobotMap.HAS_SHOOTER_HOOD) {
-      if (RobotMap.HOOD_INVERTED) {
-        angle = Math.abs(RobotMap.HOOD_MAX_ANGLE - angle);
-      }
-
-      hoodLeader.setAngle(angle);
-
-      if (hoodFollower != null && RobotMap.HOOD_FOLLOWER) {
-        double followerAngle = angle;
-        if (RobotMap.HOOD_FOLLOWER_INVERTED) {
-          followerAngle = Math.abs(RobotMap.HOOD_MAX_ANGLE - followerAngle);
-        }
-        hoodFollower.setAngle(followerAngle);
-      } 
+  public void setHoodAngle(double leftAngle, double rightAngle) {
+    if (hoodLeft != null && hoodRight != null && RobotMap.HAS_SHOOTER_HOOD) {
+      setLeftHoodAngle(leftAngle);
+      setRightHoodAngle(rightAngle);
     }
   }
 
-  public double getHoodAngle() {
+  public void setLeftHoodAngle(double angle) {
+    if (hoodLeft != null && RobotMap.HAS_SHOOTER_HOOD) {
+      angle = Math.max(0, Math.min(1, angle));
+
+      if (RobotMap.HOOD_LEFT_INVERTED) {
+        angle = Math.abs(angle-1);
+      }
+
+      if (RobotMap.HOOD_ADD_NOISE) {
+        angle = angle + ((new Random().nextInt(101)-50)/10000);
+      }
+
+      angle = (angle * (RobotMap.HOOD_LEFT_MAX - RobotMap.HOOD_LEFT_MIN)) - RobotMap.HOOD_LEFT_MIN;
+
+      hoodLeft.set(angle);
+    }
+  }
+
+  public void setRightHoodAngle(double angle) {
+    if (hoodRight != null && RobotMap.HAS_SHOOTER_HOOD) {
+      angle = Math.max(0, Math.min(1, angle));
+
+      if (RobotMap.HOOD_RIGHT_INVERTED) {
+        angle = Math.abs(angle-1);
+      }
+
+      if (RobotMap.HOOD_ADD_NOISE) {
+        angle = angle + ((new Random().nextInt(101)-50)/10000);
+      }
+
+      angle = (angle * (RobotMap.HOOD_RIGHT_MAX - RobotMap.HOOD_RIGHT_MIN)) - RobotMap.HOOD_RIGHT_MIN;
+
+      hoodRight.set(angle);
+    }
+  }
+
+  public void setLeftHoodAngleRaw(double angle) {
+    if (hoodLeft != null && RobotMap.HAS_SHOOTER_HOOD) {
+      angle = Math.max(RobotMap.HOOD_LEFT_MIN, Math.min(RobotMap.HOOD_LEFT_MAX, angle));
+
+      if (RobotMap.HOOD_LEFT_INVERTED) {
+        angle = Math.abs(angle-1);
+      }
+
+      if (RobotMap.HOOD_ADD_NOISE) {
+        angle = angle + ((new Random().nextInt(101)-50)/10000);
+      }
+
+      hoodLeft.set(angle);
+    }
+  }
+
+  public void setRightHoodAngleRaw(double angle) {
+    if (hoodRight != null && RobotMap.HAS_SHOOTER_HOOD) {
+      angle = Math.max(RobotMap.HOOD_RIGHT_MIN, Math.min(RobotMap.HOOD_RIGHT_MAX, angle));
+
+      if (RobotMap.HOOD_RIGHT_INVERTED) {
+        angle = Math.abs(angle-1);
+      }
+
+      if (RobotMap.HOOD_ADD_NOISE) {
+        angle = angle + ((new Random().nextInt(101)-50)/10000);
+      }
+
+      hoodRight.set(angle);
+    }
+  }
+
+  public double getLeftHoodAngle() {
     double angle = 0;
-    if (hoodLeader != null && RobotMap.HAS_SHOOTER_HOOD) {
-      angle = hoodLeader.getAngle();
+    if (hoodLeft != null && RobotMap.HAS_SHOOTER_HOOD) {
+      angle = hoodLeft.getAngle();
+    }
+    return angle;
+  }
+
+  public double getRightHoodAngle() {
+    double angle = 0;
+    if (hoodRight != null && RobotMap.HAS_SHOOTER_HOOD) {
+      angle = hoodRight.getAngle();
     }
     return angle;
   }
