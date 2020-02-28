@@ -53,7 +53,7 @@ public class IntakeState {
             IntakeAL.callBackward();
             break;
         case ROLLERS_OUT:
-            IntakeAL.callFoward();
+            IntakeAL.callForward();
             break;
         default:
         case ROLLERS_OFF:
@@ -82,7 +82,7 @@ public class IntakeState {
             IntakeAL.callBackward();
             break;
         case ROLLERS_OUT:
-            IntakeAL.callFoward();
+            IntakeAL.callForward();
             break;
         default:
         case ROLLERS_OFF:

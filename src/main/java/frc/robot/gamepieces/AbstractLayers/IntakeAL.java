@@ -76,7 +76,7 @@ public class IntakeAL extends GamePieceBase implements GamePiece {
         IntakeAL.getInstance().setDown();
     }
 
-    public static void callFoward() {
+    public static void callForward() {
         IntakeAL.getInstance().setForward();
     }
 

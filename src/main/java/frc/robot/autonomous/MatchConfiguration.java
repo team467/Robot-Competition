@@ -10,7 +10,7 @@ import frc.robot.logging.RobotLogManager;
 import org.apache.logging.log4j.Logger;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-/** 
+/**
  * This class determines the robots position during the beginning of the game.
  *
  */
@@ -18,39 +18,35 @@ public class MatchConfiguration {
 
   private static MatchConfiguration instance;
 
-  private static final Logger LOGGER 
-      = RobotLogManager.getMainLogger(MatchConfiguration.class.getName());
+  private static final Logger LOGGER = RobotLogManager.getMainLogger(MatchConfiguration.class.getName());
 
   public enum TeamColor {
-    UNKNOWN,
-    RED,
-    BLUE;
+    UNKNOWN, RED, BLUE;
   }
 
   public enum Side {
-    UNKNOWN,
-    LEFT,
-    RIGHT;
+    UNKNOWN, LEFT, RIGHT;
   }
 
   private TeamColor teamColor;
 
-  private String autoMode = "None"; 
+  private String autoMode = "None";
 
   private ActionGroup autonomous;
 
-  private String[] autolist= {"None","Shoot Basic"};
+  private String[] autolist = { "None", "Shoot Basic", "Collect And Shoot", "Shoot from LB", "Shoot From PP",
+      "Shoot From PS1", "Get Out Of The Way", "Shoot From Left", "Shoot From Right" };
 
   private SendableChooser<String> chooser = new SendableChooser<String>();
 
   private MatchConfiguration() {
     teamColor = TeamColor.UNKNOWN;
 
-    for(String s : autolist) {
-      chooser.addOption(s,s);
+    for (String s : autolist) {
+      chooser.addOption(s, s);
     }
 
-    SmartDashboard.putData("Auto Chooser", chooser);  
+    SmartDashboard.putData("Auto Chooser", chooser);
 
   }
 
@@ -62,7 +58,7 @@ public class MatchConfiguration {
   }
 
   public void setAllianceColor() {
-    Alliance color; 
+    Alliance color;
 
     color = DriverStation.getInstance().getAlliance();
 
@@ -75,7 +71,7 @@ public class MatchConfiguration {
     } else {
       LOGGER.info("Alliance not found");
       teamColor = TeamColor.UNKNOWN;
-    } 
+    }
   }
 
   public void setAutoModeAndStartPosition() {
@@ -85,32 +81,48 @@ public class MatchConfiguration {
 
   public ActionGroup AutoDecisionTree() {
     autonomous = Actions.doNothing();
-		
-		// if (autoMode.startsWith("Left")) {
-		// 	Actions.startOnLeft();
-		// } else if (autoMode.startsWith("Right")) {
-		// 	Actions.startOnRight();
-		// } else {
-		// 	Actions.startInCenter();
-		// }
 
+    // if (autoMode.startsWith("Left")) {
+    // Actions.startOnLeft();
+    // } else if (autoMode.startsWith("Right")) {
+    // Actions.startOnRight();
+    // } else {
+    // Actions.startInCenter();
+    // }
 
-		switch(autoMode) {
+    switch (autoMode) {
       case "None":
         autonomous = Actions.doNothing();
-          break;
+        break;
       case "Shoot Basic":
         autonomous = Actions.shootGroup();
         break;
+      case "Collect And Shoot":
+        autonomous = Actions.collectAndShoot();
+        break;
+      case "Shoot from LB":
+        autonomous = Actions.shootLB();
+        break;
+      case "Shoot From PP":
+        autonomous = Actions.shootPP();
+        break;
+      case "Shoot From PS1":
+        autonomous = Actions.shootPS1();
+        break;
+      case "Get Out Of The Way":
+        autonomous = Actions.noShoot();
+      case "Shoot From Left":
+        autonomous = Actions.leftSide();
+      case "Shoot From Right":
+        autonomous = Actions.rightSide();
       default:
-       Actions.doNothing();
+        Actions.doNothing();
     }
 
     autonomous.enable();
 
     return autonomous;
-  } 
-
+  }
 
   public void load() {
     LOGGER.debug("Loading game info.");
