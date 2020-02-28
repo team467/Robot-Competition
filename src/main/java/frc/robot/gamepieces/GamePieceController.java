@@ -218,7 +218,7 @@ public class GamePieceController {
         return false;
     }
     boolean feed = false;
-    if (driverStation.getIntakeFeed()) {
+    if (driverStation.getIndexerFeed()) {
       return true;
     }
     return feed;
