@@ -48,9 +48,9 @@ public class ClimberAL extends GamePieceBase implements GamePiece {
 
     // states of robot
     private climberSpeed speed;
-    // threshold
-    private double lowestPoint = 1.0; // TODO: determine threshold value
-    private double highestPoint = 5.0; // TODO: determine threshold value
+    // threshold TODO determine these values, wait til climber is avaliable
+    private double lowestPoint = 1.0; 
+    private double highestPoint = 5.0; 
 
     // climber tuner
     public boolean hasHighestPoint = false;
@@ -67,15 +67,15 @@ public class ClimberAL extends GamePieceBase implements GamePiece {
         this.speed = speed;
     }
 
-    public boolean isDown() { // TODO: equal to or not
-        if (getBottomSensor() || climberPosition() <= lowestPoint) {
+    public boolean isDown() { 
+        if (getBottomSensor() || potentiometerPosition() <= lowestPoint) {
             return true;
         }
         return false;
     }
 
-    public boolean isUp() { // TODO: equal or not
-        if (getTopSensor() || climberPosition() >= highestPoint) {
+    public boolean isUp() { 
+        if (getTopSensor() || potentiometerPosition() >= highestPoint) {
             return true;
         }
         return false;
@@ -88,7 +88,7 @@ public class ClimberAL extends GamePieceBase implements GamePiece {
         return false;
     }
 
-    public double climberPosition() {
+    public double potentiometerPosition() {
         double result = 0;
         if (potentiometer != null && RobotMap.HAS_CLIMB_POT) {
             result = potentiometer.get();
@@ -163,7 +163,7 @@ public class ClimberAL extends GamePieceBase implements GamePiece {
         LOGGER.debug("Climber Has Stopped");
     }
 
-    public void climberUp() {
+    public void climberUp() { //TODO change speed, wait til climber is avaliable
         climbGroup.set(0.5);
         LOGGER.debug("CLimber Is Going Up");
     }
@@ -174,7 +174,7 @@ public class ClimberAL extends GamePieceBase implements GamePiece {
     }
 
     public void climberUpSlow() {
-        climbGroup.set(0.1); // TODO: how slow? 5%?
+        climbGroup.set(0.1); 
         LOGGER.debug("Climber Is Going Up Slowly");
     }
 
@@ -331,6 +331,4 @@ public class ClimberAL extends GamePieceBase implements GamePiece {
     @Override
     public void checkSystem() {
     }
-
-    // TODO: tie climbersm to gpc, check how shooter is done
 }
