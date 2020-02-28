@@ -40,8 +40,6 @@ public class DriverStation467 {
 
     driverRumbler = new Rumbler(driverJoy);
     // navRumbler = new Rumbler(navJoy);
-
-    registerMetrics();
   }
 
   /**
@@ -180,33 +178,4 @@ public class DriverStation467 {
   public boolean getClimbDown() {
     return opCon.down(12);
   }
-
-  public void registerMetrics() {
-    Telemetry telemetry = Telemetry.getInstance(); 
-    if (RobotMap.ENABLE_DRIVER_STATION_TELEMETRY && !RobotMap.useSimulator) {
-      // telemetry.addBooleanMetric("Input Restart Camera", this::restartCamera);
-      // telemetry.addBooleanMetric("Input Drive Camera Front", this::getDriveCameraFront);
-      // telemetry.addBooleanMetric("Input Drive Camera Back", this::getDriveCameraBack);
-      // telemetry.addBooleanMetric("Input Disable Safety", this::getDisableSafety);
-      // telemetry.addBooleanMetric("Input Defense Mode", this::getDefenseMode);
-      // telemetry.addBooleanMetric("Input Hatch Mode", this::getHatchMode);
-      // telemetry.addBooleanMetric("Input Cargo Mode", this::getCargoMode);
-      // telemetry.addBooleanMetric("Input Intake Up", this::getIntakeUp);
-      // telemetry.addBooleanMetric("Input Intake Down", this::getIntakeDown);
-      // telemetry.addBooleanMetric("Input Acquire Ball", this::getAcquireBall);
-      // telemetry.addBooleanMetric("Input Fire Cargo", this::getFireCall);
-      // telemetry.addBooleanMetric("Input Wrist - Cargo Ship", 
-      //     this::getCargoWristCargoShipPosition);
-      // telemetry.addBooleanMetric("Input Fire Hatch", this::getFireHatch);
-      // telemetry.addBooleanMetric("Input Reject Ball", this::getRejectBall);
-      // telemetry.addBooleanMetric("Input Intake Ball", this::getIntakeBall);
-      // telemetry.addBooleanMetric("Input Turret Home", this::getTurretHome);
-      // telemetry.addBooleanMetric("Input Turret Left", this::getTurretLeft);
-      // telemetry.addBooleanMetric("Input Turret Right", this::getTurretRight);
-      // telemetry.addBooleanMetric("Input Target Lock", this::getAutoTargetButtonPressed);
-      // telemetry.addDoubleMetric("Input Arcade Speed", this::getArcadeSpeed);
-      // telemetry.addDoubleMetric("Input Arcade Turn", this::getArcadeTurn);
-    }
-  }
-
 }
