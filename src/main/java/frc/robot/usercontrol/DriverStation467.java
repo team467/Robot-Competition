@@ -8,11 +8,11 @@ import frc.robot.usercontrol.XBoxJoystick467.Button;
 public class DriverStation467 {
 
   private XBoxJoystick467 driverJoy;
-  private XBoxJoystick467 navJoy;
+  // private XBoxJoystick467 navJoy;
   private OperatorController467 opCon;
 
   private Rumbler driverRumbler;
-  private Rumbler navRumbler;
+  // private Rumbler navRumbler;
 
   private static DriverStation467 station;
 
@@ -35,11 +35,11 @@ public class DriverStation467 {
    */
   private DriverStation467() {
     driverJoy = new XBoxJoystick467(0, "driver");
-    navJoy = new XBoxJoystick467(1, "nav");
+    // navJoy = new XBoxJoystick467(1, "nav");
     opCon = new OperatorController467(1);
 
     driverRumbler = new Rumbler(driverJoy);
-    navRumbler = new Rumbler(navJoy);
+    // navRumbler = new Rumbler(navJoy);
 
     registerMetrics();
   }
@@ -52,10 +52,10 @@ public class DriverStation467 {
       driverJoy.read();
       driverRumbler.periodic();
     }
-    if (navJoy != null) {
-      navJoy.read();
-      navRumbler.periodic();
-    }
+    // if (navJoy != null) {
+    //   navJoy.read();
+    //   navRumbler.periodic();
+    // }
     if (opCon != null) {
       opCon.read();
     }
@@ -65,9 +65,9 @@ public class DriverStation467 {
     if (driverJoy != null) {
       driverJoy.logIdentity();
     }
-    if (navJoy != null) {
-      navJoy.logIdentity();
-    }
+    // if (navJoy != null) {
+    //   navJoy.logIdentity();
+    // }
   }
 
   /**
@@ -79,9 +79,9 @@ public class DriverStation467 {
     return driverJoy;
   }
 
-  public XBoxJoystick467 getNavJoystick() {
-    return navJoy;
-  }
+  // public XBoxJoystick467 getNavJoystick() {
+    // return navJoy;
+  // }
 
   public OperatorController467 getOperatorController() {
     return opCon;
@@ -91,9 +91,9 @@ public class DriverStation467 {
     return driverRumbler;
   }
 
-  public Rumbler getNavRumbler() {
-    return navRumbler;
-  }
+  // public Rumbler getNavRumbler() {
+  //   return navRumbler;
+  // }
 
   public double getTurnSensivity() {
     return 0.0;
@@ -121,170 +121,91 @@ public class DriverStation467 {
 
   // indexer TODO change later
 
-  public boolean getIndexerAutoMode() {
-    return navJoy.pressed(Button.b);
-  }
-
-  public boolean indexerManualMove() {
-    return navJoy.pov() == 180;
-  }
-
-  public boolean indexerFeed() {
-    return false;
-  }
-
-  public boolean indexerReverse() {
-      return false;
-  }
-
-  public boolean getCargoWristCargoShipPosition() {
-    // Nav
-    return navJoy.pov() == 180;
-  }
-
-  public boolean getAutoTargetButtonPressed() {
-    // Nav
-    // TODO: check if implemented
-    return navJoy.pressed(Button.a);
-  }
-
-  public boolean getTurretRight() {
-    // Nav
-    return navJoy.pressed(Button.b);
-  }
-
-  public boolean getTurretHome() {
-    // Nav
-    return navJoy.pressed(Button.y);
-  }
-
-  public boolean getTurretLeft() {
-    // NAV
-    return navJoy.pressed(Button.x);
-  }
-
-  public boolean getHatchMode() {
-    // NAV navJoy.down(Button.BumperLeft)
-    return navJoy.getLeftTrigger() > 0.9;
-  }
-
-  public boolean getCargoMode() {
-    return navJoy.getRightTrigger() > 0.9;
-  }
-
-  public boolean getFireCall() {
-    return navJoy.down(Button.BumperLeft);
-  }
-
-  public void navSetLeftRumble(double value) {
-    navJoy.leftRumble(value);
-  }
-
-  public void navSetRightRumble(double value) {
-    navJoy.rightRumble(value);
-  }
-
-  // Driver controls
-
-  public double getArcadeSpeed() {
-    return (RobotMap.CONTROLS_INVERTED_FB == true) ? -driverJoy.getAdjustedSpeed(driverJoy.getLeftStickY())
-        : driverJoy.getAdjustedSpeed(driverJoy.getLeftStickY());
-  }
-
-  public double getArcadeTurn() {
-    return (RobotMap.CONTROLS_INVERTED_TURN == true) ? -driverJoy.getAdjustedTurnSpeed()
-        : driverJoy.getAdjustedTurnSpeed();
-  }
-
-  public boolean getDriveCameraBack() {
-    return driverJoy.pov() == 0;
-  }
-
-  public boolean getDriveCameraFront() {
-    return driverJoy.pov() == 180;
-  }
-
-  public boolean getAcquireBall() {
-    return navJoy.down(Button.y);
-  }
-
-  public boolean getDefenseMode() {
-    if (driverJoy.down(Button.start) == true && driverJoy.down(Button.back) == true) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  public boolean getRejectBall() {
-    return driverJoy.down(Button.BumperLeft);
-  }
-
-  public boolean getIntakeBall() {
-    return navJoy.down(Button.y);
-  }
-
-  public void driverSetLeftRumble(double value) {
-    driverJoy.leftRumble(value);
-  }
-
-  public void driverSetRightRumble(double value) {
-    driverJoy.rightRumble(value);
-  }
-
-  public boolean getFireHatch() {
-    return navJoy.down(Button.BumperLeft);
-  }
-
-  public boolean restartCamera() {
-    return navJoy.pressed(Button.start);
-  }
-
-  public boolean getSlow(){
-    return driverJoy.getRightTrigger() > 0.9;
-  }
-
-  public boolean getTurbo(){
-    return driverJoy.getLeftTrigger() > 0.9;
-  }
-
-  public boolean getDisableSafety() {
-    return driverJoy.down(Button.BumperRight);
-  }
-
   public boolean getIntakeUp() {
-    return driverJoy.down(Button.y);
+    return opCon.down(1);
   }
 
   public boolean getIntakeDown() {
-    return driverJoy.down(Button.a);
+    return !opCon.down(1);
+  }
+
+  public boolean getIntakeFeed() {
+    return opCon.down(2);
+  }
+
+  public boolean getIntakeReverse() {
+    return opCon.down(3);
+  }
+
+  public boolean getIndexerManualMode() {
+    return opCon.down(4);
+  }
+
+  public boolean getIndexerAutoMode() {
+    return !opCon.down(4);
+  }
+
+  public boolean getIndexerFeed() {
+    return opCon.down(5);
+  }
+
+  public boolean getIndexerReverse() {
+    return opCon.down(6);
+  }
+
+  public boolean getShooterManualMode() {
+    return opCon.down(7);
+  }
+
+  public boolean getShooterAutoMode() {
+    return !opCon.down(7);
+  }
+
+  public boolean getFlywheelEnabled() {
+    return opCon.down(8);
+  }
+
+  public boolean getShootButton() {
+    return opCon.down(9);
+  }
+
+  public boolean getClimberEnable() {
+    return opCon.down(10);
+  }
+
+  public boolean getClimbUp() {
+    return opCon.down(11);
+  }
+
+  public boolean getClimbDown() {
+    return opCon.down(12);
   }
 
   public void registerMetrics() {
     Telemetry telemetry = Telemetry.getInstance(); 
     if (RobotMap.ENABLE_DRIVER_STATION_TELEMETRY && !RobotMap.useSimulator) {
-      telemetry.addBooleanMetric("Input Restart Camera", this::restartCamera);
-      telemetry.addBooleanMetric("Input Drive Camera Front", this::getDriveCameraFront);
-      telemetry.addBooleanMetric("Input Drive Camera Back", this::getDriveCameraBack);
-      telemetry.addBooleanMetric("Input Disable Safety", this::getDisableSafety);
-      telemetry.addBooleanMetric("Input Defense Mode", this::getDefenseMode);
-      telemetry.addBooleanMetric("Input Hatch Mode", this::getHatchMode);
-      telemetry.addBooleanMetric("Input Cargo Mode", this::getCargoMode);
-      telemetry.addBooleanMetric("Input Intake Up", this::getIntakeUp);
-      telemetry.addBooleanMetric("Input Intake Down", this::getIntakeDown);
-      telemetry.addBooleanMetric("Input Acquire Ball", this::getAcquireBall);
-      telemetry.addBooleanMetric("Input Fire Cargo", this::getFireCall);
-      telemetry.addBooleanMetric("Input Wrist - Cargo Ship", 
-          this::getCargoWristCargoShipPosition);
-      telemetry.addBooleanMetric("Input Fire Hatch", this::getFireHatch);
-      telemetry.addBooleanMetric("Input Reject Ball", this::getRejectBall);
-      telemetry.addBooleanMetric("Input Intake Ball", this::getIntakeBall);
-      telemetry.addBooleanMetric("Input Turret Home", this::getTurretHome);
-      telemetry.addBooleanMetric("Input Turret Left", this::getTurretLeft);
-      telemetry.addBooleanMetric("Input Turret Right", this::getTurretRight);
-      telemetry.addBooleanMetric("Input Target Lock", this::getAutoTargetButtonPressed);
-      telemetry.addDoubleMetric("Input Arcade Speed", this::getArcadeSpeed);
-      telemetry.addDoubleMetric("Input Arcade Turn", this::getArcadeTurn);
+      // telemetry.addBooleanMetric("Input Restart Camera", this::restartCamera);
+      // telemetry.addBooleanMetric("Input Drive Camera Front", this::getDriveCameraFront);
+      // telemetry.addBooleanMetric("Input Drive Camera Back", this::getDriveCameraBack);
+      // telemetry.addBooleanMetric("Input Disable Safety", this::getDisableSafety);
+      // telemetry.addBooleanMetric("Input Defense Mode", this::getDefenseMode);
+      // telemetry.addBooleanMetric("Input Hatch Mode", this::getHatchMode);
+      // telemetry.addBooleanMetric("Input Cargo Mode", this::getCargoMode);
+      // telemetry.addBooleanMetric("Input Intake Up", this::getIntakeUp);
+      // telemetry.addBooleanMetric("Input Intake Down", this::getIntakeDown);
+      // telemetry.addBooleanMetric("Input Acquire Ball", this::getAcquireBall);
+      // telemetry.addBooleanMetric("Input Fire Cargo", this::getFireCall);
+      // telemetry.addBooleanMetric("Input Wrist - Cargo Ship", 
+      //     this::getCargoWristCargoShipPosition);
+      // telemetry.addBooleanMetric("Input Fire Hatch", this::getFireHatch);
+      // telemetry.addBooleanMetric("Input Reject Ball", this::getRejectBall);
+      // telemetry.addBooleanMetric("Input Intake Ball", this::getIntakeBall);
+      // telemetry.addBooleanMetric("Input Turret Home", this::getTurretHome);
+      // telemetry.addBooleanMetric("Input Turret Left", this::getTurretLeft);
+      // telemetry.addBooleanMetric("Input Turret Right", this::getTurretRight);
+      // telemetry.addBooleanMetric("Input Target Lock", this::getAutoTargetButtonPressed);
+      // telemetry.addDoubleMetric("Input Arcade Speed", this::getArcadeSpeed);
+      // telemetry.addDoubleMetric("Input Arcade Turn", this::getArcadeTurn);
     }
   }
 
