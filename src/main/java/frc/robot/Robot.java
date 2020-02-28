@@ -299,9 +299,9 @@ public class Robot extends TimedRobot {
     
     driverstation.readInputs();
     OperatorController467 opcon = driverstation.getOperatorController();
-    for (int i = 1; i <= opcon.getButtonCount(); i++) {
-      SmartDashboard.putBoolean("Button " + i, opcon.getRawButton(i));
-    }
+    // for (int i = 1; i <= opcon.getButtonCount(); i++) {
+    //   SmartDashboard.putBoolean("Button " + i, opcon.getRawButton(i));
+    // }
     // if (driverstation.restartCamera()) {
     //   camera.restart();
     // } else {
