@@ -182,7 +182,7 @@ public class Actions {
   }
 
   public static ActionGroup shootGroup() {
-    String actionGroupText = "doing nothing";
+    String actionGroupText = "shoots";
     ActionGroup mode = new ActionGroup(actionGroupText);
     mode.addAction(Shoot());
     mode.addAction(moveDistanceForward(10));
@@ -311,7 +311,7 @@ public class Actions {
    */
   public static ActionGroup noShoot() {
     // stuff
-    String actionGroupText = "shoot from player station 1";
+    String actionGroupText = "dont shoot and back up";
     ActionGroup mode = new ActionGroup(actionGroupText);
     mode.addActions(move(-10));
     return mode;
@@ -319,7 +319,7 @@ public class Actions {
 
   // TODO change names
   public static ActionGroup leftSide() {
-    String actionGroupText = "aims at the target and shoot";
+    String actionGroupText = "shoot from left side";
     double thing;
     ActionGroup mode = new ActionGroup(actionGroupText);
     mode.addAction(Shoot());
@@ -332,7 +332,7 @@ public class Actions {
   }
 
   public static ActionGroup rightSide() {
-    String actionGroupText = "aims at the target and shoot";
+    String actionGroupText = "shoot from right side";
     ActionGroup mode = new ActionGroup(actionGroupText);
     mode.addActions(move(-12));
     mode.addActions(turn(42));
