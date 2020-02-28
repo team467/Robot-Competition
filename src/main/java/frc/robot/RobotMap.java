@@ -141,14 +141,17 @@ public class RobotMap {
         GYRO_MULTIPLIER = 1.0;
 
         CONTROLS_INVERTED_FB = true;
-        CONTROLS_INVERTED_TURN = true;
+        CONTROLS_INVERTED_TURN = false;
 
-        USE_VELOCITY_SPEED_CONTROL_FOR_TELOP = false;
+        USE_VELOCITY_SPEED_CONTROL_FOR_TELOP = true;
         VELOCITY_MULTIPLIER_RIGHT = 5700;
         VELOCITY_MULTIPLIER_LEFT = 5700;
 
         NORMAL_DRIVE_SPEED_MULTIPLIER = 0.8;
         SLOW_DRIVE_SPEED_MULTIPLIER = 0.6;
+
+        NORMAL_VELOCITY_SPEED_MULTIPLIER = 0.9;
+        SLOW_VELOCITY_SPEED_MULTIPLIER = 0.7;
 
         LEFT_LEAD_CHANNEL = 1;
         LEFT_FOLLOWER_1_CHANNEL = 2;
@@ -244,6 +247,11 @@ public class RobotMap {
         CLIMBER_D = 0.0;
         CLIMBER_F = 0.0;
 
+        RIGHT_DRIVE_PID_P = 0.00015;
+        RIGHT_DRIVE_PID_I = 0.0;
+        RIGHT_DRIVE_PID_D = 0.0;
+        RIGHT_DRIVE_PID_F = 0.0;
+
         HAS_CLIMB_TOP_SENSOR = true;
         HAS_CLIMB_BOTTOM_SENSOR = true;
         CLIMB_TOP_SENSOR_INVERTED = false;
@@ -256,6 +264,11 @@ public class RobotMap {
         HAS_CLIMB_TILT_SWITCH = true;
         CLIMB_TILT_SWITCH_INVERTED = false;
         CLIMB_TILT_SWITCH_CHANNEL = 3;
+
+        RIGHT_TURN_PID_P = 0.00015;
+        RIGHT_TURN_PID_I = 0.0;
+        RIGHT_TURN_PID_D = 0.0;
+        RIGHT_TURN_PID_F = 0.0;
 
         HAS_CLIMBLOCK = true;
         CLIMB_LOCK_CHANNEL = 0;
