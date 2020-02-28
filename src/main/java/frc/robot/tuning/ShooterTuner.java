@@ -33,8 +33,9 @@ public class ShooterTuner implements Tuner {
         SmartDashboard.putNumber("Shooter Voltage", 0);
         SmartDashboard.putNumber("Shooter Speed", 0);
         SmartDashboard.putNumber("Shooter Position", 0);
-        SmartDashboard.putNumber("Left Hood Angle", 0);
-        SmartDashboard.putNumber("Right Hood Angle", 0);
+        SmartDashboard.putNumber("Left Hood Angle", RobotMap.HOOD_LEFT_STARTING_POSITION);
+        SmartDashboard.putNumber("Right Hood Angle", RobotMap.HOOD_RIGHT_STARTING_POSITION);
+        SmartDashboard.putNumber("Hood Angle", 0.5);
 
         useVelocity = SmartDashboard.getBoolean("Use Velocity", false);
         double kP = SmartDashboard.getNumber("Shooter P", 0);
@@ -51,6 +52,9 @@ public class ShooterTuner implements Tuner {
         SmartDashboard.putNumber("Shooter Max Velocity", kMaxVelocity);
 
         SmartDashboard.putBoolean("Shoot", false);
+        SmartDashboard.putBoolean("Left Servo", false);
+        SmartDashboard.putBoolean("Right Servo", false);
+        SmartDashboard.putBoolean("Control Both", false);
 
         shooter.flyWheelPIDF(kP, kI, kD, kF, kMaxVelocity);
 
@@ -60,8 +64,12 @@ public class ShooterTuner implements Tuner {
     public void periodic() {
         double speed = SmartDashboard.getNumber("Speed", 0);
         boolean startShooting = SmartDashboard.getBoolean("Shoot", false);
-        double leftAngle = SmartDashboard.getNumber("Left Hood Angle", 0);
-        double rightAngle = SmartDashboard.getNumber("Right Hood Angle", 0);
+        double leftAngle = SmartDashboard.getNumber("Left Hood Angle", RobotMap.HOOD_LEFT_STARTING_POSITION);
+        double rightAngle = SmartDashboard.getNumber("Right Hood Angle", RobotMap.HOOD_LEFT_STARTING_POSITION);
+        boolean leftServo = SmartDashboard.getBoolean("Left Servo", false);
+        boolean rightServo = SmartDashboard.getBoolean("Right Servo", false);
+        double hoodAngle = SmartDashboard.getNumber("Hood Angle", 0.5);
+        boolean useBoth = SmartDashboard.getBoolean("Control Both", false);
 
         if (useVelocity) {
             shooter.rampToSpeed(speed);
@@ -96,7 +104,18 @@ public class ShooterTuner implements Tuner {
             }
         }
 
-        shooter.setHoodAngle(leftAngle, rightAngle);
+        if (useBoth) {
+            shooter.setHoodAngle(hoodAngle, hoodAngle);
+        } else {
+            if (leftServo) {
+               // shooter.setLeftHoodAngle(leftAngle);
+            }
+    
+            if (rightServo) {
+               // shooter.setRightHoodAngle(rightAngle);
+            }
+        }
+        
 
         if (startShooting) {
             LOGGER.error("trigger");

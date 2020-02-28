@@ -254,10 +254,6 @@ public class Robot extends TimedRobot {
       default:
     }
 
-    if (driverstation.restartCamera()) {
-      camera.restart();
-    }
-
     //gamePieceController.periodic(); 
     
 

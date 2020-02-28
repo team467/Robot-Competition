@@ -218,7 +218,7 @@ public class GamePieceController {
         return false;
     }
     boolean feed = false;
-    if (driverStation.indexerFeed()) {
+    if (driverStation.getIntakeFeed()) {
       return true;
     }
     return feed;
@@ -235,7 +235,7 @@ public class GamePieceController {
     }
 
     boolean reverse = false;
-    if (driverStation.indexerReverse()) {
+    if (driverStation.getIndexerReverse()) {
       return true;
     }
     return reverse;

@@ -176,31 +176,28 @@ public class RobotMap {
       RIGHT_DRIVE_PID_D = 0.0;
       RIGHT_DRIVE_PID_F = 0.0;
 
-      // Turn PIDs
-      LEFT_TURN_PID_P = 0.00025;
-      LEFT_TURN_PID_I = 0.0;
-      LEFT_TURN_PID_D = 0.0;
-      LEFT_TURN_PID_F = 0.0;
+    // CONTROLS_INVERTED_FB = false;
+    // CONTROLS_INVERTED_TURN = false;
 
-      RIGHT_TURN_PID_P = 0.00025;
-      RIGHT_TURN_PID_I = 0.0;
-      RIGHT_TURN_PID_D = 0.0;
-      RIGHT_TURN_PID_F = 0.0;
+    USE_VELOCITY_SPEED_CONTROL_FOR_TELOP = true;
+    VELOCITY_MULTIPLIER_RIGHT = 5700;
+    VELOCITY_MULTIPLIER_LEFT = 5700;
 
-      CLOSED_LOOP_RAMP_RATE = 0.5;
-      OPEN_LOOP_RAMP_RATE = 0.0;
+    NORMAL_DRIVE_SPEED_MULTIPLIER = 0.8;
+    SLOW_DRIVE_SPEED_MULTIPLIER = 0.6;
 
       FORWARD_CAMERA_INDEX = 0;
       BACKWARD_CAMERA_INDEX = 2;
       HAS_CAMERA = true;
       AUTO_CAMERA = true;
       AUTOALIGN_TURN_SPEED = 0.2;
+    NORMAL_VELOCITY_SPEED_MULTIPLIER = 0.9;
+    SLOW_VELOCITY_SPEED_MULTIPLIER = 0.7;
 
-      // Game Pieces
-      HAS_SHOOTER = true;
-      HAS_INDEXER = true;
-      HAS_INTAKE = true;
-      HAS_CLIMBER = true;
+    LEFT_LEAD_CHANNEL = 3;
+    LEFT_FOLLOWER_1_CHANNEL = 4;
+    LEFT_DRIVE_SENSOR_IS_INVERTED = true;
+    LEFT_DRIVE_MOTOR_IS_INVERTED = false;
 
       // Shooter
       // TODO:change the values of these later
@@ -265,8 +262,10 @@ public class RobotMap {
       CLIMBER_D = 0.0;
       CLIMBER_F = 0.0;
 
-      VELOCITY_MULTIPLIER_CLIMBER = 8200;
-      CLIMBER_PID_SLOT = 0;
+    RIGHT_DRIVE_PID_P = 0.00015;
+    RIGHT_DRIVE_PID_I = 0.0;
+    RIGHT_DRIVE_PID_D = 0.0;
+    RIGHT_DRIVE_PID_F = 0.0;
 
       HAS_CLIMB_TOP_SENSOR = true;
       HAS_CLIMB_BOTTOM_SENSOR = true;
@@ -277,13 +276,35 @@ public class RobotMap {
       HAS_CLIMB_POT = false;
       CLIMB_POT_CHANNEL = 1;
 
-      HAS_CLIMB_TILT_SWITCH = true;
-      CLIMB_TILT_SWITCH_INVERTED = false;
-      CLIMB_TILT_SWITCH_CHANNEL = 3;
+    RIGHT_TURN_PID_P = 0.00015;
+    RIGHT_TURN_PID_I = 0.0;
+    RIGHT_TURN_PID_D = 0.0;
+    RIGHT_TURN_PID_F = 0.0;
 
       HAS_CLIMBLOCK = true;
       CLIMB_LOCK_CHANNEL = 0;
       CLIMB_LOCK_INVERTED = false;
+      HAS_SHOOTER_HOOD = true;
+    HOOD_LEFT_PWM_PORT = 2;
+    HOOD_RIGHT_PWM_PORT = 3;
+    HOOD_LEFT_INVERTED = false;
+    HOOD_RIGHT_INVERTED = true;
+    HOOD_MAX_ANGLE = 165;
+    HOOD_ADD_NOISE = false;
+    
+    HOOD_LEFT_MIN = 0.65;
+    HOOD_RIGHT_MIN = 0.55;
+    HOOD_LEFT_MAX = 0.85;
+    HOOD_RIGHT_MAX = 0.77;
+    HOOD_LEFT_STARTING_POSITION = (HOOD_LEFT_MIN + HOOD_LEFT_MAX)/2;
+    HOOD_RIGHT_STARTING_POSITION = (HOOD_RIGHT_MIN + HOOD_RIGHT_MAX)/2;
+
+
+    HAS_SHOOTER_LEDS = false;
+    SHOOTER_LED_AMOUNT = 20;
+    SHOOTER_LED_CHANNEL = 1;
+    SHOOTER_DOUBLESIDE_LED = true;
+
       break;
 
     case KITBOT:
@@ -357,10 +378,10 @@ public class RobotMap {
 
       // Shooter
       // TODO:change the values of these later
-      SHOOTER_FOLLOWER = false;
+      SHOOTER_FOLLOWER = true;
       SHOOTER_MOTOR_CHANNEL = 5;
-      SHOOTER_MOTOR_INVERTED = false;
-      SHOOTER_MOTOR_FOLLOWER_INVERTED = false;
+      SHOOTER_MOTOR_INVERTED = true;
+      SHOOTER_MOTOR_FOLLOWER_INVERTED = true;
       SHOOTER_MOTOR_FOLLOWER_CHANNEL = 6;
       SHOOTER_SMART_SHOT = true;
 
@@ -374,13 +395,21 @@ public class RobotMap {
       HOOD_LEFT_INVERTED = false;
       HOOD_RIGHT_INVERTED = true;
       HOOD_MAX_ANGLE = 165;
+      HOOD_ADD_NOISE = false;
+      
+      HOOD_LEFT_MIN = 0.65;
+      HOOD_RIGHT_MIN = 0.55;
+      HOOD_LEFT_MAX = 0.85;
+      HOOD_RIGHT_MAX = 0.77;
+      HOOD_LEFT_STARTING_POSITION = (HOOD_LEFT_MIN + HOOD_LEFT_MAX)/2;
+      HOOD_RIGHT_STARTING_POSITION = (HOOD_RIGHT_MIN + HOOD_RIGHT_MAX)/2;
 
       HAS_SHOOTER_LEDS = false;
       SHOOTER_LED_AMOUNT = 20;
       SHOOTER_LED_CHANNEL = 2;
       SHOOTER_DOUBLESIDE_LED = true;
 
-      SHOOTER_SENSOR_INVERTED = true;
+      SHOOTER_SENSOR_INVERTED = false;
 
       SHOOTER_P = 2;
       SHOOTER_I = 0.0;
@@ -426,10 +455,10 @@ public class RobotMap {
       //Indexer 
 
       FIRST_MAGAZINE_FEED_MOTOR_CHANNEL = 6;
-      FIRST_MAGAZINE_FEED_MOTOR_INVERTED = false;
+      FIRST_MAGAZINE_FEED_MOTOR_INVERTED = true;
       SECOND_MAGAZINE_FEED_MOTOR_CHANNEL = 5;
       SECOND_MAGAZINE_FEED_MOTOR_INVERTED = false;
-      INDEX_FOLLOWER_MOTOR = false;
+      INDEX_FOLLOWER_MOTOR = true;
       
       INDEXER_MOVE_TIMER = 0.2;
       INDEXER_TOF_THRESHOLD = 100;
@@ -583,6 +612,13 @@ public class RobotMap {
   public static boolean HOOD_LEFT_INVERTED = false;
   public static boolean HOOD_RIGHT_INVERTED = false;
   public static int HOOD_MAX_ANGLE;
+  public static boolean HOOD_ADD_NOISE = false;
+  public static double HOOD_LEFT_MIN;
+  public static double HOOD_RIGHT_MIN;
+  public static double HOOD_LEFT_MAX;
+  public static double HOOD_RIGHT_MAX;
+  public static double HOOD_LEFT_STARTING_POSITION;
+  public static double HOOD_RIGHT_STARTING_POSITION;
 
   public static boolean SHOOTER_SENSOR_INVERTED;
   public static double SHOOTER_P;
