@@ -141,7 +141,7 @@ public class RobotMap {
         GYRO_MULTIPLIER = 1.0;
 
         CONTROLS_INVERTED_FB = true;
-        CONTROLS_INVERTED_TURN = true;
+        CONTROLS_INVERTED_TURN = false;
 
         USE_VELOCITY_SPEED_CONTROL_FOR_TELOP = false;
         VELOCITY_MULTIPLIER_RIGHT = 5700;

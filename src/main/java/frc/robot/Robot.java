@@ -20,7 +20,6 @@ import frc.robot.drive.Drive;
 import frc.robot.gamepieces.GamePieceController;
 import frc.robot.logging.RobotLogManager;
 import frc.robot.logging.Telemetry;
-import frc.robot.sensors.LedI2C;
 import frc.robot.sensors.PowerDistributionPanel;
 import frc.robot.usercontrol.DriverStation467;
 import frc.robot.usercontrol.OperatorController467;
@@ -54,12 +53,12 @@ public class Robot extends TimedRobot {
   private Drive drive;
   private Telemetry telemetry;
   private CameraSwitcher camera;
-  private LedI2C leds;
-  private PerfTimer perfTimer;
+  // private PerfTimer perfTimer;
   private  GamePieceController gamePieceController;
   public VisionController visionController;
   public MatchConfiguration matchConfig;
   public ActionGroup autonomous;
+
 
   public static long time = System.nanoTime();
   public static long previousTime = time;
@@ -144,9 +143,9 @@ public class Robot extends TimedRobot {
     driverstation = DriverStation467.getInstance();
     drive = Drive.getInstance();
     camera = CameraSwitcher.getInstance();
-    leds = LedI2C.getInstance();
-    gamePieceController = GamePieceController.getInstance();
+    // gamePieceController = GamePieceController.getInstance();
     visionController = VisionController.getInstance();
+    matchConfig = matchConfig.getInstance();
 
     TuneController.loadTuners();
     drive.setPidsFromRobotMap();
@@ -175,11 +174,12 @@ public class Robot extends TimedRobot {
     mode = RobotMode.AUTONOMOUS;
     driverstation.readInputs();
     matchConfig.load();
+    autonomous = matchConfig.AutoDecisionTree();
     telemetry.robotMode(mode);
     LOGGER.info("Autonomous Initialized");
-    perfTimer = PerfTimer.timer("Autonomous");
-    autonomous = matchConfig.AutoDecisionTree();
+    // perfTimer = PerfTimer.timer("Autonomous");
     autonomous.enable();
+
   }
   
   /**
@@ -188,7 +188,7 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousPeriodic() {
     LOGGER.trace("Autonomous Periodic");
-    gamePieceController.periodic();
+    // gamePieceController.periodic();
     autonomous.run();
   }
 
@@ -197,8 +197,9 @@ public class Robot extends TimedRobot {
     mode = RobotMode.TELEOP;
     telemetry.robotMode(mode);
     LOGGER.info("Teleop Initialized");
-    perfTimer = PerfTimer.timer("Teleoperated");
+    // perfTimer = PerfTimer.timer("Teleoperated");
     LOGGER.debug("Match time {}", box(DriverStation.getInstance().getMatchTime()));
+
   }
 
   /**
@@ -207,7 +208,7 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     LOGGER.trace("Teleop Periodic");
-    perfTimer.start();
+    // perfTimer.start();
     driverstation.readInputs();
 
     double speed = driverstation.getArcadeSpeed();
@@ -263,10 +264,10 @@ public class Robot extends TimedRobot {
       default:
     }
 
-    //gamePieceController.periodic(); 
+    //  gamePieceController.periodic(); 
     
 
-    perfTimer.end();
+    // perfTimer.end();
   }
 
   @Override
@@ -274,7 +275,7 @@ public class Robot extends TimedRobot {
     mode = RobotMode.TEST;
     telemetry.robotMode(mode);
     TuneController.init();
-    perfTimer = PerfTimer.timer("Test Periodic");
+    // perfTimer = PerfTimer.timer("Test Periodic");
   }
 
 
@@ -285,9 +286,9 @@ public class Robot extends TimedRobot {
   @Override
   public void testPeriodic() {
     LOGGER.trace("Test Periodic");
-    perfTimer.start();
+    // perfTimer.start();
     TuneController.periodic();
-    perfTimer.end();
+    // perfTimer.end();
     
   }
 
@@ -295,7 +296,6 @@ public class Robot extends TimedRobot {
   public void disabledInit() {
     mode = RobotMode.DISABLED;
     telemetry.robotMode(mode);
-    leds.whenDisabled();
     // PerfTimer.print();
     LOGGER.info("Robot Disabled");
   }
@@ -304,19 +304,7 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledPeriodic() {
     LOGGER.trace("Disabled Periodic");
-    leds.whenDisabled();
-    
     driverstation.readInputs();
-    OperatorController467 opcon = driverstation.getOperatorController();
-    // for (int i = 1; i <= opcon.getButtonCount(); i++) {
-    //   SmartDashboard.putBoolean("Button " + i, opcon.getRawButton(i));
-    // }
-    // if (driverstation.restartCamera()) {
-    //   camera.restart();
-    // } else {
-    //   camera.fourWaySwitch(driverstation.getNavJoystick().getJoystick().getPOV());
-    // }
-
   }
 
 }

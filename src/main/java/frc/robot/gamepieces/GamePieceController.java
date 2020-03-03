@@ -50,12 +50,13 @@ public class GamePieceController {
   private ShooterState shooterState;
   private ClimberState climberState;
 
-  private DriverStation467 driverStation;
+  private DriverStation467 driverStation = DriverStation467.getInstance();
   private VisionController visionController;
   private LedI2C led;
   public boolean RobotAligned = true;// TODO determine where this is set
 
   // DS controls
+
   public boolean IndexAuto = driverStation.getIndexerAutoMode();
   public boolean ShooterAuto = driverStation.getShooterAutoMode();
   public boolean armPosition = driverStation.getIntakeUp(); // TODO get inputs from DS class
@@ -96,7 +97,9 @@ public class GamePieceController {
     if (instance == null) {
       instance = new GamePieceController();
     }
+    
     return instance;
+
   }
 
   // TODO: get driverstation input and call intaker periodic().

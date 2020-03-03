@@ -8,7 +8,7 @@ import frc.robot.usercontrol.XBoxJoystick467.Button;
 public class DriverStation467 {
 
   private XBoxJoystick467 driverJoy;
-  private OperatorController467 operatorController;
+  // private OperatorController467 operatorController;
   // private XBoxJoystick467 navJoy;
   private OperatorController467 opCon;
 
@@ -83,7 +83,7 @@ public class DriverStation467 {
   // }
 
   public OperatorController467 getOperatorController() {
-    return operatorController;
+    return opCon;
   }
 
   public Rumbler getDriverRumbler() {
