@@ -76,6 +76,10 @@ public enum ShooterState implements State {
                 return Manual;
             }
 
+            if (!fireWhenReady) {
+                return Idle;
+            }
+            
             if (indexerAL.isBallInChamber()) {
                 return AdjustingSpeed;
             } else {

@@ -104,6 +104,7 @@ public class IntakeAL extends GamePieceBase implements GamePiece {
     public void setIntakeBeltSpeed(double speed) {
         if (intakeBelt != null && RobotMap.HAS_INTAKE) {
             double output = Math.max(-1.0, Math.min(1.0, speed));
+            LOGGER.error("Intake belt speed");
             intakeBelt.set(output);
         }
     }

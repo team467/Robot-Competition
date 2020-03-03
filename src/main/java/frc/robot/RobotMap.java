@@ -182,9 +182,9 @@ public class RobotMap {
 
         // Game Pieces
         HAS_SHOOTER = true;
-        HAS_INDEXER = true;
+        HAS_INDEXER = false;
         HAS_INTAKE = true;
-        HAS_CLIMBER = true;
+        HAS_CLIMBER = false;
 
         // Shooter
         // TODO:change the values of these later
@@ -233,7 +233,7 @@ public class RobotMap {
         INDEXER_INVERSE_SPEED = 0.2;
 
         // Climber
-        CLIMBER_MOTOR_INVERTED = false;
+        CLIMBER_MOTOR_INVERTED = true;
         CLIMBER_SENSOR = false;
         HAS_CLIMBFOLLOWER = true;
         CLIMB_MOTER_LEADER = 5;
@@ -250,8 +250,8 @@ public class RobotMap {
         CLIMB_BOTTOM_SENSOR_INVERTED = false;
         CLIMB_TOP_SENSOR_CHANNEL = 4;
         CLIMB_BOTTOM_SENSOR_CHANNEL = 5;
-        HAS_CLIMB_POT = false;
-        CLIMB_POT_CHANNEL = 1;
+        HAS_CLIMB_POT = true;
+        CLIMB_POT_CHANNEL = 0;
 
         HAS_CLIMB_TILT_SWITCH = true;
         CLIMB_TILT_SWITCH_INVERTED = false;
@@ -263,8 +263,8 @@ public class RobotMap {
         HAS_SHOOTER_HOOD = true;
         HOOD_LEFT_PWM_PORT = 2;
         HOOD_RIGHT_PWM_PORT = 3;
-        HOOD_LEFT_INVERTED = false;
-        HOOD_RIGHT_INVERTED = true;
+        HOOD_LEFT_INVERTED = true;
+        HOOD_RIGHT_INVERTED = false;
         HOOD_MAX_ANGLE = 165;
         HOOD_ADD_NOISE = false;
 

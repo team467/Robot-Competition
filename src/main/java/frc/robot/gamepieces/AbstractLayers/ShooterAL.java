@@ -24,6 +24,8 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 
+import java.util.Random;
+
 public class ShooterAL extends GamePieceBase implements GamePiece {
 
   private static ShooterAL instance = null;
@@ -69,7 +71,6 @@ public class ShooterAL extends GamePieceBase implements GamePiece {
         if (RobotMap.SHOOTER_FOLLOWER) {
           LOGGER.info("Creating follow motors");
           flywheelFollower = new WPI_TalonSRX(RobotMap.SHOOTER_MOTOR_FOLLOWER_CHANNEL);
-          flywheelFollower.setInverted(RobotMap.SHOOTER_MOTOR_FOLLOWER_INVERTED);
           flywheelFollower.setNeutralMode(NeutralMode.Coast);
         }
 
@@ -92,7 +93,10 @@ public class ShooterAL extends GamePieceBase implements GamePiece {
       if (RobotMap.HAS_SHOOTER_HOOD) {
         hoodLeft = new Servo(RobotMap.HOOD_LEFT_PWM_PORT);
         hoodRight = new Servo(RobotMap.HOOD_RIGHT_PWM_PORT);
-        
+
+        hoodLeft.set(RobotMap.HOOD_LEFT_STARTING_POSITION);
+        hoodRight.set(RobotMap.HOOD_RIGHT_STARTING_POSITION);
+
       } else {
         hoodLeft = null;
         hoodRight = null;
@@ -231,14 +235,76 @@ public class ShooterAL extends GamePieceBase implements GamePiece {
 
   public void setHoodAngle(double leftAngle, double rightAngle) {
     if (hoodLeft != null && hoodRight != null && RobotMap.HAS_SHOOTER_HOOD) {
+      setLeftHoodAngleRaw(leftAngle);
+      setRightHoodAngleRaw(rightAngle);
+    }
+  }
+
+  public void setLeftHoodAngle(double angle) {
+    if (hoodLeft != null && RobotMap.HAS_SHOOTER_HOOD) {
+      angle = Math.max(0, Math.min(1, angle));
+
       if (RobotMap.HOOD_LEFT_INVERTED) {
-        leftAngle = RobotMap.HOOD_MAX_ANGLE - leftAngle;
+        angle = Math.abs(angle-1);
       }
+
+      if (RobotMap.HOOD_ADD_NOISE) {
+        angle = angle + ((new Random().nextInt(101)-50)/10000);
+      }
+
+      angle = (angle * (RobotMap.HOOD_LEFT_MAX - RobotMap.HOOD_LEFT_MIN)) - RobotMap.HOOD_LEFT_MIN;
+
+      hoodLeft.set(angle);
+    }
+  }
+
+  public void setRightHoodAngle(double angle) {
+    if (hoodRight != null && RobotMap.HAS_SHOOTER_HOOD) {
+      angle = Math.max(0, Math.min(1, angle));
+
       if (RobotMap.HOOD_RIGHT_INVERTED) {
-        rightAngle = RobotMap.HOOD_MAX_ANGLE - rightAngle;
+        angle = Math.abs(angle-1);
       }
-      hoodLeft.setAngle(leftAngle);
-      hoodRight.setAngle(rightAngle);
+
+      if (RobotMap.HOOD_ADD_NOISE) {
+        angle = angle + ((new Random().nextInt(101)-50)/10000);
+      }
+
+      angle = (angle * (RobotMap.HOOD_RIGHT_MAX - RobotMap.HOOD_RIGHT_MIN)) - RobotMap.HOOD_RIGHT_MIN;
+
+      hoodRight.set(angle);
+    }
+  }
+
+  public void setLeftHoodAngleRaw(double angle) {
+    if (hoodLeft != null && RobotMap.HAS_SHOOTER_HOOD) {
+      angle = Math.max(RobotMap.HOOD_LEFT_MIN, Math.min(RobotMap.HOOD_LEFT_MAX, angle));
+
+      if (RobotMap.HOOD_LEFT_INVERTED) {
+        angle = Math.abs(angle-1);
+      }
+
+      if (RobotMap.HOOD_ADD_NOISE) {
+        angle = angle + ((new Random().nextInt(101)-50)/10000);
+      }
+
+      hoodLeft.set(angle);
+    }
+  }
+
+  public void setRightHoodAngleRaw(double angle) {
+    if (hoodRight != null && RobotMap.HAS_SHOOTER_HOOD) {
+      angle = Math.max(RobotMap.HOOD_RIGHT_MIN, Math.min(RobotMap.HOOD_RIGHT_MAX, angle));
+
+      if (RobotMap.HOOD_RIGHT_INVERTED) {
+        angle = Math.abs(angle-1);
+      }
+
+      if (RobotMap.HOOD_ADD_NOISE) {
+        angle = angle + ((new Random().nextInt(101)-50)/10000);
+      }
+
+      hoodRight.set(angle);
     }
   }
 
@@ -291,13 +357,11 @@ public class ShooterAL extends GamePieceBase implements GamePiece {
       case MANUAL_FORWARD:
         rampToSpeed(RobotMap.MANUAL_MODE_SHOOTER_SPEED); //TODO tbd speed
         break;
-
       case STOP:
       stop();
         break;
       
       default:
-        LOGGER.debug("invalid flywheel setting defaulting to stop");
         stop();
 
     }
@@ -309,41 +373,39 @@ public class ShooterAL extends GamePieceBase implements GamePiece {
         case SHOOTING:
           startShooting();
           break;
-
         case STOP:
           stopShooting();
           break;
-
         case REVERSE:
           reverseShooter();
           break;
-
         default:
-          LOGGER.debug("invalid trigger setting defaulting to stop");
           stopShooting();
       }
 
     }
 
+
+
     @Override
     public void checkSystem() {
 
       try {
-        getInstance();
+
         setTrigger(TriggerSettings.SHOOTING);
         setFlywheel(FlywheelSettings.FORWARD);
 
+      
         if(flywheelLeader.isAlive()) {
           LOGGER.info("flywheel is alive");
         } else {
           LOGGER.debug("flywheel is not alive");
         }
 
-      } catch (Exception e) {
+      } catch (NullPointerException e) {
         LOGGER.debug("something is wrong with the shooter");
          e.printStackTrace();
       }
 
     }
 }
-  

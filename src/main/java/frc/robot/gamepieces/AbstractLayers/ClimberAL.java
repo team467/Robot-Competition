@@ -61,21 +61,16 @@ public class ClimberAL extends GamePieceBase implements GamePiece {
         super("Telemetry", "Climber");
         this.climbGroup = climbGroup;
     }
-
-    // method to make the climber move up or down
-    public void setSpeed(climberSpeed speed) {
-        this.speed = speed;
-    }
-
+    
     public boolean isDown() { // TODO: equal to or not
-        if (getBottomSensor() || climberPosition() <= lowestPoint) {
+        if (!getBottomSensor() || climberPosition() <= lowestPoint) {
             return true;
         }
         return false;
     }
 
     public boolean isUp() { // TODO: equal or not
-        if (getTopSensor() || climberPosition() >= highestPoint) {
+        if (!getTopSensor() || climberPosition() >= highestPoint) {
             return true;
         }
         return false;
@@ -169,7 +164,7 @@ public class ClimberAL extends GamePieceBase implements GamePiece {
     }
 
     public void climberDown() {
-        climbGroup.set(-0.5);
+        climbGroup.set(-0.8);
         LOGGER.debug("Climber Is Going Down");
     }
 
@@ -231,14 +226,14 @@ public class ClimberAL extends GamePieceBase implements GamePiece {
     public void climberLock() {
         LOGGER.debug("climber lock");
         if (climbLock != null && RobotMap.HAS_CLIMBLOCK) {
-            climbLock.set(Value.kOff);
+            climbLock.set(Value.kForward);
         }
     }
 
     public void climberUnlock() {
         LOGGER.debug("climnber unlock");
         if (climbLock != null && RobotMap.HAS_CLIMBLOCK) {
-            climbLock.set(Value.kForward);
+            climbLock.set(Value.kReverse);
         }
     }
 

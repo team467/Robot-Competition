@@ -1,11 +1,16 @@
 package frc.robot.usercontrol;
 
+import frc.robot.logging.RobotLogManager;
+import org.apache.logging.log4j.Logger;
+
 import frc.robot.RobotMap;
 import frc.robot.drive.DriveMode;
 import frc.robot.logging.Telemetry;
 import frc.robot.usercontrol.XBoxJoystick467.Button;
 
 public class DriverStation467 {
+
+  private static final Logger LOGGER = RobotLogManager.getMainLogger(DriverStation467.class.getName());
 
   private XBoxJoystick467 driverJoy;
   // private OperatorController467 operatorController;

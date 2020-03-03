@@ -1,4 +1,3 @@
-
 package frc.robot.tuning;
 
 import frc.robot.RobotMap;
@@ -108,17 +107,16 @@ public class ShooterTuner implements Tuner {
             shooter.setHoodAngle(hoodAngle, hoodAngle);
         } else {
             if (leftServo) {
-               // shooter.setLeftHoodAngle(leftAngle);
+                shooter.setLeftHoodAngle(leftAngle);
             }
     
             if (rightServo) {
-               // shooter.setRightHoodAngle(rightAngle);
+                shooter.setRightHoodAngle(rightAngle);
             }
         }
         
 
         if (startShooting) {
-            LOGGER.error("trigger");
             shooter.startShooting();
         } else {
             shooter.stopShooting();
