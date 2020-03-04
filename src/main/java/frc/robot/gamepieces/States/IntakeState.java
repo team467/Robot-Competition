@@ -96,14 +96,5 @@ public class IntakeState {
             break;
         }
     }
-
-    public void setIntakeBeltAuto() {
-        if ((gamePieceController.indexerBallsReverse || gamePieceController.ShooterAuto) && 
-        !(indexer.isBallInMouth() || indexer.isBallInChamber())) {
-            IntakeAL.callIntakeBeltToIndexer();
-        } else {
-            IntakeAL.callIntakeBeltOff();
-        }
-    }
 }
 

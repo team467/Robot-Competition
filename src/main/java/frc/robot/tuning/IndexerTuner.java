@@ -29,6 +29,7 @@ public class IndexerTuner implements Tuner {
 
         SmartDashboard.putBoolean("Mouth Sensor", indexer.isBallInMouth());
         SmartDashboard.putBoolean("Chamber Sensor", indexer.isBallInChamber());
+        SmartDashboard.putNumber("Belt Speed", 0);
         
         indexer.stopIndexer();
     }

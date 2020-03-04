@@ -28,11 +28,9 @@ public class IntakeAL extends GamePieceBase implements GamePiece {
 
     private static WPI_TalonSRX armMotor;
     private static WPI_TalonSRX rollerMotor;
-    private static WPI_TalonSRX indexFollowerMotor;
 
     private static TalonSpeedControllerGroup arm;
     private static TalonSpeedControllerGroup roller;
-    private static TalonSpeedControllerGroup intakeBelt;
 
     private static SensorCollection armSensors;
 
@@ -41,24 +39,20 @@ public class IntakeAL extends GamePieceBase implements GamePiece {
             if (RobotMap.HAS_INTAKE) {
                 armMotor = new WPI_TalonSRX(RobotMap.ARM_MOTOR_CHANNEL);
                 rollerMotor = new WPI_TalonSRX(RobotMap.ROLLER_MOTOR_CHANNEL);
-                indexFollowerMotor = new WPI_TalonSRX(RobotMap.SECOND_MAGAZINE_FEED_MOTOR_CHANNEL);
 
                 arm = new TalonSpeedControllerGroup("Arm", ControlMode.PercentOutput, false, RobotMap.ARM_MOTOR_INVERTED, armMotor);
                 roller = new TalonSpeedControllerGroup("Roller", ControlMode.PercentOutput, false, RobotMap.ROLLER_MOTOR_INVERTED, rollerMotor);
-                intakeBelt = new TalonSpeedControllerGroup("IntakeBelt", ControlMode.PercentOutput, false, RobotMap.INTAKE_BELT_MOTOR_INVERTED, indexFollowerMotor);
 
                 armSensors = armMotor.getSensorCollection();
             } else {
                 arm = new TalonSpeedControllerGroup();
                 roller = new TalonSpeedControllerGroup();
-                intakeBelt = new TalonSpeedControllerGroup();
             }
 
             instance = new IntakeAL();
 
             instance.stopArm();
             instance.stopRoller();
-            instance.setIntakeBeltStop();
         }
         return instance;
     }
@@ -98,34 +92,6 @@ public class IntakeAL extends GamePieceBase implements GamePiece {
         if (roller != null && RobotMap.HAS_INTAKE) {
             double output = Math.max(-1.0, Math.min(1.0, speed));
             roller.set(output);
-        }
-    }
-
-    public void setIntakeBeltSpeed(double speed) {
-        if (intakeBelt != null && RobotMap.HAS_INTAKE) {
-            double output = Math.max(-1.0, Math.min(1.0, speed));
-            LOGGER.error("Intake belt speed");
-            intakeBelt.set(output);
-        }
-    }
-
-    public void setIntakeBeltToIndexer() {
-        if (intakeBelt != null && RobotMap.HAS_INTAKE) {
-        intakeBelt.set(-1.0);
-        }
-    }
-
-    
-    public void setIntakeBeltStop() {
-        if (intakeBelt != null && RobotMap.HAS_INTAKE) {
-        intakeBelt.set(0.0);
-        }
-    }
-
-    
-    public void setIntakeBeltToReverse() {
-        if (intakeBelt != null && RobotMap.HAS_INTAKE) {
-        intakeBelt.set(1.0);
         }
     }
 
@@ -209,19 +175,6 @@ public class IntakeAL extends GamePieceBase implements GamePiece {
     public static void callRollerStop() {
         IntakeAL.getInstance().setRollerStop();
     }
-    
-    public static void callIntakeBeltOff() {
-        IntakeAL.getInstance().setIntakeBeltStop();
-    }
-
-    public static void callIntakeBeltToIndexer() {
-        IntakeAL.getInstance().setIntakeBeltToIndexer();
-    }
-
-    public static void callIntakeBeltInverse() {
-        IntakeAL.getInstance().setIntakeBeltToReverse();
-    }
-
 
     private IntakeAL() {
         super("Telemetry", "Intake");

@@ -33,9 +33,9 @@ public class GamePieceController {
 
   // Game Pieces
   private CameraSwitcher camera;
-  // private IntakeAL intake;
-  // private IndexerAL IndexerAL;
-  // private ShooterAL ShooterAL;
+ // private IntakeAL intake;
+  private IndexerAL IndexerAL;
+  private ShooterAL ShooterAL;
 
   // Game Pieces' States
   private ShooterAL shooter;
@@ -137,65 +137,66 @@ public class GamePieceController {
    * Checks for states from driverStation.
    */
   public void periodic() {
+    //Climber
     climberDownButtonPressed = driverStation.getClimbDown();
     climberUpButtonPressed = driverStation.getClimbUp();
     climberEnabled = driverStation.getClimberEnable();
-    IndexAuto = driverStation.getIndexerAutoMode();
-    ShooterAuto = driverStation.getShooterAutoMode();
-    rollerStateIN = driverStation.getIntakeFeed();
-    rollerStateOUT = driverStation.getIntakeReverse();
-    armPosition = driverStation.getIntakeUp(); 
 
+    //Index
+    IndexAuto = driverStation.getIndexerAutoMode();
+    indexerBallsReverse = driverStation.getIndexerReverse();
+    indexerBallsForward = driverStation.getIndexerFeed();
+
+    //Shooter
+    ShooterAuto = driverStation.getShooterAutoMode();
     fireWhenReady = driverStation.getShootButton();
     triggerManual = (driverStation.getShooterManualMode()) ? driverStation.getShootButton() : false;
     flywheelManual = driverStation.getFlywheelEnabled();
 
-    indexerBallsReverse = driverStation.getIndexerReverse();
-    indexerBallsForward = driverStation.getIndexerFeed();
+    //Roller
+    rollerStateIN = driverStation.getIntakeFeed();
+    rollerStateOUT = driverStation.getIntakeReverse();
+    armPosition = driverStation.getIntakeUp(); 
 
     // Separate reading from driver station from processing state
     // so that tests can manually feed inputs.
-    processGamePieceState();
-
-  }
-
-  void processGamePieceState() {
     updateGamePieces();
+
   }
 
   public void updateGamePieces() {
     // Update all systems
-   // if (RobotMap.HAS_SHOOTER)
-      //shooterSM.step();
+   if (RobotMap.HAS_SHOOTER)
+      shooterSM.step();
 
-    //if (RobotMap.HAS_INDEXER)
-      //indexerSM.step();
+    if (RobotMap.HAS_INDEXER)
+      indexerSM.step();
 
 
     if (RobotMap.HAS_CLIMBER)
       climberSM.step();
 
     // roller controls
-    // if (RobotMap.HAS_INTAKE) {
-    //   if (armPosition && !climberEnabled) {
-    //     intake.setIntakeArm(IntakerArm.ARM_UP);
-    //   } else {
-    //     intake.setIntakeArm(IntakerArm.ARM_DOWN);
-    //   }
+    if (RobotMap.HAS_INTAKE) {
+      if (armPosition && !climberEnabled) {
+        intake.setIntakeArm(IntakerArm.ARM_UP);
+      } else {
+        intake.setIntakeArm(IntakerArm.ARM_DOWN);
+      }
 
-    //   if (rollerStateIN && !climberEnabled) {
-    //     intake.setIntakeRoller(IntakerRollers.ROLLERS_IN);
-    //   } else if (rollerStateOUT) {
-    //     intake.setIntakeRoller(IntakerRollers.ROLLERS_OUT);
-    //   } else {
-    //     intake.setIntakeRoller(IntakerRollers.ROLLERS_OFF);
-    //   }
+      if (rollerStateIN && !climberEnabled) {
+        intake.setIntakeRoller(IntakerRollers.ROLLERS_IN);
+      } else if (rollerStateOUT) {
+        intake.setIntakeRoller(IntakerRollers.ROLLERS_OUT);
+      } else {
+        intake.setIntakeRoller(IntakerRollers.ROLLERS_OFF);
+      }
 
-    //   if (climberEnabled) {
-    //     intake.setIntakeArm(IntakerArm.ARM_UP);
-    //   }
+      if (climberEnabled) {
+        intake.setIntakeArm(IntakerArm.ARM_UP);
+      }
 
-    // }
+    }
   }
 
   DriverInput forceCellsForward = DriverInput.USE_DRIVER_INPUT;

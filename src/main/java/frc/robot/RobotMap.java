@@ -171,9 +171,6 @@ public class RobotMap {
         RIGHT_DRIVE_PID_D = 0.0;
         RIGHT_DRIVE_PID_F = 0.0;
 
-        // CONTROLS_INVERTED_FB = false;
-        // CONTROLS_INVERTED_TURN = false;
-
         VELOCITY_MULTIPLIER_RIGHT = 5700;
         VELOCITY_MULTIPLIER_LEFT = 5700;
 
@@ -182,7 +179,7 @@ public class RobotMap {
 
         // Game Pieces
         HAS_SHOOTER = true;
-        HAS_INDEXER = false;
+        HAS_INDEXER = true;
         HAS_INTAKE = true;
         HAS_CLIMBER = false;
 
@@ -442,12 +439,6 @@ public class RobotMap {
 
         break;
     }
-
-    // These calculations can be made after the robot-specific constants are set.
-    POSITION_ALLOWED_ERROR = ALLOWED_ERROR_INCHES / RobotMap.WHEEL_CIRCUMFERENCE;
-
-    // This is in encoder ticks
-    POSITION_ALLOWABLE_CLOSED_LOOP_ERROR = (int) (POSITION_ALLOWED_ERROR * WHEEL_ENCODER_CODES_PER_REVOLUTION * 0.95);
   }
 
   /**
