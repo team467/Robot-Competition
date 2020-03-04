@@ -47,13 +47,11 @@ public class IndexerAL extends GamePieceBase implements GamePiece {
         LOGGER.debug("lead created");
         indexLeader = new WPI_TalonSRX(RobotMap.FIRST_MAGAZINE_FEED_MOTOR_CHANNEL);
         indexBeltMotor = null;
-
   
-
         if (RobotMap.INDEX_FOLLOWER_MOTOR){
           LOGGER.debug("follower created");
           indexBeltMotor = new WPI_TalonSRX(RobotMap.SECOND_MAGAZINE_FEED_MOTOR_CHANNEL);
-          intakeBelt = new TalonSpeedControllerGroup("IntakeBelt", ControlMode.PercentOutput, false, RobotMap.INTAKE_BELT_MOTOR_INVERTED, indexFollowerMotor);
+          intakeBelt = new TalonSpeedControllerGroup("IntakeBelt", ControlMode.PercentOutput, false, RobotMap.INTAKE_BELT_MOTOR_INVERTED, indexBeltMotor);
         }
 
         indexer = new TalonSpeedControllerGroup("Indexer", ControlMode.PercentOutput, RobotMap.INDEXER_SENSOR_INVERTED,

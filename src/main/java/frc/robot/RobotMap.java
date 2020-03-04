@@ -219,7 +219,7 @@ public class RobotMap {
         // TODO: change the values of these later.
         FIRST_MAGAZINE_FEED_MOTOR_CHANNEL = 10;
         INDEXER_MOTOR_INVERTED = true;
-        INDEX_FOLLOWER_MOTOR = false;
+        INDEX_FOLLOWER_MOTOR = true;
         SECOND_MAGAZINE_FEED_MOTOR_CHANNEL = 11;
         SECOND_MAGAZINE_FEED_MOTOR_INVERTED = true;
 
