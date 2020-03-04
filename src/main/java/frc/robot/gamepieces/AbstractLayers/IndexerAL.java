@@ -24,9 +24,11 @@ public class IndexerAL extends GamePieceBase implements GamePiece {
 
   private static final Logger LOGGER = RobotLogManager.getMainLogger(IndexerAL.class.getName());
 
-  private static WPI_TalonSRX indexLeader;
-  private static WPI_TalonSRX indexFollower;
-  private static TalonSpeedControllerGroup indexer;
+  private static WPI_TalonSRX indexFirstMotor;
+  private static TalonSpeedControllerGroup indexFirstStage;
+
+  private static WPI_TalonSRX indexSecondMotor;
+  private static TalonSpeedControllerGroup indexSecondStage;
 
   private static Rev2mDistanceSensor onboardTOF;
   private static NetworkTableEntry networkTableTOF;
@@ -42,20 +44,17 @@ public class IndexerAL extends GamePieceBase implements GamePiece {
     if (instance == null) {
       if (RobotMap.HAS_INDEXER) {
         LOGGER.debug("lead created");
-        indexLeader = new WPI_TalonSRX(RobotMap.FIRST_MAGAZINE_FEED_MOTOR_CHANNEL);
-        indexFollower = null;
+        indexFirstMotor = new WPI_TalonSRX(RobotMap.FIRST_MAGAZINE_FEED_MOTOR_CHANNEL);
+        indexSecondMotor = new WPI_TalonSRX(RobotMap.SECOND_MAGAZINE_FEED_MOTOR_CHANNEL)
 
-        if (RobotMap.INDEX_FOLLOWER_MOTOR){
-          LOGGER.debug("follower created");
-          indexFollower = new WPI_TalonSRX(RobotMap.SECOND_MAGAZINE_FEED_MOTOR_CHANNEL);
-        }
-
-        indexer = new TalonSpeedControllerGroup("Indexer", ControlMode.PercentOutput, RobotMap.INDEXER_SENSOR_INVERTED,
-            RobotMap.INDEXER_MOTOR_INVERTED, indexLeader, indexFollower);
-        LOGGER.debug("Talon group:" + indexer.toString());
+        indexFirstStage = new TalonSpeedControllerGroup("Indexer First Stage", ControlMode.PercentOutput, RobotMap.INDEXER_SENSOR_INVERTED,
+            RobotMap.FIRST_MAGAZINE_FEED_MOTOR_INVERTED, indexFirstMotor);
+        indexFirstStage = new TalonSpeedControllerGroup("Indexer Second Stage", ControlMode.PercentOutput, RobotMap.INDEXER_SENSOR_INVERTED,
+            RobotMap.SECOND_MAGAZINE_FEED_MOTOR_INVERTED, indexSecondMotor);
 
       } else {
-        indexer = new TalonSpeedControllerGroup();
+        indexFirstStage = new TalonSpeedControllerGroup();
+        indexSecondStage = new TalonSpeedControllerGroup();
       }
 
       if (RobotMap.HAS_INDEXER_TOF_SENSORS) {
@@ -65,21 +64,33 @@ public class IndexerAL extends GamePieceBase implements GamePiece {
         networkTableTOF = table.getEntry("tof");
       }
 
-      instance = new IndexerAL(indexer);
+      instance = new IndexerAL();
     }
     return instance;
   }
 
   public void stopIndexer() {
-    if (indexer != null && RobotMap.HAS_INDEXER) {
-      indexer.set(0.0);
+    if (RobotMap.HAS_INDEXER) {
+      if (indexFirstStage != null) {
+        indexFirstStage.set(0.0);
+      }
+      if (indexSecondStage != null) {
+        indexSecondStage.set(0.0);
+      }
     }
   }
 
-  public void setIndexerSpeed(double speed) {
-    if (indexer != null && RobotMap.HAS_INDEXER) {
+  public void setIndexerFirstStageSpeed(double speed) {
+    if (indexFirstStage != null && RobotMap.HAS_INDEXER) {
       double output = Math.max(-1.0, Math.min(1.0, speed));
-      indexer.set(output);
+      indexFirstStage.set(output);
+    }
+  }
+
+  public void setIndexerSecondStageSpeed(double speed) {
+    if (indexSecondStage != null && RobotMap.HAS_INDEXER) {
+      double output = Math.max(-1.0, Math.min(1.0, speed));
+      indexSecondStage.set(output);
     }
   }
 
@@ -163,7 +174,7 @@ public class IndexerAL extends GamePieceBase implements GamePiece {
 
   private void setForward() {
     LOGGER.debug("Indexer going forward");
-    indexer.set(RobotMap.INDEXER_FORWARD_SPEED);
+    index
   }
 
   private void setBackwards() {
@@ -219,7 +230,7 @@ public class IndexerAL extends GamePieceBase implements GamePiece {
 
   }
 
-  private IndexerAL(TalonSpeedControllerGroup indexer) {
+  private IndexerAL() {
     super("Telemetry", "Indexer");
   }
   

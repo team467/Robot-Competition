@@ -34,7 +34,6 @@ public class IntakeTuner implements Tuner {
         SmartDashboard.putBoolean("Arm Down", false);
 
         SmartDashboard.putNumber("Speed", 0);
-        SmartDashboard.putNumber("Belt Speed", 0);
 
         IntakeAL.callArmStop();
         IntakeAL.callRollerStop();
@@ -44,10 +43,8 @@ public class IntakeTuner implements Tuner {
         boolean armUp = SmartDashboard.getBoolean("Arm Up", false);
         boolean armDown = SmartDashboard.getBoolean("Arm Down", false);
         double speed = SmartDashboard.getNumber("Speed", 0);
-        double beltSpeed = SmartDashboard.getNumber("Belt Speed", 0);
         
         intake.setRollerSpeed(speed);
-        intake.setIntakeBeltSpeed(beltSpeed);
 
         // if (armUp) {
         //     if (currentState != ArmState.UP) {

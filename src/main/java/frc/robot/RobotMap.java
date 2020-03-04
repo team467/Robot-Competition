@@ -190,9 +190,9 @@ public class RobotMap {
         // TODO:change the values of these later
         SHOOTER_FOLLOWER = true;
         SHOOTER_MOTOR_CHANNEL = 5;
-        SHOOTER_MOTOR_INVERTED = false;
+        SHOOTER_MOTOR_INVERTED = true;
         SHOOTER_MOTOR_FOLLOWER_CHANNEL = 6;
-        SHOOTER_MOTOR_FOLLOWER_INVERTED = true;
+        SHOOTER_MOTOR_FOLLOWER_INVERTED = false;
         SHOOTER_SMART_SHOT = true;
 
         SHOOTER_SENSOR_INVERTED = true;
@@ -221,8 +221,7 @@ public class RobotMap {
         // Indexer
         // TODO: change the values of these later.
         FIRST_MAGAZINE_FEED_MOTOR_CHANNEL = 10;
-        INDEXER_MOTOR_INVERTED = true;
-        INDEX_FOLLOWER_MOTOR = false;
+        FIRST_MAGAZINE_FEED_MOTOR_INVERTED = true; 
         SECOND_MAGAZINE_FEED_MOTOR_CHANNEL = 11;
         SECOND_MAGAZINE_FEED_MOTOR_INVERTED = true;
 
