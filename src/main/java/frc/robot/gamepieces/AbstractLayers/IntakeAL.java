@@ -59,7 +59,7 @@ public class IntakeAL extends GamePieceBase implements GamePiece {
 
     public void stopArm() {
         if (arm != null && RobotMap.HAS_INTAKE) {
-            arm.set(0.5);
+            arm.set(0.0);
         }
     }
 
