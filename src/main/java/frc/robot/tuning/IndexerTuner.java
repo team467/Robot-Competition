@@ -28,6 +28,7 @@ public class IndexerTuner implements Tuner {
 
         SmartDashboard.putBoolean("Mouth Sensor", indexer.isBallInMouth());
         SmartDashboard.putBoolean("Chamber Sensor", indexer.isBallInChamber());
+        SmartDashboard.putNumber("Belt Speed", 0);
         
         indexer.stopIndexer();
     }
@@ -37,8 +38,10 @@ public class IndexerTuner implements Tuner {
     
         SmartDashboard.getBoolean("Mouth Sensor", indexer.isBallInMouth());
         SmartDashboard.getBoolean("Chamber Sensor", indexer.isBallInChamber());
-        
+        double beltSpeed = SmartDashboard.getNumber("Belt Speed", 0);
+
         indexer.setIndexerSpeed(speed);
+        indexer.setIntakeBeltSpeed(beltSpeed);
 
     }
 

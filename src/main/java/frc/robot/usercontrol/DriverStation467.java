@@ -216,4 +216,8 @@ public class DriverStation467 {
     return driverJoy.down(Button.BumperRight);
   }
 
+  public boolean getAutoAlignButton() {
+    return driverJoy.down(Button.x);
+  }
+
 }

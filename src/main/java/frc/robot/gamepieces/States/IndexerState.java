@@ -9,6 +9,7 @@ package frc.robot.gamepieces.States;
 
 import frc.robot.RobotMap;
 import frc.robot.gamepieces.AbstractLayers.IndexerAL;
+import frc.robot.gamepieces.AbstractLayers.IntakeAL;
 import frc.robot.gamepieces.GamePieceController;
 import frc.robot.logging.RobotLogManager;
 
@@ -55,20 +56,27 @@ public enum IndexerState implements State {
                 return Manual;
             }
 
-            if (indexerBallsForward && isInMouth && !isInChamber) {
+            if (indexerBallsForward && !isInMouth && isInChamber) {
                     LOGGER.debug("isInMouth and is not in Chamber");
                     return Feed;
-                }
+            }
 
-                if (shooterWantsBall) {
-                    LOGGER.debug("LoadingBalls");
-                    return Feed;
-                }
+            if (shooterWantsBall) {
+                LOGGER.debug("LoadingBalls");
+                return Feed;
+            }
 
-                if (!shooterAuto) {
-                    LOGGER.debug("Shooter in Manual sending power cell to feed");
-                    return Feed;
-                }
+            if (!shooterAuto) {
+                LOGGER.debug("Shooter in Manual sending power cell to feed");
+                return Feed;
+            }
+
+            if ((indexerBallsForward || shooterWantsBall) && (!isInMouth || !isInChamber)) {
+                IndexerAL.callIntakeBeltToIndexer();
+            } else {
+                IndexerAL.callIntakeBeltOff();
+            }
+
             return this;
         }
 
@@ -101,7 +109,7 @@ public enum IndexerState implements State {
                 return Idle;
             }
 
-            if (indexerAL.isBallInMouth()) {
+            if (!indexerAL.isBallInMouth()) {
                 return FeedBuffer;
             }
 

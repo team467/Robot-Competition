@@ -213,7 +213,7 @@ public class Robot extends TimedRobot {
 
     double speed = driverstation.getArcadeSpeed();
     double turn = driverstation.getArcadeTurn();
-    boolean autoAlign = true; //TODO change this to be a driverstation input
+    boolean autoAlign = driverstation.getAutoAlignButton(); //TODO change this to be a driverstation input
 
     if (Math.abs(speed) < RobotMap.MIN_DRIVE_SPEED) {
       speed = 0.0;

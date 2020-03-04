@@ -25,8 +25,11 @@ public class IndexerAL extends GamePieceBase implements GamePiece {
   private static final Logger LOGGER = RobotLogManager.getMainLogger(IndexerAL.class.getName());
 
   private static WPI_TalonSRX indexLeader;
-  private static WPI_TalonSRX indexFollower;
+  private static WPI_TalonSRX indexBeltMotor;
+  private static WPI_TalonSRX indexFollowerMotor;
+
   private static TalonSpeedControllerGroup indexer;
+  private static TalonSpeedControllerGroup intakeBelt;
 
   private static Rev2mDistanceSensor onboardTOF;
   private static NetworkTableEntry networkTableTOF;
@@ -43,29 +46,34 @@ public class IndexerAL extends GamePieceBase implements GamePiece {
       if (RobotMap.HAS_INDEXER) {
         LOGGER.debug("lead created");
         indexLeader = new WPI_TalonSRX(RobotMap.FIRST_MAGAZINE_FEED_MOTOR_CHANNEL);
-        indexFollower = null;
+        indexBeltMotor = null;
+
+  
 
         if (RobotMap.INDEX_FOLLOWER_MOTOR){
           LOGGER.debug("follower created");
-          indexFollower = new WPI_TalonSRX(RobotMap.SECOND_MAGAZINE_FEED_MOTOR_CHANNEL);
+          indexBeltMotor = new WPI_TalonSRX(RobotMap.SECOND_MAGAZINE_FEED_MOTOR_CHANNEL);
+          intakeBelt = new TalonSpeedControllerGroup("IntakeBelt", ControlMode.PercentOutput, false, RobotMap.INTAKE_BELT_MOTOR_INVERTED, indexFollowerMotor);
         }
 
         indexer = new TalonSpeedControllerGroup("Indexer", ControlMode.PercentOutput, RobotMap.INDEXER_SENSOR_INVERTED,
-            RobotMap.INDEXER_MOTOR_INVERTED, indexLeader, indexFollower);
+            RobotMap.INDEXER_MOTOR_INVERTED, indexLeader, indexBeltMotor);
         LOGGER.debug("Talon group:" + indexer.toString());
 
       } else {
         indexer = new TalonSpeedControllerGroup();
+        intakeBelt = new TalonSpeedControllerGroup();
       }
 
       if (RobotMap.HAS_INDEXER_TOF_SENSORS) {
         onboardTOF = new Rev2mDistanceSensor(Port.kOnboard);
         onboardTOF.setAutomaticMode(true);
-        NetworkTable table = NetworkTableInstance.getDefault().getTable("sensors");
+        final NetworkTable table = NetworkTableInstance.getDefault().getTable("sensors");
         networkTableTOF = table.getEntry("tof");
       }
 
       instance = new IndexerAL(indexer);
+      instance.setIntakeBeltStop();
     }
     return instance;
   }
@@ -76,9 +84,9 @@ public class IndexerAL extends GamePieceBase implements GamePiece {
     }
   }
 
-  public void setIndexerSpeed(double speed) {
+  public void setIndexerSpeed(final double speed) {
     if (indexer != null && RobotMap.HAS_INDEXER) {
-      double output = Math.max(-1.0, Math.min(1.0, speed));
+      final double output = Math.max(-1.0, Math.min(1.0, speed));
       indexer.set(output);
     }
   }
@@ -103,11 +111,11 @@ public class IndexerAL extends GamePieceBase implements GamePiece {
     return distance;
   }
 
-  public void setForceBallInMouth(SensorTestMode mode) {
+  public void setForceBallInMouth(final SensorTestMode mode) {
     forceMouthSensor = mode;
   }
 
-  public void setForceBallInChamber(SensorTestMode mode) {
+  public void setForceBallInChamber(final SensorTestMode mode) {
     forceChamberSensor = mode;
   }
 
@@ -127,8 +135,8 @@ public class IndexerAL extends GamePieceBase implements GamePiece {
    // LOGGER.info("Ball is in mouth {}", result);
     boolean result = false; // TODO make this false when have indexer
     if (onboardTOF != null && RobotMap.HAS_INDEXER_TOF_SENSORS) {
-      double distance = getMouthDistance();
-      double threshold = RobotMap.INDEXER_TOF_THRESHOLD;
+      final double distance = getMouthDistance();
+      final double threshold = RobotMap.INDEXER_TOF_THRESHOLD;
 
       if (distance <= threshold) {
         result = true;
@@ -150,8 +158,8 @@ public class IndexerAL extends GamePieceBase implements GamePiece {
     // LOGGER.info("Ball is in Chamber {}", result);
     boolean result = false; // TODO make this false when have indexer
     if (networkTableTOF != null && RobotMap.HAS_INDEXER_TOF_SENSORS) {
-      double distance = getChamberDistance();
-      double threshold = RobotMap.INDEXER_TOF_THRESHOLD;
+      final double distance = getChamberDistance();
+      final double threshold = RobotMap.INDEXER_TOF_THRESHOLD;
 
       if (distance <= threshold) {
         result = true;
@@ -196,7 +204,7 @@ public class IndexerAL extends GamePieceBase implements GamePiece {
 
   }
 
-  public void setDirection(SetBelts direction) {
+  public void setDirection(final SetBelts direction) {
 
     switch (direction) {
 
@@ -219,7 +227,49 @@ public class IndexerAL extends GamePieceBase implements GamePiece {
 
   }
 
-  private IndexerAL(TalonSpeedControllerGroup indexer) {
+  //Belts
+
+  public void setIntakeBeltSpeed(final double speed) {
+    if (intakeBelt != null && RobotMap.HAS_INTAKE) {
+        final double output = Math.max(-1.0, Math.min(1.0, speed));
+       // LOGGER.debug("Intake belt speed");
+        intakeBelt.set(output);
+    }
+}
+
+public void setIntakeBeltToIndexer() {
+    if (intakeBelt != null && RobotMap.HAS_INTAKE) {
+    intakeBelt.set(-1.0);
+    }
+}
+
+
+public void setIntakeBeltStop() {
+    if (intakeBelt != null && RobotMap.HAS_INTAKE) {
+    intakeBelt.set(0.0);
+    }
+}
+
+
+public void setIntakeBeltToReverse() {
+    if (intakeBelt != null && RobotMap.HAS_INTAKE) {
+    intakeBelt.set(1.0);
+    }
+}
+
+public static void callIntakeBeltOff() {
+  IndexerAL.getInstance().setIntakeBeltStop();
+}
+
+public static void callIntakeBeltToIndexer() {
+  IndexerAL.getInstance().setIntakeBeltToIndexer();
+}
+
+public static void callIntakeBeltInverse() {
+  IndexerAL.getInstance().setIntakeBeltToReverse();
+}
+
+  private IndexerAL(final TalonSpeedControllerGroup indexer) {
     super("Telemetry", "Indexer");
   }
   
@@ -229,7 +279,7 @@ public class IndexerAL extends GamePieceBase implements GamePiece {
   try {
     getInstance();
    setDirection(SetBelts.FORWARD);
-  } catch (Exception e) {
+  } catch (final Exception e) {
     LOGGER.error("Indexer problem");
     e.printStackTrace();
   }

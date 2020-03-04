@@ -47,7 +47,6 @@ public class IntakeTuner implements Tuner {
         double beltSpeed = SmartDashboard.getNumber("Belt Speed", 0);
         
         intake.setRollerSpeed(speed);
-        intake.setIntakeBeltSpeed(beltSpeed);
 
         // if (armUp) {
         //     if (currentState != ArmState.UP) {
