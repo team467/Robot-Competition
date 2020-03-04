@@ -137,26 +137,26 @@ public class GamePieceController {
    * Checks for states from driverStation.
    */
   public void periodic() {
-    //Climber
-    climberDownButtonPressed = driverStation.getClimbDown();
-    climberUpButtonPressed = driverStation.getClimbUp();
-    climberEnabled = driverStation.getClimberEnable();
+    // //Climber
+    // climberDownButtonPressed = driverStation.getClimbDown();
+    // climberUpButtonPressed = driverStation.getClimbUp();
+    // climberEnabled = driverStation.getClimberEnable();
 
-    //Index
-    IndexAuto = driverStation.getIndexerAutoMode();
-    indexerBallsReverse = driverStation.getIndexerReverse();
-    indexerBallsForward = driverStation.getIndexerFeed();
+    // //Index
+    // IndexAuto = driverStation.getIndexerAutoMode();
+    // indexerBallsReverse = driverStation.getIndexerReverse();
+    // indexerBallsForward = driverStation.getIndexerFeed();
 
-    //Shooter
-    ShooterAuto = driverStation.getShooterAutoMode();
-    fireWhenReady = driverStation.getShootButton();
-    triggerManual = (driverStation.getShooterManualMode()) ? driverStation.getShootButton() : false;
-    flywheelManual = driverStation.getFlywheelEnabled();
+    // //Shooter
+    // ShooterAuto = driverStation.getShooterAutoMode();
+    // fireWhenReady = driverStation.getShootButton();
+    // triggerManual = (driverStation.getShooterManualMode()) ? driverStation.getShootButton() : false;
+    // flywheelManual = driverStation.getFlywheelEnabled();
 
-    //Roller
-    rollerStateIN = driverStation.getIntakeFeed();
-    rollerStateOUT = driverStation.getIntakeReverse();
-    armPosition = driverStation.getIntakeUp(); 
+    // //Roller
+    // rollerStateIN = driverStation.getIntakeFeed();
+    // rollerStateOUT = driverStation.getIntakeReverse();
+    // armPosition = driverStation.getIntakeUp(); 
 
     // Separate reading from driver station from processing state
     // so that tests can manually feed inputs.

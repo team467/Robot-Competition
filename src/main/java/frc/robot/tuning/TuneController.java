@@ -18,7 +18,7 @@ public class TuneController {
     register("Indexer_Tuner", new IndexerTuner());
     register("Sm_Test", new ShooterStateMachineTuner());
     register("Indexer_SM_Tuner", new IndexerStateTuner());
-    register("GamePieceController_Tuner", new GPCTuner());
+    register("GPC_Tuner", new GPCTuner());
     register("Climber_SM_Tunner", new ClimberStateTuner());
     register("Intake_Tuner", new IntakeTuner());
   }

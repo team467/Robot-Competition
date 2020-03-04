@@ -225,8 +225,8 @@ public class RobotMap {
         INDEXER_MOVE_TIMER = 1.0;
         INDEXER_TOF_THRESHOLD = 100.0;
 
-        INDEXER_FORWARD_SPEED = -0.2;
-        INDEXER_INVERSE_SPEED = 0.2;
+        INDEXER_FORWARD_SPEED = 0.5;
+        INDEXER_INVERSE_SPEED = -0.5;
 
         // Climber
         CLIMBER_MOTOR_INVERTED = true;

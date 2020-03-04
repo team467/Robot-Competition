@@ -66,11 +66,6 @@ public enum IndexerState implements State {
                 return Feed;
             }
 
-            if (!shooterAuto) {
-                LOGGER.debug("Shooter in Manual sending power cell to feed");
-                return Feed;
-            }
-
             if ((indexerBallsForward || shooterWantsBall) && (!isInMouth || !isInChamber)) {
                 IndexerAL.callIntakeBeltToIndexer();
             } else {
@@ -209,12 +204,15 @@ public enum IndexerState implements State {
 
             if (indexerBallsForward) {
                 IndexerAL.advanceBallsToShooter();
+                IndexerAL.callIntakeBeltToIndexer();
             }
             if (indexerBallsReverse) {
                 IndexerAL.moveBallsTowardIntake();
+                IndexerAL.callIntakeBeltInverse();
             }
             if (!indexerBallsForward && !indexerBallsReverse) {
                 IndexerAL.callStop();
+                IndexerAL.callIntakeBeltOff();
             }
 
             return this;

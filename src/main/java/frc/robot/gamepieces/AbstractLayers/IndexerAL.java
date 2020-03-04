@@ -49,7 +49,7 @@ public class IndexerAL extends GamePieceBase implements GamePiece {
 
         indexFirstStage = new TalonSpeedControllerGroup("Indexer First Stage", ControlMode.PercentOutput, RobotMap.INDEXER_SENSOR_INVERTED,
             RobotMap.FIRST_MAGAZINE_FEED_MOTOR_INVERTED, indexFirstMotor);
-        indexFirstStage = new TalonSpeedControllerGroup("Indexer Second Stage", ControlMode.PercentOutput, RobotMap.INDEXER_SENSOR_INVERTED,
+        indexSecondStage = new TalonSpeedControllerGroup("Indexer Second Stage", ControlMode.PercentOutput, RobotMap.INDEXER_SENSOR_INVERTED,
             RobotMap.SECOND_MAGAZINE_FEED_MOTOR_INVERTED, indexSecondMotor);
 
       } else {

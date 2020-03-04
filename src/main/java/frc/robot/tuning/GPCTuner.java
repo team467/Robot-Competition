@@ -33,6 +33,7 @@ public class GPCTuner implements Tuner {
       SmartDashboard.putBoolean("Shoot", false);
       SmartDashboard.putBoolean("Auto Shooter", true);
       SmartDashboard.putBoolean("FlyWheel Man", false);
+      SmartDashboard.putBoolean("Trigger Man", false);
 
       //Intake controls
       SmartDashboard.putBoolean("Roller-F", false);
@@ -41,7 +42,7 @@ public class GPCTuner implements Tuner {
 
       //Index
       SmartDashboard.putBoolean("Index-F", false);
-      SmartDashboard.putBoolean("Index-B", false);
+      SmartDashboard.putBoolean("Index-R", false);
       SmartDashboard.putBoolean("Auto Index", true);
 
       //Climber
@@ -64,6 +65,7 @@ public class GPCTuner implements Tuner {
 
         gamePieceController.setAutomousFireWhenReady(SmartDashboard.getBoolean("Shoot", false));
         gamePieceController.flywheelManual = SmartDashboard.getBoolean("FlyWheel man", false);
+        gamePieceController.triggerManual = SmartDashboard.getBoolean("Trigger man", false);
 
         //Intake
         gamePieceController.rollerStateIN = SmartDashboard.getBoolean("Roller-B", false);
