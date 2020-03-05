@@ -29,6 +29,7 @@ import frc.robot.vision.VisionController;
 import frc.robot.tuning.TuneController;
 import java.io.IOException;
 import org.apache.logging.log4j.Logger;
+import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
@@ -146,6 +147,7 @@ public class Robot extends TimedRobot {
     gamePieceController = GamePieceController.getInstance();
     visionController = VisionController.getInstance();
     matchConfig = matchConfig.getInstance();
+    LiveWindow.disableAllTelemetry();
 
     TuneController.loadTuners();
     drive.setPidsFromRobotMap();

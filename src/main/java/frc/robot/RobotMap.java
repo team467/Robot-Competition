@@ -206,7 +206,7 @@ public class RobotMap {
 
         VELOCITY_MULTIPLIER_SHOOTER = 10000;
         SHOOTER_SPEED_TOLERANCE = 0.25;
-        MANUAL_MODE_SHOOTER_SPEED = -0.2; // TODO determine the speed
+        MANUAL_MODE_SHOOTER_SPEED = -0.3; // TODO determine the speed
 
         // Intake
         // TODO: change the values of these later.
@@ -223,7 +223,8 @@ public class RobotMap {
         SECOND_MAGAZINE_FEED_MOTOR_INVERTED = false;
 
         INDEXER_MOVE_TIMER = 1.0;
-        INDEXER_TOF_THRESHOLD = 20.0;
+        ONBOARD_INDEXER_TOF_THRESHOLD = 70.0;
+        NETWORK_INDEXER_TOF_THRESHOLD = 70.0;
         HAS_INDEXER_TOF_SENSORS = true;
 
         INDEXER_FORWARD_SPEED = 0.5;
@@ -433,7 +434,7 @@ public class RobotMap {
         INDEX_FOLLOWER_MOTOR = true;
 
         INDEXER_MOVE_TIMER = 0.2;
-        INDEXER_TOF_THRESHOLD = 100;
+        ONBOARD_INDEXER_TOF_THRESHOLD = 100;
 
         INDEXER_FORWARD_SPEED = 1.0;
         INDEXER_INVERSE_SPEED = -1.0;
@@ -627,5 +628,6 @@ public class RobotMap {
 
   public static double INDEXER_MOVE_TIMER;
   // distance threshold in mm for detecting a ball
-  public static double INDEXER_TOF_THRESHOLD;
+  public static double ONBOARD_INDEXER_TOF_THRESHOLD;
+  public static double NETWORK_INDEXER_TOF_THRESHOLD;
 }

@@ -37,8 +37,8 @@ public enum IndexerState implements State {
         public State action() {
             indexAuto = GamePieceController.getInstance().IndexAuto;
             shooterAuto = GamePieceController.getInstance().ShooterAuto;
-            indexerBallsReverse = GamePieceController.getInstance().indexerBallsReverse();
-            indexerBallsForward = GamePieceController.getInstance().indexerBallsForward();
+            indexerBallsReverse = GamePieceController.getInstance().indexerBallsReverse;
+            indexerBallsForward = GamePieceController.getInstance().indexerBallsForward;
             climberEnabled = GamePieceController.getInstance().climberEnabled;
 
             isInMouth = indexerAL.isBallInMouth();

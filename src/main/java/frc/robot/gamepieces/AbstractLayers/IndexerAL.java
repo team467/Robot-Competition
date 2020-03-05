@@ -61,6 +61,7 @@ public class IndexerAL extends GamePieceBase implements GamePiece {
         onboardTOF = new Rev2mDistanceSensor(Port.kOnboard);
         onboardTOF.setAutomaticMode(true);
         final NetworkTable table = NetworkTableInstance.getDefault().getTable("sensors");
+        // table.getEntry("tof").get
         networkTableTOF = table.getEntry("tof");
       }
 
@@ -103,7 +104,9 @@ public class IndexerAL extends GamePieceBase implements GamePiece {
     double distance = 0;
     if (onboardTOF != null && RobotMap.HAS_INDEXER_TOF_SENSORS) {
       if (onboardTOF.isRangeValid()) {
-        distance = onboardTOF.getRange();
+        distance = onboardTOF.getRange() * 25.4;
+      } else {
+        LOGGER.error("Invalid TOF range on onboard tof");
       }
     }
 
@@ -113,7 +116,7 @@ public class IndexerAL extends GamePieceBase implements GamePiece {
   public double getChamberDistance() {
     double distance = 0;
     if (networkTableTOF != null && RobotMap.HAS_INDEXER_TOF_SENSORS) {
-      distance = networkTableTOF.getDouble(0);
+      distance = (double) networkTableTOF.getNumber(0);
     }
 
     return distance;
@@ -144,7 +147,7 @@ public class IndexerAL extends GamePieceBase implements GamePiece {
     boolean result = false; // TODO make this false when have indexer
     if (onboardTOF != null && RobotMap.HAS_INDEXER_TOF_SENSORS) {
       final double distance = getMouthDistance();
-      final double threshold = RobotMap.INDEXER_TOF_THRESHOLD;
+      final double threshold = RobotMap.ONBOARD_INDEXER_TOF_THRESHOLD;
 
       if (distance <= threshold) {
         result = true;
@@ -167,7 +170,7 @@ public class IndexerAL extends GamePieceBase implements GamePiece {
     boolean result = false; // TODO make this false when have indexer
     if (networkTableTOF != null && RobotMap.HAS_INDEXER_TOF_SENSORS) {
       final double distance = getChamberDistance();
-      final double threshold = RobotMap.INDEXER_TOF_THRESHOLD;
+      final double threshold = RobotMap.NETWORK_INDEXER_TOF_THRESHOLD;
 
       if (distance <= threshold) {
         result = true;
