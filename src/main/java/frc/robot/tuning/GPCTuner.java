@@ -59,14 +59,14 @@ public class GPCTuner implements Tuner {
         //Shooter
         gamePieceController.ShooterAuto = SmartDashboard.getBoolean("Auto Shooter", false);
 
-        if (visionContoller.hasAngle()) {
-            gamePieceController.determineShooterSpeed();
-        }
+        // if (visionContoller.hasAngle()) {
+        //     gamePieceController.determineShooterSpeed();
+        // }
 
         gamePieceController.setAutomousFireWhenReady(SmartDashboard.getBoolean("Shoot", false));
-        gamePieceController.flywheelManual = SmartDashboard.getBoolean("FlyWheel man", false);
-        gamePieceController.triggerManual = SmartDashboard.getBoolean("Trigger man", false);
-
+        gamePieceController.flywheelManual = SmartDashboard.getBoolean("FlyWheel Man", false);
+        gamePieceController.triggerManual = SmartDashboard.getBoolean("Trigger Man", false);
+      
         //Intake
         gamePieceController.rollerStateIN = SmartDashboard.getBoolean("Roller-B", false);
         gamePieceController.rollerStateOUT = SmartDashboard.getBoolean("Roller-F", false);

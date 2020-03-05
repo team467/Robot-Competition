@@ -133,12 +133,12 @@ public class IntakeAL extends GamePieceBase implements GamePiece {
 
     private void setForward() {
         LOGGER.debug("setForward called");
-        roller.set(1.0);
+        roller.set(-1.0);
     }
 
     private void setBackward() {
         LOGGER.debug("setBackward called");
-        roller.set(-1.0);
+        roller.set(1.0);
     }
 
     private void setRollerStop() {

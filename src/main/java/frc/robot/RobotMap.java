@@ -181,7 +181,7 @@ public class RobotMap {
         HAS_SHOOTER = true;
         HAS_INDEXER = true;
         HAS_INTAKE = true;
-        HAS_CLIMBER = false;
+        HAS_CLIMBER = true;
 
         // Shooter
         // TODO:change the values of these later
@@ -206,7 +206,7 @@ public class RobotMap {
 
         VELOCITY_MULTIPLIER_SHOOTER = 10000;
         SHOOTER_SPEED_TOLERANCE = 0.25;
-        MANUAL_MODE_SHOOTER_SPEED = 1.0; // TODO determine the speed
+        MANUAL_MODE_SHOOTER_SPEED = -0.2; // TODO determine the speed
 
         // Intake
         // TODO: change the values of these later.
@@ -223,7 +223,8 @@ public class RobotMap {
         SECOND_MAGAZINE_FEED_MOTOR_INVERTED = false;
 
         INDEXER_MOVE_TIMER = 1.0;
-        INDEXER_TOF_THRESHOLD = 100.0;
+        INDEXER_TOF_THRESHOLD = 20.0;
+        HAS_INDEXER_TOF_SENSORS = true;
 
         INDEXER_FORWARD_SPEED = 0.5;
         INDEXER_INVERSE_SPEED = -0.5;

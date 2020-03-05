@@ -143,7 +143,7 @@ public class Robot extends TimedRobot {
     driverstation = DriverStation467.getInstance();
     drive = Drive.getInstance();
     camera = CameraSwitcher.getInstance();
-    // gamePieceController = GamePieceController.getInstance();
+    gamePieceController = GamePieceController.getInstance();
     visionController = VisionController.getInstance();
     matchConfig = matchConfig.getInstance();
 
@@ -264,7 +264,7 @@ public class Robot extends TimedRobot {
       default:
     }
 
-    //  gamePieceController.periodic(); 
+      gamePieceController.periodic(); 
     
 
     // perfTimer.end();

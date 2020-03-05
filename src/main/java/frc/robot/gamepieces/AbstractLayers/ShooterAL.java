@@ -139,7 +139,11 @@ public class ShooterAL extends GamePieceBase implements GamePiece {
   }
 
   public void setSpeed(double speed) {
-    this.speed = speed;
+    if (flywheel != null && RobotMap.HAS_SHOOTER) {
+      double output = Math.max(-1.0, Math.min(1.0, speed));
+      flywheel.set(ControlMode.PercentOutput, output);
+      LOGGER.debug("the speed is {}", output);
+    }
     
   }
 
@@ -355,7 +359,7 @@ public class ShooterAL extends GamePieceBase implements GamePiece {
         break;
 
       case MANUAL_FORWARD:
-        rampToSpeed(RobotMap.MANUAL_MODE_SHOOTER_SPEED); //TODO tbd speed
+        setSpeed(RobotMap.MANUAL_MODE_SHOOTER_SPEED); //TODO tbd speed
         break;
       case STOP:
       stop();

@@ -167,17 +167,21 @@ public enum ShooterState implements State {
             flyWheelMan = GamePieceController.getInstance().flywheelManual;
             triggerMan = GamePieceController.getInstance().triggerManual;
 
-            LOGGER.warn("Manual shooter called, {}, {}", flyWheelMan, triggerMan);
+           // LOGGER.warn("Manual shooter called, {}, {}", flyWheelMan, triggerMan);
 
             //Manual mode based on controls
             if (flyWheelMan) {
                 shooterAL.setFlywheel(FlywheelSettings.MANUAL_FORWARD);
-                LOGGER.warn("Manual flywheel called");
+                //LOGGER.warn("Manual flywheel called");
+            } else {
+                shooterAL.setFlywheel(FlywheelSettings.STOP);
             }
 
             if (triggerMan) {
                 shooterAL.setTrigger(TriggerSettings.SHOOTING);
-                LOGGER.warn("Manual trigger called");
+                //LOGGER.warn("Manual trigger called");
+            } else {
+                shooterAL.setTrigger(TriggerSettings.STOP);
             }
 
             if (autoMode) {

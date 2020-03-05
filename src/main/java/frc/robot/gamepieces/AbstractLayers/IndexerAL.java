@@ -99,7 +99,7 @@ public class IndexerAL extends GamePieceBase implements GamePiece {
     }
   }
 
-  private double getMouthDistance() {
+  public double getMouthDistance() {
     double distance = 0;
     if (onboardTOF != null && RobotMap.HAS_INDEXER_TOF_SENSORS) {
       if (onboardTOF.isRangeValid()) {
@@ -110,7 +110,7 @@ public class IndexerAL extends GamePieceBase implements GamePiece {
     return distance;
   }
 
-  private double getChamberDistance() {
+  public double getChamberDistance() {
     double distance = 0;
     if (networkTableTOF != null && RobotMap.HAS_INDEXER_TOF_SENSORS) {
       distance = networkTableTOF.getDouble(0);
