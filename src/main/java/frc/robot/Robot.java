@@ -197,10 +197,10 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopInit() {
     mode = RobotMode.TELEOP;
-    telemetry.robotMode(mode);
+    //telemetry.robotMode(mode);
     LOGGER.info("Teleop Initialized");
     // perfTimer = PerfTimer.timer("Teleoperated");
-    LOGGER.debug("Match time {}", box(DriverStation.getInstance().getMatchTime()));
+   // LOGGER.debug("Match time {}", box(DriverStation.getInstance().getMatchTime()));
 
   }
 
@@ -209,13 +209,13 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
-    LOGGER.trace("Teleop Periodic");
+    //LOGGER.trace("Teleop Periodic");
     // perfTimer.start();
     driverstation.readInputs();
 
     double speed = driverstation.getArcadeSpeed();
     double turn = driverstation.getArcadeTurn();
-    boolean autoAlign = driverstation.getAutoAlignButton(); //TODO change this to be a driverstation input
+    boolean autoAlign = driverstation.getShootButton(); //TODO change this to be a driverstation input
 
     if (Math.abs(speed) < RobotMap.MIN_DRIVE_SPEED) {
       speed = 0.0;
@@ -240,9 +240,9 @@ public class Robot extends TimedRobot {
     switch (driverstation.getDriveMode()) {
 
       case ArcadeDrive:
-      //auto align will remove control for driver to drive and align until driver lets go
+      //auto align will remove control for driver to drive and align until operator lets go
         if (autoAlign && visionController.hasAngle()) {
-            drive.arcadeDrive(visionController.setDistDrive(), visionController.setTurn());
+            drive.arcadeDrive(0 , visionController.setTurn());
           } else {
             drive.arcadeDrive(speed, turn, true);
           }
@@ -275,7 +275,7 @@ public class Robot extends TimedRobot {
   @Override
   public void testInit() {
     mode = RobotMode.TEST;
-    telemetry.robotMode(mode);
+    //telemetry.robotMode(mode);
     TuneController.init();
     // perfTimer = PerfTimer.timer("Test Periodic");
   }
@@ -297,7 +297,7 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledInit() {
     mode = RobotMode.DISABLED;
-    telemetry.robotMode(mode);
+    //telemetry.robotMode(mode);
     // PerfTimer.print();
     LOGGER.info("Robot Disabled");
   }

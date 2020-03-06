@@ -130,8 +130,6 @@ public class IndexerAL extends GamePieceBase implements GamePiece {
     forceChamberSensor = mode;
   }
 
-  
-
   public boolean isBallInMouth() {
    
     // Tuners may force a result, bypassing the sensor.

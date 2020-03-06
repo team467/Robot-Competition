@@ -56,7 +56,7 @@ public enum IndexerState implements State {
                 return Manual;
             }
 
-            if (indexerBallsForward && !isInMouth && isInChamber) {
+            if (indexerBallsForward && isInMouth && !isInChamber) {
                     LOGGER.debug("isInMouth and is not in Chamber");
                     return Feed;
             }
@@ -94,7 +94,7 @@ public enum IndexerState implements State {
         public State action() {
             LOGGER.debug("Feed is activated");
             autoMode = GamePieceController.getInstance().IndexAuto;
-            indexerBallsReverse = GamePieceController.getInstance().indexerBallsReverse();
+            indexerBallsReverse = GamePieceController.getInstance().indexerBallsReverse;
             isInChamber = indexerAL.isBallInChamber();
 
             IndexerAL.advanceBallsToShooter();
@@ -161,7 +161,7 @@ public enum IndexerState implements State {
 
         public State action() {
             autoMode = GamePieceController.getInstance().IndexAuto;
-            indexerBallsReverse = GamePieceController.getInstance().indexerBallsReverse();
+            indexerBallsReverse = GamePieceController.getInstance().indexerBallsReverse;
 
             IndexerAL.moveBallsTowardIntake();
 
@@ -206,10 +206,12 @@ public enum IndexerState implements State {
                 IndexerAL.advanceBallsToShooter();
                 IndexerAL.callIntakeBeltToIndexer();
             }
+
             if (indexerBallsReverse) {
                 IndexerAL.moveBallsTowardIntake();
                 IndexerAL.callIntakeBeltInverse();
             }
+
             if (!indexerBallsForward && !indexerBallsReverse) {
                 IndexerAL.callStop();
                 IndexerAL.callIntakeBeltOff();

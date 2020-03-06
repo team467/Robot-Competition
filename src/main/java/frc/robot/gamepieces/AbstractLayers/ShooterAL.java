@@ -62,14 +62,14 @@ public class ShooterAL extends GamePieceBase implements GamePiece {
   public static ShooterAL getInstance() {
     if (instance == null) {
       if (RobotMap.HAS_SHOOTER) {
-        LOGGER.info("Creating Lead Motors");
+        LOGGER.debug("Creating Lead Motors");
 
         flywheelLeader = new WPI_TalonSRX(RobotMap.SHOOTER_MOTOR_CHANNEL);
         flywheelLeader.setNeutralMode(NeutralMode.Coast);
         flywheelFollower = null;
 
         if (RobotMap.SHOOTER_FOLLOWER) {
-          LOGGER.info("Creating follow motors");
+          LOGGER.debug("Creating follow motors");
           flywheelFollower = new WPI_TalonSRX(RobotMap.SHOOTER_MOTOR_FOLLOWER_CHANNEL);
           flywheelFollower.setNeutralMode(NeutralMode.Coast);
         }

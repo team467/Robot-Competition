@@ -94,7 +94,7 @@ public class ClimberAL extends GamePieceBase implements GamePiece {
     // gets the instance
     public static ClimberAL getInstance() {
         // creates new instance if none exists
-        LOGGER.error("Instance is {}", instance);
+        LOGGER.debug("Instance is {}", instance);
         if (instance == null) {
             if (RobotMap.HAS_CLIMBER) {
                 // instantiates clomber motors
@@ -145,11 +145,11 @@ public class ClimberAL extends GamePieceBase implements GamePiece {
             }
 
             instance = new ClimberAL(climbGroup); // invoking the constructor
-            LOGGER.error("Instance is {}", instance);
+            LOGGER.debug("Instance is {}", instance);
 
             instance.stopMotors();
         }
-        LOGGER.error("Instance is {}", instance);
+        LOGGER.debug("Instance is {}", instance);
         return instance;
     }
 
