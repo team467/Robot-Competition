@@ -143,7 +143,7 @@ public class RobotMap {
         CONTROLS_INVERTED_FB = true;
         CONTROLS_INVERTED_TURN = false;
 
-        USE_VELOCITY_SPEED_CONTROL_FOR_TELOP = false;
+        USE_VELOCITY_SPEED_CONTROL_FOR_TELOP = true;
         VELOCITY_MULTIPLIER_RIGHT = 5700;
         VELOCITY_MULTIPLIER_LEFT = 5700;
         NORMAL_VELOCITY_SPEED_MULTIPLIER = 0.9;
@@ -201,7 +201,7 @@ public class RobotMap {
 
         VELOCITY_MULTIPLIER_SHOOTER = 10000;
         SHOOTER_SPEED_TOLERANCE = 0.25;
-        MANUAL_MODE_SHOOTER_SPEED = -0.3; // TODO determine the speed
+        MANUAL_MODE_SHOOTER_SPEED = 0.6; // TODO determine the speed
 
         // Intake
         // TODO: change the values of these later.

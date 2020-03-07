@@ -442,7 +442,6 @@ public class Drive extends DifferentialDrive implements AutoDrive {
 
       //feed the watchdog so it does not complain
       super.feedWatchdog();
-      
     } else {
       super.arcadeDrive(speed, rotation, squaredInputs);
     }

@@ -6,6 +6,7 @@ import frc.robot.RobotMap;
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.Servo;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 
 import java.io.IOException;
@@ -359,7 +360,7 @@ public class ShooterAL extends GamePieceBase implements GamePiece {
         break;
 
       case MANUAL_FORWARD:
-        setSpeed(RobotMap.MANUAL_MODE_SHOOTER_SPEED); //TODO tbd speed
+        rampToSpeed(SmartDashboard.getNumber("Speed", 0)); //TODO tbd speed
         break;
       case STOP:
       stop();
