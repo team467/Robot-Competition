@@ -352,11 +352,11 @@ public class ShooterAL extends GamePieceBase implements GamePiece {
    speed = GamePieceController.getInstance().shooterSpeed;
     switch(setting) {
       case FORWARD:
-        rampToSpeed(-speed);
+        rampToSpeed(speed);
         break;
 
       case BACKWARD:
-        rampToSpeed(speed);
+        rampToSpeed(-speed);
         break;
 
       case MANUAL_FORWARD:

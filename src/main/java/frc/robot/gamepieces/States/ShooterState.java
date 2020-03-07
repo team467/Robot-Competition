@@ -57,16 +57,17 @@ public enum ShooterState implements State {
     },
 
     LoadingBall {
-        public boolean autoMode;
+        public boolean autoMode, indexAuto;
         public boolean fireWhenReady = GamePieceController.getInstance().getFireWhenReady();
         public GamePieceController gamePieceController = GamePieceController.getInstance();
         public void enter() {
-            // float distance = Sensor.getDistance();
-            // int desiredRPM = (int)(distance * 1 * 1);
+            GamePieceController.getInstance().determineShooterSpeed();
         }
 
         public State action() {
             autoMode = GamePieceController.getInstance().ShooterAuto;
+            indexAuto = GamePieceController.getInstance().IndexAuto;
+            fireWhenReady = GamePieceController.getInstance().getFireWhenReady();
             shooterAL.setTrigger(TriggerSettings.STOP);
             shooterAL.setFlywheel(FlywheelSettings.FORWARD);
             gamePieceController.setShooterWantsBall(true);
@@ -80,7 +81,7 @@ public enum ShooterState implements State {
                 return Idle;
             }
             
-            if (indexerAL.isBallInChamber()) {
+            if (indexerAL.isBallInChamber() || !indexAuto) {//TODO unhack
                 return AdjustingSpeed;
             } else {
                 return LoadingBall;
@@ -95,18 +96,20 @@ public enum ShooterState implements State {
         public boolean autoMode;
         //Auto align robot and check if shooter is at the speed
         public void enter() {
-
         }
 
         public State action() {
             autoMode = GamePieceController.getInstance().ShooterAuto;
             shooterAL.setTrigger(TriggerSettings.STOP);
             shooterAL.setFlywheel(FlywheelSettings.FORWARD);
+
+            LOGGER.debug("Adjusting speed");
             if (!autoMode) {
                 return Manual;
             }
 
-            if (shooterAL.atSpeed() && robotAligned){
+            LOGGER.error(shooterAL.atSpeed());
+            if (shooterAL.atSpeed()){
                 return ShootingNoDelay;
             } else {
                 return AdjustingSpeed;
@@ -135,6 +138,7 @@ public enum ShooterState implements State {
             hasAngle = VisionController.getInstance().hasAngle();
             hasDistance = VisionController.getInstance().hasDistance();
 
+            LOGGER.error("Shooting");
             if (hasAngle && hasDistance) {
                 shooterAL.setFlywheel(FlywheelSettings.FORWARD);
                 shooterAL.setTrigger(TriggerSettings.SHOOTING);

@@ -186,6 +186,8 @@ public class GamePieceController {
     if (RobotMap.HAS_CLIMBER)
       climberSM.step();
 
+    determineShooterSpeed();
+
     // roller controls
     if (RobotMap.HAS_INTAKE) {
       if (armPosition && !climberEnabled) {
@@ -273,11 +275,12 @@ public class GamePieceController {
   public void determineShooterSpeed() {
     // math
     if (visionController.hasDistance()) {
-      shooterSpeed = ((0.16120202 * visionController.dist() + 65.5092) / 100) * 0.95;
+      shooterSpeed = ((0.090873 * visionController.dist() + 68.4238) / 100) * 0.95;
       shooterPreviousSpeed = shooterSpeed;
     } else {
       shooterSpeed = shooterPreviousSpeed;
     }
+    LOGGER.info("speed: {}", shooterSpeed, visionController.dist());
   }
 
   private void registerMetrics() {
