@@ -65,7 +65,7 @@ public class Robot extends TimedRobot {
   public static long previousTime = time;
   public static int dt = 0;
 
-  private DifferentialDrive m_myRobot;
+  //private DifferentialDrive m_myRobot;
 
   private Joystick m_leftStick;
   private Joystick m_rightStick;
@@ -215,7 +215,7 @@ public class Robot extends TimedRobot {
 
     double speed = driverstation.getArcadeSpeed();
     double turn = driverstation.getArcadeTurn();
-    boolean autoAlign = driverstation.getShootButton(); //TODO change this to be a driverstation input
+    boolean autoAlign = false; //driverstation.getShootButton(); //TODO change this to be a driverstation input
 
     if (Math.abs(speed) < RobotMap.MIN_DRIVE_SPEED) {
       speed = 0.0;
@@ -234,11 +234,10 @@ public class Robot extends TimedRobot {
       turn = turn * multiplier;
     }
 
-    LOGGER.debug("Driver Station Inputs mode: {} speed: {} turn: {}", 
-        driverstation.getDriveMode(), box(speed), box(turn));
+    //LOGGER.trace("Driver Station Inputs mode: {} speed: {} turn: {}", 
+        //driverstation.getDriveMode(), box(speed), box(turn));
 
     switch (driverstation.getDriveMode()) {
-
       case ArcadeDrive:
       //auto align will remove control for driver to drive and align until operator lets go
         if (autoAlign && visionController.hasAngle()) {
@@ -257,7 +256,7 @@ public class Robot extends TimedRobot {
         break;
 
       case TankDrive:
-        m_myRobot.tankDrive(m_leftStick.getY(), m_rightStick.getY());
+        //m_myRobot.tankDrive(m_leftStick.getY(), m_rightStick.getY());
         // double leftTank = driverstation.getDriveJoystick().getLeftStickY();
         // double rightTank = driverstation.getDriveJoystick().getRightStickY();
         // drive.tankDrive(leftTank, rightTank, true);
@@ -306,7 +305,7 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledPeriodic() {
     LOGGER.trace("Disabled Periodic");
-    driverstation.readInputs();
+    //driverstation.readInputs();
   }
 
 }

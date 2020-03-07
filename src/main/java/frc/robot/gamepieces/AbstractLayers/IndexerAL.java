@@ -106,7 +106,7 @@ public class IndexerAL extends GamePieceBase implements GamePiece {
       if (onboardTOF.isRangeValid()) {
         distance = onboardTOF.getRange() * 25.4;
       } else {
-        LOGGER.error("Invalid TOF range on onboard tof");
+        LOGGER.debug("Invalid TOF range on onboard tof");
       }
     }
 
