@@ -20,14 +20,6 @@ public class RobotMap {
   public static boolean HAS_GYRO = true;
   public static double AUTOALIGN_TURN_SPEED;
 
-  // Turret angle offsets
-  public static final double ON_TARGET = 1.0;
-  public static final double ANGLE_OFFSET_LEVEL_ONE = 5.0;
-  public static final double ANGLE_OFFSET_LEVEL_TWO = 10.0;
-  public static final double ANGLE_OFFSET_LEVEL_THREE = 15.0;
-  public static final double ANGLE_OFFSET_LEVEL_FOUR = 20.0;
-  public static final int PID_SLOT_TURRET = 0; // Slot will need to be determined and set
-
   // Steering motor ids
   public static boolean HAS_WHEELS;
   public static int DRIVEMOTOR_NUM;
@@ -187,14 +179,14 @@ public class RobotMap {
         SHOOTER_MOTOR_FOLLOWER_INVERTED = false;
         SHOOTER_SMART_SHOT = true;
 
-        SHOOTER_SENSOR_INVERTED = true;
+        SHOOTER_SENSOR_INVERTED = false;
 
         TRIGGER_MOTOR_CHANNEL = 7;
         TRIGGER_MOTOR_INVERTED = true;
         HAS_TRIGGER = true;
         HAS_SHOOTER_TRIGGER = true;
 
-        SHOOTER_P = 2;
+        SHOOTER_P = 1.05;
         SHOOTER_I = 0.0;
         SHOOTER_D = 0.0;
         SHOOTER_F = 0.0;

@@ -213,6 +213,14 @@ public class IndexerAL extends GamePieceBase implements GamePiece {
 
   }
 
+  public TalonSpeedControllerGroup getindexFirstMotor() {
+    return indexFirstStage;
+  }
+
+  public TalonSpeedControllerGroup getindexSecondMotor() {
+    return indexSecondStage;
+  }
+
   public void setDirection(final SetBelts direction) {
 
     switch (direction) {

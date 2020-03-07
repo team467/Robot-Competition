@@ -360,7 +360,7 @@ public class ShooterAL extends GamePieceBase implements GamePiece {
         break;
 
       case MANUAL_FORWARD:
-        rampToSpeed(SmartDashboard.getNumber("Speed", 0)); //TODO tbd speed
+        rampToSpeed(RobotMap.MANUAL_MODE_SHOOTER_SPEED); //TODO tbd speed
         break;
       case STOP:
       stop();

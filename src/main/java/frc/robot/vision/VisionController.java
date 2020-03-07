@@ -165,8 +165,8 @@ public class VisionController {
   }
 
   public void registerMetrics() {
-    Telemetry telemetry = Telemetry.getInstance();
-    telemetry.addBooleanMetric("Vision Has Angle", this::hasAngle);
+    // Telemetry telemetry = Telemetry.getInstance();
+    // telemetry.addBooleanMetric("Vision Has Angle", this::hasAngle);
   }
 
 }

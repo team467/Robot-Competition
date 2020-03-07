@@ -17,9 +17,12 @@ import frc.robot.RobotMap.RobotId;
 import frc.robot.autonomous.ActionGroup;
 import frc.robot.autonomous.MatchConfiguration;
 import frc.robot.drive.Drive;
+import frc.robot.drive.TalonSpeedControllerGroup;
 import frc.robot.gamepieces.GamePieceController;
+import frc.robot.gamepieces.AbstractLayers.IndexerAL;
+import frc.robot.gamepieces.AbstractLayers.ShooterAL;
 import frc.robot.logging.RobotLogManager;
-import frc.robot.logging.Telemetry;
+//import frc.robot.logging.Telemetry;
 import frc.robot.sensors.PowerDistributionPanel;
 import frc.robot.usercontrol.DriverStation467;
 import frc.robot.usercontrol.OperatorController467;
@@ -28,6 +31,9 @@ import frc.robot.vision.CameraSwitcher;
 import frc.robot.vision.VisionController;
 import frc.robot.tuning.TuneController;
 import java.io.IOException;
+
+import com.ctre.phoenix.motorcontrol.ControlMode;
+
 import org.apache.logging.log4j.Logger;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -52,14 +58,13 @@ public class Robot extends TimedRobot {
   NetworkTable table;
   private DriverStation467 driverstation;
   private Drive drive;
-  private Telemetry telemetry;
+  //private Telemetry telemetry;
   private CameraSwitcher camera;
   // private PerfTimer perfTimer;
   private  GamePieceController gamePieceController;
   public VisionController visionController;
   public MatchConfiguration matchConfig;
   public ActionGroup autonomous;
-
 
   public static long time = System.nanoTime();
   public static long previousTime = time;
@@ -69,6 +74,8 @@ public class Robot extends TimedRobot {
 
   private Joystick m_leftStick;
   private Joystick m_rightStick;
+
+  public boolean useVelocity;
 
 
   public static void enableSimulator() {
@@ -153,9 +160,9 @@ public class Robot extends TimedRobot {
     drive.setPidsFromRobotMap();
     //PowerDistributionPanel.registerPowerDistributionWithTelemetry();
 
-    telemetry = Telemetry.getInstance();
-    telemetry.robotMode(mode);
-    telemetry.start();
+    // telemetry = Telemetry.getInstance();
+    // telemetry.robotMode(mode);
+    // telemetry.start();
   }
 
   /**
@@ -177,7 +184,7 @@ public class Robot extends TimedRobot {
     driverstation.readInputs();
     matchConfig.load();
     autonomous = matchConfig.AutoDecisionTree();
-    telemetry.robotMode(mode);
+    //telemetry.robotMode(mode);
     LOGGER.info("Autonomous Initialized");
     // perfTimer = PerfTimer.timer("Autonomous");
     autonomous.enable();
@@ -211,6 +218,7 @@ public class Robot extends TimedRobot {
   public void teleopPeriodic() {
     //LOGGER.trace("Teleop Periodic");
     // perfTimer.start();
+
     driverstation.readInputs();
 
     double speed = driverstation.getArcadeSpeed();
@@ -264,7 +272,6 @@ public class Robot extends TimedRobot {
 
       default:
     }
-
       gamePieceController.periodic(); 
     
 

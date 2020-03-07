@@ -6,6 +6,9 @@ import frc.robot.sensors.LedI2C;
 import frc.robot.usercontrol.DriverStation467;
 import frc.robot.vision.CameraSwitcher;
 import frc.robot.vision.VisionController;
+
+import com.ctre.phoenix.motorcontrol.ControlMode;
+
 import org.apache.logging.log4j.Logger;
 import frc.robot.gamepieces.AbstractLayers.IndexerAL;
 import frc.robot.gamepieces.AbstractLayers.IntakeAL;
@@ -19,7 +22,7 @@ import frc.robot.gamepieces.States.StateMachine;
 import frc.robot.gamepieces.States.IntakeState.IntakerArm;
 import frc.robot.gamepieces.States.IntakeState.IntakerRollers;
 import frc.robot.RobotMap;
-
+import frc.robot.drive.TalonSpeedControllerGroup;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class GamePieceController {
@@ -38,7 +41,7 @@ public class GamePieceController {
   private ShooterAL ShooterAL;
 
   // Game Pieces' States
-  private ShooterAL shooter;
+  // private ShooterAL shooter;
   private IndexerAL indexer;
   private IntakeAL intaker;
 
@@ -78,6 +81,10 @@ public class GamePieceController {
   public boolean climberForceEnabled = false;
   public boolean climberForcedUp = false;
   public boolean climberForcedDown = false;
+
+  ShooterAL shooter;
+  TalonSpeedControllerGroup shooterMotor;
+  boolean useVelocity;
 
   public enum DriverInput {
     FORCE_TRUE, FORCE_FALSE, FORCE_AUTO_TRUE, FORCE_AUTO_FALSE, USE_DRIVER_INPUT
@@ -126,6 +133,8 @@ public class GamePieceController {
     LOGGER.debug("Starting in DEFENSE mode.");
 
     shooterSM = new StateMachine(ShooterState.Idle);
+
+
     indexerSM = new StateMachine(IndexerState.Idle);
     climberSM = new StateMachine(ClimberState.InitialLocked);
     intake = IntakeState.getInstance();
@@ -166,6 +175,7 @@ public class GamePieceController {
 
   public void updateGamePieces() {
     // Update all systems
+
    if (RobotMap.HAS_SHOOTER)
       shooterSM.step();
 
@@ -271,8 +281,9 @@ public class GamePieceController {
   }
 
   private void registerMetrics() {
-    Telemetry telemetry = Telemetry.getInstance();
-    // telemetry.addStringMetric(name + " Mode", mode::name);
+  //   Telemetry telemetry = Telemetry.getInstance();
+  //   // telemetry.addStringMetric(name + " Mode", mode::name);
+  // }
   }
 
   public void runOnTeleopInit() {

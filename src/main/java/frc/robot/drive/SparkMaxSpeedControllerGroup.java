@@ -70,8 +70,6 @@ public class SparkMaxSpeedControllerGroup implements SpeedController {
     
     //leadEncoder.setInverted(sensorIsInverted);
     leader.setInverted(motorIsInverted);
-
-    registerMetrics();
     zero();
   }
 
@@ -361,10 +359,10 @@ public class SparkMaxSpeedControllerGroup implements SpeedController {
     return feet;
   }
   
-  public void registerMetrics() {
-    Telemetry telemetry = Telemetry.getInstance();
-    telemetry.addDoubleMetric(name + "_Position", this::position);
-    telemetry.addDoubleMetric(name + "_Velocity", this::velocity);
-  }
+  // public void registerMetrics() {
+  //   Telemetry telemetry = Telemetry.getInstance();
+  //   telemetry.addDoubleMetric(name + "_Position", this::position);
+  //   telemetry.addDoubleMetric(name + "_Velocity", this::velocity);
+  // }
 
 }
