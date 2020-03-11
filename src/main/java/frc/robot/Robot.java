@@ -58,9 +58,7 @@ public class Robot extends TimedRobot {
   NetworkTable table;
   private DriverStation467 driverstation;
   private Drive drive;
-  //private Telemetry telemetry;
   private CameraSwitcher camera;
-  // private PerfTimer perfTimer;
   private  GamePieceController gamePieceController;
   public VisionController visionController;
   public MatchConfiguration matchConfig;
@@ -70,7 +68,7 @@ public class Robot extends TimedRobot {
   public static long previousTime = time;
   public static int dt = 0;
 
-  //private DifferentialDrive m_myRobot;
+  private DifferentialDrive m_myRobot;
 
   private Joystick m_leftStick;
   private Joystick m_rightStick;
@@ -158,11 +156,6 @@ public class Robot extends TimedRobot {
 
     TuneController.loadTuners();
     drive.setPidsFromRobotMap();
-    //PowerDistributionPanel.registerPowerDistributionWithTelemetry();
-
-    // telemetry = Telemetry.getInstance();
-    // telemetry.robotMode(mode);
-    // telemetry.start();
   }
 
   /**
@@ -184,9 +177,7 @@ public class Robot extends TimedRobot {
     driverstation.readInputs();
     matchConfig.load();
     autonomous = matchConfig.AutoDecisionTree();
-    //telemetry.robotMode(mode);
     LOGGER.info("Autonomous Initialized");
-    // perfTimer = PerfTimer.timer("Autonomous");
     autonomous.enable();
 
   }
@@ -204,11 +195,7 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopInit() {
     mode = RobotMode.TELEOP;
-    //telemetry.robotMode(mode);
     LOGGER.info("Teleop Initialized");
-    // perfTimer = PerfTimer.timer("Teleoperated");
-   // LOGGER.debug("Match time {}", box(DriverStation.getInstance().getMatchTime()));
-
   }
 
   /**
@@ -216,9 +203,6 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
-    //LOGGER.trace("Teleop Periodic");
-    // perfTimer.start();
-
     driverstation.readInputs();
 
     double speed = driverstation.getArcadeSpeed();
@@ -242,9 +226,6 @@ public class Robot extends TimedRobot {
       turn = turn * multiplier;
     }
 
-    //LOGGER.trace("Driver Station Inputs mode: {} speed: {} turn: {}", 
-        //driverstation.getDriveMode(), box(speed), box(turn));
-
     switch (driverstation.getDriveMode()) {
       case ArcadeDrive:
       //auto align will remove control for driver to drive and align until operator lets go
@@ -265,26 +246,21 @@ public class Robot extends TimedRobot {
         break;
 
       case TankDrive:
-        //m_myRobot.tankDrive(m_leftStick.getY(), m_rightStick.getY());
-        // double leftTank = driverstation.getDriveJoystick().getLeftStickY();
-        // double rightTank = driverstation.getDriveJoystick().getRightStickY();
-        // drive.tankDrive(leftTank, rightTank, true);
+        m_myRobot.tankDrive(m_leftStick.getY(), m_rightStick.getY());
+        double leftTank = driverstation.getDriveJoystick().getLeftStickY();
+        double rightTank = driverstation.getDriveJoystick().getRightStickY();
+        drive.tankDrive(leftTank, rightTank, true);
         break;
 
       default:
     }
       gamePieceController.periodic(); 
-    
-
-    // perfTimer.end();
   }
 
   @Override
   public void testInit() {
     mode = RobotMode.TEST;
-    //telemetry.robotMode(mode);
     TuneController.init();
-    // perfTimer = PerfTimer.timer("Test Periodic");
   }
 
 
@@ -295,17 +271,12 @@ public class Robot extends TimedRobot {
   @Override
   public void testPeriodic() {
     LOGGER.trace("Test Periodic");
-    // perfTimer.start();
     TuneController.periodic();
-    // perfTimer.end();
-    
   }
 
   @Override
   public void disabledInit() {
     mode = RobotMode.DISABLED;
-    //telemetry.robotMode(mode);
-    // PerfTimer.print();
     LOGGER.info("Robot Disabled");
   }
 
@@ -313,7 +284,6 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledPeriodic() {
     LOGGER.trace("Disabled Periodic");
-    //driverstation.readInputs();
   }
 
 }

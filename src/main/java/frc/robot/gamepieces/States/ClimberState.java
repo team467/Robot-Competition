@@ -1,22 +1,9 @@
-/*----------------------------------------------------------------------------*/
-/* Copyright (c) 2018-2019 FIRST. All Rights Reserved.                        */
-/* Open Source Software - may be modified and shared by FRC teams. The code   */
-/* must be accompanied by the FIRST BSD license file in the root directory of */
-/* the project.                                                               */
-/*----------------------------------------------------------------------------*/
-
 package frc.robot.gamepieces.States;
 
 import frc.robot.gamepieces.GamePieceController;
 import frc.robot.gamepieces.AbstractLayers.ClimberAL;
-import static frc.robot.gamepieces.AbstractLayers.ClimberAL.SolenoidLock.*;
-import static frc.robot.gamepieces.AbstractLayers.ClimberAL.climberSpeed.*;
-import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Timer;
 
-/**
- * Add your docs here.
- */
 public enum ClimberState implements State {
     InitialLocked {
         public boolean upButtonPressed;
@@ -44,6 +31,7 @@ public enum ClimberState implements State {
         }
     }, 
 
+    //removed from logic because physically cannot be done
     UnlockingUp {
         public boolean upButtonPressed;
         public double entryPosition;
@@ -81,6 +69,7 @@ public enum ClimberState implements State {
         }
     },
 
+    //removed from logic because physically cannot be done
     UnlockingDown {
         public boolean downButtonPressed;
         public double entryPosition;
@@ -160,7 +149,7 @@ public enum ClimberState implements State {
 
             climber.climberDown();
             climber.climberUnlock();
-            if (!downButtonPressed) {// || isLowest) {
+            if (!downButtonPressed) {
                 return GameLocked;
             }
             
@@ -204,10 +193,9 @@ public enum ClimberState implements State {
     private static boolean isLowest = climber.isDown();
     private static boolean isHighest = climber.isUp();
 
-    //Encoder encoder = new Encoder(0, 1, false, Encoder.EncodingType.k2X);
-    public final double distanceNeeded = 3.0; //TODO: determine value
+    public final double distanceNeeded = 3.0; 
     
-    private final static double climbThreshold = 2.0; // TODO: determine threshold for climber, should this be static or non static
+    private final static double climbThreshold = 2.0;
 
     public static Timer timer = new Timer();
 }

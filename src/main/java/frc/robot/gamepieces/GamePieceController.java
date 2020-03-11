@@ -186,8 +186,6 @@ public class GamePieceController {
     if (RobotMap.HAS_CLIMBER)
       climberSM.step();
 
-    determineShooterSpeed();
-
     // roller controls
     if (RobotMap.HAS_INTAKE) {
       if (armPosition && !climberEnabled) {
@@ -239,7 +237,6 @@ public class GamePieceController {
     return auto;
   }
 
-  // TODO: put in logic
   public boolean indexerBallsForward() {
     if (forceCellsForward == DriverInput.FORCE_TRUE) {
       LOGGER.debug("Driver pressed forward");
@@ -255,7 +252,6 @@ public class GamePieceController {
     return feed;
   }
 
-  // TODO: put in logic
   public boolean indexerBallsReverse() {
     if (forceCellsReverse == DriverInput.FORCE_TRUE) {
       LOGGER.debug("Driver pressed forward");
@@ -280,8 +276,6 @@ public class GamePieceController {
     } else {
       shooterSpeed = shooterPreviousSpeed;
     }
-    //LOGGER.info("speed: {}, Dist: {}, VisionContollerHasDistance: {}, shooterPreviousSpeed: {}",
-       //shooterSpeed, visionController.dist(), visionController.hasDistance(), shooterPreviousSpeed);
   }
 
   private void registerMetrics() {

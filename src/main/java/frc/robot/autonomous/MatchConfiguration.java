@@ -92,15 +92,6 @@ public class MatchConfiguration {
 
   public ActionGroup AutoDecisionTree() {
     autonomous = Actions.doNothing();
-		
-		// if (autoMode.startsWith("Left")) {
-		// 	Actions.startOnLeft();
-		// } else if (autoMode.startsWith("Right")) {
-		// 	Actions.startOnRight();
-		// } else {
-		// 	Actions.startInCenter();
-		// }
-
     autonomous = autoMode;
 
     autonomous.enable();

@@ -41,11 +41,9 @@ public class DriverStation467 {
    */
   private DriverStation467() {
     driverJoy = new XBoxJoystick467(0, "driver");
-    // navJoy = new XBoxJoystick467(1, "nav");
     opCon = new OperatorController467(1);
 
     driverRumbler = new Rumbler(driverJoy);
-    // navRumbler = new Rumbler(navJoy);
   }
 
   /**
@@ -56,10 +54,7 @@ public class DriverStation467 {
       driverJoy.read();
       driverRumbler.periodic();
     }
-    // if (navJoy != null) {
-    //   navJoy.read();
-    //   navRumbler.periodic();
-    // }
+
     if (opCon != null) {
       opCon.read();
     }
@@ -69,9 +64,6 @@ public class DriverStation467 {
     if (driverJoy != null) {
       driverJoy.logIdentity();
     }
-    // if (navJoy != null) {
-    //   navJoy.logIdentity();
-    // }
   }
 
   /**
@@ -82,10 +74,6 @@ public class DriverStation467 {
   public XBoxJoystick467 getDriveJoystick() {
     return driverJoy;
   }
-
-  // public XBoxJoystick467 getNavJoystick() {
-    // return navJoy;
-  // }
 
   public OperatorController467 getOperatorController() {
     return opCon;

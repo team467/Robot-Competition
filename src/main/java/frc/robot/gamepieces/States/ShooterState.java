@@ -82,7 +82,7 @@ public enum ShooterState implements State {
                 return Idle;
             }
             
-            if (indexerAL.isBallInChamber() || !indexAuto) {//TODO unhack
+            if (indexerAL.isBallInChamber() || !indexAuto) {
                 return AdjustingSpeed;
             } else {
                 return LoadingBall;
@@ -174,19 +174,15 @@ public enum ShooterState implements State {
             flyWheelMan = GamePieceController.getInstance().flywheelManual;
             triggerMan = GamePieceController.getInstance().triggerManual;
 
-           // LOGGER.warn("Manual shooter called, {}, {}", flyWheelMan, triggerMan);
-
             //Manual mode based on controls
             if (flyWheelMan) {
                 shooterAL.setFlywheel(FlywheelSettings.MANUAL_FORWARD);
-                //LOGGER.warn("Manual flywheel called");
             } else {
                 shooterAL.setFlywheel(FlywheelSettings.STOP);
             }
 
             if (triggerMan) {
                 shooterAL.setTrigger(TriggerSettings.SHOOTING);
-                //LOGGER.warn("Manual trigger called");
             } else {
                 shooterAL.setTrigger(TriggerSettings.STOP);
             }
@@ -207,7 +203,7 @@ public enum ShooterState implements State {
     private static GamePieceController gamePieceController = GamePieceController.getInstance();
     private static ShooterAL shooterAL = ShooterAL.getInstance();
     private static IndexerAL indexerAL = IndexerAL.getInstance();
-    private static boolean robotAligned = gamePieceController.RobotAligned; //TODO gpc will tell if robot is aligned
+    private static boolean robotAligned = gamePieceController.RobotAligned;
 
     private static final Logger LOGGER = RobotLogManager.getMainLogger(ShooterAL.class.getName());
     

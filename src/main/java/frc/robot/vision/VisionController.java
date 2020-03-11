@@ -54,8 +54,6 @@ public class VisionController {
     inst = NetworkTableInstance.getDefault();
     table = inst.getTable("vision");
     gyro = Gyrometer.getInstance();
-
-    registerMetrics();
   }
 
   public double angle() {
@@ -89,7 +87,7 @@ public class VisionController {
    * tells the robot to turn
    */
   public double setTurn() {
-
+    //will be redone, magic numbers will be removed in a future branch
     if (!hasAngle()) {
       return 0.0;
     }
@@ -108,7 +106,6 @@ public class VisionController {
     }
 
     return 0;
-
   }
 
   public void resetGyro() {
@@ -164,11 +161,6 @@ public class VisionController {
 
   public void setSubsystem(String subsystem) {
     this.subsystem = subsystem;
-  }
-
-  public void registerMetrics() {
-    // Telemetry telemetry = Telemetry.getInstance();
-    // telemetry.addBooleanMetric("Vision Has Angle", this::hasAngle);
   }
 
 }

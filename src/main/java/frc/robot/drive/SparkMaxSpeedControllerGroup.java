@@ -355,14 +355,7 @@ public class SparkMaxSpeedControllerGroup implements SpeedController {
   private double ticksToFeet(double ticks) {
     double feet = (ticks / RobotMap.WHEEL_ENCODER_CODES_PER_REVOLUTION) 
         * (RobotMap.WHEEL_CIRCUMFERENCE / 12);
-    //LOGGER.trace("Ticks = {} feet = {}", box(ticks), box(feet));
     return feet;
   }
-  
-  // public void registerMetrics() {
-  //   Telemetry telemetry = Telemetry.getInstance();
-  //   telemetry.addDoubleMetric(name + "_Position", this::position);
-  //   telemetry.addDoubleMetric(name + "_Velocity", this::velocity);
-  // }
 
 }

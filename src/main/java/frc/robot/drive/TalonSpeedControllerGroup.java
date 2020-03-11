@@ -346,10 +346,4 @@ public class TalonSpeedControllerGroup implements SpeedController {
     return feet;
   }
 
-  // public void registerMetrics() {
-  //   final Telemetry telemetry = Telemetry.getInstance();
-  //   telemetry.addDoubleMetric(name + "_Position", this::position);
-  //   telemetry.addDoubleMetric(name + "_Velocity", this::velocity);
-  // }
-
 }
