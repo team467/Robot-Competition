@@ -57,9 +57,10 @@ public enum ShooterState implements State {
     },
 
     LoadingBall {
-        public boolean autoMode, indexAuto;
+        public boolean autoMode, indexAuto, robotAligned;
         public boolean fireWhenReady = GamePieceController.getInstance().getFireWhenReady();
         public GamePieceController gamePieceController = GamePieceController.getInstance();
+
         public void enter() {
             GamePieceController.getInstance().determineShooterSpeed();
         }
@@ -93,23 +94,24 @@ public enum ShooterState implements State {
     },
 
     AdjustingSpeed {
-        public boolean autoMode;
+        public boolean autoMode, robotAligned;
         //Auto align robot and check if shooter is at the speed
         public void enter() {
         }
 
         public State action() {
             autoMode = GamePieceController.getInstance().ShooterAuto;
+            robotAligned = GamePieceController.getInstance().RobotAligned;
             shooterAL.setTrigger(TriggerSettings.STOP);
             shooterAL.setFlywheel(FlywheelSettings.FORWARD);
 
             LOGGER.debug("Adjusting speed");
+
             if (!autoMode) {
                 return Manual;
             }
 
-            LOGGER.error(shooterAL.atSpeed());
-            if (shooterAL.atSpeed()){
+            if (shooterAL.atSpeed() && robotAligned) {
                 return ShootingNoDelay;
             } else {
                 return AdjustingSpeed;
@@ -138,7 +140,8 @@ public enum ShooterState implements State {
             hasAngle = VisionController.getInstance().hasAngle();
             hasDistance = VisionController.getInstance().hasDistance();
 
-            LOGGER.error("Shooting");
+            LOGGER.debug("Shooting");
+            
             if (hasAngle && hasDistance) {
                 shooterAL.setFlywheel(FlywheelSettings.FORWARD);
                 shooterAL.setTrigger(TriggerSettings.SHOOTING);

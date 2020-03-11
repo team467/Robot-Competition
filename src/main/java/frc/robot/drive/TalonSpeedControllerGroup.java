@@ -126,7 +126,7 @@ public class TalonSpeedControllerGroup implements SpeedController {
 
   public double closedLoopTarget() {
     double target = 0;
-    if (leader == null) {
+    if (leader != null) {
       target = leader.getClosedLoopTarget();
     }
     return target;
@@ -134,7 +134,7 @@ public class TalonSpeedControllerGroup implements SpeedController {
 
   public double closedLoopError() {
     double error = 0;
-    if (leader == null) {
+    if (leader != null) {
       error = leader.getClosedLoopError();
     }
     return error;

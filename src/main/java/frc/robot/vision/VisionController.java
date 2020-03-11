@@ -25,6 +25,8 @@ public class VisionController {
   NetworkTableEntry net_Have_Angle;
   NetworkTableEntry net_Have_Dist;
 
+  public boolean aligned = false;
+
 
   double angle;
   double dist;
@@ -80,8 +82,7 @@ public class VisionController {
 
   public double dist() {
     netDist = table.getEntry("DistanceFromTarget");
-   //return netDist.getDouble(0.0);
-   return 120;
+   return netDist.getDouble(0.0);
   }
 
   /**
@@ -93,15 +94,16 @@ public class VisionController {
       return 0.0;
     }
 
-    if (Math.abs(angle()) < 4) {//Math.abs(angle() + gyro.getPitchDegrees())
+    if (angle() <= 7.5 && angle() >= 6.5 ) {//Math.abs(angle() + gyro.getPitchDegrees())
+        aligned = true;
         return 0.0;
     } 
     
-    if ((gyro.getPitchDegrees()) < angle()) {
+    if ((gyro.getPitchDegrees()) < angle() - 7) {
         return RobotMap.AUTOALIGN_TURN_SPEED;
     }
 
-    if ((gyro.getPitchDegrees()) > angle()) {
+    if ((gyro.getPitchDegrees()) > angle() - 7) {
         return -RobotMap.AUTOALIGN_TURN_SPEED;
     }
 

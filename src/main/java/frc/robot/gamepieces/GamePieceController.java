@@ -56,7 +56,7 @@ public class GamePieceController {
   private DriverStation467 driverStation;
   private VisionController visionController;
   private LedI2C led;
-  public boolean RobotAligned = true;// TODO determine where this is set
+  public boolean RobotAligned = false;// TODO determine where this is set
 
   // DS controls
 
@@ -275,21 +275,16 @@ public class GamePieceController {
   public void determineShooterSpeed() {
     // math
     if (visionController.hasDistance()) {
-      shooterSpeed = ((0.090873 * visionController.dist() + 68.4238) / 100);
+      shooterSpeed = ((0.090873 * visionController.dist() + 68.4238) / 100);//0.0148379 * (Math.pow(1.00902, visionController.dist())) + 0.758979; 
       shooterPreviousSpeed = shooterSpeed;
     } else {
       shooterSpeed = shooterPreviousSpeed;
     }
-    LOGGER.info("speed: {}", shooterSpeed, visionController.dist());
+    //LOGGER.info("speed: {}, Dist: {}, VisionContollerHasDistance: {}, shooterPreviousSpeed: {}",
+       //shooterSpeed, visionController.dist(), visionController.hasDistance(), shooterPreviousSpeed);
   }
 
   private void registerMetrics() {
-  //   Telemetry telemetry = Telemetry.getInstance();
-  //   // telemetry.addStringMetric(name + " Mode", mode::name);
-  // }
-  }
-
-  public void runOnTeleopInit() {
   }
 
   public void setAutomousFireWhenReady(boolean fire) {

@@ -223,7 +223,7 @@ public class Robot extends TimedRobot {
 
     double speed = driverstation.getArcadeSpeed();
     double turn = driverstation.getArcadeTurn();
-    boolean autoAlign = false; //driverstation.getShootButton(); //TODO change this to be a driverstation input
+    boolean autoAlign = driverstation.getShootButton(); //TODO change this to be a driverstation input
 
     if (Math.abs(speed) < RobotMap.MIN_DRIVE_SPEED) {
       speed = 0.0;
@@ -248,8 +248,9 @@ public class Robot extends TimedRobot {
     switch (driverstation.getDriveMode()) {
       case ArcadeDrive:
       //auto align will remove control for driver to drive and align until operator lets go
-        if (autoAlign && visionController.hasAngle()) {
+        if (autoAlign && visionController.hasAngle() && gamePieceController.ShooterAuto) {
             drive.arcadeDrive(0 , visionController.setTurn());
+            gamePieceController.RobotAligned = visionController.aligned;
           } else {
             drive.arcadeDrive(speed, turn, true);
           }

@@ -186,15 +186,17 @@ public class RobotMap {
         HAS_TRIGGER = true;
         HAS_SHOOTER_TRIGGER = true;
 
-        SHOOTER_P = 1.05;
+        SHOOTER_P = 2.0;
         SHOOTER_I = 0.0;
         SHOOTER_D = 0.0;
         SHOOTER_F = 0.0;
 
         VELOCITY_MULTIPLIER_SHOOTER = 10000;
-        SHOOTER_SPEED_TOLERANCE = 0.25;
+        SHOOTER_SPEED_TOLERANCE = 100;
         MANUAL_MODE_SHOOTER_SPEED = 0.6; // TODO determine the speed
 
+        AUTOALIGN_TURN_SPEED = 0.2;
+        
         // Intake
         // TODO: change the values of these later.
         ARM_MOTOR_CHANNEL = 8;

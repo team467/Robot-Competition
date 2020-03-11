@@ -157,11 +157,17 @@ public class ShooterAL extends GamePieceBase implements GamePiece {
   }
 
   public boolean atSpeed() {
+    // double current = flywheel.velocity();
+    // double target = flywheel.closedLoopTarget();
+    // double error = current / target;
     double current = flywheel.velocity();
-    double target = flywheel.closedLoopTarget();
-    double error = current / target;
+    double target = 9500 * GamePieceController.getInstance().shooterSpeed;
+    double error = target - current;
 
-    if (Math.abs(error - 1) <= RobotMap.SHOOTER_SPEED_TOLERANCE) {
+
+    LOGGER.debug("target: {}, Actual: {}, error {}", target, current, error);
+    
+    if (Math.abs(error) <= RobotMap.SHOOTER_SPEED_TOLERANCE) {
       return true;
     } else {
       return false;
