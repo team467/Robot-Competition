@@ -9,6 +9,7 @@ import org.apache.logging.log4j.Logger;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.DigitalInput;
 import frc.robot.gamepieces.GamePieceBase;
 import frc.robot.gamepieces.GamePiece;
 
@@ -30,8 +31,8 @@ public class IndexerAL extends GamePieceBase implements GamePiece {
   private static WPI_TalonSRX indexSecondMotor;
   private static TalonSpeedControllerGroup indexSecondStage;
 
-  private static Rev2mDistanceSensor onboardTOF;
-  private static NetworkTableEntry networkTableTOF;
+  private static DigitalInput mouthLimit;
+  private static DigitalInput chamberLimit;
 
   public enum SensorTestMode {
     FORCE_TRUE, FORCE_FALSE, USE_SENSOR
@@ -57,12 +58,9 @@ public class IndexerAL extends GamePieceBase implements GamePiece {
         indexSecondStage = new TalonSpeedControllerGroup();
       }
 
-      if (RobotMap.HAS_INDEXER_TOF_SENSORS) {
-        onboardTOF = new Rev2mDistanceSensor(Port.kOnboard);
-        onboardTOF.setAutomaticMode(true);
-        final NetworkTable table = NetworkTableInstance.getDefault().getTable("sensors");
-        // table.getEntry("tof").get
-        networkTableTOF = table.getEntry("tof");
+      if (RobotMap.HAS_INDEXER_LIMIT_SWITCHES) {
+        mouthLimit = new DigitalInput(RobotMap.INDEXER_MOUTH_SWITCH_CHANNEL);
+        chamberLimit = new DigitalInput(RobotMap.INDEXER_CHAMBER_SWITCH_CHANNEL);
       }
 
       instance = new IndexerAL();
@@ -100,28 +98,6 @@ public class IndexerAL extends GamePieceBase implements GamePiece {
     }
   }
 
-  public double getMouthDistance() {
-    double distance = 0;
-    if (onboardTOF != null && RobotMap.HAS_INDEXER_TOF_SENSORS) {
-      if (onboardTOF.isRangeValid()) {
-        distance = onboardTOF.getRange() * 25.4;
-      } else {
-        LOGGER.debug("Invalid TOF range on onboard tof");
-      }
-    }
-
-    return distance;
-  }
-
-  public double getChamberDistance() {
-    double distance = 0;
-    if (networkTableTOF != null && RobotMap.HAS_INDEXER_TOF_SENSORS) {
-      distance = (double) networkTableTOF.getNumber(0);
-    }
-
-    return distance;
-  }
-
   public void setForceBallInMouth(final SensorTestMode mode) {
     forceMouthSensor = mode;
   }
@@ -142,15 +118,12 @@ public class IndexerAL extends GamePieceBase implements GamePiece {
     }
     
    // LOGGER.info("Ball is in mouth {}", result);
-    boolean result = false; // TODO make this false when have indexer
-    if (onboardTOF != null && RobotMap.HAS_INDEXER_TOF_SENSORS) {
-      final double distance = getMouthDistance();
-      final double threshold = RobotMap.ONBOARD_INDEXER_TOF_THRESHOLD;
 
-      if (distance <= threshold) {
-        result = true;
-      }
-    }
+   boolean result = false;
+
+   if (RobotMap.HAS_INDEXER_LIMIT_SWITCHES) {
+    result = mouthLimit.get();
+   }
 
     return result;
   }
@@ -165,15 +138,12 @@ public class IndexerAL extends GamePieceBase implements GamePiece {
       return false;
     }
     // LOGGER.info("Ball is in Chamber {}", result);
-    boolean result = false; // TODO make this false when have indexer
-    if (networkTableTOF != null && RobotMap.HAS_INDEXER_TOF_SENSORS) {
-      final double distance = getChamberDistance();
-      final double threshold = RobotMap.NETWORK_INDEXER_TOF_THRESHOLD;
 
-      if (distance <= threshold) {
-        result = true;
-      }
-    }
+    boolean result = false;
+
+   if (RobotMap.HAS_INDEXER_LIMIT_SWITCHES) {
+    result = chamberLimit.get();
+   }
 
     return result;
   }

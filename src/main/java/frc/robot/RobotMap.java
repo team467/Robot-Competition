@@ -212,9 +212,9 @@ public class RobotMap {
         SECOND_MAGAZINE_FEED_MOTOR_INVERTED = false;
 
         INDEXER_MOVE_TIMER = 0.5;
-        ONBOARD_INDEXER_TOF_THRESHOLD = 70.0;
-        NETWORK_INDEXER_TOF_THRESHOLD = 70.0;
-        HAS_INDEXER_TOF_SENSORS = true;
+        INDEXER_MOUTH_SWITCH_CHANNEL = 0;
+        INDEXER_CHAMBER_SWITCH_CHANNEL = 0;
+        HAS_INDEXER_LIMIT_SWITCHES = false;
 
         INDEXER_FORWARD_SPEED = 0.5;
         INDEXER_INVERSE_SPEED = -0.5;
@@ -423,7 +423,6 @@ public class RobotMap {
         INDEX_FOLLOWER_MOTOR = true;
 
         INDEXER_MOVE_TIMER = 0.2;
-        ONBOARD_INDEXER_TOF_THRESHOLD = 100;
 
         INDEXER_FORWARD_SPEED = 1.0;
         INDEXER_INVERSE_SPEED = -1.0;
@@ -611,12 +610,12 @@ public class RobotMap {
   public static boolean INDEX_FOLLOWER_MOTOR = false;
   public static boolean INDEXER_SENSOR_INVERTED = false;
   public static boolean INDEXER_MOTOR_INVERTED = false;
-  public static boolean HAS_INDEXER_TOF_SENSORS = false;
+  public static boolean HAS_INDEXER_LIMIT_SWITCHES = false;
   public static double INDEXER_FORWARD_SPEED;
   public static double INDEXER_INVERSE_SPEED;
 
   public static double INDEXER_MOVE_TIMER;
   // distance threshold in mm for detecting a ball
-  public static double ONBOARD_INDEXER_TOF_THRESHOLD;
-  public static double NETWORK_INDEXER_TOF_THRESHOLD;
+  public static int INDEXER_MOUTH_SWITCH_CHANNEL;
+  public static int INDEXER_CHAMBER_SWITCH_CHANNEL;
 }

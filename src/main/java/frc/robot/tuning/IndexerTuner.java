@@ -27,10 +27,8 @@ public class IndexerTuner implements Tuner {
         SmartDashboard.putNumber("Stage 1 Speed", 0);
         SmartDashboard.putNumber("Stage 2 Speed", 0);
 
-        SmartDashboard.putBoolean("Mouth TOF", false);
-        SmartDashboard.putBoolean("Chamber TOF", false);
-        SmartDashboard.putNumber("Mouth Dist", 0);
-        SmartDashboard.putNumber("Chamber Dist", 0);
+        SmartDashboard.putBoolean("Mouth Limit", false);
+        SmartDashboard.putBoolean("Chamber Limit", false);
         
         indexer.stopIndexer();
     }
@@ -39,10 +37,8 @@ public class IndexerTuner implements Tuner {
         double s1Speed = SmartDashboard.getNumber("Stage 1 Speed", 0);
         double s2Speed = SmartDashboard.getNumber("Stage 2 Speed", 0);
     
-        SmartDashboard.putBoolean("Mouth TOF", indexer.isBallInMouth());
-        SmartDashboard.putBoolean("Chamber TOF", indexer.isBallInChamber());
-        SmartDashboard.putNumber("Mouth Dist", indexer.getMouthDistance());
-        SmartDashboard.putNumber("Chamber Dist", indexer.getChamberDistance());
+        SmartDashboard.putBoolean("Mouth Limit", indexer.isBallInMouth());
+        SmartDashboard.putBoolean("Chamber Limit", indexer.isBallInChamber());
         
         indexer.setIndexerFirstStageSpeed(s1Speed);
         indexer.setIndexerSecondStageSpeed(s2Speed);
