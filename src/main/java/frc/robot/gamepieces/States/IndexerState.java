@@ -49,7 +49,8 @@ public enum IndexerState implements State {
                 return Manual;
             }
 
-            if (indexerBallsForward && isInMouth && !isInChamber) {
+            //Runs indexer when you have forward pressed and there isn't a ball in the chamber cause that causes death
+            if (indexerBallsForward && isInMouth && !isInChamber) { //TODO: remove need for indexer forward to be held so it can be fully auto
                     LOGGER.debug("isInMouth and is not in Chamber");
                     return Feed;
             }
@@ -59,6 +60,7 @@ public enum IndexerState implements State {
                 return Feed;
             }
 
+            //Basically useless
             if ((indexerBallsForward || shooterWantsBall) && (!isInMouth || !isInChamber)) {
                 IndexerAL.callIntakeBeltToIndexer();
             } else {
@@ -90,14 +92,14 @@ public enum IndexerState implements State {
             indexerBallsReverse = GamePieceController.getInstance().indexerBallsReverse;
             isInChamber = indexerAL.isBallInChamber();
 
-            IndexerAL.advanceBallsToShooter();
+            // IndexerAL.advanceBallsToShooter();
 
             if (!autoMode) {
                 IndexerAL.callStop();
                 return Idle;
             }
 
-            if (!indexerAL.isBallInMouth()) {
+            if (indexerAL.isBallInMouth()) {
                 return FeedBuffer;
             }
 
