@@ -209,7 +209,6 @@ public class ShooterAL extends GamePieceBase implements GamePiece {
   public void setLedStrip(int r, int g, int b, int startingLed, int endingLed) {
     if (ledBuffer != null && leds != null && RobotMap.HAS_SHOOTER_LEDS) {
       for (var i = Math.max(0, startingLed); i <= Math.min(ledBuffer.getLength()-1, endingLed); i++) {
-        LOGGER.warn("Setting led {} to color R{} G{} B{}", i, r, g, b);
         ledBuffer.setRGB(i, r, g, b);
      }
      leds.setData(ledBuffer);
@@ -220,15 +219,12 @@ public class ShooterAL extends GamePieceBase implements GamePiece {
     if (ledBuffer != null && leds != null && RobotMap.HAS_SHOOTER_LEDS) {
       int setLed = Math.min(RobotMap.SHOOTER_LED_AMOUNT_PER_SIDE-1, led);
       setLedStrip(r, g, b, 0, setLed);
-      // if (RobotMap.SHOOTER_DOUBLESIDE_LED) {
-      //   setLedStrip(r, g, b, RobotMap.SHOOTER_LED_AMOUNT_PER_SIDE, RobotMap.SHOOTER_LED_AMOUNT_PER_SIDE + setLed);
-      // }
-      // if (setLed < RobotMap.SHOOTER_LED_AMOUNT_PER_SIDE-1) {
-      //   setLedStrip(0, 0, 0, setLed + 1, RobotMap.SHOOTER_LED_AMOUNT_PER_SIDE-1);
-      //   if (RobotMap.SHOOTER_DOUBLESIDE_LED) {
-      //     setLedStrip(r, g, b, RobotMap.SHOOTER_LED_AMOUNT_PER_SIDE + setLed + 1, ledBuffer.getLength()-1 + setLed);
-      //   }
-      // }
+      setLedStrip(r, g, b, RobotMap.SHOOTER_LED_AMOUNT_PER_SIDE, RobotMap.SHOOTER_LED_AMOUNT_PER_SIDE + setLed);
+
+      if (setLed < RobotMap.SHOOTER_LED_AMOUNT_PER_SIDE-1) {
+        setLedStrip(0, 0, 0, setLed + 1, RobotMap.SHOOTER_LED_AMOUNT_PER_SIDE-1);
+        setLedStrip(r, g, b, RobotMap.SHOOTER_LED_AMOUNT_PER_SIDE + setLed + 1, ledBuffer.getLength()-1 + setLed);
+      }
     }
   }
 
