@@ -122,7 +122,7 @@ public class IndexerAL extends GamePieceBase implements GamePiece {
    boolean result = false;
 
    if (RobotMap.HAS_INDEXER_LIMIT_SWITCHES) {
-    result = mouthLimit.get();
+    result = !mouthLimit.get();
    }
 
     return result;
@@ -142,7 +142,7 @@ public class IndexerAL extends GamePieceBase implements GamePiece {
     boolean result = false;
 
    if (RobotMap.HAS_INDEXER_LIMIT_SWITCHES) {
-    result = chamberLimit.get();
+    result = !chamberLimit.get();
    }
 
     return result;
