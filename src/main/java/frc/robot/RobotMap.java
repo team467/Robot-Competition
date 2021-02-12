@@ -262,8 +262,8 @@ public class RobotMap {
         HOOD_LEFT_STARTING_POSITION = (HOOD_LEFT_MIN + HOOD_LEFT_MAX) / 2;
         HOOD_RIGHT_STARTING_POSITION = (HOOD_RIGHT_MIN + HOOD_RIGHT_MAX) / 2;
 
-        HAS_SHOOTER_LEDS = true;
-        SHOOTER_LED_AMOUNT = 40;
+        HAS_SHOOTER_LEDS = false;
+        SHOOTER_LED_AMOUNT_PER_SIDE = 40;
         SHOOTER_LED_CHANNEL = 1;
         // SHOOTER_DOUBLESIDE_LED = true;
 
@@ -367,7 +367,7 @@ public class RobotMap {
         HOOD_RIGHT_STARTING_POSITION = (HOOD_RIGHT_MIN + HOOD_RIGHT_MAX) / 2;
 
         HAS_SHOOTER_LEDS = false;
-        SHOOTER_LED_AMOUNT = 0;
+        SHOOTER_LED_AMOUNT_PER_SIDE = 0;
         SHOOTER_LED_CHANNEL = 2;
         // SHOOTER_DOUBLESIDE_LED = true;
 
@@ -586,7 +586,7 @@ public class RobotMap {
   public static double MANUAL_MODE_SHOOTER_SPEED;
 
   public static boolean HAS_SHOOTER_LEDS = false;
-  public static int SHOOTER_LED_AMOUNT;
+  public static int SHOOTER_LED_AMOUNT_PER_SIDE;
   public static int SHOOTER_LED_CHANNEL;
   // public static boolean SHOOTER_DOUBLESIDE_LED = false;
 
