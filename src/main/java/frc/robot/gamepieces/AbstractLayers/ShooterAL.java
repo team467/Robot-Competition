@@ -52,6 +52,8 @@ public class ShooterAL extends GamePieceBase implements GamePiece {
   private static AddressableLED leds;
   private static AddressableLEDBuffer ledBuffer;
 
+  public boolean shooterWantsBall = false;
+
   private Hashtable<Integer, Integer> distanceToPower = new Hashtable<Integer, Integer>();
 
   /**
@@ -125,6 +127,17 @@ public class ShooterAL extends GamePieceBase implements GamePiece {
     return instance;
   }
 
+  public void setShooterWantsBall(boolean toggle) {
+    LOGGER.debug("shooter wants ball {}", toggle);
+
+    shooterWantsBall = toggle;
+  }
+
+
+  
+  public boolean getShooterState() {
+    return shooterWantsBall;
+  }
 
   private ShooterAL(TalonSpeedControllerGroup flywheel) {
     super("Telemetry", "Shooter");

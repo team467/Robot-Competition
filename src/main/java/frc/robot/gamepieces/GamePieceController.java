@@ -290,15 +290,14 @@ public class GamePieceController {
   }
   
   public void setShooterWantsBall(boolean toggle) {
+    LOGGER.debug("shooter wants ball {}", toggle);
+
     shooterWantsBall = toggle;
   }
 
 
   
   public boolean getShooterState() {
-    if (shooterState == ShooterState.LoadingBall) {
-      return shooterWantsBall = true; 
-    }
     return shooterWantsBall;
   }
   

@@ -71,21 +71,30 @@ public enum ShooterState implements State {
             fireWhenReady = GamePieceController.getInstance().getFireWhenReady();
             shooterAL.setTrigger(TriggerSettings.STOP);
             shooterAL.setFlywheel(FlywheelSettings.FORWARD);
-            gamePieceController.setShooterWantsBall(true);
+            // gamePieceController.setShooterWantsBall(true);
         
             LOGGER.debug("LB " + fireWhenReady);
             if (!autoMode){
+                gamePieceController.setShooterWantsBall(false);
+                shooterAL.setShooterWantsBall(false);
                 return Manual;
             }
 
             if (!fireWhenReady) {
+                gamePieceController.setShooterWantsBall(false);
+                shooterAL.setShooterWantsBall(false);
                 return Idle;
             }
             
-            if (indexerAL.isBallInChamber() || !indexAuto) {
+            if (indexerAL.ballLoaded() || !indexAuto) {
+                LOGGER.error("ball loaded");
+                gamePieceController.setShooterWantsBall(false);
+                shooterAL.setShooterWantsBall(false);
                 return AdjustingSpeed;
             } else {
-                return LoadingBall;
+                gamePieceController.setShooterWantsBall(true);
+                shooterAL.setShooterWantsBall(true);
+                return this;
             }
         }
 
@@ -152,6 +161,7 @@ public enum ShooterState implements State {
             if(timer.get() < 1.0){ //!shooterAL.atSpeed() || !indexerAL.inChamber()
                 return ShootingNoDelay;
             } else {
+                indexerAL.shootBall();
                 return Idle;
             }
         }

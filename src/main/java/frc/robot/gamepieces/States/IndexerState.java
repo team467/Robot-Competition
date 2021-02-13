@@ -3,6 +3,7 @@ package frc.robot.gamepieces.States;
 import frc.robot.RobotMap;
 import frc.robot.gamepieces.AbstractLayers.IndexerAL;
 import frc.robot.gamepieces.AbstractLayers.IntakeAL;
+import frc.robot.gamepieces.AbstractLayers.ShooterAL;
 import frc.robot.gamepieces.GamePieceController;
 import frc.robot.logging.RobotLogManager;
 
@@ -36,7 +37,7 @@ public enum IndexerState implements State {
 
             isInMouth = indexerAL.isBallInMouth();
             isInChamber = indexerAL.isBallInChamber();
-            shooterWantsBall = GamePieceController.getInstance().shooterWantsBall;
+            shooterWantsBall = ShooterAL.getInstance().getShooterState();
             LOGGER.debug("Shooter wants ball {}", shooterWantsBall);
 
             // if climber is enabled stop moving on
@@ -92,8 +93,6 @@ public enum IndexerState implements State {
             indexerBallsReverse = GamePieceController.getInstance().indexerBallsReverse;
             isInChamber = indexerAL.isBallInChamber();
 
-            // IndexerAL.advanceBallsToShooter();
-
             if (!autoMode) {
                 IndexerAL.callStop();
                 return Idle;
@@ -103,8 +102,12 @@ public enum IndexerState implements State {
                 return FeedBuffer;
             }
 
-            if (isInChamber) {
+            if (isInChamber || indexerAL.ballLoaded()) {
                 IndexerAL.callStop();
+                indexerAL.loadBall();
+                return Idle;
+            } else {
+                IndexerAL.advanceBallsToShooter();
             }
 
             return this;
@@ -120,6 +123,8 @@ public enum IndexerState implements State {
     // Timed for 50ms to let the ball Feed advance to make room for another ball to
     // be seen by the mouth TOF sensor.
     FeedBuffer {
+        boolean isInChamber;
+
 
         public void enter() {
             timer.start();
@@ -127,6 +132,11 @@ public enum IndexerState implements State {
         }
 
         public State action() {
+            isInChamber = indexerAL.isBallInChamber();
+
+            if (isInChamber) {
+                indexerAL.loadBall();
+            }
 
             IndexerAL.advanceBallsToShooter();
             // TODO: adjust timer based on how fast the ball is moving.

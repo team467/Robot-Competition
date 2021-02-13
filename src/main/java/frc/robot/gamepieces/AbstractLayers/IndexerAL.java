@@ -41,6 +41,8 @@ public class IndexerAL extends GamePieceBase implements GamePiece {
   SensorTestMode forceMouthSensor = SensorTestMode.USE_SENSOR;
   SensorTestMode forceChamberSensor = SensorTestMode.USE_SENSOR;
 
+  private boolean ballLoaded = false;
+
   public static IndexerAL getInstance() {
     if (instance == null) {
       if (RobotMap.HAS_INDEXER) {
@@ -106,6 +108,7 @@ public class IndexerAL extends GamePieceBase implements GamePiece {
     forceChamberSensor = mode;
   }
 
+
   public boolean isBallInMouth() {
    
     // Tuners may force a result, bypassing the sensor.
@@ -146,6 +149,20 @@ public class IndexerAL extends GamePieceBase implements GamePiece {
    }
 
     return result;
+  }
+
+  public void loadBall() {
+    LOGGER.debug("Loaded shot");
+    ballLoaded = true;
+  }
+
+  public void shootBall() {
+    LOGGER.debug("Ball shot");
+    ballLoaded = false;
+  }
+
+  public boolean ballLoaded() {
+    return ballLoaded;
   }
 
   private void setForward() {
