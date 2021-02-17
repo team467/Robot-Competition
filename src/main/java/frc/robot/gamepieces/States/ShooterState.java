@@ -87,15 +87,15 @@ public enum ShooterState implements State {
             }
             
             if (indexerAL.ballLoaded() || !indexAuto) {
-                LOGGER.error("ball loaded");
+                LOGGER.debug("ball loaded");
                 gamePieceController.setShooterWantsBall(false);
                 shooterAL.setShooterWantsBall(false);
                 return AdjustingSpeed;
-            } else {
-                gamePieceController.setShooterWantsBall(true);
-                shooterAL.setShooterWantsBall(true);
-                return this;
             }
+            
+            gamePieceController.setShooterWantsBall(true);
+            shooterAL.setShooterWantsBall(true);
+            return this;
         }
 
         public void exit() {
@@ -158,7 +158,7 @@ public enum ShooterState implements State {
                 return Manual;
             }
 
-            if(timer.get() < 1.0){ //!shooterAL.atSpeed() || !indexerAL.inChamber()
+            if(timer.get() < RobotMap.SHOOTER_AUTO_TIMER){ //!shooterAL.atSpeed() || !indexerAL.inChamber()
                 return ShootingNoDelay;
             } else {
                 indexerAL.shootBall();

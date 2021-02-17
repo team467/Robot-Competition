@@ -106,6 +106,9 @@ public enum IndexerState implements State {
                 IndexerAL.callStop();
                 indexerAL.loadBall();
                 return Idle;
+            } else if (!ShooterAL.getInstance().shooterWantsBall) {
+                IndexerAL.callStop();
+                return Idle;
             } else {
                 IndexerAL.advanceBallsToShooter();
             }

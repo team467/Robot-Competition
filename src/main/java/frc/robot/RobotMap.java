@@ -195,6 +195,8 @@ public class RobotMap {
         SHOOTER_SPEED_TOLERANCE = 100;
         MANUAL_MODE_SHOOTER_SPEED = 0.6; // TODO determine the speed
 
+        SHOOTER_AUTO_TIMER = 1.0;
+
         AUTOALIGN_TURN_SPEED = 0.2;
         
         // Intake
@@ -211,7 +213,7 @@ public class RobotMap {
         SECOND_MAGAZINE_FEED_MOTOR_CHANNEL = 11;
         SECOND_MAGAZINE_FEED_MOTOR_INVERTED = false;
 
-        INDEXER_MOVE_TIMER = 1;
+        INDEXER_MOVE_TIMER = 0.7;
         INDEXER_MOUTH_SWITCH_CHANNEL = 1;
         INDEXER_CHAMBER_SWITCH_CHANNEL = 0;
         HAS_INDEXER_LIMIT_SWITCHES = true;
@@ -330,6 +332,7 @@ public class RobotMap {
         BACKWARD_CAMERA_INDEX = 1;
         HAS_CAMERA = false;
         AUTO_CAMERA = false;
+        SHOOTER_AUTO_TIMER = 1.0;
         AUTOALIGN_TURN_SPEED = 0.2;
 
         // Game Pieces
@@ -556,6 +559,8 @@ public class RobotMap {
   public static int SHOOTER_MOTOR_FOLLOWER_CHANNEL;
   public static boolean SHOOTER_MOTOR_FOLLOWER_INVERTED;
   public static boolean SHOOTER_SMART_SHOT;
+  public static double SHOOTER_AUTO_TIMER;
+
 
   public static boolean HAS_SHOOTER_TRIGGER = false;
   public static int TRIGGER_MOTOR_CHANNEL;
