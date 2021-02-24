@@ -59,6 +59,7 @@ public class VisionController {
   public double angle() {
     netAngle = table.getEntry("TurningAngle");
     angle = netAngle.getDouble(180);
+    angle -= RobotMap.VISION_ANGLE_CENTER;
     LOGGER.debug("Angle from network table is {}", angle);
     return angle;
   }
@@ -88,20 +89,24 @@ public class VisionController {
    */
   public double setTurn() {
     //will be redone, magic numbers will be removed in a future branch
+    // Andrew you were wrong
     if (!hasAngle()) {
       return 0.0;
     }
 
-    if (angle() <= 7.5 && angle() >= 6.5 ) {//Math.abs(angle() + gyro.getPitchDegrees())
+    if (angle() <= RobotMap.VISION_ANGLE_BUFFER && angle() >= -RobotMap.VISION_ANGLE_BUFFER) {//Math.abs(angle() + gyro.getPitchDegrees())
         aligned = true;
+        LOGGER.debug("Gyro angle {} deg, Camera angle {} deg, shooting", gyro.getPitchDegrees(), angle());
         return 0.0;
     } 
     
-    if ((gyro.getPitchDegrees()) < angle() - 7) {
+    if ((gyro.getPitchDegrees()) < angle()) {
+      LOGGER.debug("Gyro angle {} deg, Camera angle {} deg, turn right", gyro.getPitchDegrees(), angle());
         return RobotMap.AUTOALIGN_TURN_SPEED;
     }
 
-    if ((gyro.getPitchDegrees()) > angle() - 7) {
+    if ((gyro.getPitchDegrees()) > angle()) {
+      LOGGER.debug("Gyro angle {} deg, Camera angle {} deg, turn left", gyro.getPitchDegrees(), angle());
         return -RobotMap.AUTOALIGN_TURN_SPEED;
     }
 

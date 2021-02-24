@@ -181,20 +181,24 @@ public class RobotMap {
 
         SHOOTER_SENSOR_INVERTED = false;
 
+        VISION_ANGLE_CENTER = 7.0;
+        VISION_ANGLE_BUFFER = 0.5;
+
         TRIGGER_MOTOR_CHANNEL = 7;
         TRIGGER_MOTOR_INVERTED = true;
         HAS_TRIGGER = true;
         HAS_SHOOTER_TRIGGER = true;
 
-        SHOOTER_P = 2.0;
+        SHOOTER_P = 1.2;
         SHOOTER_I = 0.0;
-        SHOOTER_D = 0.0;
+        SHOOTER_D = 120.0;
         SHOOTER_F = 0.0;
 
         VELOCITY_MULTIPLIER_SHOOTER = 10000;
         SHOOTER_SPEED_TOLERANCE = 100;
         MANUAL_MODE_SHOOTER_SPEED = 0.6; // TODO determine the speed
 
+        SHOOTER_AUTO_TIMER = 1.0;
         SHOOTER_AUTO_TIMER = 1.0;
 
         AUTOALIGN_TURN_SPEED = 0.2;
@@ -213,7 +217,7 @@ public class RobotMap {
         SECOND_MAGAZINE_FEED_MOTOR_CHANNEL = 11;
         SECOND_MAGAZINE_FEED_MOTOR_INVERTED = false;
 
-        INDEXER_MOVE_TIMER = 0.7;
+        INDEXER_MOVE_TIMER = 0.75;
         INDEXER_MOUTH_SWITCH_CHANNEL = 1;
         INDEXER_CHAMBER_SWITCH_CHANNEL = 0;
         HAS_INDEXER_LIMIT_SWITCHES = true;
@@ -266,7 +270,7 @@ public class RobotMap {
 
         HAS_SHOOTER_LEDS = false;
         SHOOTER_LED_AMOUNT_PER_SIDE = 40;
-        SHOOTER_LED_CHANNEL = 1;
+        SHOOTER_LED_CHANNEL = 2;
         // SHOOTER_DOUBLESIDE_LED = true;
 
         break;
@@ -581,6 +585,8 @@ public class RobotMap {
   public static double HOOD_RIGHT_STARTING_POSITION;
 
   public static boolean SHOOTER_SENSOR_INVERTED;
+  public static double VISION_ANGLE_CENTER;
+  public static double VISION_ANGLE_BUFFER;
   public static double SHOOTER_P;
   public static double SHOOTER_I;
   public static double SHOOTER_D;
