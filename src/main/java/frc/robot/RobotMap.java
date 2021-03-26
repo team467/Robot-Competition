@@ -182,7 +182,7 @@ public class RobotMap {
         SHOOTER_SENSOR_INVERTED = false;
 
         VISION_ANGLE_CENTER = 7.0;
-        VISION_ANGLE_BUFFER = 0.5;
+        VISION_ANGLE_BUFFER = 2;
 
         TRIGGER_MOTOR_CHANNEL = 7;
         TRIGGER_MOTOR_INVERTED = true;
@@ -256,21 +256,21 @@ public class RobotMap {
         HAS_SHOOTER_HOOD = true;
         HOOD_LEFT_PWM_PORT = 2;
         HOOD_RIGHT_PWM_PORT = 3;
-        HOOD_LEFT_INVERTED = true;
-        HOOD_RIGHT_INVERTED = false;
+        HOOD_LEFT_INVERTED = false;
+        HOOD_RIGHT_INVERTED = true;
         HOOD_MAX_ANGLE = 165;
         HOOD_ADD_NOISE = false;
 
-        HOOD_LEFT_MIN = 0.65;
+        HOOD_LEFT_MIN = 0.55;
         HOOD_RIGHT_MIN = 0.55;
-        HOOD_LEFT_MAX = 0.85;
-        HOOD_RIGHT_MAX = 0.77;
+        HOOD_LEFT_MAX = 0.84;
+        HOOD_RIGHT_MAX = 0.84;
         HOOD_LEFT_STARTING_POSITION = (HOOD_LEFT_MIN + HOOD_LEFT_MAX) / 2;
         HOOD_RIGHT_STARTING_POSITION = (HOOD_RIGHT_MIN + HOOD_RIGHT_MAX) / 2;
 
         HAS_SHOOTER_LEDS = false;
         SHOOTER_LED_AMOUNT_PER_SIDE = 40;
-        SHOOTER_LED_CHANNEL = 2;
+        SHOOTER_LED_CHANNEL = 0;
         // SHOOTER_DOUBLESIDE_LED = true;
 
         break;

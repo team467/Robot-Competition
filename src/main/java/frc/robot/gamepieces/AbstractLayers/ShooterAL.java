@@ -97,8 +97,17 @@ public class ShooterAL extends GamePieceBase implements GamePiece {
         hoodLeft = new Servo(RobotMap.HOOD_LEFT_PWM_PORT);
         hoodRight = new Servo(RobotMap.HOOD_RIGHT_PWM_PORT);
 
-        hoodLeft.set(RobotMap.HOOD_LEFT_STARTING_POSITION);
-        hoodRight.set(RobotMap.HOOD_RIGHT_STARTING_POSITION);
+        if (RobotMap.HOOD_LEFT_INVERTED) {
+          hoodLeft.set(1-RobotMap.HOOD_LEFT_STARTING_POSITION);
+        } else {
+          hoodLeft.set(RobotMap.HOOD_LEFT_STARTING_POSITION);
+        }
+
+        if (RobotMap.HOOD_RIGHT_INVERTED) {
+          hoodRight.set(1-RobotMap.HOOD_RIGHT_STARTING_POSITION);
+        } else {
+          hoodRight.set(RobotMap.HOOD_RIGHT_STARTING_POSITION);
+        }
 
       } else {
         hoodLeft = null;
@@ -253,11 +262,22 @@ public class ShooterAL extends GamePieceBase implements GamePiece {
     setLedStrip(0, 0, 0, 0, ledBuffer.getLength()-1);
   }
 
-  public void setHoodAngle(double leftAngle, double rightAngle) {
-    if (hoodLeft != null && hoodRight != null && RobotMap.HAS_SHOOTER_HOOD) {
+  public void setHoodAngle(double leftAngle, double rightAngle, boolean raw) {
+    if (hoodLeft != null && hoodRight != null && RobotMap.HAS_SHOOTER_HOOD) {  
+      if (!raw) {
+        leftAngle *= (RobotMap.HOOD_LEFT_MAX - RobotMap.HOOD_LEFT_MIN); 
+        leftAngle += RobotMap.HOOD_LEFT_MIN;
+        rightAngle *= (RobotMap.HOOD_RIGHT_MAX - RobotMap.HOOD_RIGHT_MIN);
+        rightAngle += RobotMap.HOOD_RIGHT_MIN;
+      }
+
       setLeftHoodAngleRaw(leftAngle);
       setRightHoodAngleRaw(rightAngle);
     }
+  }
+
+  public void setHoodAngle(double leftAngle, double rightAngle) {
+    this.setHoodAngle(leftAngle, rightAngle, false);
   }
 
   public void setLeftHoodAngle(double angle) {
@@ -301,7 +321,7 @@ public class ShooterAL extends GamePieceBase implements GamePiece {
       angle = Math.max(RobotMap.HOOD_LEFT_MIN, Math.min(RobotMap.HOOD_LEFT_MAX, angle));
 
       if (RobotMap.HOOD_LEFT_INVERTED) {
-        angle = Math.abs(angle-1);
+        angle = Math.abs(1-angle);
       }
 
       if (RobotMap.HOOD_ADD_NOISE) {
@@ -317,7 +337,7 @@ public class ShooterAL extends GamePieceBase implements GamePiece {
       angle = Math.max(RobotMap.HOOD_RIGHT_MIN, Math.min(RobotMap.HOOD_RIGHT_MAX, angle));
 
       if (RobotMap.HOOD_RIGHT_INVERTED) {
-        angle = Math.abs(angle-1);
+        angle = Math.abs(1-angle);
       }
 
       if (RobotMap.HOOD_ADD_NOISE) {

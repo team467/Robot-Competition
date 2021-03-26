@@ -70,6 +70,8 @@ public class ShooterTuner implements Tuner {
         double hoodAngle = SmartDashboard.getNumber("Hood Angle", 0.5);
         boolean useBoth = SmartDashboard.getBoolean("Control Both", false);
 
+        shooter.setLedStrip(255, 255, 255, 0, 5);
+
         if (useVelocity) {
             shooter.rampToSpeed(speed);
 
@@ -92,19 +94,19 @@ public class ShooterTuner implements Tuner {
         } else {
             shooterMotor.set(ControlMode.PercentOutput, speed);
 
-            if (RobotMap.HAS_SHOOTER_LEDS) {
-                double ledFillPercent = Math.max(0, Math.min(1, Math.abs(speed)));
-                int fillLeds = (int) (RobotMap.SHOOTER_LED_AMOUNT_PER_SIDE * ledFillPercent)-1;
-                if (fillLeds >= 0) {
-                    shooter.fillStrip(0, 0, 255, fillLeds);
-                } else {
-                    shooter.clearStrip();
-                }
-            }
+            // if (RobotMap.HAS_SHOOTER_LEDS) {
+            //     double ledFillPercent = Math.max(0, Math.min(1, Math.abs(speed)));
+            //     int fillLeds = (int) (RobotMap.SHOOTER_LED_AMOUNT_PER_SIDE * ledFillPercent)-1;
+            //     if (fillLeds >= 0) {
+            //         shooter.fillStrip(0, 0, 255, fillLeds);
+            //     } else {
+            //         shooter.clearStrip();
+            //     }
+            // }
         }
 
         if (useBoth) {
-            shooter.setHoodAngle(hoodAngle, hoodAngle);
+            shooter.setHoodAngle(hoodAngle, hoodAngle, false);
         } else {
             if (leftServo) {
                 shooter.setLeftHoodAngle(leftAngle);

@@ -21,6 +21,7 @@ public class TuneController {
     register("GPC_Tuner", new GPCTuner());
     register("Climber_SM_Tunner", new ClimberStateTuner());
     register("Intake_Tuner", new IntakeTuner());
+    register("Shooter_LED_Tuner", new ShooterLEDTuner());
   }
 
   private static final Logger LOGGER
