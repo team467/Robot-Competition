@@ -196,7 +196,7 @@ public class RobotMap {
 
         VELOCITY_MULTIPLIER_SHOOTER = 10000;
         SHOOTER_SPEED_TOLERANCE = 100;
-        MANUAL_MODE_SHOOTER_SPEED = 0.6; // TODO determine the speed
+        MANUAL_MODE_SHOOTER_SPEED = 0.4; // TODO determine the speed
 
         SHOOTER_AUTO_TIMER = 1.0;
         SHOOTER_AUTO_TIMER = 1.0;
