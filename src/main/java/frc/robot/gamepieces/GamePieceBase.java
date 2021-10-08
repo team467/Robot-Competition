@@ -17,7 +17,6 @@ public abstract class GamePieceBase implements GamePiece {
   protected GamePieceBase(String subsystem, String name) {
     this.subsystem = subsystem;
     this.name = name;
-    registerMetrics();
     LOGGER.trace("Created base game piece");
   }
 
@@ -29,11 +28,6 @@ public abstract class GamePieceBase implements GamePiece {
   @Override
   public boolean enabled() {
     return enabled;
-  }
-  
-  private void registerMetrics() {
-    Telemetry telemetry = Telemetry.getInstance();
-    telemetry.addBooleanMetric(name + "Enabled", this::enabled);
   }
 
 }

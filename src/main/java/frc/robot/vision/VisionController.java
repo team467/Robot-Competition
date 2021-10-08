@@ -25,12 +25,14 @@ public class VisionController {
   NetworkTableEntry net_Have_Angle;
   NetworkTableEntry net_Have_Dist;
 
+  public boolean aligned = false;
+
 
   double angle;
   double dist;
   boolean haveDistance;
   boolean haveAngle;
-  boolean isTurnDone = false;//SmartDashboard.getBoolean("Turn", false);
+  boolean isTurnDone = false; //SmartDashboard.getBoolean("Turn", false);
   boolean isDriveDone = false;
   double robotTurner;
   double speed;
@@ -52,15 +54,14 @@ public class VisionController {
     inst = NetworkTableInstance.getDefault();
     table = inst.getTable("vision");
     gyro = Gyrometer.getInstance();
-
-    registerMetrics();
   }
 
   public double angle() {
     netAngle = table.getEntry("TurningAngle");
     angle = netAngle.getDouble(180);
+    angle -= RobotMap.VISION_ANGLE_CENTER;
     LOGGER.debug("Angle from network table is {}", angle);
-    return angle - 5;
+    return angle;
   }
 
   public boolean hasAngle(){
@@ -70,7 +71,7 @@ public class VisionController {
   }
 
   public boolean atAngle() {
-    return Math.abs(angle() + gyro.getPitchDegrees()) < 4;
+    return Math.abs(angle()) < 4;
   }
 
   public boolean hasDistance() {
@@ -80,32 +81,38 @@ public class VisionController {
 
   public double dist() {
     netDist = table.getEntry("DistanceFromTarget");
-    return netDist.getDouble(0.0);
+   return netDist.getDouble(0.0);
   }
 
   /**
    * tells the robot to turn
    */
   public double setTurn() {
-
+    //will be redone, magic numbers will be removed in a future branch
+    // Andrew you were wrong
     if (!hasAngle()) {
       return 0.0;
     }
 
-    if (Math.abs(angle()) < 4) {//Math.abs(angle() + gyro.getPitchDegrees())
+    if (angle() <= RobotMap.VISION_ANGLE_BUFFER && angle() >= -RobotMap.VISION_ANGLE_BUFFER) {//Math.abs(angle() + gyro.getPitchDegrees())
+        aligned = true;
+        LOGGER.debug("Gyro angle {} deg, Camera angle {} deg, shooting", gyro.getPitchDegrees(), angle());
         return 0.0;
     } 
     
-    if (-gyro.getPitchDegrees() < angle()) {
-        return 0.2;
+    // if ((gyro.getPitchDegrees()) < angle()) {
+    if (angle() > 0) {
+      LOGGER.debug("Gyro angle {} deg, Camera angle {} deg, turn right", gyro.getPitchDegrees(), angle());
+        return RobotMap.AUTOALIGN_TURN_SPEED;
     }
 
-    if (-gyro.getPitchDegrees() > angle()) {
-        return -0.2;
+    // if ((gyro.getPitchDegrees()) > angle()) {
+    if (angle() < 0) {
+      LOGGER.debug("Gyro angle {} deg, Camera angle {} deg, turn left", gyro.getPitchDegrees(), angle());
+        return -RobotMap.AUTOALIGN_TURN_SPEED;
     }
 
     return 0;
-
   }
 
   public void resetGyro() {
@@ -120,6 +127,19 @@ public class VisionController {
     }
 
     return speed;
+  }
+
+  public double determineShooterSpeed() {
+    double shooterSpeed;
+    double shooterPreviousSpeed = RobotMap.MANUAL_MODE_SHOOTER_SPEED;
+    if (hasDistance()) {
+      shooterSpeed = ((0.16120202 * dist() + 65.5092) / 100) * 0.95;
+      shooterPreviousSpeed = shooterSpeed;
+    } else {
+      shooterSpeed = shooterPreviousSpeed;
+    }
+
+    return shooterSpeed;
   }
 
   /**
@@ -148,11 +168,6 @@ public class VisionController {
 
   public void setSubsystem(String subsystem) {
     this.subsystem = subsystem;
-  }
-
-  public void registerMetrics() {
-    Telemetry telemetry = Telemetry.getInstance();
-    telemetry.addBooleanMetric("Vision Has Angle", this::hasAngle);
   }
 
 }

@@ -16,14 +16,14 @@ import org.apache.logging.log4j.Logger;
 public class OperatorController467 extends GenericHID {
 
     private static final Logger LOGGER = RobotLogManager.getMainLogger(OperatorController467.class.getName());
-    private GenericHID controllerHID;
+    // private GenericHID controllerHID;
 
     public HashMap<Integer, Boolean> buttonDown = new HashMap<Integer, Boolean>();
     public HashMap<Integer, Boolean> previousButtonDown = new HashMap<Integer, Boolean>();
 
     public HashMap<Integer, Double> axes = new HashMap<Integer, Double>();
 
-    private int buttonTotal = 0;
+    private int buttonTotal = 12;
     private int axesTotal = 0;
 
     /**
@@ -35,6 +35,11 @@ public class OperatorController467 extends GenericHID {
      */
     public OperatorController467(final int port) {
         super(port);
+        for (Integer b = 1; b <= buttonTotal; b++) {
+            boolean result = getRawButton(b);
+            buttonDown.put(b, result);
+        }
+        read();
     }
 
     /**
@@ -42,22 +47,18 @@ public class OperatorController467 extends GenericHID {
      *
      * @return
      */
-    public GenericHID getController() {
-        // TODO: Get the joystick
-        return controllerHID;
-    }
 
     private void readButtons() {
         for (int b = 1; b <= buttonTotal; b++) {
             previousButtonDown.put(b, buttonDown.get(b));
-            LOGGER.error("Button {}", b);
-            buttonDown.put(b, controllerHID.getRawButton(b));
+            LOGGER.debug("Button {}", b);
+            buttonDown.put(b, getRawButton(b));
         }
     }
 
     private void readAxes() {
         for (int axis = 1; axis <= axesTotal; axis++) {
-            axes.put(axis, controllerHID.getRawAxis(axis));
+            axes.put(axis, getRawAxis(axis));
         }
     }
 
@@ -80,9 +81,8 @@ public class OperatorController467 extends GenericHID {
      * @return
      */
     public boolean down(final int b) {
-        final boolean result = buttonDown.get(b);
-        LOGGER.debug("Button: {} = {}", b, box(result));
-        return result;
+        LOGGER.debug("Button: {} = {}", b, box(getRawButton(b)));
+        return getRawButton(b);
     }
 
     /**

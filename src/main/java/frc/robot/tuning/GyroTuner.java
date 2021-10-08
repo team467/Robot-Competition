@@ -23,7 +23,7 @@ public class GyroTuner implements Tuner {
     drive = Drive.getInstance();
 
     gyro = Gyrometer.getInstance();
-    LOGGER.info("Gyro created: " + gyro);
+    LOGGER.debug("Gyro created: " + gyro);
   }
 
     public void init() {
@@ -39,12 +39,12 @@ public class GyroTuner implements Tuner {
 
 
      
-      if(gyro.getPitchDegrees() <= Math.abs(turn) * turnMult){
-        drive.arcadeDrive(0, -Math.signum(turn)*0.3);
+      // if(gyro.getPitchDegrees() <= Math.abs(turn) * turnMult){ } else {
+      //   drive.arcadeDrive(0, 0);
+      // }
+        drive.arcadeDrive(0, 0.2);
 
-      } else {
-        drive.arcadeDrive(0, 0);
-      }
+     
     
 
 

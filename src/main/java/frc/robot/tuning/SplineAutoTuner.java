@@ -33,7 +33,7 @@ public class SplineAutoTuner implements Tuner {
 
     gyro = Gyrometer.getInstance();
     timer = new Timer();
-    LOGGER.info("Gyro created: " + gyro);
+   // LOGGER.info("Gyro created: " + gyro);
   }
 
     public void init() {

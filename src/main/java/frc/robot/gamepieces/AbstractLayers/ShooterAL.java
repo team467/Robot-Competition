@@ -6,6 +6,7 @@ import frc.robot.RobotMap;
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.Servo;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 
 import java.io.IOException;
@@ -51,6 +52,8 @@ public class ShooterAL extends GamePieceBase implements GamePiece {
   private static AddressableLED leds;
   private static AddressableLEDBuffer ledBuffer;
 
+  public boolean shooterWantsBall = false;
+
   private Hashtable<Integer, Integer> distanceToPower = new Hashtable<Integer, Integer>();
 
   /**
@@ -62,14 +65,14 @@ public class ShooterAL extends GamePieceBase implements GamePiece {
   public static ShooterAL getInstance() {
     if (instance == null) {
       if (RobotMap.HAS_SHOOTER) {
-        LOGGER.info("Creating Lead Motors");
+        LOGGER.debug("Creating Lead Motors");
 
         flywheelLeader = new WPI_TalonSRX(RobotMap.SHOOTER_MOTOR_CHANNEL);
         flywheelLeader.setNeutralMode(NeutralMode.Coast);
         flywheelFollower = null;
 
         if (RobotMap.SHOOTER_FOLLOWER) {
-          LOGGER.info("Creating follow motors");
+          LOGGER.debug("Creating follow motors");
           flywheelFollower = new WPI_TalonSRX(RobotMap.SHOOTER_MOTOR_FOLLOWER_CHANNEL);
           flywheelFollower.setNeutralMode(NeutralMode.Coast);
         }
@@ -94,8 +97,17 @@ public class ShooterAL extends GamePieceBase implements GamePiece {
         hoodLeft = new Servo(RobotMap.HOOD_LEFT_PWM_PORT);
         hoodRight = new Servo(RobotMap.HOOD_RIGHT_PWM_PORT);
 
-        hoodLeft.set(RobotMap.HOOD_LEFT_STARTING_POSITION);
-        hoodRight.set(RobotMap.HOOD_RIGHT_STARTING_POSITION);
+        if (RobotMap.HOOD_LEFT_INVERTED) {
+          hoodLeft.set(1-RobotMap.HOOD_LEFT_STARTING_POSITION);
+        } else {
+          hoodLeft.set(RobotMap.HOOD_LEFT_STARTING_POSITION);
+        }
+
+        if (RobotMap.HOOD_RIGHT_INVERTED) {
+          hoodRight.set(1-RobotMap.HOOD_RIGHT_STARTING_POSITION);
+        } else {
+          hoodRight.set(RobotMap.HOOD_RIGHT_STARTING_POSITION);
+        }
 
       } else {
         hoodLeft = null;
@@ -104,7 +116,7 @@ public class ShooterAL extends GamePieceBase implements GamePiece {
 
       if (RobotMap.HAS_SHOOTER_LEDS) {
         leds = new AddressableLED(RobotMap.SHOOTER_LED_CHANNEL);
-        ledBuffer = new AddressableLEDBuffer(RobotMap.SHOOTER_LED_AMOUNT * (RobotMap.SHOOTER_DOUBLESIDE_LED ? 2: 1));
+        ledBuffer = new AddressableLEDBuffer(RobotMap.SHOOTER_LED_AMOUNT_PER_SIDE*2);
         leds.setLength(ledBuffer.getLength());
 
         for (var i = 0; i < ledBuffer.getLength(); i++) {
@@ -124,6 +136,17 @@ public class ShooterAL extends GamePieceBase implements GamePiece {
     return instance;
   }
 
+  public void setShooterWantsBall(boolean toggle) {
+    LOGGER.debug("shooter wants ball {}", toggle);
+
+    shooterWantsBall = toggle;
+  }
+
+
+  
+  public boolean getShooterState() {
+    return shooterWantsBall;
+  }
 
   private ShooterAL(TalonSpeedControllerGroup flywheel) {
     super("Telemetry", "Shooter");
@@ -139,7 +162,11 @@ public class ShooterAL extends GamePieceBase implements GamePiece {
   }
 
   public void setSpeed(double speed) {
-    this.speed = speed;
+    if (flywheel != null && RobotMap.HAS_SHOOTER) {
+      double output = Math.max(-1.0, Math.min(1.0, speed));
+      flywheel.set(ControlMode.PercentOutput, output);
+      LOGGER.debug("the speed is {}", output);
+    }
     
   }
 
@@ -152,11 +179,17 @@ public class ShooterAL extends GamePieceBase implements GamePiece {
   }
 
   public boolean atSpeed() {
+    // double current = flywheel.velocity();
+    // double target = flywheel.closedLoopTarget();
+    // double error = current / target;
     double current = flywheel.velocity();
-    double target = flywheel.closedLoopTarget();
-    double error = current / target;
+    double target = 9500 * GamePieceController.getInstance().shooterSpeed;
+    double error = target - current;
 
-    if (Math.abs(error - 1) <= RobotMap.SHOOTER_SPEED_TOLERANCE) {
+
+    LOGGER.debug("target: {}, Actual: {}, error {}", target, current, error);
+    
+    if (Math.abs(error) <= RobotMap.SHOOTER_SPEED_TOLERANCE) {
       return true;
     } else {
       return false;
@@ -198,7 +231,6 @@ public class ShooterAL extends GamePieceBase implements GamePiece {
   public void setLedStrip(int r, int g, int b, int startingLed, int endingLed) {
     if (ledBuffer != null && leds != null && RobotMap.HAS_SHOOTER_LEDS) {
       for (var i = Math.max(0, startingLed); i <= Math.min(ledBuffer.getLength()-1, endingLed); i++) {
-        LOGGER.warn("Setting led {} to color R{} G{} B{}", i, r, g, b);
         ledBuffer.setRGB(i, r, g, b);
      }
      leds.setData(ledBuffer);
@@ -207,16 +239,13 @@ public class ShooterAL extends GamePieceBase implements GamePiece {
 
   public void fillStrip(int r, int g, int b, int led) {
     if (ledBuffer != null && leds != null && RobotMap.HAS_SHOOTER_LEDS) {
-      int setLed = Math.min(RobotMap.SHOOTER_LED_AMOUNT-1, led);
+      int setLed = Math.min(RobotMap.SHOOTER_LED_AMOUNT_PER_SIDE-1, led);
       setLedStrip(r, g, b, 0, setLed);
-      if (RobotMap.SHOOTER_DOUBLESIDE_LED) {
-        setLedStrip(r, g, b, RobotMap.SHOOTER_LED_AMOUNT, RobotMap.SHOOTER_LED_AMOUNT + setLed);
-      }
-      if (setLed < RobotMap.SHOOTER_LED_AMOUNT-1) {
-        setLedStrip(0, 0, 0, setLed + 1, RobotMap.SHOOTER_LED_AMOUNT-1);
-        if (RobotMap.SHOOTER_DOUBLESIDE_LED) {
-          setLedStrip(r, g, b, RobotMap.SHOOTER_LED_AMOUNT + setLed + 1, ledBuffer.getLength()-1 + setLed);
-        }
+      setLedStrip(r, g, b, RobotMap.SHOOTER_LED_AMOUNT_PER_SIDE, RobotMap.SHOOTER_LED_AMOUNT_PER_SIDE + setLed);
+
+      if (setLed < RobotMap.SHOOTER_LED_AMOUNT_PER_SIDE-1) {
+        setLedStrip(0, 0, 0, setLed + 1, RobotMap.SHOOTER_LED_AMOUNT_PER_SIDE-1);
+        setLedStrip(r, g, b, RobotMap.SHOOTER_LED_AMOUNT_PER_SIDE + setLed + 1, ledBuffer.getLength()-1 + setLed);
       }
     }
   }
@@ -233,11 +262,22 @@ public class ShooterAL extends GamePieceBase implements GamePiece {
     setLedStrip(0, 0, 0, 0, ledBuffer.getLength()-1);
   }
 
-  public void setHoodAngle(double leftAngle, double rightAngle) {
-    if (hoodLeft != null && hoodRight != null && RobotMap.HAS_SHOOTER_HOOD) {
-      setLeftHoodAngle(leftAngle);
-      setRightHoodAngle(rightAngle);
+  public void setHoodAngle(double leftAngle, double rightAngle, boolean raw) {
+    if (hoodLeft != null && hoodRight != null && RobotMap.HAS_SHOOTER_HOOD) {  
+      if (!raw) {
+        leftAngle *= (RobotMap.HOOD_LEFT_MAX - RobotMap.HOOD_LEFT_MIN); 
+        leftAngle += RobotMap.HOOD_LEFT_MIN;
+        rightAngle *= (RobotMap.HOOD_RIGHT_MAX - RobotMap.HOOD_RIGHT_MIN);
+        rightAngle += RobotMap.HOOD_RIGHT_MIN;
+      }
+
+      setLeftHoodAngleRaw(leftAngle);
+      setRightHoodAngleRaw(rightAngle);
     }
+  }
+
+  public void setHoodAngle(double leftAngle, double rightAngle) {
+    this.setHoodAngle(leftAngle, rightAngle, false);
   }
 
   public void setLeftHoodAngle(double angle) {
@@ -281,7 +321,7 @@ public class ShooterAL extends GamePieceBase implements GamePiece {
       angle = Math.max(RobotMap.HOOD_LEFT_MIN, Math.min(RobotMap.HOOD_LEFT_MAX, angle));
 
       if (RobotMap.HOOD_LEFT_INVERTED) {
-        angle = Math.abs(angle-1);
+        angle = Math.abs(1-angle);
       }
 
       if (RobotMap.HOOD_ADD_NOISE) {
@@ -297,7 +337,7 @@ public class ShooterAL extends GamePieceBase implements GamePiece {
       angle = Math.max(RobotMap.HOOD_RIGHT_MIN, Math.min(RobotMap.HOOD_RIGHT_MAX, angle));
 
       if (RobotMap.HOOD_RIGHT_INVERTED) {
-        angle = Math.abs(angle-1);
+        angle = Math.abs(1-angle);
       }
 
       if (RobotMap.HOOD_ADD_NOISE) {
@@ -347,11 +387,11 @@ public class ShooterAL extends GamePieceBase implements GamePiece {
    speed = GamePieceController.getInstance().shooterSpeed;
     switch(setting) {
       case FORWARD:
-        rampToSpeed(-speed);
+        rampToSpeed(speed);
         break;
 
       case BACKWARD:
-        rampToSpeed(speed);
+        rampToSpeed(-speed);
         break;
 
       case MANUAL_FORWARD:
@@ -409,4 +449,3 @@ public class ShooterAL extends GamePieceBase implements GamePiece {
 
     }
 }
-  

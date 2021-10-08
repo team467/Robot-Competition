@@ -8,13 +8,21 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.logging.RobotLogManager;
 
 import org.apache.logging.log4j.Logger;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /** 
  * This class determines the robots position during the beginning of the game.
  *
  */
 public class MatchConfiguration {
+
+  public void loadAutos() {
+    chooser.setDefaultOption("None", Actions.doNothing());
+    register("None", Actions.doNothing());
+    register("Move forward", Actions.move(3));
+    register("Move forward further", Actions.move(6));
+    // register("Move backwards", Actions.move(-3));
+    // register("Shoot", Actions.shootGroup());
+  }
 
   private static MatchConfiguration instance;
 
@@ -35,23 +43,22 @@ public class MatchConfiguration {
 
   private TeamColor teamColor;
 
-  private String autoMode = "None"; 
+  private ActionGroup autoMode; 
 
   private ActionGroup autonomous;
 
-  private String[] autolist= {"None","Shoot Basic"};
+  private SendableChooser<ActionGroup> chooser = new SendableChooser<ActionGroup>();
 
-  private SendableChooser<String> chooser = new SendableChooser<String>();
+  private void register(String name, ActionGroup action) {
+    if (name != null && action != null) {
+      chooser.addOption(name, action);
+    }
+  }
 
   private MatchConfiguration() {
     teamColor = TeamColor.UNKNOWN;
-
-    for(String s : autolist) {
-      chooser.addOption(s,s);
-    }
-
+    loadAutos();
     SmartDashboard.putData("Auto Chooser", chooser);  
-
   }
 
   public static MatchConfiguration getInstance() {
@@ -85,26 +92,7 @@ public class MatchConfiguration {
 
   public ActionGroup AutoDecisionTree() {
     autonomous = Actions.doNothing();
-		
-		// if (autoMode.startsWith("Left")) {
-		// 	Actions.startOnLeft();
-		// } else if (autoMode.startsWith("Right")) {
-		// 	Actions.startOnRight();
-		// } else {
-		// 	Actions.startInCenter();
-		// }
-
-
-		switch(autoMode) {
-      case "None":
-        autonomous = Actions.doNothing();
-          break;
-      case "Shoot Basic":
-        autonomous = Actions.shootGroup();
-        break;
-      default:
-       Actions.doNothing();
-    }
+    autonomous = autoMode;
 
     autonomous.enable();
 

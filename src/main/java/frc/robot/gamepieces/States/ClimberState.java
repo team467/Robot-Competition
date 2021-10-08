@@ -1,25 +1,11 @@
-/*----------------------------------------------------------------------------*/
-/* Copyright (c) 2018-2019 FIRST. All Rights Reserved.                        */
-/* Open Source Software - may be modified and shared by FRC teams. The code   */
-/* must be accompanied by the FIRST BSD license file in the root directory of */
-/* the project.                                                               */
-/*----------------------------------------------------------------------------*/
-
-
 package frc.robot.gamepieces.States;
 
 import frc.robot.gamepieces.GamePieceController;
 import frc.robot.gamepieces.AbstractLayers.ClimberAL;
-import static frc.robot.gamepieces.AbstractLayers.ClimberAL.SolenoidLock.*;
-import static frc.robot.gamepieces.AbstractLayers.ClimberAL.climberSpeed.*;
 import edu.wpi.first.wpilibj.Timer;
 
-/**
- * Add your docs here.
- */
 public enum ClimberState implements State {
     InitialLocked {
-        // inlcude these
         public boolean upButtonPressed;
         public boolean climberEnabled;
 
@@ -28,14 +14,11 @@ public enum ClimberState implements State {
         }
 
         public State action() {
-            // first hand updates on the status of these stuff
             climberEnabled = GamePieceController.getInstance().climberEnabled;
             upButtonPressed = GamePieceController.getInstance().climberUpButtonPressed;
 
-            climberAL.setSpeed(OFF);
-            climberAL.setLock(LOCK);
+            climber.climberOff();
             if (climberEnabled && upButtonPressed) {
-
                 return Extending;
 
             }
@@ -47,75 +30,78 @@ public enum ClimberState implements State {
         }
     }, 
 
+    //removed from logic because physically cannot be done
     UnlockingUp {
         public boolean upButtonPressed;
         public double entryPosition;
         public double currentPosition;
+        public double distanceTravelled;
+        public double distanceNeeded;
 
         public void enter() {
-            timer.start();
-            entryPosition = climberAL.climberPosition();
+            entryPosition = ClimberAL.getInstance().getPosition();
+            //encoder.setDistancePerPulse(3./256.); //TODO determine value
         }
 
         public State action() {
-            upButtonPressed = GamePieceController.getInstance().upButtonPressed;
-            currentPosition = climberAL.climberPosition();
+            upButtonPressed = GamePieceController.getInstance().climberUpButtonPressed;
+            currentPosition = ClimberAL.getInstance().getPosition();
+           distanceTravelled = ClimberAL.getInstance().getPosition();
 
-            climberAL.setSpeed(UPSLOW);
-            climberAL.setLock(LOCK);
+           //climber.climberUpSlow();
             if (Math.abs(currentPosition - entryPosition) > climbThreshold) {
-                if (upButtonPressed) {
-                    return Extending;
+                if (upButtonPressed && distanceNeeded > distanceTravelled) {
+                    return this;
                 }
-                if (!upButtonPressed) {
+                if (distanceNeeded < distanceTravelled ) {
+                    return Extending;
+                } else {
                     return GameLocked;
                 }
-            }
-            if (timer.get() > unlockingDelay) {
-                return Disabled;
             }
             return this;
         }
 
         public void exit() {
-            timer.stop();
-            timer.reset();
+            //encoder.reset();
         }
     },
 
+    //removed from logic because physically cannot be done
     UnlockingDown {
         public boolean downButtonPressed;
         public double entryPosition;
         public double currentPosition;
+        public double distanceTravelled;
+        public double distanceNeeded;
 
         public void enter() {
-            timer.start();
-            entryPosition = climberAL.climberPosition();
+            entryPosition = ClimberAL.getInstance().getPosition();
+            //encoder.setDistancePerPulse(3./256.); //TODO determine value
         }
 
         public State action() {
-            downButtonPressed = GamePieceController.getInstance().downButtonPressed;
-            currentPosition = climberAL.climberPosition();
+            downButtonPressed = GamePieceController.getInstance().climberDownButtonPressed;
+            currentPosition = ClimberAL.getInstance().getPosition();
+            //distanceTravelled = encoder.getDistance();
 
-            climberAL.setSpeed(DOWNSLOW);
-            climberAL.setLock(LOCK);
+            climber.climberDownSlow();
             if (Math.abs(currentPosition - entryPosition) > climbThreshold) {
-                if (downButtonPressed) {
-                    return Extending;
+                if (downButtonPressed && distanceNeeded > distanceTravelled) {
+                    return this;
+                }
+                if (distanceNeeded < distanceTravelled) {
+                    return Retracting;
                 }
                 if (!downButtonPressed) {
                     return GameLocked;
                 }
             }
-            if (timer.get() > unlockingDelay && Math.abs(currentPosition - entryPosition) <= climbThreshold) { // TODO: entry position - current position
-                return Disabled;
-            }
             return this;
         }
 
         public void exit() {
-            timer.stop();
-            timer.reset();
+            //encoder.reset();
         }
     },
 
@@ -131,11 +117,11 @@ public enum ClimberState implements State {
             upButtonPressed = GamePieceController.getInstance().climberUpButtonPressed;
             downButtonPressed = GamePieceController.getInstance().climberDownButtonPressed;
 
-            climberAL.setSpeed(UP);
-            climberAL.setLock(UNLOCK);
-            if (isHighest) {
+            climber.climberUp();
+            if (climber.isUp()) {
                 return GameLocked;
             }
+
             if (!upButtonPressed || downButtonPressed) {
                 return GameLocked;
             }
@@ -158,14 +144,17 @@ public enum ClimberState implements State {
         public State action() {
             downButtonPressed = GamePieceController.getInstance().climberDownButtonPressed;
 
-            climberAL.setSpeed(DOWN);
-            climberAL.setLock(UNLOCK);
+            if (climber.getBottomSensor()) {
+                climber.resetPosition();
+                return GameLocked;
+            }
+
+            climber.climberDown();
+
             if (!downButtonPressed) {
                 return GameLocked;
             }
-            if (isLowest) {
-                return GameLocked;
-            }
+            
             return this;
         }
 
@@ -183,16 +172,15 @@ public enum ClimberState implements State {
         }
 
         public State action() {
-            upButtonPressed = GamePieceController.getInstance().upButtonPressed;
-            downButtonPressed = GamePieceController.getInstance().downButtonPressed;
+            upButtonPressed = GamePieceController.getInstance().climberUpButtonPressed;
+            downButtonPressed = GamePieceController.getInstance().climberDownButtonPressed;
 
-            climberAL.setSpeed(OFF);
-            climberAL.setLock(LOCK);
-            if (upButtonPressed && !downButtonPressed && !isHighest) {
-                return UnlockingUp;
+            climber.climberOff();
+            if (upButtonPressed && !downButtonPressed) { //&&!isHighest
+                return Extending;
             }
-            if (downButtonPressed && !upButtonPressed && !isLowest) {
-                return UnlockingDown;
+            if (downButtonPressed && !upButtonPressed) { //&&!isLowest
+                return Retracting;
             }
             return this;
         }
@@ -200,35 +188,15 @@ public enum ClimberState implements State {
         public void exit() {
             // Noop
         }
-    },
-
-    Disabled {
-        public void enter() {
-            timer.start();
-        }
-
-        public State action() {
-            climberAL.setSpeed(OFF);
-            climberAL.setLock(LOCK);
-            if (timer.get() > disableDelay) { // TODO: determine timer value
-                return GameLocked;
-            }
-            return this;
-        }
-
-        public void exit() {
-            timer.stop();
-            timer.reset();
-        }
     };
 
-    private static ClimberAL climberAL = ClimberAL.getInstance();
-    private static boolean isLowest = climberAL.isDown();
-    private static boolean isHighest = climberAL.isUp();
+    private static ClimberAL climber = ClimberAL.getInstance();
+    private static boolean isLowest = climber.isDown();
+    private static boolean isHighest = climber.isUp();
 
-    private final static double unlockingDelay = 2.0; // TODO: determine delay in seconds
-    private final static double disableDelay = 3.0; // TODO: determine delay in seconds
-    private final static double climbThreshold = 2.0; // TODO: determine threshold for climber, should this be static or non static
+    public final double distanceNeeded = 3.0; 
+    
+    private final static double climbThreshold = 2.0;
 
     public static Timer timer = new Timer();
 }

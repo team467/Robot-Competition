@@ -1,7 +1,6 @@
 package frc.robot.utilities;
 
 /*
- * @author Shashvat
  * LookUp table for 
  * sine, cosine, arctangent
  *

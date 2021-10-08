@@ -7,6 +7,7 @@ import com.revrobotics.CANSparkMaxLowLevel;
 import com.revrobotics.ControlType;
 
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.RobotMap;
 import frc.robot.logging.RobotLogManager;
@@ -438,6 +439,9 @@ public class Drive extends DifferentialDrive implements AutoDrive {
       leftSM.set(ControlType.kVelocity, MathUtil.clamp(leftMotorOutput, -1.0, 1.0) * m_maxOutput);
       // set(ControlType.kVelocity, MathUtil.clamp(leftMotorOutput, -1.0, 1.0) * m_maxOutput);
       rightSM.set(ControlType.kVelocity, MathUtil.clamp(-rightMotorOutput, -1.0, 1.0) * m_maxOutput);
+
+      //feed the watchdog so it does not complain
+      super.feedWatchdog();
     } else {
       super.arcadeDrive(speed, rotation, squaredInputs);
     }

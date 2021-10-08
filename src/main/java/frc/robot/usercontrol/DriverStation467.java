@@ -1,5 +1,8 @@
 package frc.robot.usercontrol;
 
+import frc.robot.logging.RobotLogManager;
+import org.apache.logging.log4j.Logger;
+
 import frc.robot.RobotMap;
 import frc.robot.drive.DriveMode;
 import frc.robot.logging.Telemetry;
@@ -7,7 +10,10 @@ import frc.robot.usercontrol.XBoxJoystick467.Button;
 
 public class DriverStation467 {
 
+  private static final Logger LOGGER = RobotLogManager.getMainLogger(DriverStation467.class.getName());
+
   private XBoxJoystick467 driverJoy;
+  // private OperatorController467 operatorController;
   // private XBoxJoystick467 navJoy;
   private OperatorController467 opCon;
 
@@ -35,11 +41,9 @@ public class DriverStation467 {
    */
   private DriverStation467() {
     driverJoy = new XBoxJoystick467(0, "driver");
-    // navJoy = new XBoxJoystick467(1, "nav");
     opCon = new OperatorController467(1);
 
     driverRumbler = new Rumbler(driverJoy);
-    // navRumbler = new Rumbler(navJoy);
   }
 
   /**
@@ -50,10 +54,7 @@ public class DriverStation467 {
       driverJoy.read();
       driverRumbler.periodic();
     }
-    // if (navJoy != null) {
-    //   navJoy.read();
-    //   navRumbler.periodic();
-    // }
+
     if (opCon != null) {
       opCon.read();
     }
@@ -63,9 +64,6 @@ public class DriverStation467 {
     if (driverJoy != null) {
       driverJoy.logIdentity();
     }
-    // if (navJoy != null) {
-    //   navJoy.logIdentity();
-    // }
   }
 
   /**
@@ -76,10 +74,6 @@ public class DriverStation467 {
   public XBoxJoystick467 getDriveJoystick() {
     return driverJoy;
   }
-
-  // public XBoxJoystick467 getNavJoystick() {
-    // return navJoy;
-  // }
 
   public OperatorController467 getOperatorController() {
     return opCon;
@@ -178,4 +172,40 @@ public class DriverStation467 {
   public boolean getClimbDown() {
     return opCon.down(12);
   }
+  
+  //Driver controls
+  public double getArcadeSpeed() {
+    return (RobotMap.CONTROLS_INVERTED_FB == true) ? -driverJoy.getAdjustedSpeed(driverJoy.getLeftStickY())
+        : driverJoy.getAdjustedSpeed(driverJoy.getLeftStickY());
+  }
+
+  public double getArcadeTurn() {
+    return (RobotMap.CONTROLS_INVERTED_TURN == true) ? -driverJoy.getAdjustedTurnSpeed()
+        : driverJoy.getAdjustedTurnSpeed();
+  }
+
+  public boolean getDriveCameraBack() {
+    return driverJoy.pov() == 0;
+  }
+
+  public boolean getDriveCameraFront() {
+    return driverJoy.pov() == 180;
+  }
+  
+  public boolean getSlow(){
+    return driverJoy.getRightTrigger() > 0.9;
+  }
+
+  public boolean getTurbo(){
+    return driverJoy.getLeftTrigger() > 0.9;
+  }
+
+  public boolean getDisableSafety() {
+    return driverJoy.down(Button.BumperRight);
+  }
+
+  public boolean getAutoAlignButton() {
+    return driverJoy.down(Button.x);
+  }
+
 }

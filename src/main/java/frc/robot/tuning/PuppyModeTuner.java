@@ -45,7 +45,7 @@ public class PuppyModeTuner implements Tuner {
 
     gyro = Gyrometer.getInstance();
     timer = new Timer();
-    LOGGER.info("Gyro created: " + gyro);
+    //LOGGER.info("Gyro created: " + gyro);
   }
 
     public void init() {
@@ -77,7 +77,7 @@ public class PuppyModeTuner implements Tuner {
 
       if(tryShot){
       gyro.zero();
-      gamePieceController.determineShooterSpeed();
+      visionController.determineShooterSpeed();
       drive.arcadeDrive(0, visionController.setTurn());
 
       if(visionController.atAngle()){ 

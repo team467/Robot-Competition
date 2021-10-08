@@ -1,18 +1,11 @@
-/*----------------------------------------------------------------------------*/
-/* Copyright (c) 2018-2019 FIRST. All Rights Reserved.                        */
-/* Open Source Software - may be modified and shared by FRC teams. The code   */
-/* must be accompanied by the FIRST BSD license file in the root directory of */
-/* the project.                                                               */
-/*----------------------------------------------------------------------------*/
-
 package frc.robot.gamepieces.States;
 
 import frc.robot.RobotMap;
 import frc.robot.gamepieces.AbstractLayers.IndexerAL;
+import frc.robot.gamepieces.AbstractLayers.IntakeAL;
+import frc.robot.gamepieces.AbstractLayers.ShooterAL;
 import frc.robot.gamepieces.GamePieceController;
 import frc.robot.logging.RobotLogManager;
-
-import com.fasterxml.jackson.core.io.InputDecorator;
 
 import org.apache.logging.log4j.Logger;
 
@@ -28,6 +21,8 @@ public enum IndexerState implements State {
         public boolean isInMouth;
         public boolean isInChamber;
         public boolean shooterWantsBall;
+        public boolean climberEnabled;
+        public boolean shooterAuto;
 
         public void enter() {
             // Noop
@@ -35,28 +30,42 @@ public enum IndexerState implements State {
 
         public State action() {
             indexAuto = GamePieceController.getInstance().IndexAuto;
-            indexerBallsReverse = GamePieceController.getInstance().indexerBallsReverse();
-            indexerBallsForward = GamePieceController.getInstance().indexerBallsForward();
+            shooterAuto = GamePieceController.getInstance().ShooterAuto;
+            indexerBallsReverse = GamePieceController.getInstance().indexerBallsReverse;
+            indexerBallsForward = GamePieceController.getInstance().indexerBallsForward;
+            climberEnabled = GamePieceController.getInstance().climberEnabled;
+
             isInMouth = indexerAL.isBallInMouth();
             isInChamber = indexerAL.isBallInChamber();
-            shooterWantsBall = GamePieceController.getInstance().shooterWantsBall;
+            shooterWantsBall = ShooterAL.getInstance().getShooterState();
             LOGGER.debug("Shooter wants ball {}", shooterWantsBall);
+
+            // if climber is enabled stop moving on
+            if (climberEnabled) {
+                LOGGER.debug("Climber enabled stopping");
+                return this;
+            }
+
             if (!indexAuto) {
                 return Manual;
-            } else {
-                if (indexerBallsReverse && isInMouth && !isInChamber) {
+            }
+
+            //Runs indexer when you have forward pressed and there isn't a ball in the chamber cause that causes death
+            if (indexerBallsForward && isInMouth && !isInChamber) { //TODO: remove need for indexer forward to be held so it can be fully auto
                     LOGGER.debug("isInMouth and is not in Chamber");
                     return Feed;
-                }
+            }
 
-                if (shooterWantsBall) {
-                    LOGGER.debug("LoadingBalls");
-                    return Feed;
-                }
+            if (shooterWantsBall) {
+                LOGGER.debug("LoadingBalls");
+                return Feed;
+            }
 
-                if (indexerBallsReverse) {
-                    return Feed;
-                }
+            //Basically useless
+            if ((indexerBallsForward || shooterWantsBall) && (!isInMouth || !isInChamber)) {
+                IndexerAL.callIntakeBeltToIndexer();
+            } else {
+                IndexerAL.callIntakeBeltOff();
             }
 
             return this;
@@ -81,22 +90,27 @@ public enum IndexerState implements State {
         public State action() {
             LOGGER.debug("Feed is activated");
             autoMode = GamePieceController.getInstance().IndexAuto;
-            indexerBallsReverse = GamePieceController.getInstance().indexerBallsReverse();
+            indexerBallsReverse = GamePieceController.getInstance().indexerBallsReverse;
             isInChamber = indexerAL.isBallInChamber();
-
-            IndexerAL.advanceBallsToShooter();
 
             if (!autoMode) {
                 IndexerAL.callStop();
                 return Idle;
             }
 
-            if (!indexerAL.isBallInMouth()) {
+            if (indexerAL.isBallInMouth()) {
                 return FeedBuffer;
             }
 
-            if (isInChamber) {
+            if (isInChamber || indexerAL.ballLoaded()) {
                 IndexerAL.callStop();
+                indexerAL.loadBall();
+                return Idle;
+            } else if (!ShooterAL.getInstance().shooterWantsBall) {
+                IndexerAL.callStop();
+                return Idle;
+            } else {
+                IndexerAL.advanceBallsToShooter();
             }
 
             return this;
@@ -112,6 +126,8 @@ public enum IndexerState implements State {
     // Timed for 50ms to let the ball Feed advance to make room for another ball to
     // be seen by the mouth TOF sensor.
     FeedBuffer {
+        boolean isInChamber;
+
 
         public void enter() {
             timer.start();
@@ -119,6 +135,11 @@ public enum IndexerState implements State {
         }
 
         public State action() {
+            isInChamber = indexerAL.isBallInChamber();
+
+            if (isInChamber) {
+                indexerAL.loadBall();
+            }
 
             IndexerAL.advanceBallsToShooter();
             // TODO: adjust timer based on how fast the ball is moving.
@@ -140,7 +161,7 @@ public enum IndexerState implements State {
     Reverse {
 
         public boolean autoMode;
-        public boolean indexerBallsForward;
+        public boolean indexerBallsReverse;
 
         public void enter() {
             // Noop
@@ -148,7 +169,7 @@ public enum IndexerState implements State {
 
         public State action() {
             autoMode = GamePieceController.getInstance().IndexAuto;
-            indexerBallsForward = GamePieceController.getInstance().indexerBallsReverse();
+            indexerBallsReverse = GamePieceController.getInstance().indexerBallsReverse;
 
             IndexerAL.moveBallsTowardIntake();
 
@@ -156,7 +177,7 @@ public enum IndexerState implements State {
                 return Manual;
             }
 
-            if (!indexerBallsForward) {
+            if (!indexerBallsReverse) {
                 IndexerAL.callStop();
                 return Idle;
             }
@@ -182,21 +203,26 @@ public enum IndexerState implements State {
 
         public State action() {
             autoMode = GamePieceController.getInstance().IndexAuto;
-            indexerBallsReverse = GamePieceController.getInstance().indexerBallsReverse();
-            indexerBallsForward = GamePieceController.getInstance().indexerBallsForward();
+            indexerBallsReverse = GamePieceController.getInstance().indexerBallsReverse;
+            indexerBallsForward = GamePieceController.getInstance().indexerBallsForward;
 
             if (autoMode) {
                 return Idle;
             }
 
             if (indexerBallsForward) {
-                IndexerAL.moveBallsTowardIntake();
-            }
-            if (indexerBallsReverse) {
                 IndexerAL.advanceBallsToShooter();
+                IndexerAL.callIntakeBeltToIndexer();
             }
+
+            if (indexerBallsReverse) {
+                IndexerAL.moveBallsTowardIntake();
+                IndexerAL.callIntakeBeltInverse();
+            }
+
             if (!indexerBallsForward && !indexerBallsReverse) {
                 IndexerAL.callStop();
+                IndexerAL.callIntakeBeltOff();
             }
 
             return this;

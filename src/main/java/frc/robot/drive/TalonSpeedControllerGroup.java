@@ -54,7 +54,7 @@ public class TalonSpeedControllerGroup implements SpeedController {
     leader.setSensorPhase(sensorIsInverted);
     leader.setInverted(motorIsInverted);
 
-    registerMetrics();
+    //registerMetrics();
 
     zero();
   }
@@ -126,7 +126,7 @@ public class TalonSpeedControllerGroup implements SpeedController {
 
   public double closedLoopTarget() {
     double target = 0;
-    if (leader == null) {
+    if (leader != null) {
       target = leader.getClosedLoopTarget();
     }
     return target;
@@ -134,7 +134,7 @@ public class TalonSpeedControllerGroup implements SpeedController {
 
   public double closedLoopError() {
     double error = 0;
-    if (leader == null) {
+    if (leader != null) {
       error = leader.getClosedLoopError();
     }
     return error;
@@ -344,12 +344,6 @@ public class TalonSpeedControllerGroup implements SpeedController {
     final double feet = (ticks / RobotMap.WHEEL_ENCODER_CODES_PER_REVOLUTION) * (RobotMap.WHEEL_CIRCUMFERENCE / 12);
     LOGGER.trace("Ticks = {} feet = {}", box(ticks), box(feet));
     return feet;
-  }
-
-  public void registerMetrics() {
-    final Telemetry telemetry = Telemetry.getInstance();
-    telemetry.addDoubleMetric(name + "_Position", this::position);
-    telemetry.addDoubleMetric(name + "_Velocity", this::velocity);
   }
 
 }
