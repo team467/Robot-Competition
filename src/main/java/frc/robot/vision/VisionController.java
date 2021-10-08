@@ -100,12 +100,14 @@ public class VisionController {
         return 0.0;
     } 
     
-    if ((gyro.getPitchDegrees()) < angle()) {
+    // if ((gyro.getPitchDegrees()) < angle()) {
+    if (angle() > 0) {
       LOGGER.debug("Gyro angle {} deg, Camera angle {} deg, turn right", gyro.getPitchDegrees(), angle());
         return RobotMap.AUTOALIGN_TURN_SPEED;
     }
 
-    if ((gyro.getPitchDegrees()) > angle()) {
+    // if ((gyro.getPitchDegrees()) > angle()) {
+    if (angle() < 0) {
       LOGGER.debug("Gyro angle {} deg, Camera angle {} deg, turn left", gyro.getPitchDegrees(), angle());
         return -RobotMap.AUTOALIGN_TURN_SPEED;
     }

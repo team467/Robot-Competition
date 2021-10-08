@@ -53,7 +53,6 @@ public class ClimberTuner implements Tuner {
 
     public void periodic() {
         double speed = SmartDashboard.getNumber("Speed", 0);
-        boolean lockSolenoid = SmartDashboard.getBoolean("Lock Solenoid", false);
 
         if (useVelocity) {
             climber.setClimb(speed);
@@ -61,16 +60,9 @@ public class ClimberTuner implements Tuner {
             climber.setSpeed(speed);
         }
 
-        if (lockSolenoid) {
-            climber.climberLock();
-        } else {
-            climber.climberUnlock();
-        }
-
         SmartDashboard.putNumber("Climber Speed", climber.getSpeed());
         SmartDashboard.putNumber("Climber Position", climber.getPosition());
-        SmartDashboard.putBoolean("Top Sensor", climber.getTopSensor());
         SmartDashboard.putBoolean("Bottom Sensor", climber.getBottomSensor());
-        SmartDashboard.putNumber("Climber Pot", climber.climberPosition());
+        SmartDashboard.putNumber("Climber Pot", climber.getPosition());
     }
 }

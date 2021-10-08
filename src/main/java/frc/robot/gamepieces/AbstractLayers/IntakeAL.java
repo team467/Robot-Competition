@@ -72,7 +72,7 @@ public class IntakeAL extends GamePieceBase implements GamePiece {
 
     public void armUp() {
         if (arm != null && RobotMap.HAS_INTAKE) {
-            setArmSpeed(0.5);
+            setArmSpeed(0.7);
         }
     }
 

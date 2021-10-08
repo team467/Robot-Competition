@@ -159,7 +159,7 @@ public enum ShooterState implements State {
             }
 
             if(timer.get() < RobotMap.SHOOTER_AUTO_TIMER){ //!shooterAL.atSpeed() || !indexerAL.inChamber()
-                return ShootingNoDelay;
+                return this;
             } else {
                 indexerAL.shootBall();
                 return Idle;

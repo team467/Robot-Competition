@@ -8,6 +8,7 @@
 package frc.robot.gamepieces.AbstractLayers;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import frc.robot.RobotMap;
@@ -37,14 +38,14 @@ public class ClimberAL extends GamePieceBase implements GamePiece {
     private static ClimberAL instance = null;
 
     // motors
-    private static CANSparkMax climbLeader;
-    private static CANSparkMax climbFollower;
-    private static SparkMaxSpeedControllerGroup climbGroup;
+    private static CANSparkMax climberMotor;
+    // private static CANSparkMax climbFollower;
+    private static SparkMaxSpeedControllerGroup climberGroup;
     private static Relay climbLock;
-    private static DigitalInput topSensor;
+    // private static DigitalInput topSensor;
     private static DigitalInput bottomSensor;
-    private static DigitalInput tiltLimitSwitch;
-    private static AnalogPotentiometer potentiometer;
+    // private static DigitalInput tiltLimitSwitch;
+    // private static AnalogPotentiometer potentiometer;
 
     // states of robot
     private climberSpeed speed;
@@ -57,38 +58,23 @@ public class ClimberAL extends GamePieceBase implements GamePiece {
     public boolean hasLowestPoint = false;
 
     // constructor
-    private ClimberAL(SparkMaxSpeedControllerGroup climbGroup) { // constructor
+    private ClimberAL(SparkMaxSpeedControllerGroup climberGroup) { // constructor
         super("Telemetry", "Climber");
-        this.climbGroup = climbGroup;
+        this.climberGroup = climberGroup;
     }
     
     public boolean isDown() { // TODO: equal to or not
-        if (!getBottomSensor() || climberPosition() <= lowestPoint) {
+        if (!getBottomSensor() || getPosition() <= lowestPoint) {
             return true;
         }
         return false;
     }
 
     public boolean isUp() { // TODO: equal or not
-        if (!getTopSensor() || climberPosition() >= highestPoint) {
+        if (getPosition() >= highestPoint) {
             return true;
         }
         return false;
-    }
-
-    public boolean isTilted() {
-        if (getTiltSwitch()) {
-            return true;
-        }
-        return false;
-    }
-
-    public double climberPosition() {
-        double result = 0;
-        if (potentiometer != null && RobotMap.HAS_CLIMB_POT) {
-            result = potentiometer.get();
-        }
-        return result;
     }
 
     // gets the instance
@@ -98,32 +84,17 @@ public class ClimberAL extends GamePieceBase implements GamePiece {
         if (instance == null) {
             if (RobotMap.HAS_CLIMBER) {
                 // instantiates clomber motors
-                climbLeader = new CANSparkMax(RobotMap.CLIMB_MOTER_LEADER, MotorType.kBrushless);
-                climbFollower = null;
+                climberMotor = new CANSparkMax(RobotMap.CLIMB_MOTOR, MotorType.kBrushless);
+                climberMotor.setIdleMode(IdleMode.kBrake);
 
-                if (RobotMap.HAS_CLIMBFOLLOWER) {
-                    climbFollower = new CANSparkMax(RobotMap.CLIMB_MOTER_FOLLOWER, MotorType.kBrushless);
-                }
                 // creates control group
-                climbGroup = new SparkMaxSpeedControllerGroup("Climber", ControlType.kVelocity, RobotMap.CLIMBER_SENSOR,
-                        RobotMap.CLIMBER_MOTOR_INVERTED, climbLeader, climbFollower);
+                climberGroup = new SparkMaxSpeedControllerGroup("Climber", ControlType.kVelocity, RobotMap.CLIMBER_SENSOR,
+                        RobotMap.CLIMBER_MOTOR_INVERTED, climberMotor);
 
-                climbGroup.pidf(RobotMap.CLIMBER_PID_SLOT, RobotMap.CLIMBER_P, RobotMap.CLIMBER_I, RobotMap.CLIMBER_D,
+                climberGroup.pidf(RobotMap.CLIMBER_PID_SLOT, RobotMap.CLIMBER_P, RobotMap.CLIMBER_I, RobotMap.CLIMBER_D,
                         RobotMap.CLIMBER_F, RobotMap.VELOCITY_MULTIPLIER_CLIMBER);
             } else {
-                climbGroup = new SparkMaxSpeedControllerGroup();
-            }
-
-            if (RobotMap.HAS_CLIMBLOCK) {
-                climbLock = new Relay(RobotMap.CLIMB_LOCK_CHANNEL);
-            } else {
-                climbLock = null;
-            }
-
-            if (RobotMap.HAS_CLIMB_TOP_SENSOR) {
-                topSensor = new DigitalInput(RobotMap.CLIMB_TOP_SENSOR_CHANNEL);
-            } else {
-                topSensor = null;
+                climberGroup = new SparkMaxSpeedControllerGroup();
             }
 
             if (RobotMap.HAS_CLIMB_BOTTOM_SENSOR) {
@@ -132,49 +103,37 @@ public class ClimberAL extends GamePieceBase implements GamePiece {
                 bottomSensor = null;
             }
 
-            if (RobotMap.HAS_CLIMB_TILT_SWITCH) {
-                tiltLimitSwitch = new DigitalInput(RobotMap.CLIMB_TILT_SWITCH_CHANNEL);
-            } else {
-                tiltLimitSwitch = null;
-            }
-
-            if (RobotMap.HAS_CLIMB_POT) {
-                potentiometer = new AnalogPotentiometer(RobotMap.CLIMB_POT_CHANNEL);
-            } else {
-                potentiometer = null;
-            }
-
-            instance = new ClimberAL(climbGroup); // invoking the constructor
+            instance = new ClimberAL(climberGroup); // invoking the constructor
             LOGGER.debug("Instance is {}", instance);
 
             instance.stopMotors();
-        }
+        } 
         LOGGER.debug("Instance is {}", instance);
         return instance;
     }
 
     public void climberOff() {
-        climbGroup.set(0.0);
+        climberGroup.set(0.0);
         LOGGER.debug("Climber Has Stopped");
     }
 
     public void climberUp() {
-        climbGroup.set(0.5);
+        climberGroup.set(1.0);
         LOGGER.debug("CLimber Is Going Up");
     }
 
     public void climberDown() {
-        climbGroup.set(-0.8);
+        climberGroup.set(-1.0);
         LOGGER.debug("Climber Is Going Down");
     }
 
     public void climberUpSlow() {
-        climbGroup.set(0.1); // TODO: how slow? 5%?
+        climberGroup.set(0.1); // TODO: how slow? 5%?
         LOGGER.debug("Climber Is Going Up Slowly");
     }
 
     public void climberDownSlow() {
-        climbGroup.set(-0.1);
+        climberGroup.set(-0.1);
         LOGGER.debug("Climber Is Going Down Slowly");
     }
 
@@ -202,93 +161,61 @@ public class ClimberAL extends GamePieceBase implements GamePiece {
             break;
         }
     }
-
-    public enum SolenoidLock {
-        LOCK, UNLOCK;
-    }
-
-    public void setLock(SolenoidLock state) {
-        switch (state) {
-        case LOCK:
-            climberLock();
-            break;
-        case UNLOCK:
-            climberUnlock();
-            break;
-        }
-    }
+//will the motor stop when turning on the climber?
 
     public void stopMotors() {
         LOGGER.debug("motors has stopped");
-        climbGroup.set(0.0);
-    }
-
-    public void climberLock() {
-        LOGGER.debug("climber lock");
-        if (climbLock != null && RobotMap.HAS_CLIMBLOCK) {
-            climbLock.set(Value.kForward);
-        }
-    }
-
-    public void climberUnlock() {
-        LOGGER.debug("climnber unlock");
-        if (climbLock != null && RobotMap.HAS_CLIMBLOCK) {
-            climbLock.set(Value.kReverse);
-        }
+        climberGroup.set(0.0);
     }
 
     // public or private
     public void setClimberPIDF(double kP, double kI, double kD, double kF, double maxVelocity) {
-        if (climbGroup != null && RobotMap.HAS_CLIMBER) {
-            climbGroup.pidf(RobotMap.CLIMBER_PID_SLOT, kP, kI, kD, kF, maxVelocity);
+        if (climberGroup != null && RobotMap.HAS_CLIMBER) {
+            climberGroup.pidf(RobotMap.CLIMBER_PID_SLOT, kP, kI, kD, kF, maxVelocity);
         }
     }
 
     public void setClimb(double speed) {
-        if (climbGroup != null && RobotMap.HAS_CLIMBER) {
+        if (climberGroup != null && RobotMap.HAS_CLIMBER) {
             speed = Math.max(-1.0, Math.min(1.0, speed));
-            climbGroup.set(ControlType.kVelocity, speed);
+            climberGroup.set(ControlType.kVelocity, speed);
         }
     }
 
     public void setSpeed(double speed) {
-        if (climbGroup != null && RobotMap.HAS_CLIMBER) {
+        if (climberGroup != null && RobotMap.HAS_CLIMBER) {
             speed = Math.max(-1.0, Math.min(1.0, speed));
-            climbGroup.set(speed);
+            climberGroup.set(speed);
         }
     }
 
     public double getSpeed() {
         double speed = 0;
-        if (climbGroup != null && RobotMap.HAS_CLIMBER) {
-            speed = climbGroup.velocity();
+        if (climberGroup != null && RobotMap.HAS_CLIMBER) {
+            speed = climberGroup.velocity();
         }
         return speed;
     }
 
     public double getPosition() {
         double position = 0;
-        if (climbGroup != null && RobotMap.HAS_CLIMBER) {
-            position = climbGroup.position();
+        if (climberGroup != null && RobotMap.HAS_CLIMBER) {
+            position = climberGroup.position();
         }
         return position;
     }
 
-    /**
-     * @return what the topsensor sees, true if something is detected false if
-     *         nothing is detected
-     */
-    public boolean getTopSensor() {
-        boolean result = false;
-        if (topSensor != null && RobotMap.HAS_CLIMB_TOP_SENSOR) {
-            result = !topSensor.get();
+    public void resetPosition() {
+        if (climberGroup != null && RobotMap.HAS_CLIMBER) {
+            climberGroup.zero();
         }
-
-        if (RobotMap.CLIMB_TOP_SENSOR_INVERTED) {
-            result = !result;
+    }
+    public double getCurrent() {
+        double current = 0;
+        if (climberGroup != null && RobotMap.HAS_CLIMBER) {
+            current = climberGroup.current();
         }
-
-        return result;
+        return current;
     }
 
     /**
@@ -305,21 +232,6 @@ public class ClimberAL extends GamePieceBase implements GamePiece {
             result = !result;
         }
 
-        return result;
-    }
-
-    /**
-     * @return if the climber is tilted or not true if it is detected false if it is
-     *         not
-     */
-    public boolean getTiltSwitch() {
-        boolean result = false;
-        if (bottomSensor != null && RobotMap.HAS_CLIMB_TILT_SWITCH) {
-            result = !tiltLimitSwitch.get();
-            if (RobotMap.CLIMB_TILT_SWITCH_INVERTED) {
-                result = !result;
-            }
-        }
         return result;
     }
 
