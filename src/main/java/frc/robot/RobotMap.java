@@ -189,14 +189,14 @@ public class RobotMap {
         HAS_TRIGGER = true;
         HAS_SHOOTER_TRIGGER = true;
 
-        SHOOTER_P = 1.2;
+        SHOOTER_P = 1.2; 
         SHOOTER_I = 0.0;
         SHOOTER_D = 120.0;
         SHOOTER_F = 0.0;
 
         VELOCITY_MULTIPLIER_SHOOTER = 10000;
         SHOOTER_SPEED_TOLERANCE = 100;
-        MANUAL_MODE_SHOOTER_SPEED = 0.4; // TODO determine the speed
+        MANUAL_MODE_SHOOTER_SPEED = 0.8; // TODO determine the speed
 
         SHOOTER_AUTO_TIMER = 1.0;
         SHOOTER_AUTO_TIMER = 1.0;
@@ -228,31 +228,17 @@ public class RobotMap {
         // Climber
         CLIMBER_MOTOR_INVERTED = true;
         CLIMBER_SENSOR = false;
-        HAS_CLIMBFOLLOWER = true;
-        CLIMB_MOTER_LEADER = 5;
-        CLIMB_MOTER_FOLLOWER = 6;
+        CLIMB_MOTOR = 5;
 
         CLIMBER_P = 2;
         CLIMBER_I = 0.0;
         CLIMBER_D = 0.0;
         CLIMBER_F = 0.0;
 
-        HAS_CLIMB_TOP_SENSOR = true;
         HAS_CLIMB_BOTTOM_SENSOR = true;
-        CLIMB_TOP_SENSOR_INVERTED = false;
         CLIMB_BOTTOM_SENSOR_INVERTED = false;
-        CLIMB_TOP_SENSOR_CHANNEL = 4;
         CLIMB_BOTTOM_SENSOR_CHANNEL = 5;
-        HAS_CLIMB_POT = true;
-        CLIMB_POT_CHANNEL = 0;
 
-        HAS_CLIMB_TILT_SWITCH = true;
-        CLIMB_TILT_SWITCH_INVERTED = false;
-        CLIMB_TILT_SWITCH_CHANNEL = 3;
-
-        HAS_CLIMBLOCK = true;
-        CLIMB_LOCK_CHANNEL = 0;
-        CLIMB_LOCK_INVERTED = false;
         HAS_SHOOTER_HOOD = true;
         HOOD_LEFT_PWM_PORT = 2;
         HOOD_RIGHT_PWM_PORT = 3;
@@ -392,8 +378,7 @@ public class RobotMap {
         // Climber
         CLIMBER_MOTOR_INVERTED = false;
         CLIMBER_SENSOR = true;
-        HAS_CLIMBFOLLOWER = true;
-        CLIMB_MOTER_LEADER = 5;
+        CLIMB_MOTOR = 5;
         CLIMB_MOTER_FOLLOWER = 6;
 
         CLIMBER_P = 2;
@@ -404,22 +389,9 @@ public class RobotMap {
         VELOCITY_MULTIPLIER_CLIMBER = 8200;
         CLIMBER_PID_SLOT = 0;
 
-        HAS_CLIMB_TOP_SENSOR = true;
         HAS_CLIMB_BOTTOM_SENSOR = true;
-        CLIMB_TOP_SENSOR_INVERTED = false;
         CLIMB_BOTTOM_SENSOR_INVERTED = false;
-        CLIMB_TOP_SENSOR_CHANNEL = 5;
         CLIMB_BOTTOM_SENSOR_CHANNEL = 4;
-        HAS_CLIMB_POT = true;
-        CLIMB_POT_CHANNEL = 0;
-
-        HAS_CLIMB_TILT_SWITCH = false;
-        CLIMB_TILT_SWITCH_INVERTED = false;
-        CLIMB_TILT_SWITCH_CHANNEL = 3;
-
-        HAS_CLIMBLOCK = false;
-        CLIMB_LOCK_CHANNEL = 0;
-        CLIMB_LOCK_INVERTED = false;
 
         // Indexer
 
@@ -529,24 +501,12 @@ public class RobotMap {
   public static boolean CLIMBER_MOTOR_INVERTED = false;
   public static boolean CLIMBER_SENSOR = false;
 
-  public static int CLIMB_MOTER_LEADER;
+  public static int CLIMB_MOTOR;
   public static int CLIMB_MOTER_FOLLOWER;
 
-  public static boolean HAS_CLIMBFOLLOWER = false;
-  public static boolean HAS_CLIMBLOCK = false;
-  public static int CLIMB_LOCK_CHANNEL;
-  public static boolean CLIMB_LOCK_INVERTED = false;
-  public static boolean HAS_CLIMB_TOP_SENSOR = false;
   public static boolean HAS_CLIMB_BOTTOM_SENSOR = false;
-  public static boolean CLIMB_TOP_SENSOR_INVERTED = false;
   public static boolean CLIMB_BOTTOM_SENSOR_INVERTED = false;
-  public static int CLIMB_TOP_SENSOR_CHANNEL;
   public static int CLIMB_BOTTOM_SENSOR_CHANNEL;
-  public static boolean HAS_CLIMB_POT = false;
-  public static int CLIMB_POT_CHANNEL;
-  public static boolean HAS_CLIMB_TILT_SWITCH = false;
-  public static boolean CLIMB_TILT_SWITCH_INVERTED = false;
-  public static int CLIMB_TILT_SWITCH_CHANNEL;
   public static int CLIMBER_PID_SLOT;
   public static double CLIMBER_P;
   public static double CLIMBER_I;
